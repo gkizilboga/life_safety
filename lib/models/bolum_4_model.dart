@@ -1,43 +1,61 @@
+import 'choice_result.dart';
+import '../utils/app_content.dart';
+
 class Bolum4Model {
-  final double hBina;
-  final double hYapi;
+  final ChoiceResult? binaYukseklikSinifi;
+  final ChoiceResult? yapiYuksekligiUyarisi; // Bodrum dahil yükseklik uyarısı için
+  final double? hesaplananBinaYuksekligi;
+  final double? hesaplananYapiYuksekligi;
 
-  Bolum4Model({required this.hBina, required this.hYapi});
+  Bolum4Model({
+    this.binaYukseklikSinifi,
+    this.yapiYuksekligiUyarisi,
+    this.hesaplananBinaYuksekligi,
+    this.hesaplananYapiYuksekligi,
+  });
 
-  bool get isLimitBina0950 => hBina > 9.50;
-  bool get isLimitBina1550 => hBina > 15.50;
-  bool get isLimitBina2150 => hBina > 21.50;
-  bool get isLimitBina2850 => hBina > 28.50;
-  bool get isLimitBina3050 => hBina > 30.50;
-  bool get isLimitBina5150 => hBina > 51.50;
-
-  bool get isLimitYapi2150 => hYapi > 21.50;
-  bool get isLimitYapi3050 => hYapi > 30.50;
-  bool get isLimitYapi5150 => hYapi > 51.50;
-
-  bool get isGenelYuksekBina => isLimitBina2150 || isLimitYapi3050;
+  Bolum4Model copyWith({
+    ChoiceResult? binaYukseklikSinifi,
+    ChoiceResult? yapiYuksekligiUyarisi,
+    double? hesaplananBinaYuksekligi,
+    double? hesaplananYapiYuksekligi,
+  }) {
+    return Bolum4Model(
+      binaYukseklikSinifi: binaYukseklikSinifi ?? this.binaYukseklikSinifi,
+      yapiYuksekligiUyarisi: yapiYuksekligiUyarisi ?? this.yapiYuksekligiUyarisi,
+      hesaplananBinaYuksekligi: hesaplananBinaYuksekligi ?? this.hesaplananBinaYuksekligi,
+      hesaplananYapiYuksekligi: hesaplananYapiYuksekligi ?? this.hesaplananYapiYuksekligi,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
-      'h_bina': hBina,
-      'h_yapi': hYapi,
-      'is_limit_bina_0950': isLimitBina0950,
-      'is_limit_bina_1550': isLimitBina1550,
-      'is_limit_bina_2150': isLimitBina2150,
-      'is_limit_bina_2850': isLimitBina2850,
-      'is_limit_bina_3050': isLimitBina3050,
-      'is_limit_bina_5150': isLimitBina5150,
-      'is_limit_yapi_2150': isLimitYapi2150,
-      'is_limit_yapi_3050': isLimitYapi3050,
-      'is_limit_yapi_5150': isLimitYapi5150,
-      'is_genel_yuksek_bina': isGenelYuksekBina,
+      'binaYukseklikSinifi_label': binaYukseklikSinifi?.label,
+      'yapiYuksekligiUyarisi_label': yapiYuksekligiUyarisi?.label,
+      'hesaplananBinaYuksekligi': hesaplananBinaYuksekligi,
+      'hesaplananYapiYuksekligi': hesaplananYapiYuksekligi,
     };
   }
 
   factory Bolum4Model.fromMap(Map<String, dynamic> map) {
+    // Ana Sınıfı Bul
+    ChoiceResult? anaSinif;
+    final label1 = map['binaYukseklikSinifi_label'];
+    if (label1 == Bolum4Content.yukseklikSinifiDusuk.label) anaSinif = Bolum4Content.yukseklikSinifiDusuk;
+    else if (label1 == Bolum4Content.yukseklikSinifiYuksek.label) anaSinif = Bolum4Content.yukseklikSinifiYuksek;
+    else if (label1 == Bolum4Content.yukseklikSinifiCokYuksek.label) anaSinif = Bolum4Content.yukseklikSinifiCokYuksek;
+    else if (label1 == Bolum4Content.yukseklikSinifiMaksimum.label) anaSinif = Bolum4Content.yukseklikSinifiMaksimum;
+
+    // Uyarıyı Bul
+    ChoiceResult? uyari;
+    final label2 = map['yapiYuksekligiUyarisi_label'];
+    if (label2 == Bolum4Content.yapiYuksekligiUyari.label) uyari = Bolum4Content.yapiYuksekligiUyari;
+
     return Bolum4Model(
-      hBina: map['h_bina'] ?? 0.0,
-      hYapi: map['h_yapi'] ?? 0.0,
+      binaYukseklikSinifi: anaSinif,
+      yapiYuksekligiUyarisi: uyari,
+      hesaplananBinaYuksekligi: map['hesaplananBinaYuksekligi'],
+      hesaplananYapiYuksekligi: map['hesaplananYapiYuksekligi'],
     );
   }
 }

@@ -1,70 +1,27 @@
-enum KullanimAmaci {
-  konut,
-  azYogunTicari,
-  ortaYogunTicari,
-  yuksekYogunTicari,
-  teknikOtopark,
-}
-
-extension KullanimAmaciExtension on KullanimAmaci {
-  String get aciklama {
-    switch (this) {
-      case KullanimAmaci.konut:
-        return "A) Konut (Daire, mesken)";
-      case KullanimAmaci.azYogunTicari:
-        return "B) Az yoğun ticari alan (Büro, ofis, oto galeri vb.)";
-      case KullanimAmaci.ortaYogunTicari:
-        return "C) Orta yoğun ticari alan (Market, mağaza, banka vb.)";
-      case KullanimAmaci.yuksekYogunTicari:
-        return "D) Yüksek yoğun ticari alan (Restaurant, cafe, spor salonu vb.)";
-      case KullanimAmaci.teknikOtopark:
-        return "E) Otopark, depo veya teknik hacim";
-    }
-  }
-
-  double get katsayi {
-    switch (this) {
-      case KullanimAmaci.konut:
-        return 10.0;
-      case KullanimAmaci.azYogunTicari:
-        return 10.0;
-      case KullanimAmaci.ortaYogunTicari:
-        return 5.0;
-      case KullanimAmaci.yuksekYogunTicari:
-        return 1.5;
-      case KullanimAmaci.teknikOtopark:
-        return 30.0;
-    }
-  }
-}
+import 'choice_result.dart'; 
+import '../utils/app_content.dart';
 
 class Bolum10Model {
-  final KullanimAmaci? kullanimZemin;
-  final List<KullanimAmaci?> kullanimBodrum;
-  final List<KullanimAmaci?> kullanimNormal;
+  final ChoiceResult? secim;
 
-  Bolum10Model({
-    this.kullanimZemin,
-    this.kullanimBodrum = const [],
-    this.kullanimNormal = const [],
-  });
+  Bolum10Model({this.secim});
 
-  bool get isFormValid {
-    if (kullanimZemin == null) return false;
-    if (kullanimBodrum.contains(null)) return false;
-    if (kullanimNormal.contains(null)) return false;
-    return true;
+  Bolum10Model copyWith({ChoiceResult? secim}) {
+    return Bolum10Model(secim: secim ?? this.secim);
   }
 
-  Bolum10Model copyWith({
-    KullanimAmaci? kullanimZemin,
-    List<KullanimAmaci?>? kullanimBodrum,
-    List<KullanimAmaci?>? kullanimNormal,
-  }) {
-    return Bolum10Model(
-      kullanimZemin: kullanimZemin ?? this.kullanimZemin,
-      kullanimBodrum: kullanimBodrum ?? this.kullanimBodrum,
-      kullanimNormal: kullanimNormal ?? this.kullanimNormal,
-    );
+  Map<String, dynamic> toMap() {
+    return {'secim_label': secim?.label};
+  }
+
+  factory Bolum10Model.fromMap(Map<String, dynamic> map) {
+    final label = map['secim_label'];
+    if (label == Bolum10Content.konut.label) return Bolum10Model(secim: Bolum10Content.konut);
+    if (label == Bolum10Content.azYogunTicari.label) return Bolum10Model(secim: Bolum10Content.azYogunTicari);
+    if (label == Bolum10Content.ortaYogunTicari.label) return Bolum10Model(secim: Bolum10Content.ortaYogunTicari);
+    if (label == Bolum10Content.yuksekYogunTicari.label) return Bolum10Model(secim: Bolum10Content.yuksekYogunTicari);
+    if (label == Bolum10Content.teknikDepo.label) return Bolum10Model(secim: Bolum10Content.teknikDepo);
+    
+    return Bolum10Model();
   }
 }

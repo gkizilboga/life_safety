@@ -1,79 +1,96 @@
 class Bolum7Model {
-  final bool hasKapaliOtopark;
-  final bool hasKazanDairesi;
-  final bool hasAsansorNormal;
-  final bool hasAsansorDairesi;
-  final bool hasCatiArasi;
-  final bool hasJeneratorOdasi;
-  final bool hasElektrikOdasi;
-  final bool hasTrafoOdasi;
+  // Not: Otopark bilgisi Bölüm 6'dan okunur, burada tutmaya gerek yok ama
+  // raporlama kolaylığı için buraya da kaydedebiliriz.
+  final bool hasOtopark; 
+  
+  final bool hasKazan;
+  final bool hasAsansor;
+  final bool hasCati;
+  final bool hasJenerator;
+  final bool hasElektrik;
+  final bool hasTrafo;
   final bool hasDepo;
-  final bool hasCopOdasi;
+  final bool hasCop;
   final bool hasSiginak;
-  final bool hasOrtakDuvar;
-  final bool hasHicbiri;
+  final bool hasDuvar;
+  final bool isHicbiri;
 
   Bolum7Model({
-    this.hasKapaliOtopark = false,
-    this.hasKazanDairesi = false,
-    this.hasAsansorNormal = false,
-    this.hasAsansorDairesi = false,
-    this.hasCatiArasi = false,
-    this.hasJeneratorOdasi = false,
-    this.hasElektrikOdasi = false,
-    this.hasTrafoOdasi = false,
+    this.hasOtopark = false,
+    this.hasKazan = false,
+    this.hasAsansor = false,
+    this.hasCati = false,
+    this.hasJenerator = false,
+    this.hasElektrik = false,
+    this.hasTrafo = false,
     this.hasDepo = false,
-    this.hasCopOdasi = false,
+    this.hasCop = false,
     this.hasSiginak = false,
-    this.hasOrtakDuvar = false,
-    this.hasHicbiri = false,
+    this.hasDuvar = false,
+    this.isHicbiri = false,
   });
 
-  // Hiçbir şey seçili değil mi kontrolü
-  bool get isAnySelected =>
-      hasKapaliOtopark ||
-      hasKazanDairesi ||
-      hasAsansorNormal ||
-      hasAsansorDairesi ||
-      hasCatiArasi ||
-      hasJeneratorOdasi ||
-      hasElektrikOdasi ||
-      hasTrafoOdasi ||
-      hasDepo ||
-      hasCopOdasi ||
-      hasSiginak ||
-      hasOrtakDuvar ||
-      hasHicbiri;
-
   Bolum7Model copyWith({
-    bool? hasKapaliOtopark,
-    bool? hasKazanDairesi,
-    bool? hasAsansorNormal,
-    bool? hasAsansorDairesi,
-    bool? hasCatiArasi,
-    bool? hasJeneratorOdasi,
-    bool? hasElektrikOdasi,
-    bool? hasTrafoOdasi,
+    bool? hasOtopark,
+    bool? hasKazan,
+    bool? hasAsansor,
+    bool? hasCati,
+    bool? hasJenerator,
+    bool? hasElektrik,
+    bool? hasTrafo,
     bool? hasDepo,
-    bool? hasCopOdasi,
+    bool? hasCop,
     bool? hasSiginak,
-    bool? hasOrtakDuvar,
-    bool? hasHicbiri,
+    bool? hasDuvar,
+    bool? isHicbiri,
   }) {
     return Bolum7Model(
-      hasKapaliOtopark: hasKapaliOtopark ?? this.hasKapaliOtopark,
-      hasKazanDairesi: hasKazanDairesi ?? this.hasKazanDairesi,
-      hasAsansorNormal: hasAsansorNormal ?? this.hasAsansorNormal,
-      hasAsansorDairesi: hasAsansorDairesi ?? this.hasAsansorDairesi,
-      hasCatiArasi: hasCatiArasi ?? this.hasCatiArasi,
-      hasJeneratorOdasi: hasJeneratorOdasi ?? this.hasJeneratorOdasi,
-      hasElektrikOdasi: hasElektrikOdasi ?? this.hasElektrikOdasi,
-      hasTrafoOdasi: hasTrafoOdasi ?? this.hasTrafoOdasi,
+      hasOtopark: hasOtopark ?? this.hasOtopark,
+      hasKazan: hasKazan ?? this.hasKazan,
+      hasAsansor: hasAsansor ?? this.hasAsansor,
+      hasCati: hasCati ?? this.hasCati,
+      hasJenerator: hasJenerator ?? this.hasJenerator,
+      hasElektrik: hasElektrik ?? this.hasElektrik,
+      hasTrafo: hasTrafo ?? this.hasTrafo,
       hasDepo: hasDepo ?? this.hasDepo,
-      hasCopOdasi: hasCopOdasi ?? this.hasCopOdasi,
+      hasCop: hasCop ?? this.hasCop,
       hasSiginak: hasSiginak ?? this.hasSiginak,
-      hasOrtakDuvar: hasOrtakDuvar ?? this.hasOrtakDuvar,
-      hasHicbiri: hasHicbiri ?? this.hasHicbiri,
+      hasDuvar: hasDuvar ?? this.hasDuvar,
+      isHicbiri: isHicbiri ?? this.isHicbiri,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'hasOtopark': hasOtopark,
+      'hasKazan': hasKazan,
+      'hasAsansor': hasAsansor,
+      'hasCati': hasCati,
+      'hasJenerator': hasJenerator,
+      'hasElektrik': hasElektrik,
+      'hasTrafo': hasTrafo,
+      'hasDepo': hasDepo,
+      'hasCop': hasCop,
+      'hasSiginak': hasSiginak,
+      'hasDuvar': hasDuvar,
+      'isHicbiri': isHicbiri,
+    };
+  }
+
+  factory Bolum7Model.fromMap(Map<String, dynamic> map) {
+    return Bolum7Model(
+      hasOtopark: map['hasOtopark'] ?? false,
+      hasKazan: map['hasKazan'] ?? false,
+      hasAsansor: map['hasAsansor'] ?? false,
+      hasCati: map['hasCati'] ?? false,
+      hasJenerator: map['hasJenerator'] ?? false,
+      hasElektrik: map['hasElektrik'] ?? false,
+      hasTrafo: map['hasTrafo'] ?? false,
+      hasDepo: map['hasDepo'] ?? false,
+      hasCop: map['hasCop'] ?? false,
+      hasSiginak: map['hasSiginak'] ?? false,
+      hasDuvar: map['hasDuvar'] ?? false,
+      isHicbiri: map['isHicbiri'] ?? false,
     );
   }
 }

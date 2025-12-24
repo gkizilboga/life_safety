@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_13_model.dart';
-import 'package:life_safety/models/bolum_26_model.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/screens/bolum_27_screen.dart';
+import '../../data/bina_store.dart';
+import '../../models/bolum_26_model.dart';
+import 'bolum_27_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
+import '../../models/choice_result.dart';
+
 class Bolum26Screen extends StatefulWidget {
   const Bolum26Screen({super.key});
 
@@ -14,26 +17,57 @@ class Bolum26Screen extends StatefulWidget {
 class _Bolum26ScreenState extends State<Bolum26Screen> {
   Bolum26Model _model = Bolum26Model();
 
+  // Otopark sorusunu sormak için Bölüm 6'da otopark var mı kontrolü
+  bool _askOtopark = false;
+
   @override
   void initState() {
     super.initState();
-    if (BinaStore.instance.bolum26 != null) {
-      _model = BinaStore.instance.bolum26!;
+    // Bölüm 6'da otopark varsa rampa sorusunu da soralım
+    final b6 = BinaStore.instance.bolum6;
+    if (b6?.hasOtopark == true) {
+      _askOtopark = true;
     }
   }
 
+  void _handleSelection(String type, ChoiceResult choice) {
+    setState(() {
+      if (type == 'varlik') {
+        _model = _model.copyWith(varlik: choice);
+        // Rampa yoksa detayları temizle
+        if (choice.label == Bolum26Content.varlikOptionA.label) {
+          _model = _model.copyWith(egim: null, sahanlik: null);
+        }
+      } else if (type == 'egim') {
+        _model = _model.copyWith(egim: choice);
+      } else if (type == 'sahanlik') {
+        _model = _model.copyWith(sahanlik: choice);
+      } else if (type == 'otopark') {
+        _model = _model.copyWith(otopark: choice);
+      }
+    });
+  }
+
   void _onNextPressed() {
+    if (_model.varlik == null) return _showError("Lütfen kaçış rampası sorusunu yanıtlayınız.");
+
+    // Rampa varsa detaylar zorunlu
+    if (_model.varlik?.label == Bolum26Content.varlikOptionB.label) {
+      if (_model.egim == null) return _showError("Lütfen rampa eğimini seçiniz.");
+      if (_model.sahanlik == null) return _showError("Lütfen sahanlık durumunu seçiniz.");
+    }
+
+    if (_askOtopark && _model.otopark == null) return _showError("Lütfen otopark rampası sorusunu yanıtlayınız.");
+
     BinaStore.instance.bolum26 = _model;
-    print("Bölüm 26 Kaydedildi.");
-    
-    // BURASI VERİ GİRİŞİNİN SONU OLABİLİR VEYA DEVAM EDEBİLİR.
-    // Şimdilik placeholder:
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Bölüm 26 Tamamlandı.")),
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum27Screen()),
     );
-Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum27Screen()));
+  }
 
-
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -41,165 +75,78 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum27Scr
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Kaçış Rampaları",
-            subtitle: "Bölüm 26: Rampa Güvenliği",
-            currentStep: 26,
-            totalSteps: 26, // Tahmini
-            onBack: () => Navigator.pop(context),
+          const ModernHeader(
+            title: "Bölüm-26: Kaçış Rampaları",
+            subtitle: "Eğimli kaçış yollarının güvenliği.",
+            currentStep: 16, 
+            totalSteps: 26,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ADIM-1: RAMPA VARLIĞI
-                  const Text("ADIM-1: RAMPA VARLIĞI", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Binanızda kaçış yolu olarak kullanılan (veya otoparktan çıkışı sağlayan) eğimli bir rampa var mı?",
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Hayır, sadece merdiven var.",
-                          value: ChoiceResult(label: "A", reportText: "Rampa yok."),
-                          groupValue: _model.resRampaVar,
-                          onChanged: (val) => setState(() {
-                            // A seçilirse diğer verileri temizle (Modül biter)
-                            _model = Bolum26Model(resRampaVar: val);
-                          }),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Evet, rampa var.",
-                          value: ChoiceResult(label: "B", reportText: "Rampa mevcut."),
-                          groupValue: _model.resRampaVar,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resRampaVar: val)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // 1. Varlık
+                  _buildSoru("Binanızda kaçış yolu olarak kullanılan eğimli bir rampa var mı?", 'varlik', 
+                    [Bolum26Content.varlikOptionA, Bolum26Content.varlikOptionB], _model.varlik),
 
-                  // ADIM-2, 3, 4 SADECE "B" SEÇİLİRSE GÖRÜNÜR
-                  if (_model.resRampaVar?.label == "B") ...[
-                    const Divider(height: 40),
-                    const Text("ADIM-2: EĞİM VE KAYMAZLIK", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                    const SizedBox(height: 8),
-                    const Text("Bu rampanın eğimi (dikliği) ve zemin kaplaması nasıldır?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 15),
-                    QuestionCard(
-                      child: Column(
-                        children: [
-                          SelectableCard<ChoiceResult>(
-                            title: "A) Eğim az ve zemin kaymaz.",
-                            subtitle: "✅ OLUMLU GÖRÜNÜYOR",
-                            value: ChoiceResult(label: "A", reportText: "✅ OLUMLU GÖRÜNÜYOR"),
-                            groupValue: _model.resRampaEgim,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resRampaEgim: val)),
-                          ),
-                          SelectableCard<ChoiceResult>(
-                            title: "B) Eğim fazla dik veya zemin kaygan.",
-                            subtitle: "🚨 RİSK: Düşme tehlikesi.",
-                            value: ChoiceResult(label: "B", reportText: "🚨 RİSK. Kaçış rampalarının eğimi %10'dan fazla olamaz. Zemin mutlaka kaymaz malzeme ile kaplanmalıdır."),
-                            groupValue: _model.resRampaEgim,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resRampaEgim: val)),
-                          ),
-                        ],
-                      ),
-                    ),
+                  // Diğer sorular SADECE RAMPA VARSA gösterilir
+                  if (_model.varlik?.label == Bolum26Content.varlikOptionB.label) ...[
+                    const Divider(height: 30),
+                    
+                    // 2. Eğim
+                    _buildSoru("Bu rampanın eğimi (dikliği) ve zemin kaplaması nasıldır?", 'egim', 
+                      [Bolum26Content.egimOptionA, Bolum26Content.egimOptionB], _model.egim),
 
-                    const Divider(height: 40),
-                    const Text("ADIM-3: SAHANLIK VE DOĞRULTU", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                    const SizedBox(height: 8),
-                    const Text("Rampanın başlangıcında, bitişinde ve kapı önlerinde sahanlık var mı?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 15),
-                    QuestionCard(
-                      child: Column(
-                        children: [
-                          SelectableCard<ChoiceResult>(
-                            title: "A) Evet, kapı önleri ve dönüşler düz.",
-                            subtitle: "✅ OLUMLU GÖRÜNÜYOR",
-                            value: ChoiceResult(label: "A", reportText: "✅ OLUMLU GÖRÜNÜYOR"),
-                            groupValue: _model.resRampaSahanlik,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resRampaSahanlik: val)),
-                          ),
-                          SelectableCard<ChoiceResult>(
-                            title: "B) Hayır, hemen eğim başlıyor.",
-                            subtitle: "⚠️ UYARI: Sahanlık gerekli.",
-                            value: ChoiceResult(label: "B", reportText: "⚠️ UYARI. Rampa giriş ve çıkışlarında, kapı önlerinde mutlaka düz sahanlık bulunmalıdır."),
-                            groupValue: _model.resRampaSahanlik,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resRampaSahanlik: val)),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const Divider(height: 40),
-                    const Text("ADIM-4: OTOPARK RAMPASI", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                    const SizedBox(height: 8),
-                    const Text("Otoparkınızdan dışarı çıkan araç rampasını, acil durumda yürüyerek kaçış yolu olarak kullanabilir misiniz?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 15),
-                    QuestionCard(
-                      child: Column(
-                        children: [
-                          SelectableCard<ChoiceResult>(
-                            title: "A) Evet, eğimi uygun (%10 altı).",
-                            subtitle: "✅ OLUMLU: 2. kaçış yolu olabilir.",
-                            value: ChoiceResult(label: "A", reportText: "✅ OLUMLU GÖRÜNÜYOR. (Tek bodrum katlı otoparklarda bu rampa 2. kaçış yolu olarak kabul edilebilir.)"),
-                            groupValue: _model.resOtoparkRampa,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resOtoparkRampa: val)),
-                          ),
-                          SelectableCard<ChoiceResult>(
-                            title: "B) Hayır, çok dik veya kaygan.",
-                            subtitle: "⚠️ BİLGİ: Kaçış yolu sayılamaz.",
-                            value: ChoiceResult(label: "B", reportText: "⚠️ BİLGİ. (Bu rampa kaçış yolu sayılamaz, otoparkın başka bir yaya çıkışı olmalıdır.)"),
-                            groupValue: _model.resOtoparkRampa,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resOtoparkRampa: val)),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // 3. Sahanlık
+                    _buildSoru("Rampanın başlangıcında, bitişinde ve kapı önlerinde sahanlık var mı?", 'sahanlik', 
+                      [Bolum26Content.sahanlikOptionA, Bolum26Content.sahanlikOptionB], _model.sahanlik),
                   ],
+
+                  // 4. Otopark Rampası (Sadece otopark varsa sorulur)
+                  if (_askOtopark)
+                    _buildSoru("Otoparkınızdan dışarı çıkan araç rampasını acil durumda kaçış yolu olarak kullanabilir misiniz?", 'otopark', 
+                      [Bolum26Content.otoparkOptionA, Bolum26Content.otoparkOptionB], _model.otopark),
                 ],
               ),
             ),
           ),
-          _buildBottomButton(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _onNextPressed,
+                  child: const Text("DEVAM ET"),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBottomButton() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))]),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _isFormValid() ? _onNextPressed : null,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          ...options.map((opt) => SelectableCard(
+            choice: opt,
+            isSelected: selected?.label == opt.label,
+            onTap: () => _handleSelection(key, opt),
+          )).toList(),
+        ],
       ),
     );
-  }
-
-  bool _isFormValid() {
-    if (_model.resRampaVar == null) return false;
-    
-    // Eğer Rampa Var (B) seçildiyse diğer sorular zorunlu
-    if (_model.resRampaVar?.label == "B") {
-      if (_model.resRampaEgim == null) return false;
-      if (_model.resRampaSahanlik == null) return false;
-      if (_model.resOtoparkRampa == null) return false;
-    }
-    return true;
   }
 }

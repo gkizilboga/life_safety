@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart'; // EKLENDİ
-import 'package:life_safety/models/bolum_7_model.dart';
-import 'package:life_safety/screens/bolum_8_screen.dart';
-import 'package:life_safety/widgets/custom_widgets.dart'; // ModernHeader
+import '../../data/bina_store.dart';
+import '../../models/bolum_7_model.dart';
+import 'bolum_8_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
 
 class Bolum7Screen extends StatefulWidget {
-  // Constructor'dan parametre kaldırıldı
   const Bolum7Screen({super.key});
 
   @override
@@ -18,191 +19,212 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   @override
   void initState() {
     super.initState();
-    // AUTO-SYNC: Veriyi Store'dan çek
-    final String? otoparkStatus = BinaStore.instance.otoparkStatus;
+    _checkPreviousData();
+  }
+
+  void _checkPreviousData() {
+    // Bölüm 6'dan otopark verisini kontrol et
+    final hasOtoparkFromBolum6 = BinaStore.instance.bolum6?.hasOtopark ?? false;
     
-    if (otoparkStatus == "KAPALI OTOPARK") {
-      _model = _model.copyWith(hasKapaliOtopark: true, hasHicbiri: false);
-    } else {
-      _model = _model.copyWith(hasKapaliOtopark: false);
+    // Eğer otopark varsa modele işle
+    if (hasOtoparkFromBolum6) {
+      setState(() {
+        _model = _model.copyWith(hasOtopark: true, isHicbiri: false);
+      });
     }
   }
 
-  void _updateSelection({
-    bool? kazan,
-    bool? asansor,
-    bool? asansorDaire,
-    bool? cati,
-    bool? jenerator,
-    bool? elektrik,
-    bool? trafo,
-    bool? depo,
-    bool? cop,
-    bool? siginak,
-    bool? duvar,
-  }) {
+  void _toggleOption(String key) {
     setState(() {
-      _model = _model.copyWith(
-        hasKazanDairesi: kazan,
-        hasAsansorNormal: asansor,
-        hasAsansorDairesi: asansorDaire,
-        hasCatiArasi: cati,
-        hasJeneratorOdasi: jenerator,
-        hasElektrikOdasi: elektrik,
-        hasTrafoOdasi: trafo,
-        hasDepo: depo,
-        hasCopOdasi: cop,
-        hasSiginak: siginak,
-        hasOrtakDuvar: duvar,
-        hasHicbiri: false,
-      );
-    });
-  }
+      bool newVal = false;
+      bool clearHicbiri = true; // "Hiçbiri" seçeneğini kaldıralım mı?
 
-  void _toggleHicbiri(bool? value) {
-    setState(() {
-      if (value == true) {
-        _model = _model.copyWith(
-          hasHicbiri: true,
-          hasKazanDairesi: false,
-          hasAsansorNormal: false,
-          hasAsansorDairesi: false,
-          hasCatiArasi: false,
-          hasJeneratorOdasi: false,
-          hasElektrikOdasi: false,
-          hasTrafoOdasi: false,
-          hasDepo: false,
-          hasCopOdasi: false,
-          hasSiginak: false,
-          hasOrtakDuvar: false,
-        );
-      } else {
-        _model = _model.copyWith(hasHicbiri: false);
+      switch (key) {
+        case 'kazan':
+          newVal = !_model.hasKazan;
+          _model = _model.copyWith(hasKazan: newVal);
+          break;
+        case 'asansor':
+          newVal = !_model.hasAsansor;
+          _model = _model.copyWith(hasAsansor: newVal);
+          break;
+        case 'cati':
+          newVal = !_model.hasCati;
+          _model = _model.copyWith(hasCati: newVal);
+          break;
+        case 'jenerator':
+          newVal = !_model.hasJenerator;
+          _model = _model.copyWith(hasJenerator: newVal);
+          break;
+        case 'elektrik':
+          newVal = !_model.hasElektrik;
+          _model = _model.copyWith(hasElektrik: newVal);
+          break;
+        case 'trafo':
+          newVal = !_model.hasTrafo;
+          _model = _model.copyWith(hasTrafo: newVal);
+          break;
+        case 'depo':
+          newVal = !_model.hasDepo;
+          _model = _model.copyWith(hasDepo: newVal);
+          break;
+        case 'cop':
+          newVal = !_model.hasCop;
+          _model = _model.copyWith(hasCop: newVal);
+          break;
+        case 'siginak':
+          newVal = !_model.hasSiginak;
+          _model = _model.copyWith(hasSiginak: newVal);
+          break;
+        case 'duvar':
+          newVal = !_model.hasDuvar;
+          _model = _model.copyWith(hasDuvar: newVal);
+          break;
+        case 'hicbiri':
+          // Hiçbiri seçilirse her şeyi sıfırla (Otopark hariç, o sistemden geliyor)
+          bool otoparkKalsin = BinaStore.instance.bolum6?.hasOtopark ?? false;
+          _model = Bolum7Model(
+            isHicbiri: !_model.isHicbiri, 
+            hasOtopark: otoparkKalsin
+          );
+          clearHicbiri = false;
+          break;
+      }
+
+      if (clearHicbiri) {
+        _model = _model.copyWith(isHicbiri: false);
       }
     });
   }
 
   void _onNextPressed() {
-    if (!_model.isAnySelected) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("⚠️ SEÇİM YAPMANIZ GEREKMEKTEDİR"),
-          content: const Text(
-              "Lütfen binanızda bulunan farklı amaçlı alanları işaretleyiniz. Eğer listenin tamamını kontrol ettiyseniz ve bu alanlardan hiçbiri binanızda yoksa, en alttaki 'Hiçbiri Yok' seçeneğini işaretleyerek devam ediniz."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Tamam"),
-            ),
-          ],
-        ),
+    // Hiçbir şey seçilmediyse uyarı ver (Otopark dahil hepsi false ise)
+    if (!_model.hasOtopark && !_model.hasKazan && !_model.hasAsansor && 
+        !_model.hasCati && !_model.hasJenerator && !_model.hasElektrik &&
+        !_model.hasTrafo && !_model.hasDepo && !_model.hasCop && 
+        !_model.hasSiginak && !_model.hasDuvar && !_model.isHicbiri) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Lütfen riskli alanları işaretleyiniz veya 'Hiçbiri'ni seçiniz.")),
       );
       return;
     }
 
-    _navigateToNext();
-  }
-
-  void _navigateToNext() {
-    // VERİYİ DEPOYA KAYDET
     BinaStore.instance.bolum7 = _model;
-    print("Bölüm 7 Kaydedildi.");
-
     Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => const Bolum8Screen())
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum8Screen()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Veriyi Store'dan çek (UI için)
-    final bool isKapaliOtopark = BinaStore.instance.otoparkStatus == "KAPALI OTOPARK";
+    // Otopark sistemden geliyorsa elle değiştirmeyi engellemek için
+    final bool isOtoparkLocked = BinaStore.instance.bolum6?.hasOtopark ?? false;
 
     return Scaffold(
       body: Column(
         children: [
-          // 1. MODERN BAŞLIK
-          ModernHeader(
-            title: "Özel Riskli Hacimler",
-            subtitle: "Bölüm 7: Riskli Alan Varlığı",
+          const ModernHeader(
+            title: "Bölüm-7: Riskli Alanlar",
+            subtitle: "Binadaki tehlike kaynaklarını belirleyelim.",
             currentStep: 7,
-            totalSteps: 21,
-            onBack: () => Navigator.pop(context),
+            totalSteps: 10,
           ),
-
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "ÖZEL RİSKLİ HACİM VARLIĞI",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF2C3E50),
-                    ),
+                    "Binanızda aşağıdaki alanlardan hangileri var?",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10),
                   const Text(
-                    "Binanızın içinde aşağıdaki alanlardan hangileri mevcut? (Lütfen olanların hepsini işaretleyiniz)",
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
+                    "(Birden fazla işaretleyebilirsiniz)",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 15),
 
-                  CheckboxListTile(
-                    title: const Text("Kapalı Otopark"),
-                    subtitle: Text(
-                      isKapaliOtopark
-                          ? "(Binanızda kapalı otopark olduğunu belirttiğinizden sistem tarafından işaretlenmiştir.)"
-                          : "(Binanızda kapalı otopark bulunmadığını belirttiniz.)",
-                      style: TextStyle(
-                        color: isKapaliOtopark ? Colors.green : Colors.grey,
-                        fontSize: 12,
-                      ),
+                  // OTOPARK (ÖZEL DURUM)
+                  Opacity(
+                    opacity: isOtoparkLocked ? 0.6 : 1.0,
+                    child: SelectableCard(
+                      choice: Bolum7Content.otopark,
+                      isSelected: _model.hasOtopark,
+                      onTap: () {
+                        if (!isOtoparkLocked) {
+                          // Eğer Bölüm 6'da seçilmediyse buradan manuel seçebilir (Opsiyonel)
+                          // Ama genelde kilitli kalması daha mantıklı.
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Otopark bilgisi önceki bölümden alınmıştır.")),
+                          );
+                        }
+                      },
                     ),
-                    value: _model.hasKapaliOtopark,
-                    onChanged: null,
-                    activeColor: Colors.grey,
-                    controlAffinity: ListTileControlAffinity.leading,
                   ),
-                  const Divider(),
 
-                  _buildCheckbox("Kazan Dairesi / Isı Merkezi", _model.hasKazanDairesi, (v) => _updateSelection(kazan: v)),
-                  _buildCheckbox("Normal Asansör", _model.hasAsansorNormal, (v) => _updateSelection(asansor: v)),
-                  _buildCheckbox("Asansör Makine Dairesi", _model.hasAsansorDairesi, (v) => _updateSelection(asansorDaire: v)),
-                  _buildCheckbox("Çatı Arası", _model.hasCatiArasi, (v) => _updateSelection(cati: v)),
-                  _buildCheckbox("Jeneratör Odası", _model.hasJeneratorOdasi, (v) => _updateSelection(jenerator: v)),
-                  _buildCheckbox("Elektrik Odası / Pano Odası", _model.hasElektrikOdasi, (v) => _updateSelection(elektrik: v)),
-                  _buildCheckbox("Yağlı Tip Trafo Odası", _model.hasTrafoOdasi, (v) => _updateSelection(trafo: v)),
-                  _buildCheckbox("Ortak Depo / Ardiye / Kiler", _model.hasDepo, (v) => _updateSelection(depo: v)),
-                  _buildCheckbox("Çöp Odası / Çöp Şut Odası", _model.hasCopOdasi, (v) => _updateSelection(cop: v)),
-                  _buildCheckbox("Sığınak", _model.hasSiginak, (v) => _updateSelection(siginak: v)),
-                  _buildCheckbox("Ortak Duvar", _model.hasOrtakDuvar, (v) => _updateSelection(duvar: v)),
+                  SelectableCard(
+                    choice: Bolum7Content.kazan,
+                    isSelected: _model.hasKazan,
+                    onTap: () => _toggleOption('kazan'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.asansor,
+                    isSelected: _model.hasAsansor,
+                    onTap: () => _toggleOption('asansor'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.cati,
+                    isSelected: _model.hasCati,
+                    onTap: () => _toggleOption('cati'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.jenerator,
+                    isSelected: _model.hasJenerator,
+                    onTap: () => _toggleOption('jenerator'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.elektrik,
+                    isSelected: _model.hasElektrik,
+                    onTap: () => _toggleOption('elektrik'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.trafo,
+                    isSelected: _model.hasTrafo,
+                    onTap: () => _toggleOption('trafo'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.depo,
+                    isSelected: _model.hasDepo,
+                    onTap: () => _toggleOption('depo'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.cop,
+                    isSelected: _model.hasCop,
+                    onTap: () => _toggleOption('cop'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.siginak,
+                    isSelected: _model.hasSiginak,
+                    onTap: () => _toggleOption('siginak'),
+                  ),
+                  SelectableCard(
+                    choice: Bolum7Content.duvar,
+                    isSelected: _model.hasDuvar,
+                    onTap: () => _toggleOption('duvar'),
+                  ),
 
-                  const Divider(),
+                  const Divider(thickness: 2),
                   
-                  CheckboxListTile(
-                    title: const Text("Binada hiçbiri Yok"),
-                    value: _model.hasHicbiri,
-                    onChanged: isKapaliOtopark 
-                        ? null 
-                        : _toggleHicbiri,
-                    activeColor: const Color(0xFF1A237E),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    subtitle: isKapaliOtopark 
-                      ? const Text("(Binanızda kapalı otopark olduğu için seçilemez)", style: TextStyle(fontSize: 11, color: Colors.red)) 
-                      : null,
+                  SelectableCard(
+                    choice: Bolum7Content.hicbiri,
+                    isSelected: _model.isHicbiri,
+                    onTap: () => _toggleOption('hicbiri'),
                   ),
                 ],
               ),
             ),
           ),
-
-          // SABİT BUTON ALANI
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
             decoration: BoxDecoration(
@@ -222,17 +244,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCheckbox(String title, bool value, void Function(bool?) onChanged) {
-    return CheckboxListTile(
-      title: Text(title),
-      value: value,
-      onChanged: _model.hasHicbiri ? null : onChanged,
-      activeColor: const Color(0xFF1A237E),
-      controlAffinity: ListTileControlAffinity.leading,
-      dense: true,
     );
   }
 }

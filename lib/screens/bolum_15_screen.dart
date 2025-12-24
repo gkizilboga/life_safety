@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_13_model.dart';
-import 'package:life_safety/models/bolum_15_model.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/screens/bolum_16_screen.dart';
+import '../../data/bina_store.dart';
+import '../../models/bolum_15_model.dart';
+import 'bolum_16_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
+import '../../models/choice_result.dart';
 
 class Bolum15Screen extends StatefulWidget {
   const Bolum15Screen({super.key});
@@ -15,213 +17,185 @@ class Bolum15Screen extends StatefulWidget {
 class _Bolum15ScreenState extends State<Bolum15Screen> {
   Bolum15Model _model = Bolum15Model();
 
-  @override
-  void initState() {
-    super.initState();
-    // HAFIZA DÜZELTMESİ: Veri varsa geri yükle
-    if (BinaStore.instance.bolum15 != null) {
-      _model = BinaStore.instance.bolum15!;
-    }
+  void _handleSelection(String type, ChoiceResult choice) {
+    setState(() {
+      if (type == 'kaplama') _model = _model.copyWith(kaplama: choice);
+      if (type == 'yalitim') {
+        _model = _model.copyWith(yalitim: choice);
+        // Seçim değişirse alt soruyu sıfırla
+        if (choice.label != Bolum15Content.yalitimOptionB.label) {
+          _model = _model.copyWith(yalitimSapVar: null);
+        }
+      }
+      if (type == 'tavan') {
+        _model = _model.copyWith(tavan: choice);
+        // Seçim değişirse alt soruyu sıfırla
+        if (choice.label != Bolum15Content.tavanOptionB.label) {
+          _model = _model.copyWith(tavanMalzemesi: null);
+        }
+      }
+      if (type == 'tesisat') _model = _model.copyWith(tesisat: choice);
+    });
   }
 
   void _onNextPressed() {
+    // Validasyonlar
+    if (_model.kaplama == null) return _showError("Lütfen zemin kaplama sorusunu yanıtlayınız.");
+    if (_model.yalitim == null) return _showError("Lütfen zemin yalıtım sorusunu yanıtlayınız.");
+    
+    // Yalıtım varsa şap sorusu zorunlu
+    if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label && _model.yalitimSapVar == null) {
+      return _showError("Lütfen yalıtım üzerindeki şap durumunu belirtiniz.");
+    }
+
+    if (_model.tavan == null) return _showError("Lütfen tavan sorusunu yanıtlayınız.");
+    
+    // Asma tavan varsa malzeme sorusu zorunlu
+    if (_model.tavan?.label == Bolum15Content.tavanOptionB.label && _model.tavanMalzemesi == null) {
+      return _showError("Lütfen asma tavan malzemesini seçiniz.");
+    }
+
+    if (_model.tesisat == null) return _showError("Lütfen tesisat geçiş sorusunu yanıtlayınız.");
+
     BinaStore.instance.bolum15 = _model;
-    print("Bölüm 15 Kaydedildi.");
-Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum16Screen()));  }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum16Screen()),
+    );
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bool isHighBuilding = BinaStore.instance.bolum4?.isGenelYuksekBina ?? false;
-
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Döşemeler ve Tavanlar",
-            subtitle: "Bölüm 15: Yalıtım ve Kaplamalar",
-            currentStep: 15,
-            totalSteps: 15,
-            onBack: () => Navigator.pop(context),
+          const ModernHeader(
+            title: "Bölüm-15: İç Mekan",
+            subtitle: "Kaplama ve dekorasyon malzemeleri.",
+            currentStep: 5, 
+            totalSteps: 26,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ADIM-1
-                  const Text("ADIM-1: DÖŞEME KAPLAMALARI", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Ahşap parke, laminat veya standart halı.",
-                          subtitle: isHighBuilding ? "🚨 UYARI: Yüksek binalarda riskli." : "✅ OLUMLU GÖRÜNÜYOR",
-                          value: ChoiceResult(label: "A", reportText: isHighBuilding ? "🚨 UYARI" : "✅ OLUMLU"),
-                          groupValue: _model.resDosemeKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDosemeKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Taş, seramik, mermer.",
-                          subtitle: "✅ OLUMLU GÖRÜNÜYOR",
-                          value: ChoiceResult(label: "B", reportText: "✅ OLUMLU"),
-                          groupValue: _model.resDosemeKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDosemeKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Bilmiyorum.",
-                          value: ChoiceResult(label: "C", reportText: "❓ BİLİNMİYOR"),
-                          groupValue: _model.resDosemeKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDosemeKaplama: val)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // 1. Zemin Kaplaması
+                  _buildSoru("Zeminlerinizde kullandığınız kaplama malzemesi nedir?", 'kaplama', 
+                    [Bolum15Content.kaplamaOptionA, Bolum15Content.kaplamaOptionB, Bolum15Content.kaplamaOptionC], _model.kaplama),
 
-                  // ADIM-2
-                  const Divider(height: 40),
-                  const Text("ADIM-2: DÖŞEME ISI YALITIMI", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Hayır, yok.",
-                          value: ChoiceResult(label: "A", reportText: "✅ OLUMLU"),
-                          groupValue: _model.resDosemeYalitim,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDosemeYalitim: val, resSapDurumu: null)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Evet, var.",
-                          value: ChoiceResult(label: "B", reportText: "Isı yalıtımı mevcut."),
-                          groupValue: _model.resDosemeYalitim,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDosemeYalitim: val)),
-                        ),
-                        if (_model.resDosemeYalitim?.label == "B") ...[
-                          const Padding(padding: EdgeInsets.all(8.0), child: Text("Alt Soru: Üzerinde şap var mı?", style: TextStyle(fontWeight: FontWeight.bold))),
-                          _buildSubOption("Evet, var.", "✅ OLUMLU", "A", _model.resSapDurumu, (v) => setState(() => _model = _model.copyWith(resSapDurumu: v))),
-                          _buildSubOption("Hayır, yok.", "🚨 RİSK", "B", _model.resSapDurumu, (v) => setState(() => _model = _model.copyWith(resSapDurumu: v))),
+                  // 2. Isı Yalıtımı
+                  _buildSoru("Döşeme betonunun üzerinde strafor/köpük ısı yalıtımı var mı?", 'yalitim', 
+                    [Bolum15Content.yalitimOptionA, Bolum15Content.yalitimOptionB, Bolum15Content.yalitimOptionC], _model.yalitim),
+
+                  // Alt Soru: Yalıtım Varsa Şap
+                  if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) 
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, bottom: 20),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Yalıtım malzemesinin üzerinde en az 2 cm şap (beton) var mı?", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              Radio<bool>(
+                                value: true, 
+                                groupValue: _model.yalitimSapVar, 
+                                onChanged: (v) => setState(() => _model = _model.copyWith(yalitimSapVar: v))
+                              ),
+                              const Text("Evet Var"),
+                              const SizedBox(width: 20),
+                              Radio<bool>(
+                                value: false, 
+                                groupValue: _model.yalitimSapVar, 
+                                onChanged: (v) => setState(() => _model = _model.copyWith(yalitimSapVar: v))
+                              ),
+                              const Text("Hayır Yok"),
+                            ],
+                          )
                         ],
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Bilmiyorum.",
-                          value: ChoiceResult(label: "C", reportText: "❓ BİLİNMİYOR"),
-                          groupValue: _model.resDosemeYalitim,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDosemeYalitim: val, resSapDurumu: null)),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
 
-                  // ADIM-3
-                  const Divider(height: 40),
-                  const Text("ADIM-3: TAVAN KAPLAMALARI", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Hayır, tavanlar beton.",
-                          value: ChoiceResult(label: "A", reportText: "✅ OLUMLU"),
-                          groupValue: _model.resAsmaTavan,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resAsmaTavan: val, resTavanMalzeme: null)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Evet, asma tavan var.",
-                          value: ChoiceResult(label: "B", reportText: "Asma tavan mevcut."),
-                          groupValue: _model.resAsmaTavan,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resAsmaTavan: val)),
-                        ),
-                        if (_model.resAsmaTavan?.label == "B") ...[
-                          const Padding(padding: EdgeInsets.all(8.0), child: Text("Alt Soru: Malzemesi nedir?", style: TextStyle(fontWeight: FontWeight.bold))),
-                          _buildSubOption("Alçıpanel/Metal", "✅ OLUMLU", "A", _model.resTavanMalzeme, (v) => setState(() => _model = _model.copyWith(resTavanMalzeme: v))),
-                          _buildSubOption("Ahşap/Plastik", "🚨 RİSK", "B", _model.resTavanMalzeme, (v) => setState(() => _model = _model.copyWith(resTavanMalzeme: v))),
+                  // 3. Tavan
+                  _buildSoru("Koridorlarda veya daire içlerinde Asma Tavan var mı?", 'tavan', 
+                    [Bolum15Content.tavanOptionA, Bolum15Content.tavanOptionB, Bolum15Content.tavanOptionC], _model.tavan),
+
+                  // Alt Soru: Tavan Malzemesi
+                  if (_model.tavan?.label == Bolum15Content.tavanOptionB.label) 
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, bottom: 20),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Asma tavan malzemesi nedir?", style: TextStyle(fontWeight: FontWeight.bold)),
+                          RadioListTile<String>(
+                            title: const Text("Alçıpan / Metal / Taşyünü"),
+                            value: "yanmaz",
+                            groupValue: _model.tavanMalzemesi,
+                            onChanged: (v) => setState(() => _model = _model.copyWith(tavanMalzemesi: v)),
+                          ),
+                          RadioListTile<String>(
+                            title: const Text("Ahşap / Plastik / Lambiri"),
+                            value: "yanici",
+                            groupValue: _model.tavanMalzemesi,
+                            onChanged: (v) => setState(() => _model = _model.copyWith(tavanMalzemesi: v)),
+                          ),
                         ],
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Bilmiyorum.",
-                          value: ChoiceResult(label: "C", reportText: "❓ BİLİNMİYOR"),
-                          groupValue: _model.resAsmaTavan,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resAsmaTavan: val, resTavanMalzeme: null)),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
 
-                  // ADIM-4
-                  const Divider(height: 40),
-                  const Text("ADIM-4: TESİSAT GEÇİŞLERİ", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Tam kapalı / Sızdırmaz.",
-                          value: ChoiceResult(label: "A", reportText: "✅ OLUMLU"),
-                          groupValue: _model.resTesisatGecis,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resTesisatGecis: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Boşluklar var.",
-                          value: ChoiceResult(label: "B", reportText: "🚨 RİSK"),
-                          groupValue: _model.resTesisatGecis,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resTesisatGecis: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Bilmiyorum.",
-                          value: ChoiceResult(label: "C", reportText: "❓ BİLİNMİYOR"),
-                          groupValue: _model.resTesisatGecis,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resTesisatGecis: val)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // 4. Tesisat Geçişleri
+                  _buildSoru("Döşemeden geçen boru ve kablo boşlukları nasıl kapatılmış?", 'tesisat', 
+                    [Bolum15Content.tesisatOptionA, Bolum15Content.tesisatOptionB, Bolum15Content.tesisatOptionC], _model.tesisat),
                 ],
               ),
             ),
           ),
-          _buildBottomButton(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _onNextPressed,
+                  child: const Text("DEVAM ET"),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSubOption(String text, String subText, String label, ChoiceResult? group, Function(ChoiceResult) onSelected) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 8),
-      child: SelectableCard(
-        title: text,
-        subtitle: subText,
-        value: ChoiceResult(label: label, reportText: subText),
-        groupValue: group,
-        onChanged: (v) => onSelected(v!),
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          ...options.map((opt) => SelectableCard(
+            choice: opt,
+            isSelected: selected?.label == opt.label,
+            onTap: () => _handleSelection(key, opt),
+          )).toList(),
+        ],
       ),
     );
-  }
-
-  Widget _buildBottomButton() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))]),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _isFormValid() ? _onNextPressed : null,
-            child: const Text(" DEVAM ET"),
-          ),
-        ),
-      ),
-    );
-  }
-
-  bool _isFormValid() {
-    if (_model.resDosemeKaplama == null) return false;
-    if (_model.resDosemeYalitim == null) return false;
-    if (_model.resDosemeYalitim?.label == "B" && _model.resSapDurumu == null) return false;
-    if (_model.resAsmaTavan == null) return false;
-    if (_model.resAsmaTavan?.label == "B" && _model.resTavanMalzeme == null) return false;
-    if (_model.resTesisatGecis == null) return false;
-    return true;
   }
 }

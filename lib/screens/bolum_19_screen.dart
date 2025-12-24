@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_13_model.dart'; // ChoiceResult
-import 'package:life_safety/models/bolum_19_model.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/screens/bolum_20_screen.dart';
-// import 'package:life_safety/logic/hesaplama_motoru.dart'; // Sonraki aşama
+import '../../data/bina_store.dart';
+import '../../models/bolum_19_model.dart';
+import 'bolum_20_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
+import '../../models/choice_result.dart';
 
 class Bolum19Screen extends StatefulWidget {
   const Bolum19Screen({super.key});
@@ -16,42 +17,40 @@ class Bolum19Screen extends StatefulWidget {
 class _Bolum19ScreenState extends State<Bolum19Screen> {
   Bolum19Model _model = Bolum19Model();
 
-  @override
-  void initState() {
-    super.initState();
-    if (BinaStore.instance.bolum19 != null) {
-      _model = BinaStore.instance.bolum19!;
-    }
+  void _handleSelection(String type, ChoiceResult choice) {
+    setState(() {
+      if (type == 'engel') _model = _model.copyWith(engel: choice);
+      if (type == 'levha') _model = _model.copyWith(levha: choice);
+      
+      if (type == 'yaniltici') {
+        _model = _model.copyWith(yanilticiKapi: choice);
+        // Seçim değişirse alt soruyu sıfırla
+        if (choice.label == Bolum19Content.yanilticiOptionA.label) {
+          _model = _model.copyWith(yanilticiEtiketVar: null);
+        }
+      }
+    });
   }
 
   void _onNextPressed() {
+    if (_model.engel == null) return _showError("Lütfen engeller sorusunu yanıtlayınız.");
+    if (_model.levha == null) return _showError("Lütfen yönlendirme levhaları sorusunu yanıtlayınız.");
+    if (_model.yanilticiKapi == null) return _showError("Lütfen yanıltıcı kapı sorusunu yanıtlayınız.");
+    
+    // Yanıltıcı kapı varsa etiket sorusu zorunlu
+    if (_model.yanilticiKapi?.label == Bolum19Content.yanilticiOptionB.label && _model.yanilticiEtiketVar == null) {
+      return _showError("Lütfen yanıltıcı kapıların üzerindeki yazıları belirtiniz.");
+    }
+
     BinaStore.instance.bolum19 = _model;
-    print("Bölüm 19 Kaydedildi.");
-    // VERİ GİRİŞİ SONU - Hesaplama Motoruna Geçiş
-Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum20Screen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum20Screen()),
+    );
   }
 
-  // Çoklu Seçim Mantığı (Checkbox)
-  void _toggleObstacle(ChoiceResult option, bool isSelected) {
-    setState(() {
-      List<ChoiceResult> currentList = List.from(_model.resKacisEngeller);
-      
-      if (isSelected) {
-        // Eğer A (Olumlu) seçilirse, diğer tüm olumsuzları temizle
-        if (option.label == "A") {
-          currentList.clear();
-          currentList.add(option);
-        } else {
-          // Eğer Olumsuz (B, C, D) seçilirse, A'yı temizle
-          currentList.removeWhere((item) => item.label == "A");
-          currentList.add(option);
-        }
-      } else {
-        currentList.removeWhere((item) => item.label == option.label);
-      }
-      
-      _model = _model.copyWith(resKacisEngeller: currentList);
-    });
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -59,180 +58,104 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum20Scr
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Kaçış Güvenliği",
-            subtitle: "Bölüm 19: Engeller ve İşaretler",
-            currentStep: 19,
-            totalSteps: 19,
-            onBack: () => Navigator.pop(context),
+          const ModernHeader(
+            title: "Bölüm-19: Kaçış Yolu",
+            subtitle: "Koridorlar ve yönlendirmeler.",
+            currentStep: 9, 
+            totalSteps: 26,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ADIM-1: KAÇIŞ YOLLARINDA ENGEL
-                  const Text("ADIM-1: KAÇIŞ YOLLARINDA ENGEL VE KİLİT", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 8),
-                  const Text("Yangın merdivenine giden koridorlarda veya merdiven kapılarında aşağıdakilerden hangisi var?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        _buildCheckboxOption(
-                          ChoiceResult(label: "A", reportText: "✅ OLUMLU GÖRÜNÜYOR. Kaçış yolu temiz ve açık."),
-                          "A) Kaçış yolu temiz ve açık.",
-                          "Kapılar kilitsiz ve kolayca açılıyor.",
-                        ),
-                        _buildCheckboxOption(
-                          ChoiceResult(label: "B", reportText: "🚨 KRİTİK RİSK. Yangın merdiveni kapılarına ASLA kilit, sürgü veya zincir takılamaz!"),
-                          "B) Kapılar kilitli / asma kilitli.",
-                          "🚨 KRİTİK RİSK: Panik anında anahtar aranmaz.",
-                        ),
-                        _buildCheckboxOption(
-                          ChoiceResult(label: "C", reportText: "🚨 KIRMIZI RİSK. Kaçış yolları ve merdiven sahanlıkları depo alanı değildir!"),
-                          "C) Eşya, koli, çöp var.",
-                          "🚨 RİSK: Dumanlı ortamda takılıp düşmeye sebep olur.",
-                        ),
-                        _buildCheckboxOption(
-                          ChoiceResult(label: "D", reportText: "🚨 KIRMIZI RİSK. Kaçış yolu, kilitlenebilir başka bir odanın içinden geçemez."),
-                          "D) Başka odanın içinden geçiyor.",
-                          "🚨 RİSK: Koridordan direkt ulaşım sağlanmalıdır.",
-                        ),
-                      ],
-                    ),
-                  ),
+                  // 1. Engeller
+                  _buildSoru("Yangın merdivenine giden koridorlarda veya merdiven kapılarında aşağıdakilerden hangisi var?", 'engel', 
+                    [
+                      Bolum19Content.engelOptionA, 
+                      Bolum19Content.engelOptionB, 
+                      Bolum19Content.engelOptionC,
+                      Bolum19Content.engelOptionD
+                    ], _model.engel),
 
-                  // ADIM-2: YÖNLENDİRME
-                  const Divider(height: 40),
-                  const Text("ADIM-2: YÖNLENDİRME VE İŞARETLEME", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 8),
-                  const Text("Koridorlarda, karanlıkta bile parlayan veya ışıklı 'ÇIKIŞ / EXIT' levhaları var mı?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Evet, var ve çalışıyor.",
-                          subtitle: "✅ OLUMLU GÖRÜNÜYOR",
-                          value: ChoiceResult(label: "A", reportText: "✅ OLUMLU GÖRÜNÜYOR"),
-                          groupValue: _model.resYonlendirme,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resYonlendirme: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Hayır, yok veya bozuk.",
-                          subtitle: "⚠️ UYARI: Duman görüşü kapatabilir.",
-                          value: ChoiceResult(label: "B", reportText: "⚠️ UYARI. Yangın anında elektrikler kesilebilir. Işıklı levhalar hayati önem taşır."),
-                          groupValue: _model.resYonlendirme,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resYonlendirme: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Var ama yanlış yeri gösteriyor.",
-                          subtitle: "🚨 RİSK: İnsanları tuzağa düşürür.",
-                          value: ChoiceResult(label: "C", reportText: "🚨 RİSK. Yanlış yönlendirme panik anında tehlikelidir."),
-                          groupValue: _model.resYonlendirme,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resYonlendirme: val)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // 2. Levhalar
+                  _buildSoru("Koridorlarda, ledli veya ışıklı 'ÇIKIŞ' ve koşan adam figürleri asılı mı?", 'levha', 
+                    [Bolum19Content.levhaOptionA, Bolum19Content.levhaOptionB, Bolum19Content.levhaOptionC], _model.levha),
 
-                  // ADIM-3: YANILTICI KAPILAR
-                  const Divider(height: 40),
-                  const Text("ADIM-3: ÇIKIŞ NİTELİĞİ TAŞIMAYAN KAPILAR", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 8),
-                  const Text("Koridorda, yangın merdiveni kapısına benzeyen ama aslında depo/teknik oda olan kapılar var mı?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Hayır, sadece daire ve merdiven kapısı var.",
-                          subtitle: "✅ OLUMLU GÖRÜNÜYOR",
-                          value: ChoiceResult(label: "A", reportText: "✅ OLUMLU GÖRÜNÜYOR"),
-                          groupValue: _model.resYanilticiKapi,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resYanilticiKapi: val, resKapiEtiket: null)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Evet, benzer kapılar var.",
-                          value: ChoiceResult(label: "B", reportText: "Benzer kapılar mevcut."),
-                          groupValue: _model.resYanilticiKapi,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resYanilticiKapi: val)),
-                        ),
-                        if (_model.resYanilticiKapi?.label == "B") ...[
-                          const Padding(padding: EdgeInsets.all(8.0), child: Text("Alt Soru: Üzerinde ne kapısı olduğu yazıyor mu?", style: TextStyle(fontWeight: FontWeight.bold))),
-                          _buildSubOption("Evet, yazıyor.", "✅ OLUMLU", "A", _model.resKapiEtiket, (v) => setState(() => _model = _model.copyWith(resKapiEtiket: v))),
-                          _buildSubOption("Hayır, yazmıyor.", "⚠️ UYARI: İnsanlar çıkış sanabilir.", "B", _model.resKapiEtiket, (v) => setState(() => _model = _model.copyWith(resKapiEtiket: v))),
+                  // 3. Yanıltıcı Kapılar
+                  _buildSoru("Koridorda, yangın merdiveni kapısına benzeyen ama aslında depo, elektrik odası veya çöp odası olan kapılar var mı?", 'yaniltici', 
+                    [Bolum19Content.yanilticiOptionA, Bolum19Content.yanilticiOptionB], _model.yanilticiKapi),
+
+                  // Alt Soru: Yanıltıcı Kapı Varsa
+                  if (_model.yanilticiKapi?.label == Bolum19Content.yanilticiOptionB.label) 
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, bottom: 20),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Bu kapıların üzerinde ne olduğu yazıyor mu? (Depo, Elektrik Odası vb.)", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              Radio<bool>(
+                                value: true, 
+                                groupValue: _model.yanilticiEtiketVar, 
+                                onChanged: (v) => setState(() => _model = _model.copyWith(yanilticiEtiketVar: v))
+                              ),
+                              const Text("Evet Yazıyor"),
+                              const SizedBox(width: 10),
+                              Radio<bool>(
+                                value: false, 
+                                groupValue: _model.yanilticiEtiketVar, 
+                                onChanged: (v) => setState(() => _model = _model.copyWith(yanilticiEtiketVar: v))
+                              ),
+                              const Text("Hayır Yazmıyor"),
+                            ],
+                          )
                         ],
-                      ],
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
           ),
-          _buildBottomButton(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _onNextPressed,
+                  child: const Text("DEVAM ET"),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildCheckboxOption(ChoiceResult option, String title, String subtitle) {
-    bool isSelected = _model.resKacisEngeller.any((item) => item.label == option.label);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: CheckboxListTile(
-        title: Text(title, style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        value: isSelected,
-        onChanged: (val) => _toggleObstacle(option, val ?? false),
-        activeColor: const Color(0xFF1A237E),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: isSelected ? const Color(0xFF1A237E) : Colors.grey.shade300),
-        ),
-        tileColor: isSelected ? const Color(0xFFE8EAF6) : Colors.white,
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          ...options.map((opt) => SelectableCard(
+            choice: opt,
+            isSelected: selected?.label == opt.label,
+            onTap: () => _handleSelection(key, opt),
+          )).toList(),
+        ],
       ),
     );
-  }
-
-  Widget _buildSubOption(String text, String subText, String label, ChoiceResult? group, Function(ChoiceResult) onSelected) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 8),
-      child: SelectableCard(
-        title: text,
-        subtitle: subText,
-        value: ChoiceResult(label: label, reportText: subText),
-        groupValue: group,
-        onChanged: (v) => onSelected(v!),
-      ),
-    );
-  }
-
-  Widget _buildBottomButton() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))]),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _isFormValid() ? _onNextPressed : null,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
-      ),
-    );
-  }
-
-  bool _isFormValid() {
-    if (_model.resKacisEngeller.isEmpty) return false;
-    if (_model.resYonlendirme == null) return false;
-    if (_model.resYanilticiKapi == null) return false;
-    if (_model.resYanilticiKapi?.label == "B" && _model.resKapiEtiket == null) return false;
-    return true;
   }
 }

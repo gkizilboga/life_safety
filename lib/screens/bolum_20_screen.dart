@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_20_model.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/screens/bolum_21_screen.dart';
-// import 'package:life_safety/screens/bolum_21_screen.dart'; // Sonraki aşama
+import '../../data/bina_store.dart';
+import '../../models/bolum_20_model.dart';
+import 'bolum_21_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
+import '../../models/choice_result.dart';
 
 class Bolum20Screen extends StatefulWidget {
   const Bolum20Screen({super.key});
@@ -16,236 +17,168 @@ class Bolum20Screen extends StatefulWidget {
 class _Bolum20ScreenState extends State<Bolum20Screen> {
   Bolum20Model _model = Bolum20Model();
 
-  // Controller'lar (Sayısal girişler için)
-  final TextEditingController _cNormal = TextEditingController();
-  final TextEditingController _cYanginBeton = TextEditingController();
-  final TextEditingController _cYanginCelik = TextEditingController();
-  final TextEditingController _cDisCelik = TextEditingController();
-  final TextEditingController _cDoner = TextEditingController();
-  final TextEditingController _cSahanliksiz = TextEditingController();
+  // Durum değişkenleri
+  bool _isTekKatli = false;
+  bool _hasBodrum = false;
+
+  // Controller'lar (Çok katlı bina için)
+  final _normalCtrl = TextEditingController();
+  final _icKapaliCtrl = TextEditingController();
+  final _disKapaliCtrl = TextEditingController();
+  final _disAcikCtrl = TextEditingController();
+  final _donerCtrl = TextEditingController();
+  final _sahanliksizCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    if (BinaStore.instance.bolum20 != null) {
-      _model = BinaStore.instance.bolum20!;
-      // Controllerları geri yükle
-      _cNormal.text = _model.cntNormalMerdiven == 0 ? "" : _model.cntNormalMerdiven.toString();
-      _cYanginBeton.text = _model.cntYanginMerdiveniBeton == 0 ? "" : _model.cntYanginMerdiveniBeton.toString();
-      _cYanginCelik.text = _model.cntYanginMerdiveniCelik == 0 ? "" : _model.cntYanginMerdiveniCelik.toString();
-      _cDisCelik.text = _model.cntDisCelikMerdiven == 0 ? "" : _model.cntDisCelikMerdiven.toString();
-      _cDoner.text = _model.cntDonerMerdiven == 0 ? "" : _model.cntDonerMerdiven.toString();
-      _cSahanliksiz.text = _model.cntSahanliksizMerdiven == 0 ? "" : _model.cntSahanliksizMerdiven.toString();
-    }
+    _loadBuildingInfo();
+  }
+
+  void _loadBuildingInfo() {
+    final bolum3 = BinaStore.instance.bolum3;
+    int nKat = bolum3?.normalKatSayisi ?? 0;
+    int bKat = bolum3?.bodrumKatSayisi ?? 0;
+    
+    // Zemin kat her zaman vardır (+1)
+    int toplamKat = nKat + bKat + 1;
+
+    setState(() {
+      _isTekKatli = (toplamKat == 1);
+      _hasBodrum = (bKat > 0);
+    });
   }
 
   @override
   void dispose() {
-    _cNormal.dispose();
-    _cYanginBeton.dispose();
-    _cYanginCelik.dispose();
-    _cDisCelik.dispose();
-    _cDoner.dispose();
-    _cSahanliksiz.dispose();
+    _normalCtrl.dispose();
+    _icKapaliCtrl.dispose();
+    _disKapaliCtrl.dispose();
+    _disAcikCtrl.dispose();
+    _donerCtrl.dispose();
+    _sahanliksizCtrl.dispose();
     super.dispose();
   }
 
-  void _onNextPressed() {
-    // VALIDATION
-    final int normalKat = BinaStore.instance.normalKatSayisi;
-    final int bodrumKat = BinaStore.instance.bodrumKatSayisi;
-    final bool isTekKatli = (normalKat == 0 && bodrumKat == 0);
+  void _handleSelection(String type, ChoiceResult choice) {
+    setState(() {
+      if (type == 'tekKatCikis') _model = _model.copyWith(tekKatCikis: choice);
+      if (type == 'tekKatRampa') _model = _model.copyWith(tekKatRampa: choice);
+      if (type == 'bodrum') _model = _model.copyWith(bodrumMerdivenDevami: choice);
+    });
+  }
 
-    if (isTekKatli) {
-      if (_model.resTekKatCikis == null) {
-        _showError("Lütfen çıkış şeklini seçiniz.");
-        return;
-      }
+  void _onNextPressed() {
+    if (_isTekKatli) {
+      // Tek katlı validasyonları
+      if (_model.tekKatCikis == null) return _showError("Lütfen dışarı çıkış durumunu seçiniz.");
+      if (_model.tekKatRampa == null) return _showError("Lütfen rampa durumunu seçiniz.");
     } else {
-      // Çok katlı bina kontrolü
-      if (_model.toplamMerdivenSayisi == 0) {
-        _showError("Hatalı Giriş: Çok katlı bir binada en az 1 adet merdiven bulunmak zorundadır. Lütfen sayı giriniz.");
-        return;
+      // Çok katlı validasyonları (Sayısal verileri kaydet)
+      // En az bir merdiven girilmiş olmalı
+      int normal = int.tryParse(_normalCtrl.text) ?? 0;
+      int icKapali = int.tryParse(_icKapaliCtrl.text) ?? 0;
+      int disKapali = int.tryParse(_disKapaliCtrl.text) ?? 0;
+      int disAcik = int.tryParse(_disAcikCtrl.text) ?? 0;
+      int doner = int.tryParse(_donerCtrl.text) ?? 0;
+      int sahanliksiz = int.tryParse(_sahanliksizCtrl.text) ?? 0;
+
+      if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz == 0) {
+        return _showError("Lütfen binadaki merdiven sayılarını giriniz (En az bir tane).");
       }
-      if (bodrumKat > 0 && _model.resBodrumMerdivenDevam == null) {
-        _showError("Lütfen bodrum merdiveni durumunu seçiniz.");
-        return;
-      }
-      if (_model.resRampaVarMi == null) {
-        _showError("Lütfen rampa durumunu seçiniz.");
-        return;
-      }
+
+      _model = _model.copyWith(
+        normalMerdivenSayisi: normal,
+        binaIciYanginMerdiveniSayisi: icKapali,
+        binaDisiKapaliYanginMerdiveniSayisi: disKapali,
+        binaDisiAcikYanginMerdiveniSayisi: disAcik,
+        donerMerdivenSayisi: doner,
+        sahanliksizMerdivenSayisi: sahanliksiz,
+      );
+    }
+
+    // Bodrum sorusu (varsa)
+    if (_hasBodrum && _model.bodrumMerdivenDevami == null) {
+      return _showError("Lütfen bodrum merdiveni devamlılığı sorusunu yanıtlayınız.");
     }
 
     BinaStore.instance.bolum20 = _model;
-    print("Bölüm 20 Kaydedildi.");
-    print("Flag - Normal Merdiven: ${_model.hasNormalMerdiven}");
-    print("Flag - Yangın Merdiveni: ${_model.hasYanginMerdiveni}");
-    print("Flag - Tip: ${_model.merdivenTipi}");
-
-Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum21Screen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum21Screen()),
+    );
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
   Widget build(BuildContext context) {
-    final int normalKat = BinaStore.instance.normalKatSayisi;
-    final int bodrumKat = BinaStore.instance.bodrumKatSayisi;
-    final bool isTekKatli = (normalKat == 0 && bodrumKat == 0);
-
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Merdivenler",
-            subtitle: "Bölüm 20: Çıkış İmkanları",
-            currentStep: 20, // Adım sayısını genel akışa göre güncelleyebilirsiniz
-            totalSteps: 20,
-            onBack: () => Navigator.pop(context),
+          const ModernHeader(
+            title: "Bölüm-20: Merdivenler",
+            subtitle: "Binadaki kaçış merdivenleri.",
+            currentStep: 10, 
+            totalSteps: 26,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (isTekKatli) _buildTekKatliUI() else _buildCokKatliUI(bodrumKat > 0),
+                  if (_isTekKatli) ...[
+                    // TEK KATLI BİNA SORULARI
+                    _buildSoru("Binadan dışarıya (sokağa/caddeye) çıkışınız nasıl?", 'tekKatCikis', 
+                      [Bolum20Content.tekKatOptionA], _model.tekKatCikis),
+                    
+                    _buildSoru("Binadan sokağa çıkarken merdiven yerine rampa kullanılıyor mu?", 'tekKatRampa', 
+                      [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC], _model.tekKatRampa),
+                  
+                  ] else ...[
+                    // ÇOK KATLI BİNA SORULARI (SAYISAL GİRİŞ)
+                    QuestionCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Aşağıdaki merdiven türlerinden kaçar tane var?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          const SizedBox(height: 15),
+                          
+                          _buildNumberRow(Bolum20Content.cokKatOption1.uiTitle, _normalCtrl),
+                          _buildNumberRow(Bolum20Content.cokKatOption2.uiTitle, _icKapaliCtrl),
+                          _buildNumberRow(Bolum20Content.cokKatOption3.uiTitle, _disKapaliCtrl),
+                          _buildNumberRow(Bolum20Content.cokKatOption4.uiTitle, _disAcikCtrl),
+                          _buildNumberRow(Bolum20Content.cokKatOption5.uiTitle, _donerCtrl),
+                          _buildNumberRow(Bolum20Content.cokKatOption6.uiTitle, _sahanliksizCtrl),
+                        ],
+                      ),
+                    ),
+                  ],
+
+                  // BODRUM SORUSU (HER İKİ DURUMDA DA ÇIKABİLİR)
+                  if (_hasBodrum)
+                    _buildSoru("Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?", 'bodrum', 
+                      [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB], _model.bodrumMerdivenDevami),
                 ],
               ),
             ),
           ),
-          _buildBottomButton(),
-        ],
-      ),
-    );
-  }
-
-  // --- DURUM A: TEK KATLI BİNA UI ---
-  Widget _buildTekKatliUI() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("TEK KATLI BİNA ÇIKIŞI", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
-        const SizedBox(height: 10),
-        const Text("Binanız tek katlı olduğu için, dışarıya (sokağa/bahçeye) çıkışınız nasıl?", style: TextStyle(fontSize: 15)),
-        const SizedBox(height: 20),
-        SelectableCard(
-          title: "A) Düz ayak çıkılıyor.",
-          subtitle: "✅ OLUMLU GÖRÜNÜYOR (Zeminle aynı seviyede).",
-          value: TekKatCikisSecim.duzAyak,
-          groupValue: _model.resTekKatCikis,
-          onChanged: (val) => setState(() => _model = _model.copyWith(resTekKatCikis: val)),
-        ),
-        SelectableCard(
-          title: "B) Çıkışta Rampa var.",
-          subtitle: "Eğimli yol mevcut.",
-          value: TekKatCikisSecim.rampa,
-          groupValue: _model.resTekKatCikis,
-          onChanged: (val) => setState(() => _model = _model.copyWith(resTekKatCikis: val)),
-        ),
-        SelectableCard(
-          title: "C) Çıkışta merdiven var.",
-          subtitle: "Birkaç basamak mevcut.",
-          value: TekKatCikisSecim.merdiven,
-          groupValue: _model.resTekKatCikis,
-          onChanged: (val) => setState(() => _model = _model.copyWith(resTekKatCikis: val)),
-        ),
-      ],
-    );
-  }
-
-  // --- DURUM B: ÇOK KATLI BİNA UI ---
-  Widget _buildCokKatliUI(bool hasBodrum) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("MERDİVEN TİPLERİ VE SAYILARI", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
-        const SizedBox(height: 10),
-        const Text("Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Yoksa boş bırakınız)", style: TextStyle(fontSize: 14, color: Colors.grey)),
-        const SizedBox(height: 20),
-
-        _buildCounterInput("1. Normal Apartman Merdiveni", "Günlük kullanılan ana merdiven.", _cNormal, (v) => _model = _model.copyWith(cntNormalMerdiven: int.tryParse(v) ?? 0)),
-        _buildCounterInput("2. Bina İçi 'Kapalı' Yangın Merdiveni", "Betonarme, duvarlarla kapalı.", _cYanginBeton, (v) => _model = _model.copyWith(cntYanginMerdiveniBeton: int.tryParse(v) ?? 0)),
-        _buildCounterInput("3. Bina Dışı 'Kapalı' Yangın Merdiveni", "Çelik, etrafı kapatılmış.", _cYanginCelik, (v) => _model = _model.copyWith(cntYanginMerdiveniCelik: int.tryParse(v) ?? 0)),
-        _buildCounterInput("4. Bina Dışı 'Açık' Çelik Merdiven", "Dış cepheye asılı, açıkta.", _cDisCelik, (v) => _model = _model.copyWith(cntDisCelikMerdiven: int.tryParse(v) ?? 0)),
-        _buildCounterInput("5. Döner (Spiral) Merdiven", "Yuvarlak, dönerek inilen.", _cDoner, (v) => _model = _model.copyWith(cntDonerMerdiven: int.tryParse(v) ?? 0)),
-        _buildCounterInput("6. Sahanlıksız Merdiven", "Düz sahanlığı olmayan, dönemeçli.", _cSahanliksiz, (v) => _model = _model.copyWith(cntSahanliksizMerdiven: int.tryParse(v) ?? 0)),
-
-        const Divider(height: 40),
-        
-        if (hasBodrum) ...[
-          const Text("BODRUM DEVAMLILIĞI", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-          const SizedBox(height: 10),
-          const Text("Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?", style: TextStyle(fontSize: 14)),
-          const SizedBox(height: 15),
-          SelectableCard(
-            title: "A) Evet, devam ediyor.",
-            value: BodrumDevamSecim.evetDevam,
-            groupValue: _model.resBodrumMerdivenDevam,
-            onChanged: (val) => setState(() => _model = _model.copyWith(resBodrumMerdivenDevam: val)),
-          ),
-          SelectableCard(
-            title: "B) Hayır, farklı yerde.",
-            value: BodrumDevamSecim.hayirAyri,
-            groupValue: _model.resBodrumMerdivenDevam,
-            onChanged: (val) => setState(() => _model = _model.copyWith(resBodrumMerdivenDevam: val)),
-          ),
-          const SizedBox(height: 20),
-        ],
-
-        const Text("RAMPA KULLANIMI", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-        const SizedBox(height: 10),
-        const Text("Binadan sokağa çıkarken merdiven yerine rampa (eğimli yol) kullanılıyor mu?", style: TextStyle(fontSize: 14)),
-        const SizedBox(height: 15),
-        Row(
-          children: [
-            Expanded(child: _buildRadioBtn("Evet", RampaSecim.evet)),
-            const SizedBox(width: 10),
-            Expanded(child: _buildRadioBtn("Hayır", RampaSecim.hayir)),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCounterInput(String title, String subtitle, TextEditingController ctrl, Function(String) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
-              ],
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
             ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            flex: 1,
-            child: TextField(
-              controller: ctrl,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              onChanged: (val) {
-                setState(() {
-                  onChanged(val);
-                });
-              },
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                hintText: "0",
-                contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                filled: true,
-                fillColor: Colors.grey[50],
+            child: SafeArea(
+              top: false,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _onNextPressed,
+                  child: const Text("DEVAM ET"),
+                ),
               ),
             ),
           ),
@@ -254,41 +187,43 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum21Scr
     );
   }
 
-  Widget _buildRadioBtn(String title, RampaSecim val) {
-    bool isSelected = _model.resRampaVarMi == val;
-    return GestureDetector(
-      onTap: () => setState(() => _model = _model.copyWith(resRampaVarMi: val)),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1A237E) : Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          title,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black87,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          ...options.map((opt) => SelectableCard(
+            choice: opt,
+            isSelected: selected?.label == opt.label,
+            onTap: () => _handleSelection(key, opt),
+          )).toList(),
+        ],
       ),
     );
   }
 
-  Widget _buildBottomButton() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)]),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _onNextPressed,
-            child: const Text("DEVAM ET"),
+  Widget _buildNumberRow(String label, TextEditingController ctrl) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: const TextStyle(fontSize: 14))),
+          SizedBox(
+            width: 70,
+            child: TextFormField(
+              controller: ctrl,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.symmetric(vertical: 8),
+                border: OutlineInputBorder(),
+                hintText: "0",
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

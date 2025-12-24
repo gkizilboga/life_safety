@@ -3,6 +3,9 @@ import 'package:life_safety/data/bina_store.dart';
 import 'package:life_safety/models/bolum_1_model.dart';
 import 'package:life_safety/screens/bolum_2_screen.dart';
 import 'package:life_safety/widgets/custom_widgets.dart';
+import 'package:life_safety/widgets/selectable_card.dart';
+import '../utils/app_content.dart';
+import 'package:life_safety/models/choice_result.dart';
 
 class Bolum1Screen extends StatefulWidget {
   const Bolum1Screen({super.key});
@@ -14,18 +17,18 @@ class Bolum1Screen extends StatefulWidget {
 class _Bolum1ScreenState extends State<Bolum1Screen> {
   Bolum1Model _model = Bolum1Model();
 
-  void _handleSelection(RuhsatDurumu? value) {
+  void _handleSelection(ChoiceResult choice) {
     setState(() {
-      _model = _model.copyWith(secim: value);
+      _model = _model.copyWith(secim: choice);
     });
   }
 
   void _onNextPressed() {
     if (_model.secim == null) return;
 
-    if (_model.secim == RuhsatDurumu.sonrasi) {
+    if (_model.secim?.label == Bolum1Content.ruhsatSonrasi.label) {
       _navigateToNext();
-    } else if (_model.secim == RuhsatDurumu.oncesiDegerlendir) {
+    } else {
       _showWarningDialog();
     }
   }
@@ -38,7 +41,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
     );
   }
 
-Future<void> _showWarningDialog() async {
+  Future<void> _showWarningDialog() async {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -79,7 +82,6 @@ Future<void> _showWarningDialog() async {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1A237E),
                 foregroundColor: Colors.white,
-                // DÜZELTME BURADA: Yazı boyutu küçültüldü ve padding ayarlandı
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
               ),
@@ -102,7 +104,6 @@ Future<void> _showWarningDialog() async {
             currentStep: 1,
             totalSteps: 10,
           ),
-          
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
@@ -112,32 +113,29 @@ Future<void> _showWarningDialog() async {
                   const Text(
                     "Yapı Ruhsat Tarihi",
                     style: TextStyle(
-                      fontSize: 20, // Başlık büyütüldü
-                      fontWeight: FontWeight.w900, // Daha kalın
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
                       color: Color(0xFF2C3E50),
                     ),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     "Binanızın yapı ruhsatı hangi tarihte alındı veya binanızın yapım tarihi nedir?",
-                    style: TextStyle(fontSize: 15, color: Colors.grey[800], height: 1.4), // Açıklama koyulaştırıldı
+                    style: TextStyle(fontSize: 15, color: Colors.grey[800], height: 1.4),
                   ),
                   const SizedBox(height: 25),
-
                   QuestionCard(
                     child: Column(
                       children: [
-                        SelectableCard<RuhsatDurumu>(
-                          title: "19.12.2007 ve sonrasında alındı.",
-                          value: RuhsatDurumu.sonrasi,
-                          groupValue: _model.secim,
-                          onChanged: _handleSelection,
+                        SelectableCard(
+                          choice: Bolum1Content.ruhsatSonrasi,
+                          isSelected: _model.secim?.label == Bolum1Content.ruhsatSonrasi.label,
+                          onTap: () => _handleSelection(Bolum1Content.ruhsatSonrasi),
                         ),
-                        SelectableCard<RuhsatDurumu>(
-                          title: "19.12.2007 öncesinde alındı ancak binamı YENİ BİNA kurallarına göre değerlendirmek istiyorum.",
-                          value: RuhsatDurumu.oncesiDegerlendir,
-                          groupValue: _model.secim,
-                          onChanged: _handleSelection,
+                        SelectableCard(
+                          choice: Bolum1Content.ruhsatOncesi,
+                          isSelected: _model.secim?.label == Bolum1Content.ruhsatOncesi.label,
+                          onTap: () => _handleSelection(Bolum1Content.ruhsatOncesi),
                         ),
                       ],
                     ),
@@ -146,15 +144,13 @@ Future<void> _showWarningDialog() async {
               ),
             ),
           ),
-          
-          // GÜNCELLEME: Buton yukarı taşındı (SafeArea + Padding)
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40), // Alttan 40px boşluk (Samsung tuşları için)
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
             ),
-            child: SafeArea( // Çentikli telefonlar için güvenli alan
+            child: SafeArea(
               top: false,
               child: SizedBox(
                 width: double.infinity,

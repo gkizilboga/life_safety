@@ -1,71 +1,64 @@
-enum OtoparkAciklikTipi { tamKapali, karsilikliAcik, tekCepheAcik }
+import 'choice_result.dart';
+import '../utils/app_content.dart';
 
 class Bolum6Model {
-  final bool hasOtoparkGenel;
+  // Çoklu Seçim Alanları
+  final bool hasOtopark;
   final bool hasTicari;
   final bool hasDepo;
-  final bool hasSadeceKonut; // D Şıkkı
-  final OtoparkAciklikTipi? otoparkAciklikTipi;
+  final bool isSadeceKonut;
+
+  // Alt Sorular
+  final ChoiceResult? otoparkTipi; // Sadece hasOtopark true ise
 
   Bolum6Model({
-    this.hasOtoparkGenel = false,
+    this.hasOtopark = false,
     this.hasTicari = false,
     this.hasDepo = false,
-    this.hasSadeceKonut = false,
-    this.otoparkAciklikTipi,
+    this.isSadeceKonut = false,
+    this.otoparkTipi,
   });
 
-  // Mantıksal Getters
-  bool get isYariAcik {
-    if (!hasOtoparkGenel) return false;
-    return otoparkAciklikTipi == OtoparkAciklikTipi.karsilikliAcik;
-  }
-
-  String? get otoparkStatus {
-    if (!hasOtoparkGenel || otoparkAciklikTipi == null) return null;
-    return isYariAcik ? "YARI AÇIK OTOPARK" : "KAPALI OTOPARK";
-  }
-
-  // Seçim Kontrolü (En az biri seçili mi?)
-  bool get isAnySelected => hasOtoparkGenel || hasTicari || hasDepo || hasSadeceKonut;
-
   Bolum6Model copyWith({
-    bool? hasOtoparkGenel,
+    bool? hasOtopark,
     bool? hasTicari,
     bool? hasDepo,
-    bool? hasSadeceKonut,
-    OtoparkAciklikTipi? otoparkAciklikTipi,
+    bool? isSadeceKonut,
+    ChoiceResult? otoparkTipi,
   }) {
     return Bolum6Model(
-      hasOtoparkGenel: hasOtoparkGenel ?? this.hasOtoparkGenel,
+      hasOtopark: hasOtopark ?? this.hasOtopark,
       hasTicari: hasTicari ?? this.hasTicari,
       hasDepo: hasDepo ?? this.hasDepo,
-      hasSadeceKonut: hasSadeceKonut ?? this.hasSadeceKonut,
-      otoparkAciklikTipi: otoparkAciklikTipi ?? this.otoparkAciklikTipi,
+      isSadeceKonut: isSadeceKonut ?? this.isSadeceKonut,
+      otoparkTipi: otoparkTipi ?? this.otoparkTipi,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'has_otopark_genel': hasOtoparkGenel,
-      'has_ticari': hasTicari,
-      'has_depo': hasDepo,
-      'has_sadece_konut': hasSadeceKonut,
-      'otopark_aciklik_tipi': otoparkAciklikTipi?.name,
-      'otopark_status': otoparkStatus,
-      'is_yari_acik': isYariAcik,
+      'hasOtopark': hasOtopark,
+      'hasTicari': hasTicari,
+      'hasDepo': hasDepo,
+      'isSadeceKonut': isSadeceKonut,
+      'otoparkTipi_label': otoparkTipi?.label,
     };
   }
 
   factory Bolum6Model.fromMap(Map<String, dynamic> map) {
+    ChoiceResult? otoparkSecim;
+    final label = map['otoparkTipi_label'];
+    
+    if (label == Bolum6Content.otoparkKapali.label) otoparkSecim = Bolum6Content.otoparkKapali;
+    else if (label == Bolum6Content.otoparkAcik.label) otoparkSecim = Bolum6Content.otoparkAcik;
+    else if (label == Bolum6Content.otoparkYariAcik.label) otoparkSecim = Bolum6Content.otoparkYariAcik;
+
     return Bolum6Model(
-      hasOtoparkGenel: map['has_otopark_genel'] ?? false,
-      hasTicari: map['has_ticari'] ?? false,
-      hasDepo: map['has_depo'] ?? false,
-      hasSadeceKonut: map['has_sadece_konut'] ?? false,
-      otoparkAciklikTipi: map['otopark_aciklik_tipi'] != null
-          ? OtoparkAciklikTipi.values.byName(map['otopark_aciklik_tipi'])
-          : null,
+      hasOtopark: map['hasOtopark'] ?? false,
+      hasTicari: map['hasTicari'] ?? false,
+      hasDepo: map['hasDepo'] ?? false,
+      isSadeceKonut: map['isSadeceKonut'] ?? false,
+      otoparkTipi: otoparkSecim,
     );
   }
 }

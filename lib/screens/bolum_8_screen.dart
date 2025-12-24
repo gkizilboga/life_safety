@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart'; // EKLENDİ
-import 'package:life_safety/models/bolum_8_model.dart';
-import 'package:life_safety/screens/bolum_9_screen.dart';
-import 'package:life_safety/widgets/custom_widgets.dart'; // ModernHeader ve SelectableCard
+import '../../data/bina_store.dart';
+import '../../models/bolum_8_model.dart';
+import 'bolum_9_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
+import '../../models/choice_result.dart';
 
 class Bolum8Screen extends StatefulWidget {
   const Bolum8Screen({super.key});
@@ -14,51 +17,19 @@ class Bolum8Screen extends StatefulWidget {
 class _Bolum8ScreenState extends State<Bolum8Screen> {
   Bolum8Model _model = Bolum8Model();
 
-  @override
-  void initState() {
-    super.initState();
-    // Hafızadaki veriyi geri yükle
-    if (BinaStore.instance.bolum8 != null) {
-      _model = BinaStore.instance.bolum8!;
-    }
-  }
-
-  void _handleSelection(NizamDurumu? value) {
+  void _handleSelection(ChoiceResult choice) {
     setState(() {
-      _model = _model.copyWith(secim: value);
+      _model = _model.copyWith(secim: choice);
     });
   }
 
   void _onNextPressed() {
-    if (_model.secim == null) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("⚠️ EKSİK BİLGİ!"),
-          content: const Text(
-              "Yangın güvenliği analizinde, binanızın komşu binalara olan mesafesi (bitişik olup olmadığı) kritik bir faktördür. Lütfen binanızın 'Ayrık' mı yoksa 'Bitişik' nizam mı olduğunu işaretleyiniz. Emin değilseniz binanızın cephesine bakarak yan binalara yapışık olup olmadığını kontrol edebilirsiniz."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Tamam"),
-            ),
-          ],
-        ),
-      );
-      return;
-    }
-
-    _navigateToNext();
-  }
-
-  void _navigateToNext() {
-    // VERİYİ DEPOYA KAYDET
-    BinaStore.instance.bolum8 = _model;
-    print("Bölüm 8 Kaydedildi. Nizam Durumu: ${_model.nizamDurumuDeger}");
+    if (_model.secim == null) return;
     
+    BinaStore.instance.bolum8 = _model;
     Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => const Bolum9Screen())
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum9Screen()),
     );
   }
 
@@ -67,58 +38,37 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
     return Scaffold(
       body: Column(
         children: [
-          // 1. MODERN BAŞLIK
-          ModernHeader(
-            title: "Nizam Durumu",
-            subtitle: "Bölüm 8: Yapılaşma Nizamı",
+          const ModernHeader(
+            title: "Bölüm-8: Bina Nizamı",
+            subtitle: "Binanızın komşu binalara konumu nedir?",
             currentStep: 8,
-            totalSteps: 21,
-            onBack: () => Navigator.pop(context),
+            totalSteps: 10,
           ),
-
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "NİZAM DURUMU",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF2C3E50),
+                  QuestionCard(
+                    child: Column(
+                      children: [
+                        SelectableCard(
+                          choice: Bolum8Content.ayrikNizam,
+                          isSelected: _model.secim?.label == Bolum8Content.ayrikNizam.label,
+                          onTap: () => _handleSelection(Bolum8Content.ayrikNizam),
+                        ),
+                        SelectableCard(
+                          choice: Bolum8Content.bitisikNizam,
+                          isSelected: _model.secim?.label == Bolum8Content.bitisikNizam.label,
+                          onTap: () => _handleSelection(Bolum8Content.bitisikNizam),
+                        ),
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Binanızın yapılaşma nizamı nedir?",
-                    style: TextStyle(fontSize: 15, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // SEÇENEKLER (Senin Metinlerinle)
-                  SelectableCard<NizamDurumu>(
-                    title: "A) Ayrık Nizam",
-                    subtitle: "Binanın 4 cephesi de açıktır, yan binalara kesinlikle yapışık değildir.",
-                    value: NizamDurumu.ayrik,
-                    groupValue: _model.secim,
-                    onChanged: _handleSelection,
-                  ),
-                  
-                  SelectableCard<NizamDurumu>(
-                    title: "B) Bitişik Nizam",
-                    subtitle: "Binanın herhangi bir cephesi yan binaya yapışıktır.",
-                    value: NizamDurumu.bitisik,
-                    groupValue: _model.secim,
-                    onChanged: _handleSelection,
                   ),
                 ],
               ),
             ),
           ),
-
-          // SABİT BUTON ALANI
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
             decoration: BoxDecoration(
@@ -130,7 +80,7 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _onNextPressed,
+                  onPressed: _model.secim == null ? null : _onNextPressed,
                   child: const Text("DEVAM ET"),
                 ),
               ),

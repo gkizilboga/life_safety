@@ -1,27 +1,24 @@
-enum SprinklerDurumuSecim { tamamenVar, hicYok, kismenVar }
+import 'choice_result.dart'; 
+import '../utils/app_content.dart';
 
 class Bolum9Model {
-  final SprinklerDurumuSecim? secim;
+  final ChoiceResult? secim;
 
   Bolum9Model({this.secim});
 
-  // KRİTİK MANTIK: Sadece "Tamamen Var" ise true döner.
-  // "Kısmen Var" veya "Hiç Yok" durumunda false döner.
-  bool get hasSprinkler => secim == SprinklerDurumuSecim.tamamenVar;
-
-  Bolum9Model copyWith({SprinklerDurumuSecim? secim}) {
+  Bolum9Model copyWith({ChoiceResult? secim}) {
     return Bolum9Model(secim: secim ?? this.secim);
   }
 
   Map<String, dynamic> toMap() {
-    return {'secim': secim?.name};
+    return {'secim_label': secim?.label};
   }
 
   factory Bolum9Model.fromMap(Map<String, dynamic> map) {
-    return Bolum9Model(
-      secim: map['secim'] != null
-          ? SprinklerDurumuSecim.values.byName(map['secim'])
-          : null,
-    );
+    final label = map['secim_label'];
+    if (label == Bolum9Content.tamKapsam.label) return Bolum9Model(secim: Bolum9Content.tamKapsam);
+    if (label == Bolum9Content.yok.label) return Bolum9Model(secim: Bolum9Content.yok);
+    if (label == Bolum9Content.kismen.label) return Bolum9Model(secim: Bolum9Content.kismen);
+    return Bolum9Model();
   }
 }

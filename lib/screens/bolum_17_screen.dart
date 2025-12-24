@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_8_model.dart'; // Nizam Durumu Enum
-import 'package:life_safety/models/bolum_13_model.dart'; // ChoiceResult
-import 'package:life_safety/models/bolum_17_model.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/screens/bolum_18_screen.dart';
-// import 'package:life_safety/logic/hesaplama_motoru.dart'; // Sonraki Aşama (Rapor)
+import '../../data/bina_store.dart';
+import '../../models/bolum_17_model.dart';
+import 'bolum_18_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
+import '../../models/choice_result.dart';
 
 class Bolum17Screen extends StatefulWidget {
   const Bolum17Screen({super.key});
@@ -16,263 +16,166 @@ class Bolum17Screen extends StatefulWidget {
 
 class _Bolum17ScreenState extends State<Bolum17Screen> {
   Bolum17Model _model = Bolum17Model();
+  bool _askBitisik = false;
 
   @override
   void initState() {
     super.initState();
-    // HAFIZA: Veri varsa geri yükle
-    if (BinaStore.instance.bolum17 != null) {
-      _model = BinaStore.instance.bolum17!;
+    // Bölüm 8'de "Bitişik Nizam" seçildiyse ilgili soruyu sor
+    final b8 = BinaStore.instance.bolum8;
+    if (b8?.secim?.label.contains("Bitişik") == true || b8?.secim?.label == "8-1-B") {
+      _askBitisik = true;
     }
   }
 
+  void _handleSelection(String type, ChoiceResult choice) {
+    setState(() {
+      if (type == 'kaplama') _model = _model.copyWith(kaplama: choice);
+      if (type == 'iskelet') _model = _model.copyWith(iskelet: choice);
+      if (type == 'duvar') _model = _model.copyWith(bitisikDuvar: choice);
+      
+      if (type == 'isiklik') {
+        _model = _model.copyWith(isiklik: choice);
+        // Işıklık yoksa malzeme seçimini sıfırla
+        if (choice.label == Bolum17Content.isiklikOptionA.label) {
+          _model = _model.copyWith(isiklikMalzemesi: null);
+        }
+      }
+    });
+  }
+
   void _onNextPressed() {
-    BinaStore.instance.bolum17 = _model;
-    print("Bölüm 17 Kaydedildi.");
+    if (_model.kaplama == null) return _showError("Lütfen çatı kaplama malzemesini seçiniz.");
+    if (_model.iskelet == null) return _showError("Lütfen çatı iskeleti ve yalıtımı sorusunu yanıtlayınız.");
+    if (_askBitisik && _model.bitisikDuvar == null) return _showError("Lütfen çatı arası duvar sorusunu yanıtlayınız.");
+    if (_model.isiklik == null) return _showError("Lütfen çatı ışıklık durumunu belirtiniz.");
     
-    // BURASI VERİ GİRİŞİNİN FİNALİDİR.
-    // Buradan sonra Hesaplama Motoru çalıştırılacak.
-Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum18Screen()));
+    // Işıklık varsa malzeme seçilmeli
+    if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label && _model.isiklikMalzemesi == null) {
+      return _showError("Lütfen ışıklık malzemesini seçiniz.");
+    }
+
+    BinaStore.instance.bolum17 = _model;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum18Screen()),
+    );
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
   Widget build(BuildContext context) {
-    // Global Değişkenleri Çek
-    final bool isHighBuilding = BinaStore.instance.bolum4?.isGenelYuksekBina ?? false;
-    final bool isBitisik = BinaStore.instance.bolum8?.secim == NizamDurumu.bitisik;
-
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Çatılar",
-            subtitle: "Bölüm 17: Çatı ve Yalıtım",
-            currentStep: 17, // Toplam adım sayısı arttıysa burayı güncelleyebiliriz
-            totalSteps: 17,
-            onBack: () => Navigator.pop(context),
+          const ModernHeader(
+            title: "Bölüm-17: Çatı",
+            subtitle: "Çatı kaplaması ve detayları.",
+            currentStep: 7, 
+            totalSteps: 26,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ADIM-1: ÇATI KAPLAMA
-                  const Text("ADIM-1: ÇATI KAPLAMA MALZEMESİ", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 8),
-                  const Text("Çatınızın en üst katmanında (yağmurun değdiği yüzeyde) hangi malzeme kullanıldığını biliyor musunuz?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Kiremit, Metal Kenet, Beton veya Taş.",
-                          subtitle: "✅ UYGUN (Hiç yanmaz malzeme)",
-                          value: ChoiceResult(label: "A", reportText: "✅ UYGUN"),
-                          groupValue: _model.resCatiKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Shingle, Onduline veya Membran.",
-                          subtitle: "⚠️ UYARI: Bitümlü örtüler yanıcıdır.",
-                          value: ChoiceResult(label: "B", reportText: "⚠️ UYARI. Bitümlü örtüler yanıcıdır. 'BROOF' sertifikalı olmalıdır."),
-                          groupValue: _model.resCatiKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Sandviç Panel (İçi köpük dolgulu).",
-                          subtitle: "🚨 RİSK: Yanıcı madde dolgulu.",
-                          value: ChoiceResult(label: "C", reportText: "🚨 RİSK. Yanıcı madde dolgulu paneller yangını hızla yayar. Taşyünü vb. gibi yanmaz malzeme dolgulu olmalıdır."),
-                          groupValue: _model.resCatiKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "D) Sandviç Panel (İçi taşyünü dolgulu).",
-                          subtitle: "✅ UYGUN (Hiç yanmaz)",
-                          value: ChoiceResult(label: "D", reportText: "✅ UYGUN"),
-                          groupValue: _model.resCatiKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "E) Ahşap kaplama.",
-                          subtitle: "🚨 KRİTİK RİSK",
-                          value: ChoiceResult(label: "E", reportText: "🚨 KRİTİK RİSK. Ahşap kaplama kullanılması uygun değildir."),
-                          groupValue: _model.resCatiKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "F) Bilmiyorum.",
-                          subtitle: "❓ BİLİNMİYOR",
-                          value: ChoiceResult(label: "F", reportText: "❓ BİLİNMİYOR. Çatı kaplama malzemeniz bilinmiyor. Yanıcı bir malzeme kullanıldıysa tüm bina risk altındadır. Uzman Görüşü alınması tavsiye edilir."),
-                          groupValue: _model.resCatiKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiKaplama: val)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // 1. Kaplama Malzemesi
+                  _buildSoru("Çatınızın en üst katmanında (yağmurun değdiği yüzeyde) hangi malzeme kullanıldığını biliyor musunuz?", 'kaplama', 
+                    [
+                      Bolum17Content.kaplamaOptionA, 
+                      Bolum17Content.kaplamaOptionB, 
+                      Bolum17Content.kaplamaOptionC,
+                      Bolum17Content.kaplamaOptionD,
+                      Bolum17Content.kaplamaOptionE,
+                      Bolum17Content.kaplamaOptionF
+                    ], _model.kaplama),
 
-                  // ADIM-2: ÇATI ALTI YALITIMI
-                  const Divider(height: 40),
-                  const Text("ADIM-2: ÇATI ALTI YALITIMI", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 8),
-                  const Text("Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nasıl?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Taşıyıcılar Beton/Çelik. Yalıtım Taşyünü.",
-                          subtitle: "✅ UYGUN (Hiç Yanmaz)",
-                          value: ChoiceResult(label: "A", reportText: "✅ UYGUN. Çatı taşıyıcı sisteminin ve yalıtımının yanmaz malzemeden olması yangın güvenliği için en ideal durumdur."),
-                          groupValue: _model.resCatiYalitim,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiYalitim: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Taşıyıcılar Ahşap. Yalıtım Köpük.",
-                          subtitle: isHighBuilding ? "🚨 KRİTİK RİSK (Yüksek Bina)" : "⚠️ UYARI (Yanıcı)",
-                          value: ChoiceResult(
-                            label: "B", 
-                            reportText: isHighBuilding 
-                              ? "🚨 KRİTİK RİSK. Yüksek binalarda ahşap çatı yasaktır." 
-                              : "⚠️ UYARI. Ahşap çatılarda yanıcı köpük kullanımı risklidir."
-                          ),
-                          groupValue: _model.resCatiYalitim,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiYalitim: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Bilmiyorum.",
-                          subtitle: "❓ BİLİNMİYOR",
-                          value: ChoiceResult(label: "C", reportText: "❓ BİLİNMİYOR. Çatı iskeletinin durumu bilinmiyor. Yüksek binalarda ahşap çatı büyük risk taşır. Uzman Görüşü alınması tavsiye edilir."),
-                          groupValue: _model.resCatiYalitim,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiYalitim: val)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // 2. İskelet ve Yalıtım
+                  _buildSoru("Çatıyı taşıyan iskelet (makaslar/kirişler) ve altındaki ısı yalıtımı nasıl?", 'iskelet', 
+                    [Bolum17Content.iskeletOptionA, Bolum17Content.iskeletOptionB, Bolum17Content.iskeletOptionC], _model.iskelet),
 
-                  // ADIM-3: BİTİŞİK NİZAM (Sadece Bitişikse)
-                  if (isBitisik) ...[
-                    const Divider(height: 40),
-                    const Text("ADIM-3: BİTİŞİK NİZAMDA ÇATI GEÇİŞİ", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                    const SizedBox(height: 8),
-                    const Text("Çatınız yan binanın çatısına bitişik mi? Arada yangını kesecek bir duvar var mı?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 15),
-                    QuestionCard(
+                  // 3. Bitişik Nizam Duvarı
+                  if (_askBitisik)
+                    _buildSoru("Çatınız yan binanın çatısına bitişik mi? Arada yangını kesecek bir duvar var mı?", 'duvar', 
+                      [Bolum17Content.bitisikOptionA, Bolum17Content.bitisikOptionB, Bolum17Content.bitisikOptionC], _model.bitisikDuvar),
+
+                  // 4. Işıklık
+                  _buildSoru("Çatınızda camlı ışıklık, fener veya aydınlatma kubbesi var mı?", 'isiklik', 
+                    [Bolum17Content.isiklikOptionA, Bolum17Content.isiklikOptionB], _model.isiklik),
+
+                  // Alt Soru: Işıklık Malzemesi
+                  if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label) 
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, bottom: 20),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SelectableCard<ChoiceResult>(
-                            title: "A) Arada yüksek bir duvar var.",
-                            subtitle: "✅ UYGUN",
-                            value: ChoiceResult(label: "A", reportText: "✅ UYGUN. Yangın duvarı mevcut."),
-                            groupValue: _model.resBitisikCati,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resBitisikCati: val)),
-                          ),
-                          SelectableCard<ChoiceResult>(
-                            title: "B) Çatılar birbirine değiyor.",
-                            subtitle: "🚨 RİSK: Yangın geçişi olabilir.",
-                            value: ChoiceResult(label: "B", reportText: "🚨 RİSK. Bitişik nizam binalarda, çatılar arasında yangın geçişini engelleyecek 'Yangın Duvarı' olması zorunludur."),
-                            groupValue: _model.resBitisikCati,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resBitisikCati: val)),
-                          ),
-                          SelectableCard<ChoiceResult>(
-                            title: "C) Bilmiyorum.",
-                            subtitle: "❓ BİLİNMİYOR",
-                            value: ChoiceResult(label: "C", reportText: "❓ BİLİNMİYOR. Komşu bina ile çatı birleşim detayınız bilinmiyor."),
-                            groupValue: _model.resBitisikCati,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resBitisikCati: val)),
-                          ),
+                          const Text("Işıklık malzemesi nedir?", style: TextStyle(fontWeight: FontWeight.bold)),
+                          Row(
+                            children: [
+                              Radio<String>(
+                                value: "cam", 
+                                groupValue: _model.isiklikMalzemesi, 
+                                onChanged: (v) => setState(() => _model = _model.copyWith(isiklikMalzemesi: v))
+                              ),
+                              const Text("Cam"),
+                              const SizedBox(width: 20),
+                              Radio<String>(
+                                value: "plastik", 
+                                groupValue: _model.isiklikMalzemesi, 
+                                onChanged: (v) => setState(() => _model = _model.copyWith(isiklikMalzemesi: v))
+                              ),
+                              const Text("Plastik / Mika"),
+                            ],
+                          )
                         ],
                       ),
                     ),
-                  ],
-
-                  // ADIM-4: ÇATI IŞIKLIĞI
-                  const Divider(height: 40),
-                  const Text("ADIM-4: ÇATI IŞIKLIĞI VE FENERLER", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                  const SizedBox(height: 8),
-                  const Text("Çatınızda camlı ışıklık, fener veya aydınlatma kubbesi var mı?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Hayır, yok.",
-                          subtitle: "✅ UYGUN",
-                          value: ChoiceResult(label: "A", reportText: "✅ UYGUN. Çatıda ışıklık olmaması riski azaltır."),
-                          groupValue: _model.resCatiIsiklik,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiIsiklik: val, resIsiklikMalzeme: null)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Evet, var.",
-                          value: ChoiceResult(label: "B", reportText: "Işıklık mevcut."),
-                          groupValue: _model.resCatiIsiklik,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiIsiklik: val)),
-                        ),
-                        if (_model.resCatiIsiklik?.label == "B") ...[
-                          const Padding(padding: EdgeInsets.all(8.0), child: Text("Alt Soru: Malzemesi nedir?", style: TextStyle(fontWeight: FontWeight.bold))),
-                          _buildSubOption("Temperli Cam", "✅ UYGUN", "A", _model.resIsiklikMalzeme, (v) => setState(() => _model = _model.copyWith(resIsiklikMalzeme: v))),
-                          _buildSubOption("Plastik/Pleksi", "⚠️ UYARI: Eriyip damlayabilir.", "B", _model.resIsiklikMalzeme, (v) => setState(() => _model = _model.copyWith(resIsiklikMalzeme: v))),
-                        ],
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Bilmiyorum.",
-                          subtitle: "❓ BİLİNMİYOR",
-                          value: ChoiceResult(label: "C", reportText: "❓ BİLİNMİYOR. Çatıda ışıklık olup olmadığı bilinmiyor."),
-                          groupValue: _model.resCatiIsiklik,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resCatiIsiklik: val, resIsiklikMalzeme: null)),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
           ),
-          _buildBottomButton(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _onNextPressed,
+                  child: const Text("DEVAM ET"),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSubOption(String text, String subText, String label, ChoiceResult? group, Function(ChoiceResult) onSelected) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 8),
-      child: SelectableCard(
-        title: text,
-        subtitle: subText,
-        value: ChoiceResult(label: label, reportText: subText),
-        groupValue: group,
-        onChanged: (v) => onSelected(v!),
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          ...options.map((opt) => SelectableCard(
+            choice: opt,
+            isSelected: selected?.label == opt.label,
+            onTap: () => _handleSelection(key, opt),
+          )).toList(),
+        ],
       ),
     );
-  }
-
-  Widget _buildBottomButton() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))]),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _isFormValid() ? _onNextPressed : null,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
-      ),
-    );
-  }
-
-  bool _isFormValid() {
-    if (_model.resCatiKaplama == null) return false;
-    if (_model.resCatiYalitim == null) return false;
-    
-    final bool isBitisik = BinaStore.instance.bolum8?.secim == NizamDurumu.bitisik;
-    if (isBitisik && _model.resBitisikCati == null) return false;
-
-    if (_model.resCatiIsiklik == null) return false;
-    if (_model.resCatiIsiklik?.label == "B" && _model.resIsiklikMalzeme == null) return false;
-
-    return true;
   }
 }

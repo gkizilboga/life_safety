@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_13_model.dart';
-import 'package:life_safety/models/bolum_18_model.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/screens/bolum_19_screen.dart'; // Sonraki aşama
+import '../../data/bina_store.dart';
+import '../../models/bolum_18_model.dart';
+import 'bolum_19_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
+import '../../models/choice_result.dart';
 
 class Bolum18Screen extends StatefulWidget {
   const Bolum18Screen({super.key});
@@ -14,178 +16,135 @@ class Bolum18Screen extends StatefulWidget {
 
 class _Bolum18ScreenState extends State<Bolum18Screen> {
   Bolum18Model _model = Bolum18Model();
+  
+  // Boru sorusunu sadece Yüksek Binalarda soracağız
+  bool _askBoru = false;
 
   @override
   void initState() {
     super.initState();
-    if (BinaStore.instance.bolum18 != null) {
-      _model = BinaStore.instance.bolum18!;
+    _checkBinaYuksekligi();
+  }
+
+  void _checkBinaYuksekligi() {
+    // Bölüm 4'ten hesaplanan bina yüksekliğini al
+    // Eğer H_Bina >= 21.50m ise boru sorusu sorulmalı
+    final bolum4 = BinaStore.instance.bolum4;
+    final hBina = bolum4?.hesaplananBinaYuksekligi ?? 0.0;
+
+    if (hBina >= 21.50) {
+      setState(() {
+        _askBoru = true;
+      });
     }
   }
 
+  void _handleSelection(String type, ChoiceResult choice) {
+    setState(() {
+      if (type == 'duvar') _model = _model.copyWith(duvarKaplama: choice);
+      if (type == 'boru') _model = _model.copyWith(boruTipi: choice);
+    });
+  }
+
   void _onNextPressed() {
-    BinaStore.instance.bolum18 = _model;
-    print("Bölüm 18 Kaydedildi.");
+    if (_model.duvarKaplama == null) return _showError("Lütfen duvar kaplama sorusunu yanıtlayınız.");
     
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum19Screen()));
+    // Yüksek binaysa boru sorusu zorunlu
+    if (_askBoru && _model.boruTipi == null) return _showError("Lütfen tesisat borusu sorusunu yanıtlayınız.");
+
+    BinaStore.instance.bolum18 = _model;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum19Screen()),
+    );
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
   Widget build(BuildContext context) {
-    // Global Değişkeni Burada Çekiyoruz
-    final bool isHighBuilding = BinaStore.instance.bolum4?.isGenelYuksekBina ?? false;
-
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Yapı Malzemeleri",
-            subtitle: "Bölüm 18: Kaplamalar ve Tesisat",
-            currentStep: 18,
-            totalSteps: 36,
-            onBack: () => Navigator.pop(context),
+          const ModernHeader(
+            title: "Bölüm-18: İç Duvarlar",
+            subtitle: "Koridor duvarları ve tesisat şaftları.",
+            currentStep: 8, 
+            totalSteps: 26,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "ADIM-1: DUVAR KAPLAMALARI",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF2C3E50)),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük (içten yalıtım) gibi bir kaplama var mı?",
-                    style: TextStyle(fontSize: 14, color: Colors.black87),
-                  ),
-                  const SizedBox(height: 15),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard<ChoiceResult>(
-                          title: "A) Hayır, sadece sıva ve boya.",
-                          subtitle: "✅ OLUMLU GÖRÜNÜYOR",
-                          value: ChoiceResult(label: "A", reportText: "✅ OLUMLU GÖRÜNÜYOR"),
-                          groupValue: _model.resDuvarKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDuvarKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "B) Evet, ahşap/plastik/köpük var.",
-                          subtitle: isHighBuilding 
-                            ? "🚨 KIRMIZI RİSK: Yüksek binalarda yasaktır." 
-                            : "⚠️ UYARI: Kolay alevlenici olabilir.",
-                          value: ChoiceResult(
-                            label: "B", 
-                            reportText: isHighBuilding 
-                              ? "🚨 KIRMIZI RİSK. Yüksek binalarda duvar kaplamaları ‘en az zor alevlenici' sınıfta olmalıdır. Ahşap, plastik veya köpük gibi malzemeler yangını koridor boyunca hızla yayar." 
-                              : "⚠️ UYARI. Duvarlarda kullanılan köpük veya plastik malzemeler 'Normal Alevlenici' sınıfta olmalıdır. Kolay tutuşan malzemeler yangın yükünü artırır."
-                          ),
-                          groupValue: _model.resDuvarKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDuvarKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "C) Evet, duvar kağıdı var.",
-                          subtitle: "✅ OLUMLU GÖRÜNÜYOR",
-                          value: ChoiceResult(label: "C", reportText: "✅ OLUMLU GÖRÜNÜYOR. Standart duvar kağıtları genelde kabul edilir."),
-                          groupValue: _model.resDuvarKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDuvarKaplama: val)),
-                        ),
-                        SelectableCard<ChoiceResult>(
-                          title: "D) Bilmiyorum.",
-                          subtitle: "❓ BİLİNMİYOR",
-                          value: ChoiceResult(label: "D", reportText: "❓ BİLİNMİYOR. Duvar kaplama malzemesi bilinmiyor. 21,5m üzeri binalarda yanıcı kaplama malzemesi kullanımı büyük risk taşır."),
-                          groupValue: _model.resDuvarKaplama,
-                          onChanged: (val) => setState(() => _model = _model.copyWith(resDuvarKaplama: val)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // 1. Duvar Kaplaması
+                  _buildSoru("Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük (içten yalıtım) gibi bir kaplama var mı?", 'duvar', 
+                    [
+                      Bolum18Content.duvarOptionA, 
+                      Bolum18Content.duvarOptionB, 
+                      Bolum18Content.duvarOptionC,
+                      Bolum18Content.duvarOptionD
+                    ], _model.duvarKaplama),
 
-                  if (isHighBuilding) ...[
-                    const Divider(height: 40),
-                    const Text(
-                      "ADIM-2: TESİSAT BORULARI",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF2C3E50)),
+                  // 2. Tesisat Borusu (Sadece Yüksek Binalarda)
+                  if (_askBoru) ...[
+                    const Divider(height: 30),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(10)),
+                      child: const Text("⚠️ Binanız 'Yüksek Bina' sınıfında olduğu için aşağıdaki soru açılmıştır.", style: TextStyle(color: Colors.red, fontSize: 12)),
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik pis su borularında (Pimaş) önlem alınmış mı?",
-                      style: TextStyle(fontSize: 14, color: Colors.black87),
-                    ),
-                    const SizedBox(height: 15),
-                    QuestionCard(
-                      child: Column(
-                        children: [
-                          SelectableCard<ChoiceResult>(
-                            title: "A) Sessiz Boru veya Döküm.",
-                            subtitle: "✅ OLUMLU GÖRÜNÜYOR (Zor Yanıcı)",
-                            value: ChoiceResult(label: "A", reportText: "✅ OLUMLU GÖRÜNÜYOR"),
-                            groupValue: _model.resTesisatBoru,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resTesisatBoru: val)),
-                          ),
-                          SelectableCard<ChoiceResult>(
-                            title: "B) Standart PVC + Yangın Kelepçesi.",
-                            subtitle: "✅ OLUMLU GÖRÜNÜYOR",
-                            value: ChoiceResult(label: "B", reportText: "✅ OLUMLU GÖRÜNÜYOR"),
-                            groupValue: _model.resTesisatBoru,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resTesisatBoru: val)),
-                          ),
-                          SelectableCard<ChoiceResult>(
-                            title: "C) Standart PVC (Kelepçe Yok).",
-                            subtitle: "🚨 KIRMIZI RİSK: Yangın üst kata geçer.",
-                            value: ChoiceResult(label: "C", reportText: "🚨 KIRMIZI RİSK. 21,5m ve üzeri binalarda standart plastik borular yangın anında eriyerek yok olur ve döşemede delik açılır. Yangın Kelepçesi ZORUNLUDUR."),
-                            groupValue: _model.resTesisatBoru,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resTesisatBoru: val)),
-                          ),
-                          SelectableCard<ChoiceResult>(
-                            title: "D) Bilmiyorum / Göremiyorum.",
-                            subtitle: "❓ BİLİNMİYOR",
-                            value: ChoiceResult(label: "D", reportText: "❓ BİLİNMİYOR. Tesisat borularının yangın dayanımı bilinmiyor. Yüksek binalarda yangın kesici (kelepçe) olup olmadığı hayati önem taşır."),
-                            groupValue: _model.resTesisatBoru,
-                            onChanged: (val) => setState(() => _model = _model.copyWith(resTesisatBoru: val)),
-                          ),
-                        ],
-                      ),
-                    ),
+                    const SizedBox(height: 10),
+                    _buildSoru("Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?", 'boru', 
+                      [
+                        Bolum18Content.boruOptionA, 
+                        Bolum18Content.boruOptionB, 
+                        Bolum18Content.boruOptionC,
+                        Bolum18Content.boruOptionD
+                      ], _model.boruTipi),
                   ],
                 ],
               ),
             ),
           ),
-          // DÜZELTME: isHighBuilding değişkenini buraya parametre olarak gönderiyoruz
-          _buildBottomButton(isHighBuilding),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _onNextPressed,
+                  child: const Text("DEVAM ET"),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // DÜZELTME: Fonksiyon artık parametre alıyor
-  Widget _buildBottomButton(bool isHighBuilding) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            // Parametreyi validasyon fonksiyonuna iletiyoruz
-            onPressed: _isFormValid(isHighBuilding) ? _onNextPressed : null,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          ...options.map((opt) => SelectableCard(
+            choice: opt,
+            isSelected: selected?.label == opt.label,
+            onTap: () => _handleSelection(key, opt),
+          )).toList(),
+        ],
       ),
     );
-  }
-
-  bool _isFormValid(bool isHighBuilding) {
-    if (_model.resDuvarKaplama == null) return false;
-    if (isHighBuilding && _model.resTesisatBoru == null) return false;
-    return true;
   }
 }

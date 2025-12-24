@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_13_model.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/screens/bolum_14_screen.dart';
+import '../../data/bina_store.dart';
+import '../../models/bolum_13_model.dart';
+import 'bolum_14_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
+import '../../utils/app_content.dart';
+import '../../models/choice_result.dart';
 
 class Bolum13Screen extends StatefulWidget {
   const Bolum13Screen({super.key});
@@ -14,285 +17,185 @@ class Bolum13Screen extends StatefulWidget {
 class _Bolum13ScreenState extends State<Bolum13Screen> {
   Bolum13Model _model = Bolum13Model();
 
+  // Hangi soruların sorulacağını belirleyen bayraklar
+  bool _askOtopark = false;
+  bool _askKazan = false;
+  bool _askAsansor = false;
+  bool _askJenerator = false;
+  bool _askElektrik = false;
+  bool _askTrafo = false;
+  bool _askDepo = false;
+  bool _askCop = false;
+  bool _askDuvar = false;
+  bool _askTicari = false;
+
   @override
   void initState() {
     super.initState();
-    // HAFIZA DÜZELTMESİ
-    if (BinaStore.instance.bolum13 != null) {
-      _model = BinaStore.instance.bolum13!;
-    }
+    _loadVisibilityLogic();
+  }
+
+  void _loadVisibilityLogic() {
+    final b6 = BinaStore.instance.bolum6;
+    final b7 = BinaStore.instance.bolum7;
+
+    setState(() {
+      _askOtopark = (b6?.hasOtopark ?? false) || (b7?.hasOtopark ?? false);
+      _askKazan = b7?.hasKazan ?? false;
+      _askAsansor = b7?.hasAsansor ?? false;
+      _askJenerator = b7?.hasJenerator ?? false;
+      _askElektrik = b7?.hasElektrik ?? false;
+      _askTrafo = b7?.hasTrafo ?? false;
+      _askDepo = (b6?.hasDepo ?? false) || (b7?.hasDepo ?? false);
+      _askCop = b7?.hasCop ?? false;
+      _askDuvar = b7?.hasDuvar ?? false;
+      _askTicari = b6?.hasTicari ?? false;
+    });
+  }
+
+  void _handleSelection(String type, ChoiceResult choice) {
+    setState(() {
+      if (type == 'otopark') _model = _model.copyWith(otoparkKapi: choice);
+      else if (type == 'kazan') _model = _model.copyWith(kazanKapi: choice);
+      else if (type == 'asansor') _model = _model.copyWith(asansorKapi: choice);
+      else if (type == 'jenerator') _model = _model.copyWith(jeneratorKapi: choice);
+      else if (type == 'elektrik') _model = _model.copyWith(elektrikKapi: choice);
+      else if (type == 'trafo') _model = _model.copyWith(trafoKapi: choice);
+      else if (type == 'depo') _model = _model.copyWith(depoKapi: choice);
+      else if (type == 'cop') _model = _model.copyWith(copKapi: choice);
+      else if (type == 'duvar') _model = _model.copyWith(ortakDuvar: choice);
+      else if (type == 'ticari') _model = _model.copyWith(ticariKapi: choice);
+    });
   }
 
   void _onNextPressed() {
-    if (!_isFormValid()) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("⚠️ EKSİK SEÇİM"),
-          content: const Text("Lütfen ekranda görünen tüm riskli alanlar için bir seçim yapınız."),
-          actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Tamam"))],
-        ),
-      );
-      return;
-    }
+    // Validasyon: Görünen her soru cevaplanmalı
+    if (_askOtopark && _model.otoparkKapi == null) return _showError("Lütfen otopark kapısı sorusunu yanıtlayınız.");
+    if (_askKazan && _model.kazanKapi == null) return _showError("Lütfen kazan dairesi sorusunu yanıtlayınız.");
+    if (_askAsansor && _model.asansorKapi == null) return _showError("Lütfen asansör sorusunu yanıtlayınız.");
+    if (_askJenerator && _model.jeneratorKapi == null) return _showError("Lütfen jeneratör sorusunu yanıtlayınız.");
+    if (_askElektrik && _model.elektrikKapi == null) return _showError("Lütfen elektrik odası sorusunu yanıtlayınız.");
+    if (_askTrafo && _model.trafoKapi == null) return _showError("Lütfen trafo odası sorusunu yanıtlayınız.");
+    if (_askDepo && _model.depoKapi == null) return _showError("Lütfen depo kapısı sorusunu yanıtlayınız.");
+    if (_askCop && _model.copKapi == null) return _showError("Lütfen çöp odası sorusunu yanıtlayınız.");
+    if (_askDuvar && _model.ortakDuvar == null) return _showError("Lütfen ortak duvar sorusunu yanıtlayınız.");
+    if (_askTicari && _model.ticariKapi == null) return _showError("Lütfen ticari alan sorusunu yanıtlayınız.");
 
     BinaStore.instance.bolum13 = _model;
-    print("Bölüm 13 Kaydedildi.");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum14Screen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum14Screen()),
+    );
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
   Widget build(BuildContext context) {
-    final b7 = BinaStore.instance.bolum7;
-    final b6 = BinaStore.instance.bolum6;
+    // Eğer hiçbir riskli alan yoksa otomatik geçilebilir veya boş mesaj gösterilebilir
+    if (!_askOtopark && !_askKazan && !_askAsansor && !_askJenerator && 
+        !_askElektrik && !_askTrafo && !_askDepo && !_askCop && !_askDuvar && !_askTicari) {
+       return Scaffold(
+        appBar: AppBar(title: const Text("Bölüm-13")),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Binanızda riskli alan bulunmadığı için bu bölüm atlanmıştır."),
+              const SizedBox(height: 20),
+              ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET"))
+            ],
+          ),
+        ),
+       );
+    }
 
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Yangın Kompartımanı",
-            subtitle: "Özel Riskli Hacimlerin Ayrımı",
-            currentStep: 13,
-            totalSteps: 15,
-            onBack: () => Navigator.pop(context),
+          const ModernHeader(
+            title: "Bölüm-13: Yangın Kapıları",
+            subtitle: "Riskli alanların kapıları ve duvarları.",
+            currentStep: 3,
+            totalSteps: 26,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "RİSKLİ HACİM DENETİMİ",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF2C3E50)),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Binanızda var olduğunu belirttiğiniz teknik alanların güvenlik durumunu inceleyelim.",
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 25),
+                  if (_askOtopark) _buildSoru("Otoparktan bina içine (merdiven veya asansör holüne) açılan kapınızın özelliği nedir?", 'otopark', 
+                    [Bolum13Content.otoparkOptionA, Bolum13Content.otoparkOptionB, Bolum13Content.otoparkOptionC, Bolum13Content.otoparkOptionD], _model.otoparkKapi),
 
-                  if (b7?.hasKapaliOtopark == true)
-                    _buildSection(
-                      title: "1) KAPALI OTOPARK",
-                      question: "Otoparktan bina içine açılan kapınızın özelliği nedir?",
-                      currentValue: _model.resOtoparkKapi,
-                      onChanged: (val) => setState(() => _model = _model.copyWith(resOtoparkKapi: val)),
-                      options: [
-                        ChoiceResult(label: "A", reportText: "Çelik/Metal, duman sızdırmaz, yangına dayanıklı kapı. (✅ OLUMLU GÖRÜNÜYOR)"),
-                        ChoiceResult(label: "B", reportText: "Normal demir, plastik veya ahşap kapı. (🚨 RİSK: Kapı en az 90 dk dayanıklı olmalı.)"),
-                        ChoiceResult(label: "C", reportText: "Kapı yok, direkt açık geçiş var. (🚨 KRİTİK RİSK: Duman direkt binaya dolar.)"),
-                        ChoiceResult(label: "D", reportText: "Otopark kapısının özelliklerini bilmiyorum. (❓ BİLİNMİYOR)"),
-                      ],
-                    ),
+                  if (_askKazan) _buildSoru("Kazan dairesinin duvarları ve kapısı nasıldır?", 'kazan', 
+                    [Bolum13Content.kazanOptionA, Bolum13Content.kazanOptionB, Bolum13Content.kazanOptionC, Bolum13Content.kazanOptionD], _model.kazanKapi),
 
-                  if (b7?.hasKazanDairesi == true)
-                    _buildSection(
-                      title: "2) KAZAN DAİRESİ",
-                      question: "Kazan dairesinin duvarları ve kapısı nasıldır?",
-                      currentValue: _model.resKazanKapi,
-                      onChanged: (val) => setState(() => _model = _model.copyWith(resKazanKapi: val)),
-                      options: [
-                        ChoiceResult(label: "A", reportText: "Duvarlar beton, kapı dışarıya açılan yangın kapısı. (✅ OLUMLU GÖRÜNÜYOR)"),
-                        ChoiceResult(label: "B", reportText: "Kapı plastik/ahşap veya içeriye açılıyor. (🚨 RİSK)"),
-                        ChoiceResult(label: "C", reportText: "Kazan dairesi binadan ayrı bir yerde. (✅ OLUMLU GÖRÜNÜYOR)"),
-                        ChoiceResult(label: "D", reportText: "Bilmiyorum. (❓ BİLİNMİYOR)"),
-                      ],
-                    ),
+                  if (_askAsansor) _buildSoru("Binanızdaki normal asansörün kapısı nasıldır?", 'asansor', 
+                    [Bolum13Content.asansorOptionA, Bolum13Content.asansorOptionB, Bolum13Content.asansorOptionC], _model.asansorKapi),
 
-                  if (b7?.hasAsansorNormal == true)
-                    _buildSection(
-                      title: "3) NORMAL ASANSÖR",
-                      question: "Binanızdaki normal asansörün kapısı nasıldır?",
-                      currentValue: _model.resAsansorKapi,
-                      onChanged: (val) => setState(() => _model = _model.copyWith(resAsansorKapi: val)),
-                      options: [
-                        ChoiceResult(label: "A", reportText: "Asansör kat / kabin kapıları yangına dayanıklı. (✅ OLUMLU GÖRÜNÜYOR)"),
-                        ChoiceResult(label: "B", reportText: "Asansör kat / kabin kapıları yangına dayanıklı değil. (⚠️ UYARI)"),
-                        ChoiceResult(label: "C", reportText: "Bilmiyorum. (❓ BİLİNMİYOR)"),
-                      ],
-                    ),
-                  
-                  if (b7?.hasAsansorDairesi == true)
-                    _buildSection(
-                      title: "4) ASANSÖR MAKİNE DAİRESİ",
-                      question: "Çatıdaki asansör makine dairesinin kapısı nasıldır?",
-                      currentValue: _model.resAsansorMakineKapi,
-                      onChanged: (val) => setState(() => _model = _model.copyWith(resAsansorMakineKapi: val)),
-                      options: [
-                        ChoiceResult(label: "A", reportText: "Çelik/Metal yangına dayanıklı kapı. (✅ OLUMLU GÖRÜNÜYOR)"),
-                        ChoiceResult(label: "B", reportText: "Normal demir, plastik veya ahşap kapı. (⚠️ UYARI)"),
-                        ChoiceResult(label: "C", reportText: "Bilmiyorum. (❓ BİLİNMİYOR)"),
-                      ],
-                    ),
+                  if (_askJenerator) _buildSoru("Jeneratör odasının duvar ve kapısı nasıldır?", 'jenerator', 
+                    [Bolum13Content.jeneratorOptionA, Bolum13Content.jeneratorOptionB, Bolum13Content.jeneratorOptionC], _model.jeneratorKapi),
 
-                  if (b7?.hasJeneratorOdasi == true)
-                    _buildSection(
-                      title: "5) JENERATÖR ODASI",
-                      question: "Jenerator odasının duvar ve kapısı nasıldır?",
-                      currentValue: _model.resJeneratorKapi,
-                      onChanged: (val) => setState(() => _model = _model.copyWith(resJeneratorKapi: val)),
-                      options: [
-                        ChoiceResult(label: "A", reportText: "Yangına dayanıklı duvar ve kapı ile ayrılmış. (✅ OLUMLU GÖRÜNÜYOR)"),
-                        ChoiceResult(label: "B", reportText: "Açıkta veya basit bir bölme ile ayrılmış. (🚨 RİSK)"),
-                        ChoiceResult(label: "C", reportText: "Bilmiyorum. (❓ BİLİNMİYOR)"),
-                      ],
-                    ),
+                  if (_askElektrik) _buildSoru("Binadaki elektrik odalarının duvarları ve kapıları nasıldır?", 'elektrik', 
+                    [Bolum13Content.elekOdasiOptionA, Bolum13Content.elekOdasiOptionB, Bolum13Content.elekOdasiOptionC], _model.elektrikKapi),
 
-                  // EKSİK OLAN ELEKTRİK ODASI EKLENDİ
-                  if (b7?.hasElektrikOdasi == true)
-                    _buildSection(
-                      title: "6) ELEKTRİK PANO ODASI",
-                      question: "Binadaki elektrik odalarının duvarları ve kapıları nasıldır?",
-                      currentValue: _model.resElektrikKapi,
-                      onChanged: (val) => setState(() => _model = _model.copyWith(resElektrikKapi: val)),
-                      options: [
-                        ChoiceResult(label: "A", reportText: "Kilitli, yangına dayanıklı ve duman sızdırmaz kapı. (✅ OLUMLU GÖRÜNÜYOR)"),
-                        ChoiceResult(label: "B", reportText: "Normal dayanıksız (demir, plastik, ahşap) kapı. (⚠️ UYARI)"),
-                        ChoiceResult(label: "C", reportText: "Bilmiyorum. (❓ BİLİNMİYOR)"),
-                      ],
-                    ),
+                  if (_askTrafo) _buildSoru("Trafo odasının kapısı nasıldır?", 'trafo', 
+                    [Bolum13Content.trafoOptionA, Bolum13Content.trafoOptionB, Bolum13Content.trafoOptionC], _model.trafoKapi),
 
-                  if (b6?.hasTicari == true)
-                    _buildTicariSection(),
+                  if (_askDepo) _buildSoru("Eşya deposunun veya depolarının kapısı nasıldır?", 'depo', 
+                    [Bolum13Content.depoOptionA, Bolum13Content.depoOptionB, Bolum13Content.depoOptionC], _model.depoKapi),
 
+                  if (_askCop) _buildSoru("Çöp toplama odasının kapısı ve havalandırması nasıldır?", 'cop', 
+                    [Bolum13Content.copOptionA, Bolum13Content.copOptionB, Bolum13Content.copOptionC], _model.copKapi),
+
+                  if (_askDuvar) _buildSoru("Yan bina ile ortak kullandığınız duvarın cinsi nedir?", 'duvar', 
+                    [Bolum13Content.ortakDuvarOptionA, Bolum13Content.ortakDuvarOptionB, Bolum13Content.ortakDuvarOptionC], _model.ortakDuvar),
+
+                  if (_askTicari) _buildSoru("Konutların altındaki dükkan veya ofisten konut merdivenine geçiş nasıl?", 'ticari', 
+                    [Bolum13Content.ticariOptionA, Bolum13Content.ticariOptionB, Bolum13Content.ticariOptionC], _model.ticariKapi),
                 ],
               ),
             ),
           ),
-          _buildBottomButton(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _onNextPressed,
+                  child: const Text("DEVAM ET"),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // GÖRÜNÜM DÜZELTMESİ: Başlık artık metin, alt başlık seçenek harfi
-  Widget _buildSection({
-    required String title,
-    required String question,
-    required ChoiceResult? currentValue,
-    required ValueChanged<ChoiceResult?> onChanged,
-    required List<ChoiceResult> options,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-        const SizedBox(height: 8),
-        Text(question, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 15),
-        QuestionCard(
-          child: Column(
-            children: options.map((opt) => SelectableCard<ChoiceResult>(
-              title: opt.reportText, // DÜZELTME: Metin başlık oldu
-              subtitle: "Seçenek ${opt.label}", // DÜZELTME: Harf alt başlık oldu
-              value: opt,
-              groupValue: currentValue,
-              onChanged: onChanged,
-            )).toList(),
-          ),
-        ),
-        const Divider(height: 40),
-      ],
-    );
-  }
-
-  Widget _buildTicariSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("11) TİCARİ ALAN", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-        const SizedBox(height: 8),
-        const Text("Konutların altındaki dükkan veya ofisten konut merdivenine geçiş nasıl?", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 15),
-        QuestionCard(
-          child: Column(
-            children: [
-              SelectableCard<ChoiceResult>(
-                title: "Tamamen ayrı girişleri var, bina içinden bağlantı yok. (✅ OLUMLU GÖRÜNÜYOR)",
-                subtitle: "Seçenek A",
-                value: ChoiceResult(label: "A", reportText: "Tamamen ayrı girişleri var. (✅ OLUMLU GÖRÜNÜYOR)"),
-                groupValue: _model.resTicariAlan,
-                onChanged: (val) => setState(() => _model = _model.copyWith(resTicariAlan: val, hasTicariYanginKapisi: null)),
-              ),
-              SelectableCard<ChoiceResult>(
-                title: "Aynı merdiven boşluğunu kullanıyorlar.",
-                subtitle: "Seçenek B",
-                value: ChoiceResult(label: "B", reportText: "Aynı merdiven boşluğu kullanılıyor."),
-                groupValue: _model.resTicariAlan,
-                onChanged: (val) => setState(() => _model = _model.copyWith(resTicariAlan: val)),
-              ),
-              if (_model.resTicariAlan?.label == "B") ...[
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  child: Text("Alt Soru: Arada yangın kapısı var mı?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                ),
-                // DÜZELTME: Alt soru stili Bölüm 15 gibi yapıldı
-                _buildSubOption("Evet Var", "✅ OLUMLU", true, _model.hasTicariYanginKapisi, (v) => setState(() => _model = _model.copyWith(hasTicariYanginKapisi: v))),
-                _buildSubOption("Hayır Yok", "🚨 RİSK: Ayrılmalıdır.", false, _model.hasTicariYanginKapisi, (v) => setState(() => _model = _model.copyWith(hasTicariYanginKapisi: v))),
-              ],
-              SelectableCard<ChoiceResult>(
-                title: "Bilmiyorum. (❓ BİLİNMİYOR)",
-                subtitle: "Seçenek C",
-                value: ChoiceResult(label: "C", reportText: "Bilmiyorum. (❓ BİLİNMİYOR)"),
-                groupValue: _model.resTicariAlan,
-                onChanged: (val) => setState(() => _model = _model.copyWith(resTicariAlan: val, hasTicariYanginKapisi: null)),
-              ),
-            ],
-          ),
-        ),
-        const Divider(height: 40),
-      ],
-    );
-  }
-
-  // YENİ: Alt soru için özel widget (Bölüm 15 stili)
-  Widget _buildSubOption(String text, String subText, bool value, bool? groupValue, Function(bool) onSelected) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 8),
-      child: SelectableCard<bool>(
-        title: text,
-        subtitle: subText,
-        value: value,
-        groupValue: groupValue,
-        onChanged: (v) => onSelected(v!),
+  // Soru Widget'ını oluşturan yardımcı fonksiyon (Kod tekrarını önler)
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          ...options.map((opt) => SelectableCard(
+            choice: opt,
+            isSelected: selected?.label == opt.label,
+            onTap: () => _handleSelection(key, opt),
+          )).toList(),
+        ],
       ),
     );
-  }
-
-  Widget _buildBottomButton() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)]),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _isFormValid() ? _onNextPressed : null,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
-      ),
-    );
-  }
-
-  bool _isFormValid() {
-    final b7 = BinaStore.instance.bolum7;
-    final b6 = BinaStore.instance.bolum6;
-    
-    if (b7?.hasKapaliOtopark == true && _model.resOtoparkKapi == null) return false;
-    if (b7?.hasKazanDairesi == true && _model.resKazanKapi == null) return false;
-    if (b7?.hasAsansorNormal == true && _model.resAsansorKapi == null) return false;
-    if (b7?.hasAsansorDairesi == true && _model.resAsansorMakineKapi == null) return false;
-    if (b7?.hasJeneratorOdasi == true && _model.resJeneratorKapi == null) return false;
-    if (b7?.hasElektrikOdasi == true && _model.resElektrikKapi == null) return false; // EKLENDİ
-    
-    if (b6?.hasTicari == true) {
-       if (_model.resTicariAlan == null) return false;
-       if (_model.resTicariAlan?.label == "B" && _model.hasTicariYanginKapisi == null) return false;
-    }
-    return true;
   }
 }

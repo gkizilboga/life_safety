@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_14_model.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/screens/bolum_15_screen.dart';
-
+import '../../data/bina_store.dart';
+import '../../models/bolum_14_model.dart';
+import '../../models/bolum_3_model.dart';
+import 'bolum_15_screen.dart'; // Sonraki ekran
+import '../../widgets/custom_widgets.dart';
 
 class Bolum14Screen extends StatefulWidget {
   const Bolum14Screen({super.key});
@@ -18,54 +18,65 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
   @override
   void initState() {
     super.initState();
-    _calculateRequirements();
+    _hesaplaVeAnalizEt();
   }
 
-  void _calculateRequirements() {
-    final b4 = BinaStore.instance.bolum4;
-    final b3 = BinaStore.instance.bolum3;
+  void _hesaplaVeAnalizEt() {
+    // Bölüm 3'ten bina boyutlarını çek
+    final Bolum3Model? bolum3 = BinaStore.instance.bolum3;
+    
+    // Değerleri al (yoksa varsayılan ata)
+    // h_bina aslında Zemin + Normal katlardır ama Bolum3 modelinde toplamYukseklik tüm binayı verir.
+    // Yönetmelik h_bina için Zemin+Normal katları kasteder.
+    // Manuel hesaplayalım:
+    double zeminH = bolum3?.zeminKatYuksekligi ?? 3.50;
+    double normalH = bolum3?.normalKatYuksekligi ?? 3.00;
+    double bodrumH = bolum3?.bodrumKatYuksekligi ?? 3.50;
+    
+    int nKat = bolum3?.normalKatSayisi ?? 0;
+    int bKat = bolum3?.bodrumKatSayisi ?? 0;
 
-    final bool isLimit3050 = b4?.isLimitBina3050 ?? false;
-    final bool isLimit2150 = b4?.isLimitBina2150 ?? false;
-    final double hBodrum = b3?.hBodrum ?? 0.0;
+    double hBinaYonetmelik = zeminH + (nKat * normalH); // Yerden çatıya kadar (bodrum hariç)
+    double hBodrum = bKat * bodrumH; // Toplam bodrum derinliği
 
     int duvarDk = 60;
     int kapakDk = 30;
     String mesaj = "";
 
-    if (isLimit3050) {
+    // ALGORİTMA
+    if (hBinaYonetmelik >= 30.50) {
+      // DURUM 1: 30.50m ÜZERİ
       duvarDk = 120;
       kapakDk = 90;
       mesaj = "Binanız 30.50 metreden yüksek olduğu için tüm şaft duvarları en az 120 dk, kapakları ise 90 dk duman sızdırmaz ve yangına dayanıklı olmalıdır.";
-    } else if (isLimit2150) {
+    } else if (hBinaYonetmelik >= 21.50) {
+      // DURUM 2: 21.50m - 30.50m ARASI
       duvarDk = 90;
       kapakDk = 60;
       mesaj = "Binanız 21.50m - 30.50m aralığında olup ‘Yüksek Bina’ sınıfındadır. Tesisat şaftı ve yangın duvarlarınızın en az 90 dk, kapakların ise 60 dk dayanıklı olması gerekmektedir.";
-    } else if (!isLimit2150 && hBodrum >= 10.00) {
-      duvarDk = 90;
-      kapakDk = 60;
-      mesaj = "DİKKAT: Binanız alçak olsa da, bodrum kat derinliğiniz 10 metreyi aştığı için bodrum katlarınız yüksek risk taşımaktadır. Bodrumdaki duvar ve kapak dayanımları (90dk/60dk), üst katlardan (60dk/30dk) daha yüksek seçilmelidir.";
+    } else if (hBodrum >= 10.00) {
+      // DURUM 3: ALÇAK BİNA AMA DERİN BODRUM
+      duvarDk = 90; // Bodrum esas alındı
+      kapakDk = 60; // Bodrum esas alındı
+      mesaj = "DİKKAT: Binanız alçak olsa da, bodrum kat derinliğiniz 10 metreyi aştığı için bodrum katlarınız yüksek risk taşımaktadır. Bodrumdaki şaft duvarları ve kapakların dayanımları (90dk/60dk), üst katlardan (60dk/30dk) daha yüksek seçilmelidir.";
     } else {
+      // DURUM 4: STANDART
       duvarDk = 60;
       kapakDk = 30;
-      mesaj = "Binanızın yüksekliği ve bodrum derinliği standart sınırlar içindedir. Duvarlar 60 dk, kapaklar 30 dk dayanıklı olmalıdır.";
+      mesaj = "Binanızın yüksekliği ve bodrum derinliği standart sınırlar içindedir. Şaft duvarları 60 dk, kapakları 30 dk dayanıklı olmalıdır.";
     }
 
     setState(() {
       _model = Bolum14Model(
-        valGerekenDuvarDk: duvarDk,
-        valGerekenKapakDk: kapakDk,
-        resDuvarRaporMesaji: mesaj,
+        gerekenDuvarDk: duvarDk,
+        gerekenKapakDk: kapakDk,
+        raporMesaji: mesaj,
       );
     });
   }
 
-void _onNextPressed() {
-    // Önce Bölüm 14 verilerini merkeze (BinaStore) kaydet
+  void _onNextPressed() {
     BinaStore.instance.bolum14 = _model;
-    print("Bölüm 14 Kaydedildi. Duvar: ${_model.valGerekenDuvarDk}dk");
-
-    // Şimdi Bölüm 15 ekranına git
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum15Screen()),
@@ -77,65 +88,44 @@ void _onNextPressed() {
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Yangın Duvarları",
-            subtitle: "Bölüm 14: Dayanım Süreleri",
-            currentStep: 14,
-            totalSteps: 15,
-            onBack: () => Navigator.pop(context),
+          const ModernHeader(
+            title: "Bölüm-14: Şaft Dayanımı",
+            subtitle: "Otomatik hesaplanan dayanım süreleri.",
+            currentStep: 4, 
+            totalSteps: 26,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "HESAPLANAN GEREKLİLİKLER",
-                    style: TextStyle(
-                      fontSize: 18, 
-                      fontWeight: FontWeight.w900, 
-                      color: Color(0xFF2C3E50),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Bina yüksekliği ve bodrum derinliğine göre sistem tarafından hesaplanmıştır.",
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 25),
-
-                  Row(
-                    children: [
-                      Expanded(child: _buildResultCard("Duvar Dayanımı", "${_model.valGerekenDuvarDk}", "Dakika")),
-                      const SizedBox(width: 15),
-                      Expanded(child: _buildResultCard("Kapak Dayanımı", "${_model.valGerekenKapakDk}", "Dakika")),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 20),
-                  
+                  // BİLGİ KARTI
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.blue.shade200),
+                      color: Colors.orange.shade50,
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: Colors.orange.shade200),
                     ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
                       children: [
-                        Icon(Icons.info, color: Colors.blue.shade800),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            _model.resDuvarRaporMesaji,
-                            style: TextStyle(
-                              color: Colors.blue.shade900,
-                              fontWeight: FontWeight.w500,
-                              height: 1.3,
-                            ),
-                          ),
+                        const Icon(Icons.analytics_outlined, size: 40, color: Colors.orange),
+                        const SizedBox(height: 10),
+                        const Text("GEREKEN YANGIN DAYANIMI", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildInfoBox("Duvar", "${_model.gerekenDuvarDk} dk"),
+                            _buildInfoBox("Kapak", "${_model.gerekenKapakDk} dk"),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          _model.raporMesaji ?? "Hesaplanıyor...",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey[800], fontSize: 13),
                         ),
                       ],
                     ),
@@ -166,51 +156,12 @@ void _onNextPressed() {
     );
   }
 
-  Widget _buildResultCard(String title, String value, String unit) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.1)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w900,
-              color: Color(0xFF1A237E),
-            ),
-          ),
-          Text(
-            unit,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Color(0xFF1A237E),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
+  Widget _buildInfoBox(String label, String value) {
+    return Column(
+      children: [
+        Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
     );
   }
 }

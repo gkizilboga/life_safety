@@ -1,77 +1,97 @@
-enum TekKatCikisSecim { duzAyak, rampa, merdiven }
-enum BodrumDevamSecim { evetDevam, hayirAyri }
-enum RampaSecim { evet, hayir }
+import 'choice_result.dart'; 
+import '../utils/app_content.dart';
 
 class Bolum20Model {
-  // Durum A (Tek Katlı)
-  final TekKatCikisSecim? resTekKatCikis;
+  // Tek Katlı Bina İse
+  final ChoiceResult? tekKatCikis;
+  final ChoiceResult? tekKatRampa;
 
-  // Durum B (Çok Katlı - Sayaçlar)
-  final int cntNormalMerdiven;
-  final int cntYanginMerdiveniBeton;
-  final int cntYanginMerdiveniCelik;
-  final int cntDisCelikMerdiven;
-  final int cntDonerMerdiven;
-  final int cntSahanliksizMerdiven;
+  // Çok Katlı Bina İse (Sayısal Girişler)
+  final int normalMerdivenSayisi;
+  final int binaIciYanginMerdiveniSayisi;
+  final int binaDisiKapaliYanginMerdiveniSayisi;
+  final int binaDisiAcikYanginMerdiveniSayisi;
+  final int donerMerdivenSayisi;
+  final int sahanliksizMerdivenSayisi;
 
-  // Ek Sorular
-  final BodrumDevamSecim? resBodrumMerdivenDevam;
-  final RampaSecim? resRampaVarMi;
+  // Bodrum Varsa (Bölüm 3'ten gelen bilgiye göre)
+  final ChoiceResult? bodrumMerdivenDevami;
 
   Bolum20Model({
-    this.resTekKatCikis,
-    this.cntNormalMerdiven = 0,
-    this.cntYanginMerdiveniBeton = 0,
-    this.cntYanginMerdiveniCelik = 0,
-    this.cntDisCelikMerdiven = 0,
-    this.cntDonerMerdiven = 0,
-    this.cntSahanliksizMerdiven = 0,
-    this.resBodrumMerdivenDevam,
-    this.resRampaVarMi,
+    this.tekKatCikis,
+    this.tekKatRampa,
+    this.normalMerdivenSayisi = 0,
+    this.binaIciYanginMerdiveniSayisi = 0,
+    this.binaDisiKapaliYanginMerdiveniSayisi = 0,
+    this.binaDisiAcikYanginMerdiveniSayisi = 0,
+    this.donerMerdivenSayisi = 0,
+    this.sahanliksizMerdivenSayisi = 0,
+    this.bodrumMerdivenDevami,
   });
 
-  // --- HESAPLANAN BAYRAKLAR (FLAGS) ---
-  
-  bool get hasNormalMerdiven => cntNormalMerdiven > 0;
-
-  bool get hasYanginMerdiveni => 
-      (cntYanginMerdiveniBeton + cntYanginMerdiveniCelik + cntDisCelikMerdiven) > 0;
-
-  String get merdivenTipi {
-    if (cntDonerMerdiven > 0) return 'DONER';
-    if (cntSahanliksizMerdiven > 0) return 'SAHANLIKSIZ';
-    return 'STANDART';
-  }
-
-  int get toplamMerdivenSayisi => 
-      cntNormalMerdiven + 
-      cntYanginMerdiveniBeton + 
-      cntYanginMerdiveniCelik + 
-      cntDisCelikMerdiven + 
-      cntDonerMerdiven + 
-      cntSahanliksizMerdiven;
-
   Bolum20Model copyWith({
-    TekKatCikisSecim? resTekKatCikis,
-    int? cntNormalMerdiven,
-    int? cntYanginMerdiveniBeton,
-    int? cntYanginMerdiveniCelik,
-    int? cntDisCelikMerdiven,
-    int? cntDonerMerdiven,
-    int? cntSahanliksizMerdiven,
-    BodrumDevamSecim? resBodrumMerdivenDevam,
-    RampaSecim? resRampaVarMi,
+    ChoiceResult? tekKatCikis,
+    ChoiceResult? tekKatRampa,
+    int? normalMerdivenSayisi,
+    int? binaIciYanginMerdiveniSayisi,
+    int? binaDisiKapaliYanginMerdiveniSayisi,
+    int? binaDisiAcikYanginMerdiveniSayisi,
+    int? donerMerdivenSayisi,
+    int? sahanliksizMerdivenSayisi,
+    ChoiceResult? bodrumMerdivenDevami,
   }) {
     return Bolum20Model(
-      resTekKatCikis: resTekKatCikis ?? this.resTekKatCikis,
-      cntNormalMerdiven: cntNormalMerdiven ?? this.cntNormalMerdiven,
-      cntYanginMerdiveniBeton: cntYanginMerdiveniBeton ?? this.cntYanginMerdiveniBeton,
-      cntYanginMerdiveniCelik: cntYanginMerdiveniCelik ?? this.cntYanginMerdiveniCelik,
-      cntDisCelikMerdiven: cntDisCelikMerdiven ?? this.cntDisCelikMerdiven,
-      cntDonerMerdiven: cntDonerMerdiven ?? this.cntDonerMerdiven,
-      cntSahanliksizMerdiven: cntSahanliksizMerdiven ?? this.cntSahanliksizMerdiven,
-      resBodrumMerdivenDevam: resBodrumMerdivenDevam ?? this.resBodrumMerdivenDevam,
-      resRampaVarMi: resRampaVarMi ?? this.resRampaVarMi,
+      tekKatCikis: tekKatCikis ?? this.tekKatCikis,
+      tekKatRampa: tekKatRampa ?? this.tekKatRampa,
+      normalMerdivenSayisi: normalMerdivenSayisi ?? this.normalMerdivenSayisi,
+      binaIciYanginMerdiveniSayisi: binaIciYanginMerdiveniSayisi ?? this.binaIciYanginMerdiveniSayisi,
+      binaDisiKapaliYanginMerdiveniSayisi: binaDisiKapaliYanginMerdiveniSayisi ?? this.binaDisiKapaliYanginMerdiveniSayisi,
+      binaDisiAcikYanginMerdiveniSayisi: binaDisiAcikYanginMerdiveniSayisi ?? this.binaDisiAcikYanginMerdiveniSayisi,
+      donerMerdivenSayisi: donerMerdivenSayisi ?? this.donerMerdivenSayisi,
+      sahanliksizMerdivenSayisi: sahanliksizMerdivenSayisi ?? this.sahanliksizMerdivenSayisi,
+      bodrumMerdivenDevami: bodrumMerdivenDevami ?? this.bodrumMerdivenDevami,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'tekKatCikis_label': tekKatCikis?.label,
+      'tekKatRampa_label': tekKatRampa?.label,
+      'normalMerdivenSayisi': normalMerdivenSayisi,
+      'binaIciYanginMerdiveniSayisi': binaIciYanginMerdiveniSayisi,
+      'binaDisiKapaliYanginMerdiveniSayisi': binaDisiKapaliYanginMerdiveniSayisi,
+      'binaDisiAcikYanginMerdiveniSayisi': binaDisiAcikYanginMerdiveniSayisi,
+      'donerMerdivenSayisi': donerMerdivenSayisi,
+      'sahanliksizMerdivenSayisi': sahanliksizMerdivenSayisi,
+      'bodrumMerdivenDevami_label': bodrumMerdivenDevami?.label,
+    };
+  }
+
+  factory Bolum20Model.fromMap(Map<String, dynamic> map) {
+    // Tek Kat Çıkış
+    ChoiceResult? tk;
+    if (map['tekKatCikis_label'] == Bolum20Content.tekKatOptionA.label) tk = Bolum20Content.tekKatOptionA;
+
+    // Tek Kat Rampa
+    ChoiceResult? tr;
+    if (map['tekKatRampa_label'] == Bolum20Content.rampaOptionB.label) tr = Bolum20Content.rampaOptionB;
+    if (map['tekKatRampa_label'] == Bolum20Content.rampaOptionC.label) tr = Bolum20Content.rampaOptionC;
+
+    // Bodrum Devamı
+    ChoiceResult? bd;
+    if (map['bodrumMerdivenDevami_label'] == Bolum20Content.bodrumOptionA.label) bd = Bolum20Content.bodrumOptionA;
+    if (map['bodrumMerdivenDevami_label'] == Bolum20Content.bodrumOptionB.label) bd = Bolum20Content.bodrumOptionB;
+
+    return Bolum20Model(
+      tekKatCikis: tk,
+      tekKatRampa: tr,
+      normalMerdivenSayisi: map['normalMerdivenSayisi'] ?? 0,
+      binaIciYanginMerdiveniSayisi: map['binaIciYanginMerdiveniSayisi'] ?? 0,
+      binaDisiKapaliYanginMerdiveniSayisi: map['binaDisiKapaliYanginMerdiveniSayisi'] ?? 0,
+      binaDisiAcikYanginMerdiveniSayisi: map['binaDisiAcikYanginMerdiveniSayisi'] ?? 0,
+      donerMerdivenSayisi: map['donerMerdivenSayisi'] ?? 0,
+      sahanliksizMerdivenSayisi: map['sahanliksizMerdivenSayisi'] ?? 0,
+      bodrumMerdivenDevami: bd,
     );
   }
 }
