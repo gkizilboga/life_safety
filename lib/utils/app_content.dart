@@ -3,14 +3,14 @@ class Bolum1Content {
   static final ruhsatSonrasi = ChoiceResult(
     label: "1-A",
     uiTitle: "19.12.2007 ve sonrasında alındı.",
-    uiSubtitle: "YENİ BİNA statüsündedir.",
+    uiSubtitle: "Bina, YENİ BİNA statüsünde kabul edilecektir.",
     reportText: "✅ BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 ve sonrası olduğu için, analiz \"Binaların Yangından Korunması Hakkında Yönetmelik\" (BYKHY) kapsamındaki \"YENİ BİNA\" hükümlerine göre yapılmıştır."
   );
 
   static final ruhsatOncesi = ChoiceResult(
     label: "1-B",
     uiTitle: "19.12.2007 öncesinde alındı.",
-    uiSubtitle: "MEVCUT BİNA ama Yeni Bina kurallarıyla değerlendirilsin.",
+    uiSubtitle: "Tarih itibarıyla MEVCUT BİNA statüsünde ancak yine de YENİ BİNA hükümlerine göre değerlendirilsin.",
     reportText: "⚠️ UYARI: Bina, ruhsat tarihi itibarıyla \"Mevcut Bina\" statüsünde olmasına rağmen, kullanıcı talebi üzerine güncel yönetmeliğin \"YENİ BİNA\" standartlarına göre analiz edilmiştir. Bu rapor, binanın güncel güvenlik şartlarını ne kadar sağladığını gösterir."
   );
 }
@@ -18,35 +18,35 @@ class Bolum2Content {
   static final betonarme = ChoiceResult(
     label: "2-A",
     uiTitle: "Betonarme",
-    uiSubtitle: "Türkiye'deki binaların neredeyse tamamıdır. Binada kolon, kiriş ve/veya perde beton vardır.",
+    uiSubtitle: "Türkiye'deki binaların tamamına yakını betonermedir. Binada kolon, kiriş, perde beton vardır.",
     reportText: "✅ BİLGİ: Binanın taşıyıcı sistemi BETONARME olarak beyan edilmiştir. Yangın dayanım hesapları (paspayı vb.) betonarme standartlarına göre değerlendirilmiştir."
   );
 
   static final celik = ChoiceResult(
     label: "2-B",
     uiTitle: "Çelik",
-    uiSubtitle: "Türkiye'de konut sektöründe nadiren görülür. Binanın iskeleti kalın demir/çelik profillerden oluşur.",
+    uiSubtitle: "Türkiye'deki konut sektöründe nadiren görülür. Binanın iskeleti kalın çelik profillerden oluşur.",
     reportText: "⚠️ BİLGİ: Binanın taşıyıcı sistemi ÇELİK olarak beyan edilmiştir. Çelik yapılar yüksek sıcaklıkta (540°C) taşıma gücünü hızla kaybettiği için, yangın yalıtımı (boya/kaplama) kritik önem taşımaktadır."
   );
 
   static final ahsap = ChoiceResult(
     label: "2-C",
     uiTitle: "Ahşap",
-    uiSubtitle: "Binanın ana taşıyıcıları kalın ahşap direkler ve kirişlerden oluşur.",
+    uiSubtitle: "Binanın ana taşıyıcıları kalın ahşap kolon, kirişten oluşur.",
     reportText: "⚠️ BİLGİ: Binanın taşıyıcı sistemi AHŞAP olarak beyan edilmiştir. Ahşap yapıların yangın dayanımı, kullanılan kesitlerin kalınlığına (kömürleşme hızına) bağlı olarak değerlendirilmiştir."
   );
 
   static final yigma = ChoiceResult(
     label: "2-D",
     uiTitle: "Yığma / Kagir (Taş Duvarlı)",
-    uiSubtitle: "Binada kolon, kiriş olmaz. Tüm yükü taşıyan, çok kalın dış duvarlar (taş) olur.",
+    uiSubtitle: "Binada kolon, kiriş olmaz. Tüm yükü taşıyan kalın taş duvarlardır.",
     reportText: "✅ BİLGİ: Binanın taşıyıcı sistemi YIĞMA (KAGİR) olarak beyan edilmiştir. Yığma binalarda duvar kalınlıkları (en az 19 cm), yangın dayanım süresini belirleyen ana faktördür."
   );
 
   static final bilinmiyor = ChoiceResult(
     label: "2-E",
     uiTitle: "Bilmiyorum / Emin Değilim",
-    uiSubtitle: "Sistem tarafından Betonarme varsayılacaktır.",
+    uiSubtitle: "Türkiye konut sektörü baz alınarak binanın Betonarme olduğu varsayılacaktır.",
     reportText: "❓ BİLİNMİYOR: Binanın taşıyıcı sistemi net olarak bilinmemektedir. Türkiye'deki yapı stoğunun büyük çoğunluğu betonarme olduğu için analiz BETONARME varsayımıyla yapılmıştır. Kesin sonuç için statik proje incelenmelidir."
   );
 }
@@ -121,7 +121,7 @@ class Bolum5Content {
   static final oturumAlani = ChoiceResult(
     label: "5-1 (Oturum)",
     uiTitle: "Bina Oturum (Taban) Alanı",
-    uiSubtitle: "Binanın zeminde kapladığı alan büyüklüğüdür.",
+    uiSubtitle: "Binanın zeminde kapladığı alan büyüklüğü.",
     reportText: "(Sayısal veri olarak saklanır: \"Taban Alanı: X m²\")"
   );
 
