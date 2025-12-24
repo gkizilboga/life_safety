@@ -193,7 +193,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _onNextPressed,
-                  child: const Text("HESAPLA VE DEVAM ET"),
+                  child: const Text("OTOMATİK HESAPLA VE DEVAM ET"),
                 ),
               ),
             ),
