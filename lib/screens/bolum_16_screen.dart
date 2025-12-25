@@ -89,8 +89,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-16: Dış Cephe",
-            subtitle: "Binanın dış kabuğu ve riskleri.",
+            title: "Bölüm-16: Binanın Dış Cephe Özellikleri",
+            subtitle: " ",
             currentStep: 6, 
             totalSteps: 26,
           ),

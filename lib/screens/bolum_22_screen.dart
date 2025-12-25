@@ -70,8 +70,8 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-22: İtfaiye Asansörü",
-            subtitle: "Yüksek binalarda acil durum asansörü.",
+            title: "Bölüm-22: İtfaiye (Acil Durum) Asansörü",
+            subtitle: " ",
             currentStep: 12, 
             totalSteps: 26,
           ),
@@ -81,7 +81,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               child: Column(
                 children: [
                   // 1. Varlık Sorusu
-                  _buildSoru("Binanızda (51.50m üzeri ise zorunlu olan) İtfaiye Asansörü var mı?", 'varlik', 
+                  _buildSoru("Binanızda (51.50m üzeri ise zorunlu olan) İtfaiye (acil durum) asansörü var mı?", 'varlik', 
                     [
                       Bolum22Content.varlikOptionA, 
                       Bolum22Content.varlikOptionB,
@@ -93,7 +93,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
                     const Divider(height: 30),
                     
                     // 2. Kapı Konumu
-                    _buildSoru("Bu İtfaiye Asansörünün kapısı nereye açılıyor?", 'konum', 
+                    _buildSoru("Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?", 'konum', 
                       [
                         Bolum22Content.konumOptionA, 
                         Bolum22Content.konumOptionB,

@@ -42,7 +42,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) {
       if (_model.malzeme == null) return _showError("Lütfen YGH malzemesi sorusunu yanıtlayınız.");
       if (_model.kapi == null) return _showError("Lütfen YGH kapı özellikleri sorusunu yanıtlayınız.");
-      if (_model.esya == null) return _showError("Lütfen YGH eşya durumu sorusunu yanıtlayınız.");
+      if (_model.esya == null) return _showError("Lütfen YGH 'de bulunabilecek eşya durumu sorusunu yanıtlayınız.");
     }
 
     BinaStore.instance.bolum21 = _model;
@@ -62,8 +62,8 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-21: Güvenlik Holü",
-            subtitle: "Yangın güvenlik holü (YGH) analizi.",
+            title: "Bölüm-21: Yangın Güvenlik Holü (YGH)",
+            subtitle: " ",
             currentStep: 11, 
             totalSteps: 26,
           ),
@@ -73,7 +73,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               child: Column(
                 children: [
                   // 1. Varlık Sorusu
-                  _buildSoru("Daire kapısından çıkıp yangın merdivenine giderken, arada ikinci bir kapıdan geçtiğiniz küçük bir oda (YGH) var mı?", 'varlik', 
+                  _buildSoru("Daire kapınızdan çıktığınızda merdivene doğru yürürken, merdivene girmeden evvel ufak bir odadan (YGH'den) geçiyor musunuz?", 'varlik', 
                     [
                       Bolum21Content.varlikOptionA, 
                       Bolum21Content.varlikOptionB
@@ -92,7 +92,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
                       ], _model.malzeme),
 
                     // 3. Kapı Sorusu
-                    _buildSoru("Bu hole giriş ve çıkış sağlayan kapıların özelliği nedir?", 'kapi', 
+                    _buildSoru("Bu YGH'ye giriş-çıkış sağlayan kapıların özelliği nedir?", 'kapi', 
                       [
                         Bolum21Content.kapiOptionA, 
                         Bolum21Content.kapiOptionB,
@@ -100,7 +100,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
                       ], _model.kapi),
 
                     // 4. Eşya Sorusu
-                    _buildSoru("Şu an YGH'nin içinde herhangi bir eşya bekletiliyor mu?", 'esya', 
+                    _buildSoru("YGH'nin içinde geçici veya kalıcı sebeplerle herhangi bir eşya vs.  bekletiliyor mu veya bu holde kaçışa engel bir unsur var mı?", 'esya', 
                       [
                         Bolum21Content.esyaOptionA, 
                         Bolum21Content.esyaOptionB,

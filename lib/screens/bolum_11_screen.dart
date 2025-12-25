@@ -21,30 +21,55 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
     setState(() {
       if (type == 'mesafe') {
         _model = _model.copyWith(mesafe: choice);
-      } else if (type == 'engel') {
+        
+        // Eğer mesafe uygunsa (A seçeneği) veya bilinmiyorsa (C seçeneği), 
+        // diğer sorulara gerek kalmaz, onları temizle.
+        if (choice.label != Bolum11Content.mesafeOptionB.label) {
+          _model = _model.copyWith(engel: null, zayifNokta: null);
+        }
+      } 
+      else if (type == 'engel') {
         _model = _model.copyWith(engel: choice);
-      } else if (type == 'zayifNokta') {
+        
+        // Eğer engel yoksa (A seçeneği) veya bilinmiyorsa (C seçeneği),
+        // zayıf nokta sorusuna gerek kalmaz, temizle.
+        if (choice.label != Bolum11Content.engelOptionB.label) {
+          _model = _model.copyWith(zayifNokta: null);
+        }
+      } 
+      else if (type == 'zayifNokta') {
         _model = _model.copyWith(zayifNokta: choice);
       }
     });
   }
 
   void _onNextPressed() {
-    // 3 soru da cevaplanmalı
-    if (_model.mesafe == null || _model.engel == null) {
+    // 1. Soru her zaman zorunlu
+    if (_model.mesafe == null) {
        ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen tüm soruları yanıtlayınız.")),
+        const SnackBar(content: Text("Lütfen itfaiye yaklaşım mesafesi sorusunu yanıtlayınız.")),
       );
       return;
     }
-    
-    // Zayıf nokta sorusu, sadece engel varsa mantıklı olabilir ama 
-    // genelde hepsinin cevaplanması istenir.
-    if (_model.zayifNokta == null) {
-       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen zayıf geçiş noktası sorusunu da yanıtlayınız.")),
-      );
-      return;
+
+    // 2. Soru (Engel), sadece 1. soruda B seçildiyse zorunlu
+    if (_model.mesafe?.label == Bolum11Content.mesafeOptionB.label) {
+      if (_model.engel == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Lütfen engel durumu sorusunu yanıtlayınız.")),
+        );
+        return;
+      }
+      
+      // 3. Soru (Zayıf Nokta), sadece 2. soruda B seçildiyse zorunlu
+      if (_model.engel?.label == Bolum11Content.engelOptionB.label) {
+        if (_model.zayifNokta == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Lütfen zayıf geçiş noktası sorusunu yanıtlayınız.")),
+          );
+          return;
+        }
+      }
     }
 
     BinaStore.instance.bolum11 = _model;
@@ -61,16 +86,16 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
         children: [
           const ModernHeader(
             title: "Bölüm-11: İtfaiye Erişimi",
-            subtitle: "İtfaiye aracı binaya yanaşabiliyor mu?",
-            currentStep: 1, // Detaylı Analiz Adım 1
-            totalSteps: 26, // Toplam 26 Detay Adımı Var (11-36 arası)
+            subtitle: "İtfaiye Aracının Binaya Yaklaşım İmkanı",
+            currentStep: 1, 
+            totalSteps: 26, 
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // SORU 1
+                  // SORU 1: MESAFE (HER ZAMAN GÖRÜNÜR)
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,58 +124,64 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
                     ),
                   ),
 
-                  // SORU 2
-                  QuestionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "2. Bahçe duvarı, çevre duvarı veya kilitli kapı engeli var mı?",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        SelectableCard(
-                          choice: Bolum11Content.engelOptionA,
-                          isSelected: _model.engel?.label == Bolum11Content.engelOptionA.label,
-                          onTap: () => _handleSelection('engel', Bolum11Content.engelOptionA),
-                        ),
-                        SelectableCard(
-                          choice: Bolum11Content.engelOptionB,
-                          isSelected: _model.engel?.label == Bolum11Content.engelOptionB.label,
-                          onTap: () => _handleSelection('engel', Bolum11Content.engelOptionB),
-                        ),
-                        SelectableCard(
-                          choice: Bolum11Content.engelOptionC,
-                          isSelected: _model.engel?.label == Bolum11Content.engelOptionC.label,
-                          onTap: () => _handleSelection('engel', Bolum11Content.engelOptionC),
-                        ),
-                      ],
+                  // SORU 2: ENGEL (SADECE MESAFE > 45m İSE GÖRÜNÜR)
+                  if (_model.mesafe?.label == Bolum11Content.mesafeOptionB.label) ...[
+                    const SizedBox(height: 20),
+                    QuestionCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "2. İtfaiye aracının binaya yeterince yanaşmasını engelleyen bir bahçe duvarı, çevre duvarı veya kilitli bir kapı var mı?",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          SelectableCard(
+                            choice: Bolum11Content.engelOptionA,
+                            isSelected: _model.engel?.label == Bolum11Content.engelOptionA.label,
+                            onTap: () => _handleSelection('engel', Bolum11Content.engelOptionA),
+                          ),
+                          SelectableCard(
+                            choice: Bolum11Content.engelOptionB,
+                            isSelected: _model.engel?.label == Bolum11Content.engelOptionB.label,
+                            onTap: () => _handleSelection('engel', Bolum11Content.engelOptionB),
+                          ),
+                          SelectableCard(
+                            choice: Bolum11Content.engelOptionC,
+                            isSelected: _model.engel?.label == Bolum11Content.engelOptionC.label,
+                            onTap: () => _handleSelection('engel', Bolum11Content.engelOptionC),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
 
-                  // SORU 3
-                  QuestionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "3. Duvarda 'Kırmızı Çarpı (X)' ile işaretlenmiş zayıf geçiş noktası var mı?",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        SelectableCard(
-                          choice: Bolum11Content.zayifNoktaOptionA,
-                          isSelected: _model.zayifNokta?.label == Bolum11Content.zayifNoktaOptionA.label,
-                          onTap: () => _handleSelection('zayifNokta', Bolum11Content.zayifNoktaOptionA),
-                        ),
-                        SelectableCard(
-                          choice: Bolum11Content.zayifNoktaOptionB,
-                          isSelected: _model.zayifNokta?.label == Bolum11Content.zayifNoktaOptionB.label,
-                          onTap: () => _handleSelection('zayifNokta', Bolum11Content.zayifNoktaOptionB),
-                        ),
-                      ],
+                  // SORU 3: ZAYIF NOKTA (SADECE ENGEL VARSA GÖRÜNÜR)
+                  if (_model.engel?.label == Bolum11Content.engelOptionB.label) ...[
+                    const SizedBox(height: 20),
+                    QuestionCard(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "3. Bu duvarda 'Kırmızı Çarpı (X)' ile işaretlenmiş VEYA itfaiyenin kolayca yıkıp geçebileceği zayıf bir bölüm (en az 8 metre genişliğinde) var mı?",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 10),
+                          SelectableCard(
+                            choice: Bolum11Content.zayifNoktaOptionA,
+                            isSelected: _model.zayifNokta?.label == Bolum11Content.zayifNoktaOptionA.label,
+                            onTap: () => _handleSelection('zayifNokta', Bolum11Content.zayifNoktaOptionA),
+                          ),
+                          SelectableCard(
+                            choice: Bolum11Content.zayifNoktaOptionB,
+                            isSelected: _model.zayifNokta?.label == Bolum11Content.zayifNoktaOptionB.label,
+                            onTap: () => _handleSelection('zayifNokta', Bolum11Content.zayifNoktaOptionB),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),

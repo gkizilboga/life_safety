@@ -58,7 +58,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     
     // ÇELİK
     if (_tasiyiciSistemLabel == Bolum2Content.celik.label && _model.celikKoruma == null) {
-      _showError("Lütfen çelik koruma durumunu seçiniz."); return;
+      _showError("Lütfen binanızdaki çeliklerin korunma yöntemini seçiniz."); return;
     }
     
     // BETON
@@ -118,8 +118,8 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-12: Yapısal Dayanım",
-            subtitle: "Taşıyıcı sistemin yangın direnci.",
+            title: "Bölüm-12: Taşıyıcı Sistemin Yapısal Yangın Dayanımı",
+            subtitle: " ",
             currentStep: 2, 
             totalSteps: 26,
           ),
@@ -183,7 +183,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Betonarme taşıyıcılarınızdaki demirleri örten beton tabakasının kalınlıkları hakkında nasıl bilgi girmek istersiniz?", style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text("Betonarme taşıyıcılarınızdaki demir donatıları örten beton tabakasının kalınlıkları hakkında nasıl bilgi girmek istersiniz?", style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
           SelectableCard(
             choice: Bolum12Content.betonOptionA,

@@ -104,7 +104,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
         !_model.hasTrafo && !_model.hasDepo && !_model.hasCop && 
         !_model.hasSiginak && !_model.hasDuvar && !_model.isHicbiri) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen riskli alanları işaretleyiniz veya 'Hiçbiri'ni seçiniz.")),
+        const SnackBar(content: Text("Lütfen binanızdaki teknik hacimleri, riskli alanları işaretleyiniz veya 'Hiçbiri'ni seçiniz.")),
       );
       return;
     }
@@ -125,8 +125,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-7: Riskli Alanlar",
-            subtitle: "Binadaki tehlike kaynaklarını belirleyelim.",
+            title: "Bölüm-7: Özel Riskli Alanlar ve Teknik Hacimler",
+            subtitle: " ",
             currentStep: 7,
             totalSteps: 10,
           ),

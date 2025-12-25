@@ -40,7 +40,7 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
         children: [
           const ModernHeader(
             title: "Bölüm-8: Bina Nizamı",
-            subtitle: "Binanızın komşu binalara konumu nedir?",
+            subtitle: "Binanın Komşu Binalara Göre Konumu",
             currentStep: 8,
             totalSteps: 10,
           ),

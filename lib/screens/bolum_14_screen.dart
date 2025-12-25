@@ -48,22 +48,22 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
       // DURUM 1: 30.50m ÜZERİ
       duvarDk = 120;
       kapakDk = 90;
-      mesaj = "Binanız 30.50 metreden yüksek olduğu için tüm şaft duvarları en az 120 dk, kapakları ise 90 dk duman sızdırmaz ve yangına dayanıklı olmalıdır.";
+      mesaj = "Binanız 30.50 metreden yüksek olduğundan tüm tesisat şaft duvarları en az 120 dk, şaft kapakları ise en az 90 dk yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.";
     } else if (hBinaYonetmelik >= 21.50) {
       // DURUM 2: 21.50m - 30.50m ARASI
       duvarDk = 90;
       kapakDk = 60;
-      mesaj = "Binanız 21.50m - 30.50m aralığında olup ‘Yüksek Bina’ sınıfındadır. Tesisat şaftı ve yangın duvarlarınızın en az 90 dk, kapakların ise 60 dk dayanıklı olması gerekmektedir.";
+      mesaj = "Binanız 21.50m - 30.50m aralığında olup ‘Yüksek Bina’ sınıfındadır. Tesisat şaftı ve yangın duvarlarınızın en az 90 dk, şaft kapaklarınızın ise en az 60 dk dayanıklı, duman sızdırmaz özellikte olmaları gerekmektedir.";
     } else if (hBodrum >= 10.00) {
       // DURUM 3: ALÇAK BİNA AMA DERİN BODRUM
       duvarDk = 90; // Bodrum esas alındı
       kapakDk = 60; // Bodrum esas alındı
-      mesaj = "DİKKAT: Binanız alçak olsa da, bodrum kat derinliğiniz 10 metreyi aştığı için bodrum katlarınız yüksek risk taşımaktadır. Bodrumdaki şaft duvarları ve kapakların dayanımları (90dk/60dk), üst katlardan (60dk/30dk) daha yüksek seçilmelidir.";
+      mesaj = "DİKKAT: Binanız alçak olsa da, bodrum kat derinliğiniz 10 metreyi aştığı için bodrum katlarınız risk taşımaktadır. Bodrumdaki şaft duvarları en az 90 dk ve şaft kapakların dayanımları en az 60dk, zemin üst normal katlarda ise duvarları en az 60dk, kapakları en az 30dk olmalıdır.";
     } else {
       // DURUM 4: STANDART
       duvarDk = 60;
       kapakDk = 30;
-      mesaj = "Binanızın yüksekliği ve bodrum derinliği standart sınırlar içindedir. Şaft duvarları 60 dk, kapakları 30 dk dayanıklı olmalıdır.";
+      mesaj = "Binanızın yüksekliği ve bodrum derinliği yüksek olmayan bina sınırları içindedir. Tesisat şaft duvarları en az 60 dk, şaft kapakları ise en az 30 dk dayanıklı olması yeterlidir.";
     }
 
     setState(() {
@@ -89,8 +89,8 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-14: Şaft Dayanımı",
-            subtitle: "Otomatik hesaplanan dayanım süreleri.",
+            title: "Bölüm-14: Tesisat Şaftlarının Durumu",
+            subtitle: " ",
             currentStep: 4, 
             totalSteps: 26,
           ),

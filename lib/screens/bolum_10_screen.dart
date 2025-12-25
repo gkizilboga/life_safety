@@ -41,8 +41,8 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-10: Kullanım Sınıfı",
-            subtitle: "Binanın ana kullanım amacı ve yoğunluğu.",
+            title: "Bölüm-10: Kat Kullanım Amacı ve Yoğunlukları",
+            subtitle: " ",
             currentStep: 10,
             totalSteps: 10, // Burası 1. Aşamanın sonu
           ),
@@ -56,7 +56,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Binanın Kullanım Sınıfı / Yoğunluğu Nedir?",
+                          "Binanın Kullanım Sınıfı ve Yoğunluğu Nedir?",
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 15),
@@ -104,7 +104,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _model.secim == null ? null : _onNextPressed,
-                  child: const Text("GENEL BİLGİLERİ TAMAMLA"),
+                  child: const Text("BİNA HAKKINDA TEMEL BİLGİLERİ TAMAMLA"),
                 ),
               ),
             ),

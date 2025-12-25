@@ -4,17 +4,9 @@ import '../utils/app_content.dart';
 class Bolum15Model {
   final ChoiceResult? kaplama;
   final ChoiceResult? yalitim;
-  
-  // Yalıtım varsa alt soru (Şap Var/Yok veya Malzeme Tipi)
-  // Burada basitçe String veya bool tutabiliriz ama raporlama için
-  // ChoiceResult yapısında seçenekler oluşturmak daha temiz olurdu.
-  // Ancak AppContent'te bu alt seçenekler tanımlı olmadığı için (görselde yok),
-  // Şimdilik basit bool ile yönetip, rapor mesajını ona göre manipüle edeceğiz.
   final bool? yalitimSapVar; 
-
   final ChoiceResult? tavan;
-  final String? tavanMalzemesi; // Alçı/Metal veya Ahşap/Plastik seçimi için
-
+  final String? tavanMalzemesi; 
   final ChoiceResult? tesisat;
 
   Bolum15Model({

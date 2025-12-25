@@ -8,10 +8,15 @@ class Bolum3Model {
   // Yükseklik Hassasiyet Tercihi (Biliniyor / Standart)
   final ChoiceResult? yukseklikTercihi;
 
-  // Eğer "Biliyorum" seçilirse girilecek değerler:
+  // Girilen Değerler
   final double? zeminKatYuksekligi;
   final double? normalKatYuksekligi;
   final double? bodrumKatYuksekligi;
+
+  // Hesaplanan Sonuçlar (Özet Ekranı İçin)
+  final double? hBina; // Zemin + Normal
+  final double? hYapi; // Zemin + Normal + Bodrum
+  final bool? isYuksekBina; // hBina > 21.50 mi?
 
   Bolum3Model({
     this.normalKatSayisi,
@@ -20,27 +25,10 @@ class Bolum3Model {
     this.zeminKatYuksekligi,
     this.normalKatYuksekligi,
     this.bodrumKatYuksekligi,
+    this.hBina,
+    this.hYapi,
+    this.isYuksekBina,
   });
-
-  // Toplam Yüksekliği Hesaplayan Akıllı Getter
-  double get toplamYukseklik {
-    double zeminH = zeminKatYuksekligi ?? 3.50; // Varsayılan
-    double normalH = normalKatYuksekligi ?? 3.00; // Varsayılan
-    double bodrumH = bodrumKatYuksekligi ?? 3.50; // Varsayılan
-
-    // Eğer standart seçildiyse varsayılanları kullan
-    if (yukseklikTercihi?.label == Bolum3Content.yukseklikStandart.label) {
-      zeminH = 3.50;
-      normalH = 3.00;
-      bodrumH = 3.50;
-    }
-
-    int nKat = normalKatSayisi ?? 0;
-    int bKat = bodrumKatSayisi ?? 0;
-
-    // Toplam = Zemin + (Normal Katlar) + (Bodrumlar)
-    return zeminH + (nKat * normalH) + (bKat * bodrumH);
-  }
 
   Bolum3Model copyWith({
     int? normalKatSayisi,
@@ -49,6 +37,9 @@ class Bolum3Model {
     double? zeminKatYuksekligi,
     double? normalKatYuksekligi,
     double? bodrumKatYuksekligi,
+    double? hBina,
+    double? hYapi,
+    bool? isYuksekBina,
   }) {
     return Bolum3Model(
       normalKatSayisi: normalKatSayisi ?? this.normalKatSayisi,
@@ -57,6 +48,9 @@ class Bolum3Model {
       zeminKatYuksekligi: zeminKatYuksekligi ?? this.zeminKatYuksekligi,
       normalKatYuksekligi: normalKatYuksekligi ?? this.normalKatYuksekligi,
       bodrumKatYuksekligi: bodrumKatYuksekligi ?? this.bodrumKatYuksekligi,
+      hBina: hBina ?? this.hBina,
+      hYapi: hYapi ?? this.hYapi,
+      isYuksekBina: isYuksekBina ?? this.isYuksekBina,
     );
   }
 
@@ -68,11 +62,13 @@ class Bolum3Model {
       'zeminKatYuksekligi': zeminKatYuksekligi,
       'normalKatYuksekligi': normalKatYuksekligi,
       'bodrumKatYuksekligi': bodrumKatYuksekligi,
+      'hBina': hBina,
+      'hYapi': hYapi,
+      'isYuksekBina': isYuksekBina,
     };
   }
 
   factory Bolum3Model.fromMap(Map<String, dynamic> map) {
-    // Tercihi geri yükle
     ChoiceResult? secilenTercih;
     final label = map['yukseklikTercihi_label'];
     if (label == Bolum3Content.yukseklikBiliniyor.label) {
@@ -88,6 +84,9 @@ class Bolum3Model {
       zeminKatYuksekligi: map['zeminKatYuksekligi'],
       normalKatYuksekligi: map['normalKatYuksekligi'],
       bodrumKatYuksekligi: map['bodrumKatYuksekligi'],
+      hBina: map['hBina'],
+      hYapi: map['hYapi'],
+      isYuksekBina: map['isYuksekBina'],
     );
   }
 }

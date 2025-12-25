@@ -59,8 +59,8 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-24: Açık Koridorlar",
-            subtitle: "Dışarıya açık geçitlerin güvenliği.",
+            title: "Bölüm-24: Dış Kaçış Geçitleri / Koridorları",
+            subtitle: " ",
             currentStep: 14, 
             totalSteps: 26,
           ),

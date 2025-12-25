@@ -134,7 +134,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     _buildSoru("Binadan dışarıya (sokağa/caddeye) çıkışınız nasıl?", 'tekKatCikis', 
                       [Bolum20Content.tekKatOptionA], _model.tekKatCikis),
                     
-                    _buildSoru("Binadan sokağa çıkarken merdiven yerine rampa kullanılıyor mu?", 'tekKatRampa', 
+                    _buildSoru("Binadan sokağa çıkarken rampaya basmak veya rampa kullanmak zorunda kalıyor musunuz?", 'tekKatRampa', 
                       [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC], _model.tekKatRampa),
                   
                   ] else ...[
@@ -143,7 +143,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Aşağıdaki merdiven türlerinden kaçar tane var?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          const Text("Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Merdiven adetlerini mutlaka belirtmeniz gereklidir)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                           const SizedBox(height: 15),
                           
                           _buildNumberRow(Bolum20Content.cokKatOption1.uiTitle, _normalCtrl),

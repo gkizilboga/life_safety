@@ -44,16 +44,33 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
         _toplamController.text = tahmin.toStringAsFixed(2);
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Otomatik Hesaplandı: $katSayisi kat x $kAlani m²")),
+        SnackBar(
+          content: Text("Otomatik Hesaplandı: $katSayisi kat x $kAlani m²"),
+          backgroundColor: Colors.green,
+        ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen önce 'Standart Kat Alanı'nı giriniz.")),
+        const SnackBar(
+          content: Text("Lütfen önce 'Standart Kat Alanı'nı giriniz."),
+          backgroundColor: Colors.orange,
+        ),
       );
     }
   }
 
   void _onNextPressed() {
+    // Validasyon: Toplam alan boş olamaz
+    if (_toplamController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Lütfen Toplam İnşaat Alanını giriniz veya Otomatik Hesaplatınız."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     _model = _model.copyWith(
       tabanAlani: double.tryParse(_tabanController.text.replaceAll(',', '.')),
       katAlani: double.tryParse(_katController.text.replaceAll(',', '.')),
@@ -73,8 +90,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-5: Alan Bilgileri",
-            subtitle: "Binanın büyüklüğünü belirleyelim.",
+            title: "Bölüm-5: Bina Kat Alanı Bilgileri",
+            subtitle: " ",
             currentStep: 5,
             totalSteps: 10,
           ),
@@ -100,27 +117,32 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
                         _buildNumberInput(_katController),
 
                         const SizedBox(height: 20),
+                        const Divider(thickness: 2),
+                        const SizedBox(height: 10),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(Bolum5Content.toplamInsaat.uiTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                  Text(Bolum5Content.toplamInsaat.uiSubtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                                ],
-                              ),
+                        // OTOMATİK HESAPLA BUTONU (BÜYÜTÜLDÜ)
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: _otomatikHesapla,
+                            icon: const Icon(Icons.calculate, size: 24),
+                            label: const Text(
+                              "OTOMATİK HESAPLA",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
-                            TextButton.icon(
-                              onPressed: _otomatikHesapla,
-                              icon: const Icon(Icons.calculate, size: 18),
-                              label: const Text("Otomatik"),
-                              style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                            )
-                          ],
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange.shade700,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                          ),
                         ),
+                        
+                        const SizedBox(height: 15),
+
+                        Text(Bolum5Content.toplamInsaat.uiTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        Text(Bolum5Content.toplamInsaat.uiSubtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                         const SizedBox(height: 5),
                         _buildNumberInput(_toplamController),
                       ],

@@ -103,7 +103,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Binanızda riskli alan bulunmadığı için bu bölüm atlanmıştır."),
+              const Text("Binanızda riskli alan bulunmadığı için bu bölüm atlanacaktır."),
               const SizedBox(height: 20),
               ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET"))
             ],
@@ -116,8 +116,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-13: Yangın Kapıları",
-            subtitle: "Riskli alanların kapıları ve duvarları.",
+            title: "Bölüm-13: Özel Riskli Alanların, Teknik Hacimleri Duvar ve Kapı Özellikleri",
+            subtitle: " ",
             currentStep: 3,
             totalSteps: 26,
           ),
@@ -126,13 +126,13 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  if (_askOtopark) _buildSoru("Otoparktan bina içine (merdiven veya asansör holüne) açılan kapınızın özelliği nedir?", 'otopark', 
+                  if (_askOtopark) _buildSoru("Otoparktan bina içine (merdiven veya asansör holüne) açılan kapının özelliği nedir?", 'otopark', 
                     [Bolum13Content.otoparkOptionA, Bolum13Content.otoparkOptionB, Bolum13Content.otoparkOptionC, Bolum13Content.otoparkOptionD], _model.otoparkKapi),
 
                   if (_askKazan) _buildSoru("Kazan dairesinin duvarları ve kapısı nasıldır?", 'kazan', 
                     [Bolum13Content.kazanOptionA, Bolum13Content.kazanOptionB, Bolum13Content.kazanOptionC, Bolum13Content.kazanOptionD], _model.kazanKapi),
 
-                  if (_askAsansor) _buildSoru("Binanızdaki normal asansörün kapısı nasıldır?", 'asansor', 
+                  if (_askAsansor) _buildSoru("Binanızdaki normal (insan taşıma) asansörünün kapısı nasıldır?", 'asansor', 
                     [Bolum13Content.asansorOptionA, Bolum13Content.asansorOptionB, Bolum13Content.asansorOptionC], _model.asansorKapi),
 
                   if (_askJenerator) _buildSoru("Jeneratör odasının duvar ve kapısı nasıldır?", 'jenerator', 
@@ -144,16 +144,16 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                   if (_askTrafo) _buildSoru("Trafo odasının kapısı nasıldır?", 'trafo', 
                     [Bolum13Content.trafoOptionA, Bolum13Content.trafoOptionB, Bolum13Content.trafoOptionC], _model.trafoKapi),
 
-                  if (_askDepo) _buildSoru("Eşya deposunun veya depolarının kapısı nasıldır?", 'depo', 
+                  if (_askDepo) _buildSoru("Binadaki eşya depolarının kapıları nasıldır?", 'depo', 
                     [Bolum13Content.depoOptionA, Bolum13Content.depoOptionB, Bolum13Content.depoOptionC], _model.depoKapi),
 
-                  if (_askCop) _buildSoru("Çöp toplama odasının kapısı ve havalandırması nasıldır?", 'cop', 
+                  if (_askCop) _buildSoru("Çöp toplama odalarının kapıları ve havalandırma imkanları nasıldır?", 'cop', 
                     [Bolum13Content.copOptionA, Bolum13Content.copOptionB, Bolum13Content.copOptionC], _model.copKapi),
 
-                  if (_askDuvar) _buildSoru("Yan bina ile ortak kullandığınız duvarın cinsi nedir?", 'duvar', 
+                  if (_askDuvar) _buildSoru("Yan bina ile ortak kullandığınız duvarın özelliği nedir?", 'duvar', 
                     [Bolum13Content.ortakDuvarOptionA, Bolum13Content.ortakDuvarOptionB, Bolum13Content.ortakDuvarOptionC], _model.ortakDuvar),
 
-                  if (_askTicari) _buildSoru("Konutların altındaki dükkan veya ofisten konut merdivenine geçiş nasıl?", 'ticari', 
+                  if (_askTicari) _buildSoru("Konutların altındaki işyerleri veya dükkanlardan (ticari her türlü alandan) konut merdivenine geçiş nasıldır?", 'ticari', 
                     [Bolum13Content.ticariOptionA, Bolum13Content.ticariOptionB, Bolum13Content.ticariOptionC], _model.ticariKapi),
                 ],
               ),

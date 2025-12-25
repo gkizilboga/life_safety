@@ -72,7 +72,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
     // Hiçbir şey seçilmediyse
     if (!_model.hasOtopark && !_model.hasTicari && !_model.hasDepo && !_model.isSadeceKonut) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen binadaki kullanım alanlarını işaretleyiniz.")),
+        const SnackBar(content: Text("Lütfen binadaki farklı kullanım alanlarını işaretleyiniz.")),
       );
       return;
     }
@@ -92,8 +92,8 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-6: Kullanım Detayları",
-            subtitle: "Binada konut harici neler var?",
+            title: "Bölüm-6: Farklı Kullanım Amaçları",
+            subtitle: "Binadaki Konut Harici Alanlar",
             currentStep: 6,
             totalSteps: 10,
           ),

@@ -40,7 +40,7 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
         children: [
           const ModernHeader(
             title: "Bölüm-2: Taşıyıcı Sistem",
-            subtitle: "Binanızın iskelet yapısı nedir?",
+            subtitle: "Binanın İskelet Yapısı",
             currentStep: 2,
             totalSteps: 10,
             // onBack: () => Navigator.pop(context), // İstersen geri butonu ekleyebilirsin

@@ -67,7 +67,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Binanızda Döner Merdiven bulunmadığı için bu bölüm atlanmıştır."),
+              const Text("Binanızda döner (dairesel) merdiven bulunmadığı için bu bölüm atlanacaktır."),
               const SizedBox(height: 20),
               ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET"))
             ],
@@ -80,8 +80,8 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-25: Döner Merdiven",
-            subtitle: "Döner merdivenlerin uygunluğu.",
+            title: "Bölüm-25: Döner (Dairesel) Merdiven",
+            subtitle: " ",
             currentStep: 15, 
             totalSteps: 26,
           ),
@@ -90,13 +90,13 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru("Mevcut döner merdiveninizin genişliği ve hizmet ettiği kişi sayısı nedir?", 'kapasite', 
+                  _buildSoru("Mevcut döner (dairesel) merdiveninizin genişliği ve hizmet ettiği kişi sayısı nedir?", 'kapasite', 
                     [Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB], _model.kapasite),
 
-                  _buildSoru("Basamaklara bastığınızda, ayağınızın tam sığdığı kısım yeterli mi?", 'basamak', 
+                  _buildSoru("Dairesel merdivenin basamaklarına bastığınızda, ayağınızın tam sığdığı kısım yeterli genişlikte mi?", 'basamak', 
                     [Bolum25Content.basamakOptionA, Bolum25Content.basamakOptionB], _model.basamak),
 
-                  _buildSoru("Merdivenden inerken üstteki basamak veya tavan başınıza ne kadar yakın?", 'basKurtarma', 
+                  _buildSoru("Dairesel merdivenden inerken üstteki basamak veya tavan, başınıza ne kadar yakın?", 'basKurtarma', 
                     [Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB], _model.basKurtarma),
                 ],
               ),

@@ -39,8 +39,8 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Bölüm-9: Yangın Söndürme",
-            subtitle: "Binada otomatik söndürme sistemi var mı?",
+            title: "Bölüm-9: Otomatik Yangın Söndürme Sistemi Varlığı",
+            subtitle: " ",
             currentStep: 9,
             totalSteps: 10,
           ),

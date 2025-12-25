@@ -52,7 +52,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
         children: [
           const ModernHeader(
             title: "Bölüm-23: Normal Asansörler",
-            subtitle: "Genel asansör güvenlik kontrolleri.",
+            subtitle: " ",
             currentStep: 13, 
             totalSteps: 26,
           ),
@@ -62,7 +62,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
               child: Column(
                 children: [
                   // 1. Bodrum
-                  _buildSoru("Asansörünüz bodrum kata (Otopark, Depo vb.) iniyor mu?", 'bodrum', 
+                  _buildSoru("Asansörünüz bodrum katlara da (otopark, depo vb.) iniyor mu?", 'bodrum', 
                     [
                       Bolum23Content.bodrumOptionA, 
                       Bolum23Content.bodrumOptionB, 
@@ -71,7 +71,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
                     ], _model.bodrum),
 
                   // 2. Yangın Modu
-                  _buildSoru("Yangın alarmı çaldığında asansörler otomatik zemin kata inip kapılarını açıyor mu?", 'yanginModu', 
+                  _buildSoru("Yangın alarmı çaldığında asansörler otomatik olarak zemin kata inip veya çıkıp kapısı açık halde bekliyor mu?", 'yanginModu', 
                     [
                       Bolum23Content.yanginModuOptionA, 
                       Bolum23Content.yanginModuOptionB,
@@ -95,7 +95,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
                     ], _model.levha),
 
                   // 5. Havalandırma
-                  _buildSoru("Asansör kuyusunun tepesinde duman tahliyesi için bir havalandırma var mı?", 'havalandirma', 
+                  _buildSoru("Asansör kuyusunun tepesinde duman tahliyesi için bir havalandırma penceresi var mı?", 'havalandirma', 
                     [
                       Bolum23Content.havalandirmaOptionA, 
                       Bolum23Content.havalandirmaOptionB,

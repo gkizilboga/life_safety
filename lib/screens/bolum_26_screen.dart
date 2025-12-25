@@ -77,7 +77,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
         children: [
           const ModernHeader(
             title: "Bölüm-26: Kaçış Rampaları",
-            subtitle: "Eğimli kaçış yollarının güvenliği.",
+            subtitle: " ",
             currentStep: 16, 
             totalSteps: 26,
           ),
@@ -87,7 +87,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
               child: Column(
                 children: [
                   // 1. Varlık
-                  _buildSoru("Binanızda kaçış yolu olarak kullanılan eğimli bir rampa var mı?", 'varlik', 
+                  _buildSoru("Binadan çıkarken ve bina içerisinde kullanmak zorunda kaldığınız eğimli bir rampa var mı?", 'varlik', 
                     [Bolum26Content.varlikOptionA, Bolum26Content.varlikOptionB], _model.varlik),
 
                   // Diğer sorular SADECE RAMPA VARSA gösterilir
@@ -99,7 +99,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
                       [Bolum26Content.egimOptionA, Bolum26Content.egimOptionB], _model.egim),
 
                     // 3. Sahanlık
-                    _buildSoru("Rampanın başlangıcında, bitişinde ve kapı önlerinde sahanlık var mı?", 'sahanlik', 
+                    _buildSoru("Rampanın başlangıcında ve bitişinde sahanlık var mı?", 'sahanlik', 
                       [Bolum26Content.sahanlikOptionA, Bolum26Content.sahanlikOptionB], _model.sahanlik),
                   ],
 

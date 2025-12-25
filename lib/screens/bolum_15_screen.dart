@@ -86,11 +86,19 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
                 children: [
                   // 1. Zemin Kaplaması
                   _buildSoru("Zeminlerinizde kullandığınız kaplama malzemesi nedir?", 'kaplama', 
-                    [Bolum15Content.kaplamaOptionA, Bolum15Content.kaplamaOptionB, Bolum15Content.kaplamaOptionC], _model.kaplama),
+                    [
+                      Bolum15Content.kaplamaOptionA, 
+                      Bolum15Content.kaplamaOptionB, 
+                      Bolum15Content.kaplamaOptionC
+                    ], _model.kaplama),
 
                   // 2. Isı Yalıtımı
-                  _buildSoru("Döşeme betonunun üzerinde strafor/köpük ısı yalıtımı var mı?", 'yalitim', 
-                    [Bolum15Content.yalitimOptionA, Bolum15Content.yalitimOptionB, Bolum15Content.yalitimOptionC], _model.yalitim),
+                  _buildSoru("Döşeme betonunun üzerinde strafor/köpük vb. ısı yalıtımı var mı?", 'yalitim', 
+                    [
+                      Bolum15Content.yalitimOptionA, 
+                      Bolum15Content.yalitimOptionB, 
+                      Bolum15Content.yalitimOptionC
+                    ], _model.yalitim),
 
                   // Alt Soru: Yalıtım Varsa Şap
                   if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) 
@@ -125,7 +133,11 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
 
                   // 3. Tavan
                   _buildSoru("Koridorlarda veya daire içlerinde Asma Tavan var mı?", 'tavan', 
-                    [Bolum15Content.tavanOptionA, Bolum15Content.tavanOptionB, Bolum15Content.tavanOptionC], _model.tavan),
+                    [
+                      Bolum15Content.tavanOptionA, 
+                      Bolum15Content.tavanOptionB, 
+                      Bolum15Content.tavanOptionC
+                    ], _model.tavan),
 
                   // Alt Soru: Tavan Malzemesi
                   if (_model.tavan?.label == Bolum15Content.tavanOptionB.label) 
@@ -138,13 +150,13 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
                         children: [
                           const Text("Asma tavan malzemesi nedir?", style: TextStyle(fontWeight: FontWeight.bold)),
                           RadioListTile<String>(
-                            title: const Text("Alçıpan / Metal / Taşyünü"),
+                            title: const Text("Alçıpanel, metal vb. yanmaz malzeme"),
                             value: "yanmaz",
                             groupValue: _model.tavanMalzemesi,
                             onChanged: (v) => setState(() => _model = _model.copyWith(tavanMalzemesi: v)),
                           ),
                           RadioListTile<String>(
-                            title: const Text("Ahşap / Plastik / Lambiri"),
+                            title: const Text("Ahşap, plastik, lambiri vs. yanıcı malzeme"),
                             value: "yanici",
                             groupValue: _model.tavanMalzemesi,
                             onChanged: (v) => setState(() => _model = _model.copyWith(tavanMalzemesi: v)),
@@ -155,7 +167,11 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
 
                   // 4. Tesisat Geçişleri
                   _buildSoru("Döşemeden geçen boru ve kablo boşlukları nasıl kapatılmış?", 'tesisat', 
-                    [Bolum15Content.tesisatOptionA, Bolum15Content.tesisatOptionB, Bolum15Content.tesisatOptionC], _model.tesisat),
+                    [
+                      Bolum15Content.tesisatOptionA, 
+                      Bolum15Content.tesisatOptionB, 
+                      Bolum15Content.tesisatOptionC
+                    ], _model.tesisat),
                 ],
               ),
             ),
