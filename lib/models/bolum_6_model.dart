@@ -49,8 +49,9 @@ class Bolum6Model {
     ChoiceResult? otoparkSecim;
     final label = map['otoparkTipi_label'];
     
-    if (label == Bolum6Content.otoparkKapali.label) otoparkSecim = Bolum6Content.otoparkKapali;
-    else if (label == Bolum6Content.otoparkAcik.label) otoparkSecim = Bolum6Content.otoparkAcik;
+    if (label == Bolum6Content.otoparkKapali.label) {
+      otoparkSecim = Bolum6Content.otoparkKapali;
+    } else if (label == Bolum6Content.otoparkAcik.label) otoparkSecim = Bolum6Content.otoparkAcik;
     else if (label == Bolum6Content.otoparkYariAcik.label) otoparkSecim = Bolum6Content.otoparkYariAcik;
 
     return Bolum6Model(

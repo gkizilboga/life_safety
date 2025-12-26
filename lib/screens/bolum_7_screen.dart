@@ -124,11 +124,10 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-7: Özel Riskli Alanlar ve Teknik Hacimler",
-            subtitle: " ",
-            currentStep: 7,
-            totalSteps: 10,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(

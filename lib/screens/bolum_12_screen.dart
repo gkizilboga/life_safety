@@ -117,11 +117,10 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-12: Taşıyıcı Sistemin Yapısal Yangın Dayanımı",
-            subtitle: " ",
-            currentStep: 2, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(

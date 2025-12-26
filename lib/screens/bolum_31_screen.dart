@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_31_model.dart';
-import 'bolum_32_screen.dart'; // Sonraki ekran
+import 'bolum_32_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -21,13 +21,23 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
   @override
   void initState() {
     super.initState();
-    _checkTrafo();
+    _checkAndRedirect();
   }
 
-  void _checkTrafo() {
+  void _checkAndRedirect() {
     final b7 = BinaStore.instance.bolum7;
+    
     if (b7?.hasTrafo == true) {
-      _hasTrafo = true;
+      setState(() {
+        _hasTrafo = true;
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum32Screen()),
+        );
+      });
     }
   }
 
@@ -38,7 +48,6 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
       
       if (type == 'tip') {
         _model = _model.copyWith(tip: choice);
-        // Kuru tip seçilirse alt soruları temizle
         if (choice.label == Bolum31Content.tipOptionA.label) {
           _model = _model.copyWith(cukur: null, sondurme: null);
         }
@@ -54,7 +63,6 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
       if (_model.yapi == null) return _showError("Lütfen trafo odası yapı özelliklerini seçiniz.");
       if (_model.tip == null) return _showError("Lütfen trafo tipini seçiniz.");
 
-      // Yağlı tipse detaylar zorunlu
       if (_model.tip?.label == Bolum31Content.tipOptionB.label) {
         if (_model.cukur == null) return _showError("Lütfen yağ toplama çukuru durumunu seçiniz.");
         if (_model.sondurme == null) return _showError("Lütfen otomatik söndürme durumunu seçiniz.");
@@ -77,36 +85,24 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
   @override
   Widget build(BuildContext context) {
     if (!_hasTrafo) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Bölüm-31")),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Binanızda Trafo bulunmadığı için bu bölüm atlanmıştır."),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET"))
-            ],
-          ),
-        ),
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-31: Trafo Odası",
-            subtitle: "Yüksek gerilim güvenliği.",
-            currentStep: 21, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // 1. Yapı Özellikleri
                   _buildSoru("Trafo odasının duvarları ve kapısı yangına dayanıklı mı?", 'yapi', 
                     [
                       Bolum31Content.yapiOptionA, 
@@ -114,11 +110,9 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
                       Bolum31Content.yapiOptionC
                     ], _model.yapi),
 
-                  // 2. Trafo Tipi
                   _buildSoru("Binanızdaki trafo 'Yağlı Tip' mi yoksa 'Kuru Tip' mi?", 'tip', 
                     [Bolum31Content.tipOptionA, Bolum31Content.tipOptionB], _model.tip),
 
-                  // Alt Sorular (Yağlı Tip ise)
                   if (_model.tip?.label == Bolum31Content.tipOptionB.label) ...[
                     const Divider(height: 30),
                     _buildSoru("Trafonun altında 'Yağ Toplama Çukuru' ve ızgara var mı?", 'cukur', 
@@ -128,7 +122,6 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
                       [Bolum31Content.sondurmeOptionA, Bolum31Content.sondurmeOptionB], _model.sondurme),
                   ],
 
-                  // 3. Çevresel Riskler
                   _buildSoru("Trafo odasının içinden su borusu geçiyor mu veya üst katında ıslak zemin var mı?", 'cevre', 
                     [
                       Bolum31Content.cevreOptionA, 
@@ -172,7 +165,7 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

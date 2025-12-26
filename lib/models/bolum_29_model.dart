@@ -11,6 +11,7 @@ class Bolum29Model {
   final ChoiceResult? trafo;
   final ChoiceResult? depo;
   final ChoiceResult? cop;
+  final ChoiceResult? siginak; // Yeni eklendi
 
   Bolum29Model({
     this.otopark,
@@ -22,6 +23,7 @@ class Bolum29Model {
     this.trafo,
     this.depo,
     this.cop,
+    this.siginak,
   });
 
   Bolum29Model copyWith({
@@ -34,6 +36,7 @@ class Bolum29Model {
     ChoiceResult? trafo,
     ChoiceResult? depo,
     ChoiceResult? cop,
+    ChoiceResult? siginak,
   }) {
     return Bolum29Model(
       otopark: otopark ?? this.otopark,
@@ -45,6 +48,7 @@ class Bolum29Model {
       trafo: trafo ?? this.trafo,
       depo: depo ?? this.depo,
       cop: cop ?? this.cop,
+      siginak: siginak ?? this.siginak,
     );
   }
 
@@ -59,11 +63,11 @@ class Bolum29Model {
       'trafo_label': trafo?.label,
       'depo_label': depo?.label,
       'cop_label': cop?.label,
+      'siginak_label': siginak?.label,
     };
   }
 
   factory Bolum29Model.fromMap(Map<String, dynamic> map) {
-    // Yardımcı fonksiyon: Etikete göre nesne bulma
     ChoiceResult? find(String? label, List<ChoiceResult> options) {
       try {
         return options.firstWhere((e) => e.label == label);
@@ -73,15 +77,16 @@ class Bolum29Model {
     }
 
     return Bolum29Model(
-      otopark: find(map['otopark_label'], [Bolum29Content.otoparkOptionA, Bolum29Content.otoparkOptionB]),
-      kazan: find(map['kazan_label'], [Bolum29Content.kazanOptionA, Bolum29Content.kazanOptionB]),
-      cati: find(map['cati_label'], [Bolum29Content.catiOptionA, Bolum29Content.catiOptionB]),
-      asansor: find(map['asansor_label'], [Bolum29Content.asansorOptionA, Bolum29Content.asansorOptionB]),
-      jenerator: find(map['jenerator_label'], [Bolum29Content.jeneratorOptionA, Bolum29Content.jeneratorOptionB]),
-      pano: find(map['pano_label'], [Bolum29Content.panoOptionA, Bolum29Content.panoOptionB]),
+      otopark: find(map['otopark_label'], [Bolum29Content.otoparkOptionA, Bolum29Content.otoparkOptionB, Bolum29Content.otoparkOptionC]),
+      kazan: find(map['kazan_label'], [Bolum29Content.kazanOptionA, Bolum29Content.kazanOptionB, Bolum29Content.kazanOptionC]),
+      cati: find(map['cati_label'], [Bolum29Content.catiOptionA, Bolum29Content.catiOptionB, Bolum29Content.catiOptionC]),
+      asansor: find(map['asansor_label'], [Bolum29Content.asansorOptionA, Bolum29Content.asansorOptionB, Bolum29Content.asansorOptionC]),
+      jenerator: find(map['jenerator_label'], [Bolum29Content.jeneratorOptionA, Bolum29Content.jeneratorOptionB, Bolum29Content.jeneratorOptionC]),
+      pano: find(map['pano_label'], [Bolum29Content.panoOptionA, Bolum29Content.panoOptionB, Bolum29Content.panoOptionC]),
       trafo: find(map['trafo_label'], [Bolum29Content.trafoOptionA, Bolum29Content.trafoOptionB, Bolum29Content.trafoOptionC]),
-      depo: find(map['depo_label'], [Bolum29Content.depoOptionA, Bolum29Content.depoOptionB]),
-      cop: find(map['cop_label'], [Bolum29Content.copOptionA, Bolum29Content.copOptionB]),
+      depo: find(map['depo_label'], [Bolum29Content.depoOptionA, Bolum29Content.depoOptionB, Bolum29Content.depoOptionC]),
+      cop: find(map['cop_label'], [Bolum29Content.copOptionA, Bolum29Content.copOptionB, Bolum29Content.copOptionC]),
+      siginak: find(map['siginak_label'], [Bolum29Content.siginakOptionA, Bolum29Content.siginakOptionB, Bolum29Content.siginakOptionC]),
     );
   }
 }

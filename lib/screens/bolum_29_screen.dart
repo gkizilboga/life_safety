@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_29_model.dart';
-import 'bolum_30_screen.dart'; // Sonraki ekran
+import 'bolum_30_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -17,7 +17,6 @@ class Bolum29Screen extends StatefulWidget {
 class _Bolum29ScreenState extends State<Bolum29Screen> {
   Bolum29Model _model = Bolum29Model();
 
-  // Soruların görünürlüğü
   bool _askOtopark = false;
   bool _askKazan = false;
   bool _askCati = false;
@@ -27,6 +26,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
   bool _askTrafo = false;
   bool _askDepo = false;
   bool _askCop = false;
+  bool _askSiginak = false;
 
   @override
   void initState() {
@@ -48,13 +48,15 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
       _askTrafo = b7?.hasTrafo ?? false;
       _askDepo = (b6?.hasDepo ?? false) || (b7?.hasDepo ?? false);
       _askCop = b7?.hasCop ?? false;
+      _askSiginak = b7?.hasSiginak ?? false;
     });
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'otopark') _model = _model.copyWith(otopark: choice);
-      else if (type == 'kazan') _model = _model.copyWith(kazan: choice);
+      if (type == 'otopark') {
+        _model = _model.copyWith(otopark: choice);
+      } else if (type == 'kazan') _model = _model.copyWith(kazan: choice);
       else if (type == 'cati') _model = _model.copyWith(cati: choice);
       else if (type == 'asansor') _model = _model.copyWith(asansor: choice);
       else if (type == 'jenerator') _model = _model.copyWith(jenerator: choice);
@@ -62,11 +64,11 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
       else if (type == 'trafo') _model = _model.copyWith(trafo: choice);
       else if (type == 'depo') _model = _model.copyWith(depo: choice);
       else if (type == 'cop') _model = _model.copyWith(cop: choice);
+      else if (type == 'siginak') _model = _model.copyWith(siginak: choice);
     });
   }
 
   void _onNextPressed() {
-    // Validasyon
     if (_askOtopark && _model.otopark == null) return _showError("Lütfen otopark temizliği sorusunu yanıtlayınız.");
     if (_askKazan && _model.kazan == null) return _showError("Lütfen kazan dairesi temizliği sorusunu yanıtlayınız.");
     if (_askCati && _model.cati == null) return _showError("Lütfen çatı arası temizliği sorusunu yanıtlayınız.");
@@ -76,12 +78,10 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
     if (_askTrafo && _model.trafo == null) return _showError("Lütfen trafo odası temizliği sorusunu yanıtlayınız.");
     if (_askDepo && _model.depo == null) return _showError("Lütfen depo düzeni sorusunu yanıtlayınız.");
     if (_askCop && _model.cop == null) return _showError("Lütfen çöp odası temizliği sorusunu yanıtlayınız.");
+    if (_askSiginak && _model.siginak == null) return _showError("Lütfen sığınak temizliği sorusunu yanıtlayınız.");
 
     BinaStore.instance.bolum29 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum30Screen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum30Screen()));
   }
 
   void _showError(String msg) {
@@ -93,43 +93,45 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
-            title: "Bölüm-29: Temizlik ve Düzen",
-            subtitle: "Riskli alanlarda depolama kontrolü.",
-            currentStep: 19, 
-            totalSteps: 26,
+          ModernHeader(
+            title: "Bölüm-29: Özel Riskli Alanlarda Temizlik ve Düzen",
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  if (_askOtopark) _buildSoru("Otoparkın köşelerinde, kolon aralarında eski lastikler, koliler veya yanıcı eşyalar yığılı mı?", 'otopark', 
-                    [Bolum29Content.otoparkOptionA, Bolum29Content.otoparkOptionB], _model.otopark),
+                  if (_askOtopark) _buildSoru("Otoparkın köşelerinde, kolon aralarında veya araç park yerlerinde eski lastikler, koltuklar, koli veya yanıcı eşyalar yığılı mı?", 'otopark', 
+                    [Bolum29Content.otoparkOptionA, Bolum29Content.otoparkOptionB, Bolum29Content.otoparkOptionC], _model.otopark),
 
-                  if (_askKazan) _buildSoru("Kazan dairesinde veya yakıt tankı çevresinde eski eşya, odun, kömür çuvalı veya kağıt saklanıyor mu?", 'kazan', 
-                    [Bolum29Content.kazanOptionA, Bolum29Content.kazanOptionB], _model.kazan),
+                  if (_askKazan) _buildSoru("Kazan dairesinin içinde veya yakıt tankının çevresinde eski eşya, odun, kömür çuvalı veya kağıt/karton saklanıyor mu?", 'kazan', 
+                    [Bolum29Content.kazanOptionA, Bolum29Content.kazanOptionB, Bolum29Content.kazanOptionC], _model.kazan),
 
-                  if (_askCati) _buildSoru("Çatı arasında eski eşyalar, ahşap malzemeler, arşiv, evrak vb. yanıcı ürünler saklanıyor mu?", 'cati', 
-                    [Bolum29Content.catiOptionA, Bolum29Content.catiOptionB], _model.cati),
+                  if (_askCati) _buildSoru("Çatı arasında eski eşyalar, ahşap malzemeler veya arşiv kutuları saklanıyor mu?", 'cati', 
+                    [Bolum29Content.catiOptionA, Bolum29Content.catiOptionB, Bolum29Content.catiOptionC], _model.cati),
 
-                  if (_askAsansor) _buildSoru("Çatıdaki asansör motorunun olduğu odada yağ tenekeleri, temizlik malzemeleri veya eski eşyalar var mı?", 'asansor', 
-                    [Bolum29Content.asansorOptionA, Bolum29Content.asansorOptionB], _model.asansor),
+                  if (_askAsansor) _buildSoru("Çatıdaki asansör motorunun olduğu odada yağ tenekeleri, temizlik malzemeleri veya eski parçalar var mı?", 'asansor', 
+                    [Bolum29Content.asansorOptionA, Bolum29Content.asansorOptionB, Bolum29Content.asansorOptionC], _model.asansor),
 
-                  if (_askJenerator) _buildSoru("Jeneratör odasında jeneratörle ilgisiz yanıcı başka malzemeler depolanıyor mu?", 'jenerator', 
-                    [Bolum29Content.jeneratorOptionA, Bolum29Content.jeneratorOptionB], _model.jenerator),
+                  if (_askJenerator) _buildSoru("Jeneratör odasında yedek yakıt bidonları veya jeneratörle ilgisiz başka malzemeler depolanıyor mu?", 'jenerator', 
+                    [Bolum29Content.jeneratorOptionA, Bolum29Content.jeneratorOptionB, Bolum29Content.jeneratorOptionC], _model.jenerator),
 
-                  if (_askPano) _buildSoru("Elektrik panolarının olduğu odada veya dolapta temizlik malzemesi veya kağıt saklanıyor mu?", 'pano', 
-                    [Bolum29Content.panoOptionA, Bolum29Content.panoOptionB], _model.pano),
+                  if (_askPano) _buildSoru("Elektrik panolarının olduğu odada veya dolapta temizlik malzemesi (paspas, süpürge) veya kağıt saklanıyor mu?", 'pano', 
+                    [Bolum29Content.panoOptionA, Bolum29Content.panoOptionB, Bolum29Content.panoOptionC], _model.pano),
 
                   if (_askTrafo) _buildSoru("Trafo odasının havalandırma menfezleri açık mı ve içerisi temiz mi?", 'trafo', 
                     [Bolum29Content.trafoOptionA, Bolum29Content.trafoOptionB, Bolum29Content.trafoOptionC], _model.trafo),
 
                   if (_askDepo) _buildSoru("Bu depolarda yanıcı, parlayıcı maddeler (Tiner, Boya, Benzin, Tüp) saklanıyor mu?", 'depo', 
-                    [Bolum29Content.depoOptionA, Bolum29Content.depoOptionB], _model.depo),
+                    [Bolum29Content.depoOptionA, Bolum29Content.depoOptionB, Bolum29Content.depoOptionC], _model.depo),
 
                   if (_askCop) _buildSoru("Çöp odası düzenli temizleniyor mu, yoksa çöpler birikip koku/gaz yapıyor mu?", 'cop', 
-                    [Bolum29Content.copOptionA, Bolum29Content.copOptionB], _model.cop),
+                    [Bolum29Content.copOptionA, Bolum29Content.copOptionB, Bolum29Content.copOptionC], _model.cop),
+
+                  if (_askSiginak) _buildSoru("Sığınağınızda yanıcı/patlayıcı maddeler (boya, tiner, tüp, lastik) depolanıyor mu?", 'siginak', 
+                    [Bolum29Content.siginakOptionA, Bolum29Content.siginakOptionB, Bolum29Content.siginakOptionC], _model.siginak),
                 ],
               ),
             ),
@@ -167,7 +169,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

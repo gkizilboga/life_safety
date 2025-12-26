@@ -21,14 +21,26 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
   @override
   void initState() {
     super.initState();
-    _checkDonerMerdiven();
+    _checkAndRedirect();
   }
 
-  void _checkDonerMerdiven() {
+  void _checkAndRedirect() {
     // Bölüm 20'den döner merdiven sayısını kontrol et
     final b20 = BinaStore.instance.bolum20;
+    
     if ((b20?.donerMerdivenSayisi ?? 0) > 0) {
-      _hasDonerMerdiven = true;
+      setState(() {
+        _hasDonerMerdiven = true;
+      });
+    } else {
+      // Eğer döner merdiven yoksa, bu sayfayı "Görünmez" olarak geç.
+      // WidgetsBinding kullanarak ekran çizildikten hemen sonra diğer sayfaya atlıyoruz.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum26Screen()),
+        );
+      });
     }
   }
 
@@ -41,11 +53,9 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
   }
 
   void _onNextPressed() {
-    if (_hasDonerMerdiven) {
-      if (_model.kapasite == null) return _showError("Lütfen kapasite sorusunu yanıtlayınız.");
-      if (_model.basamak == null) return _showError("Lütfen basamak genişliği sorusunu yanıtlayınız.");
-      if (_model.basKurtarma == null) return _showError("Lütfen baş kurtarma yüksekliği sorusunu yanıtlayınız.");
-    }
+    if (_model.kapasite == null) return _showError("Lütfen kapasite sorusunu yanıtlayınız.");
+    if (_model.basamak == null) return _showError("Lütfen basamak genişliği sorusunu yanıtlayınız.");
+    if (_model.basKurtarma == null) return _showError("Lütfen baş kurtarma yüksekliği sorusunu yanıtlayınız.");
 
     BinaStore.instance.bolum25 = _model;
     Navigator.push(
@@ -60,30 +70,21 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
 
   @override
   Widget build(BuildContext context) {
+    // Eğer döner merdiven yoksa ekranın geri kalanını hiç çizmiyoruz,
+    // sadece kısa bir geçiş anı için boş bir Scaffold veya yükleniyor gösteriyoruz.
     if (!_hasDonerMerdiven) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Bölüm-25")),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Binanızda döner (dairesel) merdiven bulunmadığı için bu bölüm atlanacaktır."),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET"))
-            ],
-          ),
-        ),
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-25: Döner (Dairesel) Merdiven",
-            subtitle: " ",
-            currentStep: 15, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -135,7 +136,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

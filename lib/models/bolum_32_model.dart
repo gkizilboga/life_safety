@@ -38,37 +38,19 @@ class Bolum32Model {
   }
 
   factory Bolum32Model.fromMap(Map<String, dynamic> map) {
-    // Yapı
-    ChoiceResult? y;
-    final l1 = map['yapi_label'];
-    if (l1 == Bolum32Content.yapiOptionA.label) y = Bolum32Content.yapiOptionA;
-    if (l1 == Bolum32Content.yapiOptionB.label) y = Bolum32Content.yapiOptionB;
-    if (l1 == Bolum32Content.yapiOptionC.label) y = Bolum32Content.yapiOptionC;
-
-    // Yakıt
-    ChoiceResult? ya;
-    final l2 = map['yakit_label'];
-    if (l2 == Bolum32Content.yakitOptionA.label) ya = Bolum32Content.yakitOptionA;
-    if (l2 == Bolum32Content.yakitOptionB.label) ya = Bolum32Content.yakitOptionB;
-
-    // Çevre
-    ChoiceResult? ce;
-    final l3 = map['cevre_label'];
-    if (l3 == Bolum32Content.cevreOptionA.label) ce = Bolum32Content.cevreOptionA;
-    if (l3 == Bolum32Content.cevreOptionB.label) ce = Bolum32Content.cevreOptionB;
-    if (l3 == Bolum32Content.cevreOptionC.label) ce = Bolum32Content.cevreOptionC;
-
-    // Egzoz
-    ChoiceResult? eg;
-    final l4 = map['egzoz_label'];
-    if (l4 == Bolum32Content.egzozOptionA.label) eg = Bolum32Content.egzozOptionA;
-    if (l4 == Bolum32Content.egzozOptionB.label) eg = Bolum32Content.egzozOptionB;
+    ChoiceResult? find(String? label, List<ChoiceResult> options) {
+      try {
+        return options.firstWhere((e) => e.label == label);
+      } catch (_) {
+        return null;
+      }
+    }
 
     return Bolum32Model(
-      yapi: y,
-      yakit: ya,
-      cevre: ce,
-      egzoz: eg,
+      yapi: find(map['yapi_label'], [Bolum32Content.yapiOptionA, Bolum32Content.yapiOptionB, Bolum32Content.yapiOptionC, Bolum32Content.yapiOptionD]),
+      yakit: find(map['yakit_label'], [Bolum32Content.yakitOptionA, Bolum32Content.yakitOptionB, Bolum32Content.yakitOptionC]),
+      cevre: find(map['cevre_label'], [Bolum32Content.cevreOptionA, Bolum32Content.cevreOptionB, Bolum32Content.cevreOptionC, Bolum32Content.cevreOptionD]),
+      egzoz: find(map['egzoz_label'], [Bolum32Content.egzozOptionA, Bolum32Content.egzozOptionB, Bolum32Content.egzozOptionC]),
     );
   }
 }

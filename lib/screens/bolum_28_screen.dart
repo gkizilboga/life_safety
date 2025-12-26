@@ -71,11 +71,10 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
-            title: "Bölüm-28: Daire İçi",
-            subtitle: "Mesafeler ve kat planı.",
-            currentStep: 18, 
-            totalSteps: 26,
+          ModernHeader(
+            title: "Bölüm-28: Daire İçi Mesafeler ve Kat Planı",
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -153,7 +152,7 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

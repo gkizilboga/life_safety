@@ -40,11 +40,10 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-10: Kat Kullanım Amacı ve Yoğunlukları",
-            subtitle: " ",
-            currentStep: 10,
-            totalSteps: 10, // Burası 1. Aşamanın sonu
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(

@@ -31,16 +31,18 @@ class Bolum18Model {
     // Duvar Kaplama
     ChoiceResult? d;
     final l1 = map['duvarKaplama_label'];
-    if (l1 == Bolum18Content.duvarOptionA.label) d = Bolum18Content.duvarOptionA;
-    else if (l1 == Bolum18Content.duvarOptionB.label) d = Bolum18Content.duvarOptionB;
+    if (l1 == Bolum18Content.duvarOptionA.label) {
+      d = Bolum18Content.duvarOptionA;
+    } else if (l1 == Bolum18Content.duvarOptionB.label) d = Bolum18Content.duvarOptionB;
     else if (l1 == Bolum18Content.duvarOptionC.label) d = Bolum18Content.duvarOptionC;
     else if (l1 == Bolum18Content.duvarOptionD.label) d = Bolum18Content.duvarOptionD;
 
     // Boru Tipi
     ChoiceResult? b;
     final l2 = map['boruTipi_label'];
-    if (l2 == Bolum18Content.boruOptionA.label) b = Bolum18Content.boruOptionA;
-    else if (l2 == Bolum18Content.boruOptionB.label) b = Bolum18Content.boruOptionB;
+    if (l2 == Bolum18Content.boruOptionA.label) {
+      b = Bolum18Content.boruOptionA;
+    } else if (l2 == Bolum18Content.boruOptionB.label) b = Bolum18Content.boruOptionB;
     else if (l2 == Bolum18Content.boruOptionC.label) b = Bolum18Content.boruOptionC;
     else if (l2 == Bolum18Content.boruOptionD.label) b = Bolum18Content.boruOptionD;
 

@@ -38,11 +38,10 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-9: Otomatik Yangın Söndürme Sistemi Varlığı",
-            subtitle: " ",
-            currentStep: 9,
-            totalSteps: 10,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(

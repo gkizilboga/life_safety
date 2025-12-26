@@ -91,11 +91,10 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
-            title: "Bölüm-6: Farklı Kullanım Amaçları",
-            subtitle: "Binadaki Konut Harici Alanlar",
-            currentStep: 6,
-            totalSteps: 10,
+          ModernHeader(
+            title: "Bölüm-6: Konut Harici Farklı Kullanım Amaçları",
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(

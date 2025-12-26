@@ -61,11 +61,10 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-21: Yangın Güvenlik Holü (YGH)",
-            subtitle: " ",
-            currentStep: 11, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -144,7 +143,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

@@ -41,8 +41,9 @@ class Bolum4Model {
     // Ana Sınıfı Bul
     ChoiceResult? anaSinif;
     final label1 = map['binaYukseklikSinifi_label'];
-    if (label1 == Bolum4Content.yukseklikSinifiDusuk.label) anaSinif = Bolum4Content.yukseklikSinifiDusuk;
-    else if (label1 == Bolum4Content.yukseklikSinifiYuksek.label) anaSinif = Bolum4Content.yukseklikSinifiYuksek;
+    if (label1 == Bolum4Content.yukseklikSinifiDusuk.label) {
+      anaSinif = Bolum4Content.yukseklikSinifiDusuk;
+    } else if (label1 == Bolum4Content.yukseklikSinifiYuksek.label) anaSinif = Bolum4Content.yukseklikSinifiYuksek;
     else if (label1 == Bolum4Content.yukseklikSinifiCokYuksek.label) anaSinif = Bolum4Content.yukseklikSinifiCokYuksek;
     else if (label1 == Bolum4Content.yukseklikSinifiMaksimum.label) anaSinif = Bolum4Content.yukseklikSinifiMaksimum;
 

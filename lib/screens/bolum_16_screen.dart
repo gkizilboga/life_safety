@@ -88,11 +88,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-16: Binanın Dış Cephe Özellikleri",
-            subtitle: " ",
-            currentStep: 6, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -216,7 +215,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

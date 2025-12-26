@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_30_model.dart';
-import 'bolum_31_screen.dart'; // Sonraki ekran
+import 'bolum_31_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -22,13 +22,24 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
   @override
   void initState() {
     super.initState();
-    _checkKazan();
+    _checkKazanAndRedirect();
   }
 
-  void _checkKazan() {
+  void _checkKazanAndRedirect() {
     final b7 = BinaStore.instance.bolum7;
+    
     if (b7?.hasKazan == true) {
-      _hasKazan = true;
+      setState(() {
+        _hasKazan = true;
+      });
+    } else {
+      // Kazan dairesi yoksa, ekran çizilir çizilmez bir sonraki bölüme yönlendir
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum31Screen()),
+        );
+      });
     }
   }
 
@@ -47,8 +58,8 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       
       if (type == 'yakit') {
         _model = _model.copyWith(yakit: choice);
-        // Sıvı yakıt değilse drenajı sıfırla
-        if (choice.label == Bolum30Content.yakitOptionA.label) {
+        // Sıvı yakıt (Option B) dışında bir şey seçilirse drenajı sıfırla
+        if (choice.label != Bolum30Content.yakitOptionB.label) {
           _model = _model.copyWith(drenaj: null);
         }
       }
@@ -59,9 +70,10 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
 
   void _onNextPressed() {
     if (_hasKazan) {
+      // Validasyonlar
       if (_model.konum == null) return _showError("Lütfen kazan dairesi konumunu seçiniz.");
       
-      // Kapasite Opsiyonel Olabilir veya Zorunlu
+      // Kapasiteyi sayısal olarak modele işle
       double? kap = double.tryParse(_kapasiteCtrl.text.replaceAll(',', '.'));
       _model = _model.copyWith(kapasite: kap);
 
@@ -69,11 +81,12 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       if (_model.hava == null) return _showError("Lütfen havalandırma durumunu seçiniz.");
       if (_model.yakit == null) return _showError("Lütfen yakıt türünü seçiniz.");
 
+      // Sadece sıvı yakıt seçiliyse drenaj zorunlu
       if (_model.yakit?.label == Bolum30Content.yakitOptionB.label && _model.drenaj == null) {
         return _showError("Lütfen drenaj kanalı durumunu seçiniz.");
       }
 
-      if (_model.tup == null) return _showError("Lütfen yangın tüpü durumunu seçiniz.");
+      if (_model.tup == null) return _showError("Lütfen yangın söndürme ekipmanı durumunu seçiniz.");
     }
 
     BinaStore.instance.bolum30 = _model;
@@ -84,55 +97,49 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // Kazan dairesi yoksa boş bir yükleniyor ekranı göster (yönlendirme bitene kadar)
     if (!_hasKazan) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Bölüm-30")),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Binanızda Kazan Dairesi bulunmadığı için bu bölüm atlanmıştır."),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET"))
-            ],
-          ),
-        ),
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
-            title: "Bölüm-30: Kazan Dairesi",
-            subtitle: "Isı merkezinin güvenliği.",
-            currentStep: 20, 
-            totalSteps: 26,
+          ModernHeader(
+            title: "Bölüm-30: Kazan Dairesi / Isı Merkezi",
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // 1. Konum
+                  // 1. KONUM
                   _buildSoru("Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?", 'konum', 
                     [
                       Bolum30Content.konumOptionA, 
                       Bolum30Content.konumOptionB, 
-                      Bolum30Content.konumOptionC
+                      Bolum30Content.konumOptionC,
+                      Bolum30Content.konumOptionD,
                     ], _model.konum),
 
-                  // 2. Kapasite (Sayısal)
+                  // 2. KAPASİTE (SAYISAL GİRİŞ)
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Kazan kapasitesi (kW/kcal) biliniyorsa giriniz (Opsiyonel):", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Kazan kapasitesi (kW/kcal) biliniyorsa giriniz (Opsiyonel):", 
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _kapasiteCtrl,
@@ -147,31 +154,48 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
                     ),
                   ),
 
-                  // 3. Kapı Sayısı
+                  // 3. KAPI SAYISI
                   _buildSoru("Kazan dairesinin kaç adet çıkış kapısı var?", 'kapi', 
-                    [Bolum30Content.kapiOptionA, Bolum30Content.kapiOptionB], _model.kapi),
+                    [
+                      Bolum30Content.kapiOptionA, 
+                      Bolum30Content.kapiOptionB,
+                      Bolum30Content.kapiOptionC,
+                    ], _model.kapi),
 
-                  // 4. Havalandırma
+                  // 4. HAVALANDIRMA
                   _buildSoru("İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?", 'hava', 
-                    [Bolum30Content.havaOptionA, Bolum30Content.havaOptionB], _model.hava),
+                    [
+                      Bolum30Content.havaOptionA, 
+                      Bolum30Content.havaOptionB,
+                      Bolum30Content.havaOptionC,
+                    ], _model.hava),
 
-                  // 5. Yakıt Tipi
+                  // 5. YAKIT TİPİ
                   _buildSoru("Kazanınız sıvı yakıtlı (Mazot/Fuel-oil) mı?", 'yakit', 
-                    [Bolum30Content.yakitOptionA, Bolum30Content.yakitOptionB], _model.yakit),
+                    [
+                      Bolum30Content.yakitOptionA, 
+                      Bolum30Content.yakitOptionB,
+                      Bolum30Content.yakitOptionC,
+                    ], _model.yakit),
 
-                  // Alt Soru: Drenaj (Sıvı yakıt ise)
+                  // 6. DRENAJ (SADECE SIVI YAKIT İSE)
                   if (_model.yakit?.label == Bolum30Content.yakitOptionB.label) ...[
                     const Divider(height: 30),
                     _buildSoru("Zeminde dökülen yakıtı toplayacak kanallar ve bir pis su çukuru var mı?", 'drenaj', 
-                      [Bolum30Content.drenajOptionA, Bolum30Content.drenajOptionB], _model.drenaj),
+                      [
+                        Bolum30Content.drenajOptionA, 
+                        Bolum30Content.drenajOptionB,
+                        Bolum30Content.drenajOptionC,
+                      ], _model.drenaj),
                   ],
 
-                  // 6. Yangın Tüpü
+                  // 7. YANGIN TÜPÜ / SÖNDÜRME
                   _buildSoru("Kazan dairesinde yangın söndürme tüpü ve yangın dolabı var mı?", 'tup', 
                     [
                       Bolum30Content.tupOptionA, 
                       Bolum30Content.tupOptionB, 
-                      Bolum30Content.tupOptionC
+                      Bolum30Content.tupOptionC,
+                      Bolum30Content.tupOptionD,
                     ], _model.tup),
                 ],
               ),
@@ -199,18 +223,19 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     );
   }
 
+  // Yardımcı Soru Oluşturucu
   Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

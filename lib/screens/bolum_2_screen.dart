@@ -38,11 +38,11 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-2: Taşıyıcı Sistem",
-            subtitle: "Binanın İskelet Yapısı",
-            currentStep: 2,
-            totalSteps: 10,
+            subtitle: "...",
+            screenType: widget.runtimeType,
+
             // onBack: () => Navigator.pop(context), // İstersen geri butonu ekleyebilirsin
           ),
           Expanded(

@@ -243,9 +243,9 @@ class Bolum7Content {
 
   static final trafo = ChoiceResult(
     label: "7-8 (Trafo)",
-    uiTitle: "Yağlı Tip Trafo Odası",
+    uiTitle: "Trafo Odası",
     uiSubtitle: "Yüksek gerilim trafosu.",
-    reportText: "☢️ KRİTİK RİSK: Binada Yağlı Tip Trafo bulunmaktadır. Patlama ve yangın riski yüksektir. Binadan bağımsız olarak ek önlemler alınması şarttır."
+    reportText: "☢️ KRİTİK RİSK: Binada Trafo bulunmaktadır. Yağlı tip trafonun yangın riski yüksektir. Binadan bağımsız olarak ek önlemler alınması şarttır."
   );
 
   static final depo = ChoiceResult(
@@ -1313,7 +1313,7 @@ class Bolum22Content {
     label: "22-3-B (Boyut)",
     uiTitle: "Standart (6-10 m² arası).",
     uiSubtitle: "Hol alanı yeterli genişlikte.",
-    reportText: "✅ OLUMLU: YGH alanı yeterlidir."Type
+    reportText: "✅ OLUMLU: YGH alanı yeterlidir.",
   );
 
   static final boyutOptionC = ChoiceResult(
@@ -1827,243 +1827,345 @@ class Bolum28Content {
   );
 }
 class Bolum29Content {
+  // 1. OTOPARK
   static final otoparkOptionA = ChoiceResult(
-    label: "29-1-A (Otopark)",
-    uiTitle: "Hayır, sadece araçlar var.",
+    label: "29-1-A",
+    uiTitle: "Hayır, sadece araçlar var, alan temiz.",
     uiSubtitle: "Otopark alanı düzenli.",
-    reportText: "✅ OLUMLU: Otopark alanı temizdir, depolama yapılmamıştır."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Otopark alanı temizdir, depolama yapılmamıştır."
   );
-
   static final otoparkOptionB = ChoiceResult(
-    label: "29-1-B (Otopark)",
+    label: "29-1-B",
     uiTitle: "Evet, eşya yığınları var.",
     uiSubtitle: "Lastik, koli, eski eşya vb. biriktirilmiş.",
-    reportText: "☢️ RİSK: Otopark alanı sadece araç parkı amacıyla dizayn edilir. Eşya yığınları yangını büyütebilir ve söndürme işlemini zorlaştırabilir."
+    reportText: "🚨 RİSK: Otoparklar sadece araç parkı içindir. Eşya yığınları yangını büyütür ve söndürmeyi zorlaştırır. Derhal temizlenmelidir."
+  );
+  static final otoparkOptionC = ChoiceResult(
+    label: "29-1-C",
+    uiTitle: "Bilmiyorum / Dikkat etmedim.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Otoparkın temizlik durumu bilinmiyor. Araçların yanına istiflenen eski lastikler veya eşyalar, küçük bir araç yangınını tüm binayı saracak bir felakete dönüştürebilir. Lütfen otoparkı kontrol ediniz."
   );
 
+  // 2. KAZAN DAİRESİ
   static final kazanOptionA = ChoiceResult(
-    label: "29-2-A (Kazan)",
-    uiTitle: "Hayır, sadece kazanlar var.",
+    label: "29-2-A",
+    uiTitle: "Hayır, sadece kazan ve tesisat var.",
     uiSubtitle: "Kazan dairesi boş ve temiz.",
-    reportText: "✅ OLUMLU: Kazan dairesinde gereksiz yanıcı madde bulunmamaktadır."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Kazan dairesinde gereksiz yanıcı madde bulunmamaktadır."
   );
-
   static final kazanOptionB = ChoiceResult(
-    label: "29-2-B (Kazan)",
-    uiTitle: "Evet, eşyalar bulunuyor.",
+    label: "29-2-B",
+    uiTitle: "Evet, eşyalar var.",
     uiSubtitle: "Odun, kömür, kağıt, eski eşya vb. var.",
-    reportText: "☢️ KRİTİK RİSK: Kazan daireleri depo değildir. Yakıt tankının veya kazanın yanında olası bir kıvılcımlanma oradaki eşyaları tutuşturabilir."
+    reportText: "🚨 KRİTİK RİSK: Kazan daireleri depo değildir! Yakıt tankının veya kazanın yanındaki en ufak bir kıvılcım, oradaki eşyaları tutuşturup binayı tehlikeye atar."
+  );
+  static final kazanOptionC = ChoiceResult(
+    label: "29-2-C",
+    uiTitle: "Bilmiyorum / İçini görmedim.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Kazan dairesinin içi bilinmiyor. Burası binanın kalbidir ve en yüksek yangın riskini taşır. İçeride unutulan bir bez parçası veya kağıt yığını büyük bir patlamaya neden olabilir. Mutlaka denetlenmelidir."
   );
 
+  // 3. ÇATI ARASI
   static final catiOptionA = ChoiceResult(
-    label: "29-3-A (Çatı)",
+    label: "29-3-A",
     uiTitle: "Hayır, boş ve kilitli.",
     uiSubtitle: "Çatı arası temiz.",
-    reportText: "✅ OLUMLU: Çatı arası temiz ve güvenlidir."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Çatı arası temiz ve güvenlidir."
   );
-
   static final catiOptionB = ChoiceResult(
-    label: "29-3-B (Çatı)",
+    label: "29-3-B",
     uiTitle: "Evet, depo gibi kullanılıyor.",
     uiSubtitle: "Eski eşyalar, arşiv, hurda var.",
-    reportText: "☢️ RİSK: Çatı araları elektrik kontağından en çok yangın çıkan yerlerdir. Buradaki eşyalar yangına katkı sağlar."
+    reportText: "🚨 RİSK: Çatı araları elektrik kontağından en çok yangın çıkan yerlerdir. Buradaki eşyalar yangını hızlandırır."
+  );
+  static final catiOptionC = ChoiceResult(
+    label: "29-3-C",
+    uiTitle: "Bilmiyorum / Çatıya hiç çıkmadım.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Çatı arasının durumu bilinmiyor. Genellikle 'unutulan eşyaların' biriktiği yerdir. Elektrik tesisatından çıkabilecek bir kıvılcım, buradaki kuru ve tozlu eşyaları anında tutuşturur. Kontrol edilmesi hayati önem taşır."
   );
 
+  // 4. ASANSÖR MAKİNE DAİRESİ
   static final asansorOptionA = ChoiceResult(
-    label: "29-4-A (Asansör)",
+    label: "29-4-A",
     uiTitle: "Hayır, temiz.",
     uiSubtitle: "Makine dairesinde sadece motor var.",
-    reportText: "✅ OLUMLU: Asansör makine dairesi temizdir."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Asansör makine dairesi temizdir."
   );
-
   static final asansorOptionB = ChoiceResult(
-    label: "29-4-B (Asansör)",
+    label: "29-4-B",
     uiTitle: "Evet, malzemeler var.",
     uiSubtitle: "Yağ tenekesi, bez vs. yanıcı maddeler var.",
-    reportText: "☢️ RİSK: Asansör motorları ısınır. Yanındaki yağlı bezler veya malzemeler tutuşabilir. Makine dairesi depo olarak kullanılamaz."
+    reportText: "🚨 RİSK: Asansör motorları ısınır. Yanındaki yağlı bezler veya malzemeler tutuşabilir. Makine dairesi depo olarak kullanılamaz."
   );
-
-  static final jeneratorOptionA = ChoiceResult(
-    label: "29-5-A (Jeneratör)",
-    uiTitle: "Hayır.",
-    uiSubtitle: "Sadece jeneratör ve ilgili ekipmanlar var.",
-    reportText: "✅ OLUMLU: Jeneratör odası temizdir."
-  );
-
-  static final jeneratorOptionB = ChoiceResult(
-    label: "29-5-B (Jeneratör)",
-    uiTitle: "Evet.",
-    uiSubtitle: "Yanıcı malzemeler, eşya vb. bekletiliyor.",
-    reportText: "☢️ KRİTİK RİSK: Jeneratör odasında sadece günlük yakıt tankı bulunabilir. Bidonla yakıt saklamak veya eşya koymak yasaktır."
-  );
-
-  static final panoOptionA = ChoiceResult(
-    label: "29-6-A (Pano)",
-    uiTitle: "Hayır.",
-    uiSubtitle: "Pano odası boş.",
-    reportText: "✅ OLUMLU: Elektrik pano odası temizdir."
-  );
-
-  static final panoOptionB = ChoiceResult(
-    label: "29-6-B (Pano)",
-    uiTitle: "Evet, temizlik malzemesi var.",
-    uiSubtitle: "Paspas, süpürge, kağıt saklanıyor.",
-    reportText: "☢️ RİSK: Pano odaları kesinlikle boş olmalıdır. Elektrik kontağı anında yanıcı malzemeleri tutuşturur."
-  );
-
-  static final trafoOptionA = ChoiceResult(
-    label: "29-7-A (Trafo)",
-    uiTitle: "Evet, temiz ve havadar.",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU. Trafo odası havalandırılıyor ve temiz tutuluyor."
-  );
-
-  static final trafoOptionB = ChoiceResult(
-    label: "29-7-B (Trafo)",
-    uiTitle: "Hayır, menfezler kapalı veya içeride eşya var.",
-    uiSubtitle: "",
-    reportText: "☢️ KRİTİK RİSK. Mesaj: Trafo odaları ısınır ve patlama riski taşır. Havalandırma asla kapatılmamalı ve içerisi depo gibi kullanılmamalıdır."
-  );
-
-  static final trafoOptionC = ChoiceResult(
-    label: "29-7-C (Trafo)",
+  static final asansorOptionC = ChoiceResult(
+    label: "29-4-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR. Mesaj: Trafo odasının durumu bilinmiyor. Yüksek gerilim hattı taşıyan bu odaların havalandırmasının kapanması veya içeride eşya olması yangın veya patlama riskini doğurabilir."
+    reportText: "❓ BİLİNMİYOR: Asansör makine dairesinin durumu bilinmiyor. Motorların ısınmasıyla yanabilecek yağlı bezler veya plastik malzemeler burada büyük risk oluşturur. Yöneticiden bilgi alınız."
   );
 
+  // 5. JENERATÖR ODASI
+  static final jeneratorOptionA = ChoiceResult(
+    label: "29-5-A",
+    uiTitle: "Hayır.",
+    uiSubtitle: "Sadece jeneratör ve ilgili ekipmanlar var.",
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Jeneratör odası temizdir."
+  );
+  static final jeneratorOptionB = ChoiceResult(
+    label: "29-5-B",
+    uiTitle: "Evet.",
+    uiSubtitle: "Yanıcı malzemeler, eşya vb. bekletiliyor.",
+    reportText: "🚨 KRİTİK RİSK: Jeneratör odasında sadece günlük yakıt tankı bulunabilir. Bidonla yakıt saklamak veya eşya koymak yasaktır."
+  );
+  static final jeneratorOptionC = ChoiceResult(
+    label: "29-5-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Jeneratör odasının durumu bilinmiyor. İçeride yakıt buharı olabilir. Depolanan gereksiz eşyalar havalandırmayı tıkayabilir veya yangın yükünü artırabilir. Uzman kontrolü önerilir."
+  );
+
+  // 6. ELEKTRİK PANO ODASI
+  static final panoOptionA = ChoiceResult(
+    label: "29-6-A",
+    uiTitle: "Hayır.",
+    uiSubtitle: "Pano odası boş.",
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Elektrik pano odası temizdir."
+  );
+  static final panoOptionB = ChoiceResult(
+    label: "29-6-B",
+    uiTitle: "Evet.",
+    uiSubtitle: "Paspas, süpürge, kağıt saklanıyor.",
+    reportText: "🚨 RİSK: Pano odaları kesinlikle boş olmalıdır. Elektrik kontağı anında yanıcı malzemeleri tutuşturur."
+  );
+  static final panoOptionC = ChoiceResult(
+    label: "29-6-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Elektrik odasının içi bilinmiyor. Pano odaları yangınların en sık başladığı yerlerdir. İçeride unutulan bir paspas veya kağıt parçası, küçük bir ark (kıvılcım) sonucu büyük bir yangını başlatabilir."
+  );
+
+  // 7. TRAFO ODASI
+  static final trafoOptionA = ChoiceResult(
+    label: "29-7-A",
+    uiTitle: "Evet, temiz ve havadar.",
+    uiSubtitle: "",
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Trafo odası havalandırılıyor ve temiz tutuluyor."
+  );
+  static final trafoOptionB = ChoiceResult(
+    label: "29-7-B",
+    uiTitle: "Hayır, menfezler kapalı veya içeride eşya var.",
+    uiSubtitle: "",
+    reportText: "🚨 KRİTİK RİSK: Trafo odaları ısınır ve patlama riski taşır. Havalandırma asla kapatılmamalı ve içerisi depo yapılmamalıdır."
+  );
+  static final trafoOptionC = ChoiceResult(
+    label: "29-7-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Trafo odasının durumu bilinmiyor. Yüksek gerilim hattı taşıyan bu odaların havalandırmasının kapanması veya içeride eşya olması patlama riskini doğurur. Acilen kontrol edilmelidir."
+  );
+
+  // 8. ORTAK DEPO
   static final depoOptionA = ChoiceResult(
-    label: "29-8-A (Depo)",
+    label: "29-8-A",
     uiTitle: "Hayır, sadece ev eşyası.",
     uiSubtitle: "Yüksek yanıcı madde yok.",
-    reportText: "✅ OLUMLU: Depolarda parlayıcı madde tespit edilmemiştir."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Depolarda parlayıcı madde tespit edilmemiştir."
   );
-
   static final depoOptionB = ChoiceResult(
-    label: "29-8-B (Depo)",
-    uiTitle: "Evet, boya, tiner, LPG tüpü vb. ürünler var.",
+    label: "29-8-B",
+    uiTitle: "Evet, boya kutuları veya kimyasallar var.",
     uiSubtitle: "Yanıcı kimyasallar saklanıyor.",
-    reportText: "⚠️ UYARI: Apartman altındaki depolarda parlayıcı madde (tiner, benzin, LPG tüpü vb.) saklanmamalıdır."
+    reportText: "⚠️ UYARI: Apartman altındaki depolarda parlayıcı madde saklamak yasaktır. Bu malzemeler özel güvenlikli dolaplarda tutulmalıdır."
+  );
+  static final depoOptionC = ChoiceResult(
+    label: "29-8-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Depolarda ne saklandığı bilinmiyor. Komşularınızın buraya koyduğu tiner, boya veya LPG tüpü gibi malzemeler tüm binayı riske atabilir. Depo denetimi yapılmalıdır."
   );
 
+  // 9. ÇÖP ODASI
   static final copOptionA = ChoiceResult(
-    label: "29-9-A (Çöp)",
-    uiTitle: "Düzenli temizleniyor.",
+    label: "29-9-A",
+    uiTitle: "Düzenli atılıyor, temiz.",
     uiSubtitle: "Yoğun koku veya gaz birikmesi yok.",
-    reportText: "✅ OLUMLU: Çöp odası temizliği uygun gözüküyor."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Çöp odası temizliği uygun gözüküyor."
+  );
+  static final copOptionB = ChoiceResult(
+    label: "29-9-B",
+    uiTitle: "Çöpler birikiyor, hijyen kötü.",
+    uiSubtitle: "Hijyen kötü, yoğun koku var.",
+    reportText: "🚨 RİSK: Biriken çöpler metan gazı oluşturur ve kendiliğinden yanabilir. Günlük temizlik şarttır."
+  );
+  static final copOptionC = ChoiceResult(
+    label: "29-9-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Çöp odasının hijyen durumu bilinmiyor. Biriken çöplerden sızan metan gazı, kapalı alanda patlama veya zehirlenme riski oluşturur. Havalandırma ve temizlik kontrol edilmelidir."
   );
 
-  static final copOptionB = ChoiceResult(
-    label: "29-9-B (Çöp)",
-    uiTitle: "Çöpler birikiyor.",
-    uiSubtitle: "Hijyen kötü, yoğun koku var.",
-    reportText: "☢️ RİSK: Biriken çöpler metan gazı oluşturur ve kendiliğinden yanabilir. Günlük temizlik şarttır."
+  // 10. SIĞINAK
+  static final siginakOptionA = ChoiceResult(
+    label: "29-10-A",
+    uiTitle: "Hayır.",
+    uiSubtitle: "",
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Sığınakta yanıcı madde depolanmamaktadır."
+  );
+  static final siginakOptionB = ChoiceResult(
+    label: "29-10-B",
+    uiTitle: "Evet.",
+    uiSubtitle: "Boya, tiner, tüp vb. var.",
+    reportText: "⚠️ UYARI: Sığınaklar barış zamanında depo olarak kullanılabilir ANCAK yanıcı madde konulamaz. Yangın yükünü artırır."
+  );
+  static final siginakOptionC = ChoiceResult(
+    label: "29-10-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Sığınağın kullanım durumu bilinmiyor. Kontrolsüzce yığılan eşyalar, sığınağı güvenli bir alan olmaktan çıkarabilir. Kontrol edilmesi tavsiye edilir."
   );
 }
 class Bolum30Content {
+  // --- 1. KONUM ---
   static final konumOptionA = ChoiceResult(
-    label: "30-1-A (Konum)",
+    label: "30-1-A",
     uiTitle: "Koridora veya hole açılıyor.",
     uiSubtitle: "Arada hol var.",
     reportText: "✅ OLUMLU: Kazan dairesi kapısı koridora açılmaktadır."
   );
-
   static final konumOptionB = ChoiceResult(
-    label: "30-1-B (Konum)",
+    label: "30-1-B",
     uiTitle: "Direkt merdiven boşluğuna açılıyor.",
     uiSubtitle: "Kapıyı açınca merdiven sahanlığı var.",
     reportText: "☢️ KRİTİK RİSK: Kazan dairesi kapısı ASLA doğrudan merdiven boşluğuna açılamaz. Olası bir patlama veya gaz sızıntısında merdiven kullanılamaz hale gelir."
   );
-
   static final konumOptionC = ChoiceResult(
-    label: "30-1-C (Konum)",
+    label: "30-1-C",
     uiTitle: "Binadan ayrı (dış cepheden uzakta veya bahçede).",
     uiSubtitle: "Bina dışında müstakil yapı.",
     reportText: "✅ OLUMLU: Kazan dairesi bina dışındadır."
   );
+  static final konumOptionD = ChoiceResult(
+    label: "30-1-D",
+    uiTitle: "Bilmiyorum / Emin Değilim",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Kazan dairesinin konumu ve kapı açılış yönü bilinmiyor. Yangın anında müdahale ve tahliye güvenliği için bu alanın denetlenmesi önerilir."
+  );
 
+  // --- 2. KAPASİTE ---
   static final kapasiteOption = ChoiceResult(
-    label: "30-2 (Kapasite)",
+    label: "30-2",
     uiTitle: "(Sayısal veya Tahmini Giriş)",
     uiSubtitle: "(Kullanıcı değer girer)",
     reportText: "(Sistem \"Büyük Kazan\" olup olmadığına karar verir)"
   );
 
+  // --- 3. KAPI SAYISI ---
   static final kapiOptionA = ChoiceResult(
-    label: "30-3-A (Kapı)",
+    label: "30-3-A",
     uiTitle: "1 Adet Kapı.",
     uiSubtitle: "Tek çıkış var.",
     reportText: "(Büyük Kazan İse) ☢️ KRİTİK RİSK: Girdiğiniz bilgilere göre kazan daireniz 'Büyük/Yüksek Kapasiteli' sınıfındadır. Yönetmeliğe göre en az 2 adet çıkış kapısı zorunludur.<br>(Küçük Kazan İse) ✅ OLUMLU: Kapı sayısı yeterlidir."
   );
-
   static final kapiOptionB = ChoiceResult(
-    label: "30-3-B (Kapı)",
+    label: "30-3-B",
     uiTitle: "2 Adet (veya daha fazla).",
     uiSubtitle: "Çift çıkış var.",
     reportText: "✅ OLUMLU: Kazan dairesinde birden fazla çıkış mevcuttur."
   );
+  static final kapiOptionC = ChoiceResult(
+    label: "30-3-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Kazan dairesi çıkış kapısı sayısı bilinmiyor. Büyük kapasiteli kazanlarda acil durum tahliyesi için en az 2 çıkış şarttır."
+  );
 
+  // --- 4. HAVALANDIRMA ---
   static final havaOptionA = ChoiceResult(
-    label: "30-4-A (Hava)",
+    label: "30-4-A",
     uiTitle: "Evet, altta ve üstte menfezler var.",
     uiSubtitle: "Temiz ve kirli hava delikleri mevcut.",
     reportText: "✅ OLUMLU: Kazan dairesi havalandırması (alt ve üst menfez) uygundur."
   );
-
   static final havaOptionB = ChoiceResult(
-    label: "30-4-B (Hava)",
+    label: "30-4-B",
     uiTitle: "Hayır, sadece pencere, menfez vs. yok.",
     uiSubtitle: "Menfez yok, hava sirkülasyonu yetersiz.",
-    reportText: "☢️ KIRMIZI RİSK: Temiz hava girişi ve kirli hava çıkışı (baca haricinde) sağlanmazsa verimsiz yanma olur ve karbonmonoksit zehirlenmesi riski doğar."
+    reportText: "☢️ KIRMIZI RİSK: Temiz hava girişi ve kirli hava çıkışı sağlanmazsa verimsiz yanma olur ve karbonmonoksit zehirlenmesi riski doğar."
+  );
+  static final havaOptionC = ChoiceResult(
+    label: "30-4-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Havalandırma durumu bilinmiyor. Yetersiz havalandırma, yanma verimini düşürür ve patlama riski oluşturur."
   );
 
+  // --- 5. YAKIT TİPİ ---
   static final yakitOptionA = ChoiceResult(
-    label: "30-5-A (Yakıt)",
+    label: "30-5-A",
     uiTitle: "Hayır, Doğalgazlı veya Kömürlü.",
     uiSubtitle: "Sıvı yakıt değil.",
-    reportText: "(Drenaj sorusu sorulmaz)"
+    reportText: "✅ BİLGİ: Kazan yakıtı sıvı yakıt (mazot vb.) değildir."
   );
-
   static final yakitOptionB = ChoiceResult(
-    label: "30-5-B (Yakıt)",
+    label: "30-5-B",
     uiTitle: "Evet, Sıvı Yakıtlı.",
     uiSubtitle: "Mazot, Fuel-oil vb.",
-    reportText: "(Alt soru açılır)"
+    reportText: "⚠️ BİLGİ: Kazan sıvı yakıtlıdır. Sızıntı ve drenaj önlemleri kritik önem taşır."
+  );
+  static final yakitOptionC = ChoiceResult(
+    label: "30-5-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Yakıt türü bilinmiyor. Yakıt türüne göre alınması gereken özel önlemler (drenaj, söndürme sistemi vb.) belirlenememiştir."
   );
 
+  // --- 6. DRENAJ ---
   static final drenajOptionA = ChoiceResult(
-    label: "30-5-B-1 (Drenaj)",
+    label: "30-5-B-1",
     uiTitle: "Evet, var.",
     uiSubtitle: "Kanal ve çukur mevcut.",
     reportText: "✅ OLUMLU: Sıvı yakıtlı kazanda drenaj sistemi mevcuttur."
   );
-
   static final drenajOptionB = ChoiceResult(
-    label: "30-5-B-2 (Drenaj)",
+    label: "30-5-B-2",
     uiTitle: "Hayır, yok.",
     uiSubtitle: "Zemin düz.",
     reportText: "⚠️ UYARI: Sıvı yakıtlı kazan dairelerinde, yakıt sızıntısını toplayacak drenaj kanalları ve yakıt ayırıcılı pis su çukuru zorunludur."
   );
+  static final drenajOptionC = ChoiceResult(
+    label: "30-5-B-3",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Sıvı yakıtlı kazanlarda sızıntı önleme (drenaj) sistemi olup olmadığı bilinmiyor."
+  );
 
+  // --- 7. TÜP ---
   static final tupOptionA = ChoiceResult(
-    label: "30-6-A (Tüp)",
+    label: "30-6-A",
     uiTitle: "Evet, en az 6kg'lık yangın söndürme tüpü var.",
     uiSubtitle: "",
     reportText: "⚠️ UYARI: Yangın söndürme tüpü mevcuttur. Büyük/Yüksek kapasiteli kazan dairelerinde yangın dolabı da olmalıdır."
   );
-
   static final tupOptionB = ChoiceResult(
-    label: "30-6-B (Tüp)",
+    label: "30-6-B",
     uiTitle: "Evet, yangın söndürme tüpü ve yangın dolabı var.",
     uiSubtitle: "",
     reportText: "✅ OLUMLU: Yangın söndürme ekipmanları tamdır."
   );
-
   static final tupOptionC = ChoiceResult(
-    label: "30-6-C (Tüp)",
+    label: "30-6-C",
     uiTitle: "Hayır, hiçbiri yok.",
     uiSubtitle: "Söndürme cihazı yok.",
-    reportText: "☢️ KRİTİK RİSK: Kazan dairesinde en az 1 adet 6 kg'lık Kuru Kimyevi Tozlu yangın söndürme cihazı bulunması yasal zorunluluktur. Büyük/Yüksek kapasiteli kazan dairelerinde yangın dolabı da olmalıdır."
+    reportText: "☢️ KRİTİK RİSK: Kazan dairesinde en az 1 adet 6 kg'lık Kuru Kimyevi Tozlu yangın söndürme cihazı bulunması yasal zorunluluktur."
+  );
+  static final tupOptionD = ChoiceResult(
+    label: "30-6-D",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Söndürme ekipmanlarının varlığı bilinmiyor. Kazan dairesinde en az 1 adet 6 kg'lık tüp bulunması şarttır."
   );
 }
 class Bolum31Content {
@@ -2152,74 +2254,96 @@ class Bolum31Content {
   );
 }
 class Bolum32Content {
+  // --- 1. YAPI ---
   static final yapiOptionA = ChoiceResult(
-    label: "32-1-A (Yapı)",
+    label: "32-1-A",
     uiTitle: "Duvarlar beton/tuğla, kapı yangına dayanıklı ve dışarıya açılıyor.",
     uiSubtitle: "",
     reportText: "✅ OLUMLU: Jeneratör odası yangın kompartımanı olarak uygundur."
   );
-
   static final yapiOptionB = ChoiceResult(
-    label: "32-1-B (Yapı)",
+    label: "32-1-B",
     uiTitle: "Kapısı direkt apartman koridoruna açılıyor.",
     uiSubtitle: "",
     reportText: "☢️ KRİTİK RİSK: Jeneratör odasından çıkacak zehirli egzoz gazı ve duman, kaçış yollarını kullanılamaz hale getirir. Kapı asla direkt kaçış yoluna açılmamalıdır."
   );
-
   static final yapiOptionC = ChoiceResult(
-    label: "32-1-C (Yapı)",
+    label: "32-1-C",
     uiTitle: "Duvarlar dayanıksız beyaz alçıpanel vb., kapısı dayanımsız.",
     uiSubtitle: "",
     reportText: "☢️ RİSK: Jeneratör odası yangın bölmesi olarak tasarlanmalıdır. Duvarlar ve kapı en az 120 dakika yangına dayanmazsa, yakıt yangını binaya sıçrar."
   );
+  static final yapiOptionD = ChoiceResult(
+    label: "32-1-D",
+    uiTitle: "Bilmiyorum / Emin Değilim",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Jeneratör odasının yapısal özellikleri ve kapı dayanımı bilinmiyor. Yangın ve zehirli gaz yayılımı riskine karşı bu alanın teknik denetimi yapılmalıdır."
+  );
 
+  // --- 2. YAKIT ---
   static final yakitOptionA = ChoiceResult(
-    label: "32-2-A (Yakıt)",
+    label: "32-2-A",
     uiTitle: "Kendi tankında veya gömülü tankta.",
     uiSubtitle: "Güvenli depolama.",
     reportText: "✅ OLUMLU: Yakıt depolama yöntemi güvenlidir."
   );
-
   static final yakitOptionB = ChoiceResult(
-    label: "32-2-B (Yakıt)",
+    label: "32-2-B",
     uiTitle: "Oda içinde bidonlarda/varillerde.",
     uiSubtitle: "Açıkta yedek yakıt var.",
     reportText: "☢️ KRİTİK RİSK: Jeneratör odasında bidonla veya açık kapta yakıt saklamak uygun değildir. Yakıt buharı elektrik kontağından alev alıp patlamaya neden olabilir."
   );
+  static final yakitOptionC = ChoiceResult(
+    label: "32-2-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Jeneratör yakıtının depolanma şekli bilinmiyor. Yanıcı sıvıların açıkta saklanması büyük bir patlama riskidir, kontrol edilmelidir."
+  );
 
+  // --- 3. ÇEVRE ---
   static final cevreOptionA = ChoiceResult(
-    label: "32-3-A (Çevre)",
+    label: "32-3-A",
     uiTitle: "Hayır, çevresi ve üstü kuru, ıslak zemin yok.",
     uiSubtitle: "",
     reportText: "✅ OLUMLU: Çevresel su riski bulunmamaktadır."
   );
-
   static final cevreOptionB = ChoiceResult(
-    label: "32-3-B (Çevre)",
+    label: "32-3-B",
     uiTitle: "Evet, içinden su/doğalgaz boruları geçiyor.",
     uiSubtitle: "",
     reportText: "☢️ KRİTİK RİSK: Jeneratör odasından su veya gaz tesisatı geçirilemez. Boru patlaması durumunda suyun elektrikle teması veya gaz kaçağı felakete yol açar."
   );
-
   static final cevreOptionC = ChoiceResult(
-    label: "32-3-C (Çevre)",
+    label: "32-3-C",
     uiTitle: "Evet, üstünde banyo/tuvalet vb. ıslak hacim var.",
     uiSubtitle: "",
     reportText: "☢️ RİSK: Jeneratör odalarının üstü ıslak hacim olamaz. Su sızıntısı kısa devreye yol açar."
   );
+  static final cevreOptionD = ChoiceResult(
+    label: "32-3-D",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Jeneratör odası çevresindeki tesisat riskleri bilinmiyor. Olası bir su sızıntısının elektrik sistemine zarar verip vermeyeceği denetlenmelidir."
+  );
 
+  // --- 4. EGZOZ ---
   static final egzozOptionA = ChoiceResult(
-    label: "32-4-A (Egzoz)",
+    label: "32-4-A",
     uiTitle: "Egzoz dışarıda, havalandırma var.",
     uiSubtitle: "Gaz tahliyesi mümkün.",
     reportText: "✅ OLUMLU: Egzoz gazı bina dışına atılmaktadır."
   );
-
   static final egzozOptionB = ChoiceResult(
-    label: "32-4-B (Egzoz)",
+    label: "32-4-B",
     uiTitle: "Egzoz içeride veya havalandırma yok.",
     uiSubtitle: "Gaz içeride birikme yapabilir.",
     reportText: "☢️ KRİTİK RİSK: Jeneratör egzozu karbonmonoksit içerir. Egzoz sağlanmalı ve mutlaka bina dışına uzatılmalıdır."
+  );
+  static final egzozOptionC = ChoiceResult(
+    label: "32-4-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Jeneratör egzoz tahliye sistemi bilinmiyor. Karbonmonoksit zehirlenmesi riskine karşı egzozun bina dışına verildiğinden emin olunmalıdır."
   );
 }
 class Bolum33Content {
@@ -2309,224 +2433,176 @@ class Bolum34Content {
   );
 }
 class Bolum35Content {
+  // --- SENARYO 1: TEK YÖN ---
   static final tekYonOptionA = ChoiceResult(
-    label: "35-1-A (Tek Yön)",
+    label: "35-1-A",
     uiTitle: "Tam ölçüyü biliyorum.",
     uiSubtitle: "Mesafeyi metre cinsinden gireceğim.",
     reportText: "(Girilen değere göre otomatik hesaplanır)"
   );
-
   static final tekYonOptionB = ChoiceResult(
-    label: "35-1-B (Tek Yön)",
+    label: "35-1-B",
     uiTitle: "Tahminen [LİMİT] metreden KISADIR.",
     uiSubtitle: "Mesafe uygun görünüyor.",
     reportText: "✅ OLUMLU: Tek yön kaçış mesafesi Yönetmelik sınırları içerisindedir."
   );
-
   static final tekYonOptionC = ChoiceResult(
-    label: "35-1-C (Tek Yön)",
+    label: "35-1-C",
     uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
     uiSubtitle: "Mesafe çok uzun.",
     reportText: "☢️ RİSK: Tek yön kaçış mesafesi sınırın üzerinde! Yangın anında merdivene ulaşmak uzun sürebilir."
   );
-
   static final tekYonOptionD = ChoiceResult(
-    label: "35-1-D (Tek Yön)",
+    label: "35-1-D",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Mesafeyi tahmin edemiyorum.",
     reportText: "❓ BİLİNMİYOR: Kaçış mesafesi bilinmiyor. Bu mesafe, insanların tahliye süresini belirleyen en önemli faktördür. Ölçüm yapılmalıdır."
   );
 
+  // --- SENARYO 2: ÇİFT YÖN (EN YAKIN) ---
   static final ciftYonOptionA = ChoiceResult(
-    label: "35-2-A (Çift Yön)",
+    label: "35-2-A",
     uiTitle: "Tam ölçüyü biliyorum.",
     uiSubtitle: "En yakın çıkışa olan mesafeyi gireceğim.",
     reportText: "(Girilen değere göre otomatik hesaplanır)"
   );
-
   static final ciftYonOptionB = ChoiceResult(
-    label: "35-2-B (Çift Yön)",
+    label: "35-2-B",
     uiTitle: "Tahminen [LİMİT] metreden KISADIR.",
     uiSubtitle: "En yakın çıkışa mesafe uygun.",
     reportText: "✅ OLUMLU: En yakın çıkışa kaçış mesafesi yönetmelik sınırları içerisindedir."
   );
-
   static final ciftYonOptionC = ChoiceResult(
-    label: "35-2-C (Çift Yön)",
+    label: "35-2-C",
     uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
     uiSubtitle: "En yakın çıkış bile çok uzak.",
     reportText: "☢️ RİSK: En yakın çıkışa mesafe sınırın üzerinde! (Limit: [LİMİT] m)."
   );
-
   static final ciftYonOptionD = ChoiceResult(
-    label: "35-2-D (Çift Yön)",
+    label: "35-2-D",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Mesafeyi bilmiyorum.",
     reportText: "❓ BİLİNMİYOR: Kaçış mesafesi bilinmiyor. Ölçüm yapılmalıdır."
   );
 
+  // --- ÇIKMAZ KORİDOR DURUMU ---
   static final cikmazOptionA = ChoiceResult(
-    label: "35-3-A (Çıkmaz)",
-    uiTitle: "Hayır, iki yöne de gidebiliyorum.",
+    label: "35-3-A",
+    uiTitle: "Hayır, daireden çıkınca sağa veya sola (iki yöne de) gidebiliyorum.",
     uiSubtitle: "Koridor sonunda değilim.",
     reportText: "✅ OLUMLU: Daire çıkmaz koridor üzerinde değildir."
   );
-
   static final cikmazOptionB = ChoiceResult(
-    label: "35-3-B (Çıkmaz)",
-    uiTitle: "Evet, çıkmaz koridorun ucundayım.",
+    label: "35-3-B",
+    uiTitle: "Evet, çıkmaz bir koridorun ucundayım.",
     uiSubtitle: "Sadece tek yöne gidebiliyorum.",
     reportText: "(Alt soru açılır)"
   );
 
-  static final cikmazOptionC = ChoiceResult(
-    label: "35-3-C (Çıkmaz)",
+  // --- ÇIKMAZ KORİDOR UZUNLUĞU ---
+  static final cikmazMesafeOptionA = ChoiceResult(
+    label: "35-3-C",
     uiTitle: "Tam ölçüyü biliyorum.",
     uiSubtitle: "Yol ayrımına kadar olan mesafeyi gireceğim.",
     reportText: "(Girilen değere göre otomatik hesaplanır)"
   );
-
-  static final cikmazOptionD = ChoiceResult(
-    label: "35-3-D (Çıkmaz)",
+  static final cikmazMesafeOptionB = ChoiceResult(
+    label: "35-3-D",
     uiTitle: "Tahminen [LİMİT] metreden KISADIR.",
     uiSubtitle: "Çıkmaz koridor kısa.",
     reportText: "✅ OLUMLU: Çıkmaz koridor mesafesi yönetmelik sınırları içerisindedir."
   );
-
-  static final cikmazOptionE = ChoiceResult(
-    label: "35-3-E (Çıkmaz)",
+  static final cikmazMesafeOptionC = ChoiceResult(
+    label: "35-3-E",
     uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
     uiSubtitle: "Çıkmaz koridor çok uzun.",
     reportText: "☢️ RİSK: Çıkmaz koridor mesafesi sınırın üzerinde! Duman dolduğunda kaçacak yeriniz kalmaz."
   );
-
-  static final cikmazOptionF = ChoiceResult(
-    label: "35-3-F (Çıkmaz)",
+  static final cikmazMesafeOptionD = ChoiceResult(
+    label: "35-3-F",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Mesafeyi bilmiyorum.",
     reportText: "❓ BİLİNMİYOR: Çıkmaz koridor mesafesi bilinmiyor. Ölçüm yapılmalıdır."
   );
 }
 class Bolum36Content {
+  // --- ADIM 1: DIŞ MERDİVEN ---
   static final disMerdOptionA = ChoiceResult(
-    label: "36-1-A (Dış Merd.)",
-    uiTitle: "Hayır, duvarlar sağır.",
+    label: "36-1-A",
+    uiTitle: "Hayır, merdiven etrafındaki duvarlar tamamen sağır (düz duvar).",
     uiSubtitle: "Merdiven etrafında pencere yok.",
-    reportText: "✅ OLUMLU: Dış kaçış merdiveni etrafında alev sıçrayabilecek açıklık bulunmamaktadır."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Dış kaçış merdiveni etrafında alev sıçrayabilecek açıklık bulunmamaktadır."
   );
-
   static final disMerdOptionB = ChoiceResult(
-    label: "36-1-B (Dış Merd.)",
-    uiTitle: "Evet, pencere/kapı var.",
+    label: "36-1-B",
+    uiTitle: "Evet, merdivenin hemen yanında/altında daire pencereleri veya kapılar var.",
     uiSubtitle: "Merdivenin hemen yanında açıklık var.",
-    reportText: "☢️ RİSK: Açık dış kaçış merdiveninin 3 metre yakınında korunumsuz pencere veya kapı bulunamaz. Daireden çıkan alevler merdiveni sarabilir."
+    reportText: "🚨 RİSK: Açık dış kaçış merdiveninin 3 metre yakınında korunumsuz pencere veya kapı bulunamaz. Daireden çıkan alevler merdiveni sarabilir ve kaçışı imkansız hale getirebilir."
   );
-
   static final disMerdOptionC = ChoiceResult(
-    label: "36-1-C (Dış Merd.)",
+    label: "36-1-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Duvar durumunu bilmiyorum.",
     reportText: "❓ BİLİNMİYOR: Dış merdiven çevresindeki açıklıklar bilinmiyor. Yangın anında alevlerin merdivene sıçrama riski kontrol edilmelidir."
   );
 
+  // --- ADIM 2: KONUM ---
   static final konumOptionA = ChoiceResult(
-    label: "36-2-A (Konum)",
-    uiTitle: "Birbirlerine uzaklar.",
+    label: "36-2-A",
+    uiTitle: "Birbirlerine uzaklar (Koridorun zıt uçlarındalar / Farklı cephedeler).",
     uiSubtitle: "Koridorun zıt uçlarındalar.",
-    reportText: "✅ OLUMLU: Merdivenlerin zıt yönlerde olması, alternatif kaçış imkanı sağlar."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Merdivenlerin zıt yönlerde olması, alternatif kaçış imkanı sağlar."
   );
-
   static final konumOptionB = ChoiceResult(
-    label: "36-2-B (Konum)",
-    uiTitle: "Yan yanalar veya çok yakınlar.",
+    label: "36-2-B",
+    uiTitle: "Yan yanalar veya birbirlerine çok yakınlar.",
     uiSubtitle: "Birbirlerine bitişikler.",
-    reportText: "☢️ KRİTİK RİSK: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış' sayılmaz. Birini duman bastığında diğeri de kullanılamaz."
+    reportText: "🚨 KRİTİK RİSK: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış' sayılmaz. Birini duman bastığında diğeri de kullanılamaz."
   );
-
   static final konumOptionC = ChoiceResult(
-    label: "36-2-C (Konum)",
+    label: "36-2-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Konumlarını bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Merdiven konumları net değil. Yönetmeliğe göre iki çıkış arasındaki mesafe, binanın köşegen mesafesinin en az yarısı kadar olmalıdır."
+    reportText: "❓ BİLİNMİYOR: Merdiven konumları net değil. Yönetmeliğe göre iki çıkış arasındaki mesafe, binanın köşegen mesafesinin en az yarısı (veya üçte biri) kadar olmalıdır."
   );
 
-  // Not: Sayısal girişlerin sonuç metinleri hesaplama sonrası kullanılır.
-  // Aşağıdakiler raporlama mantığında kullanılacak şablonlardır.
-  static final genislikSonucKritik = ChoiceResult(
-    label: "36-3 (Genişlik-Kritik)",
-    uiTitle: "Genişlik < 80cm",
-    uiSubtitle: "",
-    reportText: "☢️ KRİTİK RİSK: Kaçış yolu genişliği ASLA 80 cm'den az olamaz!"
-  );
-
-  static final genislikSonucRisk = ChoiceResult(
-    label: "36-3 (Genişlik-Risk)",
-    uiTitle: "Genişlik < 120cm (Yüksek Bina)",
-    uiSubtitle: "",
-    reportText: "☢️ RİSK: Yüksek binalarda kaçış yolları en az 120 cm olmak zorundadır."
-  );
-
-  static final genislikSonucOlumlu = ChoiceResult(
-    label: "36-3 (Genişlik-Olumlu)",
-    uiTitle: "Genişlik Uygun",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU GÖRÜNÜYOR."
-  );
-
+  // --- ADIM 4: KAPI TİPİ ---
   static final kapiTipiOptionA = ChoiceResult(
-    label: "36-4-A (Kapı Tipi)",
-    uiTitle: "Tek Kanatlı Kapı.",
+    label: "36-4-A",
+    uiTitle: "Tek Kanatlı Kapı (Normal oda kapısı gibi tek parça açılır).",
     uiSubtitle: "Normal kapı.",
     reportText: "(Genişlik kontrolü yapılır)"
   );
-
   static final kapiTipiOptionB = ChoiceResult(
-    label: "36-4-B (Kapı Tipi)",
-    uiTitle: "Çift Kanatlı Kapı.",
+    label: "36-4-B",
+    uiTitle: "Çift Kanatlı Kapı (İki parça halinde iki yana açılır).",
     uiSubtitle: "İki yana açılan kapı.",
     reportText: "(Genişlik kontrolü yapılır)"
   );
-
-  // Kapı Genişliği Sonuçları
-  static final kapiGenSonucKritik = ChoiceResult(
-    label: "36-4 (Kapı Gen.-Kritik)",
-    uiTitle: "Genişlik < 80cm",
+  static final kapiTipiOptionC = ChoiceResult(
+    label: "36-4-C",
+    uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText: "☢️ KRİTİK RİSK: Çıkış kapısı temiz genişliği en az 80 cm olmalıdır."
+    reportText: "❓ BİLİNMİYOR: Çıkış kapısı tipi ve genişliği bilinmiyor. Tahliye kapasitesi hesaplanamamıştır."
   );
 
-  static final kapiGenSonucUyari = ChoiceResult(
-    label: "36-4 (Kapı Gen.-Uyarı)",
-    uiTitle: "Genişlik > 120cm (Tek Kanat)",
-    uiSubtitle: "",
-    reportText: "⚠️ UYARI: Tek kanatlı kapı en çok 120 cm olabilir. Daha geniş kapılar ağır olduğu için zor açılır."
-  );
-
-  static final kapiGenSonucOlumlu = ChoiceResult(
-    label: "36-4 (Kapı Gen.-Olumlu)",
-    uiTitle: "Genişlik Uygun",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU GÖRÜNÜYOR."
-  );
-
+  // --- ADIM 5: GÖRÜNÜRLÜK ---
   static final gorunurlukOptionA = ChoiceResult(
-    label: "36-5-A (Görünürlük)",
-    uiTitle: "Evet, açıkça görünüyor.",
+    label: "36-5-A",
+    uiTitle: "Evet, açıkça görünüyor ve engel yok.",
     uiSubtitle: "Engel yok.",
-    reportText: "✅ OLUMLU: Kaçış yolları ve çıkış kapıları açıkça görülebilir durumdadır."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Kaçış yolları ve çıkış kapıları açıkça görülebilir durumdadır."
   );
-
   static final gorunurlukOptionB = ChoiceResult(
-    label: "36-5-B (Görünürlük)",
-    uiTitle: "Hayır, önünde eşyalar var.",
+    label: "36-5-B",
+    uiTitle: "Hayır, önünde eşyalar var veya çıkış kapılarını görmekte zorlanıyorum.",
     uiSubtitle: "Çıkışlar kapalı veya görünmüyor.",
-    reportText: "☢️ RİSK: Çıkışlar her an kullanılabilir durumda ve engelsiz olmalıdır. Önündeki eşyalar derhal kaldırılmalıdır."
+    reportText: "🚨 RİSK: Çıkışlar her an kullanılabilir durumda ve engelsiz olmalıdır. Önündeki eşyalar derhal kaldırılmalıdır."
   );
-
   static final gorunurlukOptionC = ChoiceResult(
-    label: "36-5-C (Görünürlük)",
+    label: "36-5-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Durumu bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Çıkışların erişilebilirliği bilinmiyor. Çıkışlar her an kullanılabilir durumda ve engelsiz olmalıdır. Önündeki eşyalar derhal kaldırılmalıdır."
+    reportText: "❓ BİLİNMİYOR: Çıkışların erişilebilirliği bilinmiyor. Acil durumda saniyeler önemlidir; kapıların yerini ve önünün açık olduğunu teyit ediniz."
   );
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_34_model.dart';
-import 'bolum_35_screen.dart'; // Sonraki ekran
+import 'bolum_35_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -21,13 +21,24 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
   @override
   void initState() {
     super.initState();
-    _checkTicari();
+    _checkTicariAndRedirect();
   }
 
-  void _checkTicari() {
+  void _checkTicariAndRedirect() {
     final b6 = BinaStore.instance.bolum6;
+    
     if (b6?.hasTicari == true) {
-      _hasTicari = true;
+      setState(() {
+        _hasTicari = true;
+      });
+    } else {
+      // Ticari alan yoksa, ekran çizilir çizilmez bir sonraki bölüme yönlendir
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum35Screen()),
+        );
+      });
     }
   }
 
@@ -52,49 +63,41 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // Ticari alan yoksa boş bir yükleniyor ekranı göster (yönlendirme bitene kadar)
     if (!_hasTicari) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Bölüm-34")),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Binanızda Ticari Alan bulunmadığı için bu bölüm atlanmıştır."),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET"))
-            ],
-          ),
-        ),
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-34: Ticari Alanlar",
-            subtitle: "Dükkan ve mağaza çıkışları.",
-            currentStep: 24, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru("Zemin kattaki dükkan, mağaza veya restoranların doğrudan sokağa açılan kapıları var mı?", 'zemin', 
+                  _buildSoru("Zemin kattaki dükkan, mağaza veya restoranların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?", 'zemin', 
                     [
                       Bolum34Content.zeminOptionA, 
                       Bolum34Content.zeminOptionB, 
                       Bolum34Content.zeminOptionC
                     ], _model.zemin),
 
-                  _buildSoru("Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait bir merdiveni var mı?", 'bodrum', 
+                  _buildSoru("Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait bir merdiveni veya rampası var mı?", 'bodrum', 
                     [
                       Bolum34Content.bodrumOptionA, 
                       Bolum34Content.bodrumOptionB, 
@@ -131,13 +134,13 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

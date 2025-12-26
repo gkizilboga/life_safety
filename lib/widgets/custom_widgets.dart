@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import '../utils/app_progress.dart';
 
 class ModernHeader extends StatelessWidget {
   final String title;
   final String subtitle;
-  final int currentStep;
-  final int totalSteps;
+  final Type screenType; // int currentStep yerine Type alıyoruz
   final VoidCallback? onBack;
 
   const ModernHeader({
     super.key,
     required this.title,
     required this.subtitle,
-    required this.currentStep,
-    required this.totalSteps,
+    required this.screenType,
     this.onBack,
   });
 
   @override
-  Widget build(BuildContext context) {
-    double progress = currentStep / totalSteps;
+Widget build(BuildContext context) {
+  // Parantez içinde çağırdığından emin ol:
+  int currentStep = AppProgress.currentStep(screenType); 
+  int totalSteps = AppProgress.totalSteps;
+  double progress = currentStep / totalSteps;
     
     return Container(
       width: double.infinity,
@@ -67,7 +69,7 @@ class ModernHeader extends StatelessWidget {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 14,
                       ),
                     ),
@@ -77,9 +79,9 @@ class ModernHeader extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white.withOpacity(0.2)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
                 ),
                 child: Text(
                   "$currentStep/$totalSteps",
@@ -100,7 +102,7 @@ class ModernHeader extends StatelessWidget {
                 children: [
                   Text(
                     "Analiz İlerlemesi",
-                    style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 12),
                   ),
                   Text(
                     "%${(progress * 100).toInt()}",
@@ -114,7 +116,7 @@ class ModernHeader extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: progress,
                   minHeight: 6,
-                  backgroundColor: Colors.white.withOpacity(0.2),
+                  backgroundColor: Colors.white.withValues(alpha: 0.2),
                   valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4CAF50)),
                 ),
               ),
@@ -139,7 +141,7 @@ class QuestionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),

@@ -55,8 +55,9 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'otopark') _model = _model.copyWith(otoparkKapi: choice);
-      else if (type == 'kazan') _model = _model.copyWith(kazanKapi: choice);
+      if (type == 'otopark') {
+        _model = _model.copyWith(otoparkKapi: choice);
+      } else if (type == 'kazan') _model = _model.copyWith(kazanKapi: choice);
       else if (type == 'asansor') _model = _model.copyWith(asansorKapi: choice);
       else if (type == 'jenerator') _model = _model.copyWith(jeneratorKapi: choice);
       else if (type == 'elektrik') _model = _model.copyWith(elektrikKapi: choice);
@@ -115,11 +116,10 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-13: Özel Riskli Alanların, Teknik Hacimleri Duvar ve Kapı Özellikleri",
-            subtitle: " ",
-            currentStep: 3,
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -193,7 +193,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

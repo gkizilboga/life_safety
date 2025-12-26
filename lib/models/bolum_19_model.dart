@@ -41,23 +41,26 @@ class Bolum19Model {
     // Engel
     ChoiceResult? e;
     final l1 = map['engel_label'];
-    if (l1 == Bolum19Content.engelOptionA.label) e = Bolum19Content.engelOptionA;
-    else if (l1 == Bolum19Content.engelOptionB.label) e = Bolum19Content.engelOptionB;
+    if (l1 == Bolum19Content.engelOptionA.label) {
+      e = Bolum19Content.engelOptionA;
+    } else if (l1 == Bolum19Content.engelOptionB.label) e = Bolum19Content.engelOptionB;
     else if (l1 == Bolum19Content.engelOptionC.label) e = Bolum19Content.engelOptionC;
     else if (l1 == Bolum19Content.engelOptionD.label) e = Bolum19Content.engelOptionD;
 
     // Levha
     ChoiceResult? l;
     final l2 = map['levha_label'];
-    if (l2 == Bolum19Content.levhaOptionA.label) l = Bolum19Content.levhaOptionA;
-    else if (l2 == Bolum19Content.levhaOptionB.label) l = Bolum19Content.levhaOptionB;
+    if (l2 == Bolum19Content.levhaOptionA.label) {
+      l = Bolum19Content.levhaOptionA;
+    } else if (l2 == Bolum19Content.levhaOptionB.label) l = Bolum19Content.levhaOptionB;
     else if (l2 == Bolum19Content.levhaOptionC.label) l = Bolum19Content.levhaOptionC;
 
     // Yanıltıcı Kapı
     ChoiceResult? y;
     final l3 = map['yanilticiKapi_label'];
-    if (l3 == Bolum19Content.yanilticiOptionA.label) y = Bolum19Content.yanilticiOptionA;
-    else if (l3 == Bolum19Content.yanilticiOptionB.label) y = Bolum19Content.yanilticiOptionB;
+    if (l3 == Bolum19Content.yanilticiOptionA.label) {
+      y = Bolum19Content.yanilticiOptionA;
+    } else if (l3 == Bolum19Content.yanilticiOptionB.label) y = Bolum19Content.yanilticiOptionB;
 
     return Bolum19Model(
       engel: e,

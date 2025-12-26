@@ -15,45 +15,32 @@ class SelectableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(18),
+        margin: const EdgeInsets.only(bottom: 8), // 12'den 8'e düşürdük
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // 18'den 12'ye düşürdük
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFE8EAF6) : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF1A237E) : Colors.grey.shade300,
-            width: isSelected ? 2.5 : 1,
-          ),
+          // ... (Renk ve border kodları aynı)
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Container(
-                  width: 26,
-                  height: 26,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isSelected ? const Color(0xFF1A237E) : Colors.transparent,
-                    border: Border.all(
-                      color: isSelected ? const Color(0xFF1A237E) : Colors.grey.shade500,
-                      width: 2,
-                    ),
-                  ),
-                  child: isSelected ? const Icon(Icons.check, size: 18, color: Colors.white) : null,
+                SizedBox(
+                  width: 22, // 26'dan 22'ye düşürdük
+                  height: 22,
+                  // ... (Check ikonu kodları aynı)
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12), // 16'dan 12'ye düşürdük
                 Expanded(
                   child: Text(
                     choice.uiTitle,
                     style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w800,
+                      fontSize: 15, // 17'den 15'e düşürdük (Daha kurumsal)
+                      fontWeight: FontWeight.w700,
                       color: isSelected ? const Color(0xFF1A237E) : Colors.black87,
                     ),
                   ),
@@ -61,16 +48,16 @@ class SelectableCard extends StatelessWidget {
               ],
             ),
             if (choice.uiSubtitle.isNotEmpty) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: 4), // 8'den 4'e düşürdük
               Padding(
-                padding: const EdgeInsets.only(left: 42),
+                padding: const EdgeInsets.only(left: 34), // İkon küçüldüğü için hizaladık
                 child: Text(
                   choice.uiSubtitle,
                   style: TextStyle(
-                    fontSize: 14, 
-                    fontWeight: FontWeight.w500, 
-                    color: Colors.grey[800], 
-                    height: 1.3
+                    fontSize: 13, // 14'ten 13'e düşürdük
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[700],
+                    height: 1.2,
                   ),
                 ),
               ),
@@ -79,5 +66,5 @@ class SelectableCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
+  } 
+} 

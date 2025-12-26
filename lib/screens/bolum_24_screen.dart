@@ -58,11 +58,10 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-24: Dış Kaçış Geçitleri / Koridorları",
-            subtitle: " ",
-            currentStep: 14, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -131,7 +130,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

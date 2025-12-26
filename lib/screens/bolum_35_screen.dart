@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_35_model.dart';
-import 'bolum_36_screen.dart'; // Sonraki ekran
+import 'bolum_36_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -16,70 +16,77 @@ class Bolum35Screen extends StatefulWidget {
 
 class _Bolum35ScreenState extends State<Bolum35Screen> {
   Bolum35Model _model = Bolum35Model();
+  final _mesafeCtrl = TextEditingController();
   
-  // Çıkış sayısına göre Tek Yön / Çift Yön sorusunu belirle
   bool _tekCikis = true;
+  int _limitTekYon = 15;
+  int _limitCiftYon = 30;
 
   @override
   void initState() {
     super.initState();
-    _checkCikisSayisi();
+    _calculateLimits();
   }
 
-  void _checkCikisSayisi() {
-    // Bölüm 20'den toplam çıkış sayısını al
+  void _calculateLimits() {
     final b20 = BinaStore.instance.bolum20;
-    int toplam = (b20?.normalMerdivenSayisi ?? 0) + 
-                 (b20?.binaIciYanginMerdiveniSayisi ?? 0) + 
-                 (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) + 
-                 (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0);
+    final b9 = BinaStore.instance.bolum9;
     
-    if (toplam > 1) {
-      setState(() {
-        _tekCikis = false;
-      });
-    }
+    int toplamCikis = (b20?.normalMerdivenSayisi ?? 0) + 
+                      (b20?.binaIciYanginMerdiveniSayisi ?? 0) + 
+                      (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) + 
+                      (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0);
+    
+    bool hasSprinkler = b9?.secim?.label == "9-1-A";
+
+    setState(() {
+      _tekCikis = (toplamCikis <= 1);
+      _limitTekYon = hasSprinkler ? 30 : 15;
+      _limitCiftYon = hasSprinkler ? 75 : 30;
+    });
+  }
+
+  // Placeholder'ları rakamla değiştiren yardımcı fonksiyon
+  ChoiceResult _getDynamicChoice(ChoiceResult original, int limit) {
+    return ChoiceResult(
+      label: original.label,
+      uiTitle: original.uiTitle.replaceAll("[LİMİT]", limit.toString()),
+      uiSubtitle: original.uiSubtitle.replaceAll("[LİMİT]", limit.toString()),
+      reportText: original.reportText.replaceAll("[LİMİT]", limit.toString()),
+    );
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'tekYon') _model = _model.copyWith(tekYon: choice);
       if (type == 'ciftYon') _model = _model.copyWith(ciftYon: choice);
-      
       if (type == 'cikmaz') {
         _model = _model.copyWith(cikmaz: choice);
-        if (choice.label == Bolum35Content.cikmazOptionA.label) {
-          _model = _model.copyWith(cikmazMesafe: null);
-        }
+        if (choice.label == Bolum35Content.cikmazOptionA.label) _model = _model.copyWith(cikmazMesafe: null);
       }
-      
       if (type == 'cikmazMesafe') _model = _model.copyWith(cikmazMesafe: choice);
     });
   }
 
   void _onNextPressed() {
-    if (_tekCikis) {
-      if (_model.tekYon == null) return _showError("Lütfen tek yön kaçış mesafesini seçiniz.");
-    } else {
-      if (_model.ciftYon == null) return _showError("Lütfen en yakın çıkışa mesafeyi seçiniz.");
-    }
-
-    if (_model.cikmaz == null) return _showError("Lütfen çıkmaz koridor durumunu seçiniz.");
-    
-    // Çıkmaz varsa mesafe zorunlu
+    if (_tekCikis && _model.tekYon == null) return _showError("Lütfen mesafeyi seçiniz.");
+    if (!_tekCikis && _model.ciftYon == null) return _showError("Lütfen mesafeyi seçiniz.");
+    if (!_tekCikis && _model.cikmaz == null) return _showError("Lütfen çıkmaz koridor durumunu seçiniz.");
     if (_model.cikmaz?.label == Bolum35Content.cikmazOptionB.label && _model.cikmazMesafe == null) {
       return _showError("Lütfen çıkmaz koridor mesafesini seçiniz.");
     }
 
+    // Manuel giriş kontrolü
+    if (_mesafeCtrl.text.isNotEmpty) {
+      _model = _model.copyWith(manuelMesafe: double.tryParse(_mesafeCtrl.text.replaceAll(',', '.')));
+    }
+
     BinaStore.instance.bolum35 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum36Screen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum36Screen()));
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800));
   }
 
   @override
@@ -87,70 +94,63 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
-            title: "Bölüm-35: Kaçış Mesafeleri",
-            subtitle: "Koridor uzunluklarının analizi.",
-            currentStep: 25, 
-            totalSteps: 26,
-          ),
+          ModernHeader(
+            title: "Bölüm-35: Kaçış Mesafeleri", 
+            subtitle: "...", 
+            screenType: widget.runtimeType,
+            ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // 1. Mesafe Sorusu (Tek veya Çift Çıkışa Göre Değişir)
                   if (_tekCikis) 
                     _buildSoru("Evinizin en uzak noktasından bina merdiven kapısına kadar olan mesafe kaç metredir?", 'tekYon', 
                       [
-                        Bolum35Content.tekYonOptionB, 
-                        Bolum35Content.tekYonOptionC,
+                        Bolum35Content.tekYonOptionA,
+                        _getDynamicChoice(Bolum35Content.tekYonOptionB, _limitTekYon),
+                        _getDynamicChoice(Bolum35Content.tekYonOptionC, _limitTekYon),
                         Bolum35Content.tekYonOptionD
                       ], _model.tekYon)
-                  else
+                  else ...[
                     _buildSoru("Daire kapınızdan çıktığınızda, size EN YAKIN olan yangın merdivenine mesafe kaç metredir?", 'ciftYon', 
                       [
-                        Bolum35Content.ciftYonOptionB, 
-                        Bolum35Content.ciftYonOptionC,
+                        Bolum35Content.ciftYonOptionA,
+                        _getDynamicChoice(Bolum35Content.ciftYonOptionB, _limitCiftYon),
+                        _getDynamicChoice(Bolum35Content.ciftYonOptionC, _limitCiftYon),
                         Bolum35Content.ciftYonOptionD
                       ], _model.ciftYon),
+                    
+                    _buildSoru("Daireniz koridorun sonunda, 'Çıkmaz' bir noktada mı?", 'cikmaz', 
+                      [Bolum35Content.cikmazOptionA, Bolum35Content.cikmazOptionB], _model.cikmaz),
 
-                  // 2. Çıkmaz Koridor
-                  _buildSoru("Daireniz koridorun sonunda, 'Çıkmaz' bir noktada mı?", 'cikmaz', 
-                    [
-                      Bolum35Content.cikmazOptionA, 
-                      Bolum35Content.cikmazOptionB
-                    ], _model.cikmaz),
-
-                  // Alt Soru: Çıkmaz ise Mesafe
-                  if (_model.cikmaz?.label == Bolum35Content.cikmazOptionB.label) ...[
-                    const Divider(height: 30),
-                    _buildSoru("Daire kapınızdan, koridordaki yol ayrımına kadar olan mesafe kaç metredir?", 'cikmazMesafe', 
-                      [
-                        Bolum35Content.cikmazOptionD, 
-                        Bolum35Content.cikmazOptionE,
-                        Bolum35Content.cikmazOptionF
-                      ], _model.cikmazMesafe),
+                    if (_model.cikmaz?.label == Bolum35Content.cikmazOptionB.label)
+                      _buildSoru("Daire kapınızdan, koridordaki yol ayrımına kadar olan mesafe kaç metredir?", 'cikmazMesafe', 
+                        [
+                          Bolum35Content.cikmazMesafeOptionA,
+                          _getDynamicChoice(Bolum35Content.cikmazMesafeOptionB, _limitTekYon),
+                          _getDynamicChoice(Bolum35Content.cikmazMesafeOptionC, _limitTekYon),
+                          Bolum35Content.cikmazMesafeOptionD
+                        ], _model.cikmazMesafe),
                   ],
+
+                  // Manuel Giriş Alanı (Eğer "Tam ölçüyü biliyorum" seçilirse)
+                  if (_model.tekYon?.label == "35-1-A" || _model.ciftYon?.label == "35-2-A" || _model.cikmazMesafe?.label == "35-3-C")
+                    QuestionCard(
+                      child: TextFormField(
+                        controller: _mesafeCtrl,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        decoration: const InputDecoration(labelText: "Net Mesafeyi Giriniz (m)", suffixText: "metre", border: OutlineInputBorder()),
+                      ),
+                    ),
                 ],
               ),
             ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
+            decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))]),
+            child: SafeArea(child: SizedBox(width: double.infinity, child: ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET")))),
           ),
         ],
       ),
@@ -162,13 +162,13 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

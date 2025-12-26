@@ -58,11 +58,10 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-19: Kaçış Yolu",
-            subtitle: "Koridorlar ve yönlendirmeler.",
-            currentStep: 9, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -153,7 +152,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

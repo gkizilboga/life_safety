@@ -84,11 +84,10 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-11: İtfaiye Erişimi",
-            subtitle: "İtfaiye Aracının Binaya Yaklaşım İmkanı",
-            currentStep: 1, 
-            totalSteps: 26, 
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(

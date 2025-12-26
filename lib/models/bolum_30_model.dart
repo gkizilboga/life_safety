@@ -3,11 +3,11 @@ import '../utils/app_content.dart';
 
 class Bolum30Model {
   final ChoiceResult? konum;
-  final double? kapasite; // Sayısal Giriş
+  final double? kapasite;
   final ChoiceResult? kapi;
   final ChoiceResult? hava;
   final ChoiceResult? yakit;
-  final ChoiceResult? drenaj; // Sıvı yakıt ise
+  final ChoiceResult? drenaj;
   final ChoiceResult? tup;
 
   Bolum30Model({
@@ -53,52 +53,22 @@ class Bolum30Model {
   }
 
   factory Bolum30Model.fromMap(Map<String, dynamic> map) {
-    // Konum
-    ChoiceResult? kn;
-    final l1 = map['konum_label'];
-    if (l1 == Bolum30Content.konumOptionA.label) kn = Bolum30Content.konumOptionA;
-    if (l1 == Bolum30Content.konumOptionB.label) kn = Bolum30Content.konumOptionB;
-    if (l1 == Bolum30Content.konumOptionC.label) kn = Bolum30Content.konumOptionC;
-
-    // Kapı
-    ChoiceResult? k;
-    final l2 = map['kapi_label'];
-    if (l2 == Bolum30Content.kapiOptionA.label) k = Bolum30Content.kapiOptionA;
-    if (l2 == Bolum30Content.kapiOptionB.label) k = Bolum30Content.kapiOptionB;
-
-    // Hava
-    ChoiceResult? h;
-    final l3 = map['hava_label'];
-    if (l3 == Bolum30Content.havaOptionA.label) h = Bolum30Content.havaOptionA;
-    if (l3 == Bolum30Content.havaOptionB.label) h = Bolum30Content.havaOptionB;
-
-    // Yakıt
-    ChoiceResult? y;
-    final l4 = map['yakit_label'];
-    if (l4 == Bolum30Content.yakitOptionA.label) y = Bolum30Content.yakitOptionA;
-    if (l4 == Bolum30Content.yakitOptionB.label) y = Bolum30Content.yakitOptionB;
-
-    // Drenaj
-    ChoiceResult? d;
-    final l5 = map['drenaj_label'];
-    if (l5 == Bolum30Content.drenajOptionA.label) d = Bolum30Content.drenajOptionA;
-    if (l5 == Bolum30Content.drenajOptionB.label) d = Bolum30Content.drenajOptionB;
-
-    // Tüp
-    ChoiceResult? t;
-    final l6 = map['tup_label'];
-    if (l6 == Bolum30Content.tupOptionA.label) t = Bolum30Content.tupOptionA;
-    if (l6 == Bolum30Content.tupOptionB.label) t = Bolum30Content.tupOptionB;
-    if (l6 == Bolum30Content.tupOptionC.label) t = Bolum30Content.tupOptionC;
+    ChoiceResult? find(String? label, List<ChoiceResult> options) {
+      try {
+        return options.firstWhere((e) => e.label == label);
+      } catch (_) {
+        return null;
+      }
+    }
 
     return Bolum30Model(
-      konum: kn,
+      konum: find(map['konum_label'], [Bolum30Content.konumOptionA, Bolum30Content.konumOptionB, Bolum30Content.konumOptionC, Bolum30Content.konumOptionD]),
       kapasite: map['kapasite'],
-      kapi: k,
-      hava: h,
-      yakit: y,
-      drenaj: d,
-      tup: t,
+      kapi: find(map['kapi_label'], [Bolum30Content.kapiOptionA, Bolum30Content.kapiOptionB, Bolum30Content.kapiOptionC]),
+      hava: find(map['hava_label'], [Bolum30Content.havaOptionA, Bolum30Content.havaOptionB, Bolum30Content.havaOptionC]),
+      yakit: find(map['yakit_label'], [Bolum30Content.yakitOptionA, Bolum30Content.yakitOptionB, Bolum30Content.yakitOptionC]),
+      drenaj: find(map['drenaj_label'], [Bolum30Content.drenajOptionA, Bolum30Content.drenajOptionB, Bolum30Content.drenajOptionC]),
+      tup: find(map['tup_label'], [Bolum30Content.tupOptionA, Bolum30Content.tupOptionB, Bolum30Content.tupOptionC, Bolum30Content.tupOptionD]),
     );
   }
 }

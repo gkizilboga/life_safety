@@ -9,6 +9,11 @@ class Bolum36Model {
   final double? kapiGenislik;
   final ChoiceResult? gorunurluk;
 
+  // Hesaplanan Mantıksal Değerler
+  final int? totalValidCikisSayisi;
+  final bool? donerElendi;
+  final bool? disCelikElendi;
+
   Bolum36Model({
     this.disMerd,
     this.konum,
@@ -16,6 +21,9 @@ class Bolum36Model {
     this.kapiTipi,
     this.kapiGenislik,
     this.gorunurluk,
+    this.totalValidCikisSayisi,
+    this.donerElendi,
+    this.disCelikElendi,
   });
 
   Bolum36Model copyWith({
@@ -25,6 +33,9 @@ class Bolum36Model {
     ChoiceResult? kapiTipi,
     double? kapiGenislik,
     ChoiceResult? gorunurluk,
+    int? totalValidCikisSayisi,
+    bool? donerElendi,
+    bool? disCelikElendi,
   }) {
     return Bolum36Model(
       disMerd: disMerd ?? this.disMerd,
@@ -33,6 +44,9 @@ class Bolum36Model {
       kapiTipi: kapiTipi ?? this.kapiTipi,
       kapiGenislik: kapiGenislik ?? this.kapiGenislik,
       gorunurluk: gorunurluk ?? this.gorunurluk,
+      totalValidCikisSayisi: totalValidCikisSayisi ?? this.totalValidCikisSayisi,
+      donerElendi: donerElendi ?? this.donerElendi,
+      disCelikElendi: disCelikElendi ?? this.disCelikElendi,
     );
   }
 
@@ -44,25 +58,26 @@ class Bolum36Model {
       'kapiTipi_label': kapiTipi?.label,
       'kapiGenislik': kapiGenislik,
       'gorunurluk_label': gorunurluk?.label,
+      'totalValidCikisSayisi': totalValidCikisSayisi,
+      'donerElendi': donerElendi,
+      'disCelikElendi': disCelikElendi,
     };
   }
 
   factory Bolum36Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? label, List<ChoiceResult> options) {
-      try {
-        return options.firstWhere((e) => e.label == label);
-      } catch (_) {
-        return null;
-      }
+      try { return options.firstWhere((e) => e.label == label); } catch (_) { return null; }
     }
-
     return Bolum36Model(
       disMerd: find(map['disMerd_label'], [Bolum36Content.disMerdOptionA, Bolum36Content.disMerdOptionB, Bolum36Content.disMerdOptionC]),
       konum: find(map['konum_label'], [Bolum36Content.konumOptionA, Bolum36Content.konumOptionB, Bolum36Content.konumOptionC]),
       genislik: map['genislik'],
-      kapiTipi: find(map['kapiTipi_label'], [Bolum36Content.kapiTipiOptionA, Bolum36Content.kapiTipiOptionB]),
+      kapiTipi: find(map['kapiTipi_label'], [Bolum36Content.kapiTipiOptionA, Bolum36Content.kapiTipiOptionB, Bolum36Content.kapiTipiOptionC]),
       kapiGenislik: map['kapiGenislik'],
       gorunurluk: find(map['gorunurluk_label'], [Bolum36Content.gorunurlukOptionA, Bolum36Content.gorunurlukOptionB, Bolum36Content.gorunurlukOptionC]),
+      totalValidCikisSayisi: map['totalValidCikisSayisi'],
+      donerElendi: map['donerElendi'],
+      disCelikElendi: map['disCelikElendi'],
     );
   }
 }

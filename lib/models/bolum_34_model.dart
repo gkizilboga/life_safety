@@ -28,23 +28,25 @@ class Bolum34Model {
   }
 
   factory Bolum34Model.fromMap(Map<String, dynamic> map) {
-    // Zemin
-    ChoiceResult? z;
-    final l1 = map['zemin_label'];
-    if (l1 == Bolum34Content.zeminOptionA.label) z = Bolum34Content.zeminOptionA;
-    if (l1 == Bolum34Content.zeminOptionB.label) z = Bolum34Content.zeminOptionB;
-    if (l1 == Bolum34Content.zeminOptionC.label) z = Bolum34Content.zeminOptionC;
-
-    // Bodrum
-    ChoiceResult? b;
-    final l2 = map['bodrum_label'];
-    if (l2 == Bolum34Content.bodrumOptionA.label) b = Bolum34Content.bodrumOptionA;
-    if (l2 == Bolum34Content.bodrumOptionB.label) b = Bolum34Content.bodrumOptionB;
-    if (l2 == Bolum34Content.bodrumOptionC.label) b = Bolum34Content.bodrumOptionC;
+    ChoiceResult? find(String? label, List<ChoiceResult> options) {
+      try {
+        return options.firstWhere((e) => e.label == label);
+      } catch (_) {
+        return null;
+      }
+    }
 
     return Bolum34Model(
-      zemin: z,
-      bodrum: b,
+      zemin: find(map['zemin_label'], [
+        Bolum34Content.zeminOptionA, 
+        Bolum34Content.zeminOptionB, 
+        Bolum34Content.zeminOptionC
+      ]),
+      bodrum: find(map['bodrum_label'], [
+        Bolum34Content.bodrumOptionA, 
+        Bolum34Content.bodrumOptionB, 
+        Bolum34Content.bodrumOptionC
+      ]),
     );
   }
 }

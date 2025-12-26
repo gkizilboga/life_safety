@@ -124,11 +124,11 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-3: Bina Kat ve Yükseklik Bilgileri",
-            subtitle: " ",
-            currentStep: 3,
-            totalSteps: 10,
+            subtitle: "...",
+            screenType: widget.runtimeType,
+
           ),
           Expanded(
             child: SingleChildScrollView(

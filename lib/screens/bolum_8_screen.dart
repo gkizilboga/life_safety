@@ -38,11 +38,10 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-8: Bina Nizamı",
-            subtitle: "Binanın Komşu Binalara Göre Konumu",
-            currentStep: 8,
-            totalSteps: 10,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(

@@ -98,11 +98,11 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-1: Yapı Ruhsat / İnşa Tarihi",
-            subtitle: " ",
-            currentStep: 1,
-            totalSteps: 10,
+            subtitle: "...",
+            screenType: widget.runtimeType,
+
           ),
           Expanded(
             child: SingleChildScrollView(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_32_model.dart';
-import 'bolum_33_screen.dart'; // Sonraki ekran
+import 'bolum_33_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -21,13 +21,24 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
   @override
   void initState() {
     super.initState();
-    _checkJenerator();
+    _checkJeneratorAndRedirect();
   }
 
-  void _checkJenerator() {
+  void _checkJeneratorAndRedirect() {
     final b7 = BinaStore.instance.bolum7;
+    
     if (b7?.hasJenerator == true) {
-      _hasJenerator = true;
+      setState(() {
+        _hasJenerator = true;
+      });
+    } else {
+      // Jeneratör yoksa, ekran çizilir çizilmez bir sonraki bölüme yönlendir
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum33Screen()),
+        );
+      });
     }
   }
 
@@ -56,35 +67,27 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // Jeneratör yoksa boş bir yükleniyor ekranı göster (yönlendirme bitene kadar)
     if (!_hasJenerator) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Bölüm-32")),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Binanızda Jeneratör Odası bulunmadığı için bu bölüm atlanmıştır."),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET"))
-            ],
-          ),
-        ),
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-32: Jeneratör Odası",
-            subtitle: "Yedek güç sistemi güvenliği.",
-            currentStep: 22, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -95,21 +98,31 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
                     [
                       Bolum32Content.yapiOptionA, 
                       Bolum32Content.yapiOptionB, 
-                      Bolum32Content.yapiOptionC
+                      Bolum32Content.yapiOptionC,
+                      Bolum32Content.yapiOptionD,
                     ], _model.yapi),
 
                   _buildSoru("Jeneratörün yakıtı nerede ve nasıl depolanıyor?", 'yakit', 
-                    [Bolum32Content.yakitOptionA, Bolum32Content.yakitOptionB], _model.yakit),
+                    [
+                      Bolum32Content.yakitOptionA, 
+                      Bolum32Content.yakitOptionB,
+                      Bolum32Content.yakitOptionC,
+                    ], _model.yakit),
 
                   _buildSoru("Jeneratör odasının içinden su borusu geçiyor mu veya üst katında ıslak zemin var mı?", 'cevre', 
                     [
                       Bolum32Content.cevreOptionA, 
                       Bolum32Content.cevreOptionB, 
-                      Bolum32Content.cevreOptionC
+                      Bolum32Content.cevreOptionC,
+                      Bolum32Content.cevreOptionD,
                     ], _model.cevre),
 
                   _buildSoru("Jeneratörün egzoz borusu nereye veriliyor ve oda havalandırılıyor mu?", 'egzoz', 
-                    [Bolum32Content.egzozOptionA, Bolum32Content.egzozOptionB], _model.egzoz),
+                    [
+                      Bolum32Content.egzozOptionA, 
+                      Bolum32Content.egzozOptionB,
+                      Bolum32Content.egzozOptionC,
+                    ], _model.egzoz),
                 ],
               ),
             ),
@@ -141,13 +154,13 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );

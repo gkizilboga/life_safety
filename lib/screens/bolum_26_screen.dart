@@ -75,11 +75,10 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
     return Scaffold(
       body: Column(
         children: [
-          const ModernHeader(
+          ModernHeader(
             title: "Bölüm-26: Kaçış Rampaları",
-            subtitle: " ",
-            currentStep: 16, 
-            totalSteps: 26,
+            subtitle: "...",
+            screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -144,7 +143,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
-          )).toList(),
+          )),
         ],
       ),
     );
