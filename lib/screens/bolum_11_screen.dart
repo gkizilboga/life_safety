@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_11_model.dart';
-import 'bolum_12_screen.dart'; // Sonraki ekran
+import 'bolum_12_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -17,24 +17,40 @@ class Bolum11Screen extends StatefulWidget {
 class _Bolum11ScreenState extends State<Bolum11Screen> {
   Bolum11Model _model = Bolum11Model();
 
+  // 1. ADIM: Kaydırma kontrolcüsünü tanımlıyoruz
+  final ScrollController _scrollController = ScrollController();
+
+  // 2. ADIM: Otomatik kaydırma fonksiyonu
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'mesafe') {
         _model = _model.copyWith(mesafe: choice);
-        
-        // Eğer mesafe uygunsa (A seçeneği) veya bilinmiyorsa (C seçeneği), 
-        // diğer sorulara gerek kalmaz, onları temizle.
         if (choice.label != Bolum11Content.mesafeOptionB.label) {
           _model = _model.copyWith(engel: null, zayifNokta: null);
+        } else {
+          // Eğer 45m aşıldıysa alt soru açılacak, kaydır
+          _scrollToBottom();
         }
       } 
       else if (type == 'engel') {
         _model = _model.copyWith(engel: choice);
-        
-        // Eğer engel yoksa (A seçeneği) veya bilinmiyorsa (C seçeneği),
-        // zayıf nokta sorusuna gerek kalmaz, temizle.
         if (choice.label != Bolum11Content.engelOptionB.label) {
           _model = _model.copyWith(zayifNokta: null);
+        } else {
+          // Eğer engel varsa alt soru açılacak, kaydır
+          _scrollToBottom();
         }
       } 
       else if (type == 'zayifNokta') {
@@ -44,7 +60,6 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
   }
 
   void _onNextPressed() {
-    // 1. Soru her zaman zorunlu
     if (_model.mesafe == null) {
        ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Lütfen itfaiye yaklaşım mesafesi sorusunu yanıtlayınız.")),
@@ -52,7 +67,6 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
       return;
     }
 
-    // 2. Soru (Engel), sadece 1. soruda B seçildiyse zorunlu
     if (_model.mesafe?.label == Bolum11Content.mesafeOptionB.label) {
       if (_model.engel == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -61,7 +75,6 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
         return;
       }
       
-      // 3. Soru (Zayıf Nokta), sadece 2. soruda B seçildiyse zorunlu
       if (_model.engel?.label == Bolum11Content.engelOptionB.label) {
         if (_model.zayifNokta == null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -86,21 +99,22 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
         children: [
           ModernHeader(
             title: "Bölüm-11: İtfaiye Erişimi",
-            subtitle: "...",
+            subtitle: "İtfaiye araçlarının binaya yaklaşım analizi",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController, // 3. ADIM: Kontrolcüyü bağladık
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // SORU 1: MESAFE (HER ZAMAN GÖRÜNÜR)
+                  // SORU 1: MESAFE
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "1. İtfaiye aracının binaya yaklaşım mesafesi 45 metreyi geçiyor mu?",
+                          "1. İtfaiye aracının binaya yaklaşım mesafesi 45 metreyi aşıyor mu?",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 10),
@@ -123,15 +137,18 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
                     ),
                   ),
 
-                  // SORU 2: ENGEL (SADECE MESAFE > 45m İSE GÖRÜNÜR)
+                  // 4. ADIM: Alt Soru Bilgi Notu (Mesafe > 45m ise çıkar)
+                  if (_model.mesafe?.label == Bolum11Content.mesafeOptionB.label)
+                    _buildInfoNote("Mesafe 45m'yi aştığı için ek güvenlik soruları açılmıştır."),
+
+                  // SORU 2: ENGEL
                   if (_model.mesafe?.label == Bolum11Content.mesafeOptionB.label) ...[
-                    const SizedBox(height: 20),
                     QuestionCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "2. İtfaiye aracının binaya yeterince yanaşmasını engelleyen bir bahçe duvarı, çevre duvarı veya kilitli bir kapı var mı?",
+                            "2. İtfaiye aracının binaya yanaşmasını engelleyen bir bahçe duvarı veya kilitli kapılar var mı?",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
@@ -155,15 +172,18 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
                     ),
                   ],
 
-                  // SORU 3: ZAYIF NOKTA (SADECE ENGEL VARSA GÖRÜNÜR)
+                  // 5. ADIM: Zayıf Nokta Bilgi Notu (Engel varsa çıkar)
+                  if (_model.engel?.label == Bolum11Content.engelOptionB.label)
+                    _buildInfoNote("Engel bulunduğu için zayıf geçiş noktası tespiti gereklidir."),
+
+                  // SORU 3: ZAYIF NOKTA
                   if (_model.engel?.label == Bolum11Content.engelOptionB.label) ...[
-                    const SizedBox(height: 20),
                     QuestionCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "3. Bu duvarda 'Kırmızı Çarpı (X)' ile işaretlenmiş VEYA itfaiyenin kolayca yıkıp geçebileceği zayıf bir bölüm (en az 8 metre genişliğinde) var mı?",
+                            "3. Bu duvarda 'Kırmızı Çarpı (X)' ile işaretlenmiş VEYA itfaiyenin kolayca yıkıp geçebileceği zayıf duvar, tel, çit vb. (en az 8 metre genişliğinde) var mı?",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 10),
@@ -187,9 +207,9 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
             ),
             child: SafeArea(
               top: false,
@@ -199,6 +219,35 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
                   onPressed: _onNextPressed,
                   child: const Text("DEVAM ET"),
                 ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Bilgi Notu Tasarımı
+  Widget _buildInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Color(0xFFE65100),
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
               ),
             ),
           ),

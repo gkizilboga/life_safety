@@ -43,39 +43,32 @@ class Bolum17Model {
   }
 
   factory Bolum17Model.fromMap(Map<String, dynamic> map) {
-    // Kaplama
     ChoiceResult? k;
     final l1 = map['kaplama_label'];
-    if (l1 == Bolum17Content.kaplamaOptionA.label) {
-      k = Bolum17Content.kaplamaOptionA;
-    } else if (l1 == Bolum17Content.kaplamaOptionB.label) k = Bolum17Content.kaplamaOptionB;
+    if (l1 == Bolum17Content.kaplamaOptionA.label) k = Bolum17Content.kaplamaOptionA;
+    else if (l1 == Bolum17Content.kaplamaOptionB.label) k = Bolum17Content.kaplamaOptionB;
     else if (l1 == Bolum17Content.kaplamaOptionC.label) k = Bolum17Content.kaplamaOptionC;
     else if (l1 == Bolum17Content.kaplamaOptionD.label) k = Bolum17Content.kaplamaOptionD;
     else if (l1 == Bolum17Content.kaplamaOptionE.label) k = Bolum17Content.kaplamaOptionE;
     else if (l1 == Bolum17Content.kaplamaOptionF.label) k = Bolum17Content.kaplamaOptionF;
 
-    // İskelet
     ChoiceResult? i;
     final l2 = map['iskelet_label'];
-    if (l2 == Bolum17Content.iskeletOptionA.label) {
-      i = Bolum17Content.iskeletOptionA;
-    } else if (l2 == Bolum17Content.iskeletOptionB.label) i = Bolum17Content.iskeletOptionB;
+    if (l2 == Bolum17Content.iskeletOptionA.label) i = Bolum17Content.iskeletOptionA;
+    else if (l2 == Bolum17Content.iskeletOptionB.label) i = Bolum17Content.iskeletOptionB;
     else if (l2 == Bolum17Content.iskeletOptionC.label) i = Bolum17Content.iskeletOptionC;
 
-    // Bitişik Duvar
     ChoiceResult? b;
     final l3 = map['bitisikDuvar_label'];
-    if (l3 == Bolum17Content.bitisikOptionA.label) {
-      b = Bolum17Content.bitisikOptionA;
-    } else if (l3 == Bolum17Content.bitisikOptionB.label) b = Bolum17Content.bitisikOptionB;
+    if (l3 == Bolum17Content.bitisikOptionA.label) b = Bolum17Content.bitisikOptionA;
+    else if (l3 == Bolum17Content.bitisikOptionB.label) b = Bolum17Content.bitisikOptionB;
     else if (l3 == Bolum17Content.bitisikOptionC.label) b = Bolum17Content.bitisikOptionC;
 
-    // Işıklık
     ChoiceResult? ls;
     final l4 = map['isiklik_label'];
-    if (l4 == Bolum17Content.isiklikOptionA.label) {
-      ls = Bolum17Content.isiklikOptionA;
-    } else if (l4 == Bolum17Content.isiklikOptionB.label) ls = Bolum17Content.isiklikOptionB;
+    if (l4 == Bolum17Content.isiklikOptionA.label) ls = Bolum17Content.isiklikOptionA;
+    else if (l4 == Bolum17Content.isiklikOptionB.label) ls = Bolum17Content.isiklikOptionB;
+    else if (l4 == Bolum17Content.isiklikOptionC.label) ls = Bolum17Content.isiklikOptionC;
 
     return Bolum17Model(
       kaplama: k,
@@ -85,4 +78,4 @@ class Bolum17Model {
       isiklikMalzemesi: map['isiklikMalzemesi'],
     );
   }
-}
+ }  

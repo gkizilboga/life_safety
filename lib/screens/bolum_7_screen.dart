@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_7_model.dart';
-import 'bolum_8_screen.dart'; // Sonraki ekran
+import 'bolum_8_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -23,10 +23,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   }
 
   void _checkPreviousData() {
-    // Bölüm 6'dan otopark verisini kontrol et
     final hasOtoparkFromBolum6 = BinaStore.instance.bolum6?.hasOtopark ?? false;
-    
-    // Eğer otopark varsa modele işle
     if (hasOtoparkFromBolum6) {
       setState(() {
         _model = _model.copyWith(hasOtopark: true, isHicbiri: false);
@@ -37,7 +34,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   void _toggleOption(String key) {
     setState(() {
       bool newVal = false;
-      bool clearHicbiri = true; // "Hiçbiri" seçeneğini kaldıralım mı?
+      bool clearHicbiri = true;
 
       switch (key) {
         case 'kazan':
@@ -81,7 +78,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
           _model = _model.copyWith(hasDuvar: newVal);
           break;
         case 'hicbiri':
-          // Hiçbiri seçilirse her şeyi sıfırla (Otopark hariç, o sistemden geliyor)
           bool otoparkKalsin = BinaStore.instance.bolum6?.hasOtopark ?? false;
           _model = Bolum7Model(
             isHicbiri: !_model.isHicbiri, 
@@ -98,13 +94,12 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   }
 
   void _onNextPressed() {
-    // Hiçbir şey seçilmediyse uyarı ver (Otopark dahil hepsi false ise)
     if (!_model.hasOtopark && !_model.hasKazan && !_model.hasAsansor && 
         !_model.hasCati && !_model.hasJenerator && !_model.hasElektrik &&
         !_model.hasTrafo && !_model.hasDepo && !_model.hasCop && 
         !_model.hasSiginak && !_model.hasDuvar && !_model.isHicbiri) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen binanızdaki teknik hacimleri, riskli alanları işaretleyiniz veya 'Hiçbiri'ni seçiniz.")),
+        const SnackBar(content: Text("Lütfen riskli alanları işaretleyiniz veya 'Hiçbiri'ni seçiniz.")),
       );
       return;
     }
@@ -118,15 +113,14 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
 
   @override
   Widget build(BuildContext context) {
-    // Otopark sistemden geliyorsa elle değiştirmeyi engellemek için
     final bool isOtoparkLocked = BinaStore.instance.bolum6?.hasOtopark ?? false;
 
     return Scaffold(
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-7: Özel Riskli Alanlar ve Teknik Hacimler",
-            subtitle: "...",
+            title: "Bölüm-7: Özel Riskli Alanlar",
+            subtitle: "Teknik hacimler ve riskli bölgeler.",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -144,24 +138,52 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
                   ),
                   const SizedBox(height: 15),
 
-                  // OTOPARK (ÖZEL DURUM)
-                  Opacity(
-                    opacity: isOtoparkLocked ? 0.6 : 1.0,
-                    child: SelectableCard(
+                  // --- OTOPARK KİLİTLİ ALAN VE NOT ---
+                  if (isOtoparkLocked) ...[
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.blue.shade200),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.info_outline, color: Colors.blue.shade800, size: 20),
+                          const SizedBox(width: 10),
+                          const Expanded(
+                            child: Text(
+                              "Binada kapalı otopark olup olmadığı bilgisi bir önceki bölümden alınarak sisteme işlenmiştir.",
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Stack(
+                      children: [
+                        SelectableCard(
+                          choice: Bolum7Content.otopark,
+                          isSelected: true,
+                          onTap: () {}, // Kilitli olduğu için işlem yapmaz
+                        ),
+                        Positioned(
+                          right: 15,
+                          top: 15,
+                          child: Icon(Icons.lock, color: Colors.blue.shade900.withValues(alpha: 0.5), size: 20),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                  ] else 
+                    SelectableCard(
                       choice: Bolum7Content.otopark,
                       isSelected: _model.hasOtopark,
-                      onTap: () {
-                        if (!isOtoparkLocked) {
-                          // Eğer Bölüm 6'da seçilmediyse buradan manuel seçebilir (Opsiyonel)
-                          // Ama genelde kilitli kalması daha mantıklı.
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Otopark bilgisi önceki bölümden alınmıştır.")),
-                          );
-                        }
-                      },
+                      onTap: () => _toggleOption('otopark'),
                     ),
-                  ),
 
+                  // --- DİĞER SEÇENEKLER ---
                   SelectableCard(
                     choice: Bolum7Content.kazan,
                     isSelected: _model.hasKazan,
@@ -213,7 +235,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
                     onTap: () => _toggleOption('duvar'),
                   ),
 
-                  const Divider(thickness: 2),
+                  const Divider(thickness: 2, height: 30),
                   
                   SelectableCard(
                     choice: Bolum7Content.hicbiri,

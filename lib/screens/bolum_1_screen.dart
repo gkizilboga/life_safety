@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
-import 'package:life_safety/models/bolum_1_model.dart';
-import 'package:life_safety/screens/bolum_2_screen.dart';
-import 'package:life_safety/widgets/custom_widgets.dart';
-import 'package:life_safety/widgets/selectable_card.dart';
+import '../data/bina_store.dart'; // 'logic' değil 'data' klasöründeymiş
+import '../models/bolum_1_model.dart';
+import 'bolum_2_screen.dart';
+import '../widgets/custom_widgets.dart';
+import '../widgets/selectable_card.dart';
 import '../utils/app_content.dart';
-import 'package:life_safety/models/choice_result.dart';
+import '../models/choice_result.dart';
+import '../utils/app_assets.dart';
 
 class Bolum1Screen extends StatefulWidget {
   const Bolum1Screen({super.key});
@@ -100,9 +101,8 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
         children: [
           ModernHeader(
             title: "Bölüm-1: Yapı Ruhsat / İnşa Tarihi",
-            subtitle: "...",
-            screenType: widget.runtimeType,
-
+            subtitle: "Binanın tabi olduğu yönetmelik tespiti",
+            screenType: widget.runtimeType, // Hata veren ScreenType yerine orijinali
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -124,22 +124,24 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                     style: TextStyle(fontSize: 15, color: Colors.grey[800], height: 1.4),
                   ),
                   const SizedBox(height: 25),
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard(
-                          choice: Bolum1Content.ruhsatSonrasi,
-                          isSelected: _model.secim?.label == Bolum1Content.ruhsatSonrasi.label,
-                          onTap: () => _handleSelection(Bolum1Content.ruhsatSonrasi),
-                        ),
-                        SelectableCard(
-                          choice: Bolum1Content.ruhsatOncesi,
-                          isSelected: _model.secim?.label == Bolum1Content.ruhsatOncesi.label,
-                          onTap: () => _handleSelection(Bolum1Content.ruhsatOncesi),
-                        ),
-                      ],
-                    ),
-                  ),
+QuestionCard(
+  child: Column(
+    children: [
+      SectionImage(assetPath: AppAssets.section_1), // Sadece bu!
+      SelectableCard(
+        choice: Bolum1Content.ruhsatSonrasi,
+        isSelected: _model.secim?.label == Bolum1Content.ruhsatSonrasi.label,
+        onTap: () => _handleSelection(Bolum1Content.ruhsatSonrasi),
+      ),
+      const SizedBox(height: 12),
+      SelectableCard(
+        choice: Bolum1Content.ruhsatOncesi,
+        isSelected: _model.secim?.label == Bolum1Content.ruhsatOncesi.label,
+        onTap: () => _handleSelection(Bolum1Content.ruhsatOncesi),
+      ),
+    ],
+  ),
+),
                 ],
               ),
             ),
@@ -148,7 +150,13 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
             decoration: BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                )
+              ],
             ),
             child: SafeArea(
               top: false,

@@ -34,8 +34,11 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   void _loadInitialData() {
     final b3 = BinaStore.instance.bolum3;
     setState(() {
-      _hasNormal = (b3?.normalKatSayisi ?? 0) >= 1;
-      _hasBodrum = (b3?.bodrumKatSayisi ?? 0) >= 1;
+      // Tip güvenliği için toString() ve tryParse kullanıyoruz
+      int nVal = int.tryParse(b3?.normalKatSayisi?.toString() ?? "0") ?? 0;
+      int bVal = int.tryParse(b3?.bodrumKatSayisi?.toString() ?? "0") ?? 0;
+      _hasNormal = nVal >= 1;
+      _hasBodrum = bVal >= 1;
     });
   }
 

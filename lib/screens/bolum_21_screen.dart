@@ -42,7 +42,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) {
       if (_model.malzeme == null) return _showError("Lütfen YGH malzemesi sorusunu yanıtlayınız.");
       if (_model.kapi == null) return _showError("Lütfen YGH kapı özellikleri sorusunu yanıtlayınız.");
-      if (_model.esya == null) return _showError("Lütfen YGH 'de bulunabilecek eşya durumu sorusunu yanıtlayınız.");
+      if (_model.esya == null) return _showError("Lütfen YGH 'de bulunabilecek eşya sorusunu yanıtlayınız.");
     }
 
     BinaStore.instance.bolum21 = _model;
@@ -72,7 +72,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               child: Column(
                 children: [
                   // 1. Varlık Sorusu
-                  _buildSoru("Daire kapınızdan çıktığınızda merdivene doğru yürürken, merdivene girmeden evvel ufak bir odadan (YGH'den) geçiyor musunuz?", 'varlik', 
+                  _buildSoru("Daire kapınızdan çıktığınızda merdivene doğru yürürken, merdivene girmeden evvel ufak bir odadan (yangın güvenlik holünden) geçiyor musunuz?", 'varlik', 
                     [
                       Bolum21Content.varlikOptionA, 
                       Bolum21Content.varlikOptionB

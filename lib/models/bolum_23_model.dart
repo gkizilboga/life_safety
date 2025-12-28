@@ -43,48 +43,23 @@ class Bolum23Model {
   }
 
   factory Bolum23Model.fromMap(Map<String, dynamic> map) {
-    // Bodrum
-    ChoiceResult? b;
-    final l1 = map['bodrum_label'];
-    if (l1 == Bolum23Content.bodrumOptionA.label) b = Bolum23Content.bodrumOptionA;
-    if (l1 == Bolum23Content.bodrumOptionB.label) b = Bolum23Content.bodrumOptionB;
-    if (l1 == Bolum23Content.bodrumOptionC.label) b = Bolum23Content.bodrumOptionC;
-    if (l1 == Bolum23Content.bodrumOptionD.label) b = Bolum23Content.bodrumOptionD;
-
-    // Yangın Modu
-    ChoiceResult? y;
-    final l2 = map['yanginModu_label'];
-    if (l2 == Bolum23Content.yanginModuOptionA.label) y = Bolum23Content.yanginModuOptionA;
-    if (l2 == Bolum23Content.yanginModuOptionB.label) y = Bolum23Content.yanginModuOptionB;
-    if (l2 == Bolum23Content.yanginModuOptionC.label) y = Bolum23Content.yanginModuOptionC;
-
-    // Konum
-    ChoiceResult? k;
-    final l3 = map['konum_label'];
-    if (l3 == Bolum23Content.konumOptionA.label) k = Bolum23Content.konumOptionA;
-    if (l3 == Bolum23Content.konumOptionB.label) k = Bolum23Content.konumOptionB;
-    if (l3 == Bolum23Content.konumOptionC.label) k = Bolum23Content.konumOptionC;
-
-    // Levha
-    ChoiceResult? le;
-    final l4 = map['levha_label'];
-    if (l4 == Bolum23Content.levhaOptionA.label) le = Bolum23Content.levhaOptionA;
-    if (l4 == Bolum23Content.levhaOptionB.label) le = Bolum23Content.levhaOptionB;
-    if (l4 == Bolum23Content.levhaOptionC.label) le = Bolum23Content.levhaOptionC;
-
-    // Havalandırma
-    ChoiceResult? h;
-    final l5 = map['havalandirma_label'];
-    if (l5 == Bolum23Content.havalandirmaOptionA.label) h = Bolum23Content.havalandirmaOptionA;
-    if (l5 == Bolum23Content.havalandirmaOptionB.label) h = Bolum23Content.havalandirmaOptionB;
-    if (l5 == Bolum23Content.havalandirmaOptionC.label) h = Bolum23Content.havalandirmaOptionC;
+    ChoiceResult? find(String? l) {
+      if (l == null) return null;
+      return [
+        Bolum23Content.bodrumOptionA, Bolum23Content.bodrumOptionB, Bolum23Content.bodrumOptionC, Bolum23Content.bodrumOptionD,
+        Bolum23Content.yanginModuOptionA, Bolum23Content.yanginModuOptionB, Bolum23Content.yanginModuOptionC,
+        Bolum23Content.konumOptionA, Bolum23Content.konumOptionB, Bolum23Content.konumOptionC,
+        Bolum23Content.levhaOptionA, Bolum23Content.levhaOptionB, Bolum23Content.levhaOptionC,
+        Bolum23Content.havalandirmaOptionA, Bolum23Content.havalandirmaOptionB, Bolum23Content.havalandirmaOptionC,
+      ].firstWhere((e) => e.label == l, orElse: () => Bolum23Content.levhaOptionC);
+    }
 
     return Bolum23Model(
-      bodrum: b,
-      yanginModu: y,
-      konum: k,
-      levha: le,
-      havalandirma: h,
+      bodrum: find(map['bodrum_label']),
+      yanginModu: find(map['yanginModu_label']),
+      konum: find(map['konum_label']),
+      levha: find(map['levha_label']),
+      havalandirma: find(map['havalandirma_label']),
     );
   }
 }

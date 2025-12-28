@@ -4,7 +4,7 @@ import '../utils/app_progress.dart';
 class ModernHeader extends StatelessWidget {
   final String title;
   final String subtitle;
-  final Type screenType; // int currentStep yerine Type alıyoruz
+  final Type screenType;
   final VoidCallback? onBack;
 
   const ModernHeader({
@@ -16,12 +16,14 @@ class ModernHeader extends StatelessWidget {
   });
 
   @override
-Widget build(BuildContext context) {
-  // Parantez içinde çağırdığından emin ol:
-  int currentStep = AppProgress.currentStep(screenType); 
-  int totalSteps = AppProgress.totalSteps;
-  double progress = currentStep / totalSteps;
-    
+  Widget build(BuildContext context) {
+    int currentStep = AppProgress.currentStep(screenType);
+    int totalSteps = AppProgress.totalSteps;
+    double progress = currentStep / totalSteps;
+
+    // Eğer geri dönülebilecek bir sayfa varsa otomatik algılar
+    final bool canPop = Navigator.canPop(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 50, 24, 30),
@@ -42,14 +44,17 @@ Widget build(BuildContext context) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (onBack != null)
-            IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-              onPressed: onBack,
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
+          // GERİ BUTONU: onBack verilmişse onu kullanır, yoksa otomatik pop yapar
+          if (onBack != null || canPop)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 22),
+                onPressed: onBack ?? () => Navigator.pop(context),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
             ),
-          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -148,6 +153,100 @@ class QuestionCard extends StatelessWidget {
         ],
       ),
       child: child,
+    );
+  }
+}
+
+class SectionImage extends StatelessWidget {
+  final String assetPath;
+  const SectionImage({super.key, required this.assetPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Image.asset(
+          assetPath,
+          width: double.infinity,
+          height: 200,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              width: double.infinity,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Center(
+                child: Icon(Icons.image_not_supported_outlined, color: Colors.grey),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// İkonla görsel açma butonu (Progressive Disclosure için)
+class ImageInfoButton extends StatelessWidget {
+  final String assetPath;
+  final String title;
+
+  const ImageInfoButton({super.key, required this.assetPath, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.info_outline, color: Color(0xFF1A237E), size: 28),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+          ),
+          builder: (context) => Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                const SizedBox(height: 20),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.asset(assetPath, fit: BoxFit.contain),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Kapat", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

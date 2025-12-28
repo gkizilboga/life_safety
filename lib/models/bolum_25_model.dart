@@ -33,28 +33,19 @@ class Bolum25Model {
   }
 
   factory Bolum25Model.fromMap(Map<String, dynamic> map) {
-    // Kapasite
-    ChoiceResult? k;
-    final l1 = map['kapasite_label'];
-    if (l1 == Bolum25Content.kapasiteOptionA.label) k = Bolum25Content.kapasiteOptionA;
-    if (l1 == Bolum25Content.kapasiteOptionB.label) k = Bolum25Content.kapasiteOptionB;
-
-    // Basamak
-    ChoiceResult? b;
-    final l2 = map['basamak_label'];
-    if (l2 == Bolum25Content.basamakOptionA.label) b = Bolum25Content.basamakOptionA;
-    if (l2 == Bolum25Content.basamakOptionB.label) b = Bolum25Content.basamakOptionB;
-
-    // Baş Kurtarma
-    ChoiceResult? bk;
-    final l3 = map['basKurtarma_label'];
-    if (l3 == Bolum25Content.basKurtarmaOptionA.label) bk = Bolum25Content.basKurtarmaOptionA;
-    if (l3 == Bolum25Content.basKurtarmaOptionB.label) bk = Bolum25Content.basKurtarmaOptionB;
+    ChoiceResult? find(String? l) {
+      if (l == null) return null;
+      return [
+        Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB, Bolum25Content.kapasiteOptionC,
+        Bolum25Content.basamakOptionA, Bolum25Content.basamakOptionB, Bolum25Content.basamakOptionC,
+        Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB, Bolum25Content.basKurtarmaOptionC,
+      ].firstWhere((e) => e.label == l, orElse: () => Bolum25Content.kapasiteOptionC);
+    }
 
     return Bolum25Model(
-      kapasite: k,
-      basamak: b,
-      basKurtarma: bk,
+      kapasite: find(map['kapasite_label']),
+      basamak: find(map['basamak_label']),
+      basKurtarma: find(map['basKurtarma_label']),
     );
   }
 }

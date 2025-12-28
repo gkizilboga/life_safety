@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_14_model.dart';
 import '../../models/bolum_3_model.dart';
-import 'bolum_15_screen.dart'; // Sonraki ekran
+import 'bolum_15_screen.dart';
 import '../../widgets/custom_widgets.dart';
+import '../../utils/app_content.dart';
+import '../../utils/app_assets.dart';
 
 class Bolum14Screen extends StatefulWidget {
   const Bolum14Screen({super.key});
@@ -22,48 +24,38 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
   }
 
   void _hesaplaVeAnalizEt() {
-    // Bölüm 3'ten bina boyutlarını çek
     final Bolum3Model? bolum3 = BinaStore.instance.bolum3;
     
-    // Değerleri al (yoksa varsayılan ata)
-    // h_bina aslında Zemin + Normal katlardır ama Bolum3 modelinde toplamYukseklik tüm binayı verir.
-    // Yönetmelik h_bina için Zemin+Normal katları kasteder.
-    // Manuel hesaplayalım:
-    double zeminH = bolum3?.zeminKatYuksekligi ?? 3.50;
-    double normalH = bolum3?.normalKatYuksekligi ?? 3.00;
-    double bodrumH = bolum3?.bodrumKatYuksekligi ?? 3.50;
+    double zeminH = double.tryParse(bolum3?.zeminKatYuksekligi?.toString() ?? "3.5") ?? 3.5;
+    double normalH = double.tryParse(bolum3?.normalKatYuksekligi?.toString() ?? "3.0") ?? 3.0;
+    double bodrumH = double.tryParse(bolum3?.bodrumKatYuksekligi?.toString() ?? "3.5") ?? 3.5;
     
-    int nKat = bolum3?.normalKatSayisi ?? 0;
-    int bKat = bolum3?.bodrumKatSayisi ?? 0;
+    int nKat = int.tryParse(bolum3?.normalKatSayisi?.toString() ?? "0") ?? 0;
+    int bKat = int.tryParse(bolum3?.bodrumKatSayisi?.toString() ?? "0") ?? 0;
 
-    double hBinaYonetmelik = zeminH + (nKat * normalH); // Yerden çatıya kadar (bodrum hariç)
-    double hBodrum = bKat * bodrumH; // Toplam bodrum derinliği
+    double hBinaYonetmelik = zeminH + (nKat * normalH);
+    double hBodrum = bKat * bodrumH;
 
     int duvarDk = 60;
     int kapakDk = 30;
     String mesaj = "";
 
-    // ALGORİTMA
     if (hBinaYonetmelik >= 30.50) {
-      // DURUM 1: 30.50m ÜZERİ
       duvarDk = 120;
       kapakDk = 90;
-      mesaj = "Binanız 30.50 metreden yüksek olduğundan tüm tesisat şaft duvarları en az 120 dk, şaft kapakları ise en az 90 dk yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.";
+      mesaj = Bolum14Content.msgHigh;
     } else if (hBinaYonetmelik >= 21.50) {
-      // DURUM 2: 21.50m - 30.50m ARASI
       duvarDk = 90;
       kapakDk = 60;
-      mesaj = "Binanız 21.50m - 30.50m aralığında olup ‘Yüksek Bina’ sınıfındadır. Tesisat şaftı ve yangın duvarlarınızın en az 90 dk, şaft kapaklarınızın ise en az 60 dk dayanıklı, duman sızdırmaz özellikte olmaları gerekmektedir.";
+      mesaj = Bolum14Content.msgMid;
     } else if (hBodrum >= 10.00) {
-      // DURUM 3: ALÇAK BİNA AMA DERİN BODRUM
-      duvarDk = 90; // Bodrum esas alındı
-      kapakDk = 60; // Bodrum esas alındı
-      mesaj = "DİKKAT: Binanız alçak olsa da, bodrum kat derinliğiniz 10 metreyi aştığı için bodrum katlarınız risk taşımaktadır. Bodrumdaki şaft duvarları en az 90 dk ve şaft kapakların dayanımları en az 60dk, zemin üst normal katlarda ise duvarları en az 60dk, kapakları en az 30dk olmalıdır.";
+      duvarDk = 90;
+      kapakDk = 60;
+      mesaj = Bolum14Content.msgDeepBasement;
     } else {
-      // DURUM 4: STANDART
       duvarDk = 60;
       kapakDk = 30;
-      mesaj = "Binanızın yüksekliği ve bodrum derinliği yüksek olmayan bina sınırları içindedir. Tesisat şaft duvarları en az 60 dk, şaft kapakları ise en az 30 dk dayanıklı olması yeterlidir.";
+      mesaj = Bolum14Content.msgStandard;
     }
 
     setState(() {
@@ -77,10 +69,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
 
   void _onNextPressed() {
     BinaStore.instance.bolum14 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum15Screen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum15Screen()));
   }
 
   @override
@@ -89,78 +78,130 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-14: Tesisat Şaftlarının Durumu",
-            subtitle: "...",
+            title: Bolum14Content.title,
+            subtitle: "Bina yüksekliğine göre şaft gereksinimleri",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // BİLGİ KARTI
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(
+                        child: Text(
+                          "Yönetmelik Analiz Sonucu",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2C3E50)),
+                        ),
+                      ),
+                      ImageInfoButton(
+                        assetPath: AppAssets.section_1, // Buraya şaft görselini ekleyebilirsin
+                        title: "Tesisat Şaftı Nedir?",
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.orange.shade50,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.orange.shade200),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.1)),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 15, offset: const Offset(0, 5)),
+                      ],
                     ),
                     child: Column(
                       children: [
-                        const Icon(Icons.analytics_outlined, size: 40, color: Colors.orange),
-                        const SizedBox(height: 10),
-                        const Text("GEREKEN YANGIN DAYANIMI", style: TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 15),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildInfoBox("Duvar", "${_model.gerekenDuvarDk} dk"),
-                            _buildInfoBox("Kapak", "${_model.gerekenKapakDk} dk"),
+                            _buildResultBox("Şaft Duvarı", "${_model.gerekenDuvarDk}", "dakika"),
+                            Container(width: 1, height: 50, color: Colors.grey[200]),
+                            _buildResultBox("Şaft Kapağı", "${_model.gerekenKapakDk}", "dakika"),
                           ],
                         ),
-                        const SizedBox(height: 20),
-                        Text(
-                          _model.raporMesaji ?? "Hesaplanıyor...",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey[800], fontSize: 13),
+                        const Divider(height: 40),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.gavel_rounded, color: Color(0xFF1A237E), size: 20),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                _model.raporMesaji ?? "",
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  height: 1.5,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF34495E),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  _buildWarningNote(),
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
-          ),
+          _buildBottomNav(),
         ],
       ),
     );
   }
 
-  Widget _buildInfoBox(String label, String value) {
-    return Column(
-      children: [
-        Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-      ],
+  Widget _buildResultBox(String label, String value, String unit) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w600)),
+          const SizedBox(height: 4),
+          Text(value, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
+          Text(unit, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWarningNote() {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.blue.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: const Text(
+        "Not: Bu değerler BYKHY Madde 24 ve 25 uyarınca binanızın mimari verilerine göre otomatik hesaplanmıştır.",
+        style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: Colors.blueGrey),
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _onNextPressed,
+            child: const Text("ANALİZİ ONAYLA VE DEVAM ET"),
+          ),
+        ),
+      ),
     );
   }
 }

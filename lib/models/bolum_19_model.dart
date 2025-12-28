@@ -2,71 +2,74 @@ import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum19Model {
-  final ChoiceResult? engel;
+  final List<ChoiceResult> engeller;
   final ChoiceResult? levha;
   final ChoiceResult? yanilticiKapi;
-  final bool? yanilticiEtiketVar; // Alt soru için
+  final ChoiceResult? yanilticiEtiket;
+
+  ChoiceResult? get engel => engeller.isNotEmpty ? engeller.first : null;
 
   Bolum19Model({
-    this.engel,
+    this.engeller = const [],
     this.levha,
     this.yanilticiKapi,
-    this.yanilticiEtiketVar,
+    this.yanilticiEtiket,
   });
 
   Bolum19Model copyWith({
-    ChoiceResult? engel,
+    List<ChoiceResult>? engeller,
     ChoiceResult? levha,
     ChoiceResult? yanilticiKapi,
-    bool? yanilticiEtiketVar,
+    ChoiceResult? yanilticiEtiket,
   }) {
     return Bolum19Model(
-      engel: engel ?? this.engel,
+      engeller: engeller ?? this.engeller,
       levha: levha ?? this.levha,
       yanilticiKapi: yanilticiKapi ?? this.yanilticiKapi,
-      yanilticiEtiketVar: yanilticiEtiketVar ?? this.yanilticiEtiketVar,
+      yanilticiEtiket: yanilticiEtiket ?? this.yanilticiEtiket,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'engel_label': engel?.label,
+      'engeller_labels': engeller.map((e) => e.label).toList(),
       'levha_label': levha?.label,
       'yanilticiKapi_label': yanilticiKapi?.label,
-      'yanilticiEtiketVar': yanilticiEtiketVar,
+      'yanilticiEtiket_label': yanilticiEtiket?.label,
     };
   }
 
   factory Bolum19Model.fromMap(Map<String, dynamic> map) {
-    // Engel
-    ChoiceResult? e;
-    final l1 = map['engel_label'];
-    if (l1 == Bolum19Content.engelOptionA.label) {
-      e = Bolum19Content.engelOptionA;
-    } else if (l1 == Bolum19Content.engelOptionB.label) e = Bolum19Content.engelOptionB;
-    else if (l1 == Bolum19Content.engelOptionC.label) e = Bolum19Content.engelOptionC;
-    else if (l1 == Bolum19Content.engelOptionD.label) e = Bolum19Content.engelOptionD;
+    ChoiceResult? find(String? l) {
+      if (l == null) return null;
+      final allChoices = [
+        Bolum19Content.engelOptionA, Bolum19Content.engelOptionB, 
+        Bolum19Content.engelOptionC, Bolum19Content.engelOptionD,
+        Bolum19Content.levhaOptionA, Bolum19Content.levhaOptionB, Bolum19Content.levhaOptionC,
+        Bolum19Content.yanilticiOptionA, Bolum19Content.yanilticiOptionB,
+        Bolum19Content.etiketOptionA, Bolum19Content.etiketOptionB, Bolum19Content.etiketOptionC,
+      ];
+      
+      for (var choice in allChoices) {
+        if (choice.label == l) return choice;
+      }
+      return null;
+    }
 
-    // Levha
-    ChoiceResult? l;
-    final l2 = map['levha_label'];
-    if (l2 == Bolum19Content.levhaOptionA.label) {
-      l = Bolum19Content.levhaOptionA;
-    } else if (l2 == Bolum19Content.levhaOptionB.label) l = Bolum19Content.levhaOptionB;
-    else if (l2 == Bolum19Content.levhaOptionC.label) l = Bolum19Content.levhaOptionC;
-
-    // Yanıltıcı Kapı
-    ChoiceResult? y;
-    final l3 = map['yanilticiKapi_label'];
-    if (l3 == Bolum19Content.yanilticiOptionA.label) {
-      y = Bolum19Content.yanilticiOptionA;
-    } else if (l3 == Bolum19Content.yanilticiOptionB.label) y = Bolum19Content.yanilticiOptionB;
+    List<ChoiceResult> eList = [];
+    if (map['engeller_labels'] != null) {
+      eList = (map['engeller_labels'] as List)
+          .map((l) => find(l.toString()))
+          .where((e) => e != null)
+          .cast<ChoiceResult>()
+          .toList();
+    }
 
     return Bolum19Model(
-      engel: e,
-      levha: l,
-      yanilticiKapi: y,
-      yanilticiEtiketVar: map['yanilticiEtiketVar'],
+      engeller: eList,
+      levha: find(map['levha_label']),
+      yanilticiKapi: find(map['yanilticiKapi_label']),
+      yanilticiEtiket: find(map['yanilticiEtiket_label']),
     );
   }
 }

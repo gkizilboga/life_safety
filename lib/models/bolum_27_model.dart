@@ -5,7 +5,7 @@ class Bolum27Model {
   final ChoiceResult? boyut;
   final ChoiceResult? yon;
   final ChoiceResult? kilit;
-  final ChoiceResult? dayanim;
+  final ChoiceResult? dayanim; // Sadece yangın merdiveni varsa dolu olur
 
   Bolum27Model({
     this.boyut,
@@ -38,42 +38,16 @@ class Bolum27Model {
   }
 
   factory Bolum27Model.fromMap(Map<String, dynamic> map) {
-    // Boyut
-    ChoiceResult? b;
-    final l1 = map['boyut_label'];
-    if (l1 == Bolum27Content.boyutOptionA.label) b = Bolum27Content.boyutOptionA;
-    if (l1 == Bolum27Content.boyutOptionB.label) b = Bolum27Content.boyutOptionB;
-    if (l1 == Bolum27Content.boyutOptionC.label) b = Bolum27Content.boyutOptionC;
-
-    // Yön
-    ChoiceResult? y;
-    final l2 = map['yon_label'];
-    if (l2 == Bolum27Content.yonOptionA.label) y = Bolum27Content.yonOptionA;
-    if (l2 == Bolum27Content.yonOptionB.label) y = Bolum27Content.yonOptionB;
-    if (l2 == Bolum27Content.yonOptionC.label) y = Bolum27Content.yonOptionC;
-    if (l2 == Bolum27Content.yonOptionD.label) y = Bolum27Content.yonOptionD;
-
-    // Kilit
-    ChoiceResult? k;
-    final l3 = map['kilit_label'];
-    if (l3 == Bolum27Content.kilitOptionA.label) k = Bolum27Content.kilitOptionA;
-    if (l3 == Bolum27Content.kilitOptionB.label) k = Bolum27Content.kilitOptionB;
-    if (l3 == Bolum27Content.kilitOptionC.label) k = Bolum27Content.kilitOptionC;
-    if (l3 == Bolum27Content.kilitOptionD.label) k = Bolum27Content.kilitOptionD;
-
-    // Dayanım
-    ChoiceResult? d;
-    final l4 = map['dayanim_label'];
-    if (l4 == Bolum27Content.dayanimOptionA.label) d = Bolum27Content.dayanimOptionA;
-    if (l4 == Bolum27Content.dayanimOptionB.label) d = Bolum27Content.dayanimOptionB;
-    if (l4 == Bolum27Content.dayanimOptionC.label) d = Bolum27Content.dayanimOptionC;
-    if (l4 == Bolum27Content.dayanimOptionD.label) d = Bolum27Content.dayanimOptionD;
+    ChoiceResult? find(String? l, List<ChoiceResult> options) {
+      if (l == null) return null;
+      return options.firstWhere((e) => e.label == l, orElse: () => options.last);
+    }
 
     return Bolum27Model(
-      boyut: b,
-      yon: y,
-      kilit: k,
-      dayanim: d,
+      boyut: find(map['boyut_label'], [Bolum27Content.boyutOptionA, Bolum27Content.boyutOptionB, Bolum27Content.boyutOptionC]),
+      yon: find(map['yon_label'], [Bolum27Content.yonOptionA, Bolum27Content.yonOptionB, Bolum27Content.yonOptionC, Bolum27Content.yonOptionD]),
+      kilit: find(map['kilit_label'], [Bolum27Content.kilitOptionA, Bolum27Content.kilitOptionB, Bolum27Content.kilitOptionC, Bolum27Content.kilitOptionD]),
+      dayanim: find(map['dayanim_label'], [Bolum27Content.dayanimOptionA, Bolum27Content.dayanimOptionB, Bolum27Content.dayanimOptionC, Bolum27Content.dayanimOptionD]),
     );
   }
 }

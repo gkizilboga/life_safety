@@ -121,21 +121,21 @@ class Bolum5Content {
   static final oturumAlani = ChoiceResult(
     label: "5-1 (Oturum)",
     uiTitle: "Bina Oturum (Taban) Alanı",
-    uiSubtitle: "Binanın zeminde kapladığı alan büyüklüğü.",
+    uiSubtitle: "Binanın parsel zemininde kapladığı (taban) alan büyüklüğü.",
     reportText: "(Sayısal veri olarak saklanır: \"Taban Alanı: X m²\")"
   );
 
   static final katBrut = ChoiceResult(
     label: "5-2 (Kat Brüt)",
     uiTitle: "Standart Kat Alanı",
-    uiSubtitle: "Kat holleri, merdivenler, balkonlar dahil brüt ölçü.",
+    uiSubtitle: "En büyük zemin üstü kata ait hol, merdiven, balkonlar dahil brüt alan.",
     reportText: "(Sayısal veri olarak saklanır: \"Kat Alanı: Y m²\")"
   );
 
   static final toplamInsaat = ChoiceResult(
     label: "5-3 (Toplam)",
     uiTitle: "Toplam İnşaat Alanı",
-    uiSubtitle: "Bodrumlar ve çatı dahil tüm katların toplamı.",
+    uiSubtitle: "Bodrumlar ve çatı dahil binadaki tüm katların toplam alanı.",
     reportText: "(Sayısal veri olarak saklanır: \"Toplam İnşaat Alanı: Z m²\")"
   );
 
@@ -199,6 +199,8 @@ class Bolum6Content {
 }
 
 class Bolum7Content {
+  static const String otoparkBilgiNotu = "Binada kapalı otopark olup olmadığı bilgisi bir önceki bölümden alınarak sisteme işlenmiştir.";
+
   static final otopark = ChoiceResult(
     label: "7-1 (Otopark)",
     uiTitle: "Kapalı Otopark",
@@ -279,8 +281,8 @@ class Bolum7Content {
   static final hicbiri = ChoiceResult(
     label: "7-13 (Hiçbiri)",
     uiTitle: "Yukarıdakilerden hiçbiri binada bulunmamaktadır.",
-    uiSubtitle: "Binada yüksek riskli alan yok.",
-    reportText: "✅ OLUMLU: Binada özel risk taşıyan teknik hacim (Kazan, Jeneratör, Elektrik Odası vb.) bulunmamaktadır."
+    uiSubtitle: "Binada özel riskli alan yok.",
+    reportText: "✅ OLUMLU: Binada özel risk taşıyan teknik hacim (kazan, jeneratör, elektrik odası vb.) bulunmamaktadır."
   );
 }
 class Bolum8Content {
@@ -362,15 +364,15 @@ class Bolum11Content {
   // --- ADIM 1: MESAFE ---
   static final mesafeOptionA = ChoiceResult(
     label: "11-1-A",
-    uiTitle: "Hayır, geçmiyor.",
-    uiSubtitle: "En uzak nokta 45 metreden daha yakın.",
+    uiTitle: "Hayır, aşmıyor.",
+    uiSubtitle: "İtfaiye aracı binanın tüm cephelerine 45 metre içerisinde ulaşabilir.",
     reportText: "✅ OLUMLU GÖRÜNÜYOR: İtfaiye yaklaşım mesafesi uygun (Tüm cepheler 45 metre menzil içerisinde)."
   );
 
   static final mesafeOptionB = ChoiceResult(
     label: "11-1-B",
-    uiTitle: "Evet, geçiyor.",
-    uiSubtitle: "Mesafe 45 metreden fazla.",
+    uiTitle: "Evet, aşıyor.",
+    uiSubtitle: "İtfaiye aracı binanın tüm cephelerine 45 metre içerisinde ulaşamaz.",
     reportText: "☢️ KIRMIZI RİSK: İtfaiye yaklaşım mesafesi sınırın üzerinde! Yönetmeliğe göre itfaiye aracı, binanın her cephesine (arka cepheler dahil) en fazla 45 metre mesafede yaklaşabilmelidir. Mevcut durumda binanın bazı cephelerine müdahale edilemeyebilir."
   );
 
@@ -385,14 +387,14 @@ class Bolum11Content {
   static final engelOptionA = ChoiceResult(
     label: "11-2-A",
     uiTitle: "Hayır, engel yok.",
-    uiSubtitle: "Araç binanın dibine kadar gelebiliyor, engelleyici bir duvar yok.",
-    reportText: "✅ OLUMLU GÖRÜNÜYOR: İtfaiye aracı binaya yaklaşabiliyor, fiziksel engel bulunmuyor."
+    uiSubtitle: "Araç binanın dibine kadar gelebiliyor, engelleyen bir duvar yok.",
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: İtfaiye aracı binaya yaklaşabiliyor, fiziksel engel bulunmuyor. Kilitli kapılar olsa bile bina güvenliği veya yönetim tarafından kilidi açılabiliyor."
   );
 
   static final engelOptionB = ChoiceResult(
     label: "11-2-B",
-    uiTitle: "Evet, duvar/kapı/çit var.",
-    uiSubtitle: "İtfaiye aracı kolayca geçemez.",
+    uiTitle: "Evet, duvar, kapı, çit gibi engel mevcut.",
+    uiSubtitle: "İtfaiye aracı binaya kolayca erişemiyor.",
     reportText: "🚨 RİSKLİ: İtfaiye erişimini zorlaştıran fiziksel engeller (duvar, kapı vs.) tespit edilmiştir."
   );
 
@@ -714,93 +716,138 @@ class Bolum13Content {
     reportText: "❓ BİLİNMİYOR: Farklı kullanım alanlarındaki geçiş bilinmiyor, Uzman Görüşü alınması tavsiye edilir."
   );
 }
+class Bolum14Content {
+  static const String title = "Bölüm-14: Tesisat Şaftları";
+  static const String msgHigh = "Binanız 30.50 metreden yüksek olduğundan tüm tesisat şaft duvarları en az 120 dk, şaft kapakları ise en az 90 dk yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.";
+  static const String msgMid = "Binanız 21.50m - 30.50m aralığında olup ‘Yüksek Bina’ sınıfındadır. Tesisat şaftı ve yangın duvarlarınızın en az 90 dk, şaft kapaklarınızın ise en az 60 dk dayanıklı, duman sızdırmaz özellikte olmaları gerekmektedir.";
+  static const String msgDeepBasement = "DİKKAT: Binanız alçak olsa da, bodrum kat derinliğiniz 10 metreyi aştığı için bodrum katlarınız risk taşımaktadır. Bodrumdaki şaft duvarları en az 90 dk ve şaft kapakların dayanımları en az 60dk, zemin üst normal katlarda ise duvarları en az 60dk, kapakları en az 30dk olmalıdır.";
+  static const String msgStandard = "Binanızın yüksekliği ve bodrum derinliği yüksek olmayan bina sınırları içindedir. Tesisat şaft duvarları en az 60 dk, şaft kapakları ise en az 30 dk dayanıklı olması yeterlidir.";
+}
 class Bolum15Content {
-  // --- 1. KAPLAMA ---
   static final kaplamaOptionA = ChoiceResult(
-    label: "15-1-A (Kaplama)",
+    label: "15-1-A",
     uiTitle: "Ahşap parke, laminat, pvc vinil, karo halı",
     uiSubtitle: "Yanıcılık gösterebilen malzemeler.",
-    reportText: "(Yüksek Bina İse) ⚠️ UYARI: Binanız yüksek bina statüsünde olduğu için döşeme kaplamalarının 'en az zor alevlenici' sınıfta olması gerekir. Mevcut ahşap/tekstil kaplamalar yangın yükünü artırabilir. Kaplama malzemesinin yangına tepki test raporu sorgulanmalıdır. <br>(Alçak Bina İse) ⚠️ UYARI: Döşeme kaplaması 'en az normal alevlenici' olması gerekir. Kaplama malzemesinin yangına tepki test raporu sorgulanmalıdır."
+    reportText: "⚠️ UYARI: Döşeme kaplamasının yanıcılık sınıfı kontrol edilmelidir."
   );
 
   static final kaplamaOptionB = ChoiceResult(
-    label: "15-1-B (Kaplama)",
+    label: "15-1-B",
     uiTitle: "Taş, seramik, mermer veya özel yanmaz kaplama.",
-    uiSubtitle: "Limitli yanıcılık gösteren veya hiç yanmayan malzemeler.",
-    reportText: "✅ OLUMLU: Zemin kaplaması olarak binada limitli yanıcılık gösteren veya hiç yanmayan (taş, seramik vb.) malzeme kullanıldığı beyan edilmiştir. Belirtilen malzemeler yangın yükünü artırmaz. Yine de kullanılan zemin kaplama malzemesinin yangına tepki test raporu sorgulanmalıdır."
+    uiSubtitle: "Limitli yanıcılık gösteren malzemeler.",
+    reportText: "✅ OLUMLU: Zemin kaplaması yanmaz malzeme olarak beyan edilmiştir."
   );
 
   static final kaplamaOptionC = ChoiceResult(
-    label: "15-1-C (Kaplama)",
+    label: "15-1-C",
     uiTitle: "Kaplama malzemesini bilmiyorum.",
-    uiSubtitle: "Zemin kaplamasının cinsi veya yanıcılık sınıfı hakkında bilgim yok.",
-    reportText: "❓ BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor. Eğer binanız 21.50m'den yüksekse, kullanılan malzemenin sertifikaları kontrol edilmelidir. Kolay alevlenen malzemeler yangını hızla yayar. Zemin kaplama malzemesinin yangına tepki test raporu sorgulanmalıdır."
+    uiSubtitle: "Zemin kaplamasının cinsi belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor."
   );
 
-  // --- 2. YALITIM ---
   static final yalitimOptionA = ChoiceResult(
-    label: "15-2-A (Yalıtım)",
-    uiTitle: "Hayır, döşeme betonunun üzerinde ısı yalıtım yok.",
-    uiSubtitle: "Köpük, strafor, XPS vb. yanıcı ısı yalıtım malzemeleri.",
-    reportText: "✅ OLUMLU: Döşeme betonu altında yanıcı ısı yalıtım malzemesi bulunmamaktadır."
+    label: "15-2-A",
+    uiTitle: "Hayır, ısı yalıtım yok.",
+    uiSubtitle: "Döşeme betonunda yalıtım bulunmuyor.",
+    reportText: "✅ OLUMLU: Döşeme betonu altında yanıcı yalıtım bulunmamaktadır."
   );
 
   static final yalitimOptionB = ChoiceResult(
-    label: "15-2-B (Yalıtım)",
-    uiTitle: "Evet, ısı yalıtımı olarak strafor/köpük/XPS vb. malzeme var.",
-    uiSubtitle: "Yanıcı malzemeler.",
-    reportText: "(Alt soruya göre belirlenir)<br>Şap Var: ✅ OLUMLU: Yanıcı ısı yalıtım malzemesi en az 2 cm şap ile korunmuştur.<br>Şap Yok: ☢️ KIRMIZI RİSK: Kolay alevlenen yalıtım malzemeleri (köpük, XPS vb.) çıplak şekilde kullanılamaz. Üzeri mutlaka en az 2 cm şap ile örtülmelidir."
+    label: "15-2-B",
+    uiTitle: "Evet, ısı yalıtımı (strafor/köpük vb.) var.",
+    uiSubtitle: "Yanıcı malzemeler tespit edildi.",
+    reportText: "⚠️ RİSK: Yanıcı yalıtım malzemesi kullanımı tespit edilmiştir."
   );
 
   static final yalitimOptionC = ChoiceResult(
-    label: "15-2-C (Yalıtım)",
+    label: "15-2-C",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "Zemin detayını göremiyorum.",
-    reportText: "❓ BİLİNMİYOR: Zemin altında yanıcı köpük (XPS, EPS vb. ) olup olmadığı bilinmiyor. Eğer varsa ve üzeri şap ile örtülmediyse, olası bir yangında zehirli gaz yayabilir. Uzman Görüşü alınması tavsiye edilir."
+    uiSubtitle: "Zemin detayına erişilemiyor.",
+    reportText: "❓ BİLİNMİYOR: Zemin altında yanıcı köpük olup olmadığı bilinmiyor."
   );
 
-  // --- 3. TAVAN ---
+  static final yalitimSapOptionA = ChoiceResult(
+    label: "15-2-ALT-A",
+    uiTitle: "Evet, en az 2 cm şap var.",
+    uiSubtitle: "Beton koruma katmanı mevcut.",
+    reportText: "✅ OLUMLU: Yanıcı yalıtım şap ile korunmuştur."
+  );
+
+  static final yalitimSapOptionB = ChoiceResult(
+    label: "15-2-ALT-B",
+    uiTitle: "Hayır, şap yok.",
+    uiSubtitle: "Yalıtım malzemesi çıplak durumda.",
+    reportText: "☢️ KIRMIZI RİSK: Yalıtımın üzeri şap ile örtülmelidir."
+  );
+
+  static final yalitimSapOptionC = ChoiceResult(
+    label: "15-2-ALT-C",
+    uiTitle: "Bilmiyorum / Göremiyorum.",
+    uiSubtitle: "Şap tabakası belirsiz.",
+    reportText: "⚠️ RİSK: Koruyucu şap tabakası olup olmadığı bilinmiyor."
+  );
+
   static final tavanOptionA = ChoiceResult(
-    label: "15-3-A (Tavan)",
-    uiTitle: "Hayır, tavanlar direkt beton üzeri sıva/boya.",
-    uiSubtitle: "Tavanda asma tavan uygulaması yoktur, orijinal beton yüzeydir.",
-    reportText: "✅ OLUMLU: Tavanlarda asma tavan bulunmamaktadır. Sıva ve boyalı beton tavanlar yangın yükü oluşturmaz, uygundur."
+    label: "15-3-A",
+    uiTitle: "Hayır, asma tavan yok.",
+    uiSubtitle: "Tavanlar direkt beton üzeri sıva/boya.",
+    reportText: "✅ OLUMLU: Tavanlarda asma tavan bulunmamaktadır."
   );
 
   static final tavanOptionB = ChoiceResult(
-    label: "15-3-B (Tavan)",
+    label: "15-3-B",
     uiTitle: "Evet, asma tavan var.",
-    uiSubtitle: "Koridorlarda veya dairelerde tavan seviyesi düşürülmüş, asma tavan yapılmıştır.",
-    reportText: "(Alt soruya göre belirlenir)<br>Alçı/Metal: ✅ OLUMLU: Asma tavan malzemesi yanmaz veya zor yanıcı sınıftadır.<br>Ahşap/Plastik: ☢️ KIRMIZI RİSK: Tavan malzemeleri 'en az zor alevlenici' (en az C, s3-d2) sınıfında olmalıdır. Ahşap, plastik veya köpük malzemeler kolay yanar, eriyerek damlar ve kaçış yolunu kapatır. Kullanımı yasaktır."
+    uiSubtitle: "Tavan seviyesi düşürülmüş uygulama.",
+    reportText: "⚠️ UYARI: Asma tavan malzemesi kontrol edilmelidir."
   );
 
   static final tavanOptionC = ChoiceResult(
-    label: "15-3-C (Tavan)",
-    uiTitle: "Tavan malzemesini tanımıyorum.",
-    uiSubtitle: "Asma tavan var ancak malzemesinin ne olduğunu bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Tavan malzemesinin cinsi bilinmiyor. Eğer tavanınız plastik veya cilalı ahşap ise derhal sökülmelidir, çünkü yangında eriyerek damlar ve kaçışı engeller. Uzman Görüşü alınması tavsiye edilir."
+    label: "15-3-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Tavan yapısı belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Tavan yapısı hakkında bilgi yok."
   );
 
-  // --- 4. TESİSAT ---
+  static final tavanMalzemeOptionA = ChoiceResult(
+    label: "15-3-ALT-A",
+    uiTitle: "Alçıpanel, metal vb. yanmaz malzeme.",
+    uiSubtitle: "A1 veya A2 sınıfı malzemeler.",
+    reportText: "✅ OLUMLU: Asma tavan malzemesi yanmaz sınıftadır."
+  );
+
+  static final tavanMalzemeOptionB = ChoiceResult(
+    label: "15-3-ALT-B",
+    uiTitle: "Ahşap, plastik, lambiri vb. yanıcı malzeme.",
+    uiSubtitle: "Kolay alevlenici dekoratif malzemeler.",
+    reportText: "☢️ KIRMIZI RİSK: Tavan malzemeleri yanıcı seçilmiştir."
+  );
+
+  static final tavanMalzemeOptionC = ChoiceResult(
+    label: "15-3-ALT-C",
+    uiTitle: "Malzemeyi bilmiyorum.",
+    uiSubtitle: "Yanıcılık sınıfı belirsiz.",
+    reportText: "⚠️ UYARI: Asma tavan malzemesinin yanıcılığı bilinmiyor."
+  );
+
   static final tesisatOptionA = ChoiceResult(
-    label: "15-4-A (Tesisat)",
-    uiTitle: "Beton, harç veya yanmaz mastik ile tesisat çevresi tam olarak kapatılmış ve sızdırmazlık sağlanmış.",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU: Döşemeden geçen tesisatların çevresi yangına dayanıklı malzeme ile yalıtılmış, alev ve duman geçişi engellenmiştir."
+    label: "15-4-A",
+    uiTitle: "Beton, harç veya yanmaz mastik ile kapatılmış.",
+    uiSubtitle: "Sızdırmazlık sağlanmış.",
+    reportText: "✅ OLUMLU: Tesisat geçişleri yalıtılmıştır."
   );
 
   static final tesisatOptionB = ChoiceResult(
-    label: "15-4-B (Tesisat)",
-    uiTitle: "Tesisat geçişlerinde boşluklar var veya poliüretan vb. (yanıcı sarı köpük) sıkılarak kapatma yapılmış.",
-    uiSubtitle: "",
-    reportText: "☢️ KIRMIZI RİSK: Döşemeden geçen tesisatların çevresinde ASLA boşluk kalmamalıdır. Bu boşluklar 'Baca Etkisi' yaparak dumanı ve alevi üst katlara taşır. Sarı poliüretan köpük tesisat geçişlerinde kullanılmamalıdır."
+    label: "15-4-B",
+    uiTitle: "Boşluklar var veya yanıcı köpük sıkılmış.",
+    uiSubtitle: "Duman geçişine açık noktalar.",
+    reportText: "☢️ KIRMIZI RİSK: Tesisat geçişlerinde boşluklar mevcuttur."
   );
 
   static final tesisatOptionC = ChoiceResult(
-    label: "15-4-C (Tesisat)",
-    uiTitle: "Tesisat geçişlerini göremiyorum.",
-    uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Tesisat şaftlarının içindeki yalıtım durumu bilinmiyor. Döşemeden geçen tesisatların çevresinde ASLA boşluk kalmamalıdır. Bu boşluklar 'Baca Etkisi' yaparak dumanı ve alevi üst katlara taşır. Sarı poliüretan köpük tesisat geçişlerinde kullanılmamalıdır."
+    label: "15-4-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Tesisat geçişleri kapalı durumda.",
+    reportText: "❓ BİLİNMİYOR: Tesisat şaft yalıtımı bilinmiyor."
   );
 }
 class Bolum16Content {
@@ -884,8 +931,8 @@ class Bolum16Content {
 class Bolum17Content {
   static final kaplamaOptionA = ChoiceResult(
     label: "17-1-A (Kaplama)",
-    uiTitle: "Kiremit, metal kenet, beton, taş vb yanmaz malzeme.",
-    uiSubtitle: "Çatı yüzeyi yanmaz (A1 sınıf) malzemelerle kaplanmıştır.",
+    uiTitle: "Kiremit, metal kenet, beton, taş vb. türünde yanmaz malzeme.",
+    uiSubtitle: "Çatı yüzeyi yanmaz (A1 sınıf) malzemeyle kaplanmıştır.",
     reportText: "✅ OLUMLU: Çatı kaplamasında hiç yanmaz (A1 sınıfı) malzeme kullanılmıştır. Bu durum, dışarıdan gelebilecek kıvılcımlara karşı koruma sağlar."
   );
 
@@ -954,7 +1001,7 @@ class Bolum17Content {
 
   static final bitisikOptionB = ChoiceResult(
     label: "17-3-B (Bitişik)",
-    uiTitle: "Çatılar arasında yüksek yangın duvarı yok.",
+    uiTitle: "Çatılar arasında yangın dayanımlı duvarı yok.",
     uiSubtitle: "",
     reportText: "☢️ RİSK: Bitişik nizam binalarda, çatılar arasında yangın geçişini engelleyecek, çatı seviyesinden en az 60 cm yükseltilmiş 'Yangın Duvarı' olması zorunludur."
   );
@@ -978,6 +1025,12 @@ class Bolum17Content {
     uiTitle: "Evet, ışıklık var.",
     uiSubtitle: "Çatıda aydınlatma feneri veya kubbesi mevcut.",
     reportText: "(Alt soruya göre belirlenir)<br>Cam: ✅ OLUMLU: Temperli cam ışıklıklar yeterli olabilir<br>Plastik: ⚠️ UYARI: Çatı ışıklıklarında kullanılan plastik malzemeler yangında eriyip aşağıya damlayarak yangını içeri taşıyabilir."
+  );
+  static final isiklikOptionC = ChoiceResult(
+    label: "17-4-C (Işıklık)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Çatıdaki açıklıkların yapısı belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Çatı ışıklık durumu bilinmiyor. Işıklık varsa ve plastikse yangın riski oluşturabilir. Uzman kontrolü önerilir."
   );
 }
 class Bolum18Content {
@@ -1039,66 +1092,87 @@ class Bolum18Content {
 }
 class Bolum19Content {
   static final engelOptionA = ChoiceResult(
-    label: "19-1-A (Engel)",
-    uiTitle: "Kaçış yolu temiz ve açık.",
-    uiSubtitle: "Kapılar kilitsiz, koridorlarda eşya yok.",
-    reportText: "✅ OLUMLU: Kaçış yolları temiz, kapılar kilitsiz ve kolayca açılabilir durumdadır."
+    label: "19-1-A",
+    uiTitle: "Herhangi bir engel yok, yol tamamen açık.",
+    uiSubtitle: "Tahliye yolu mevzuata uygun.",
+    reportText: "✅ OLUMLU: Kaçış yollarında tahliyeyi engelleyici unsur bulunmamaktadır."
   );
 
   static final engelOptionB = ChoiceResult(
-    label: "19-1-B (Engel)",
-    uiTitle: "Kapılarda asma kilit var.",
-    uiSubtitle: "Yangın merdiveni kapısı kilitlenmiş veya sürgülenmiş.",
-    reportText: "☢️ KRİTİK RİSK: Yangın merdiveni kapılarına ASLA kilit, sürgü veya zincir takılamaz. Panik anında anahtar aranmaz. Kapılar her zaman içeriden kolla veya panik barla basınca açılacak şekilde olmalıdır."
+    label: "19-1-B",
+    uiTitle: "Eşya, bisiklet, saksı vb. malzemeler var.",
+    uiSubtitle: "Yol genişliği daralmış.",
+    reportText: "⚠️ RİSK: Kaçış yollarında eşya ve malzeme istifi tespit edilmiştir."
   );
 
   static final engelOptionC = ChoiceResult(
-    label: "19-1-C (Engel)",
-    uiTitle: "Kaçış koridorlarında veya merdivenlerde eşya, koli, çöp vs. var.",
-    uiSubtitle: "Koridorlarda veya sahanlıkta depolama yapılmış.",
-    reportText: "☢️ KIRMIZI RİSK: Kaçış yolları ve merdiven sahanlıkları depo alanı değildir. Dumanlı ortamda bu eşyalar takılıp düşmenize ve kaçışın engellenmesine sebep olur. Derhal kaldırılmalıdır."
+    label: "19-1-C",
+    uiTitle: "Kilitli kapı veya geçişi zorlaştıran bariyer var.",
+    uiSubtitle: "Acil çıkış engellenmiş.",
+    reportText: "☢️ KIRMIZI RİSK: Kaçış yolunda kilitli kapı veya fiziksel engel mevcuttur."
   );
 
   static final engelOptionD = ChoiceResult(
-    label: "19-1-D (Engel)",
-    uiTitle: "Kattan çıkarken başka daireden veya başka mahallerden geçilmesi gerekiyor.",
-    uiSubtitle: "Merdivene ulaşmak için yatak odası veya depodan geçiliyor.",
-    reportText: "☢️ KIRMIZI RİSK: Kaçış yolu, kilitlenebilir başka bir odanın içinden geçemez. Koridordan direkt merdivene ulaşım sağlanmalıdır."
+    label: "19-1-D",
+    uiTitle: "Eşik, basamak veya kaygan zemin var.",
+    uiSubtitle: "Düşme ve takılma riski.",
+    reportText: "⚠️ RİSK: Kaçış yolu zemininde takılma veya kayma riski tespit edilmiştir."
   );
 
   static final levhaOptionA = ChoiceResult(
-    label: "19-2-A (Levha)",
-    uiTitle: "Evet, var ve çalışıyorlar.",
-    uiSubtitle: "Işıklı 'ÇIKIŞ' işaretleri mevcut.",
-    reportText: "✅ OLUMLU: Kaçış yollarında yönlendirme işaretleri mevcuttur."
+    label: "19-2-A",
+    uiTitle: "Evet, tüm çıkışlarda ledli, ışıklı acil yönlendirme işaretleri var.",
+    uiSubtitle: "Yönlendirme yeterli.",
+    reportText: "✅ OLUMLU: Acil durum yönlendirme işaretleri ."
   );
 
   static final levhaOptionB = ChoiceResult(
-    label: "19-2-B (Levha)",
-    uiTitle: "Hayır, yok veya bozuklar.",
-    uiSubtitle: "Yönlendirme işaretleri bulunmuyor veya ışıkları yanmıyor.",
-    reportText: "⚠️ UYARI: Yangın anında elektrikler kesilebilir ve duman görüşü kapatabilir. Kaçış yolunu gösteren ışıklı yönlendirme levhaları hayati önem taşır."
+    label: "19-2-B",
+    uiTitle: "Hayır, hiçbir yerde yönlendirme levhası yok.",
+    uiSubtitle: "Karanlıkta veya dumanlı ortamda çıkış bulunması çok güçtür.",
+    reportText: "☢️ KIRMIZI RİSK: Binada acil durum yönlendirme işaretleri bulunmamaktadır."
   );
 
   static final levhaOptionC = ChoiceResult(
-    label: "19-2-C (Levha)",
-    uiTitle: "Var ama yanlış yönü gösteriyorlar.",
-    uiSubtitle: "",
-    reportText: "☢️ RİSK: Yanlış yönlendirme, panik anında insanları tuzağa düşürür. Levhalar sadece gerçek çıkışları göstermelidir."
+    label: "19-2-C",
+    uiTitle: "Yönlendirmeler var ama çalışmıyorlar, bozuk veya pilleri bitik olabilir.",
+    uiSubtitle: " ",
+    reportText: "⚠️ RİSK: Yönlendirme işaretlemeleri mevcut ancak çalışır durumda değildir."
   );
 
   static final yanilticiOptionA = ChoiceResult(
-    label: "19-3-A (Yanıltıcı)",
-    uiTitle: "Hayır, sadece daire ve merdiven kapısı var.",
-    uiSubtitle: "Koridorda kafa karıştırıcı başka kapı yok.",
-    reportText: "✅ OLUMLU: Koridorda kaçış anında insanları yanıltıcı kapı bulunmamaktadır."
+    label: "19-3-A",
+    uiTitle: "Hayır, yanıltıcı kapı yok.",
+    uiSubtitle: "Tüm kapılar amacına uygun.",
+    reportText: "✅ OLUMLU: Kaçış yollarında kullanıcıyı yanıltacak kapı bulunmamaktadır."
   );
 
   static final yanilticiOptionB = ChoiceResult(
-    label: "19-3-B (Yanıltıcı)",
-    uiTitle: "Evet, benzer kapılar var.",
-    uiSubtitle: "Depo veya teknik oda kapıları merdivene giriş kapılarına benziyor.",
-    reportText: "(Alt soruya göre belirlenir)<br>Etiket Var: ✅ OLUMLU: Kapıların üzerinde ne kapısı olduğu yazması önerilir.<br>Etiket Yok: ⚠️ UYARI: Dumanlı ortamda insanlar her kapıyı çıkış sanabilir. Çıkış olmayan kapıların üzerine 'ÇIKIŞ DEĞİLDİR' veya mahal ismi yazılması önerilir."
+    label: "19-3-B",
+    uiTitle: "Evet, yanıltıcı kapılar var.",
+    uiSubtitle: "Depo/Elektrik odası kapıları merdiven kapısına benziyor.",
+    reportText: "⚠️ RİSK: Kaçış yollarında yangın merdiveni ile karıştırılabilecek yanıltıcı kapılar mevcuttur."
+  );
+
+  static final etiketOptionA = ChoiceResult(
+    label: "19-3-ALT-A",
+    uiTitle: "Evet, 'ÇIKIŞ DEĞİLDİR' veya mahalin adı yazıyor.",
+    uiSubtitle: "İşaretleme yapılmış.",
+    reportText: "✅ OLUMLU: Yanıltıcı kapılar üzerinde gerekli uyarı levhaları mevcuttur."
+  );
+
+  static final etiketOptionB = ChoiceResult(
+    label: "19-3-ALT-B",
+    uiTitle: "Hayır, herhangi bir yazı veya levha yok.",
+    uiSubtitle: " ",
+    reportText: "☢️ KIRMIZI RİSK: Yanıltıcı kapılar üzerinde uyarı levhası bulunmamaktadır."
+  );
+
+  static final etiketOptionC = ChoiceResult(
+    label: "19-3-ALT-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Konu hakkında bilgim yok.",
+    reportText: "❓ BİLİNMİYOR: Yanıltıcı kapıların işaretleme durumu tespit edilememiştir."
   );
 }
 class Bolum20Content {
@@ -1185,14 +1259,14 @@ class Bolum21Content {
   static final varlikOptionA = ChoiceResult(
     label: "21-1-A (Varlık)",
     uiTitle: "Evet, var.",
-    uiSubtitle: "Merdiven önünde çift kapılı bir hol (oda) var.",
+    uiSubtitle: "Merdiven önünde çift kapılı bir hol (yangın güvenlik holü) var.",
     reportText: "✅ OLUMLU: Yangın merdiveni önünde Yangın Güvenlik Holü (YGH) mevcuttur."
   );
 
   static final varlikOptionB = ChoiceResult(
     label: "21-1-B (Varlık)",
     uiTitle: "Hayır, yok.",
-    uiSubtitle: "Koridordan direkt merdivene çıkılıyor.",
+    uiSubtitle: "Koridordan direkt merdivene çıkılıyor,arada hol yok.",
     reportText: "(Yüksek Bina İse) ☢️ KRİTİK RİSK: 51.50m üzeri binalarda merdiven önünde YGH ZORUNLUDUR. Dumanın merdivene dolmasını bu hol engeller.<br>(Alçak Bina İse) ⚠️ UYARI: Bodrum katlardaki riskli alanlardan merdivene geçişte YGH olması mecburidir."
   );
 
@@ -1206,7 +1280,7 @@ class Bolum21Content {
   static final malzemeOptionB = ChoiceResult(
     label: "21-2-B (Malzeme)",
     uiTitle: "Ahşap, duvar kağıdı, plastik.",
-    uiSubtitle: "Hol içinde yanıcı kaplama veya süsleme var.",
+    uiSubtitle: "Hol içinde yanıcı kaplama veya dekorasyon var.",
     reportText: "☢️ KIRMIZI RİSK: Yangın güvenlik holleri 'Kaçış Yolu'nun bir parçasıdır. Duvar, tavan ve tabanında HİÇBİR yanıcı malzeme (ahşap, plastik, duvar kağıdı) kullanılamaz. Bu malzemeler varsa sökülmelidir."
   );
 
@@ -1262,7 +1336,7 @@ class Bolum21Content {
 class Bolum22Content {
   static final varlikOptionA = ChoiceResult(
     label: "22-1-A (Varlık)",
-    uiTitle: "Hayır, itfaiye asansörü yok sadece normal asansör var.",
+    uiTitle: "Hayır, itfaiye asansörü yok sadece normal (insan taşıma) asansör var.",
     uiSubtitle: "",
     reportText: "☢️ KRİTİK RİSK: Yönetmeliğe aykırı durum. 51.50 metreden yüksek binalarda yangın anında itfaiyenin kullanabileceği, jeneratöre bağlı ve korunumlu İtfaiye Asansörü olması ZORUNLUDUR."
   );
@@ -1332,14 +1406,14 @@ class Bolum22Content {
 
   static final kabinOptionA = ChoiceResult(
     label: "22-4-A (Kabin)",
-    uiTitle: "Evet, 1,8 m2'den geniş ve 1dk 'da en üst kata hızlıca çıkabiliyor.",
+    uiTitle: "Evet, 1,8 m2'den geniş ve 1 dakikada en üst kata hızlıca çıkabiliyor.",
     uiSubtitle: "",
     reportText: "✅ OLUMLU: İtfaiye asansörü kabin boyutu ve hızı yeterlidir."
   );
 
   static final kabinOptionB = ChoiceResult(
     label: "22-4-B (Kabin)",
-    uiTitle: "Hayır, küçük veya yavaş.",
+    uiTitle: "Hayır, kabini küçük veya 1 dakikada en üst kata ulaşamıyor.",
     uiSubtitle: "",
     reportText: "☢️ RİSK: İtfaiye asansörü kabini en az 1.8 m² olmalı ve en üst kata 1 dakikada ulaşmalıdır. Aksi takdirde acil müdahale ve tahliye gecikir."
   );
@@ -1348,12 +1422,12 @@ class Bolum22Content {
     label: "22-4-C (Kabin)",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Asansörün teknik kapasitesi bilinmiyor. İtfaiye asansörü kabini en az 1.8 m² olmalı ve en üst kata 1 dakikada ulaşmalıdır. Aksi takdirde acil müdahale ve tahliye gecikir."
+    reportText: "❓ BİLİNMİYOR: İtfaiye asansörünün teknik özellikleri bilinmiyor. İtfaiye asansörü kabini en az 1.8 m² olmalı ve en üst kata 1 dakikada ulaşmalıdır. Aksi takdirde acil müdahale ve tahliye gecikir."
   );
 
   static final enerjiOptionA = ChoiceResult(
     label: "22-5-A (Enerji)",
-    uiTitle: "Evet, asansörlerin hepsi jeneratöre bağlı ve 60dk çalışabilir düzeyde.",
+    uiTitle: "Evet, asansörlerin hepsi jeneratöre bağlı ve binada elektrik olmasa bile 60 dakika boyunca  çalışabilir durumda.",
     uiSubtitle: "Elektrik kesilse bile asansörler çalışabiliyor.",
     reportText: "✅ OLUMLU: İtfaiye asansörü acil durum enerji sistemine bağlıdır."
   );
@@ -1374,86 +1448,86 @@ class Bolum22Content {
 
   static final basincOptionA = ChoiceResult(
     label: "22-6-A (Basınç)",
-    uiTitle: "Evet, basınçlandırma var.",
-    uiSubtitle: "Asansör kuyusuna temiz hava basan sistem.",
+    uiTitle: "Evet, basınçlandırma sistemi var.",
+    uiSubtitle: "Asansör kuyusuna hava üfleyen sistem.",
     reportText: "✅ OLUMLU: İtfaiye asansör kuyusu basınçlandırılmıştır."
   );
 
   static final basincOptionB = ChoiceResult(
     label: "22-6-B (Basınç)",
     uiTitle: "Hayır, yok.",
-    uiSubtitle: "Asansör kuyusuna temiz hava basan sistem yok.",
+    uiSubtitle: "Asansör kuyusuna hava üfleyen yok.",
     reportText: "☢️ RİSK: İtfaiye asansör kuyusu basınçlandırılmalıdır. Aksi takdirde kuyuya duman dolar ve insanlar boğulma tehlikesi geçirir."
   );
 
   static final basincOptionC = ChoiceResult(
     label: "22-6-C (Basınç)",
-    uiTitle: "Sistem var mı yok mu bilmiyorum.",
+    uiTitle: "Basınçlandırma var mı yok mu bilmiyorum.",
     uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Kuyu basınçlandırma durumu bilinmiyor. Bu sistem dumanın asansör kuyusuna girmesini engeller."
+    reportText: "❓ BİLİNMİYOR: Kuyunun basınçlandırma durumu bilinmiyor. Bu sistem dumanın asansör kuyusuna girmesini engeller ve itfaiye asansör kuyusunda olmalıdır."
   );
 }
 class Bolum23Content {
   static final bodrumOptionA = ChoiceResult(
     label: "23-1-A (Bodrum)",
-    uiTitle: "Asansör bodrum katlara inmiyor.",
+    uiTitle: "Normal (insan taşıma) asansör bodrum katlara inmiyor.",
     uiSubtitle: "Asansör sadece zemin ve üst katlar arasında çalışıyor.",
     reportText: "✅ OLUMLU: Asansör bodrum katlara inmemektedir."
   );
 
   static final bodrumOptionB = ChoiceResult(
     label: "23-1-B (Bodrum)",
-    uiTitle: "Asansör bodrum katlara iniyor ve bodrum katta kapısını korunumlu bir hole açıyor.",
+    uiTitle: "Normal asansör bodrum katlara da iniyor ve bodrum katta kapısını korunumlu bir hole açıyor.",
     uiSubtitle: " ",
     reportText: "✅ OLUMLU: Asansör bodrum katta yangın güvenlik holüne açılmaktadır."
   );
 
   static final bodrumOptionC = ChoiceResult(
     label: "23-1-C (Bodrum)",
-    uiTitle: "Asansör bodrum katlara iniyor ve holsüz biçimde direkt otoparka, depoya veya ticari alanlara açılıyor.",
-    uiSubtitle: "Bodrum katta korunumlu hol yok.",
+    uiTitle: "Normal asansör bodrum katlara da iniyor ve holsüz biçimde direkt otoparka, depoya veya ticari alanlara açılıyor.",
+    uiSubtitle: "Asansörün bodrum kata çıktığı noktada bir YGH yok.",
     reportText: "☢️ KRİTİK RİSK: Asansör kuyuları binanın bacası gibidir. Bodrumdaki otoparkta veya kazan dairesinde çıkacak bir yangının dumanı, direkt asansör kapısından kuyuya girer ve saniyeler içinde tüm üst katlara yayılır."
   );
 
   static final bodrumOptionD = ChoiceResult(
     label: "23-1-D (Bodrum)",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
+    uiTitle: "Bilmiyorum, konu hakkında fikrim yok.",
+    uiSubtitle: " ",
     reportText: "❓ BİLİNMİYOR: Bodrum katlardaki asansörlerin hemen önünde mutlaka 'Yangın Güvenlik Holü' olmalıdır. Mevcut durum bilinmiyor."
   );
 
   static final yanginModuOptionA = ChoiceResult(
     label: "23-2-A (Yangın Modu)",
-    uiTitle: "Evet, otomatik iniyor ve kapısını açıyor.",
-    uiSubtitle: "",
+    uiTitle: "Evet, otomatik olarak kendliğinden iniyor ve kapısını açıyor.",
+    uiSubtitle: " ",
     reportText: "✅ OLUMLU: Asansörlerde yangın modu mevcuttur."
   );
 
   static final yanginModuOptionB = ChoiceResult(
     label: "23-2-B (Yangın Modu)",
-    uiTitle: "Hayır, asansör normalin dışında bir aksiyon almıyor.",
+    uiTitle: "Hayır, asansör normalin dışında farklı bir aksiyon almıyor.",
     uiSubtitle: "Yangın anında normal çalışmasına devam ediyor.",
     reportText: "☢️ RİSK: Asansörlerin yangın anında özel aksiyon alması gereklidir."
   );
 
   static final yanginModuOptionC = ChoiceResult(
     label: "23-2-C (Yangın Modu)",
-    uiTitle: "Bilmiyorum, dikkat etmedim.",
-    uiSubtitle: "",
+    uiTitle: "Bilmiyorum, buna dikkat etmedim.",
+    uiSubtitle: " ",
     reportText: "❓ BİLİNMİYOR: Asansörün yangın senaryosu bilinmiyor. Yangın anında asansörde mahsur kalmamak için bu özelliğin varlığı hayati önem taşır."
   );
 
   static final konumOptionA = ChoiceResult(
     label: "23-3-A (Konum)",
     uiTitle: "Kat koridoruna, kat holüne veya asansör holüne açılıyor.",
-    uiSubtitle: "",
+    uiSubtitle: " ",
     reportText: "✅ OLUMLU: Asansör kapıları kat koridoruna açılmaktadır."
   );
 
   static final konumOptionB = ChoiceResult(
     label: "23-3-B (Konum)",
     uiTitle: "Doğrudan yangın merdiveninin içine açılıyor.",
-    uiSubtitle: "",
+    uiSubtitle: " ",
     reportText: "☢️ KRİTİK RİSK: Yönetmeliğe göre asansör kapıları ASLA yangın merdiveni yuvasına açılamaz. Asansör kuyusundan sızan duman, insanların kaçtığı temiz bölgeyi (merdiveni) dumanla doldurur."
   );
 
@@ -1467,7 +1541,7 @@ class Bolum23Content {
   static final levhaOptionA = ChoiceResult(
     label: "23-4-A (Levha)",
     uiTitle: "Evet, her katta levha var.",
-    uiSubtitle: "",
+    uiSubtitle: " ",
     reportText: "✅ OLUMLU: Asansörlerde gerekli uyarı levhaları mevcuttur."
   );
 
@@ -1509,16 +1583,23 @@ class Bolum23Content {
 class Bolum24Content {
   static final tipOptionA = ChoiceResult(
     label: "24-1-A (Tip)",
-    uiTitle: "Daire kapısı koridora, hole veya apartman boşluğuna çıkılıyor.",
-    uiSubtitle: "Daire kapısı bina içine açılıyor.",
-    reportText: "(Bu modül atlanır, rapor notu oluşmaz)"
+    uiTitle: "Önce kapalı apartman koridoruna, sonrasında cadde seviyesindeki dış havaya çıkılabiliyor.",
+    uiSubtitle: " ",
+    reportText: "Binadan çıkışta dış kaçış geçidi yer almamaktadır, Yönetmeliğe göre bir değerlendirmeye ihtiyaç bulunmaz."
   );
 
   static final tipOptionB = ChoiceResult(
     label: "24-1-B (Tip)",
-    uiTitle: "Daire kapısı dış cephede açık bir kaçış yoluna, terasa veya açık bir koridora çıkılıyor.",
-    uiSubtitle: "",
-    reportText: "(Analiz devam eder)"
+    uiTitle: "Daire kapısı veya kat koridorundan çıkışta öncelikle dış cephede bulunan açık bir kaçış yoluna çıkılması gerekiyor.",
+    uiSubtitle: " ",
+    reportText: "Binadan çıkışta dış kaçış geçidi yer almaktadır. Yönetmeliğe göre bu geçidin ve dış cephedeki tehlikelerin değerlendirilmesi gereklidir."
+  );
+
+  static final tipOptionC = ChoiceResult(
+    label: "24-1-C (Tip)",
+    uiTitle: "Bilmiyorum / Emin değilim.",
+    uiSubtitle: "Çıkış güzergahı tam olarak analiz edilemedi.",
+    reportText: "❓ BİLİNMİYOR: Binadan çıkışta dış kaçış geçidi (açık koridor) olup olmadığı tespit edilememiştir. Uzman kontrolü önerilir."
   );
 
   static final pencereOptionA = ChoiceResult(
@@ -1532,21 +1613,35 @@ class Bolum24Content {
     label: "24-2-B (Pencere)",
     uiTitle: "Evet, pencereler var.",
     uiSubtitle: "Açık kaçış yoluna veya koridora bakan daire pencereleri mevcut.",
-    reportText: "(Alt soruya göre belirlenir)<br>Yüksek: ✅ OLUMLU: Pencereler yerden 1.80m yüksekte olduğu için duman kaçış yolunu etkilemez.<br>Alçak: ☢️ RİSK: Dış kaçış geçidine bakan pencereler, yerden en az 1.80 metre yüksekte olmalıdır. Aksi takdirde daireden çıkan alev ve duman, kaçış yolunu kapatır."
+    reportText: "⚠️ RİSK: Dış kaçış geçidine bakan pencereler, yerden en az 1.80 metre yüksekte olmalıdır. Aksi takdirde daireden çıkan alev ve duman, kaçış yolunu kapatır."
+  );
+
+  static final pencereOptionC = ChoiceResult(
+    label: "24-2-C (Pencere)",
+    uiTitle: "Bilmiyorum / Göremiyorum.",
+    uiSubtitle: "Pencere yüksekliği veya varlığı belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Dış kaçış geçidine bakan pencerelerin varlığı veya yüksekliği bilinmiyor. Bu pencereler yangın anında kaçış yolunu dumanla doldurabilir."
   );
 
   static final kapiOptionA = ChoiceResult(
     label: "24-3-A (Kapı)",
     uiTitle: "Çelik, yangına dayanıklı, duman sızdırmaz, bırakınca kendiliğinden kapanıyor.",
     uiSubtitle: "",
-    reportText: "✅ OLUMLU: Dış geçide açılan kapı yangına dayanıklı,duman sızdırmaz ve kendiliğinden kapanır özelliktedir."
+    reportText: "✅ OLUMLU: Dış geçide açılan kapı yangına dayanıklı, duman sızdırmaz ve kendiliğinden kapanır özelliktedir."
   );
 
   static final kapiOptionB = ChoiceResult(
     label: "24-3-B (Kapı)",
     uiTitle: "Dayanıksız, kendiliğinden kapanmıyor.",
     uiSubtitle: "Kapı ahşap, pvc, demir vs.",
-    reportText: "⚠️ RİSK: Dış kaçış geçitlerine açılan kapılar en az 30 dakika yangına dayanıklı olmalı ve bırakınca kendiliğinden kapanmalıdır. Aksi halde dairedeki olası yangın, kaçış yolunu bloke edebilir."
+    reportText: "⚠️ RİSK: Dış kaçış geçitlerine açılan kapılar en az 30 dakika yangına dayanıklı olmalı ve bırakınca kendiliğinden kapanmalıdır."
+  );
+
+  static final kapiOptionC = ChoiceResult(
+    label: "24-3-C (Kapı)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Kapı özellikleri analiz edilemedi.",
+    reportText: "❓ BİLİNMİYOR: Dış kaçış geçidine açılan kapıların yangın dayanımı ve sızdırmazlık özellikleri bilinmiyor."
   );
 }
 class Bolum25Content {
@@ -1564,6 +1659,13 @@ class Bolum25Content {
     reportText: "✅ OLUMLU: Döner merdiven genişliği ve kullanıcı yükü yönetmelik sınırları (100cm / 25 kişi) içerisindedir."
   );
 
+  static final kapasiteOptionC = ChoiceResult(
+    label: "25-1-C (Kapasite)",
+    uiTitle: "Bilmiyorum / Ölçüm yapamadım.",
+    uiSubtitle: "Genişlik ve kullanıcı kapasitesi belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Döner merdiven genişliği ve hizmet verdiği kişi sayısı bilinmiyor. 100 cm altındaki genişlikler acil durumlarda yığılmaya neden olabilir."
+  );
+
   static final basamakOptionA = ChoiceResult(
     label: "25-2-A (Basamak)",
     uiTitle: "Evet, rahat basılıyor.",
@@ -1576,6 +1678,13 @@ class Bolum25Content {
     uiTitle: "Hayır, basamaklar çok dar.",
     uiSubtitle: "Basamaklar üçgen şeklinde, sadece en dıştan basılabiliyor.",
     reportText: "⚠️ UYARI: Döner merdivenlerde basamak genişliği, merkezden 50 cm uzaklıkta en az 25 cm olmalıdır. Çok dar basamaklar panik anında düşme riskini artırır."
+  );
+
+  static final basamakOptionC = ChoiceResult(
+    label: "25-2-C (Basamak)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Basamak yapısı analiz edilemedi.",
+    reportText: "❓ BİLİNMİYOR: Döner merdiven basamak genişliği bilinmiyor. Basamakların dar olması tahliye hızını ciddi oranda düşürür."
   );
 
   static final basKurtarmaOptionA = ChoiceResult(
@@ -1591,168 +1700,207 @@ class Bolum25Content {
     uiSubtitle: "Tavan alçak, baş çarpma riski var.",
     reportText: "⚠️ UYARI: Döner merdivenlerde baş kurtarma yüksekliği, normal merdivenlerden daha fazla (en az 2.50 m) olmalıdır. Dönüş sırasında baş çarpma riski daha yüksektir."
   );
+
+  static final basKurtarmaOptionC = ChoiceResult(
+    label: "25-3-C (Baş Kurtarma)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Yükseklik ölçümü yapılamadı.",
+    reportText: "❓ BİLİNMİYOR: Döner merdiven baş kurtarma yüksekliği bilinmiyor. Alçak tavanlar tahliye sırasında yaralanmalara yol açabilir."
+  );
 }
 class Bolum26Content {
   static final varlikOptionA = ChoiceResult(
-    label: "26-1-A (Varlık)",
-    uiTitle: "Hayır, sadece merdiven var.",
-    uiSubtitle: "Binada kaçış yolunda rampa bulunmuyor.",
-    reportText: "(Bu modül atlanır, rapor notu oluşmaz)"
+    label: "26-1-A",
+    uiTitle: "Hayır, sadece merdiven var, rampa yok.",
+    uiSubtitle: "Binada kaçış yolunda hiç rampa yok.",
+    reportText: "Binada rampa bulunmadığından Yönetmeliğe göre bu konuda bir değerlendirme yapılmaz."
   );
 
   static final varlikOptionB = ChoiceResult(
-    label: "26-1-B (Varlık)",
+    label: "26-1-B",
     uiTitle: "Evet, rampa var.",
     uiSubtitle: "Binada kaçış yolunda rampa bulunuyor.",
-    reportText: "(Analiz devam eder)"
+    reportText: "Binada kaçış rampası tespit edilmiştir. Eğim ve sahanlık kriterleri analiz edilmelidir."
+  );
+
+  static final varlikOptionC = ChoiceResult(
+    label: "26-1-C",
+    uiTitle: "Bilmiyorum",
+    uiSubtitle: "Rampa varlığı veya konumu belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Binada kaçış rampası olup olmadığı veya konumu tespit edilememiştir."
   );
 
   static final egimOptionA = ChoiceResult(
-    label: "26-2-A (Eğim)",
+    label: "26-2-A",
     uiTitle: "Eğim az (%10'dan az) ve zemin kaymaz.",
-    uiSubtitle: "Rahat yürünüyor, zeminde kaymaz bant veya kaymaz malzeme kullanılmıştır.",
+    uiSubtitle: "Rahat yürünüyor, zeminde kaymaz bant veya malzeme var.",
     reportText: "✅ OLUMLU: Rampa eğimi ve zemin kaplaması kaçış güvenliğine uygundur."
   );
 
   static final egimOptionB = ChoiceResult(
-    label: "26-2-B (Eğim)",
+    label: "26-2-B",
     uiTitle: "Eğim fazla dik (%10'dan fazla) veya zemin kaygan.",
     uiSubtitle: "Yürürken insanı zorluyor, kayma tehlikesi var.",
-    reportText: "☢️ RİSK: Kaçış rampalarının eğimi %10'dan fazla olamaz. Dik ve kaygan rampalar panik anında düşmelere sebep olur. Zemin mutlaka kaymaz malzeme ile kaplanmalıdır."
+    reportText: "☢️ RİSK: Kaçış rampalarının eğimi %10'dan fazla olamaz. Dik ve kaygan rampalar panik anında düşmelere sebep olur."
+  );
+
+  static final egimOptionC = ChoiceResult(
+    label: "26-2-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Eğim ölçümü veya zemin analizi yapılamadı.",
+    reportText: "❓ BİLİNMİYOR: Rampa eğimi ve zemin kaymazlık durumu bilinmiyor. %10 üzerindeki eğimler tahliyeyi tehlikeye atar."
   );
 
   static final sahanlikOptionA = ChoiceResult(
-    label: "26-3-A (Sahanlık)",
-    uiTitle: "Evet, kapı önleri ve dönüşler düz.",
+    label: "26-3-A",
+    uiTitle: "Evet, sahanlık var, kapı önleri ve dönüşler düz.",
     uiSubtitle: "Rampa başlangıç ve bitişinde düz alanlar var.",
     reportText: "✅ OLUMLU: Rampa sahanlıkları ve kapı önü düzlükleri mevcuttur."
   );
 
   static final sahanlikOptionB = ChoiceResult(
-    label: "26-3-B (Sahanlık)",
-    uiTitle: "Hayır, hemen eğim başlıyor.",
+    label: "26-3-B",
+    uiTitle: "Hayır, rampadan önce veya sonra eğim var.",
     uiSubtitle: "Kapıyı açınca direkt eğimli yüzeye basılıyor.",
-    reportText: "⚠️ UYARI: Rampa giriş ve çıkışlarında, kapı önlerinde mutlaka düz sahanlık bulunmalıdır. Kapı açıldığında eğimli yüzeye basmak tehlikelidir."
+    reportText: "⚠️ UYARI: Rampa giriş ve çıkışlarında, kapı önlerinde mutlaka düz sahanlık bulunmalıdır."
+  );
+
+  static final sahanlikOptionC = ChoiceResult(
+    label: "26-3-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Sahanlık varlığı tespit edilemedi.",
+    reportText: "❓ BİLİNMİYOR: Rampa sahanlıklarının varlığı ve kapı önü düzlükleri bilinmiyor."
   );
 
   static final otoparkOptionA = ChoiceResult(
-    label: "26-4-A (Otopark)",
+    label: "26-4-A",
     uiTitle: "Evet, eğimi uygun (%10 'un altı).",
     uiSubtitle: "Araç rampası yürüyerek çıkmaya müsait.",
-    reportText: "✅ OLUMLU: Otopark rampası, eğimi uygun olduğu için (tek bodrum katlı otoparklarda) 2. kaçış yolu olarak kabul edilebilir."
+    reportText: "✅ OLUMLU: Otopark rampası, eğimi uygun olduğu için 2. kaçış yolu olarak kabul edilebilir."
   );
 
   static final otoparkOptionB = ChoiceResult(
-    label: "26-4-B (Otopark)",
-    uiTitle: "Hayır, çok dik (%10'dan fazla) veya kaygan.",
-    uiSubtitle: "Rampayı sadece araçlar kullanabilir, yürümek zor.",
-    reportText: "⚠️ BİLGİ: Otopark rampası çok dik (%10'dan fazla) veya kaygan olduğu için kaçış yolu sayılamaz. Otoparkın başka bir yaya çıkışı olmalıdır."
+    label: "26-4-B",
+    uiTitle: "Hayır, çok dik (%10'dan fazla) veya zemin kaygan.",
+    uiSubtitle: "Rampayı sadece araçlar kullanabilir.",
+    reportText: "⚠️ BİLGİ: Otopark rampası çok dik (%10'dan fazla) olduğu için kaçış yolu sayılamaz."
+  );
+
+  static final otoparkOptionC = ChoiceResult(
+    label: "26-4-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Otopark rampası analiz edilemedi.",
+    reportText: "❓ BİLİNMİYOR: Otopark rampasının kaçış yolu olarak kullanılabilirliği belirsizdir."
   );
 }
 class Bolum27Content {
+  // 1. BOYUT VE EŞİK
   static final boyutOptionA = ChoiceResult(
-    label: "27-1-A (Boyut)",
+    label: "27-1-A",
     uiTitle: "80 cm'den geniş ve eşiksiz (düz ayak).",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU: Kaçış kapısı genişliği ve zemin düzgünlüğü (eşiksiz olması) uygundur."
+    uiSubtitle: "Geçiş rahat, takılma riski yok.",
+    reportText: "✅ OLUMLU: Kaçış kapısı genişliği (min. 80cm) ve zemin düzgünlüğü uygundur."
   );
 
   static final boyutOptionB = ChoiceResult(
-    label: "27-1-B (Boyut)",
-    uiTitle: "80 cm'den dar veya eşik/kasis/çıkıntı var.",
-    uiSubtitle: "",
+    label: "27-1-B",
+    uiTitle: "80 cm'den dar veya yerde eşik/kasis var.",
+    uiSubtitle: "Geçiş zor veya takılma riski var.",
     reportText: "☢️ RİSK: Kaçış kapılarında temiz geçiş genişliği en az 80 cm olmalıdır. Ayrıca takılıp düşmeye sebep olacak 'Eşik' bulunması kesinlikle yasaktır."
   );
 
   static final boyutOptionC = ChoiceResult(
-    label: "27-1-C (Boyut)",
+    label: "27-1-C",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Kapı ölçüleri ve eşik durumu bilinmiyor. Kaçış kapılarında temiz geçiş genişliği en az 80 cm olmalıdır. Ayrıca takılıp düşmeye sebep olacak 'Eşik' bulunması kesinlikle yasaktır. Panik anında dar kapılar yığılmaya, eşikler ise düşmelere sebep olur."
+    uiSubtitle: "Ölçüm yapılamadı.",
+    reportText: "❓ BİLİNMİYOR: Kapı ölçüleri ve eşik durumu bilinmiyor. Dar kapılar ve eşikler panik anında yığılmalara neden olabilir."
   );
 
+  // 2. YÖN (50 Kişi kuralı burada işletilecek)
   static final yonOptionA = ChoiceResult(
-    label: "27-2-A (Yön)",
+    label: "27-2-A",
     uiTitle: "Dışarıya (Kaçış yönüne) açılıyor.",
     uiSubtitle: "Kapıyı itince açılıyor.",
     reportText: "✅ OLUMLU: Kapı açılış yönü (kaçış yönü) doğrudur."
   );
 
   static final yonOptionB = ChoiceResult(
-    label: "27-2-B (Yön)",
+    label: "27-2-B",
     uiTitle: "İçeriye (Koridora) açılıyor.",
     uiSubtitle: "Kapıyı açmak için kendinize çekmeniz gerekiyor.",
-    reportText: "⚠️ UYARI: Kullanıcı yükü 50 kişiyi geçen katlarda kapılar mutlaka kaçış yönüne (dışarıya) doğru açılmalıdır. İçeri açılan kapılar, arkadan gelen kalabalığın baskısıyla açılamaz hale gelebilir."
+    reportText: "⚠️ UYARI: Kullanıcı yükü 50 kişiyi geçen mahallerde kapılar mutlaka kaçış yönüne (dışarıya) doğru açılmalıdır."
   );
 
   static final yonOptionC = ChoiceResult(
-    label: "27-2-C (Yön)",
+    label: "27-2-C",
     uiTitle: "Döner kapı, turnike veya sürgülü.",
-    uiSubtitle: "Otomatik veya döner mekanizmalı kapı.",
-    reportText: "☢️ KRİTİK RİSK: Döner kapı ve sürgülü kapı kaçış yolunda kullanılmaz, alternatif kaçış imkanı gerekir. Turnike ise yangın anında boşa düşerek kaçışı serbest hale getiriyorsa kullanılabilir. Yangın anında böyle bir açılma senaryosu oluşturulmadıysa turnike de kullanılamaz."
+    uiSubtitle: "Otomatik veya döner mekanizma.",
+    reportText: "☢️ KRİTİK RİSK: Kaçış yolunda döner kapı veya sürgülü kapı kullanılamaz. Turnikeler yangın anında serbest kalmıyorsa büyük risk oluşturur."
   );
 
   static final yonOptionD = ChoiceResult(
-    label: "27-2-D (Yön)",
+    label: "27-2-D",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "Açılış yönünü hatırlamıyorum.",
-    reportText: "❓ BİLİNMİYOR: Kapı açılma yönü bilinmiyor. Tüm kapılarda güvenli tahliye için kapının itince açılması önerilir. Bir kattaki kullanıcı yükü 50 kişiyi aşıyorsa itince açılır tipte olması yasal zorunluluktur."
+    uiSubtitle: "Yön tespiti yapılamadı.",
+    reportText: "❓ BİLİNMİYOR: Kapı açılma yönü bilinmiyor. 50 kişiyi aşan alanlarda dışarı açılması zorunludur."
   );
 
+  // 3. KİLİT MEKANİZMASI (100 Kişi kuralı burada işletilecek)
   static final kilitOptionA = ChoiceResult(
-    label: "27-3-A (Kilit)",
-    uiTitle: "Panik Bar var (İtince açılıyor).",
-    uiSubtitle: "Kapı üzerinde yatay bar mekanizması var.",
-    reportText: "✅ OLUMLU: Kapıda panik bar mekanizması mevcuttur."
+    label: "27-3-A",
+    uiTitle: "Panik Bar var (Vücutla itince açılıyor).",
+    uiSubtitle: "Yatay bar mekanizması mevcut.",
+    reportText: "✅ OLUMLU: Kapıda panik bar mekanizması mevcuttur ve kullanıma uygundur."
   );
 
   static final kilitOptionB = ChoiceResult(
-    label: "27-3-B (Kilit)",
+    label: "27-3-B",
     uiTitle: "Normal kapı kolu var.",
-    uiSubtitle: "Standart çevirmeli kol.",
-    reportText: "(Bir katta kullanıcı yükü 100'ü aşıyorsa) ⚠️ UYARI: Binanızın yoğunluğu nedeniyle kapı kolu yerine 'Panik Bar' kullanılması ZORUNLUDUR.<br>(Az Yoğun İse) ✅ OLUMLU: 100 kişinin altındaki yoğunlukta kapı kolu kabul edilebilir."
+    uiSubtitle: "Çevirmeli standart kol.",
+    reportText: "⚠️ BİLGİ: Kullanıcı yükü 100 kişiyi aşmayan yerlerde kapı kolu kabul edilebilir. 100 kişiyi aşan yerlerde Panik Bar zorunludur."
   );
 
   static final kilitOptionC = ChoiceResult(
-    label: "27-3-C (Kilit)",
+    label: "27-3-C",
     uiTitle: "Kilitli / Anahtar gerekiyor.",
     uiSubtitle: "Kapı kilitli tutuluyor.",
-    reportText: "☢️ KRİTİK RİSK: Kaçış yolundaki (özellikle merdivene ulaşan, binadan çıkış sağlayan kapılar) ASLA kilitlenemez. Daire kapıları ve teknik hacim kapıları dışında ortak hollerdeki kaçış kapıları kesinlikle kilitli tutulamaz."
+    reportText: "☢️ KRİTİK RİSK: Kaçış yolu kapıları ASLA kilitlenemez. Her an tek hamlede açılabilir olmalıdır."
   );
 
   static final kilitOptionD = ChoiceResult(
-    label: "27-3-D (Kilit)",
+    label: "27-3-D",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "Kilit durumunu bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Kilit mekanizması bilinmiyor. Çıkış kapılarının kontrol edilmeleri gerekir. Kaçış yolundaki (özellikle merdivene ulaşan, binadan çıkış sağlayan kapılar) ASLA kilitlenemez. Daire kapıları ve teknik hacim kapıları dışında ortak hollerdeki çıkış kapıları kesinlikle kilitli tutulamaz."
+    uiSubtitle: "Kilit mekanizması belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Kilit mekanizması kontrol edilmelidir. Kilitli kapılar can kaybına neden olur."
   );
 
+  // 4. DAYANIM (Sadece Yangın Merdiveni Varsa Sorulacak)
   static final dayanimOptionA = ChoiceResult(
-    label: "27-4-A (Dayanım)",
-    uiTitle: "Çelik, yangına dayanıklı, duman sızdırmaz, bırakınca kendiliğinden kapanıyor.",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU: Kapı yangına dayanıklı ve kendiliğinden kapanma özelliğine sahiptir."
+    label: "27-4-A",
+    uiTitle: "Çelik, yangına dayanıklı, duman sızdırmaz.",
+    uiSubtitle: "Üzerinde sertifikası var, kendiliğinden kapanıyor.",
+    reportText: "✅ OLUMLU: Yangın kapısı standartlara (EI60/EI90) ve sızdırmazlık şartlarına uygundur."
   );
 
   static final dayanimOptionB = ChoiceResult(
-    label: "27-4-B (Dayanım)",
-    uiTitle: "Dayanıklı, duman sızdırmaz ancak kendiliğinden kapanmıyor.",
-    uiSubtitle: "",
-    reportText: "☢️ RİSK: Yangın kapıları her zaman kapalı durmalı veya kendiliğinden kapanmalıdır (Hidrolik kapı kapatıcı veya yaylı menteşe ile). Açık kalan kapı, dumanın merdivene dolmasına neden olur."
+    label: "27-4-B",
+    uiTitle: "Metal ama kendiliğinden kapanmıyor.",
+    uiSubtitle: "Hidrolik yok veya bozuk.",
+    reportText: "☢️ RİSK: Yangın kapıları her zaman otomatik kapanır durumda (hidrolikli) olmalıdır."
   );
 
   static final dayanimOptionC = ChoiceResult(
-    label: "27-4-C (Dayanım)",
-    uiTitle: "Ahşap, PVC veya Cam kapı (dayanıksız)",
-    uiSubtitle: "",
-    reportText: "☢️ KRİTİK RİSK: Kaçış merdiveni kapıları yangına en az 30-60-90 dakika dayanıklı ve duman sızdırmaz olmalıdır. Ahşap, PVC vb. kapılar yangına çoğunlukla dayanmaz."
+    label: "27-4-C",
+    uiTitle: "Ahşap, PVC veya Cam kapı (Dayanıksız).",
+    uiSubtitle: "Yangın kapısı değil.",
+    reportText: "☢️ KRİTİK RİSK: Yangın merdiveni kapıları yanıcı malzemeden (Ahşap/PVC) yapılamaz. En az 60 dk yangına dayanıklı olmalıdır."
   );
 
   static final dayanimOptionD = ChoiceResult(
-    label: "27-4-D (Dayanım)",
-    uiTitle: "Kapıların özelliğini bilmiyorum.",
-    uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Kapının yangın dayanımı ve sızdırmazlığı bilinmiyor. Uzman Görüşü alınması önerilir."
+    label: "27-4-D",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Kapı özelliği belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Yangın merdiveni kapısının dayanım sınıfı bilinmiyor."
   );
 }
 class Bolum28Content {

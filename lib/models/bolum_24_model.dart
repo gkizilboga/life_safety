@@ -6,17 +6,9 @@ class Bolum24Model {
   final ChoiceResult? pencere;
   final ChoiceResult? kapi;
 
-  Bolum24Model({
-    this.tip,
-    this.pencere,
-    this.kapi,
-  });
+  Bolum24Model({this.tip, this.pencere, this.kapi});
 
-  Bolum24Model copyWith({
-    ChoiceResult? tip,
-    ChoiceResult? pencere,
-    ChoiceResult? kapi,
-  }) {
+  Bolum24Model copyWith({ChoiceResult? tip, ChoiceResult? pencere, ChoiceResult? kapi}) {
     return Bolum24Model(
       tip: tip ?? this.tip,
       pencere: pencere ?? this.pencere,
@@ -33,28 +25,19 @@ class Bolum24Model {
   }
 
   factory Bolum24Model.fromMap(Map<String, dynamic> map) {
-    // Tip
-    ChoiceResult? t;
-    final l1 = map['tip_label'];
-    if (l1 == Bolum24Content.tipOptionA.label) t = Bolum24Content.tipOptionA;
-    if (l1 == Bolum24Content.tipOptionB.label) t = Bolum24Content.tipOptionB;
-
-    // Pencere
-    ChoiceResult? p;
-    final l2 = map['pencere_label'];
-    if (l2 == Bolum24Content.pencereOptionA.label) p = Bolum24Content.pencereOptionA;
-    if (l2 == Bolum24Content.pencereOptionB.label) p = Bolum24Content.pencereOptionB;
-
-    // Kapı
-    ChoiceResult? k;
-    final l3 = map['kapi_label'];
-    if (l3 == Bolum24Content.kapiOptionA.label) k = Bolum24Content.kapiOptionA;
-    if (l3 == Bolum24Content.kapiOptionB.label) k = Bolum24Content.kapiOptionB;
+    ChoiceResult? find(String? l) {
+      if (l == null) return null;
+      return [
+        Bolum24Content.tipOptionA, Bolum24Content.tipOptionB, Bolum24Content.tipOptionC,
+        Bolum24Content.pencereOptionA, Bolum24Content.pencereOptionB, Bolum24Content.pencereOptionC,
+        Bolum24Content.kapiOptionA, Bolum24Content.kapiOptionB, Bolum24Content.kapiOptionC,
+      ].firstWhere((e) => e.label == l, orElse: () => Bolum24Content.tipOptionC);
+    }
 
     return Bolum24Model(
-      tip: t,
-      pencere: p,
-      kapi: k,
+      tip: find(map['tip_label']),
+      pencere: find(map['pencere_label']),
+      kapi: find(map['kapi_label']),
     );
   }
 }

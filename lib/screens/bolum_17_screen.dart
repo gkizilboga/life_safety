@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_17_model.dart';
-import 'bolum_18_screen.dart'; // Sonraki ekran
+import 'bolum_18_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -17,15 +17,27 @@ class Bolum17Screen extends StatefulWidget {
 class _Bolum17ScreenState extends State<Bolum17Screen> {
   Bolum17Model _model = Bolum17Model();
   bool _askBitisik = false;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    // Bölüm 8'de "Bitişik Nizam" seçildiyse ilgili soruyu sor
     final b8 = BinaStore.instance.bolum8;
     if (b8?.secim?.label.contains("Bitişik") == true || b8?.secim?.label == "8-1-B") {
       _askBitisik = true;
     }
+  }
+
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
@@ -36,9 +48,10 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       
       if (type == 'isiklik') {
         _model = _model.copyWith(isiklik: choice);
-        // Işıklık yoksa malzeme seçimini sıfırla
-        if (choice.label == Bolum17Content.isiklikOptionA.label) {
+        if (choice.label != Bolum17Content.isiklikOptionB.label) {
           _model = _model.copyWith(isiklikMalzemesi: null);
+        } else {
+          _scrollToBottom();
         }
       }
     });
@@ -50,16 +63,12 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
     if (_askBitisik && _model.bitisikDuvar == null) return _showError("Lütfen çatı arası duvar sorusunu yanıtlayınız.");
     if (_model.isiklik == null) return _showError("Lütfen çatı ışıklık durumunu belirtiniz.");
     
-    // Işıklık varsa malzeme seçilmeli
     if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label && _model.isiklikMalzemesi == null) {
       return _showError("Lütfen ışıklık malzemesini seçiniz.");
     }
 
     BinaStore.instance.bolum17 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum18Screen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum18Screen()));
   }
 
   void _showError(String msg) {
@@ -73,16 +82,16 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
         children: [
           ModernHeader(
             title: "Bölüm-17: Çatı",
-            subtitle: "...",
+            subtitle: "Çatı katmanları ve ışıklık analizi",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // 1. Kaplama Malzemesi
-                  _buildSoru("Çatınızın en üst katmanında (yağmurun değdiği yüzeyde) hangi malzeme kullanıldığını biliyor musunuz?", 'kaplama', 
+                  _buildSoru("Çatınızın en üst katmanında hangi malzeme kullanılıyor?", 'kaplama', 
                     [
                       Bolum17Content.kaplamaOptionA, 
                       Bolum17Content.kaplamaOptionB, 
@@ -92,34 +101,30 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                       Bolum17Content.kaplamaOptionF
                     ], _model.kaplama),
 
-                  // 2. İskelet ve Yalıtım
-                  _buildSoru("Çatıyı taşıyan iskelet (makaslar/kirişler) ve altındaki ısı yalıtımı nasıl?", 'iskelet', 
+                  _buildSoru("Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?", 'iskelet', 
                     [Bolum17Content.iskeletOptionA, Bolum17Content.iskeletOptionB, Bolum17Content.iskeletOptionC], _model.iskelet),
 
-                  // 3. Bitişik Nizam Duvarı
                   if (_askBitisik)
-                    _buildSoru("Çatınız yan binanın çatısına bitişik mi? Arada yangını kesecek bir duvar var mı?", 'duvar', 
+                    _buildSoru("Çatılar arasında yangını kesecek bir duvar var mı?", 'duvar', 
                       [Bolum17Content.bitisikOptionA, Bolum17Content.bitisikOptionB, Bolum17Content.bitisikOptionC], _model.bitisikDuvar),
 
-                  // 4. Işıklık
-                  _buildSoru("Çatınızda camlı ışıklık, fener veya aydınlatma kubbesi var mı?", 'isiklik', 
-                    [Bolum17Content.isiklikOptionA, Bolum17Content.isiklikOptionB], _model.isiklik),
+                  _buildSoru("Çatınızda camlı ışıklık veya aydınlatma kubbesi var mı?", 'isiklik', 
+                    [Bolum17Content.isiklikOptionA, Bolum17Content.isiklikOptionB, Bolum17Content.isiklikOptionC], _model.isiklik),
 
-                  // Alt Soru: Işıklık Malzemesi
-                  if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label) 
-                    Container(
-                      margin: const EdgeInsets.only(left: 20, bottom: 20),
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
+                  if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label) ...[
+                    _buildInfoNote("Işıklık bulunduğu için malzeme türü seçilmelidir."),
+                    QuestionCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text("Işıklık malzemesi nedir?", style: TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 10),
                           Row(
                             children: [
                               Radio<String>(
                                 value: "cam", 
                                 groupValue: _model.isiklikMalzemesi, 
+                                activeColor: const Color(0xFF1A237E),
                                 onChanged: (v) => setState(() => _model = _model.copyWith(isiklikMalzemesi: v))
                               ),
                               const Text("Cam"),
@@ -127,35 +132,60 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                               Radio<String>(
                                 value: "plastik", 
                                 groupValue: _model.isiklikMalzemesi, 
+                                activeColor: const Color(0xFF1A237E),
                                 onChanged: (v) => setState(() => _model = _model.copyWith(isiklikMalzemesi: v))
                               ),
-                              const Text("Plastik / Mika"),
+                              const Expanded(child: Text("Plastik, mika vb.")),
                             ],
                           )
                         ],
                       ),
                     ),
+                  ],
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
+          _buildBottomNav(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _onNextPressed,
+            child: const Text("DEVAM ET"),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
+          const SizedBox(width: 12),
+          Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13))),
         ],
       ),
     );

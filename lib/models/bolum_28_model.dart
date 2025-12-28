@@ -6,12 +6,14 @@ class Bolum28Model {
   final ChoiceResult? dubleks;
   final ChoiceResult? alan;
   final ChoiceResult? cikis;
+  final ChoiceResult? muafiyet; // Otomatik atlama (4 kat altı muafiyeti) için eklendi
 
   Bolum28Model({
     this.mesafe,
     this.dubleks,
     this.alan,
     this.cikis,
+    this.muafiyet,
   });
 
   Bolum28Model copyWith({
@@ -19,12 +21,14 @@ class Bolum28Model {
     ChoiceResult? dubleks,
     ChoiceResult? alan,
     ChoiceResult? cikis,
+    ChoiceResult? muafiyet,
   }) {
     return Bolum28Model(
       mesafe: mesafe ?? this.mesafe,
       dubleks: dubleks ?? this.dubleks,
       alan: alan ?? this.alan,
       cikis: cikis ?? this.cikis,
+      muafiyet: muafiyet ?? this.muafiyet,
     );
   }
 
@@ -34,40 +38,36 @@ class Bolum28Model {
       'dubleks_label': dubleks?.label,
       'alan_label': alan?.label,
       'cikis_label': cikis?.label,
+      'muafiyet_label': muafiyet?.label,
     };
   }
 
   factory Bolum28Model.fromMap(Map<String, dynamic> map) {
-    // Mesafe
-    ChoiceResult? m;
-    final l1 = map['mesafe_label'];
-    if (l1 == Bolum28Content.mesafeOptionA.label) m = Bolum28Content.mesafeOptionA;
-    if (l1 == Bolum28Content.mesafeOptionB.label) m = Bolum28Content.mesafeOptionB;
-    if (l1 == Bolum28Content.mesafeOptionC.label) m = Bolum28Content.mesafeOptionC;
-
-    // Dubleks
-    ChoiceResult? d;
-    final l2 = map['dubleks_label'];
-    if (l2 == Bolum28Content.dubleksOptionA.label) d = Bolum28Content.dubleksOptionA;
-    if (l2 == Bolum28Content.dubleksOptionB.label) d = Bolum28Content.dubleksOptionB;
-
-    // Alan
-    ChoiceResult? a;
-    final l3 = map['alan_label'];
-    if (l3 == Bolum28Content.alanOption1.label) a = Bolum28Content.alanOption1;
-    if (l3 == Bolum28Content.alanOption2.label) a = Bolum28Content.alanOption2;
-
-    // Çıkış
-    ChoiceResult? c;
-    final l4 = map['cikis_label'];
-    if (l4 == Bolum28Content.cikisOptionA.label) c = Bolum28Content.cikisOptionA;
-    if (l4 == Bolum28Content.cikisOptionB.label) c = Bolum28Content.cikisOptionB;
+    // Yardımcı fonksiyon: Etiketten ChoiceResult nesnesini bulur
+    ChoiceResult? find(String? label) {
+      if (label == null) return null;
+      // Tüm seçenekleri tek bir listede toplayıp arıyoruz
+      final allOptions = [
+        Bolum28Content.mesafeOptionA, Bolum28Content.mesafeOptionB, Bolum28Content.mesafeOptionC,
+        Bolum28Content.dubleksOptionA, Bolum28Content.dubleksOptionB,
+        Bolum28Content.alanOption1, Bolum28Content.alanOption2,
+        Bolum28Content.cikisOptionA, Bolum28Content.cikisOptionB,
+        Bolum28Content.muafiyetOption,
+      ];
+      
+      try {
+        return allOptions.firstWhere((e) => e.label == label);
+      } catch (e) {
+        return null;
+      }
+    }
 
     return Bolum28Model(
-      mesafe: m,
-      dubleks: d,
-      alan: a,
-      cikis: c,
+      mesafe: find(map['mesafe_label']),
+      dubleks: find(map['dubleks_label']),
+      alan: find(map['alan_label']),
+      cikis: find(map['cikis_label']),
+      muafiyet: find(map['muafiyet_label']),
     );
   }
 }

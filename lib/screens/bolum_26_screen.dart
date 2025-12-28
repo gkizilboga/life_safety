@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_26_model.dart';
-import 'bolum_27_screen.dart'; // Sonraki ekran
+import 'bolum_27_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -16,27 +16,38 @@ class Bolum26Screen extends StatefulWidget {
 
 class _Bolum26ScreenState extends State<Bolum26Screen> {
   Bolum26Model _model = Bolum26Model();
-
-  // Otopark sorusunu sormak için Bölüm 6'da otopark var mı kontrolü
   bool _askOtopark = false;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    // Bölüm 6'da otopark varsa rampa sorusunu da soralım
     final b6 = BinaStore.instance.bolum6;
     if (b6?.hasOtopark == true) {
       _askOtopark = true;
     }
   }
 
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'varlik') {
         _model = _model.copyWith(varlik: choice);
-        // Rampa yoksa detayları temizle
-        if (choice.label == Bolum26Content.varlikOptionA.label) {
+        if (choice.label != Bolum26Content.varlikOptionB.label) {
           _model = _model.copyWith(egim: null, sahanlik: null);
+        } else {
+          _scrollToBottom();
         }
       } else if (type == 'egim') {
         _model = _model.copyWith(egim: choice);
@@ -50,20 +61,13 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
 
   void _onNextPressed() {
     if (_model.varlik == null) return _showError("Lütfen kaçış rampası sorusunu yanıtlayınız.");
-
-    // Rampa varsa detaylar zorunlu
     if (_model.varlik?.label == Bolum26Content.varlikOptionB.label) {
-      if (_model.egim == null) return _showError("Lütfen rampa eğimini seçiniz.");
-      if (_model.sahanlik == null) return _showError("Lütfen sahanlık durumunu seçiniz.");
+      if (_model.egim == null || _model.sahanlik == null) return _showError("Lütfen rampa detaylarını yanıtlayınız.");
     }
-
     if (_askOtopark && _model.otopark == null) return _showError("Lütfen otopark rampası sorusunu yanıtlayınız.");
 
     BinaStore.instance.bolum26 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum27Screen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum27Screen()));
   }
 
   void _showError(String msg) {
@@ -77,56 +81,73 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
         children: [
           ModernHeader(
             title: "Bölüm-26: Kaçış Rampaları",
-            subtitle: "...",
+            subtitle: "Rampa eğimi ve sahanlık analizi",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // 1. Varlık
-                  _buildSoru("Binadan çıkarken ve bina içerisinde kullanmak zorunda kaldığınız eğimli bir rampa var mı?", 'varlik', 
-                    [Bolum26Content.varlikOptionA, Bolum26Content.varlikOptionB], _model.varlik),
+                  _buildSoru("Binada kullanmak zorunda kaldığınız eğimli bir rampa var mı?", 'varlik', 
+                    [Bolum26Content.varlikOptionA, Bolum26Content.varlikOptionB, Bolum26Content.varlikOptionC], _model.varlik),
 
-                  // Diğer sorular SADECE RAMPA VARSA gösterilir
                   if (_model.varlik?.label == Bolum26Content.varlikOptionB.label) ...[
-                    const Divider(height: 30),
-                    
-                    // 2. Eğim
-                    _buildSoru("Bu rampanın eğimi (dikliği) ve zemin kaplaması nasıldır?", 'egim', 
-                      [Bolum26Content.egimOptionA, Bolum26Content.egimOptionB], _model.egim),
-
-                    // 3. Sahanlık
-                    _buildSoru("Rampanın başlangıcında ve bitişinde sahanlık var mı?", 'sahanlik', 
-                      [Bolum26Content.sahanlikOptionA, Bolum26Content.sahanlikOptionB], _model.sahanlik),
+                    _buildInfoNote("Rampa tespit edildiği için eğim ve sahanlık soruları açılmıştır."),
+                    _buildSoru("Bu rampanın eğimi ve zemin kaplaması nasıl?", 'egim', 
+                      [Bolum26Content.egimOptionA, Bolum26Content.egimOptionB, Bolum26Content.egimOptionC], _model.egim),
+                    _buildSoru("Rampanın başlangıcında ve bitişinde sahanlık (düzlük) var mı?", 'sahanlik', 
+                      [Bolum26Content.sahanlikOptionA, Bolum26Content.sahanlikOptionB, Bolum26Content.sahanlikOptionC], _model.sahanlik),
                   ],
 
-                  // 4. Otopark Rampası (Sadece otopark varsa sorulur)
                   if (_askOtopark)
-                    _buildSoru("Otoparkınızdan dışarı çıkan araç rampasını acil durumda kaçış yolu olarak kullanabilir misiniz?", 'otopark', 
-                      [Bolum26Content.otoparkOptionA, Bolum26Content.otoparkOptionB], _model.otopark),
+                    _buildSoru("Otopark araç rampasını acil durumda kaçış yolu olarak kullanabilir misiniz?", 'otopark', 
+                      [Bolum26Content.otoparkOptionA, Bolum26Content.otoparkOptionB, Bolum26Content.otoparkOptionC], _model.otopark),
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
+          _buildBottomNav(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _onNextPressed,
+            child: const Text("DEVAM ET"),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
+          const SizedBox(width: 12),
+          Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13))),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_25_model.dart';
-import 'bolum_26_screen.dart'; // Sonraki ekran
+import 'bolum_26_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -24,17 +24,18 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
     _checkAndRedirect();
   }
 
-  void _checkAndRedirect() {
-    // Bölüm 20'den döner merdiven sayısını kontrol et
+void _checkAndRedirect() {
     final b20 = BinaStore.instance.bolum20;
     
-    if ((b20?.donerMerdivenSayisi ?? 0) > 0) {
+    // Soru işaretlerini (?.toString) noktaya (.toString) çevirdik:
+    int donerCount = int.tryParse(b20?.donerMerdivenSayisi.toString() ?? "0") ?? 0;
+    int sahanliksizCount = int.tryParse(b20?.sahanliksizMerdivenSayisi.toString() ?? "0") ?? 0;
+
+    if (donerCount > 0 || sahanliksizCount > 0) {
       setState(() {
         _hasDonerMerdiven = true;
       });
     } else {
-      // Eğer döner merdiven yoksa, bu sayfayı "Görünmez" olarak geç.
-      // WidgetsBinding kullanarak ekran çizildikten hemen sonra diğer sayfaya atlıyoruz.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
           context,
@@ -53,9 +54,10 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
   }
 
   void _onNextPressed() {
-    if (_model.kapasite == null) return _showError("Lütfen kapasite sorusunu yanıtlayınız.");
-    if (_model.basamak == null) return _showError("Lütfen basamak genişliği sorusunu yanıtlayınız.");
-    if (_model.basKurtarma == null) return _showError("Lütfen baş kurtarma yüksekliği sorusunu yanıtlayınız.");
+    if (_model.kapasite == null || _model.basamak == null || _model.basKurtarma == null) {
+      _showError("Lütfen tüm soruları yanıtlayınız.");
+      return;
+    }
 
     BinaStore.instance.bolum25 = _model;
     Navigator.push(
@@ -70,8 +72,6 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
 
   @override
   Widget build(BuildContext context) {
-    // Eğer döner merdiven yoksa ekranın geri kalanını hiç çizmiyoruz,
-    // sadece kısa bir geçiş anı için boş bir Scaffold veya yükleniyor gösteriyoruz.
     if (!_hasDonerMerdiven) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -83,7 +83,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
         children: [
           ModernHeader(
             title: "Bölüm-25: Döner (Dairesel) Merdiven",
-            subtitle: "...",
+            subtitle: "Dairesel merdivenlerin tahliye uygunluğu",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -91,23 +91,23 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru("Mevcut döner (dairesel) merdiveninizin genişliği ve hizmet ettiği kişi sayısı nedir?", 'kapasite', 
-                    [Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB], _model.kapasite),
+                  _buildSoru("Mevcut döner (dairesel) merdiveninizin kol genişliği ne kadar?", 'kapasite', 
+                    [Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB, Bolum25Content.kapasiteOptionC], _model.kapasite),
 
-                  _buildSoru("Dairesel merdivenin basamaklarına bastığınızda, ayağınızın tam sığdığı kısım yeterli genişlikte mi?", 'basamak', 
-                    [Bolum25Content.basamakOptionA, Bolum25Content.basamakOptionB], _model.basamak),
+                  _buildSoru("Dairesel merdivenin basamak genişliği ne kadar?", 'basamak', 
+                    [Bolum25Content.basamakOptionA, Bolum25Content.basamakOptionB, Bolum25Content.basamakOptionC], _model.basamak),
 
-                  _buildSoru("Dairesel merdivenden inerken üstteki basamak veya tavan, başınıza ne kadar yakın?", 'basKurtarma', 
-                    [Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB], _model.basKurtarma),
+                  _buildSoru("Dairesel merdivenden inerken üstteki basamakla aranızdaki boşluk ne kadar?", 'basKurtarma', 
+                    [Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB, Bolum25Content.basKurtarmaOptionC], _model.basKurtarma),
                 ],
               ),
             ),
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
             ),
             child: SafeArea(
               top: false,

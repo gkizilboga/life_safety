@@ -64,7 +64,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     if (_toplamController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Lütfen Toplam İnşaat Alanını giriniz veya Otomatik Hesaplatınız."),
+          content: Text("Lütfen Toplam İnşaat Alanını Giriniz veya Otomatik Hesaplatınız."),
           backgroundColor: Colors.red,
         ),
       );

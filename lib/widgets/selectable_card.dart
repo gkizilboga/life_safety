@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/models/choice_result.dart';
+import '../models/choice_result.dart';
 
 class SelectableCard extends StatelessWidget {
   final ChoiceResult choice;
@@ -15,56 +15,72 @@ class SelectableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return GestureDetector(
+    return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.only(bottom: 8), // 12'den 8'e düşürdük
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // 18'den 12'ye düşürdük
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          // ... (Renk ve border kodları aynı)
+          // Seçili olduğunda arka plan rengi belirginleşir
+          color: isSelected ? const Color(0xFFE8EAF6) : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            // Seçili olduğunda çerçeve kalınlaşır ve lacivert olur
+            color: isSelected ? const Color(0xFF1A237E) : Colors.grey.shade300,
+            width: isSelected ? 2.5 : 1.0,
+          ),
         ),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 22, // 26'dan 22'ye düşürdük
-                  height: 22,
-                  // ... (Check ikonu kodları aynı)
+            // Sol taraftaki yuvarlak işaretleyici (Check)
+            Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isSelected ? const Color(0xFF1A237E) : Colors.transparent,
+                border: Border.all(
+                  color: isSelected ? const Color(0xFF1A237E) : Colors.grey.shade500,
+                  width: 2,
                 ),
-                const SizedBox(width: 12), // 16'dan 12'ye düşürdük
-                Expanded(
-                  child: Text(
-                    choice.uiTitle,
+              ),
+              child: isSelected 
+                  ? const Icon(Icons.check, size: 16, color: Colors.white) 
+                  : null,
+            ),
+            const SizedBox(width: 12),
+            // Metin Alanı
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    choice.uiTitle, // app_content'ten gelen başlık
                     style: TextStyle(
-                      fontSize: 15, // 17'den 15'e düşürdük (Daha kurumsal)
-                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                       color: isSelected ? const Color(0xFF1A237E) : Colors.black87,
                     ),
                   ),
-                ),
-              ],
-            ),
-            if (choice.uiSubtitle.isNotEmpty) ...[
-              const SizedBox(height: 4), // 8'den 4'e düşürdük
-              Padding(
-                padding: const EdgeInsets.only(left: 34), // İkon küçüldüğü için hizaladık
-                child: Text(
-                  choice.uiSubtitle,
-                  style: TextStyle(
-                    fontSize: 13, // 14'ten 13'e düşürdük
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[700],
-                    height: 1.2,
-                  ),
-                ),
+                  if (choice.uiSubtitle.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      choice.uiSubtitle, // app_content'ten gelen alt başlık
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey.shade700,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                ],
               ),
-            ],
+            ),
           ],
         ),
       ),
     );
-  } 
-} 
+  }
+}

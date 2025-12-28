@@ -100,7 +100,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
                       ], _model.konum),
 
                     // 3. YGH Boyutu
-                    _buildSoru("İtfaiye asansörünün açıldığı YGH'nin taban alanı yaklaşık kaç metrekaredir?", 'boyut', 
+                    _buildSoru("İtfaiye asansörünün açıldığı yangın güvenlik holünün taban alanı yaklaşık kaç metrekaredir?", 'boyut', 
                       [
                         Bolum22Content.boyutOptionA, 
                         Bolum22Content.boyutOptionB,
@@ -109,7 +109,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
                       ], _model.boyut),
 
                     // 4. Kabin Özelliği
-                    _buildSoru("Kabin genişliği (en az 1.8 m²) ve hızı yeterli mi?", 'kabin', 
+                    _buildSoru("Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?", 'kabin', 
                       [
                         Bolum22Content.kabinOptionA, 
                         Bolum22Content.kabinOptionB,
@@ -117,7 +117,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
                       ], _model.kabin),
 
                     // 5. Enerji / Jeneratör
-                    _buildSoru("Bu asansör, elektrik kesildiğinde en az 60 dk çalışabilen bir jeneratöre bağlı mı?", 'enerji', 
+                    _buildSoru("Bu asansör, elektrik kesildiğinde en az 60 dakika çalışabilen bir jeneratöre bağlı mı?", 'enerji', 
                       [
                         Bolum22Content.enerjiOptionA, 
                         Bolum22Content.enerjiOptionB,
@@ -125,7 +125,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
                       ], _model.enerji),
 
                     // 6. Basınçlandırma
-                    _buildSoru("İtfaiye asansörünün kuyusu basınçlandırılmış mı? (İçeriden dışarıya hava üflüyor mu?)", 'basinc', 
+                    _buildSoru("İtfaiye asansörünün kuyusu basınçlandırılmış mı? (Asansör kovasında duman birikmemesi için dışarıdan hava üfleyen sistem)", 'basinc', 
                       [
                         Bolum22Content.basincOptionA, 
                         Bolum22Content.basincOptionB,
