@@ -16,23 +16,36 @@ class Bolum34Screen extends StatefulWidget {
 
 class _Bolum34ScreenState extends State<Bolum34Screen> {
   Bolum34Model _model = Bolum34Model();
-  bool _hasTicari = false;
+  bool _isEligible = false;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _checkTicariAndRedirect();
+    _checkEligibilityAndRedirect();
   }
 
-  void _checkTicariAndRedirect() {
+  void _checkEligibilityAndRedirect() {
     final b6 = BinaStore.instance.bolum6;
-    
-    if (b6?.hasTicari == true) {
+    final b10 = BinaStore.instance.bolum10;
+
+    // Bölüm 6'da işaretlenmiş mi?
+    bool hasTicariInB6 = b6?.hasTicari ?? false;
+
+    // Bölüm 10'da herhangi bir katta ticari seçilmiş mi?
+    bool hasTicariInB10 = false;
+    if (b10 != null) {
+      hasTicariInB10 = (b10.zemin?.label.contains("Ticari") ?? false) ||
+                       (b10.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false)) ||
+                       (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
+    }
+
+    if (hasTicariInB6 || hasTicariInB10) {
       setState(() {
-        _hasTicari = true;
+        _isEligible = true;
       });
     } else {
-      // Ticari alan yoksa, ekran çizilir çizilmez bir sonraki bölüme yönlendir
+      // Ticari alan yoksa doğrudan Bölüm 35'e atla
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
           context,
@@ -42,15 +55,32 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     }
   }
 
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'zemin') _model = _model.copyWith(zemin: choice);
-      if (type == 'bodrum') _model = _model.copyWith(bodrum: choice);
+      if (type == 'zemin') {
+        _model = _model.copyWith(zemin: choice);
+        _scrollToBottom(); // Zemin seçilince bodrum sorusuna kaydır
+      }
+      if (type == 'bodrum') {
+        _model = _model.copyWith(bodrum: choice);
+      }
     });
   }
 
   void _onNextPressed() {
-    if (_hasTicari) {
+    if (_isEligible) {
       if (_model.zemin == null) return _showError("Lütfen zemin kat ticari çıkış durumunu seçiniz.");
       if (_model.bodrum == null) return _showError("Lütfen bodrum kat ticari çıkış durumunu seçiniz.");
     }
@@ -70,11 +100,8 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
 
   @override
   Widget build(BuildContext context) {
-    // Ticari alan yoksa boş bir yükleniyor ekranı göster (yönlendirme bitene kadar)
-    if (!_hasTicari) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+    if (!_isEligible) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
@@ -82,49 +109,81 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
         children: [
           ModernHeader(
             title: "Bölüm-34: Ticari Alanlar",
-            subtitle: "...",
+            subtitle: "Dükkan ve mağazaların tahliye bağımsızlığı",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru("Zemin kattaki dükkan, mağaza veya restoranların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?", 'zemin', 
-                    [
-                      Bolum34Content.zeminOptionA, 
-                      Bolum34Content.zeminOptionB, 
-                      Bolum34Content.zeminOptionC
-                    ], _model.zemin),
+                  _buildSoru(
+                    "1. Zemin kattaki dükkan, mağaza veya restoranların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?", 
+                    'zemin', 
+                    [Bolum34Content.zeminOptionA, Bolum34Content.zeminOptionB, Bolum34Content.zeminOptionC], 
+                    _model.zemin
+                  ),
 
-                  _buildSoru("Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait bir merdiveni veya rampası var mı?", 'bodrum', 
-                    [
-                      Bolum34Content.bodrumOptionA, 
-                      Bolum34Content.bodrumOptionB, 
-                      Bolum34Content.bodrumOptionC
-                    ], _model.bodrum),
+                  if (_model.zemin != null) ...[
+                    _buildInfoNote("Zemin kat tespiti yapıldı. Lütfen bodrum kat ticari alan çıkışlarını da kontrol ediniz."),
+                    _buildSoru(
+                      "2. Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait bir merdiveni veya rampası var mı?", 
+                      'bodrum', 
+                      [Bolum34Content.bodrumOptionA, Bolum34Content.bodrumOptionB, Bolum34Content.bodrumOptionC], 
+                      _model.bodrum
+                    ),
+                  ],
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
+          _buildBottomNav(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _onNextPressed,
+            child: const Text("DEVAM ET"),
+          ),
+        ),
       ),
     );
   }

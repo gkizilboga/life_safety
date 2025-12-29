@@ -180,7 +180,18 @@ class BinaStore {
       debugPrint("Veriler Diskten Yüklendi");
     }
   }
-
+  void clearAfter(int sectionNumber) {
+    if (sectionNumber <= 1) bolum1 = null; // Örnek: 1 değişirse hepsi gider
+    if (sectionNumber <= 3) {
+      bolum4 = null; bolum5 = null; bolum14 = null; bolum33 = null;
+    }
+    if (sectionNumber <= 6) {
+      bolum10 = null; bolum13 = null; bolum34 = null;
+    }
+    // İhtiyaca göre genişletilebilir...
+    saveToDisk();
+    debugPrint("Bölüm $sectionNumber sonrası bağımlı veriler temizlendi.");
+  }
   void reset() {
     bolum1 = null; bolum2 = null; bolum3 = null; bolum4 = null;
     bolum5 = null; bolum6 = null; bolum7 = null; bolum8 = null;

@@ -55,6 +55,7 @@ class _Bolum4ScreenState extends State<Bolum4Screen> {
     );
 
     BinaStore.instance.bolum4 = model;
+    BinaStore.instance.saveToDisk();
 
     // 4. Hiç beklemeden Bölüm 5'e geç
     // pushReplacement kullanıyoruz ki kullanıcı "Geri" tuşuna basınca bu boş ekrana dönmesin.

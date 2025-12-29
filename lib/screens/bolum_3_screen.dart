@@ -107,6 +107,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     if (!_isConfirmed) return _showError("Lütfen bilgilerin doğruluğunu onay kutucuğunu işaretleyerek teyit ediniz.");
 
     BinaStore.instance.bolum3 = _model;
+    BinaStore.instance.bolum4 = null;
     
     // Bölüm 4'e geç (Bölüm 4 artık sadece bu sonuçları gösterecek)
     Navigator.push(

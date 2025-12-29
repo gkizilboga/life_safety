@@ -17,6 +17,7 @@ class Bolum30Screen extends StatefulWidget {
 class _Bolum30ScreenState extends State<Bolum30Screen> {
   Bolum30Model _model = Bolum30Model();
   final TextEditingController _kapasiteCtrl = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   bool _hasKazan = false;
 
   @override
@@ -27,25 +28,31 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
 
   void _checkKazanAndRedirect() {
     final b7 = BinaStore.instance.bolum7;
-    
     if (b7?.hasKazan == true) {
-      setState(() {
-        _hasKazan = true;
-      });
+      setState(() => _hasKazan = true);
     } else {
-      // Kazan dairesi yoksa, ekran çizilir çizilmez bir sonraki bölüme yönlendir
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Bolum31Screen()),
-        );
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Bolum31Screen()));
       });
     }
+  }
+
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
   }
 
   @override
   void dispose() {
     _kapasiteCtrl.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -58,172 +65,156 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       
       if (type == 'yakit') {
         _model = _model.copyWith(yakit: choice);
-        // Sıvı yakıt (Option B) dışında bir şey seçilirse drenajı sıfırla
-        if (choice.label != Bolum30Content.yakitOptionB.label) {
+        if (choice.label == Bolum30Content.yakitOptionB.label) {
+          _scrollToBottom();
+        } else {
           _model = _model.copyWith(drenaj: null);
         }
       }
-      
       if (type == 'drenaj') _model = _model.copyWith(drenaj: choice);
     });
   }
 
   void _onNextPressed() {
     if (_hasKazan) {
-      // Validasyonlar
-      if (_model.konum == null) return _showError("Lütfen kazan dairesi konumunu seçiniz.");
+      if (_model.konum == null) return _showError("Lütfen kazan dairesinin konumunu seçiniz.");
       
-      // Kapasiteyi sayısal olarak modele işle
       double? kap = double.tryParse(_kapasiteCtrl.text.replaceAll(',', '.'));
       _model = _model.copyWith(kapasite: kap);
+
+      // 350 kW Kontrolü
+      if (!_model.kapasiteBilinmiyor && kap != null && kap > 350 && _model.kapi?.label == Bolum30Content.kapiOptionA.label) {
+        return _showError("350 kW üzerindeki kazan dairelerinde en az 2 adet çıkış kapısı zorunludur.");
+      }
 
       if (_model.kapi == null) return _showError("Lütfen çıkış kapısı sayısını seçiniz.");
       if (_model.hava == null) return _showError("Lütfen havalandırma durumunu seçiniz.");
       if (_model.yakit == null) return _showError("Lütfen yakıt türünü seçiniz.");
-
-      // Sadece sıvı yakıt seçiliyse drenaj zorunlu
       if (_model.yakit?.label == Bolum30Content.yakitOptionB.label && _model.drenaj == null) {
         return _showError("Lütfen drenaj kanalı durumunu seçiniz.");
       }
-
       if (_model.tup == null) return _showError("Lütfen yangın söndürme ekipmanı durumunu seçiniz.");
     }
 
     BinaStore.instance.bolum30 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum31Screen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum31Screen()));
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800));
   }
 
   @override
   Widget build(BuildContext context) {
-    // Kazan dairesi yoksa boş bir yükleniyor ekranı göster (yönlendirme bitene kadar)
-    if (!_hasKazan) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
+    if (!_hasKazan) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     return Scaffold(
       body: Column(
         children: [
           ModernHeader(
             title: "Bölüm-30: Kazan Dairesi / Isı Merkezi",
-            subtitle: "...",
+            subtitle: "Isıl kapasite ve havalandırma analizi",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // 1. KONUM
                   _buildSoru("Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?", 'konum', 
-                    [
-                      Bolum30Content.konumOptionA, 
-                      Bolum30Content.konumOptionB, 
-                      Bolum30Content.konumOptionC,
-                      Bolum30Content.konumOptionD,
-                    ], _model.konum),
+                    [Bolum30Content.konumOptionA, Bolum30Content.konumOptionB, Bolum30Content.konumOptionC, Bolum30Content.konumOptionD], _model.konum),
 
-                  // 2. KAPASİTE (SAYISAL GİRİŞ)
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Kazan kapasitesi (kW/kcal) biliniyorsa giriniz (Opsiyonel):", 
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Kazan kapasitesi (kW/kcal) biliniyorsa giriniz (Opsiyonel):", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _kapasiteCtrl,
+                          enabled: !_model.kapasiteBilinmiyor,
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          decoration: const InputDecoration(
-                            hintText: "Örn: 350",
-                            suffixText: "kW",
-                            border: OutlineInputBorder(),
-                          ),
+                          decoration: const InputDecoration(hintText: "Örn: 350", suffixText: "kW", border: OutlineInputBorder()),
+                        ),
+                        const SizedBox(height: 10),
+                        SelectableCard(
+                          choice: Bolum30Content.kapasiteBilinmiyorOption,
+                          isSelected: _model.kapasiteBilinmiyor,
+                          onTap: () {
+                            setState(() {
+                              _model = _model.copyWith(kapasiteBilinmiyor: !_model.kapasiteBilinmiyor);
+                              if (_model.kapasiteBilinmiyor) _kapasiteCtrl.clear();
+                            });
+                          },
                         ),
                       ],
                     ),
                   ),
 
-                  // 3. KAPI SAYISI
                   _buildSoru("Kazan dairesinin kaç adet çıkış kapısı var?", 'kapi', 
-                    [
-                      Bolum30Content.kapiOptionA, 
-                      Bolum30Content.kapiOptionB,
-                      Bolum30Content.kapiOptionC,
-                    ], _model.kapi),
+                    [Bolum30Content.kapiOptionA, Bolum30Content.kapiOptionB, Bolum30Content.kapiOptionC], _model.kapi),
 
-                  // 4. HAVALANDIRMA
                   _buildSoru("İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?", 'hava', 
-                    [
-                      Bolum30Content.havaOptionA, 
-                      Bolum30Content.havaOptionB,
-                      Bolum30Content.havaOptionC,
-                    ], _model.hava),
+                    [Bolum30Content.havaOptionA, Bolum30Content.havaOptionB, Bolum30Content.havaOptionC], _model.hava),
 
-                  // 5. YAKIT TİPİ
                   _buildSoru("Kazanınız sıvı yakıtlı (Mazot/Fuel-oil) mı?", 'yakit', 
-                    [
-                      Bolum30Content.yakitOptionA, 
-                      Bolum30Content.yakitOptionB,
-                      Bolum30Content.yakitOptionC,
-                    ], _model.yakit),
+                    [Bolum30Content.yakitOptionA, Bolum30Content.yakitOptionB, Bolum30Content.yakitOptionC], _model.yakit),
 
-                  // 6. DRENAJ (SADECE SIVI YAKIT İSE)
                   if (_model.yakit?.label == Bolum30Content.yakitOptionB.label) ...[
-                    const Divider(height: 30),
+                    _buildInfoNote("Sıvı yakıtlı kazanlar için drenaj ve sızıntı kontrolü gereklidir."),
                     _buildSoru("Zeminde dökülen yakıtı toplayacak kanallar ve bir pis su çukuru var mı?", 'drenaj', 
-                      [
-                        Bolum30Content.drenajOptionA, 
-                        Bolum30Content.drenajOptionB,
-                        Bolum30Content.drenajOptionC,
-                      ], _model.drenaj),
+                      [Bolum30Content.drenajOptionA, Bolum30Content.drenajOptionB, Bolum30Content.drenajOptionC], _model.drenaj),
                   ],
 
-                  // 7. YANGIN TÜPÜ / SÖNDÜRME
                   _buildSoru("Kazan dairesinde yangın söndürme tüpü ve yangın dolabı var mı?", 'tup', 
-                    [
-                      Bolum30Content.tupOptionA, 
-                      Bolum30Content.tupOptionB, 
-                      Bolum30Content.tupOptionC,
-                      Bolum30Content.tupOptionD,
-                    ], _model.tup),
+                    [Bolum30Content.tupOptionA, Bolum30Content.tupOptionB, Bolum30Content.tupOptionC, Bolum30Content.tupOptionD], _model.tup),
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
-          ),
+          _buildBottomNav(),
         ],
       ),
     );
   }
 
-  // Yardımcı Soru Oluşturucu
+  Widget _buildInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
+          const SizedBox(width: 12),
+          Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET")),
+        ),
+      ),
+    );
+  }
+
   Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
     return QuestionCard(
       child: Column(

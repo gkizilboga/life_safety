@@ -40,7 +40,12 @@ class Bolum27Model {
   factory Bolum27Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? l, List<ChoiceResult> options) {
       if (l == null) return null;
-      return options.firstWhere((e) => e.label == l, orElse: () => options.last);
+      try {
+        // Sadece eşleşen etiketi bul, bulamazsan null dön (rastgele şık seçme)
+        return options.firstWhere((e) => e.label == l);
+      } catch (_) {
+        return null; 
+      }
     }
 
     return Bolum27Model(

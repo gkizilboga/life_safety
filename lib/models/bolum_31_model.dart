@@ -4,8 +4,8 @@ import '../utils/app_content.dart';
 class Bolum31Model {
   final ChoiceResult? yapi;
   final ChoiceResult? tip;
-  final ChoiceResult? cukur; // Yağlı tip ise
-  final ChoiceResult? sondurme; // Yağlı tip ise
+  final ChoiceResult? cukur;
+  final ChoiceResult? sondurme;
   final ChoiceResult? cevre;
 
   Bolum31Model({
@@ -43,44 +43,23 @@ class Bolum31Model {
   }
 
   factory Bolum31Model.fromMap(Map<String, dynamic> map) {
-    // Yapı
-    ChoiceResult? y;
-    final l1 = map['yapi_label'];
-    if (l1 == Bolum31Content.yapiOptionA.label) y = Bolum31Content.yapiOptionA;
-    if (l1 == Bolum31Content.yapiOptionB.label) y = Bolum31Content.yapiOptionB;
-    if (l1 == Bolum31Content.yapiOptionC.label) y = Bolum31Content.yapiOptionC;
-
-    // Tip
-    ChoiceResult? t;
-    final l2 = map['tip_label'];
-    if (l2 == Bolum31Content.tipOptionA.label) t = Bolum31Content.tipOptionA;
-    if (l2 == Bolum31Content.tipOptionB.label) t = Bolum31Content.tipOptionB;
-
-    // Çukur
-    ChoiceResult? c;
-    final l3 = map['cukur_label'];
-    if (l3 == Bolum31Content.cukurOptionA.label) c = Bolum31Content.cukurOptionA;
-    if (l3 == Bolum31Content.cukurOptionB.label) c = Bolum31Content.cukurOptionB;
-
-    // Söndürme
-    ChoiceResult? s;
-    final l4 = map['sondurme_label'];
-    if (l4 == Bolum31Content.sondurmeOptionA.label) s = Bolum31Content.sondurmeOptionA;
-    if (l4 == Bolum31Content.sondurmeOptionB.label) s = Bolum31Content.sondurmeOptionB;
-
-    // Çevre
-    ChoiceResult? ce;
-    final l5 = map['cevre_label'];
-    if (l5 == Bolum31Content.cevreOptionA.label) ce = Bolum31Content.cevreOptionA;
-    if (l5 == Bolum31Content.cevreOptionB.label) ce = Bolum31Content.cevreOptionB;
-    if (l5 == Bolum31Content.cevreOptionC.label) ce = Bolum31Content.cevreOptionC;
+    ChoiceResult? find(String? l) {
+      if (l == null) return null;
+      return [
+        Bolum31Content.yapiOptionA, Bolum31Content.yapiOptionB, Bolum31Content.yapiOptionC, Bolum31Content.yapiOptionD,
+        Bolum31Content.tipOptionA, Bolum31Content.tipOptionB, Bolum31Content.tipOptionC,
+        Bolum31Content.cukurOptionA, Bolum31Content.cukurOptionB, Bolum31Content.cukurOptionC,
+        Bolum31Content.sondurmeOptionA, Bolum31Content.sondurmeOptionB, Bolum31Content.sondurmeOptionC,
+        Bolum31Content.cevreOptionA, Bolum31Content.cevreOptionB, Bolum31Content.cevreOptionC, Bolum31Content.cevreOptionD,
+      ].firstWhere((e) => e.label == l, orElse: () => Bolum31Content.tipOptionC);
+    }
 
     return Bolum31Model(
-      yapi: y,
-      tip: t,
-      cukur: c,
-      sondurme: s,
-      cevre: ce,
+      yapi: find(map['yapi_label']),
+      tip: find(map['tip_label']),
+      cukur: find(map['cukur_label']),
+      sondurme: find(map['sondurme_label']),
+      cevre: find(map['cevre_label']),
     );
   }
 }

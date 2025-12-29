@@ -120,33 +120,39 @@ class Bolum4Content {
 class Bolum5Content {
   static final oturumAlani = ChoiceResult(
     label: "5-1 (Oturum)",
-    uiTitle: "Bina Oturum (Taban) Alanı",
-    uiSubtitle: "Binanın parsel zemininde kapladığı (taban) alan büyüklüğü.",
-    reportText: "(Sayısal veri olarak saklanır: \"Taban Alanı: X m²\")"
+    uiTitle: "Zemin Kat (Taban) Alanı",
+    uiSubtitle: "Binanın zemin katının brüt alanı.",
+    reportText: "Zemin Kat Alanı: "
   );
 
-  static final katBrut = ChoiceResult(
-    label: "5-2 (Kat Brüt)",
-    uiTitle: "Standart Kat Alanı",
-    uiSubtitle: "En büyük zemin üstü kata ait hol, merdiven, balkonlar dahil brüt alan.",
-    reportText: "(Sayısal veri olarak saklanır: \"Kat Alanı: Y m²\")"
+  static final normalKatAlani = ChoiceResult(
+    label: "5-2 (Normal)",
+    uiTitle: "Normal Kat Alanı",
+    uiSubtitle: "Zemin üstü standart bir katın brüt alanı.",
+    reportText: "Normal Kat Alanı: "
+  );
+
+  static final bodrumKatAlani = ChoiceResult(
+    label: "5-3 (Bodrum)",
+    uiTitle: "Bodrum Kat Alanı",
+    uiSubtitle: "Zemin altı standart bir katın brüt alanı.",
+    reportText: "Bodrum Kat Alanı: "
   );
 
   static final toplamInsaat = ChoiceResult(
-    label: "5-3 (Toplam)",
+    label: "5-4 (Toplam)",
     uiTitle: "Toplam İnşaat Alanı",
-    uiSubtitle: "Bodrumlar ve çatı dahil binadaki tüm katların toplam alanı.",
-    reportText: "(Sayısal veri olarak saklanır: \"Toplam İnşaat Alanı: Z m²\")"
+    uiSubtitle: "Tüm katların (Zemin+Normal+Bodrum) toplam brüt alanı.",
+    reportText: "Toplam İnşaat Alanı: "
   );
 
   static final otomatikHesap = ChoiceResult(
     label: "5-Otomatik",
     uiTitle: "OTOMATİK HESAPLA",
-    uiSubtitle: "Kat sayısı x Kat alanı formülüyle tahmini hesaplar.",
-    reportText: "ℹ️ BİLGİ: Toplam inşaat alanı, kullanıcı beyanına dayalı kat sayısı ve kat alanı verileri kullanılarak sistem tarafından otomatik hesaplanmıştır."
+    uiSubtitle: "Kat sayıları ve alan verileriyle toplamı hesaplar.",
+    reportText: "ℹ️ BİLGİ: Toplam inşaat alanı sistem tarafından otomatik hesaplanmıştır."
   );
 }
-
 class Bolum6Content {
   static final otoparkVar = ChoiceResult(
     label: "6-1-A (Otopark)",
@@ -1978,9 +1984,9 @@ class Bolum29Content {
   // 1. OTOPARK
   static final otoparkOptionA = ChoiceResult(
     label: "29-1-A",
-    uiTitle: "Hayır, sadece araçlar var, alan temiz.",
+    uiTitle: "Hayır, sadece taşıtlar var, alan temiz.",
     uiSubtitle: "Otopark alanı düzenli.",
-    reportText: "✅ OLUMLU GÖRÜNÜYOR: Otopark alanı temizdir, depolama yapılmamıştır."
+    reportText: "✅ OLUMLU GÖRÜNÜYOR: Otopark alanı temizdir, farklı risk grubuna ait depolama yapılmamıştır."
   );
   static final otoparkOptionB = ChoiceResult(
     label: "29-1-B",
@@ -2025,14 +2031,14 @@ class Bolum29Content {
   static final catiOptionB = ChoiceResult(
     label: "29-3-B",
     uiTitle: "Evet, depo gibi kullanılıyor.",
-    uiSubtitle: "Eski eşyalar, arşiv, hurda var.",
-    reportText: "🚨 RİSK: Çatı araları elektrik kontağından en çok yangın çıkan yerlerdir. Buradaki eşyalar yangını hızlandırır."
+    uiSubtitle: "Eski eşyalar, mobilya, temizlik ürünleri vb. farklı yanıcı maddeler vs. var.",
+    reportText: "🚨 RİSK: Çatı araları elektrik kontağından en çok yangın görülen yerlerdir. Buradaki fazla eşyalar yangına sebep olur veya mevcut yangına katkı sağlayarak hızlandırır."
   );
   static final catiOptionC = ChoiceResult(
     label: "29-3-C",
     uiTitle: "Bilmiyorum / Çatıya hiç çıkmadım.",
     uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Çatı arasının durumu bilinmiyor. Genellikle 'unutulan eşyaların' biriktiği yerdir. Elektrik tesisatından çıkabilecek bir kıvılcım, buradaki kuru ve tozlu eşyaları anında tutuşturur. Kontrol edilmesi hayati önem taşır."
+    reportText: "❓ BİLİNMİYOR: Çatı arasının durumu bilinmiyor. Genellikle fazla eşyaların biriktirildiği yerdir. Elektrik tesisatından çıkabilecek bir kıvılcım, buradaki kuru ve tozlu eşyaları anında tutuşturur. Kontrol edilmesi hayati önem taşır."
   );
 
   // 4. ASANSÖR MAKİNE DAİRESİ
@@ -2091,7 +2097,7 @@ class Bolum29Content {
   static final panoOptionC = ChoiceResult(
     label: "29-6-C",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
+    uiSubtitle: " ",
     reportText: "❓ BİLİNMİYOR: Elektrik odasının içi bilinmiyor. Pano odaları yangınların en sık başladığı yerlerdir. İçeride unutulan bir paspas veya kağıt parçası, küçük bir ark (kıvılcım) sonucu büyük bir yangını başlatabilir."
   );
 
@@ -2099,7 +2105,7 @@ class Bolum29Content {
   static final trafoOptionA = ChoiceResult(
     label: "29-7-A",
     uiTitle: "Evet, temiz ve havadar.",
-    uiSubtitle: "",
+    uiSubtitle: " ",
     reportText: "✅ OLUMLU GÖRÜNÜYOR: Trafo odası havalandırılıyor ve temiz tutuluyor."
   );
   static final trafoOptionB = ChoiceResult(
@@ -2151,7 +2157,7 @@ class Bolum29Content {
   static final copOptionC = ChoiceResult(
     label: "29-9-C",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
+    uiSubtitle: " ",
     reportText: "❓ BİLİNMİYOR: Çöp odasının hijyen durumu bilinmiyor. Biriken çöplerden sızan metan gazı, kapalı alanda patlama veya zehirlenme riski oluşturur. Havalandırma ve temizlik kontrol edilmelidir."
   );
 
@@ -2203,11 +2209,11 @@ class Bolum30Content {
   );
 
   // --- 2. KAPASİTE ---
-  static final kapasiteOption = ChoiceResult(
-    label: "30-2",
-    uiTitle: "(Sayısal veya Tahmini Giriş)",
-    uiSubtitle: "(Kullanıcı değer girer)",
-    reportText: "(Sistem \"Büyük Kazan\" olup olmadığına karar verir)"
+  static final kapasiteBilinmiyorOption = ChoiceResult(
+    label: "30-2-BILMIYORUM",
+    uiTitle: "Kazan dairesinin ısıl kapasitesini bilmiyorum.",
+    uiSubtitle: "Kapasite bilgisine ulaşılamadı.",
+    reportText: "⚠️ UYARI: Kazan dairesinin ısıl kapasitesi eğer 350kw 'ın üzerindeyse çift çıkış kapısı gereklidir."
   );
 
   // --- 3. KAPI SAYISI ---
@@ -2318,114 +2324,149 @@ class Bolum30Content {
 }
 class Bolum31Content {
   static final yapiOptionA = ChoiceResult(
-    label: "31-1-A (Yapı)",
+    label: "31-1-A",
     uiTitle: "Duvarları beton/tuğla, kapısı dışarıya açılıyor.",
     uiSubtitle: "Yangına dayanıklı duvar ve kapı mevcut.",
     reportText: "✅ OLUMLU: Trafo odası yangın kompartımanı olarak tasarlanmıştır. Duvarlar ve kapı yangına dayanıklıdır."
   );
 
   static final yapiOptionB = ChoiceResult(
-    label: "31-1-B (Yapı)",
+    label: "31-1-B",
     uiTitle: "Kapısı direkt apartman koridoruna açılıyor.",
     uiSubtitle: "Kapı açılınca bina içine duman dolabilir.",
     reportText: "☢️ KRİTİK RİSK: Trafo odasından çıkacak yoğun duman ve ısı, kaçış yollarını (merdivenleri) kullanılamaz hale getirir. Kapı asla direkt kaçış yoluna açılmamalıdır."
   );
 
   static final yapiOptionC = ChoiceResult(
-    label: "31-1-C (Yapı)",
+    label: "31-1-C",
     uiTitle: "Duvarları ve kapısı yangın dayanımsız.",
-    uiSubtitle: "Dayanıklı olmayan beyaz alçıpanel vs. ile dayanıklı olmayan metal, demir, pvc, ahşap kapı vs kullanılmıştır.",
+    uiSubtitle: "Dayanıklı olmayan malzeme (alçıpanel, ahşap kapı vb.) kullanılmıştır.",
     reportText: "☢️ RİSK: Trafo odası yangın bölmesi (kompartıman) olarak tasarlanmalıdır. Yağlı tip trafo odalarının duvarları 120dk, kapısı 90dk yangına dayanıklı olmalıdır."
   );
 
+  static final yapiOptionD = ChoiceResult(
+    label: "31-1-D",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Yapısal özellikler tespit edilemedi.",
+    reportText: "❓ BİLİNMİYOR: Trafo odasının yapısal özellikleri (duvar/kapı) tespit edilememiştir. Yangın güvenliği açısından bu alanın kompartıman özelliği Uzmman tarafından incelenmelidir."
+  );
+
   static final tipOptionA = ChoiceResult(
-    label: "31-2-A (Tip)",
+    label: "31-2-A",
     uiTitle: "Kuru Tip.",
     uiSubtitle: "Yağsız trafo.",
     reportText: "✅ OLUMLU: Kuru tip trafo kullanıldığı için yağ sızıntısı ve yangın riski düşüktür."
   );
 
   static final tipOptionB = ChoiceResult(
-    label: "31-2-B (Tip)",
+    label: "31-2-B",
     uiTitle: "Yağlı Tip.",
     uiSubtitle: "İçinde soğutma yağı var.",
     reportText: "(Alt soruya göre belirlenir)"
   );
 
+  static final tipOptionC = ChoiceResult(
+    label: "31-2-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Trafo tipi belirlenemedi.",
+    reportText: "❓ BİLİNMİYOR: Trafo tipi (yağlı/kuru) belirlenememiştir. Yağlı tip trafolar daha yüksek yangın riski taşıdığından tip tespiti kritiktir."
+  );
+
   static final cukurOptionA = ChoiceResult(
-    label: "31-2-B-1 (Çukur)",
+    label: "31-2-B-1",
     uiTitle: "Evet, var.",
     uiSubtitle: "Yağ toplama çukuru mevcut.",
     reportText: "✅ OLUMLU: Yağlı trafo altında toplama çukuru mevcuttur."
   );
 
   static final cukurOptionB = ChoiceResult(
-    label: "31-2-B-2 (Çukur)",
+    label: "31-2-B-2",
     uiTitle: "Hayır, düz zemin.",
     uiSubtitle: "Çukur yok, yağ etrafa yayılabilir.",
     reportText: "☢️ KRİTİK RİSK: Yağlı trafolarda, ısınan yağın taşması veya tankın delinmesi durumunda yanıcı yağın çevreye yayılmaması için toplama çukuru ZORUNLUDUR."
   );
 
+  static final cukurOptionC = ChoiceResult(
+    label: "31-2-B-3",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Zemin detayları görülemedi.",
+    reportText: "❓ BİLİNMİYOR: Yağlı trafo altında yağ toplama çukuru olup olmadığı tespit edilememiştir."
+  );
+
   static final sondurmeOptionA = ChoiceResult(
-    label: "31-3-A (Söndürme)",
-    uiTitle: "Evet, dedektörler ve söndürme var.",
-    uiSubtitle: "Otomatik sistem mevcut.",
+    label: "31-3-A",
+    uiTitle: "Evet, dedektör ve söndürme var.",
+    uiSubtitle: "Otomatik çalışan sistemler mevcut.",
     reportText: "✅ OLUMLU: Trafo odasında otomatik yangın algılama ve söndürme sistemi mevcuttur."
   );
 
   static final sondurmeOptionB = ChoiceResult(
-    label: "31-3-B (Söndürme)",
+    label: "31-3-B",
     uiTitle: "Hayır, hiçbir sistem yok.",
     uiSubtitle: "Sadece manuel müdahale mümkün.",
     reportText: "☢️ RİSK: Trafo odaları kapalı ve kilitli alanlardır. Yangın başladığında dışarıdan fark edilmesi zordur. Otomatik algılama ve söndürme sistemi hayati önem taşır."
   );
 
+  static final sondurmeOptionC = ChoiceResult(
+    label: "31-3-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Sistemlerin varlığı kontrol edilemedi.",
+    reportText: "❓ BİLİNMİYOR: Trafo odasındaki otomatik söndürme/algılama sistemlerinin varlığı veya çalışabilirliği belirsizdir."
+  );
+
   static final cevreOptionA = ChoiceResult(
-    label: "31-4-A (Çevre)",
+    label: "31-4-A",
     uiTitle: "Hayır, çevresi ve üstü kuru.",
     uiSubtitle: "Su tesisatı riski yok.",
     reportText: "✅ OLUMLU: Trafo odası çevresinde su tesisatı riski bulunmamaktadır."
   );
 
   static final cevreOptionB = ChoiceResult(
-    label: "31-4-B (Çevre)",
+    label: "31-4-B",
     uiTitle: "Evet, içinden su boruları geçiyor.",
     uiSubtitle: "Odanın içinden boru geçiyor.",
     reportText: "☢️ KRİTİK RİSK: Yüksek gerilim hattının olduğu yerden su borusu geçirilemez! Boru patlarsa su ve elektrik teması büyük bir patlamaya neden olur."
   );
 
   static final cevreOptionC = ChoiceResult(
-    label: "31-4-C (Çevre)",
+    label: "31-4-C",
     uiTitle: "Evet, üstünde banyo/tuvalet var.",
     uiSubtitle: "Üst kat ıslak hacim.",
     reportText: "☢️ RİSK: Trafo odalarının üstü ıslak hacim olamaz. Üst kattan olası bir su sızıntısı trafoya damlarsa ölümcül kazalara ve yangına yol açabilir."
+  );
+
+  static final cevreOptionD = ChoiceResult(
+    label: "31-4-D",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Çevresel riskler gözlemlenemedi.",
+    reportText: "❓ BİLİNMİYOR: Trafo odası çevresindeki su tesisatı veya ıslak hacim riskleri gözlemlenememiştir."
   );
 }
 class Bolum32Content {
   // --- 1. YAPI ---
   static final yapiOptionA = ChoiceResult(
     label: "32-1-A",
-    uiTitle: "Duvarlar beton/tuğla, kapı yangına dayanıklı ve dışarıya açılıyor.",
+    uiTitle: "Duvarları beton / tuğla, kapısı yangına dayanıklı çelik kapı ve dışarıya doğru açılıyor.",
     uiSubtitle: "",
-    reportText: "✅ OLUMLU: Jeneratör odası yangın kompartımanı olarak uygundur."
+    reportText: "✅ OLUMLU: Jeneratör odasında yangın kompartımantasyonunun sağlandığı söylenebilir."
   );
   static final yapiOptionB = ChoiceResult(
     label: "32-1-B",
-    uiTitle: "Kapısı direkt apartman koridoruna açılıyor.",
+    uiTitle: "Kapısı direkt apartman koridoruna ve hole açılıyor.",
     uiSubtitle: "",
     reportText: "☢️ KRİTİK RİSK: Jeneratör odasından çıkacak zehirli egzoz gazı ve duman, kaçış yollarını kullanılamaz hale getirir. Kapı asla direkt kaçış yoluna açılmamalıdır."
   );
   static final yapiOptionC = ChoiceResult(
     label: "32-1-C",
-    uiTitle: "Duvarlar dayanıksız beyaz alçıpanel vb., kapısı dayanımsız.",
+    uiTitle: "Duvarlar beyaz alçıpanel vb. dayanıksız malzemeden, kapısı da yangın dayanımsız.",
     uiSubtitle: "",
-    reportText: "☢️ RİSK: Jeneratör odası yangın bölmesi olarak tasarlanmalıdır. Duvarlar ve kapı en az 120 dakika yangına dayanmazsa, yakıt yangını binaya sıçrar."
+    reportText: "☢️ RİSK: Jeneratör odası yangın bölmesi olarak tasarlanmalıdır. Duvarlar ve kapı en az 90-120 dakika yangına dayanmazsa, yakıt yangını binaya sıçrayabilir."
   );
   static final yapiOptionD = ChoiceResult(
     label: "32-1-D",
     uiTitle: "Bilmiyorum / Emin Değilim",
     uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Jeneratör odasının yapısal özellikleri ve kapı dayanımı bilinmiyor. Yangın ve zehirli gaz yayılımı riskine karşı bu alanın teknik denetimi yapılmalıdır."
+    reportText: "❓ BİLİNMİYOR: Jeneratör odasının yapısal özellikleri ve kapı dayanımı bilinmiyor. Yangın ve zehirli gaz yayılımı riskine karşı bu alanın teknik incelemesi yapılmalıdır."
   );
 
   // --- 2. YAKIT ---
@@ -2433,11 +2474,11 @@ class Bolum32Content {
     label: "32-2-A",
     uiTitle: "Kendi tankında veya gömülü tankta.",
     uiSubtitle: "Güvenli depolama.",
-    reportText: "✅ OLUMLU: Yakıt depolama yöntemi güvenlidir."
+    reportText: "✅ OLUMLU: Yakıt depolama yöntemi güvenli gözükmektedir."
   );
   static final yakitOptionB = ChoiceResult(
     label: "32-2-B",
-    uiTitle: "Oda içinde bidonlarda/varillerde.",
+    uiTitle: "Oda içinde bidonlarda veya varillerde.",
     uiSubtitle: "Açıkta yedek yakıt var.",
     reportText: "☢️ KRİTİK RİSK: Jeneratör odasında bidonla veya açık kapta yakıt saklamak uygun değildir. Yakıt buharı elektrik kontağından alev alıp patlamaya neden olabilir."
   );

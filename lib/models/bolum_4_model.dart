@@ -46,7 +46,7 @@ class Bolum4Model {
     } else if (label1 == Bolum4Content.yukseklikSinifiYuksek.label) anaSinif = Bolum4Content.yukseklikSinifiYuksek;
     else if (label1 == Bolum4Content.yukseklikSinifiCokYuksek.label) anaSinif = Bolum4Content.yukseklikSinifiCokYuksek;
     else if (label1 == Bolum4Content.yukseklikSinifiMaksimum.label) anaSinif = Bolum4Content.yukseklikSinifiMaksimum;
-
+    
     // Uyarıyı Bul
     ChoiceResult? uyari;
     final label2 = map['yapiYuksekligiUyarisi_label'];
@@ -55,8 +55,8 @@ class Bolum4Model {
     return Bolum4Model(
       binaYukseklikSinifi: anaSinif,
       yapiYuksekligiUyarisi: uyari,
-      hesaplananBinaYuksekligi: map['hesaplananBinaYuksekligi'],
-      hesaplananYapiYuksekligi: map['hesaplananYapiYuksekligi'],
+      hesaplananBinaYuksekligi: (map['hesaplananBinaYuksekligi'] as num?)?.toDouble(),
+      hesaplananYapiYuksekligi: (map['hesaplananYapiYuksekligi'] as num?)?.toDouble(),
     );
   }
 }

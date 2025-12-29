@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../data/bina_store.dart';
-import '../../models/bolum_10_model.dart';
+import '../data/bina_store.dart';
+import '../models/bolum_10_model.dart';
 import 'bolum_11_screen.dart';
-import '../../widgets/custom_widgets.dart';
-import '../../widgets/selectable_card.dart';
-import '../../utils/app_content.dart';
-import '../../models/choice_result.dart';
+import '../widgets/custom_widgets.dart';
+import '../widgets/selectable_card.dart';
+import '../utils/app_content.dart';
+import '../models/choice_result.dart';
 
 class Bolum10Screen extends StatefulWidget {
   const Bolum10Screen({super.key});
@@ -48,7 +48,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
 
   void _handleSelection(String type, ChoiceResult choice, {int? index}) {
     setState(() {
-      _isSummaryAccepted = false; // Her seçimde onayı sıfırla
+      _isSummaryAccepted = false;
       if (type == 'zemin') {
         _model = _model.copyWith(zemin: choice);
         _scrollToBottom();
@@ -72,7 +72,6 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     });
   }
 
-  // KRİTİK DÜZELTME: Doğrulama Mantığı
   bool _checkIfComplete() {
     if (_model.zemin == null) return false;
     if (_model.bodrumlar.any((e) => e == null)) return false;
@@ -81,28 +80,9 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   }
 
   void _onNextPressed() {
-    if (!_checkIfComplete()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Lütfen tüm katların kullanım amacını seçiniz!"),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    if (!_isSummaryAccepted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen önce özeti onaylayınız.")),
-      );
-      return;
-    }
-
+    if (!_checkIfComplete() || !_isSummaryAccepted) return;
     BinaStore.instance.bolum10 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum11Screen()),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum11Screen()));
   }
 
   @override
@@ -123,9 +103,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSectionTitle("Zemin Kat"),
-                  QuestionCard(
-                    child: _buildChoiceGrid('zemin', null, _model.zemin),
-                  ),
+                  QuestionCard(child: _buildChoiceGrid('zemin', null, _model.zemin)),
 
                   if (_model.bodrumlar.isNotEmpty) ...[
                     const SizedBox(height: 10),
@@ -142,7 +120,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("${i + 1}. Bodrum Kat", style: const TextStyle(fontWeight: FontWeight.bold)),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 12),
                               _buildChoiceGrid('bodrum', i, _model.bodrumlar[i]),
                             ],
                           ),
@@ -165,7 +143,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("${i + 1}. Normal Kat", style: const TextStyle(fontWeight: FontWeight.bold)),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 12),
                               _buildChoiceGrid('normal', i, _model.normaller[i]),
                             ],
                           ),
@@ -185,7 +163,9 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   }
 
   Widget _buildChoiceGrid(String type, int? index, ChoiceResult? selected) {
-    final choices = [
+    final bool hasTicari = BinaStore.instance.bolum6?.hasTicari ?? false;
+
+    final allChoices = [
       Bolum10Content.konut,
       Bolum10Content.azYogunTicari,
       Bolum10Content.ortaYogunTicari,
@@ -193,18 +173,23 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       Bolum10Content.teknikDepo,
     ];
 
+    final filteredChoices = allChoices.where((c) {
+      if (!hasTicari) return !c.label.contains("Ticari");
+      return true;
+    }).toList();
+
     return GridView.builder(
-      shrinkWrap: true, // İçeriğe göre boyutu ayarlar
-      physics: const NeverScrollableScrollPhysics(), // Kendi içinde kaydırmayı kapatır
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Yan yana 2 kutucuk
-        crossAxisSpacing: 12, // Yatay boşluk
-        mainAxisSpacing: 12, // Dikey boşluk
-        childAspectRatio: 2.2, // Kutucukların genişlik/yükseklik oranı (Genişletmek için burayı küçültebilirsin)
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 2.2,
       ),
-      itemCount: choices.length,
+      itemCount: filteredChoices.length,
       itemBuilder: (context, i) {
-        final c = choices[i];
+        final c = filteredChoices[i];
         return SelectableCard(
           choice: c,
           isSelected: selected?.label == c.label,

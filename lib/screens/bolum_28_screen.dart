@@ -39,14 +39,13 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
                   (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
     }
 
-    if (toplamKat <= 4 && !hasTicari) {
+if (toplamKat <= 4 && !hasTicari) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final muafiyetModel = Bolum28Model(
-          muafiyet: Bolum28Content.muafiyetOption, // Hata düzeltildi: Bolum28Content kullanıldı
+          muafiyet: Bolum28Content.muafiyetOption,
         );
-        
         BinaStore.instance.bolum28 = muafiyetModel;
-        
+        BinaStore.instance.saveToDisk(); // DISKE KAYDET
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Bolum29Screen()),
@@ -105,7 +104,9 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
     }
 
     BinaStore.instance.bolum28 = _model;
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum29Screen()));
+      BinaStore.instance.saveToDisk();
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const 
+    Bolum29Screen()));
   }
 
   void _showError(String msg) {

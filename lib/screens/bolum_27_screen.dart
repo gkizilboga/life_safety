@@ -96,12 +96,12 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
     if (_model.yon == null) return _showError("Lütfen kapı açılış yönünü seçiniz.");
     if (_model.kilit == null) return _showError("Lütfen kilit mekanizmasını seçiniz.");
     
-    // Eğer yangın merdiveni varsa dayanım sorusu zorunludur
     if (_needsFireDoor && _model.dayanim == null) {
       return _showError("Lütfen kapı dayanımı sorusunu yanıtlayınız.");
     }
 
     BinaStore.instance.bolum27 = _model;
+    BinaStore.instance.saveToDisk(); // BU SATIRI EKLEMELİSİN
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum28Screen()));
   }
 

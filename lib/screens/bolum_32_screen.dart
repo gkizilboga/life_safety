@@ -53,10 +53,10 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
 
   void _onNextPressed() {
     if (_hasJenerator) {
-      if (_model.yapi == null) return _showError("Lütfen jeneratör odası yapı özelliklerini seçiniz.");
+      if (_model.yapi == null) return _showError("Lütfen yapı özelliklerini seçiniz.");
       if (_model.yakit == null) return _showError("Lütfen yakıt depolama şeklini seçiniz.");
       if (_model.cevre == null) return _showError("Lütfen çevresel risk durumunu seçiniz.");
-      if (_model.egzoz == null) return _showError("Lütfen egzoz tahliye durumunu seçiniz.");
+      if (_model.egzoz == null) return _showError("Lütfen egzoz durumunu seçiniz.");
     }
 
     BinaStore.instance.bolum32 = _model;

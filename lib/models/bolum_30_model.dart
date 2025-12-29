@@ -4,6 +4,7 @@ import '../utils/app_content.dart';
 class Bolum30Model {
   final ChoiceResult? konum;
   final double? kapasite;
+  final bool kapasiteBilinmiyor; // Kapasite bilinmiyor durumu için
   final ChoiceResult? kapi;
   final ChoiceResult? hava;
   final ChoiceResult? yakit;
@@ -13,6 +14,7 @@ class Bolum30Model {
   Bolum30Model({
     this.konum,
     this.kapasite,
+    this.kapasiteBilinmiyor = false,
     this.kapi,
     this.hava,
     this.yakit,
@@ -23,6 +25,7 @@ class Bolum30Model {
   Bolum30Model copyWith({
     ChoiceResult? konum,
     double? kapasite,
+    bool? kapasiteBilinmiyor,
     ChoiceResult? kapi,
     ChoiceResult? hava,
     ChoiceResult? yakit,
@@ -32,6 +35,7 @@ class Bolum30Model {
     return Bolum30Model(
       konum: konum ?? this.konum,
       kapasite: kapasite ?? this.kapasite,
+      kapasiteBilinmiyor: kapasiteBilinmiyor ?? this.kapasiteBilinmiyor,
       kapi: kapi ?? this.kapi,
       hava: hava ?? this.hava,
       yakit: yakit ?? this.yakit,
@@ -44,6 +48,7 @@ class Bolum30Model {
     return {
       'konum_label': konum?.label,
       'kapasite': kapasite,
+      'kapasiteBilinmiyor': kapasiteBilinmiyor,
       'kapi_label': kapi?.label,
       'hava_label': hava?.label,
       'yakit_label': yakit?.label,
@@ -64,6 +69,7 @@ class Bolum30Model {
     return Bolum30Model(
       konum: find(map['konum_label'], [Bolum30Content.konumOptionA, Bolum30Content.konumOptionB, Bolum30Content.konumOptionC, Bolum30Content.konumOptionD]),
       kapasite: map['kapasite'],
+      kapasiteBilinmiyor: map['kapasiteBilinmiyor'] ?? false,
       kapi: find(map['kapi_label'], [Bolum30Content.kapiOptionA, Bolum30Content.kapiOptionB, Bolum30Content.kapiOptionC]),
       hava: find(map['hava_label'], [Bolum30Content.havaOptionA, Bolum30Content.havaOptionB, Bolum30Content.havaOptionC]),
       yakit: find(map['yakit_label'], [Bolum30Content.yakitOptionA, Bolum30Content.yakitOptionB, Bolum30Content.yakitOptionC]),

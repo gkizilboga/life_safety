@@ -8,7 +8,6 @@ class Bolum10Model {
   final bool bodrumlarAyni;
   final bool normallerAyni;
 
-  // DİĞER EKRANLARIN HATA VERMEMESİ İÇİN BU GETTER'I EKLEDİK
   ChoiceResult? get secim => zemin; 
 
   Bolum10Model({

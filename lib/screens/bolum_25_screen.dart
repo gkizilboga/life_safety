@@ -17,6 +17,7 @@ class Bolum25Screen extends StatefulWidget {
 class _Bolum25ScreenState extends State<Bolum25Screen> {
   Bolum25Model _model = Bolum25Model();
   bool _hasDonerMerdiven = false;
+  bool _isCommercial = false;
 
   @override
   void initState() {
@@ -24,16 +25,24 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
     _checkAndRedirect();
   }
 
-void _checkAndRedirect() {
+  void _checkAndRedirect() {
     final b20 = BinaStore.instance.bolum20;
+    final b6 = BinaStore.instance.bolum6;
+    final b10 = BinaStore.instance.bolum10;
     
-    // Soru işaretlerini (?.toString) noktaya (.toString) çevirdik:
     int donerCount = int.tryParse(b20?.donerMerdivenSayisi.toString() ?? "0") ?? 0;
     int sahanliksizCount = int.tryParse(b20?.sahanliksizMerdivenSayisi.toString() ?? "0") ?? 0;
+
+    // Ticari Alan Kontrolü
+    bool hasTicari = (b6?.hasTicari ?? false) ||
+                     (b10?.zemin?.label.contains("Ticari") ?? false) ||
+                     (b10?.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false) ?? false) ||
+                     (b10?.normaller.any((e) => e?.label.contains("Ticari") ?? false) ?? false);
 
     if (donerCount > 0 || sahanliksizCount > 0) {
       setState(() {
         _hasDonerMerdiven = true;
+        _isCommercial = hasTicari;
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -73,9 +82,7 @@ void _checkAndRedirect() {
   @override
   Widget build(BuildContext context) {
     if (!_hasDonerMerdiven) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
@@ -91,6 +98,8 @@ void _checkAndRedirect() {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
+                  if (_isCommercial) _buildCriticalWarning(),
+                  
                   _buildSoru("Mevcut döner (dairesel) merdiveninizin kol genişliği ne kadar?", 'kapasite', 
                     [Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB, Bolum25Content.kapasiteOptionC], _model.kapasite),
 
@@ -103,24 +112,62 @@ void _checkAndRedirect() {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
+          _buildBottomNav(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCriticalWarning() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.red.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.red.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.gavel_rounded, color: Colors.red.shade900, size: 28),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "YÖNETMELİK KISITLAMASI",
+                  style: TextStyle(color: Colors.red.shade900, fontWeight: FontWeight.bold, fontSize: 14),
                 ),
-              ),
+                const SizedBox(height: 4),
+                const Text(
+                  "Binada ticari alan (dükkan/mağaza vb.) bulunduğu için döner merdivenler kaçış yolu olarak kabul edilemez. Lütfen teknik ölçümleri yine de yapınız.",
+                  style: TextStyle(color: Colors.black87, fontSize: 12),
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _onNextPressed,
+            child: const Text("DEVAM ET"),
+          ),
+        ),
       ),
     );
   }

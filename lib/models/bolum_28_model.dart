@@ -43,21 +43,17 @@ class Bolum28Model {
   }
 
   factory Bolum28Model.fromMap(Map<String, dynamic> map) {
-    // Yardımcı fonksiyon: Etiketten ChoiceResult nesnesini bulur
     ChoiceResult? find(String? label) {
       if (label == null) return null;
-      // Tüm seçenekleri tek bir listede toplayıp arıyoruz
-      final allOptions = [
-        Bolum28Content.mesafeOptionA, Bolum28Content.mesafeOptionB, Bolum28Content.mesafeOptionC,
-        Bolum28Content.dubleksOptionA, Bolum28Content.dubleksOptionB,
-        Bolum28Content.alanOption1, Bolum28Content.alanOption2,
-        Bolum28Content.cikisOptionA, Bolum28Content.cikisOptionB,
-        Bolum28Content.muafiyetOption,
-      ];
-      
       try {
-        return allOptions.firstWhere((e) => e.label == label);
-      } catch (e) {
+        return [
+          Bolum28Content.mesafeOptionA, Bolum28Content.mesafeOptionB, Bolum28Content.mesafeOptionC,
+          Bolum28Content.dubleksOptionA, Bolum28Content.dubleksOptionB,
+          Bolum28Content.alanOption1, Bolum28Content.alanOption2,
+          Bolum28Content.cikisOptionA, Bolum28Content.cikisOptionB,
+          Bolum28Content.muafiyetOption,
+        ].firstWhere((e) => e.label == label);
+      } catch (_) {
         return null;
       }
     }
