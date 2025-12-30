@@ -7,6 +7,8 @@ class Bolum26Model {
   final ChoiceResult? sahanlik;
   final ChoiceResult? otopark;
 
+  ChoiceResult? get secim => varlik ?? egim ?? sahanlik ?? otopark;
+
   Bolum26Model({this.varlik, this.egim, this.sahanlik, this.otopark});
 
   Bolum26Model copyWith({ChoiceResult? varlik, ChoiceResult? egim, ChoiceResult? sahanlik, ChoiceResult? otopark}) {

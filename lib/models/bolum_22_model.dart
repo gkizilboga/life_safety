@@ -9,6 +9,8 @@ class Bolum22Model {
   final ChoiceResult? enerji;
   final ChoiceResult? basinc;
 
+  ChoiceResult? get secim => varlik ?? konum ?? boyut ?? kabin ?? enerji ?? basinc;
+
   Bolum22Model({
     this.varlik,
     this.konum,

@@ -6,6 +6,8 @@ class Bolum24Model {
   final ChoiceResult? pencere;
   final ChoiceResult? kapi;
 
+  ChoiceResult? get secim => tip ?? pencere ?? kapi;
+
   Bolum24Model({this.tip, this.pencere, this.kapi});
 
   Bolum24Model copyWith({ChoiceResult? tip, ChoiceResult? pencere, ChoiceResult? kapi}) {

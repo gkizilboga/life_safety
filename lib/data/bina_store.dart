@@ -1,43 +1,43 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:life_safety/models/bolum_1_model.dart';
-import 'package:life_safety/models/bolum_2_model.dart';
-import 'package:life_safety/models/bolum_3_model.dart';
-import 'package:life_safety/models/bolum_4_model.dart';
-import 'package:life_safety/models/bolum_5_model.dart';
-import 'package:life_safety/models/bolum_6_model.dart';
-import 'package:life_safety/models/bolum_7_model.dart';
-import 'package:life_safety/models/bolum_8_model.dart';
-import 'package:life_safety/models/bolum_9_model.dart';
-import 'package:life_safety/models/bolum_10_model.dart';
-import 'package:life_safety/models/bolum_11_model.dart';
-import 'package:life_safety/models/bolum_12_model.dart';
-import 'package:life_safety/models/bolum_13_model.dart';
-import 'package:life_safety/models/bolum_14_model.dart';
-import 'package:life_safety/models/bolum_15_model.dart';
-import 'package:life_safety/models/bolum_16_model.dart';
-import 'package:life_safety/models/bolum_17_model.dart';
-import 'package:life_safety/models/bolum_18_model.dart';
-import 'package:life_safety/models/bolum_19_model.dart';
-import 'package:life_safety/models/bolum_20_model.dart';
-import 'package:life_safety/models/bolum_21_model.dart';
-import 'package:life_safety/models/bolum_22_model.dart';
-import 'package:life_safety/models/bolum_23_model.dart';
-import 'package:life_safety/models/bolum_24_model.dart';
-import 'package:life_safety/models/bolum_25_model.dart';
-import 'package:life_safety/models/bolum_26_model.dart';
-import 'package:life_safety/models/bolum_27_model.dart';
-import 'package:life_safety/models/bolum_28_model.dart';
-import 'package:life_safety/models/bolum_29_model.dart';
-import 'package:life_safety/models/bolum_30_model.dart';
-import 'package:life_safety/models/bolum_31_model.dart';
-import 'package:life_safety/models/bolum_32_model.dart';
-import 'package:life_safety/models/bolum_33_model.dart';
-import 'package:life_safety/models/bolum_34_model.dart';
-import 'package:life_safety/models/bolum_35_model.dart';
-import 'package:life_safety/models/bolum_36_model.dart';
-import 'package:life_safety/models/choice_result.dart'; // Tip dönüşümü için gerekli olabilir
+import '../models/bolum_1_model.dart';
+import '../models/bolum_2_model.dart';
+import '../models/bolum_3_model.dart';
+import '../models/bolum_4_model.dart';
+import '../models/bolum_5_model.dart';
+import '../models/bolum_6_model.dart';
+import '../models/bolum_7_model.dart';
+import '../models/bolum_8_model.dart';
+import '../models/bolum_9_model.dart';
+import '../models/bolum_10_model.dart';
+import '../models/bolum_11_model.dart';
+import '../models/bolum_12_model.dart';
+import '../models/bolum_13_model.dart';
+import '../models/bolum_14_model.dart';
+import '../models/bolum_15_model.dart';
+import '../models/bolum_16_model.dart';
+import '../models/bolum_17_model.dart';
+import '../models/bolum_18_model.dart';
+import '../models/bolum_19_model.dart';
+import '../models/bolum_20_model.dart';
+import '../models/bolum_21_model.dart';
+import '../models/bolum_22_model.dart';
+import '../models/bolum_23_model.dart';
+import '../models/bolum_24_model.dart';
+import '../models/bolum_25_model.dart';
+import '../models/bolum_26_model.dart';
+import '../models/bolum_27_model.dart';
+import '../models/bolum_28_model.dart';
+import '../models/bolum_29_model.dart';
+import '../models/bolum_30_model.dart';
+import '../models/bolum_31_model.dart';
+import '../models/bolum_32_model.dart';
+import '../models/bolum_33_model.dart';
+import '../models/bolum_34_model.dart';
+import '../models/bolum_35_model.dart';
+import '../models/bolum_36_model.dart';
+import '../models/choice_result.dart';
 
 class BinaStore {
   static final BinaStore _instance = BinaStore._internal();
@@ -82,13 +82,6 @@ class BinaStore {
   Bolum35Model? bolum35;
   Bolum36Model? bolum36;
 
-  // GETTERLAR (Erişim Kolaylığı İçin)
-  int get normalKatSayisi => bolum3?.normalKatSayisi ?? 0;
-  int get bodrumKatSayisi => bolum3?.bodrumKatSayisi ?? 0;
-  // HATA DÜZELTİLDİ: otoparkStatus yerine otoparkTipi
-  ChoiceResult? get otoparkTipi => bolum6?.otoparkTipi;
-
-  // SAVE (KAYIT)
   Future<void> saveToDisk() async {
     final prefs = await SharedPreferences.getInstance();
     final data = {
@@ -130,16 +123,13 @@ class BinaStore {
       'bolum36': bolum36?.toMap(),
     };
     await prefs.setString('bina_data', json.encode(data));
-    debugPrint("Tüm Veriler Diske Kaydedildi");
   }
 
-  // LOAD (YÜKLEME)
   Future<void> loadFromDisk() async {
     final prefs = await SharedPreferences.getInstance();
     final rawData = prefs.getString('bina_data');
     if (rawData != null) {
       final data = json.decode(rawData);
-      
       if (data['bolum1'] != null) bolum1 = Bolum1Model.fromMap(data['bolum1']);
       if (data['bolum2'] != null) bolum2 = Bolum2Model.fromMap(data['bolum2']);
       if (data['bolum3'] != null) bolum3 = Bolum3Model.fromMap(data['bolum3']);
@@ -176,22 +166,47 @@ class BinaStore {
       if (data['bolum34'] != null) bolum34 = Bolum34Model.fromMap(data['bolum34']);
       if (data['bolum35'] != null) bolum35 = Bolum35Model.fromMap(data['bolum35']);
       if (data['bolum36'] != null) bolum36 = Bolum36Model.fromMap(data['bolum36']);
+    }
+  }
 
-      debugPrint("Veriler Diskten Yüklendi");
-    }
-  }
   void clearAfter(int sectionNumber) {
-    if (sectionNumber <= 1) bolum1 = null; // Örnek: 1 değişirse hepsi gider
-    if (sectionNumber <= 3) {
-      bolum4 = null; bolum5 = null; bolum14 = null; bolum33 = null;
-    }
-    if (sectionNumber <= 6) {
-      bolum10 = null; bolum13 = null; bolum34 = null;
-    }
-    // İhtiyaca göre genişletilebilir...
+    if (sectionNumber <= 3) { bolum4 = null; bolum5 = null; bolum14 = null; bolum33 = null; }
+    if (sectionNumber <= 6) { bolum10 = null; bolum13 = null; bolum34 = null; }
     saveToDisk();
-    debugPrint("Bölüm $sectionNumber sonrası bağımlı veriler temizlendi.");
   }
+
+  ChoiceResult? getResultForSection(int id) {
+    switch (id) {
+      case 1: return bolum1?.secim;
+      case 2: return bolum2?.secim;
+      case 4: return bolum4?.binaYukseklikSinifi;
+      case 8: return bolum8?.secim;
+      case 9: return bolum9?.secim;
+      case 11: return bolum11?.mesafe;
+      case 12: return bolum12?.secim; // Modelde 'secim' tanımlı olmalı
+      case 14: return bolum14?.secim; // Modelde 'secim' tanımlı olmalı
+      case 15: return bolum15?.kaplama;
+      case 16: return bolum16?.secim; // Modelde 'secim' tanımlı olmalı
+      case 17: return bolum17?.kaplama;
+      case 18: return bolum18?.secim; // Modelde 'secim' tanımlı olmalı
+      case 21: return bolum21?.secim; // Modelde 'secim' tanımlı olmalı
+      case 22: return bolum22?.secim; // Modelde 'secim' tanımlı olmalı
+      case 23: return bolum23?.secim; // Modelde 'secim' tanımlı olmalı
+      case 24: return bolum24?.secim; // Modelde 'secim' tanımlı olmalı
+      case 25: return bolum25?.kapasite;
+      case 26: return bolum26?.secim; // Modelde 'secim' tanımlı olmalı
+      case 27: return bolum27?.boyut;
+      case 28: return bolum28?.mesafe;
+      case 30: return bolum30?.konum;
+      case 31: return bolum31?.yapi;
+      case 32: return bolum32?.yapi;
+      case 34: return bolum34?.zemin;
+      case 35: return bolum35?.tekYon ?? bolum35?.ciftYon;
+      case 36: return bolum36?.gorunurluk;
+      default: return null;
+    }
+  }
+
   void reset() {
     bolum1 = null; bolum2 = null; bolum3 = null; bolum4 = null;
     bolum5 = null; bolum6 = null; bolum7 = null; bolum8 = null;
@@ -202,5 +217,6 @@ class BinaStore {
     bolum25 = null; bolum26 = null; bolum27 = null; bolum28 = null;
     bolum29 = null; bolum30 = null; bolum31 = null; bolum32 = null;
     bolum33 = null; bolum34 = null; bolum35 = null; bolum36 = null;
+    saveToDisk();
   }
 }

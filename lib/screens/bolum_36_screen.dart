@@ -5,7 +5,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import 'report_summary_screen.dart'; // Rapor ekranı import edildi
+import 'report_summary_screen.dart';
 
 class Bolum36Screen extends StatefulWidget {
   const Bolum36Screen({super.key});
@@ -18,10 +18,13 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   Bolum36Model _model = Bolum36Model();
   final _genislikCtrl = TextEditingController();
   final _kapiGenislikCtrl = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   int _cntDisCelik = 0;
   bool _isHighBuilding = false;
   bool _showStep0Warning = false;
+  bool _genislikBilinmiyor = false;
+  bool _kapiGenislikBilinmiyor = false;
 
   @override
   void initState() {
@@ -59,35 +62,59 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     });
   }
 
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
     _genislikCtrl.dispose();
     _kapiGenislikCtrl.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'disMerd') _model = _model.copyWith(disMerd: choice);
-      if (type == 'konum') _model = _model.copyWith(konum: choice);
-      if (type == 'kapiTipi') _model = _model.copyWith(kapiTipi: choice);
+      if (type == 'disMerd') {
+        _model = _model.copyWith(disMerd: choice);
+        _scrollToBottom();
+      }
+      if (type == 'konum') {
+        _model = _model.copyWith(konum: choice);
+        _scrollToBottom();
+      }
+      if (type == 'kapiTipi') {
+        _model = _model.copyWith(kapiTipi: choice);
+        _scrollToBottom();
+      }
       if (type == 'gorunurluk') _model = _model.copyWith(gorunurluk: choice);
     });
   }
 
   void _onFinishPressed() {
-    double? gen = double.tryParse(_genislikCtrl.text.replaceAll(',', '.'));
-    double? kGen = double.tryParse(_kapiGenislikCtrl.text.replaceAll(',', '.'));
+    double? gen = _genislikBilinmiyor ? null : double.tryParse(_genislikCtrl.text.replaceAll(',', '.'));
+    double? kGen = _kapiGenislikBilinmiyor ? null : double.tryParse(_kapiGenislikCtrl.text.replaceAll(',', '.'));
+    
     _model = _model.copyWith(genislik: gen, kapiGenislik: kGen);
 
-    if (_cntDisCelik > 0 && _model.disMerd == null) return _showError("Lütfen dış merdiven çevresi sorusunu yanıtlayınız.");
+    if (_cntDisCelik > 0 && _model.disMerd == null) return _showError("Lütfen dış merdiven sorusunu yanıtlayınız.");
     if ((_model.totalValidCikisSayisi ?? 0) > 1 && _model.konum == null) return _showError("Lütfen merdiven konumu sorusunu yanıtlayınız.");
-    if (gen == null) return _showError("Lütfen koridor/merdiven genişliğini giriniz.");
-    if (_model.kapiTipi == null) return _showError("Lütfen çıkış kapısı tipini seçiniz.");
-    if (kGen == null) return _showError("Lütfen kapı net geçiş genişliğini giriniz.");
-    if (_model.gorunurluk == null) return _showError("Lütfen çıkışların görünürlüğünü seçiniz.");
+    if (!_genislikBilinmiyor && gen == null) return _showError("Lütfen genişlik giriniz veya 'Bilmiyorum' seçiniz.");
+    if (_model.kapiTipi == null) return _showError("Lütfen kapı tipini seçiniz.");
+    if (!_kapiGenislikBilinmiyor && kGen == null) return _showError("Lütfen kapı genişliği giriniz veya 'Bilmiyorum' seçiniz.");
+    if (_model.gorunurluk == null) return _showError("Lütfen görünürlük sorusunu yanıtlayınız.");
 
     BinaStore.instance.bolum36 = _model;
+    BinaStore.instance.saveToDisk();
     _showFinishDialog();
   }
 
@@ -102,15 +129,15 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         title: const Text("Analiz Tamamlandı", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-        content: const Text("Tüm veriler başarıyla işlendi. Binanızın risk analiz raporu hazırlandı."),
+        content: const Text("Tüm veriler başarıyla işlendi. Binanızın yangın risk analiz raporu hazırlandı."),
         actions: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white),
             onPressed: () {
-              Navigator.pop(ctx); // Diyaloğu kapat
-              Navigator.push(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const ReportSummaryScreen()),
+                (route) => false, // Geri dönmeyi kapatır, çünkü analiz bitti.
               );
             },
             child: const Text("Raporu Görüntüle"),
@@ -132,65 +159,109 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   if (_showStep0Warning) _buildStep0Card(),
+                  
                   if (_cntDisCelik > 0) ...[
                     if (_isHighBuilding) _buildHighBuildingWarning(),
-                    _buildSoru("Dışarıdaki yangın merdivenine 3 metre mesafede herhangi bir pencere, kapı veya duvar boşluğu var mı?", 'disMerd', 
+                    _buildSoru("Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?", 'disMerd', 
                       [Bolum36Content.disMerdOptionA, Bolum36Content.disMerdOptionB, Bolum36Content.disMerdOptionC], _model.disMerd),
                   ],
-                  if ((_model.totalValidCikisSayisi ?? 0) > 1)
-                    _buildSoru("Binanızdaki kaçış merdivenleri birbirine göre nasıl konumlanmış?", 'konum', 
+
+                  if ((_model.totalValidCikisSayisi ?? 0) > 1) ...[
+                    _buildInfoNote("Binada birden fazla çıkış tespit edildiği için konum analizi gereklidir."),
+                    _buildSoru("Kaçış merdivenleri birbirine göre nasıl konumlanmış?", 'konum', 
                       [Bolum36Content.konumOptionA, Bolum36Content.konumOptionB, Bolum36Content.konumOptionC], _model.konum),
+                  ],
+
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Merdiveninizin ve ona giden koridorun temiz genişliği (cm) kaçtır?", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Merdiven/Koridor temiz genişliği (cm) kaçtır?", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _genislikCtrl,
-                          keyboardType: TextInputType.number,
+                          enabled: !_genislikBilinmiyor,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           decoration: const InputDecoration(hintText: "Örn: 120", suffixText: "cm", border: OutlineInputBorder()),
+                        ),
+                        const SizedBox(height: 10),
+                        SelectableCard(
+                          choice: Bolum36Content.genislikBilinmiyor,
+                          isSelected: _genislikBilinmiyor,
+                          onTap: () => setState(() {
+                            _genislikBilinmiyor = !_genislikBilinmiyor;
+                            if (_genislikBilinmiyor) _genislikCtrl.clear();
+                            _scrollToBottom();
+                          }),
                         ),
                       ],
                     ),
                   ),
-                  _buildSoru("Yangın merdivenine (veya sokağa) açılan çıkış kapınızın tipi nedir?", 'kapiTipi', 
+
+                  _buildSoru("Çıkış kapınızın tipi nedir?", 'kapiTipi', 
                     [Bolum36Content.kapiTipiOptionA, Bolum36Content.kapiTipiOptionB, Bolum36Content.kapiTipiOptionC], _model.kapiTipi),
+
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Kapı 90 derece açıldığında, geçiş yapılabilecek temiz net genişlik (cm) kaçtır?", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Kapı net geçiş genişliği (cm) kaçtır?", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _kapiGenislikCtrl,
-                          keyboardType: TextInputType.number,
+                          enabled: !_kapiGenislikBilinmiyor,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           decoration: const InputDecoration(hintText: "Örn: 90", suffixText: "cm", border: OutlineInputBorder()),
+                        ),
+                        const SizedBox(height: 10),
+                        SelectableCard(
+                          choice: Bolum36Content.kapiGenislikBilinmiyor,
+                          isSelected: _kapiGenislikBilinmiyor,
+                          onTap: () => setState(() {
+                            _kapiGenislikBilinmiyor = !_kapiGenislikBilinmiyor;
+                            if (_kapiGenislikBilinmiyor) _kapiGenislikCtrl.clear();
+                            _scrollToBottom();
+                          }),
                         ),
                       ],
                     ),
                   ),
-                  _buildSoru("Kaçış yolları ve çıkış kapıları açıkça görülebiliyor mu ve önlerinde engel var mı?", 'gorunurluk', 
+
+                  _buildSoru("Kaçış yolları açıkça görülebiliyor mu?", 'gorunurluk', 
                     [Bolum36Content.gorunurlukOptionA, Bolum36Content.gorunurlukOptionB, Bolum36Content.gorunurlukOptionC], _model.gorunurluk),
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))]),
-            child: SafeArea(child: SizedBox(width: double.infinity, child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
-              onPressed: _onFinishPressed, 
-              child: const Text("ANALİZİ BİTİR VE RAPORLA")
-            ))),
-          ),
+          _buildBottomNav(),
         ],
       ),
+    );
+  }
+
+  Widget _buildInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: Colors.orange.withOpacity(0.1), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.orange.withOpacity(0.3))),
+      child: Row(children: [const Icon(Icons.arrow_downward, color: Colors.orange, size: 20), const SizedBox(width: 12), Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13)))]),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))]),
+      child: SafeArea(child: SizedBox(width: double.infinity, child: ElevatedButton(
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade700, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 15)),
+        onPressed: _onFinishPressed, 
+        child: const Text("ANALİZİ BİTİR VE RAPORLA", style: TextStyle(fontWeight: FontWeight.bold))
+      ))),
     );
   }
 
@@ -198,27 +269,21 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(color: Colors.amber.shade50, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.amber)),
-      child: Column(
-        children: [
-          const Row(children: [Icon(Icons.warning, color: Colors.amber), SizedBox(width: 10), Text("DİKKAT: BAZI ÇIKIŞLAR ELENDİ", style: TextStyle(fontWeight: FontWeight.bold))]),
-          const SizedBox(height: 10),
-          Text("Yönetmelik gereği bina yüksekliğinizden dolayı; "
-               "${_model.donerElendi! ? 'Döner merdivenleriniz, ' : ''}"
-               "${_model.disCelikElendi! ? 'Dışarıdaki açık çelik merdivenleriniz, ' : ''}"
-               "Yasal Kaçış Yolu olarak hesaba katılmamıştır.", style: const TextStyle(fontSize: 13)),
-        ],
-      ),
+      decoration: BoxDecoration(color: Colors.amber.shade50, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.amber.shade200)),
+      child: Column(children: [
+        const Row(children: [Icon(Icons.warning_amber_rounded, color: Colors.orange), SizedBox(width: 10), Text("BAZI ÇIKIŞLAR GEÇERSİZ", style: TextStyle(fontWeight: FontWeight.bold))]),
+        const SizedBox(height: 10),
+        Text("Bina yüksekliğinden dolayı; ${_model.donerElendi! ? 'Döner merdivenler, ' : ''}${_model.disCelikElendi! ? 'Dış açık merdivenler, ' : ''}yasal kaçış yolu sayılmamıştır.", style: const TextStyle(fontSize: 12)),
+      ]),
     );
   }
 
   Widget _buildHighBuildingWarning() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(10)),
-      child: const Text("🚨 KRİTİK RİSK: Bina yüksekliği 21.50m üzerinde olduğu için dış açık merdivenlere izin verilmez.", 
-        style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold)),
+      decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.red.shade200)),
+      child: const Text("🚨 KRİTİK: 21.50m üzeri binalarda dış açık merdivenler yönetmeliğe aykırıdır.", style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold)),
     );
   }
 

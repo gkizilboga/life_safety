@@ -15,6 +15,8 @@ class Bolum16Model {
 
   final ChoiceResult? bitisikNizam;
 
+  ChoiceResult? get secim => mantolama ?? sagirYuzey ?? bitisikNizam;
+
   Bolum16Model({
     this.mantolama,
     this.giydirmeBoslukYalitim,

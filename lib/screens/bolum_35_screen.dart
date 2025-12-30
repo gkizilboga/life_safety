@@ -17,6 +17,7 @@ class Bolum35Screen extends StatefulWidget {
 class _Bolum35ScreenState extends State<Bolum35Screen> {
   Bolum35Model _model = Bolum35Model();
   final _mesafeCtrl = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   
   bool _tekCikis = true;
   int _limitTekYon = 15;
@@ -26,6 +27,13 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
   void initState() {
     super.initState();
     _calculateLimits();
+  }
+
+  @override
+  void dispose() {
+    _mesafeCtrl.dispose();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _calculateLimits() {
@@ -46,7 +54,18 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     });
   }
 
-  // Placeholder'ları rakamla değiştiren yardımcı fonksiyon
+  void _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
   ChoiceResult _getDynamicChoice(ChoiceResult original, int limit) {
     return ChoiceResult(
       label: original.label,
@@ -58,13 +77,26 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'tekYon') _model = _model.copyWith(tekYon: choice);
-      if (type == 'ciftYon') _model = _model.copyWith(ciftYon: choice);
+      if (type == 'tekYon') {
+        _model = _model.copyWith(tekYon: choice);
+        if (choice.label == "35-1-A") _scrollToBottom();
+      }
+      if (type == 'ciftYon') {
+        _model = _model.copyWith(ciftYon: choice);
+        if (choice.label == "35-2-A") _scrollToBottom();
+      }
       if (type == 'cikmaz') {
         _model = _model.copyWith(cikmaz: choice);
-        if (choice.label == Bolum35Content.cikmazOptionA.label) _model = _model.copyWith(cikmazMesafe: null);
+        if (choice.label == Bolum35Content.cikmazOptionB.label) {
+          _scrollToBottom();
+        } else {
+          _model = _model.copyWith(cikmazMesafe: null);
+        }
       }
-      if (type == 'cikmazMesafe') _model = _model.copyWith(cikmazMesafe: choice);
+      if (type == 'cikmazMesafe') {
+        _model = _model.copyWith(cikmazMesafe: choice);
+        if (choice.label == "35-3-C") _scrollToBottom();
+      }
     });
   }
 
@@ -76,12 +108,12 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
       return _showError("Lütfen çıkmaz koridor mesafesini seçiniz.");
     }
 
-    // Manuel giriş kontrolü
     if (_mesafeCtrl.text.isNotEmpty) {
       _model = _model.copyWith(manuelMesafe: double.tryParse(_mesafeCtrl.text.replaceAll(',', '.')));
     }
 
     BinaStore.instance.bolum35 = _model;
+    BinaStore.instance.saveToDisk();
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum36Screen()));
   }
 
@@ -91,21 +123,26 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
 
   @override
   Widget build(BuildContext context) {
+    bool showManualInput = (_model.tekYon?.label == "35-1-A" || 
+                            _model.ciftYon?.label == "35-2-A" || 
+                            _model.cikmazMesafe?.label == "35-3-C");
+
     return Scaffold(
       body: Column(
         children: [
           ModernHeader(
             title: "Bölüm-35: Kaçış Mesafeleri", 
-            subtitle: "...", 
+            subtitle: "Daire kapısından merdivene ulaşım analizi", 
             screenType: widget.runtimeType,
-            ),
+          ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   if (_tekCikis) 
-                    _buildSoru("Evinizin en uzak noktasından bina merdiven kapısına kadar olan mesafe kaç metredir?", 'tekYon', 
+                    _buildSoru("Daire kapınızdan çıktığınızda bina merdiven kapısına kadar olan mesafe kaç metredir?", 'tekYon', 
                       [
                         Bolum35Content.tekYonOptionA,
                         _getDynamicChoice(Bolum35Content.tekYonOptionB, _limitTekYon),
@@ -113,7 +150,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
                         Bolum35Content.tekYonOptionD
                       ], _model.tekYon)
                   else ...[
-                    _buildSoru("Daire kapınızdan çıktığınızda, size EN YAKIN olan yangın merdivenine mesafe kaç metredir?", 'ciftYon', 
+                    _buildSoru("Daire kapınızdan çıktığınızda, size EN YAKIN yangın merdivenine olan mesafe kaç metredir?", 'ciftYon', 
                       [
                         Bolum35Content.ciftYonOptionA,
                         _getDynamicChoice(Bolum35Content.ciftYonOptionB, _limitCiftYon),
@@ -124,7 +161,8 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
                     _buildSoru("Daireniz koridorun sonunda, 'Çıkmaz' bir noktada mı?", 'cikmaz', 
                       [Bolum35Content.cikmazOptionA, Bolum35Content.cikmazOptionB], _model.cikmaz),
 
-                    if (_model.cikmaz?.label == Bolum35Content.cikmazOptionB.label)
+                    if (_model.cikmaz?.label == Bolum35Content.cikmazOptionB.label) ...[
+                      _buildInfoNote("Çıkmaz koridor tespiti yapıldı. Lütfen yol ayrımına kadar olan mesafeyi belirtiniz."),
                       _buildSoru("Daire kapınızdan, koridordaki yol ayrımına kadar olan mesafe kaç metredir?", 'cikmazMesafe', 
                         [
                           Bolum35Content.cikmazMesafeOptionA,
@@ -132,27 +170,69 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
                           _getDynamicChoice(Bolum35Content.cikmazMesafeOptionC, _limitTekYon),
                           Bolum35Content.cikmazMesafeOptionD
                         ], _model.cikmazMesafe),
+                    ],
                   ],
 
-                  // Manuel Giriş Alanı (Eğer "Tam ölçüyü biliyorum" seçilirse)
-                  if (_model.tekYon?.label == "35-1-A" || _model.ciftYon?.label == "35-2-A" || _model.cikmazMesafe?.label == "35-3-C")
+                  if (showManualInput) ...[
+                    _buildInfoNote("Lütfen net mesafeyi metre cinsinden aşağıya yazınız."),
                     QuestionCard(
                       child: TextFormField(
                         controller: _mesafeCtrl,
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        decoration: const InputDecoration(labelText: "Net Mesafeyi Giriniz (m)", suffixText: "metre", border: OutlineInputBorder()),
+                        decoration: const InputDecoration(
+                          labelText: "Net Mesafeyi Giriniz (m)", 
+                          suffixText: "metre", 
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.straighten),
+                        ),
                       ),
                     ),
+                  ],
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))]),
-            child: SafeArea(child: SizedBox(width: double.infinity, child: ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET")))),
-          ),
+          _buildBottomNav(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
+          const SizedBox(width: 12),
+          Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(
+        color: Colors.white, 
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity, 
+          child: ElevatedButton(
+            onPressed: _onNextPressed, 
+            child: const Text("DEVAM ET"),
+          ),
+        ),
       ),
     );
   }

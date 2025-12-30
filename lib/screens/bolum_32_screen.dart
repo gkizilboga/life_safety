@@ -26,18 +26,11 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
 
   void _checkJeneratorAndRedirect() {
     final b7 = BinaStore.instance.bolum7;
-    
     if (b7?.hasJenerator == true) {
-      setState(() {
-        _hasJenerator = true;
-      });
+      setState(() => _hasJenerator = true);
     } else {
-      // Jeneratör yoksa, ekran çizilir çizilmez bir sonraki bölüme yönlendir
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Bolum33Screen()),
-        );
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Bolum33Screen()));
       });
     }
   }
@@ -60,33 +53,24 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
     }
 
     BinaStore.instance.bolum32 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum33Screen()),
-    );
+    BinaStore.instance.saveToDisk(); // VERİYİ DİSKE YAZ
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum33Screen()));
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800));
   }
 
   @override
   Widget build(BuildContext context) {
-    // Jeneratör yoksa boş bir yükleniyor ekranı göster (yönlendirme bitene kadar)
-    if (!_hasJenerator) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
+    if (!_hasJenerator) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     return Scaffold(
       body: Column(
         children: [
           ModernHeader(
             title: "Bölüm-32: Jeneratör Odası",
-            subtitle: "...",
+            subtitle: "Jeneratör odası yapısal ve egzoz güvenliği",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -95,56 +79,61 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
               child: Column(
                 children: [
                   _buildSoru("Jeneratör odasının duvarları yangına dayanıklı mı ve kapısı nereye açılıyor?", 'yapi', 
-                    [
-                      Bolum32Content.yapiOptionA, 
-                      Bolum32Content.yapiOptionB, 
-                      Bolum32Content.yapiOptionC,
-                      Bolum32Content.yapiOptionD,
-                    ], _model.yapi),
+                    [Bolum32Content.yapiOptionA, Bolum32Content.yapiOptionB, Bolum32Content.yapiOptionC, Bolum32Content.yapiOptionD], _model.yapi),
 
                   _buildSoru("Jeneratörün yakıtı nerede ve nasıl depolanıyor?", 'yakit', 
-                    [
-                      Bolum32Content.yakitOptionA, 
-                      Bolum32Content.yakitOptionB,
-                      Bolum32Content.yakitOptionC,
-                    ], _model.yakit),
+                    [Bolum32Content.yakitOptionA, Bolum32Content.yakitOptionB, Bolum32Content.yakitOptionC], _model.yakit),
+
+                  if (_model.yakit != null)
+                    _buildInfoNote("Yakıt deposu jeneratör odası dışındaysa, boru hattının yangına dayanıklı şaft içinden geçmesi önerilir."),
 
                   _buildSoru("Jeneratör odasının içinden su borusu geçiyor mu veya üst katında ıslak zemin var mı?", 'cevre', 
-                    [
-                      Bolum32Content.cevreOptionA, 
-                      Bolum32Content.cevreOptionB, 
-                      Bolum32Content.cevreOptionC,
-                      Bolum32Content.cevreOptionD,
-                    ], _model.cevre),
+                    [Bolum32Content.cevreOptionA, Bolum32Content.cevreOptionB, Bolum32Content.cevreOptionC, Bolum32Content.cevreOptionD], _model.cevre),
 
                   _buildSoru("Jeneratörün egzoz borusu nereye veriliyor ve oda havalandırılıyor mu?", 'egzoz', 
-                    [
-                      Bolum32Content.egzozOptionA, 
-                      Bolum32Content.egzozOptionB,
-                      Bolum32Content.egzozOptionC,
-                    ], _model.egzoz),
+                    [Bolum32Content.egzozOptionA, Bolum32Content.egzozOptionB, Bolum32Content.egzozOptionC], _model.egzoz),
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
-          ),
+          _buildBottomNav(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 15),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.blue.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.blue.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.info_outline, color: Colors.blue, size: 20),
+          const SizedBox(width: 12),
+          Expanded(child: Text(text, style: const TextStyle(color: Color(0xFF0D47A1), fontWeight: FontWeight.bold, fontSize: 12))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET")),
+        ),
       ),
     );
   }

@@ -5,6 +5,8 @@ class Bolum18Model {
   final ChoiceResult? duvarKaplama;
   final ChoiceResult? boruTipi; // Sadece yüksek binalarda sorulur
 
+  ChoiceResult? get secim => duvarKaplama ?? boruTipi;
+
   Bolum18Model({
     this.duvarKaplama,
     this.boruTipi,

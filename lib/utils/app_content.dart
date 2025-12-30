@@ -2632,13 +2632,13 @@ class Bolum35Content {
   static final tekYonOptionB = ChoiceResult(
     label: "35-1-B",
     uiTitle: "Tahminen [LİMİT] metreden KISADIR.",
-    uiSubtitle: "Mesafe uygun görünüyor.",
+    uiSubtitle: "Mesafe yakın.",
     reportText: "✅ OLUMLU: Tek yön kaçış mesafesi Yönetmelik sınırları içerisindedir."
   );
   static final tekYonOptionC = ChoiceResult(
     label: "35-1-C",
     uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
-    uiSubtitle: "Mesafe çok uzun.",
+    uiSubtitle: "Mesafe uzun.",
     reportText: "☢️ RİSK: Tek yön kaçış mesafesi sınırın üzerinde! Yangın anında merdivene ulaşmak uzun sürebilir."
   );
   static final tekYonOptionD = ChoiceResult(
@@ -2658,27 +2658,27 @@ class Bolum35Content {
   static final ciftYonOptionB = ChoiceResult(
     label: "35-2-B",
     uiTitle: "Tahminen [LİMİT] metreden KISADIR.",
-    uiSubtitle: "En yakın çıkışa mesafe uygun.",
+    uiSubtitle: "Mesafe yakın.",
     reportText: "✅ OLUMLU: En yakın çıkışa kaçış mesafesi yönetmelik sınırları içerisindedir."
   );
   static final ciftYonOptionC = ChoiceResult(
     label: "35-2-C",
     uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
-    uiSubtitle: "En yakın çıkış bile çok uzak.",
+    uiSubtitle: "Mesafe uzak.",
     reportText: "☢️ RİSK: En yakın çıkışa mesafe sınırın üzerinde! (Limit: [LİMİT] m)."
   );
   static final ciftYonOptionD = ChoiceResult(
     label: "35-2-D",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "Mesafeyi bilmiyorum.",
+    uiSubtitle: "Mesafeyi tahmin edemiyorum.",
     reportText: "❓ BİLİNMİYOR: Kaçış mesafesi bilinmiyor. Ölçüm yapılmalıdır."
   );
 
   // --- ÇIKMAZ KORİDOR DURUMU ---
   static final cikmazOptionA = ChoiceResult(
     label: "35-3-A",
-    uiTitle: "Hayır, daireden çıkınca sağa veya sola (iki yöne de) gidebiliyorum.",
-    uiSubtitle: "Koridor sonunda değilim.",
+    uiTitle: "Hayır, daireden çıkınca sağa veya sola (iki farklı yöne) gidebiliyorum.",
+    uiSubtitle: " ",
     reportText: "✅ OLUMLU: Daire çıkmaz koridor üzerinde değildir."
   );
   static final cikmazOptionB = ChoiceResult(
@@ -2698,13 +2698,13 @@ class Bolum35Content {
   static final cikmazMesafeOptionB = ChoiceResult(
     label: "35-3-D",
     uiTitle: "Tahminen [LİMİT] metreden KISADIR.",
-    uiSubtitle: "Çıkmaz koridor kısa.",
+    uiSubtitle: "Çıkmaz koridoru boyu kısa.",
     reportText: "✅ OLUMLU: Çıkmaz koridor mesafesi yönetmelik sınırları içerisindedir."
   );
   static final cikmazMesafeOptionC = ChoiceResult(
     label: "35-3-E",
     uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
-    uiSubtitle: "Çıkmaz koridor çok uzun.",
+    uiSubtitle: "Çıkmaz koridorun boyu uzun.",
     reportText: "☢️ RİSK: Çıkmaz koridor mesafesi sınırın üzerinde! Duman dolduğunda kaçacak yeriniz kalmaz."
   );
   static final cikmazMesafeOptionD = ChoiceResult(
@@ -2715,7 +2715,6 @@ class Bolum35Content {
   );
 }
 class Bolum36Content {
-  // --- ADIM 1: DIŞ MERDİVEN ---
   static final disMerdOptionA = ChoiceResult(
     label: "36-1-A",
     uiTitle: "Hayır, merdiven etrafındaki duvarlar tamamen sağır (düz duvar).",
@@ -2735,7 +2734,6 @@ class Bolum36Content {
     reportText: "❓ BİLİNMİYOR: Dış merdiven çevresindeki açıklıklar bilinmiyor. Yangın anında alevlerin merdivene sıçrama riski kontrol edilmelidir."
   );
 
-  // --- ADIM 2: KONUM ---
   static final konumOptionA = ChoiceResult(
     label: "36-2-A",
     uiTitle: "Birbirlerine uzaklar (Koridorun zıt uçlarındalar / Farklı cephedeler).",
@@ -2746,36 +2744,48 @@ class Bolum36Content {
     label: "36-2-B",
     uiTitle: "Yan yanalar veya birbirlerine çok yakınlar.",
     uiSubtitle: "Birbirlerine bitişikler.",
-    reportText: "🚨 KRİTİK RİSK: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış' sayılmaz. Birini duman bastığında diğeri de kullanılamaz."
+    reportText: "🚨 KRİTİK RİSK: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış' sayılmaz."
   );
   static final konumOptionC = ChoiceResult(
     label: "36-2-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Konumlarını bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Merdiven konumları net değil. Yönetmeliğe göre iki çıkış arasındaki mesafe, binanın köşegen mesafesinin en az yarısı (veya üçte biri) kadar olmalıdır."
+    reportText: "❓ BİLİNMİYOR: Merdiven konumları net değil. Çıkışlar arası mesafe yönetmelik kriterlerine göre incelenmelidir."
   );
 
-  // --- ADIM 4: KAPI TİPİ ---
+  static final genislikBilinmiyor = ChoiceResult(
+    label: "36-3-BILMIYORUM",
+    uiTitle: "Merdiven/Koridor genişliğini bilmiyorum.",
+    uiSubtitle: "Ölçüm yapılamadı.",
+    reportText: "⚠️ UYARI: Kaçış yolu genişliği ölçülemediği için tahliye kapasitesi doğrulaması yapılamamıştır."
+  );
+
   static final kapiTipiOptionA = ChoiceResult(
     label: "36-4-A",
-    uiTitle: "Tek Kanatlı Kapı (Normal oda kapısı gibi tek parça açılır).",
-    uiSubtitle: "Normal kapı.",
-    reportText: "(Genişlik kontrolü yapılır)"
+    uiTitle: "Tek Kanatlı Kapı.",
+    uiSubtitle: "Normal oda kapısı gibi.",
+    reportText: "ℹ️ BİLGİ: Çıkış kapısı tek kanatlı olarak beyan edilmiştir."
   );
   static final kapiTipiOptionB = ChoiceResult(
     label: "36-4-B",
-    uiTitle: "Çift Kanatlı Kapı (İki parça halinde iki yana açılır).",
+    uiTitle: "Çift Kanatlı Kapı.",
     uiSubtitle: "İki yana açılan kapı.",
-    reportText: "(Genişlik kontrolü yapılır)"
+    reportText: "ℹ️ BİLGİ: Çıkış kapısı çift kanatlı olarak beyan edilmiştir."
   );
   static final kapiTipiOptionC = ChoiceResult(
     label: "36-4-C",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Çıkış kapısı tipi ve genişliği bilinmiyor. Tahliye kapasitesi hesaplanamamıştır."
+    uiSubtitle: "Kapı tipi belirsiz.",
+    reportText: "❓ BİLİNMİYOR: Çıkış kapısı tipi bilinmiyor."
   );
 
-  // --- ADIM 5: GÖRÜNÜRLÜK ---
+  static final kapiGenislikBilinmiyor = ChoiceResult(
+    label: "36-4-ALT-BILMIYORUM",
+    uiTitle: "Kapı net geçiş genişliğini bilmiyorum.",
+    uiSubtitle: "Ölçüm yapılamadı.",
+    reportText: "⚠️ UYARI: Çıkış kapısı net genişliği bilinmiyor. Kapı genişliği kullanıcı yüküne göre yetersiz olabilir."
+  );
+
   static final gorunurlukOptionA = ChoiceResult(
     label: "36-5-A",
     uiTitle: "Evet, açıkça görünüyor ve engel yok.",
@@ -2784,14 +2794,14 @@ class Bolum36Content {
   );
   static final gorunurlukOptionB = ChoiceResult(
     label: "36-5-B",
-    uiTitle: "Hayır, önünde eşyalar var veya çıkış kapılarını görmekte zorlanıyorum.",
+    uiTitle: "Hayır, önünde eşyalar var veya görmekte zorlanıyorum.",
     uiSubtitle: "Çıkışlar kapalı veya görünmüyor.",
-    reportText: "🚨 RİSK: Çıkışlar her an kullanılabilir durumda ve engelsiz olmalıdır. Önündeki eşyalar derhal kaldırılmalıdır."
+    reportText: "🚨 RİSK: Çıkışlar her an kullanılabilir durumda ve engelsiz olmalıdır."
   );
   static final gorunurlukOptionC = ChoiceResult(
     label: "36-5-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Durumu bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Çıkışların erişilebilirliği bilinmiyor. Acil durumda saniyeler önemlidir; kapıların yerini ve önünün açık olduğunu teyit ediniz."
+    reportText: "❓ BİLİNMİYOR: Çıkışların erişilebilirliği ve görünürlüğü tespit edilememiştir."
   );
 }

@@ -65,7 +65,7 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
     });
   }
 
-  void _onNextPressed() {
+void _onNextPressed() {
     if (_hasTrafo) {
       if (_model.yapi == null) return _showError("Lütfen kapı-duvar özelliklerini seçiniz.");
       if (_model.tip == null) return _showError("Lütfen trafo tipini seçiniz.");
@@ -75,7 +75,9 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
       }
       if (_model.cevre == null) return _showError("Lütfen çevresel risk durumunu seçiniz.");
     }
+    
     BinaStore.instance.bolum31 = _model;
+    BinaStore.instance.saveToDisk(); // BU SATIRI EKLE
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum32Screen()));
   }
 

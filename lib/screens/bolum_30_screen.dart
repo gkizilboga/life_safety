@@ -82,7 +82,6 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       double? kap = double.tryParse(_kapasiteCtrl.text.replaceAll(',', '.'));
       _model = _model.copyWith(kapasite: kap);
 
-      // 350 kW Kontrolü
       if (!_model.kapasiteBilinmiyor && kap != null && kap > 350 && _model.kapi?.label == Bolum30Content.kapiOptionA.label) {
         return _showError("350 kW üzerindeki kazan dairelerinde en az 2 adet çıkış kapısı zorunludur.");
       }
@@ -97,6 +96,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     }
 
     BinaStore.instance.bolum30 = _model;
+    BinaStore.instance.saveToDisk();
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum31Screen()));
   }
 

@@ -39,6 +39,7 @@ class Bolum32Model {
 
   factory Bolum32Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? label, List<ChoiceResult> options) {
+      if (label == null) return null;
       try {
         return options.firstWhere((e) => e.label == label);
       } catch (_) {

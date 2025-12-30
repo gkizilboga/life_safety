@@ -14,6 +14,8 @@ class Bolum21Model {
     this.esya,
   });
 
+  ChoiceResult? get secim => varlik ?? malzeme ?? kapi ?? esya;
+
   Bolum21Model copyWith({
     ChoiceResult? varlik,
     ChoiceResult? malzeme,

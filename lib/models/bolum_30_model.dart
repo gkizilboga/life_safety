@@ -4,7 +4,7 @@ import '../utils/app_content.dart';
 class Bolum30Model {
   final ChoiceResult? konum;
   final double? kapasite;
-  final bool kapasiteBilinmiyor; // Kapasite bilinmiyor durumu için
+  final bool kapasiteBilinmiyor;
   final ChoiceResult? kapi;
   final ChoiceResult? hava;
   final ChoiceResult? yakit;
@@ -59,6 +59,7 @@ class Bolum30Model {
 
   factory Bolum30Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? label, List<ChoiceResult> options) {
+      if (label == null) return null;
       try {
         return options.firstWhere((e) => e.label == label);
       } catch (_) {

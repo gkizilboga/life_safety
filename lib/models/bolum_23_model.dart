@@ -8,6 +8,8 @@ class Bolum23Model {
   final ChoiceResult? levha;
   final ChoiceResult? havalandirma;
 
+  ChoiceResult? get secim => bodrum ?? yanginModu ?? konum ?? levha ?? havalandirma;
+
   Bolum23Model({
     this.bodrum,
     this.yanginModu,

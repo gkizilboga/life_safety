@@ -1,3 +1,4 @@
+import 'screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:life_safety/screens/bolum_1_screen.dart';
 import 'package:life_safety/utils/app_theme.dart';
@@ -21,7 +22,7 @@ class BinaKarnesiApp extends StatelessWidget {
         fontFamily: 'Roboto',
         elevatedButtonTheme: ElevatedButtonThemeData(style: AppStyles.mainButton),
       ),
-      home: const Bolum1Screen(),
+      home: const DashboardScreen(),
     );
   }
 }
