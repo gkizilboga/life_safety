@@ -21,7 +21,6 @@ class ModernHeader extends StatelessWidget {
     int totalSteps = AppProgress.totalSteps;
     double progress = currentStep / totalSteps;
 
-    // Eğer geri dönülebilecek bir sayfa varsa otomatik algılar
     final bool canPop = Navigator.canPop(context);
 
     return Container(
@@ -44,7 +43,6 @@ class ModernHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // GERİ BUTONU: onBack verilmişse onu kullanır, yoksa otomatik pop yapar
           if (onBack != null || canPop)
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
@@ -191,7 +189,7 @@ class SectionImage extends StatelessWidget {
   }
 }
 
-// İkonla görsel açma butonu (Progressive Disclosure için)
+// Küçük Bilgi İkonu (Hızlı ipuçları için)
 class ImageInfoButton extends StatelessWidget {
   final String assetPath;
   final String title;
@@ -202,51 +200,119 @@ class ImageInfoButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.info_outline, color: Color(0xFF1A237E), size: 28),
-      onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      onPressed: () => _showPopup(context),
+    );
+  }
+
+  void _showPopup(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25))),
+      builder: (context) => _ImagePopupContent(assetPath: assetPath, title: title),
+    );
+  }
+}
+
+// YENİ: Belirgin Büyük Teknik Görsel Butonu
+class TechnicalDrawingButton extends StatelessWidget {
+  final String assetPath;
+  final String title;
+
+  const TechnicalDrawingButton({super.key, required this.assetPath, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: InkWell(
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => _ImagePopupContent(assetPath: assetPath, title: title),
+          );
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A237E).withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.2)),
           ),
-          builder: (context) => Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.image_search_rounded, color: Color(0xFF1A237E), size: 26),
+              SizedBox(width: 12),
+              Text(
+                "TEKNİK GÖRSELİ AÇ",
+                style: TextStyle(
+                  color: Color(0xFF1A237E),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  letterSpacing: 0.5
                 ),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                const SizedBox(height: 20),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Image.asset(assetPath, fit: BoxFit.contain),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("Kapat", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Ortak Popup İçeriği (Zoom özellikli)
+class _ImagePopupContent extends StatelessWidget {
+  final String assetPath;
+  final String title;
+
+  const _ImagePopupContent({required this.assetPath, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
+          const SizedBox(height: 20),
+          Text(title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1A237E))),
+          const SizedBox(height: 20),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: InteractiveViewer(
+              minScale: 1.0,
+              maxScale: 4.0,
+              child: Image.asset(assetPath, fit: BoxFit.contain),
             ),
           ),
-        );
-      },
+          const SizedBox(height: 15),
+          const Text("Görseli büyütmek için iki parmağınızla yakınlaştırabilirsiniz.", style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic)),
+          const SizedBox(height: 25),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1A237E),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: () => Navigator.pop(context),
+              child: const Text("KAPAT", style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
     );
   }
 }

@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'bolum_1_screen.dart';
 import 'report_summary_screen.dart';
+import 'archive_screen.dart'; // Bu dosyayı bir sonraki adımda oluşturacağız
 import '../../data/bina_store.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
   Widget build(BuildContext context) {
     bool hasOngoing = BinaStore.instance.bolum1 != null;
+    String buildingName = BinaStore.instance.currentBinaName ?? "İsimsiz Bina";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
@@ -18,7 +26,7 @@ class DashboardScreen extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(20),
               children: [
-                if (hasOngoing) _buildOngoingCard(context),
+                if (hasOngoing) _buildOngoingCard(context, buildingName),
                 const SizedBox(height: 20),
                 _buildMainActions(context),
                 const SizedBox(height: 25),
@@ -47,13 +55,13 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 12),
           const Text("Hoş Geldiniz,", 
             style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-          const Text("Kişi", 
+          const Text("Analiz Uzmanı", 
             style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w300)),
           const SizedBox(height: 20),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
-            child: const Text("Sistem Aktif: Binaların Yangından Korunması Hakkında Yönetmeliği (BYKHY) ile Entegre", 
+            child: const Text("Sistem Aktif: BYKHY Mevzuat Entegre", 
               style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500)),
           ),
         ],
@@ -61,14 +69,14 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOngoingCard(BuildContext context) {
+  Widget _buildOngoingCard(BuildContext context, String name) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [const Color(0xFF283593), const Color(0xFF1A237E)]
+          colors: [Color(0xFF283593), Color(0xFF1A237E)]
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
@@ -76,17 +84,17 @@ class DashboardScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("AKTİF ANALİZ", 
+              const Text("AKTİF ANALİZ", 
                 style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1)),
-              Icon(Icons.analytics_outlined, color: Colors.white70, size: 20),
+              Icon(Icons.analytics_outlined, color: Colors.white.withOpacity(0.5), size: 20),
             ],
           ),
           const SizedBox(height: 15),
-          const Text("Mevcut Analize Devam Et", 
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(name, 
+            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 5),
           const Text("Yarım kalan yangın risk analizine kaldığınız yerden devam edebilirsiniz.", 
             style: TextStyle(color: Colors.white60, fontSize: 12)),
@@ -100,7 +108,7 @@ class DashboardScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
               ),
               onPressed: () {
-                // Navigasyon mantığı
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum1Screen()));
               },
               child: const Text("ANALİZE DÖN", style: TextStyle(fontWeight: FontWeight.bold)),
             ),
@@ -131,7 +139,9 @@ class DashboardScreen extends StatelessWidget {
             "Tamamlanan Analizler",
             Icons.inventory_2_outlined,
             const Color(0xFF1A237E),
-            () { /* Arşiv */ },
+            () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const ArchiveScreen()));
+            },
           ),
         ),
       ],
@@ -202,21 +212,39 @@ class DashboardScreen extends StatelessWidget {
   }
 
   void _startNewAnalysis(BuildContext context) {
+    final TextEditingController nameCtrl = TextEditingController();
+    
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text("Yeni Yangın Risk Analizi"),
-        content: const Text("Mevcut veriler temizlenecek ve yeni bir analiz süreci başlayacaktır. Devam etmek istiyor musunuz?"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Analiz edilecek binanın adını veya referans numarasını giriniz:"),
+            const SizedBox(height: 15),
+            TextField(
+              controller: nameCtrl,
+              autofocus: true,
+              decoration: const InputDecoration(
+                hintText: "Örn: Huzur Apartmanı A Blok",
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Vazgeç", style: TextStyle(color: Colors.grey))),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white),
             onPressed: () {
-              BinaStore.instance.reset();
-              BinaStore.instance.saveToDisk();
+              if (nameCtrl.text.trim().isEmpty) return;
+              BinaStore.instance.createNewBuilding(nameCtrl.text.trim());
               Navigator.pop(ctx);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const ReportSummaryScreen()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum1Screen())).then((_) {
+                setState(() {}); // Geri dönüldüğünde dashboard'u tazele
+              });
             },
             child: const Text("Başlat"),
           ),

@@ -97,10 +97,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2C3E50)),
                         ),
                       ),
-                      ImageInfoButton(
-                        assetPath: AppAssets.section_1, // Buraya şaft görselini ekleyebilirsin
-                        title: "Tesisat Şaftı Nedir?",
-                      ),
+                      
                     ],
                   ),
                   const SizedBox(height: 15),

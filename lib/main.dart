@@ -1,9 +1,11 @@
-import 'screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:life_safety/screens/bolum_1_screen.dart';
-import 'package:life_safety/utils/app_theme.dart';
+import 'screens/dashboard_screen.dart';
+import 'data/bina_store.dart';
+import 'utils/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await BinaStore.instance.loadFromDisk();
   runApp(const BinaKarnesiApp());
 }
 

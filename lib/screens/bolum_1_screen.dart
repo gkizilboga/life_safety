@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import '../data/bina_store.dart'; // 'logic' değil 'data' klasöründeymiş
+import '../data/bina_store.dart'; 
 import '../models/bolum_1_model.dart';
 import 'bolum_2_screen.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/selectable_card.dart';
 import '../utils/app_content.dart';
 import '../models/choice_result.dart';
-import '../utils/app_assets.dart';
 
 class Bolum1Screen extends StatefulWidget {
   const Bolum1Screen({super.key});
@@ -127,7 +126,6 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
 QuestionCard(
   child: Column(
     children: [
-      SectionImage(assetPath: AppAssets.section_1), // Sadece bu!
       SelectableCard(
         choice: Bolum1Content.ruhsatSonrasi,
         isSelected: _model.secim?.label == Bolum1Content.ruhsatSonrasi.label,

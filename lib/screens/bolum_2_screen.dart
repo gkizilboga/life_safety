@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_2_model.dart';
-import 'bolum_3_screen.dart'; // Sonraki ekran
+import 'bolum_3_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_assets.dart';
+
 
 class Bolum2Screen extends StatefulWidget {
   const Bolum2Screen({super.key});
@@ -63,6 +65,12 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
                           isSelected: _model.secim?.label == Bolum2Content.celik.label,
                           onTap: () => _handleSelection(Bolum2Content.celik),
                         ),
+                        TechnicalDrawingButton(
+                          assetPath: AppAssets.section2Celik,
+                          title: "Çelik Yapı Görseli",
+                        ),
+                        const SizedBox(height: 12),
+
                         SelectableCard(
                           choice: Bolum2Content.ahsap,
                           isSelected: _model.secim?.label == Bolum2Content.ahsap.label,

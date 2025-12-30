@@ -1,3 +1,4 @@
 class AppAssets {
-  static const String section_1 = 'assets/images/sections/ruhsat_tarih_1.webp';
+  static const String section2Celik = 'assets/images/sections/celik_yapi.webp';
+
 }

@@ -45,6 +45,10 @@ class BinaStore {
   BinaStore._internal();
   static BinaStore get instance => _instance;
 
+  String? currentBinaId;
+  String? currentBinaName;
+  List<Map<String, dynamic>> archive = [];
+
   Bolum1Model? bolum1;
   Bolum2Model? bolum2;
   Bolum3Model? bolum3;
@@ -84,89 +88,126 @@ class BinaStore {
 
   Future<void> saveToDisk() async {
     final prefs = await SharedPreferences.getInstance();
-    final data = {
-      'bolum1': bolum1?.toMap(),
-      'bolum2': bolum2?.toMap(),
-      'bolum3': bolum3?.toMap(),
-      'bolum4': bolum4?.toMap(),
-      'bolum5': bolum5?.toMap(),
-      'bolum6': bolum6?.toMap(),
-      'bolum7': bolum7?.toMap(),
-      'bolum8': bolum8?.toMap(),
-      'bolum9': bolum9?.toMap(),
-      'bolum10': bolum10?.toMap(),
-      'bolum11': bolum11?.toMap(),
-      'bolum12': bolum12?.toMap(),
-      'bolum13': bolum13?.toMap(),
-      'bolum14': bolum14?.toMap(),
-      'bolum15': bolum15?.toMap(),
-      'bolum16': bolum16?.toMap(),
-      'bolum17': bolum17?.toMap(),
-      'bolum18': bolum18?.toMap(),
-      'bolum19': bolum19?.toMap(),
-      'bolum20': bolum20?.toMap(),
-      'bolum21': bolum21?.toMap(),
-      'bolum22': bolum22?.toMap(),
-      'bolum23': bolum23?.toMap(),
-      'bolum24': bolum24?.toMap(),
-      'bolum25': bolum25?.toMap(),
-      'bolum26': bolum26?.toMap(),
-      'bolum27': bolum27?.toMap(),
-      'bolum28': bolum28?.toMap(),
-      'bolum29': bolum29?.toMap(),
-      'bolum30': bolum30?.toMap(),
-      'bolum31': bolum31?.toMap(),
-      'bolum32': bolum32?.toMap(),
-      'bolum33': bolum33?.toMap(),
-      'bolum34': bolum34?.toMap(),
-      'bolum35': bolum35?.toMap(),
-      'bolum36': bolum36?.toMap(),
+    
+    final currentData = {
+      'id': currentBinaId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      'name': currentBinaName ?? "İsimsiz Bina",
+      'date': DateTime.now().toIso8601String(),
+      'sections': {
+        'bolum1': bolum1?.toMap(),
+        'bolum2': bolum2?.toMap(),
+        'bolum3': bolum3?.toMap(),
+        'bolum4': bolum4?.toMap(),
+        'bolum5': bolum5?.toMap(),
+        'bolum6': bolum6?.toMap(),
+        'bolum7': bolum7?.toMap(),
+        'bolum8': bolum8?.toMap(),
+        'bolum9': bolum9?.toMap(),
+        'bolum10': bolum10?.toMap(),
+        'bolum11': bolum11?.toMap(),
+        'bolum12': bolum12?.toMap(),
+        'bolum13': bolum13?.toMap(),
+        'bolum14': bolum14?.toMap(),
+        'bolum15': bolum15?.toMap(),
+        'bolum16': bolum16?.toMap(),
+        'bolum17': bolum17?.toMap(),
+        'bolum18': bolum18?.toMap(),
+        'bolum19': bolum19?.toMap(),
+        'bolum20': bolum20?.toMap(),
+        'bolum21': bolum21?.toMap(),
+        'bolum22': bolum22?.toMap(),
+        'bolum23': bolum23?.toMap(),
+        'bolum24': bolum24?.toMap(),
+        'bolum25': bolum25?.toMap(),
+        'bolum26': bolum26?.toMap(),
+        'bolum27': bolum27?.toMap(),
+        'bolum28': bolum28?.toMap(),
+        'bolum29': bolum29?.toMap(),
+        'bolum30': bolum30?.toMap(),
+        'bolum31': bolum31?.toMap(),
+        'bolum32': bolum32?.toMap(),
+        'bolum33': bolum33?.toMap(),
+        'bolum34': bolum34?.toMap(),
+        'bolum35': bolum35?.toMap(),
+        'bolum36': bolum36?.toMap(),
+      }
     };
-    await prefs.setString('bina_data', json.encode(data));
+
+    int index = archive.indexWhere((element) => element['id'] == currentData['id']);
+    if (index != -1) {
+      archive[index] = currentData;
+    } else {
+      archive.add(currentData);
+    }
+
+    await prefs.setString('bina_archive', json.encode(archive));
+    await prefs.setString('active_bina_id', currentBinaId ?? "");
   }
 
   Future<void> loadFromDisk() async {
     final prefs = await SharedPreferences.getInstance();
-    final rawData = prefs.getString('bina_data');
-    if (rawData != null) {
-      final data = json.decode(rawData);
-      if (data['bolum1'] != null) bolum1 = Bolum1Model.fromMap(data['bolum1']);
-      if (data['bolum2'] != null) bolum2 = Bolum2Model.fromMap(data['bolum2']);
-      if (data['bolum3'] != null) bolum3 = Bolum3Model.fromMap(data['bolum3']);
-      if (data['bolum4'] != null) bolum4 = Bolum4Model.fromMap(data['bolum4']);
-      if (data['bolum5'] != null) bolum5 = Bolum5Model.fromMap(data['bolum5']);
-      if (data['bolum6'] != null) bolum6 = Bolum6Model.fromMap(data['bolum6']);
-      if (data['bolum7'] != null) bolum7 = Bolum7Model.fromMap(data['bolum7']);
-      if (data['bolum8'] != null) bolum8 = Bolum8Model.fromMap(data['bolum8']);
-      if (data['bolum9'] != null) bolum9 = Bolum9Model.fromMap(data['bolum9']);
-      if (data['bolum10'] != null) bolum10 = Bolum10Model.fromMap(data['bolum10']);
-      if (data['bolum11'] != null) bolum11 = Bolum11Model.fromMap(data['bolum11']);
-      if (data['bolum12'] != null) bolum12 = Bolum12Model.fromMap(data['bolum12']);
-      if (data['bolum13'] != null) bolum13 = Bolum13Model.fromMap(data['bolum13']);
-      if (data['bolum14'] != null) bolum14 = Bolum14Model.fromMap(data['bolum14']);
-      if (data['bolum15'] != null) bolum15 = Bolum15Model.fromMap(data['bolum15']);
-      if (data['bolum16'] != null) bolum16 = Bolum16Model.fromMap(data['bolum16']);
-      if (data['bolum17'] != null) bolum17 = Bolum17Model.fromMap(data['bolum17']);
-      if (data['bolum18'] != null) bolum18 = Bolum18Model.fromMap(data['bolum18']);
-      if (data['bolum19'] != null) bolum19 = Bolum19Model.fromMap(data['bolum19']);
-      if (data['bolum20'] != null) bolum20 = Bolum20Model.fromMap(data['bolum20']);
-      if (data['bolum21'] != null) bolum21 = Bolum21Model.fromMap(data['bolum21']);
-      if (data['bolum22'] != null) bolum22 = Bolum22Model.fromMap(data['bolum22']);
-      if (data['bolum23'] != null) bolum23 = Bolum23Model.fromMap(data['bolum23']);
-      if (data['bolum24'] != null) bolum24 = Bolum24Model.fromMap(data['bolum24']);
-      if (data['bolum25'] != null) bolum25 = Bolum25Model.fromMap(data['bolum25']);
-      if (data['bolum26'] != null) bolum26 = Bolum26Model.fromMap(data['bolum26']);
-      if (data['bolum27'] != null) bolum27 = Bolum27Model.fromMap(data['bolum27']);
-      if (data['bolum28'] != null) bolum28 = Bolum28Model.fromMap(data['bolum28']);
-      if (data['bolum29'] != null) bolum29 = Bolum29Model.fromMap(data['bolum29']);
-      if (data['bolum30'] != null) bolum30 = Bolum30Model.fromMap(data['bolum30']);
-      if (data['bolum31'] != null) bolum31 = Bolum31Model.fromMap(data['bolum31']);
-      if (data['bolum32'] != null) bolum32 = Bolum32Model.fromMap(data['bolum32']);
-      if (data['bolum33'] != null) bolum33 = Bolum33Model.fromMap(data['bolum33']);
-      if (data['bolum34'] != null) bolum34 = Bolum34Model.fromMap(data['bolum34']);
-      if (data['bolum35'] != null) bolum35 = Bolum35Model.fromMap(data['bolum35']);
-      if (data['bolum36'] != null) bolum36 = Bolum36Model.fromMap(data['bolum36']);
+    final archiveRaw = prefs.getString('bina_archive');
+    final activeId = prefs.getString('active_bina_id');
+
+    if (archiveRaw != null) {
+      archive = List<Map<String, dynamic>>.from(json.decode(archiveRaw));
+      if (activeId != null && activeId.isNotEmpty) {
+        final activeData = archive.firstWhere((e) => e['id'] == activeId, orElse: () => {});
+        if (activeData.isNotEmpty) {
+          _loadBuildingFromMap(activeData);
+        }
+      }
     }
+  }
+
+  void _loadBuildingFromMap(Map<String, dynamic> data) {
+        
+    currentBinaId = data['id'];
+    currentBinaName = data['name'];
+    final s = data['sections'];
+    if (s['bolum1'] != null) bolum1 = Bolum1Model.fromMap(s['bolum1']);
+    if (s['bolum2'] != null) bolum2 = Bolum2Model.fromMap(s['bolum2']);
+    if (s['bolum3'] != null) bolum3 = Bolum3Model.fromMap(s['bolum3']);
+    if (s['bolum4'] != null) bolum4 = Bolum4Model.fromMap(s['bolum4']);
+    if (s['bolum5'] != null) bolum5 = Bolum5Model.fromMap(s['bolum5']);
+    if (s['bolum6'] != null) bolum6 = Bolum6Model.fromMap(s['bolum6']);
+    if (s['bolum7'] != null) bolum7 = Bolum7Model.fromMap(s['bolum7']);
+    if (s['bolum8'] != null) bolum8 = Bolum8Model.fromMap(s['bolum8']);
+    if (s['bolum9'] != null) bolum9 = Bolum9Model.fromMap(s['bolum9']);
+    if (s['bolum10'] != null) bolum10 = Bolum10Model.fromMap(s['bolum10']);
+    if (s['bolum11'] != null) bolum11 = Bolum11Model.fromMap(s['bolum11']);
+    if (s['bolum12'] != null) bolum12 = Bolum12Model.fromMap(s['bolum12']);
+    if (s['bolum13'] != null) bolum13 = Bolum13Model.fromMap(s['bolum13']);
+    if (s['bolum14'] != null) bolum14 = Bolum14Model.fromMap(s['bolum14']);
+    if (s['bolum15'] != null) bolum15 = Bolum15Model.fromMap(s['bolum15']);
+    if (s['bolum16'] != null) bolum16 = Bolum16Model.fromMap(s['bolum16']);
+    if (s['bolum17'] != null) bolum17 = Bolum17Model.fromMap(s['bolum17']);
+    if (s['bolum18'] != null) bolum18 = Bolum18Model.fromMap(s['bolum18']);
+    if (s['bolum19'] != null) bolum19 = Bolum19Model.fromMap(s['bolum19']);
+    if (s['bolum20'] != null) bolum20 = Bolum20Model.fromMap(s['bolum20']);
+    if (s['bolum21'] != null) bolum21 = Bolum21Model.fromMap(s['bolum21']);
+    if (s['bolum22'] != null) bolum22 = Bolum22Model.fromMap(s['bolum22']);
+    if (s['bolum23'] != null) bolum23 = Bolum23Model.fromMap(s['bolum23']);
+    if (s['bolum24'] != null) bolum24 = Bolum24Model.fromMap(s['bolum24']);
+    if (s['bolum25'] != null) bolum25 = Bolum25Model.fromMap(s['bolum25']);
+    if (s['bolum26'] != null) bolum26 = Bolum26Model.fromMap(s['bolum26']);
+    if (s['bolum27'] != null) bolum27 = Bolum27Model.fromMap(s['bolum27']);
+    if (s['bolum28'] != null) bolum28 = Bolum28Model.fromMap(s['bolum28']);
+    if (s['bolum29'] != null) bolum29 = Bolum29Model.fromMap(s['bolum29']);
+    if (s['bolum30'] != null) bolum30 = Bolum30Model.fromMap(s['bolum30']);
+    if (s['bolum31'] != null) bolum31 = Bolum31Model.fromMap(s['bolum31']);
+    if (s['bolum32'] != null) bolum32 = Bolum32Model.fromMap(s['bolum32']);
+    if (s['bolum33'] != null) bolum33 = Bolum33Model.fromMap(s['bolum33']);
+    if (s['bolum34'] != null) bolum34 = Bolum34Model.fromMap(s['bolum34']);
+    if (s['bolum35'] != null) bolum35 = Bolum35Model.fromMap(s['bolum35']);
+    if (s['bolum36'] != null) bolum36 = Bolum36Model.fromMap(s['bolum36']);
+  }
+
+  void createNewBuilding(String name) {
+    reset();
+    currentBinaId = DateTime.now().millisecondsSinceEpoch.toString();
+    currentBinaName = name;
+    saveToDisk();
   }
 
   void clearAfter(int sectionNumber) {
@@ -183,18 +224,18 @@ class BinaStore {
       case 8: return bolum8?.secim;
       case 9: return bolum9?.secim;
       case 11: return bolum11?.mesafe;
-      case 12: return bolum12?.secim; // Modelde 'secim' tanımlı olmalı
-      case 14: return bolum14?.secim; // Modelde 'secim' tanımlı olmalı
+      case 12: return bolum12?.secim;
+      case 14: return bolum14?.secim;
       case 15: return bolum15?.kaplama;
-      case 16: return bolum16?.secim; // Modelde 'secim' tanımlı olmalı
+      case 16: return bolum16?.secim;
       case 17: return bolum17?.kaplama;
-      case 18: return bolum18?.secim; // Modelde 'secim' tanımlı olmalı
-      case 21: return bolum21?.secim; // Modelde 'secim' tanımlı olmalı
-      case 22: return bolum22?.secim; // Modelde 'secim' tanımlı olmalı
-      case 23: return bolum23?.secim; // Modelde 'secim' tanımlı olmalı
-      case 24: return bolum24?.secim; // Modelde 'secim' tanımlı olmalı
+      case 18: return bolum18?.secim;
+      case 21: return bolum21?.secim;
+      case 22: return bolum22?.secim;
+      case 23: return bolum23?.secim;
+      case 24: return bolum24?.secim;
       case 25: return bolum25?.kapasite;
-      case 26: return bolum26?.secim; // Modelde 'secim' tanımlı olmalı
+      case 26: return bolum26?.secim;
       case 27: return bolum27?.boyut;
       case 28: return bolum28?.mesafe;
       case 30: return bolum30?.konum;
@@ -217,6 +258,19 @@ class BinaStore {
     bolum25 = null; bolum26 = null; bolum27 = null; bolum28 = null;
     bolum29 = null; bolum30 = null; bolum31 = null; bolum32 = null;
     bolum33 = null; bolum34 = null; bolum35 = null; bolum36 = null;
+  }
+  void loadBuildingFromArchive(String id) {
+    final data = archive.firstWhere((e) => e['id'] == id, orElse: () => {});
+    if (data.isNotEmpty) {
+      reset(); // Mevcut modelleri temizle
+      _loadBuildingFromMap(data); // Arşivdeki veriyi modellere doldur
+      saveToDisk(); // Bu binayı "aktif" bina olarak kaydet
+    }
+  }
+
+  void deleteFromArchive(String id) {
+    archive.removeWhere((element) => element['id'] == id);
+    if (currentBinaId == id) reset();
     saveToDisk();
   }
 }
