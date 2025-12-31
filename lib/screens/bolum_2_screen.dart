@@ -9,6 +9,7 @@ import '../../models/choice_result.dart';
 import '../../utils/app_assets.dart';
 
 
+
 class Bolum2Screen extends StatefulWidget {
   const Bolum2Screen({super.key});
 

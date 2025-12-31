@@ -48,7 +48,6 @@ class ReportSummaryScreen extends StatelessWidget {
             module.title,
             style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E), fontSize: 16),
           ),
-          // BURADAKİ ÇAĞRI DÜZELTİLDİ: (context, id) gönderiliyor
           children: module.sectionIds.map((id) => _buildSectionTile(context, id)).toList(),
         ),
       ),

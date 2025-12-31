@@ -220,16 +220,24 @@ class BinaStore {
     switch (id) {
       case 1: return bolum1?.secim;
       case 2: return bolum2?.secim;
+      case 3: return ChoiceResult(label: "3", uiTitle: "Kat Sayısı", uiSubtitle: "H_Bina: ${bolum3?.hBina}m", reportText: "");
       case 4: return bolum4?.binaYukseklikSinifi;
+      case 5: return ChoiceResult(label: "5", uiTitle: "Alan Bilgisi", uiSubtitle: "${bolum5?.toplamInsaatAlani} m²", reportText: "");
+      case 6: return ChoiceResult(label: "6", uiTitle: "Riskli Alanlar", uiSubtitle: "Tespit Yapıldı", reportText: "");
+      case 7: return ChoiceResult(label: "7", uiTitle: "Teknik Hacimler", uiSubtitle: "Beyan Edildi", reportText: "");
       case 8: return bolum8?.secim;
       case 9: return bolum9?.secim;
+      case 10: return bolum10?.secim;
       case 11: return bolum11?.mesafe;
       case 12: return bolum12?.secim;
+      case 13: return bolum13?.otoparkKapi; // İlk dolu olanı döndürür
       case 14: return bolum14?.secim;
       case 15: return bolum15?.kaplama;
       case 16: return bolum16?.secim;
       case 17: return bolum17?.kaplama;
       case 18: return bolum18?.secim;
+      case 19: return bolum19?.levha;
+      case 20: return ChoiceResult(label: "20", uiTitle: "Merdiven Tipleri", uiSubtitle: "Sayısal Tespit", reportText: "");
       case 21: return bolum21?.secim;
       case 22: return bolum22?.secim;
       case 23: return bolum23?.secim;
@@ -238,9 +246,11 @@ class BinaStore {
       case 26: return bolum26?.secim;
       case 27: return bolum27?.boyut;
       case 28: return bolum28?.mesafe;
+      case 29: return bolum29?.otopark;
       case 30: return bolum30?.konum;
       case 31: return bolum31?.yapi;
       case 32: return bolum32?.yapi;
+      case 33: return bolum33?.zeminKatSonuc;
       case 34: return bolum34?.zemin;
       case 35: return bolum35?.tekYon ?? bolum35?.ciftYon;
       case 36: return bolum36?.gorunurluk;

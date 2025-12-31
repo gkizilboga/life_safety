@@ -19,251 +19,173 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   @override
   void initState() {
     super.initState();
-    _checkPreviousData();
+    _syncWithPreviousSteps();
   }
 
-  void _checkPreviousData() {
-    final hasOtoparkFromBolum6 = BinaStore.instance.bolum6?.hasOtopark ?? false;
-    if (hasOtoparkFromBolum6) {
-      setState(() {
-        _model = _model.copyWith(hasOtopark: true, isHicbiri: false);
-      });
-    }
+  void _syncWithPreviousSteps() {
+    final b6 = BinaStore.instance.bolum6;
+    setState(() {
+      _model = _model.copyWith(
+        hasOtopark: b6?.hasOtopark ?? false,
+        hasDepo: b6?.hasDepo ?? false,
+        isHicbiri: false,
+      );
+    });
   }
 
   void _toggleOption(String key) {
     setState(() {
-      bool newVal = false;
-      bool clearHicbiri = true;
-
       switch (key) {
-        case 'kazan':
-          newVal = !_model.hasKazan;
-          _model = _model.copyWith(hasKazan: newVal);
-          break;
-        case 'asansor':
-          newVal = !_model.hasAsansor;
-          _model = _model.copyWith(hasAsansor: newVal);
-          break;
-        case 'cati':
-          newVal = !_model.hasCati;
-          _model = _model.copyWith(hasCati: newVal);
-          break;
-        case 'jenerator':
-          newVal = !_model.hasJenerator;
-          _model = _model.copyWith(hasJenerator: newVal);
-          break;
-        case 'elektrik':
-          newVal = !_model.hasElektrik;
-          _model = _model.copyWith(hasElektrik: newVal);
-          break;
-        case 'trafo':
-          newVal = !_model.hasTrafo;
-          _model = _model.copyWith(hasTrafo: newVal);
-          break;
-        case 'depo':
-          newVal = !_model.hasDepo;
-          _model = _model.copyWith(hasDepo: newVal);
-          break;
-        case 'cop':
-          newVal = !_model.hasCop;
-          _model = _model.copyWith(hasCop: newVal);
-          break;
-        case 'siginak':
-          newVal = !_model.hasSiginak;
-          _model = _model.copyWith(hasSiginak: newVal);
-          break;
-        case 'duvar':
-          newVal = !_model.hasDuvar;
-          _model = _model.copyWith(hasDuvar: newVal);
-          break;
+        case 'kazan': _model = _model.copyWith(hasKazan: !_model.hasKazan); break;
+        case 'asansor': _model = _model.copyWith(hasAsansor: !_model.hasAsansor); break;
+        case 'cati': _model = _model.copyWith(hasCati: !_model.hasCati); break;
+        case 'jenerator': _model = _model.copyWith(hasJenerator: !_model.hasJenerator); break;
+        case 'elektrik': _model = _model.copyWith(hasElektrik: !_model.hasElektrik); break;
+        case 'trafo': _model = _model.copyWith(hasTrafo: !_model.hasTrafo); break;
+        case 'cop': _model = _model.copyWith(hasCop: !_model.hasCop); break;
+        case 'siginak': _model = _model.copyWith(hasSiginak: !_model.hasSiginak); break;
+        case 'duvar': _model = _model.copyWith(hasDuvar: !_model.hasDuvar); break;
         case 'hicbiri':
-          bool otoparkKalsin = BinaStore.instance.bolum6?.hasOtopark ?? false;
+          final b6 = BinaStore.instance.bolum6;
           _model = Bolum7Model(
-            isHicbiri: !_model.isHicbiri, 
-            hasOtopark: otoparkKalsin
+            isHicbiri: !_model.isHicbiri,
+            hasOtopark: b6?.hasOtopark ?? false,
+            hasDepo: b6?.hasDepo ?? false,
           );
-          clearHicbiri = false;
-          break;
+          return;
       }
-
-      if (clearHicbiri) {
-        _model = _model.copyWith(isHicbiri: false);
-      }
+      _model = _model.copyWith(isHicbiri: false);
     });
-  }
-
-  void _onNextPressed() {
-    if (!_model.hasOtopark && !_model.hasKazan && !_model.hasAsansor && 
-        !_model.hasCati && !_model.hasJenerator && !_model.hasElektrik &&
-        !_model.hasTrafo && !_model.hasDepo && !_model.hasCop && 
-        !_model.hasSiginak && !_model.hasDuvar && !_model.isHicbiri) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen riskli alanları işaretleyiniz veya 'Hiçbiri'ni seçiniz.")),
-      );
-      return;
-    }
-
-    BinaStore.instance.clearAfter(7); 
-
-    BinaStore.instance.bolum7 = _model;
-    BinaStore.instance.saveToDisk(); 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum8Screen()));
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool isOtoparkLocked = BinaStore.instance.bolum6?.hasOtopark ?? false;
+    final b6 = BinaStore.instance.bolum6;
+    // Bölüm 6'daki herhangi bir otopark seçimi (A, B, C, D) hasOtopark'ı true yapar.
+    final bool isOtoparkLocked = b6?.hasOtopark ?? false;
+    final bool isDepoLocked = b6?.hasDepo ?? false;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA), // Ofis ortamı için ferah arka plan
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-7: Özel Riskli Alanlar",
-            subtitle: "Teknik hacimler ve riskli bölgeler.",
+            title: "Teknik Hacimler",
+            subtitle: "Binadaki özel riskli alanların tespiti",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Binanızda aşağıdaki alanlardan hangileri var?",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 4, bottom: 12),
+                    child: Text(
+                      "Binanızda aşağıdaki alanlardan hangileri mevcut?",
+                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+                    ),
                   ),
-                  const Text(
-                    "(Birden fazla işaretleyebilirsiniz)",
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 15),
 
-                  // --- OTOPARK KİLİTLİ ALAN VE NOT ---
-                  if (isOtoparkLocked) ...[
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      margin: const EdgeInsets.only(bottom: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.blue.shade200),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.info_outline, color: Colors.blue.shade800, size: 20),
-                          const SizedBox(width: 10),
-                          const Expanded(
-                            child: Text(
-                              "Binada kapalı otopark olup olmadığı bilgisi bir önceki bölümden alınarak sisteme işlenmiştir.",
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Stack(
-                      children: [
-                        SelectableCard(
-                          choice: Bolum7Content.otopark,
-                          isSelected: true,
-                          onTap: () {}, // Kilitli olduğu için işlem yapmaz
-                        ),
-                        Positioned(
-                          right: 15,
-                          top: 15,
-                          child: Icon(Icons.lock, color: Colors.blue.shade900.withValues(alpha: 0.5), size: 20),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                  ] else 
-                    SelectableCard(
-                      choice: Bolum7Content.otopark,
-                      isSelected: _model.hasOtopark,
-                      onTap: () => _toggleOption('otopark'),
-                    ),
+                  // --- OTOPARK (Bölüm 6'dan otomatik gelir) ---
+                  _buildSyncCard(
+                    isLocked: isOtoparkLocked,
+                    choice: Bolum7Content.otopark,
+                    isSelected: _model.hasOtopark,
+                    onTap: () => _toggleOption('otopark'),
+                    message: "Otopark varlığı Bölüm-6 seçimlerinize göre kilitlenmiştir.",
+                  ),
 
-                  // --- DİĞER SEÇENEKLER ---
-                  SelectableCard(
-                    choice: Bolum7Content.kazan,
-                    isSelected: _model.hasKazan,
-                    onTap: () => _toggleOption('kazan'),
-                  ),
-                  SelectableCard(
-                    choice: Bolum7Content.asansor,
-                    isSelected: _model.hasAsansor,
-                    onTap: () => _toggleOption('asansor'),
-                  ),
-                  SelectableCard(
-                    choice: Bolum7Content.cati,
-                    isSelected: _model.hasCati,
-                    onTap: () => _toggleOption('cati'),
-                  ),
-                  SelectableCard(
-                    choice: Bolum7Content.jenerator,
-                    isSelected: _model.hasJenerator,
-                    onTap: () => _toggleOption('jenerator'),
-                  ),
-                  SelectableCard(
-                    choice: Bolum7Content.elektrik,
-                    isSelected: _model.hasElektrik,
-                    onTap: () => _toggleOption('elektrik'),
-                  ),
-                  SelectableCard(
-                    choice: Bolum7Content.trafo,
-                    isSelected: _model.hasTrafo,
-                    onTap: () => _toggleOption('trafo'),
-                  ),
-                  SelectableCard(
+                  _buildOption(Bolum7Content.kazan, _model.hasKazan, () => _toggleOption('kazan')),
+                  _buildOption(Bolum7Content.asansor, _model.hasAsansor, () => _toggleOption('asansor')),
+                  _buildOption(Bolum7Content.cati, _model.hasCati, () => _toggleOption('cati')),
+                  _buildOption(Bolum7Content.jenerator, _model.hasJenerator, () => _toggleOption('jenerator')),
+                  _buildOption(Bolum7Content.elektrik, _model.hasElektrik, () => _toggleOption('elektrik')),
+                  _buildOption(Bolum7Content.trafo, _model.hasTrafo, () => _toggleOption('trafo')),
+
+                  // --- DEPO (Bölüm 6'dan otomatik gelir) ---
+                  _buildSyncCard(
+                    isLocked: isDepoLocked,
                     choice: Bolum7Content.depo,
                     isSelected: _model.hasDepo,
                     onTap: () => _toggleOption('depo'),
-                  ),
-                  SelectableCard(
-                    choice: Bolum7Content.cop,
-                    isSelected: _model.hasCop,
-                    onTap: () => _toggleOption('cop'),
-                  ),
-                  SelectableCard(
-                    choice: Bolum7Content.siginak,
-                    isSelected: _model.hasSiginak,
-                    onTap: () => _toggleOption('siginak'),
-                  ),
-                  SelectableCard(
-                    choice: Bolum7Content.duvar,
-                    isSelected: _model.hasDuvar,
-                    onTap: () => _toggleOption('duvar'),
+                    message: "Depo alanı varlığı Bölüm-6 seçimlerinize göre kilitlenmiştir.",
                   ),
 
-                  const Divider(thickness: 2, height: 30),
+                  _buildOption(Bolum7Content.cop, _model.hasCop, () => _toggleOption('cop')),
+                  _buildOption(Bolum7Content.siginak, _model.hasSiginak, () => _toggleOption('siginak')),
+                  _buildOption(Bolum7Content.duvar, _model.hasDuvar, () => _toggleOption('duvar')),
+
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider(color: Color(0xFFECEFF1))),
                   
-                  SelectableCard(
-                    choice: Bolum7Content.hicbiri,
-                    isSelected: _model.isHicbiri,
-                    onTap: () => _toggleOption('hicbiri'),
-                  ),
+                  _buildOption(Bolum7Content.hicbiri, _model.isHicbiri, () => _toggleOption('hicbiri')),
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
+          _buildBottomAction(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOption(dynamic choice, bool isSelected, VoidCallback onTap) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: SelectableCard(
+        choice: choice, 
+        isSelected: isSelected, 
+        onTap: onTap,
+      ),
+    );
+  }
+
+  Widget _buildSyncCard({required bool isLocked, required dynamic choice, required bool isSelected, required VoidCallback onTap, required String message}) {
+    if (!isLocked) return _buildOption(choice, isSelected, onTap);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3F2FD),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFFBBDEFB)),
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.lock_outline, color: Color(0xFF1565C0), size: 20),
+            title: Text(choice.uiTitle, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1565C0))),
+            subtitle: Text(message, style: const TextStyle(fontSize: 11, color: Color(0xFF1976D2))),
+            trailing: const Icon(Icons.check_circle, color: Color(0xFF1565C0), size: 20),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBottomAction() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: ElevatedButton(
+          onPressed: () {
+            BinaStore.instance.bolum7 = _model;
+            BinaStore.instance.saveToDisk();
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum8Screen()));
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1A237E),
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 54),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+          child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, letterSpacing: 1)),
+        ),
       ),
     );
   }

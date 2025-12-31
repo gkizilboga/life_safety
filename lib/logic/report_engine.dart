@@ -3,7 +3,7 @@ import '../data/bina_store.dart';
 import '../models/choice_result.dart';
 
 enum ReportModule {
-  binaBilgileri("Bina Genel Bilgileri", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+  genel("Bina Genel Bilgileri", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
   modul1("Modül 1: Yapısal Analiz", [11, 12, 13, 14, 15]),
   modul2("Modül 2: Tahliye Güvenliği", [16, 17, 18, 19, 20]),
   modul3("Modül 3: Yangın Sistemleri", [21, 22, 23, 24, 25]),
@@ -16,21 +16,18 @@ enum ReportModule {
 }
 
 class ReportEngine {
-  // Özet metni getirir
   static String getSectionSummary(int id) {
     final result = BinaStore.instance.getResultForSection(id);
     if (result == null) return "Veri Girilmedi";
     return result.uiTitle.isNotEmpty ? result.uiTitle : result.label;
   }
 
-  // Tam rapor metnini getirir (Detay penceresi için)
   static String getSectionFullReport(int id) {
     final result = BinaStore.instance.getResultForSection(id);
     if (result == null) return "Bu bölüm için veri girişi yapılmamıştır.";
     return result.reportText;
   }
 
-  // Durum rengini belirler
   static Color getStatusColor(ChoiceResult? result) {
     if (result == null) return Colors.grey.shade300;
     final text = result.reportText.toLowerCase();

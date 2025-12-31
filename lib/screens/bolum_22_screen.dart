@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_22_model.dart';
-import 'bolum_23_screen.dart'; // Sonraki ekran
+import 'bolum_23_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -21,7 +21,6 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
     setState(() {
       if (type == 'varlik') {
         _model = _model.copyWith(varlik: choice);
-        // Eğer "Yok" seçilirse diğer cevapları temizle
         if (choice.label != Bolum22Content.varlikOptionB.label) {
           _model = _model.copyWith(
             konum: null, boyut: null, kabin: null, enerji: null, basinc: null
@@ -44,7 +43,6 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
   void _onNextPressed() {
     if (_model.varlik == null) return _showError("Lütfen itfaiye asansörü varlığı sorusunu yanıtlayınız.");
 
-    // Eğer İtfaiye Asansörü varsa (Option B), diğer sorular da zorunlu
     if (_model.varlik?.label == Bolum22Content.varlikOptionB.label) {
       if (_model.konum == null) return _showError("Lütfen asansör kapı konumu sorusunu yanıtlayınız.");
       if (_model.boyut == null) return _showError("Lütfen YGH alan büyüklüğü sorusunu yanıtlayınız.");
@@ -54,10 +52,8 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
     }
 
     BinaStore.instance.bolum22 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum23Screen()),
-    );
+    BinaStore.instance.saveToDisk();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum23Screen()));
   }
 
   void _showError(String msg) {
@@ -67,104 +63,89 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-22: İtfaiye (Acil Durum) Asansörü",
-            subtitle: "...",
+            title: "İtfaiye (Acil Durum) Asansörü",
+            subtitle: "Yüksek binalar için erişim denetimi",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  // 1. Varlık Sorusu
-                  _buildSoru("Binanızda (51.50m üzeri ise zorunlu olan) İtfaiye (acil durum) asansörü var mı?", 'varlik', 
-                    [
-                      Bolum22Content.varlikOptionA, 
-                      Bolum22Content.varlikOptionB,
-                      Bolum22Content.varlikOptionC
-                    ], _model.varlik),
+                  _buildSoru(
+                    "Binanızda İtfaiye (acil durum) asansörü var mı?", 
+                    'varlik', 
+                    [Bolum22Content.varlikOptionA, Bolum22Content.varlikOptionB, Bolum22Content.varlikOptionC], 
+                    _model.varlik,
+                    description: "Yalnızca 51,5 m ve üzeri binalarda zorunludur. Binanızda normal (insan taşıma) asansörü varsa bu soru için Hayır.. yanıtını işaretleyiniz."
+                  ),
 
-                  // Diğer sorular SADECE İTFAİYE ASANSÖRÜ VARSA gösterilir
                   if (_model.varlik?.label == Bolum22Content.varlikOptionB.label) ...[
-                    const Divider(height: 30),
+                    const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Divider()),
                     
-                    // 2. Kapı Konumu
                     _buildSoru("Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?", 'konum', 
-                      [
-                        Bolum22Content.konumOptionA, 
-                        Bolum22Content.konumOptionB,
-                        Bolum22Content.konumOptionC
-                      ], _model.konum),
+                      [Bolum22Content.konumOptionA, Bolum22Content.konumOptionB, Bolum22Content.konumOptionC], _model.konum),
 
-                    // 3. YGH Boyutu
                     _buildSoru("İtfaiye asansörünün açıldığı yangın güvenlik holünün taban alanı yaklaşık kaç metrekaredir?", 'boyut', 
-                      [
-                        Bolum22Content.boyutOptionA, 
-                        Bolum22Content.boyutOptionB,
-                        Bolum22Content.boyutOptionC,
-                        Bolum22Content.boyutOptionD
-                      ], _model.boyut),
+                      [Bolum22Content.boyutOptionA, Bolum22Content.boyutOptionB, Bolum22Content.boyutOptionC, Bolum22Content.boyutOptionD], _model.boyut),
 
-                    // 4. Kabin Özelliği
                     _buildSoru("Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?", 'kabin', 
-                      [
-                        Bolum22Content.kabinOptionA, 
-                        Bolum22Content.kabinOptionB,
-                        Bolum22Content.kabinOptionC
-                      ], _model.kabin),
+                      [Bolum22Content.kabinOptionA, Bolum22Content.kabinOptionB, Bolum22Content.kabinOptionC], _model.kabin),
 
-                    // 5. Enerji / Jeneratör
                     _buildSoru("Bu asansör, elektrik kesildiğinde en az 60 dakika çalışabilen bir jeneratöre bağlı mı?", 'enerji', 
-                      [
-                        Bolum22Content.enerjiOptionA, 
-                        Bolum22Content.enerjiOptionB,
-                        Bolum22Content.enerjiOptionC
-                      ], _model.enerji),
+                      [Bolum22Content.enerjiOptionA, Bolum22Content.enerjiOptionB, Bolum22Content.enerjiOptionC], _model.enerji),
 
-                    // 6. Basınçlandırma
                     _buildSoru("İtfaiye asansörünün kuyusu basınçlandırılmış mı? (Asansör kovasında duman birikmemesi için dışarıdan hava üfleyen sistem)", 'basinc', 
-                      [
-                        Bolum22Content.basincOptionA, 
-                        Bolum22Content.basincOptionB,
-                        Bolum22Content.basincOptionC
-                      ], _model.basinc),
+                      [Bolum22Content.basincOptionA, Bolum22Content.basincOptionB, Bolum22Content.basincOptionC], _model.basinc),
                   ],
                 ],
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
-          ),
+          _buildBottomNav(),
         ],
       ),
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildBottomNav() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _onNextPressed,
+            child: const Text("DEVAM ET"),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected, {String? description}) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+          if (description != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              description,
+              style: TextStyle(fontSize: 12, color: Colors.blue.shade800, fontWeight: FontWeight.w500, height: 1.3),
+            ),
+          ],
+          const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
             choice: opt,
             isSelected: selected?.label == opt.label,
