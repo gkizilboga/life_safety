@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'bolum_1_screen.dart';
-import 'report_summary_screen.dart';
-import 'archive_screen.dart'; // Bu dosyayı bir sonraki adımda oluşturacağız
+import 'archive_screen.dart';
+import 'building_setup_screen.dart'; // YENİ EKLENDİ
 import '../../data/bina_store.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -47,23 +47,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         color: Color(0xFF1A237E),
         borderRadius: BorderRadius.only(bottomRight: Radius.circular(40)),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Bina Karnesi", 
+          Text("YANGIN RİSK ANALİZİ", 
             style: TextStyle(color: Colors.white70, fontSize: 14, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
-          const SizedBox(height: 12),
-          const Text("Hoş Geldiniz,", 
+          SizedBox(height: 12),
+          Text("HOŞ GELDİNİZ,", 
             style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-          const Text("Analiz Uzmanı", 
+          Text("Analiz Uzmanı", 
             style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w300)),
-          const SizedBox(height: 20),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
-            child: const Text("Sistem Aktif: BYKHY Mevzuat Entegre", 
-              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w500)),
-          ),
+          SizedBox(height: 20),
         ],
       ),
     );
@@ -125,7 +119,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: _buildActionCard(
             context,
             "Yeni Analiz",
-            "Yeni Risk Analizi Başlat",
+            "Yeni Analizi Başlat",
             Icons.add_moderator_outlined,
             Colors.green.shade700,
             () => _startNewAnalysis(context),
@@ -179,11 +173,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         const Padding(
           padding: EdgeInsets.only(left: 5, bottom: 15),
-          child: Text("KÜTÜPHANE VE AYARLAR", 
+          child: Text("BİLGİLER VE AYARLAR", 
             style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
         ),
-        _buildMenuTile(Icons.menu_book_outlined, "Yangın Yönetmeliği", "BYKHY Teknik Maddeler"),
-        _buildMenuTile(Icons.calculate_outlined, "Hesaplama Araçları", "Kapasite ve Mesafe Cetvelleri"),
+        _buildMenuTile(Icons.menu_book_outlined, "Yangın Yönetmeliği", "BYKHY Hükümleri"),
+        _buildMenuTile(Icons.calculate_outlined, "Hesaplama Araçları", "İlgili Kapasite ve Mesafe Tabloları"),
         _buildMenuTile(Icons.settings_outlined, "Uygulama Ayarları", "Profil ve Tercihler"),
       ],
     );
@@ -212,39 +206,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _startNewAnalysis(BuildContext context) {
-    final TextEditingController nameCtrl = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text("Yeni Yangın Risk Analizi", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Analiz edilecek binanın adını veya adresini giriniz:"),
-            const SizedBox(height: 15),
-            TextField(
-              controller: nameCtrl,
-              decoration: const InputDecoration(hintText: "Örn: Huzur Apartmanı / A Blok", border: OutlineInputBorder()),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Vazgeç")),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white),
-            onPressed: () {
-              if (nameCtrl.text.isNotEmpty) {
-                BinaStore.instance.createNewBuilding(nameCtrl.text);
-                Navigator.pop(ctx);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum1Screen()));
-              }
-            },
-            child: const Text("Başlat"),
-          ),
-        ],
-      ),
+    // Hata veren dialog yerine doğrudan kurulum ekranına yönlendiriyoruz
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => const BuildingSetupScreen())
     );
   }
 }

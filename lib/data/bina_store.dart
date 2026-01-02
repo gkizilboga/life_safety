@@ -204,10 +204,11 @@ class BinaStore {
     if (s['bolum36'] != null) bolum36 = Bolum36Model.fromMap(s['bolum36']);
   }
 
-  void createNewBuilding(String name) {
-    reset();
+  void createNewBuilding({required String name, required String city, required String district}) {
+    reset(); // Eski verileri temizle
     currentBinaId = DateTime.now().millisecondsSinceEpoch.toString();
     currentBinaName = name;
+    // İleride city ve district bilgilerini de bir Map içinde saklayabiliriz
     saveToDisk();
   }
 
@@ -276,12 +277,15 @@ class BinaStore {
   void loadBuildingFromArchive(String id) {
     final data = archive.firstWhere((e) => e['id'] == id, orElse: () => {});
     if (data.isNotEmpty) {
-      reset();
-      _loadBuildingFromMap(data);
-      saveToDisk();
+      reset(); // Mevcut modelleri temizle
+      _loadBuildingFromMap(data); // Arşivdeki veriyi modellere doldur
+      currentBinaId = id;
+      currentBinaName = data['name'];
+      saveToDisk(); // Bu binayı "aktif" bina olarak işaretle
     }
   }
 
+  // Arşivden bir binayı siler
   void deleteFromArchive(String id) {
     archive.removeWhere((element) => element['id'] == id);
     if (currentBinaId == id) reset();
