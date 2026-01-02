@@ -22,10 +22,35 @@ class ReportEngine {
     return result.uiTitle.isNotEmpty ? result.uiTitle : result.label;
   }
 
-  static String getSectionFullReport(int id) {
-    final result = BinaStore.instance.getResultForSection(id);
-    if (result == null) return "Bu bölüm için veri girişi yapılmamıştır.";
-    return result.reportText;
+  static List<ChoiceResult> getSectionSubResults(int id) {
+    final store = BinaStore.instance;
+    List<ChoiceResult?> results = [];
+
+    switch (id) {
+      case 13:
+        final m = store.bolum13;
+        results = [m?.otoparkKapi, m?.kazanKapi, m?.asansorKapi, m?.jeneratorKapi, m?.elektrikKapi, m?.trafoKapi, m?.depoKapi, m?.copKapi, m?.ortakDuvar, m?.ticariKapi];
+        break;
+      case 20:
+        final m = store.bolum20;
+        if (m == null) break;
+        if (m.normalMerdivenSayisi > 0) results.add(ChoiceResult(label: "20-1", uiTitle: "Normal Merdiven", uiSubtitle: "${m.normalMerdivenSayisi} Adet", reportText: "Binada ${m.normalMerdivenSayisi} adet normal apartman merdiveni beyan edilmiştir."));
+        if (m.binaIciYanginMerdiveniSayisi > 0) results.add(ChoiceResult(label: "20-2", uiTitle: "İç Yangın Merdiveni", uiSubtitle: "${m.binaIciYanginMerdiveniSayisi} Adet", reportText: "Binada ${m.binaIciYanginMerdiveniSayisi} adet bina içi kapalı yangın merdiveni mevcuttur."));
+        if (m.binaDisiAcikYanginMerdiveniSayisi > 0) results.add(ChoiceResult(label: "20-4", uiTitle: "Dış Açık Merdiven", uiSubtitle: "${m.binaDisiAcikYanginMerdiveniSayisi} Adet", reportText: "Binada ${m.binaDisiAcikYanginMerdiveniSayisi} adet bina dışı açık çelik yangın merdiveni mevcuttur."));
+        if (m.bodrumMerdivenDevami != null) results.add(m.bodrumMerdivenDevami);
+        break;
+      case 29:
+        final m = store.bolum29;
+        results = [m?.otopark, m?.kazan, m?.cati, m?.asansor, m?.jenerator, m?.pano, m?.trafo, m?.depo, m?.cop, m?.siginak];
+        break;
+      case 33:
+        final m = store.bolum33;
+        results = [m?.zeminKatSonuc, m?.normalKatSonuc, m?.bodrumKatSonuc];
+        break;
+      default:
+        results = [store.getResultForSection(id)];
+    }
+    return results.whereType<ChoiceResult>().toList();
   }
 
   static Color getStatusColor(ChoiceResult? result) {

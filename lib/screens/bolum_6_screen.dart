@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_6_model.dart';
-import 'bolum_7_screen.dart'; // Sonraki ekran
+import 'bolum_7_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_assets.dart';
 
 class Bolum6Screen extends StatefulWidget {
   const Bolum6Screen({super.key});
@@ -25,7 +26,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
       bool newKonut = _model.isSadeceKonut;
 
       if (type == 'konut') {
-        // Sadece Konut seçildiyse diğerlerini kapat
         newKonut = !newKonut;
         if (newKonut) {
           newOtopark = false;
@@ -33,7 +33,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
           newDepo = false;
         }
       } else {
-        // Diğerleri seçildiyse "Sadece Konut"u kapat
         if (type == 'otopark') newOtopark = !newOtopark;
         if (type == 'ticari') newTicari = !newTicari;
         if (type == 'depo') newDepo = !newDepo;
@@ -48,7 +47,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         hasTicari: newTicari,
         hasDepo: newDepo,
         isSadeceKonut: newKonut,
-        // Otopark seçimi kaldırılırsa tipini de sıfırla
         otoparkTipi: newOtopark ? _model.otoparkTipi : null, 
       );
     });
@@ -61,7 +59,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
   }
 
   void _onNextPressed() {
-    // Validasyon: Otopark varsa tipi seçilmeli
     if (_model.hasOtopark && _model.otoparkTipi == null) {
        ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Lütfen otopark tipini seçiniz.")),
@@ -69,7 +66,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
       return;
     }
 
-    // Hiçbir şey seçilmediyse
     if (!_model.hasOtopark && !_model.hasTicari && !_model.hasDepo && !_model.isSadeceKonut) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Lütfen binadaki farklı kullanım alanlarını işaretleyiniz.")),
@@ -77,70 +73,84 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
       return;
     }
 
+    // KRİTİK: Veriyi Store'a yaz ve diske kaydet
     BinaStore.instance.bolum6 = _model;
-    
-    // Geçici olarak Bölüm 7'ye yönlendiriyoruz (Dosyası yoksa oluşturman gerekebilir)
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum7Screen()),
-    );
+    BinaStore.instance.saveToDisk(); 
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum7Screen()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA), // Ofis Standartı Arka Plan
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-6: Konut Harici Farklı Kullanım Amaçları",
-            subtitle: "...",
+            title: "Kullanım Amaçları",
+            subtitle: "Konut harici fonksiyonların tespiti",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Binanızda aşağıdaki alanlardan hangileri var?",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 4, bottom: 12),
+                    child: Text(
+                      "Binanızda aşağıdaki alanlardan hangileri mevcut?",
+                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+                    ),
                   ),
-                  const Text(
-                    "(Birden fazla işaretleyebilirsiniz)",
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 15),
 
-                  // ÇOKLU SEÇİM ALANI
+                  // 1. OTOPARK
                   SelectableCard(
                     choice: Bolum6Content.otoparkVar,
                     isSelected: _model.hasOtopark,
                     onTap: () => _toggleUsage('otopark'),
                   ),
+
+                  // 2. TİCARİ ALAN VE GÖRSEL BUTONU
                   SelectableCard(
                     choice: Bolum6Content.ticariVar,
                     isSelected: _model.hasTicari,
                     onTap: () => _toggleUsage('ticari'),
                   ),
+                  TechnicalDrawingButton(
+                    assetPath: AppAssets.section6Ticari,
+                    title: "Ticari Alan ve Dükkan Tanımları",
+                  ),
+                  const SizedBox(height: 8),
+
+                  // 3. DEPO
                   SelectableCard(
                     choice: Bolum6Content.depoVar,
                     isSelected: _model.hasDepo,
                     onTap: () => _toggleUsage('depo'),
                   ),
+
+                  // 4. SADECE KONUT
                   SelectableCard(
                     choice: Bolum6Content.sadeceKonut,
                     isSelected: _model.isSadeceKonut,
                     onTap: () => _toggleUsage('konut'),
                   ),
 
-                  // OTOPARK VARSA AÇILAN EK SORU
+                  // OTOPARK DETAYI (Sadece Otopark Varsa)
                   if (_model.hasOtopark) ...[
-                    const Divider(height: 40, thickness: 2),
-                    const Text(
-                      "Otopark Tipi Nedir?",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Divider(thickness: 1, color: Color(0xFFECEFF1)),
                     ),
-                    const SizedBox(height: 15),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 4, bottom: 12),
+                      child: Text(
+                        "Otopark Yapısal Tipi",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
+                      ),
+                    ),
                     SelectableCard(
                       choice: Bolum6Content.otoparkKapali,
                       isSelected: _model.otoparkTipi?.label == Bolum6Content.otoparkKapali.label,
@@ -161,20 +171,23 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
               ),
             ),
           ),
+          // ALT BUTON ALANI
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+            decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
             ),
             child: SafeArea(
               top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
+              child: ElevatedButton(
+                onPressed: _onNextPressed,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1A237E),
+                  minimumSize: const Size(double.infinity, 54),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
+                child: const Text("DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ),
             ),
           ),

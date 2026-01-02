@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_12_model.dart';
-import 'bolum_13_screen.dart'; // Sonraki ekran
+import 'bolum_13_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_assets.dart'; // GÖRSEL YOLU İÇİN EKLENDİ
 
 class Bolum12Screen extends StatefulWidget {
   const Bolum12Screen({super.key});
@@ -16,18 +17,13 @@ class Bolum12Screen extends StatefulWidget {
 
 class _Bolum12ScreenState extends State<Bolum12Screen> {
   Bolum12Model _model = Bolum12Model();
-  
-  // Bölüm 2'den gelen taşıyıcı sistem bilgisi
   String? _tasiyiciSistemLabel;
-
-  // Manuel giriş için controller'lar
-  final TextEditingController _kolonPaspayiCtrl = TextEditingController();
-  final TextEditingController _kirisPaspayiCtrl = TextEditingController();
+  final _kolonPaspayiCtrl = TextEditingController();
+  final _kirisPaspayiCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // Bölüm 2 verisini çek
     final bolum2 = BinaStore.instance.bolum2;
     _tasiyiciSistemLabel = bolum2?.secim?.label;
   }
@@ -41,227 +37,176 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'celik') {
-        _model = _model.copyWith(celikKoruma: choice);
-      } else if (type == 'beton') {
-        _model = _model.copyWith(betonPaspayi: choice);
-      } else if (type == 'ahsap') {
-        _model = _model.copyWith(ahsapKesit: choice);
-      } else if (type == 'yigma') {
-        _model = _model.copyWith(yigmaDuvar: choice);
-      }
+      if (type == 'celik') _model = _model.copyWith(celikKoruma: choice);
+      else if (type == 'beton') _model = _model.copyWith(betonPaspayi: choice);
+      else if (type == 'ahsap') _model = _model.copyWith(ahsapKesit: choice);
+      else if (type == 'yigma') _model = _model.copyWith(yigmaDuvar: choice);
     });
   }
 
-  void _onNextPressed() {
-    // Validasyon: İlgili soru cevaplanmış mı?
+  bool _isReady() {
+    if (_tasiyiciSistemLabel == "2-B") return _model.celikKoruma != null;
+    if (_tasiyiciSistemLabel == "2-C") return _model.ahsapKesit != null;
+    if (_tasiyiciSistemLabel == "2-D") return _model.yigmaDuvar != null;
     
-    // ÇELİK
-    if (_tasiyiciSistemLabel == Bolum2Content.celik.label && _model.celikKoruma == null) {
-      _showError("Lütfen binanızdaki çeliklerin korunma yöntemini seçiniz."); return;
+    if (_model.betonPaspayi == null) return false;
+    if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
+      return _kolonPaspayiCtrl.text.isNotEmpty && _kirisPaspayiCtrl.text.isNotEmpty;
     }
-    
-    // BETON
-    if (_tasiyiciSistemLabel == Bolum2Content.betonarme.label || _tasiyiciSistemLabel == Bolum2Content.bilinmiyor.label) {
-      if (_model.betonPaspayi == null) {
-        _showError("Lütfen paspayı durumunu seçiniz."); return;
-      }
-      // Manuel giriş seçildiyse değerleri kaydet
-      if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
-        double? k = double.tryParse(_kolonPaspayiCtrl.text.replaceAll(',', '.'));
-        double? ki = double.tryParse(_kirisPaspayiCtrl.text.replaceAll(',', '.'));
-        if (k == null || ki == null) {
-          _showError("Lütfen paspayı değerlerini giriniz."); return;
-        }
-        _model = _model.copyWith(kolonPaspayi: k, kirisPaspayi: ki);
-      }
-    }
-
-    // AHŞAP
-    if (_tasiyiciSistemLabel == Bolum2Content.ahsap.label && _model.ahsapKesit == null) {
-      _showError("Lütfen ahşap kesit durumunu seçiniz."); return;
-    }
-
-    // YIĞMA
-    if (_tasiyiciSistemLabel == Bolum2Content.yigma.label && _model.yigmaDuvar == null) {
-      _showError("Lütfen duvar kalınlığı durumunu seçiniz."); return;
-    }
-
-    BinaStore.instance.bolum12 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum13Screen()),
-    );
-  }
-
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    // Taşıyıcı sisteme göre hangi widget'ın gösterileceğini belirle
-    Widget content;
+    return AnalysisPageLayout(
+      title: "Yapısal Yangın Dayanımı",
+      subtitle: "Taşıyıcı sistemin yangın altındaki stabilitesi",
+      screenType: widget.runtimeType,
+      isNextEnabled: _isReady(),
+      onNext: () {
+        if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
+          _model = _model.copyWith(
+            kolonPaspayi: double.tryParse(_kolonPaspayiCtrl.text.replaceAll(',', '.')),
+            kirisPaspayi: double.tryParse(_kirisPaspayiCtrl.text.replaceAll(',', '.')),
+          );
+        }
+        BinaStore.instance.bolum12 = _model;
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum13Screen()));
+      },
+      child: _buildContent(),
+    );
+  }
 
-    if (_tasiyiciSistemLabel == Bolum2Content.celik.label) {
-      content = _buildCelikSorusu();
-    } else if (_tasiyiciSistemLabel == Bolum2Content.ahsap.label) {
-      content = _buildAhsapSorusu();
-    } else if (_tasiyiciSistemLabel == Bolum2Content.yigma.label) {
-      content = _buildYigmaSorusu();
-    } else {
-      // Betonarme veya Bilinmiyor ise Beton sorusu sorulur
-      content = _buildBetonSorusu();
-    }
+  Widget _buildContent() {
+    if (_tasiyiciSistemLabel == "2-B") return _buildCelikSorusu();
+    if (_tasiyiciSistemLabel == "2-C") return _buildAhsapSorusu();
+    if (_tasiyiciSistemLabel == "2-D") return _buildYigmaSorusu();
+    return _buildBetonSorusu();
+  }
 
-    return Scaffold(
-      body: Column(
-        children: [
-          ModernHeader(
-            title: "Bölüm-12: Taşıyıcı Sistemin Yapısal Yangın Dayanımı",
-            subtitle: "...",
-            screenType: widget.runtimeType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: content,
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
+  Widget _buildBetonSorusu() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 4, bottom: 12),
+          child: Text("Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?", 
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+        ),
+        
+        // --- TEKNİK GÖRSEL BUTONU BURAYA EKLENDİ ---
+        TechnicalDrawingButton(
+          assetPath: AppAssets.section12Paspayi,
+          title: "Paspayı (Beton Koruma Tabakası) Detayı",
+        ),
+        const SizedBox(height: 12),
+
+        QuestionCard(
+          child: Column(
+            children: [
+              SelectableCard(
+                choice: Bolum12Content.betonOptionA,
+                isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionA.label,
+                onTap: () => _handleSelection('beton', Bolum12Content.betonOptionA),
               ),
-            ),
+              SelectableCard(
+                choice: Bolum12Content.betonOptionB,
+                isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionB.label,
+                onTap: () => _handleSelection('beton', Bolum12Content.betonOptionB),
+              ),
+              if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) ...[
+                const SizedBox(height: 12),
+                _buildManualInput("Kolon Paspayı (mm)", _kolonPaspayiCtrl),
+                const SizedBox(height: 12),
+                _buildManualInput("Kiriş Paspayı (mm)", _kirisPaspayiCtrl),
+                const SizedBox(height: 12),
+              ],
+              SelectableCard(
+                choice: Bolum12Content.betonOptionC,
+                isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionC.label,
+                onTap: () => _handleSelection('beton', Bolum12Content.betonOptionC),
+              ),
+              SelectableCard(
+                choice: Bolum12Content.betonOptionD,
+                isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionD.label,
+                onTap: () => _handleSelection('beton', Bolum12Content.betonOptionD),
+              ),
+            ],
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildManualInput(String label, TextEditingController ctrl) {
+    return TextFormField(
+      controller: ctrl,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(
+        labelText: label,
+        suffixText: "mm",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       ),
+      onChanged: (_) => setState(() {}),
     );
   }
 
   Widget _buildCelikSorusu() {
-    return QuestionCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Çelik taşıyıcılarınızda (kolon ve kirişlerde) yangına karşı bir koruma veya yalıtım var mı?", style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          SelectableCard(
-            choice: Bolum12Content.celikOptionA,
-            isSelected: _model.celikKoruma?.label == Bolum12Content.celikOptionA.label,
-            onTap: () => _handleSelection('celik', Bolum12Content.celikOptionA),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?", 
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        QuestionCard(
+          child: Column(
+            children: [
+              SelectableCard(choice: Bolum12Content.celikOptionA, isSelected: _model.celikKoruma?.label == Bolum12Content.celikOptionA.label, onTap: () => _handleSelection('celik', Bolum12Content.celikOptionA)),
+              SelectableCard(choice: Bolum12Content.celikOptionB, isSelected: _model.celikKoruma?.label == Bolum12Content.celikOptionB.label, onTap: () => _handleSelection('celik', Bolum12Content.celikOptionB)),
+              SelectableCard(choice: Bolum12Content.celikOptionC, isSelected: _model.celikKoruma?.label == Bolum12Content.celikOptionC.label, onTap: () => _handleSelection('celik', Bolum12Content.celikOptionC)),
+            ],
           ),
-          SelectableCard(
-            choice: Bolum12Content.celikOptionB,
-            isSelected: _model.celikKoruma?.label == Bolum12Content.celikOptionB.label,
-            onTap: () => _handleSelection('celik', Bolum12Content.celikOptionB),
-          ),
-          SelectableCard(
-            choice: Bolum12Content.celikOptionC,
-            isSelected: _model.celikKoruma?.label == Bolum12Content.celikOptionC.label,
-            onTap: () => _handleSelection('celik', Bolum12Content.celikOptionC),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBetonSorusu() {
-    return QuestionCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Betonarme taşıyıcılarınızdaki demir donatıları örten beton tabakasının kalınlıkları hakkında nasıl bilgi girmek istersiniz?", style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          SelectableCard(
-            choice: Bolum12Content.betonOptionA,
-            isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionA.label,
-            onTap: () => _handleSelection('beton', Bolum12Content.betonOptionA),
-          ),
-          SelectableCard(
-            choice: Bolum12Content.betonOptionB,
-            isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionB.label,
-            onTap: () => _handleSelection('beton', Bolum12Content.betonOptionB),
-          ),
-          
-          if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) ...[
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _kolonPaspayiCtrl,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: "Kolon Paspayı (mm)", border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _kirisPaspayiCtrl,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: "Kiriş Paspayı (mm)", border: OutlineInputBorder()),
-            ),
-            const SizedBox(height: 10),
-          ],
-
-          SelectableCard(
-            choice: Bolum12Content.betonOptionC,
-            isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionC.label,
-            onTap: () => _handleSelection('beton', Bolum12Content.betonOptionC),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildAhsapSorusu() {
-    return QuestionCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Ahşap taşıyıcılarınızın kalınlığı (kesiti) nasıldır?", style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          SelectableCard(
-            choice: Bolum12Content.ahsapOptionA,
-            isSelected: _model.ahsapKesit?.label == Bolum12Content.ahsapOptionA.label,
-            onTap: () => _handleSelection('ahsap', Bolum12Content.ahsapOptionA),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Ahşap taşıyıcılarınızın kalınlığı (kesiti) nasıldır?", 
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        QuestionCard(
+          child: Column(
+            children: [
+              SelectableCard(choice: Bolum12Content.ahsapOptionA, isSelected: _model.ahsapKesit?.label == Bolum12Content.ahsapOptionA.label, onTap: () => _handleSelection('ahsap', Bolum12Content.ahsapOptionA)),
+              SelectableCard(choice: Bolum12Content.ahsapOptionB, isSelected: _model.ahsapKesit?.label == Bolum12Content.ahsapOptionB.label, onTap: () => _handleSelection('ahsap', Bolum12Content.ahsapOptionB)),
+            ],
           ),
-          SelectableCard(
-            choice: Bolum12Content.ahsapOptionB,
-            isSelected: _model.ahsapKesit?.label == Bolum12Content.ahsapOptionB.label,
-            onTap: () => _handleSelection('ahsap', Bolum12Content.ahsapOptionB),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildYigmaSorusu() {
-    return QuestionCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Binanızın taşıyıcı duvarlarının kalınlığı en az 19 cm (yaklaşık bir tuğla boyu) var mı?", style: TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          SelectableCard(
-            choice: Bolum12Content.yigmaOptionA,
-            isSelected: _model.yigmaDuvar?.label == Bolum12Content.yigmaOptionA.label,
-            onTap: () => _handleSelection('yigma', Bolum12Content.yigmaOptionA),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Binanızın taşıyıcı duvarlarının kalınlığı en az 19 cm var mı?", 
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        QuestionCard(
+          child: Column(
+            children: [
+              SelectableCard(choice: Bolum12Content.yigmaOptionA, isSelected: _model.yigmaDuvar?.label == Bolum12Content.yigmaOptionA.label, onTap: () => _handleSelection('yigma', Bolum12Content.yigmaOptionA)),
+              SelectableCard(choice: Bolum12Content.yigmaOptionB, isSelected: _model.yigmaDuvar?.label == Bolum12Content.yigmaOptionB.label, onTap: () => _handleSelection('yigma', Bolum12Content.yigmaOptionB)),
+            ],
           ),
-          SelectableCard(
-            choice: Bolum12Content.yigmaOptionB,
-            isSelected: _model.yigmaDuvar?.label == Bolum12Content.yigmaOptionB.label,
-            onTap: () => _handleSelection('yigma', Bolum12Content.yigmaOptionB),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -136,12 +136,12 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "YÖNETMELİK KISITLAMASI",
+                  " ",
                   style: TextStyle(color: Colors.red.shade900, fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 const SizedBox(height: 4),
                 const Text(
-                  "Binada ticari alan (dükkan/mağaza vb.) bulunduğu için döner merdivenler kaçış yolu olarak kabul edilemez. Lütfen teknik ölçümleri yine de yapınız.",
+                  " ",
                   style: TextStyle(color: Colors.black87, fontSize: 12),
                 ),
               ],

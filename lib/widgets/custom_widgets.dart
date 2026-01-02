@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/app_progress.dart';
+import '../data/bina_store.dart';
 
 class ModernHeader extends StatelessWidget {
   final String title;
@@ -26,7 +27,7 @@ class ModernHeader extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(20, 45, 20, 20),
       decoration: const BoxDecoration(
-        color: Color(0xFF1A237E), // Kurumsal Lacivert
+        color: Color(0xFF1A237E),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
@@ -106,44 +107,70 @@ class QuestionCard extends StatelessWidget {
   }
 }
 
-class TechnicalDrawingButton extends StatelessWidget {
+// DOĞRUDAN EKRANDA GÖRÜNEN GÖRSEL BİLEŞENİ
+class SectionImage extends StatelessWidget {
   final String assetPath;
-  final String title;
-
-  const TechnicalDrawingButton({super.key, required this.assetPath, required this.title});
+  const SectionImage({super.key, required this.assetPath});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: Image.asset(
+          assetPath,
+          width: double.infinity,
+          height: 200,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+}
+
+class TechnicalDrawingButton extends StatelessWidget {
+  final String assetPath;
+  final String title;
+
+  const TechnicalDrawingButton({
+    super.key, 
+    required this.assetPath, 
+    required this.title
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: InkWell(
-        onTap: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) => _ImagePopupContent(assetPath: assetPath, title: title),
-          );
-        },
+        onTap: () => _showImagePopup(context),
         borderRadius: BorderRadius.circular(12),
         child: Container(
+          width: double.infinity, 
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: const Color(0xFF1A237E).withValues(alpha: 0.08),
+            color: const Color(0xFF1A237E).withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.2)),
+            border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.1)),
           ),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.image_search_rounded, color: Color(0xFF1A237E), size: 26),
-              SizedBox(width: 12),
+              Icon(
+                Icons.image_search_rounded, 
+                color: const Color(0xFF1A237E).withValues(alpha: 0.6),
+                size: 22
+              ),
+              const SizedBox(width: 10),
               Text(
-                "TEKNİK GÖRSELİ AÇ",
+                "TEKNİK GÖRSELİ İNCELE",
                 style: TextStyle(
-                  color: Color(0xFF1A237E),
-                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF1A237E).withValues(alpha: 0.7),
+                  fontWeight: FontWeight.w600,
                   fontSize: 13,
+                  letterSpacing: 0.3
                 ),
               ),
             ],
@@ -152,53 +179,115 @@ class TechnicalDrawingButton extends StatelessWidget {
       ),
     );
   }
+
+  void _showImagePopup(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.8,
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        ),
+        child: Column(
+          children: [
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
+            const SizedBox(height: 20),
+            Text(title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1A237E))),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: InteractiveViewer(
+                  minScale: 1.0,
+                  maxScale: 4.0,
+                  child: Image.asset(assetPath, fit: BoxFit.contain),
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            const Text("Görseli büyütmek için iki parmağınızla yakınlaştırabilirsiniz.", style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic)),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1A237E),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                onPressed: () => Navigator.pop(context),
+                child: const Text("ANLADIM, DEVAM ET", style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _ImagePopupContent extends StatelessWidget {
-  final String assetPath;
+class AnalysisPageLayout extends StatelessWidget {
   final String title;
-  const _ImagePopupContent({required this.assetPath, required this.title});
+  final String subtitle;
+  final Type screenType;
+  final Widget child;
+  final VoidCallback? onNext;
+  final bool isNextEnabled;
+
+  const AnalysisPageLayout({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.screenType,
+    required this.child,
+    this.onNext,
+    this.isNextEnabled = true,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA),
+      body: Column(
         children: [
-          Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
-          const SizedBox(height: 20),
-          Text(title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1A237E))),
-          const SizedBox(height: 20),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: InteractiveViewer(
-              minScale: 1.0,
-              maxScale: 4.0,
-              child: Image.asset(assetPath, fit: BoxFit.contain),
+          ModernHeader(
+            title: title,
+            subtitle: subtitle,
+            screenType: screenType,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: child,
             ),
           ),
-          const SizedBox(height: 15),
-          const Text("Görseli büyütmek için iki parmağınızla yakınlaştırabilirsiniz.", style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic)),
-          const SizedBox(height: 25),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1A237E), 
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          Container(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: ElevatedButton(
+                onPressed: isNextEnabled ? () {
+                  BinaStore.instance.saveToDisk();
+                  if (onNext != null) onNext!();
+                } : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1A237E),
+                  minimumSize: const Size(double.infinity, 54),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ),
-              onPressed: () => Navigator.pop(context),
-              child: const Text("KAPAT", style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
-          const SizedBox(height: 10),
         ],
       ),
     );

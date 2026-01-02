@@ -448,25 +448,33 @@ class Bolum11Content {
     reportText: "❓ BİLİNMİYOR: Çelik elemanlarda yangın koruması olup olmadığı bilinmiyor. Koruma yoksa, yangın anında bina taşıma kapasitesini hızla kaybedebilir. Uzman Görüşü alınarak yalıtım durumu netleştirilmesi önerilir."
   );
 
-  static final betonOptionA = ChoiceResult(
+    static final betonOptionA = ChoiceResult(
     label: "12-A (Beton)",
     uiTitle: "Bina yapım tarihimiz 2000 yılı sonrası.",
-    uiSubtitle: "TS 500 standardı uyarınca, binanızın inşa tarihi baz alınarak paspayı ölçülerinin (Kolon ≥ 35mm, Kiriş ≥ 25mm) uygun olduğu varsayılmıştır.",
-    reportText: "✅ OLUMLU: TS 500 standardı uyarınca, binanızın inşa tarihi baz alınarak paspayı ölçülerinin (Kolon ≥ 35mm, Kiriş ≥ 25mm) uygun olduğu varsayılmıştır."
+    uiSubtitle: "TS 500 standardı uyarınca, paspayı ölçülerinin (Kolon ≥ 35mm, Kiriş ≥ 25mm) uygun olduğu varsayılmıştır.",
+    reportText: "✅ OLUMLU: TS 500 standardı uyarınca, binanızın inşa tarihi baz alınarak paspayı ölçülerinin uygun olduğu varsayılmıştır."
   );
 
   static final betonOptionB = ChoiceResult(
     label: "12-B (Beton)",
     uiTitle: "Binadaki paspayı ölçülerini biliyorum, kendim gireceğim.",
-    uiSubtitle: "Betonun içindeki demiri örten beton tabakasının kalınlıklarını biliyorum, kendim bilgi gireceğim.",
-    reportText: "(Girilen değerlere göre otomatik üretilir) Örn: \"🚨 RİSK: Kolon paspayı 35mm altında tespit edilmiştir. Bu durum, yangın ısısının demirlere hızla ulaşarak genleşmeye ve betonun patlamasına yol açabilir.\""
+    uiSubtitle: "Betonun içindeki demiri örten tabaka kalınlıklarını manuel gireceğim.",
+    reportText: "(Girilen değerlere göre otomatik analiz edilir)"
   );
 
+  // YENİ EKLENEN C ŞIKKI
   static final betonOptionC = ChoiceResult(
     label: "12-C (Beton)",
+    uiTitle: "Bina yapım tarihimiz 2000 yılı öncesi.",
+    uiSubtitle: "Eski standartlara göre inşa edilen yapılarda paspayı koruması zayıf olabilir.",
+    reportText: "⚠️ UYARI: Bina yapım tarihi 2000 yılı öncesi olduğu için paspayı ölçülerinin (demir üzerindeki beton tabakası) güncel TS 500 standartlarını karşılamama ihtimali yüksektir. Yangın anında taşıyıcı sistemin korunması için detaylı inceleme yapılmalıdır."
+  );
+
+  static final betonOptionD = ChoiceResult(
+    label: "12-D (Beton)",
     uiTitle: "Paspayı durumunu bilmiyorum.",
-    uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Paspayı kalınlığı bilinmediği için yapısal yangın dayanım tahmini yapılamamıştır. Bu değer, binanın çökme süresi için kritik öneme sahiptir. Statik projenin, Uzman tarafından incelenmesi önerilir."
+    uiSubtitle: "Beton içindeki demir koruma tabakası hakkında bilgim yok.",
+    reportText: "❓ BİLİNMİYOR: Paspayı kalınlığı bilinmediği için yapısal yangın dayanım tahmini yapılamamıştır. Uzman incelemesi tavsiye edilir."
   );
 
   static final ahsapOptionA = ChoiceResult(
@@ -1193,28 +1201,28 @@ class Bolum20Content {
   // metinleri buradan çekilecektir.
   static final cokKatOption1 = ChoiceResult(
     label: "20-1 (Çok Kat)",
-    uiTitle: "Normal Apartman Merdiveni.",
+    uiTitle: "Normal Apartman Merdiveni (Kapısız).",
     uiSubtitle: "Binanın ana sirkülasyon merdivenidir. Bu merdiven üzerinde yangın kapıları bulunmaz.",
     reportText: "(Sayısal veri olarak saklanır)"
   );
 
   static final cokKatOption2 = ChoiceResult(
     label: "20-2 (Çok Kat)",
-    uiTitle: "Bina İçi 'Kapalı' Yangın Merdiveni.",
+    uiTitle: "Bina İçi 'Kapalı' Yangın Merdiveni (Kapılı).",
     uiSubtitle: "Betonarme, duvarla çevrili, yangın kapısı bulunan merdiven.",
     reportText: "(Sayısal veri olarak saklanır)"
   );
 
   static final cokKatOption3 = ChoiceResult(
     label: "20-3 (Çok Kat)",
-    uiTitle: "Bina Dışı 'Kapalı' Yangın Merdiveni.",
+    uiTitle: "Bina Dışı 'Kapalı' Yangın Merdiveni (Kapılı).",
     uiSubtitle: "Çelik, yangın dayanımlı alçıpanel vb. duvarla çevrili, yangın kapısı olan merdiven",
     reportText: "(Sayısal veri olarak saklanır)"
   );
 
   static final cokKatOption4 = ChoiceResult(
     label: "20-4 (Çok Kat)",
-    uiTitle: "Bina Dışı 'Açık' Çelik Merdiven.",
+    uiTitle: "Bina Dışı 'Açık' Çelik Merdiven (Kapılı).",
     uiSubtitle: "Çelik, genelde kollu-Z tipi merdiven, duvarsız ancak üzerinde yangın kapıları olan merdiven",
     reportText: "(Sayısal veri olarak saklanır)"
   );
@@ -1653,23 +1661,23 @@ class Bolum24Content {
 class Bolum25Content {
   static final kapasiteOptionA = ChoiceResult(
     label: "25-1-A (Kapasite)",
-    uiTitle: "Genişlik < 100 cm VEYA Kişi > 25.",
+    uiTitle: "Dairesel mrdiveninin kol genişliği 100 cm'den az VEYA katta 25 kişiden fazla kişi bulunuyor",
     uiSubtitle: "Merdiven dar veya çok kalabalık bir kata hizmet ediyor.",
-    reportText: "☢️ KIRMIZI RİSK: Döner merdivenler 'Zorunlu Çıkış' olarak kabul edilebilmesi için en az 100 cm genişlikte olmalı ve en fazla 25 kişiye hizmet etmelidir. Aksi takdirde kaçış yolu sayılamaz."
+    reportText: "☢️ KIRMIZI RİSK: Dairesel merdivenler 'Zorunlu Çıkış' olarak kabul edilebilmesi için en az 100 cm genişlikte olmalı ve en fazla 25 kişiye hizmet etmelidir. Aksi takdirde kaçış yolu sayılamaz."
   );
 
   static final kapasiteOptionB = ChoiceResult(
     label: "25-1-B (Kapasite)",
-    uiTitle: "Genişlik ≥ 100 cm VE Kişi ≤ 25.",
+    uiTitle: "Dairesel merdivenin kol genişliği 100 cm'den fazla VE katta 25 kişiden az kişi bulunuyor",
     uiSubtitle: "Merdiven geniş ve az kişiye hizmet ediyor.",
-    reportText: "✅ OLUMLU: Döner merdiven genişliği ve kullanıcı yükü yönetmelik sınırları (100cm / 25 kişi) içerisindedir."
+    reportText: "✅ OLUMLU: Dairesel merdiven genişliği ve kullanıcı yükü yönetmelik sınırları (100cm / 25 kişi) içerisindedir."
   );
 
   static final kapasiteOptionC = ChoiceResult(
     label: "25-1-C (Kapasite)",
     uiTitle: "Bilmiyorum / Ölçüm yapamadım.",
     uiSubtitle: "Genişlik ve kullanıcı kapasitesi belirsiz.",
-    reportText: "❓ BİLİNMİYOR: Döner merdiven genişliği ve hizmet verdiği kişi sayısı bilinmiyor. 100 cm altındaki genişlikler acil durumlarda yığılmaya neden olabilir."
+    reportText: "❓ BİLİNMİYOR: Dairesel merdiven genişliği ve hizmet verdiği kişi sayısı bilinmiyor. 100 cm altındaki genişlikler acil durumlarda yığılmaya neden olabilir."
   );
 
   static final basamakOptionA = ChoiceResult(
@@ -2538,37 +2546,37 @@ class Bolum32Content {
 class Bolum33Content {
   static final normalKatYeterli = ChoiceResult(
     label: "Normal Kat (Yeterli)",
-    uiTitle: "Normal Kat Çıkış Sayısı Yeterli",
+    uiTitle: "Normal Kat Çıkış İmkanı Yeterli",
     uiSubtitle: "",
-    reportText: "✅ OLUMLU: Normal katlardaki çıkış sayısı yeterli."
+    reportText: "✅ OLUMLU: Normal katlardaki çıkış sayısı yeterli görünüyor."
   );
 
   static final normalKatYetersiz = ChoiceResult(
     label: "Normal Kat (Yetersiz)",
-    uiTitle: "Normal Kat Çıkış Sayısı Yetersiz",
+    uiTitle: "Normal Kat Çıkış İmkanı Yetersiz",
     uiSubtitle: "",
     reportText: "☢️ RİSK: Normal katlarda kullanıcı yüküne göre [GEREKEN] çıkış gerekirken, sadece [MEVCUT] çıkış var. YETERSİZ."
   );
 
   static final zeminKatYeterli = ChoiceResult(
     label: "Zemin Kat (Yeterli)",
-    uiTitle: "Zemin Kat Çıkış Sayısı Yeterli",
+    uiTitle: "Zemin Kat Çıkış İmkanı Yeterli",
     uiSubtitle: "",
-    reportText: "✅ OLUMLU: Zemin kat çıkış kapasitesi uygun görünüyor."
+    reportText: "✅ OLUMLU: Zemin kat çıkış kapasitesi yeterli görünüyor."
   );
 
   static final zeminKatYetersiz = ChoiceResult(
     label: "Zemin Kat (Yetersiz)",
-    uiTitle: "Zemin Kat Çıkış Sayısı Yetersiz",
+    uiTitle: "Zemin Kat Çıkış İmkanı Yetersiz",
     uiSubtitle: "",
     reportText: "⚠️ UYARI: Zemin kattaki yoğunluk (Örn: Dükkan/Restoran) nedeniyle [GEREKEN] adet bağımsız çıkış kapısı gerekmektedir."
   );
 
   static final bodrumKatYeterli = ChoiceResult(
     label: "Bodrum Kat (Yeterli)",
-    uiTitle: "Bodrum Kat Çıkış Sayısı Yeterli",
+    uiTitle: "Bodrum Kat Çıkış İmkanı Yeterli",
     uiSubtitle: "",
-    reportText: "✅ OLUMLU: Bodrum katlardaki çıkış sayısı yeterli."
+    reportText: "✅ OLUMLU: Bodrum katlardaki çıkış sayısı yeterli görünüyor."
   );
 
   static final bodrumKatYetersiz = ChoiceResult(
@@ -2674,7 +2682,6 @@ class Bolum35Content {
     reportText: "❓ BİLİNMİYOR: Kaçış mesafesi bilinmiyor. Ölçüm yapılmalıdır."
   );
 
-  // --- ÇIKMAZ KORİDOR DURUMU ---
   static final cikmazOptionA = ChoiceResult(
     label: "35-3-A",
     uiTitle: "Hayır, daireden çıkınca sağa veya sola (iki farklı yöne) gidebiliyorum.",
@@ -2688,7 +2695,6 @@ class Bolum35Content {
     reportText: "(Alt soru açılır)"
   );
 
-  // --- ÇIKMAZ KORİDOR UZUNLUĞU ---
   static final cikmazMesafeOptionA = ChoiceResult(
     label: "35-3-C",
     uiTitle: "Tam ölçüyü biliyorum.",

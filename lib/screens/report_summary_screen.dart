@@ -58,10 +58,10 @@ class ReportSummaryScreen extends StatelessWidget {
     final summary = ReportEngine.getSectionSummary(id);
     final result = BinaStore.instance.getResultForSection(id);
     final statusColor = ReportEngine.getStatusColor(result);
-    final fullReport = ReportEngine.getSectionFullReport(id);
 
     return ListTile(
-      onTap: () => _showDetailSheet(context, id, summary, fullReport, statusColor),
+      // DÜZELTME: Sadece gerekli 4 parametreyi gönderiyoruz
+      onTap: () => _showDetailSheet(context, id, summary, statusColor),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       title: Text("Bölüm $id", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey)),
       subtitle: Text(summary, style: const TextStyle(fontSize: 14, color: Color(0xFF2C3E50), fontWeight: FontWeight.w500)),
@@ -73,12 +73,15 @@ class ReportSummaryScreen extends StatelessWidget {
     );
   }
 
-  void _showDetailSheet(BuildContext context, int id, String title, String report, Color color) {
+  void _showDetailSheet(BuildContext context, int id, String title, Color color) {
+    final subResults = ReportEngine.getSectionSubResults(id);
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.85),
         padding: const EdgeInsets.all(24),
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -86,51 +89,54 @@ class ReportSummaryScreen extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
-            ),
-            const SizedBox(height: 25),
-            Row(
-              children: [
-                Container(width: 4, height: 24, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text("Bölüm $id: $title", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-                ),
-              ],
-            ),
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
             const SizedBox(height: 20),
-            const Text("ANALİZ TESPİTİ VE TAVSİYE:", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.1)),
-            const SizedBox(height: 10),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(15), border: Border.all(color: color.withOpacity(0.1))),
-              child: Text(
-                report,
-                style: const TextStyle(fontSize: 15, color: Color(0xFF2C3E50), height: 1.5, fontWeight: FontWeight.w500),
+            Text("Bölüm $id: $title", textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
+            const SizedBox(height: 20),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: subResults.length,
+                itemBuilder: (context, index) {
+                  final res = subResults[index];
+                  final resColor = ReportEngine.getStatusColor(res);
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: resColor.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: resColor.withOpacity(0.2)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(res.uiTitle, style: TextStyle(fontWeight: FontWeight.bold, color: resColor.shade900, fontSize: 14)),
+                        const SizedBox(height: 6),
+                        Text(res.reportText, style: const TextStyle(fontSize: 13, height: 1.4, color: Colors.black87)),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1A237E),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
+                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 15)),
                 onPressed: () => Navigator.pop(context),
-                child: const Text("ANLADIM", style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text("KAPAT", style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
+}
+
+extension on Color {
+  Color? get shade900 => null;
 }

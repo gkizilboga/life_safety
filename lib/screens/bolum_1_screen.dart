@@ -35,10 +35,8 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
 
   void _navigateToNext() {
     BinaStore.instance.bolum1 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum2Screen()),
-    );
+    BinaStore.instance.saveToDisk(); // EKLE
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum2Screen()));
   }
 
   Future<void> _showWarningDialog() async {

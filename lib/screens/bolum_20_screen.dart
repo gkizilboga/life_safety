@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_20_model.dart';
-import 'bolum_21_screen.dart'; // Sonraki ekran
+import 'bolum_21_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_assets.dart'; // Görsel yolları için eklendi
 
 class Bolum20Screen extends StatefulWidget {
   const Bolum20Screen({super.key});
@@ -17,11 +18,9 @@ class Bolum20Screen extends StatefulWidget {
 class _Bolum20ScreenState extends State<Bolum20Screen> {
   Bolum20Model _model = Bolum20Model();
 
-  // Durum değişkenleri
   bool _isTekKatli = false;
   bool _hasBodrum = false;
 
-  // Controller'lar (Çok katlı bina için)
   final _normalCtrl = TextEditingController();
   final _icKapaliCtrl = TextEditingController();
   final _disKapaliCtrl = TextEditingController();
@@ -39,8 +38,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     final bolum3 = BinaStore.instance.bolum3;
     int nKat = bolum3?.normalKatSayisi ?? 0;
     int bKat = bolum3?.bodrumKatSayisi ?? 0;
-    
-    // Zemin kat her zaman vardır (+1)
     int toplamKat = nKat + bKat + 1;
 
     setState(() {
@@ -68,14 +65,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     });
   }
 
-  void _onNextPressed() {
+  bool _validateAndSave() {
     if (_isTekKatli) {
-      // Tek katlı validasyonları
-      if (_model.tekKatCikis == null) return _showError("Lütfen dışarı çıkış durumunu seçiniz.");
-      if (_model.tekKatRampa == null) return _showError("Lütfen rampa durumunu seçiniz.");
+      if (_model.tekKatCikis == null || _model.tekKatRampa == null) return false;
     } else {
-      // Çok katlı validasyonları (Sayısal verileri kaydet)
-      // En az bir merdiven girilmiş olmalı
       int normal = int.tryParse(_normalCtrl.text) ?? 0;
       int icKapali = int.tryParse(_icKapaliCtrl.text) ?? 0;
       int disKapali = int.tryParse(_disKapaliCtrl.text) ?? 0;
@@ -83,9 +76,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       int doner = int.tryParse(_donerCtrl.text) ?? 0;
       int sahanliksiz = int.tryParse(_sahanliksizCtrl.text) ?? 0;
 
-      if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz == 0) {
-        return _showError("Lütfen binadaki merdiven sayılarını giriniz (En az bir tane).");
-      }
+      if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz == 0) return false;
 
       _model = _model.copyWith(
         normalMerdivenSayisi: normal,
@@ -97,92 +88,154 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       );
     }
 
-    // Bodrum sorusu (varsa)
-    if (_hasBodrum && _model.bodrumMerdivenDevami == null) {
-      return _showError("Lütfen bodrum merdiveni devamlılığı sorusunu yanıtlayınız.");
-    }
+    if (_hasBodrum && _model.bodrumMerdivenDevami == null) return false;
 
     BinaStore.instance.bolum20 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum21Screen()),
-    );
-  }
-
-  void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Kaçış Merdivenleri",
+      subtitle: "Binadaki merdiven tipleri ve adetleri",
+      screenType: widget.runtimeType,
+      isNextEnabled: true, // Validasyon onNext içinde yapılacak
+      onNext: () {
+        if (_validateAndSave()) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum21Screen()));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Lütfen gerekli alanları doldurunuz.")),
+          );
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernHeader(
-            title: "Bölüm-20: Binadaki Kaçış Merdivenler",
-            subtitle: "...",
-            screenType: widget.runtimeType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
+          if (_isTekKatli) ...[
+            _buildSoru("Binadan dışarıya (sokağa/caddeye) çıkışınız nasıl?", 'tekKatCikis', 
+              [Bolum20Content.tekKatOptionA], _model.tekKatCikis),
+            _buildSoru("Binadan sokağa çıkarken rampa kullanmak zorunda kalıyor musunuz?", 'tekKatRampa', 
+              [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC], _model.tekKatRampa),
+          ] else ...[
+            const Padding(
+              padding: EdgeInsets.only(left: 4, bottom: 16),
+              child: Text("Binanızda aşağıdaki merdiven türlerinden kaçar tane var?", 
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+            ),
+            
+            QuestionCard(
               child: Column(
                 children: [
-                  if (_isTekKatli) ...[
-                    // TEK KATLI BİNA SORULARI
-                    _buildSoru("Binadan dışarıya (sokağa/caddeye) çıkışınız nasıl?", 'tekKatCikis', 
-                      [Bolum20Content.tekKatOptionA], _model.tekKatCikis),
-                    
-                    _buildSoru("Binadan sokağa çıkarken rampaya basmak veya rampa kullanmak zorunda kalıyor musunuz?", 'tekKatRampa', 
-                      [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC], _model.tekKatRampa),
-                  
-                  ] else ...[
-                    // ÇOK KATLI BİNA SORULARI (SAYISAL GİRİŞ)
-                    QuestionCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Merdiven adetlerini mutlaka belirtmeniz gereklidir)", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                          const SizedBox(height: 15),
-                          
-                          _buildNumberRow(Bolum20Content.cokKatOption1.uiTitle, _normalCtrl),
-                          _buildNumberRow(Bolum20Content.cokKatOption2.uiTitle, _icKapaliCtrl),
-                          _buildNumberRow(Bolum20Content.cokKatOption3.uiTitle, _disKapaliCtrl),
-                          _buildNumberRow(Bolum20Content.cokKatOption4.uiTitle, _disAcikCtrl),
-                          _buildNumberRow(Bolum20Content.cokKatOption5.uiTitle, _donerCtrl),
-                          _buildNumberRow(Bolum20Content.cokKatOption6.uiTitle, _sahanliksizCtrl),
-                        ],
-                      ),
-                    ),
-                  ],
+                  // 1. Normal Merdiven
+                  _buildStairInputGroup(
+                    label: Bolum20Content.cokKatOption1.uiTitle,
+                    ctrl: _normalCtrl,
+                    assetPath: AppAssets.section20Normal,
+                    assetTitle: "Normal Apartman Merdiveni",
+                  ),
+                  const Divider(height: 32),
 
-                  // BODRUM SORUSU (HER İKİ DURUMDA DA ÇIKABİLİR)
-                  if (_hasBodrum)
-                    _buildSoru("Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?", 'bodrum', 
-                      [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB], _model.bodrumMerdivenDevami),
+                  // 2. Bina İçi Kapalı
+                  _buildStairInputGroup(
+                    label: Bolum20Content.cokKatOption2.uiTitle,
+                    ctrl: _icKapaliCtrl,
+                    assetPath: AppAssets.section20IcKapali,
+                    assetTitle: "Bina İçi Kapalı Yangın Merdiveni",
+                  ),
+                  const Divider(height: 32),
+
+                  // 3. Bina Dışı Kapalı
+                  _buildStairInputGroup(
+                    label: Bolum20Content.cokKatOption3.uiTitle,
+                    ctrl: _disKapaliCtrl,
+                    assetPath: AppAssets.section20DisKapali,
+                    assetTitle: "Bina Dışı Kapalı Yangın Merdiveni",
+                  ),
+                  const Divider(height: 32),
+
+                  // 4. Bina Dışı Açık (3 Görsel)
+                  _buildStairInputGroup(
+                    label: Bolum20Content.cokKatOption4.uiTitle,
+                    ctrl: _disAcikCtrl,
+                    assetPaths: [
+                      AppAssets.section20DisAcik1,
+                      AppAssets.section20DisAcik2,
+                      AppAssets.section20DisAcik3,
+                    ],
+                    assetTitles: [
+                      "Dış Açık Merdiven Örnek 1",
+                      "Dış Açık Merdiven Örnek 2",
+                      "Dış Açık Merdiven Örnek 3",
+                    ],
+                  ),
+                  const Divider(height: 32),
+
+                  // 5. Döner Merdiven
+                  _buildStairInputGroup(
+                    label: Bolum20Content.cokKatOption5.uiTitle,
+                    ctrl: _donerCtrl,
+                    assetPath: AppAssets.section20Dairesel,
+                    assetTitle: "Döner (Spiral) Merdiven",
+                  ),
+                  const Divider(height: 32),
+
+                  // 6. Sahanlıksız Merdiven
+                  _buildStairInputGroup(
+                    label: Bolum20Content.cokKatOption6.uiTitle,
+                    ctrl: _sahanliksizCtrl,
+                    assetPath: AppAssets.section20Sahanliksiz,
+                    assetTitle: "Sahanlıksız (Dönemeçli) Merdiven",
+                  ),
                 ],
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
-          ),
+          ],
+
+          if (_hasBodrum)
+            _buildSoru("Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?", 'bodrum', 
+              [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB], _model.bodrumMerdivenDevami),
         ],
       ),
+    );
+  }
+
+  // Merdiven girişi ve görsel butonunu birleştiren yardımcı widget
+  Widget _buildStairInputGroup({
+    required String label, 
+    required TextEditingController ctrl, 
+    String? assetPath, 
+    String? assetTitle,
+    List<String>? assetPaths,
+    List<String>? assetTitles,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(child: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
+            const SizedBox(width: 10),
+            SizedBox(
+              width: 60,
+              child: TextFormField(
+                controller: ctrl,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 8), border: OutlineInputBorder(), hintText: "0"),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (assetPath != null)
+          TechnicalDrawingButton(assetPath: assetPath, title: assetTitle ?? label),
+        if (assetPaths != null)
+          ...List.generate(assetPaths.length, (index) => 
+            TechnicalDrawingButton(assetPath: assetPaths[index], title: assetTitles![index])
+          ),
+      ],
     );
   }
 
@@ -191,37 +244,13 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
             choice: opt,
             isSelected: selected?.label == opt.label,
             onTap: () => _handleSelection(key, opt),
           )),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNumberRow(String label, TextEditingController ctrl) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: Row(
-        children: [
-          Expanded(child: Text(label, style: const TextStyle(fontSize: 14))),
-          SizedBox(
-            width: 70,
-            child: TextFormField(
-              controller: ctrl,
-              keyboardType: TextInputType.number,
-              textAlign: TextAlign.center,
-              decoration: const InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 8),
-                border: OutlineInputBorder(),
-                hintText: "0",
-              ),
-            ),
-          ),
         ],
       ),
     );

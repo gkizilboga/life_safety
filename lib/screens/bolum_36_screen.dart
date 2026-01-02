@@ -18,7 +18,13 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   Bolum36Model _model = Bolum36Model();
   final _genislikCtrl = TextEditingController();
   final _kapiGenislikCtrl = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+
+  // Nokta atışı kaydırma için anahtarlar
+  final GlobalKey _qKonumKey = GlobalKey();
+  final GlobalKey _qGenislikKey = GlobalKey();
+  final GlobalKey _qKapiTipiKey = GlobalKey();
+  final GlobalKey _qKapiGenislikKey = GlobalKey();
+  final GlobalKey _qGorunurlukKey = GlobalKey();
 
   int _cntDisCelik = 0;
   bool _isHighBuilding = false;
@@ -62,13 +68,15 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     });
   }
 
-  void _scrollToBottom() {
+  // Belirli bir widget'a yumuşak kaydırma fonksiyonu
+  void _scrollToKey(GlobalKey key) {
     Future.delayed(const Duration(milliseconds: 300), () {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
+      if (key.currentContext != null) {
+        Scrollable.ensureVisible(
+          key.currentContext!,
           duration: const Duration(milliseconds: 600),
           curve: Curves.easeInOut,
+          alignment: 0.1,
         );
       }
     });
@@ -78,7 +86,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   void dispose() {
     _genislikCtrl.dispose();
     _kapiGenislikCtrl.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -86,18 +93,35 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     setState(() {
       if (type == 'disMerd') {
         _model = _model.copyWith(disMerd: choice);
-        _scrollToBottom();
-      }
-      if (type == 'konum') {
+        // Dış merdiven seçilince varsa Konum'a, yoksa Genişlik'e kaydır
+        if ((_model.totalValidCikisSayisi ?? 0) > 1) {
+          _scrollToKey(_qKonumKey);
+        } else {
+          _scrollToKey(_qGenislikKey);
+        }
+      } else if (type == 'konum') {
         _model = _model.copyWith(konum: choice);
-        _scrollToBottom();
-      }
-      if (type == 'kapiTipi') {
+        _scrollToKey(_qGenislikKey);
+      } else if (type == 'kapiTipi') {
         _model = _model.copyWith(kapiTipi: choice);
-        _scrollToBottom();
+        _scrollToKey(_qKapiGenislikKey);
+      } else if (type == 'gorunurluk') {
+        _model = _model.copyWith(gorunurluk: choice);
       }
-      if (type == 'gorunurluk') _model = _model.copyWith(gorunurluk: choice);
     });
+  }
+
+  bool _isReady() {
+    double? gen = _genislikBilinmiyor ? null : double.tryParse(_genislikCtrl.text.replaceAll(',', '.'));
+    double? kGen = _kapiGenislikBilinmiyor ? null : double.tryParse(_kapiGenislikCtrl.text.replaceAll(',', '.'));
+
+    if (_cntDisCelik > 0 && _model.disMerd == null) return false;
+    if ((_model.totalValidCikisSayisi ?? 0) > 1 && _model.konum == null) return false;
+    if (!_genislikBilinmiyor && gen == null) return false;
+    if (_model.kapiTipi == null) return false;
+    if (!_kapiGenislikBilinmiyor && kGen == null) return false;
+    if (_model.gorunurluk == null) return false;
+    return true;
   }
 
   void _onFinishPressed() {
@@ -106,20 +130,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     
     _model = _model.copyWith(genislik: gen, kapiGenislik: kGen);
 
-    if (_cntDisCelik > 0 && _model.disMerd == null) return _showError("Lütfen dış merdiven sorusunu yanıtlayınız.");
-    if ((_model.totalValidCikisSayisi ?? 0) > 1 && _model.konum == null) return _showError("Lütfen merdiven konumu sorusunu yanıtlayınız.");
-    if (!_genislikBilinmiyor && gen == null) return _showError("Lütfen genişlik giriniz veya 'Bilmiyorum' seçiniz.");
-    if (_model.kapiTipi == null) return _showError("Lütfen kapı tipini seçiniz.");
-    if (!_kapiGenislikBilinmiyor && kGen == null) return _showError("Lütfen kapı genişliği giriniz veya 'Bilmiyorum' seçiniz.");
-    if (_model.gorunurluk == null) return _showError("Lütfen görünürlük sorusunu yanıtlayınız.");
-
     BinaStore.instance.bolum36 = _model;
     BinaStore.instance.saveToDisk();
     _showFinishDialog();
-  }
-
-  void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800));
   }
 
   void _showFinishDialog() {
@@ -127,9 +140,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text("Analiz Tamamlandı", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-        content: const Text("Tüm veriler başarıyla işlendi. Binanızın yangın risk analiz raporu hazırlandı."),
+        content: const Text("Tüm veriler başarıyla işlendi. Binanızın Yangın Risk Analiz Ön Raporu hazırlandı."),
         actions: [
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white),
@@ -137,10 +150,10 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const ReportSummaryScreen()),
-                (route) => false, // Geri dönmeyi kapatır, çünkü analiz bitti.
+                (route) => false,
               );
             },
-            child: const Text("Raporu Görüntüle"),
+            child: const Text("Ön Raporu Görüntüle"),
           ),
         ],
       ),
@@ -149,119 +162,125 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Kaçış Yollarının Değerlendirmesi",
+      subtitle: "Final ölçümleri ve erişim denetimi",
+      screenType: widget.runtimeType,
+      isNextEnabled: _isReady(),
+      onNext: _onFinishPressed,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernHeader(
-            title: "Bölüm-36: Kapasite Kontrol", 
-            subtitle: "Son ölçümler ve erişim denetimi.", 
-            screenType: widget.runtimeType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  if (_showStep0Warning) _buildStep0Card(),
-                  
-                  if (_cntDisCelik > 0) ...[
-                    if (_isHighBuilding) _buildHighBuildingWarning(),
-                    _buildSoru("Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?", 'disMerd', 
-                      [Bolum36Content.disMerdOptionA, Bolum36Content.disMerdOptionB, Bolum36Content.disMerdOptionC], _model.disMerd),
-                  ],
+          if (_showStep0Warning) _buildStep0Card(),
+          
+          // --- SORU 1: DIŞ MERDİVEN ---
+          if (_cntDisCelik > 0) ...[
+            if (_isHighBuilding) _buildHighBuildingWarning(),
+            _buildSoruHeader("1. Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?"),
+            _buildSoruCard('disMerd', [Bolum36Content.disMerdOptionA, Bolum36Content.disMerdOptionB, Bolum36Content.disMerdOptionC], _model.disMerd),
+          ],
 
-                  if ((_model.totalValidCikisSayisi ?? 0) > 1) ...[
-                    _buildInfoNote("Binada birden fazla çıkış tespit edildiği için konum analizi gereklidir."),
-                    _buildSoru("Kaçış merdivenleri birbirine göre nasıl konumlanmış?", 'konum', 
-                      [Bolum36Content.konumOptionA, Bolum36Content.konumOptionB, Bolum36Content.konumOptionC], _model.konum),
-                  ],
+          // --- SORU 2: KONUM ---
+          if ((_model.totalValidCikisSayisi ?? 0) > 1) ...[
+            SizedBox(key: _qKonumKey, height: 1),
+            _buildInfoNote("Binada birden fazla çıkış tespit edildiği için konum değerlendirmesi gereklidir."),
+            _buildSoruHeader("2. Kaçış merdivenleri birbirine göre nasıl konumlanmış?"),
+            _buildSoruCard('konum', [Bolum36Content.konumOptionA, Bolum36Content.konumOptionB, Bolum36Content.konumOptionC], _model.konum),
+          ],
 
-                  QuestionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Merdiven/Koridor temiz genişliği (cm) kaçtır?", style: TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _genislikCtrl,
-                          enabled: !_genislikBilinmiyor,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          decoration: const InputDecoration(hintText: "Örn: 120", suffixText: "cm", border: OutlineInputBorder()),
-                        ),
-                        const SizedBox(height: 10),
-                        SelectableCard(
-                          choice: Bolum36Content.genislikBilinmiyor,
-                          isSelected: _genislikBilinmiyor,
-                          onTap: () => setState(() {
-                            _genislikBilinmiyor = !_genislikBilinmiyor;
-                            if (_genislikBilinmiyor) _genislikCtrl.clear();
-                            _scrollToBottom();
-                          }),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  _buildSoru("Çıkış kapınızın tipi nedir?", 'kapiTipi', 
-                    [Bolum36Content.kapiTipiOptionA, Bolum36Content.kapiTipiOptionB, Bolum36Content.kapiTipiOptionC], _model.kapiTipi),
-
-                  QuestionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Kapı net geçiş genişliği (cm) kaçtır?", style: TextStyle(fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _kapiGenislikCtrl,
-                          enabled: !_kapiGenislikBilinmiyor,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          decoration: const InputDecoration(hintText: "Örn: 90", suffixText: "cm", border: OutlineInputBorder()),
-                        ),
-                        const SizedBox(height: 10),
-                        SelectableCard(
-                          choice: Bolum36Content.kapiGenislikBilinmiyor,
-                          isSelected: _kapiGenislikBilinmiyor,
-                          onTap: () => setState(() {
-                            _kapiGenislikBilinmiyor = !_kapiGenislikBilinmiyor;
-                            if (_kapiGenislikBilinmiyor) _kapiGenislikCtrl.clear();
-                            _scrollToBottom();
-                          }),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  _buildSoru("Kaçış yolları açıkça görülebiliyor mu?", 'gorunurluk', 
-                    [Bolum36Content.gorunurlukOptionA, Bolum36Content.gorunurlukOptionB, Bolum36Content.gorunurlukOptionC], _model.gorunurluk),
-                ],
-              ),
+          // --- SORU 3: GENİŞLİK ---
+          SizedBox(key: _qGenislikKey, height: 1),
+          _buildSoruHeader("3. Merdiven/Koridor temiz genişliği (cm) kaçtır?"),
+          QuestionCard(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _genislikCtrl,
+                  enabled: !_genislikBilinmiyor,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (_) => setState(() {}),
+                  decoration: const InputDecoration(hintText: "Örn: 120", suffixText: "cm", border: OutlineInputBorder()),
+                ),
+                const SizedBox(height: 12),
+                SelectableCard(
+                  choice: Bolum36Content.genislikBilinmiyor,
+                  isSelected: _genislikBilinmiyor,
+                  onTap: () => setState(() {
+                    _genislikBilinmiyor = !_genislikBilinmiyor;
+                    if (_genislikBilinmiyor) _genislikCtrl.clear();
+                    _scrollToKey(_qKapiTipiKey);
+                  }),
+                ),
+              ],
             ),
           ),
-          _buildBottomNav(),
+
+          // --- SORU 4: KAPI TİPİ ---
+          SizedBox(key: _qKapiTipiKey, height: 1),
+          _buildSoruHeader("4. Merdivenlere açılan çıkış kapılarınızın tipi nedir?"),
+          _buildSoruCard('kapiTipi', [Bolum36Content.kapiTipiOptionA, Bolum36Content.kapiTipiOptionB, Bolum36Content.kapiTipiOptionC], _model.kapiTipi),
+
+          // --- SORU 5: KAPI GENİŞLİK ---
+          SizedBox(key: _qKapiGenislikKey, height: 1),
+          _buildSoruHeader("5. Kapı net geçiş genişliği (cm) kaçtır?"),
+          QuestionCard(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _kapiGenislikCtrl,
+                  enabled: !_kapiGenislikBilinmiyor,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (_) => setState(() {}),
+                  decoration: const InputDecoration(hintText: "Örn: 90", suffixText: "cm", border: OutlineInputBorder()),
+                ),
+                const SizedBox(height: 12),
+                SelectableCard(
+                  choice: Bolum36Content.kapiGenislikBilinmiyor,
+                  isSelected: _kapiGenislikBilinmiyor,
+                  onTap: () => setState(() {
+                    _kapiGenislikBilinmiyor = !_kapiGenislikBilinmiyor;
+                    if (_kapiGenislikBilinmiyor) _kapiGenislikCtrl.clear();
+                    _scrollToKey(_qGorunurlukKey);
+                  }),
+                ),
+              ],
+            ),
+          ),
+
+          // --- SORU 6: GÖRÜNÜRLÜK ---
+          SizedBox(key: _qGorunurlukKey, height: 1),
+          _buildSoruHeader("6. Kaçış yolları açıkça görülebiliyor mu?"),
+          _buildSoruCard('gorunurluk', [Bolum36Content.gorunurlukOptionA, Bolum36Content.gorunurlukOptionB, Bolum36Content.gorunurlukOptionC], _model.gorunurluk),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSoruHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
+      child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+    );
+  }
+
+  Widget _buildSoruCard(String key, List<ChoiceResult> options, ChoiceResult? selected) {
+    return QuestionCard(
+      child: Column(
+        children: options.map((opt) => SelectableCard(
+          choice: opt,
+          isSelected: selected?.label == opt.label,
+          onTap: () => _handleSelection(key, opt),
+        )).toList(),
       ),
     );
   }
 
   Widget _buildInfoNote(String text) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 15),
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: Colors.orange.withOpacity(0.1), borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.orange.withOpacity(0.3))),
-      child: Row(children: [const Icon(Icons.arrow_downward, color: Colors.orange, size: 20), const SizedBox(width: 12), Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13)))]),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))]),
-      child: SafeArea(child: SizedBox(width: double.infinity, child: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade700, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 15)),
-        onPressed: _onFinishPressed, 
-        child: const Text("ANALİZİ BİTİR VE RAPORLA", style: TextStyle(fontWeight: FontWeight.bold))
-      ))),
+      decoration: BoxDecoration(color: const Color(0xFFFFF3E0), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFFFFE0B2))),
+      child: Row(children: [const Icon(Icons.arrow_downward, color: Color(0xFFE65100), size: 20), const SizedBox(width: 12), Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13)))]),
     );
   }
 
@@ -283,24 +302,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.red.shade200)),
-      child: const Text("🚨 KRİTİK: 21.50m üzeri binalarda dış açık merdivenler yönetmeliğe aykırıdır.", style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold)),
-    );
-  }
-
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
-    return QuestionCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-          const SizedBox(height: 12),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
-        ],
-      ),
+      child: const Text("🚨 KRİTİK: 21.50m üzeri binalarda dış açık merdivenler Yangın Yönetmeliği'ne göre kullanılamaz..", style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold)),
     );
   }
 }

@@ -16,7 +16,6 @@ class Bolum10Screen extends StatefulWidget {
 
 class _Bolum10ScreenState extends State<Bolum10Screen> {
   Bolum10Model _model = Bolum10Model();
-  final ScrollController _scrollController = ScrollController();
   bool _isSummaryAccepted = false;
 
   final GlobalKey _bodrumKey = GlobalKey();
@@ -38,13 +37,14 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     );
   }
 
-  void _scrollToSection(GlobalKey key) {
+  void _scrollToKey(GlobalKey key) {
     Future.delayed(const Duration(milliseconds: 300), () {
       if (key.currentContext != null) {
         Scrollable.ensureVisible(
           key.currentContext!,
           duration: const Duration(milliseconds: 600),
           curve: Curves.easeInOut,
+          alignment: 0.1,
         );
       }
     });
@@ -55,17 +55,14 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       _isSummaryAccepted = false;
       if (type == 'zemin') {
         _model = _model.copyWith(zemin: choice);
-        if (_model.bodrumlar.isNotEmpty) {
-          _scrollToSection(_bodrumKey);
-        } else if (_model.normaller.isNotEmpty) {
-          _scrollToSection(_normalKey);
-        }
+        if (_model.bodrumlar.isNotEmpty) _scrollToKey(_bodrumKey);
+        else if (_model.normaller.isNotEmpty) _scrollToKey(_normalKey);
       } else if (type == 'bodrum') {
         List<ChoiceResult?> newList = List.from(_model.bodrumlar);
         if (_model.bodrumlarAyni) {
           newList = List.filled(newList.length, choice);
           _model = _model.copyWith(bodrumlar: newList);
-          if (_model.normaller.isNotEmpty) _scrollToSection(_normalKey);
+          if (_model.normaller.isNotEmpty) _scrollToKey(_normalKey);
         } else {
           if (index != null) newList[index] = choice;
           _model = _model.copyWith(bodrumlar: newList);
@@ -75,7 +72,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
         if (_model.normallerAyni) {
           newList = List.filled(newList.length, choice);
           _model = _model.copyWith(normaller: newList);
-          if (_checkIfComplete()) _scrollToSection(_summaryKey);
+          if (_checkIfComplete()) _scrollToKey(_summaryKey);
         } else {
           if (index != null) newList[index] = choice;
           _model = _model.copyWith(normaller: newList);
@@ -91,93 +88,75 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     return true;
   }
 
-  void _onNextPressed() {
-    if (!_checkIfComplete() || !_isSummaryAccepted) return;
-    BinaStore.instance.bolum10 = _model;
-    BinaStore.instance.saveToDisk();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum11Screen()));
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Kat Kullanım Amaçları",
+      subtitle: "Her katın fonksiyonel yükünü belirleyin",
+      screenType: widget.runtimeType,
+      isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
+      onNext: () {
+        BinaStore.instance.bolum10 = _model;
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum11Screen()));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernHeader(
-            title: "Kat Kullanım Amaçları",
-            subtitle: "Her katın fonksiyonel yükünü belirleyin",
-            screenType: widget.runtimeType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle("Zemin Kat"),
-                  _buildChoiceGrid('zemin', null, _model.zemin),
+          _buildSectionTitle("Zemin Kat"),
+          _buildChoiceGrid('zemin', null, _model.zemin),
 
-                  if (_model.bodrumlar.isNotEmpty) ...[
-                    const SizedBox(height: 20),
-                    _buildSectionTitle("Bodrum Katlar", key: _bodrumKey),
-                    _buildToggleRow("Tüm bodrumlar aynı", _model.bodrumlarAyni, (val) {
-                      setState(() => _model = _model.copyWith(bodrumlarAyni: val));
-                    }),
-                    if (_model.bodrumlarAyni)
-                      _buildChoiceGrid('bodrum', 0, _model.bodrumlar[0])
-                    else
-                      ...List.generate(_model.bodrumlar.length, (i) => 
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              // DÜZELTİLEN SATIR: EdgeInsets.only kullanıldı
-                              padding: const EdgeInsets.only(top: 8, bottom: 8, left: 4),
-                              child: Text("${i + 1}. Bodrum Kat", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                            ),
-                            _buildChoiceGrid('bodrum', i, _model.bodrumlar[i]),
-                          ],
-                        ),
-                      ),
-                  ],
-
-                  if (_model.normaller.isNotEmpty) ...[
-                    const SizedBox(height: 20),
-                    _buildSectionTitle("Normal Katlar", key: _normalKey),
-                    _buildToggleRow("Tüm normal katlar aynı", _model.normallerAyni, (val) {
-                      setState(() => _model = _model.copyWith(normallerAyni: val));
-                    }),
-                    if (_model.normallerAyni)
-                      _buildChoiceGrid('normal', 0, _model.normaller[0])
-                    else
-                      ...List.generate(_model.normaller.length, (i) => 
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              // DÜZELTİLEN SATIR: EdgeInsets.only kullanıldı
-                              padding: const EdgeInsets.only(top: 8, bottom: 8, left: 4),
-                              child: Text("${i + 1}. Normal Kat", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                            ),
-                            _buildChoiceGrid('normal', i, _model.normaller[i]),
-                          ],
-                        ),
-                      ),
-                  ],
-
-                  if (_checkIfComplete()) 
+          if (_model.bodrumlar.isNotEmpty) ...[
+            SizedBox(key: _bodrumKey, height: 20),
+            _buildSectionTitle("Bodrum Katlar"),
+            _buildToggleRow("Tüm bodrumlar aynı", _model.bodrumlarAyni, (val) {
+              setState(() => _model = _model.copyWith(bodrumlarAyni: val));
+            }),
+            if (_model.bodrumlarAyni)
+              _buildChoiceGrid('bodrum', 0, _model.bodrumlar[0])
+            else
+              ...List.generate(_model.bodrumlar.length, (i) => 
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Padding(
-                      key: _summaryKey,
-                      padding: const EdgeInsets.only(top: 20),
-                      child: _buildSummaryCard(),
+                      padding: const EdgeInsets.only(top: 8, bottom: 8, left: 4),
+                      child: Text("${i + 1}. Bodrum Kat", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                     ),
-                ],
+                    _buildChoiceGrid('bodrum', i, _model.bodrumlar[i]),
+                  ],
+                ),
               ),
+          ],
+
+          if (_model.normaller.isNotEmpty) ...[
+            SizedBox(key: _normalKey, height: 20),
+            _buildSectionTitle("Normal Katlar"),
+            _buildToggleRow("Tüm normal katlar aynı", _model.normallerAyni, (val) {
+              setState(() => _model = _model.copyWith(normallerAyni: val));
+            }),
+            if (_model.normallerAyni)
+              _buildChoiceGrid('normal', 0, _model.normaller[0])
+            else
+              ...List.generate(_model.normaller.length, (i) => 
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, bottom: 8, left: 4),
+                      child: Text("${i + 1}. Normal Kat", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                    ),
+                    _buildChoiceGrid('normal', i, _model.normaller[i]),
+                  ],
+                ),
+              ),
+          ],
+
+          if (_checkIfComplete()) 
+            Padding(
+              key: _summaryKey,
+              padding: const EdgeInsets.only(top: 20),
+              child: _buildSummaryCard(),
             ),
-          ),
-          _buildBottomNav(),
         ],
       ),
     );
@@ -209,9 +188,8 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     );
   }
 
-  Widget _buildSectionTitle(String title, {GlobalKey? key}) {
+  Widget _buildSectionTitle(String title) {
     return Padding(
-      key: key,
       padding: const EdgeInsets.only(bottom: 12, left: 4),
       child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
     );
@@ -258,29 +236,6 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
             activeColor: Colors.green,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
-      ),
-      child: SafeArea(
-        top: false,
-        child: ElevatedButton(
-          onPressed: (_checkIfComplete() && _isSummaryAccepted) ? _onNextPressed : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1A237E),
-            foregroundColor: Colors.white,
-            minimumSize: const Size(double.infinity, 54),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-        ),
       ),
     );
   }

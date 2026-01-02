@@ -89,8 +89,10 @@ class BinaStore {
   Future<void> saveToDisk() async {
     final prefs = await SharedPreferences.getInstance();
     
+    currentBinaId ??= DateTime.now().millisecondsSinceEpoch.toString();
+
     final currentData = {
-      'id': currentBinaId ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      'id': currentBinaId,
       'name': currentBinaName ?? "İsimsiz Bina",
       'date': DateTime.now().toIso8601String(),
       'sections': {
@@ -133,7 +135,7 @@ class BinaStore {
       }
     };
 
-    int index = archive.indexWhere((element) => element['id'] == currentData['id']);
+    int index = archive.indexWhere((element) => element['id'] == currentBinaId);
     if (index != -1) {
       archive[index] = currentData;
     } else {
@@ -141,7 +143,7 @@ class BinaStore {
     }
 
     await prefs.setString('bina_archive', json.encode(archive));
-    await prefs.setString('active_bina_id', currentBinaId ?? "");
+    await prefs.setString('active_bina_id', currentBinaId!);
   }
 
   Future<void> loadFromDisk() async {
@@ -161,7 +163,6 @@ class BinaStore {
   }
 
   void _loadBuildingFromMap(Map<String, dynamic> data) {
-        
     currentBinaId = data['id'];
     currentBinaName = data['name'];
     final s = data['sections'];
@@ -230,7 +231,7 @@ class BinaStore {
       case 10: return bolum10?.secim;
       case 11: return bolum11?.mesafe;
       case 12: return bolum12?.secim;
-      case 13: return bolum13?.otoparkKapi; // İlk dolu olanı döndürür
+      case 13: return bolum13?.otoparkKapi ?? bolum13?.kazanKapi ?? bolum13?.asansorKapi;
       case 14: return bolum14?.secim;
       case 15: return bolum15?.kaplama;
       case 16: return bolum16?.secim;
@@ -246,7 +247,7 @@ class BinaStore {
       case 26: return bolum26?.secim;
       case 27: return bolum27?.boyut;
       case 28: return bolum28?.mesafe;
-      case 29: return bolum29?.otopark;
+      case 29: return bolum29?.otopark ?? bolum29?.kazan ?? bolum29?.cati;
       case 30: return bolum30?.konum;
       case 31: return bolum31?.yapi;
       case 32: return bolum32?.yapi;
@@ -268,13 +269,16 @@ class BinaStore {
     bolum25 = null; bolum26 = null; bolum27 = null; bolum28 = null;
     bolum29 = null; bolum30 = null; bolum31 = null; bolum32 = null;
     bolum33 = null; bolum34 = null; bolum35 = null; bolum36 = null;
+    currentBinaId = null;
+    currentBinaName = null;
   }
+
   void loadBuildingFromArchive(String id) {
     final data = archive.firstWhere((e) => e['id'] == id, orElse: () => {});
     if (data.isNotEmpty) {
-      reset(); // Mevcut modelleri temizle
-      _loadBuildingFromMap(data); // Arşivdeki veriyi modellere doldur
-      saveToDisk(); // Bu binayı "aktif" bina olarak kaydet
+      reset();
+      _loadBuildingFromMap(data);
+      saveToDisk();
     }
   }
 

@@ -2,7 +2,6 @@ import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum13Model {
-  // Her riskli alan için bir soru (ChoiceResult)
   final ChoiceResult? otoparkKapi;
   final ChoiceResult? kazanKapi;
   final ChoiceResult? asansorKapi;
@@ -11,36 +10,12 @@ class Bolum13Model {
   final ChoiceResult? trafoKapi;
   final ChoiceResult? depoKapi;
   final ChoiceResult? copKapi;
-  
-  // Ortak Duvar ve Ticari Alan soruları (Bölüm 6 ve 7'den gelen bilgiye göre)
   final ChoiceResult? ortakDuvar;
   final ChoiceResult? ticariKapi;
 
-  Bolum13Model({
-    this.otoparkKapi,
-    this.kazanKapi,
-    this.asansorKapi,
-    this.jeneratorKapi,
-    this.elektrikKapi,
-    this.trafoKapi,
-    this.depoKapi,
-    this.copKapi,
-    this.ortakDuvar,
-    this.ticariKapi,
-  });
+  Bolum13Model({this.otoparkKapi, this.kazanKapi, this.asansorKapi, this.jeneratorKapi, this.elektrikKapi, this.trafoKapi, this.depoKapi, this.copKapi, this.ortakDuvar, this.ticariKapi});
 
-  Bolum13Model copyWith({
-    ChoiceResult? otoparkKapi,
-    ChoiceResult? kazanKapi,
-    ChoiceResult? asansorKapi,
-    ChoiceResult? jeneratorKapi,
-    ChoiceResult? elektrikKapi,
-    ChoiceResult? trafoKapi,
-    ChoiceResult? depoKapi,
-    ChoiceResult? copKapi,
-    ChoiceResult? ortakDuvar,
-    ChoiceResult? ticariKapi,
-  }) {
+  Bolum13Model copyWith({ChoiceResult? otoparkKapi, ChoiceResult? kazanKapi, ChoiceResult? asansorKapi, ChoiceResult? jeneratorKapi, ChoiceResult? elektrikKapi, ChoiceResult? trafoKapi, ChoiceResult? depoKapi, ChoiceResult? copKapi, ChoiceResult? ortakDuvar, ChoiceResult? ticariKapi}) {
     return Bolum13Model(
       otoparkKapi: otoparkKapi ?? this.otoparkKapi,
       kazanKapi: kazanKapi ?? this.kazanKapi,
@@ -71,23 +46,21 @@ class Bolum13Model {
   }
 
   factory Bolum13Model.fromMap(Map<String, dynamic> map) {
-    // Burada AppContent'teki tüm seçenekleri tek tek kontrol etmek yerine
-    // sadece label'ı kaydedip rapor aşamasında eşleştirme yapacağız.
-    // Ancak UI'da göstermek için manuel mapping gerekebilir.
-    // Şimdilik basitçe null check ile geçiyoruz, detaylı mapping
-    // proje sonunda AppContent içindeki bir helper metod ile yapılabilir.
-    
-    // Örnek Mapping (Sadece Otopark İçin Gösteriyorum, Diğerlerini de ekleyebilirsin)
-    ChoiceResult? otopark;
-    if (map['otoparkKapi_label'] == Bolum13Content.otoparkOptionA.label) {
-      otopark = Bolum13Content.otoparkOptionA;
-    } else if (map['otoparkKapi_label'] == Bolum13Content.otoparkOptionB.label) otopark = Bolum13Content.otoparkOptionB;
-    else if (map['otoparkKapi_label'] == Bolum13Content.otoparkOptionC.label) otopark = Bolum13Content.otoparkOptionC;
-    else if (map['otoparkKapi_label'] == Bolum13Content.otoparkOptionD.label) otopark = Bolum13Content.otoparkOptionD;
-
-    // Diğer alanlar için de benzer mantık kurulmalı veya
-    // Raporlama sırasında sadece label üzerinden gidilmeli.
-    // Şimdilik null döndürerek devam ediyoruz.
-    return Bolum13Model(otoparkKapi: otopark);
+    ChoiceResult? find(String? l, List<ChoiceResult> opts) {
+      if (l == null) return null;
+      try { return opts.firstWhere((e) => e.label == l); } catch (_) { return null; }
+    }
+    return Bolum13Model(
+      otoparkKapi: find(map['otoparkKapi_label'], [Bolum13Content.otoparkOptionA, Bolum13Content.otoparkOptionB, Bolum13Content.otoparkOptionC, Bolum13Content.otoparkOptionD]),
+      kazanKapi: find(map['kazanKapi_label'], [Bolum13Content.kazanOptionA, Bolum13Content.kazanOptionB, Bolum13Content.kazanOptionC, Bolum13Content.kazanOptionD]),
+      asansorKapi: find(map['asansorKapi_label'], [Bolum13Content.asansorOptionA, Bolum13Content.asansorOptionB, Bolum13Content.asansorOptionC]),
+      jeneratorKapi: find(map['jeneratorKapi_label'], [Bolum13Content.jeneratorOptionA, Bolum13Content.jeneratorOptionB, Bolum13Content.jeneratorOptionC]),
+      elektrikKapi: find(map['elektrikKapi_label'], [Bolum13Content.elekOdasiOptionA, Bolum13Content.elekOdasiOptionB, Bolum13Content.elekOdasiOptionC]),
+      trafoKapi: find(map['trafoKapi_label'], [Bolum13Content.trafoOptionA, Bolum13Content.trafoOptionB, Bolum13Content.trafoOptionC]),
+      depoKapi: find(map['depoKapi_label'], [Bolum13Content.depoOptionA, Bolum13Content.depoOptionB, Bolum13Content.depoOptionC]),
+      copKapi: find(map['copKapi_label'], [Bolum13Content.copOptionA, Bolum13Content.copOptionB, Bolum13Content.copOptionC]),
+      ortakDuvar: find(map['ortakDuvar_label'], [Bolum13Content.ortakDuvarOptionA, Bolum13Content.ortakDuvarOptionB, Bolum13Content.ortakDuvarOptionC]),
+      ticariKapi: find(map['ticariKapi_label'], [Bolum13Content.ticariOptionA, Bolum13Content.ticariOptionB, Bolum13Content.ticariOptionC]),
+    );
   }
 }

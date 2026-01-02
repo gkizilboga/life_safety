@@ -69,47 +69,46 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
 
   void _onNextPressed() {
     BinaStore.instance.bolum14 = _model;
+    // KRİTİK: Veriyi diske kaydet
+    BinaStore.instance.saveToDisk(); 
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum15Screen()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA), // Ofis Standartı Arka Plan
       body: Column(
         children: [
           ModernHeader(
-            title: Bolum14Content.title,
+            title: "Tesisat Şaftları",
             subtitle: "Bina yüksekliğine göre şaft gereksinimleri",
             screenType: widget.runtimeType,
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Expanded(
-                        child: Text(
-                          "Yönetmelik Analiz Sonucu",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2C3E50)),
-                        ),
-                      ),
-                      
-                    ],
+                  const Padding(
+                    padding: EdgeInsets.only(left: 4, bottom: 12),
+                    child: Text(
+                      "Yönetmelik Analiz Sonucu",
+                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+                    ),
                   ),
-                  const SizedBox(height: 15),
+                  
+                  // --- ANALİZ SONUÇ KARTI ---
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.1)),
+                      border: Border.all(color: const Color(0xFFE0E0E0)),
                       boxShadow: [
-                        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 15, offset: const Offset(0, 5)),
+                        BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4)),
                       ],
                     ),
                     child: Column(
@@ -117,11 +116,14 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                         Row(
                           children: [
                             _buildResultBox("Şaft Duvarı", "${_model.gerekenDuvarDk}", "dakika"),
-                            Container(width: 1, height: 50, color: Colors.grey[200]),
+                            Container(width: 1, height: 40, color: const Color(0xFFECEFF1)),
                             _buildResultBox("Şaft Kapağı", "${_model.gerekenKapakDk}", "dakika"),
                           ],
                         ),
-                        const Divider(height: 40),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Divider(height: 1, color: Color(0xFFECEFF1)),
+                        ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -131,10 +133,10 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                               child: Text(
                                 _model.raporMesaji ?? "",
                                 style: const TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   height: 1.5,
                                   fontWeight: FontWeight.w500,
-                                  color: Color(0xFF34495E),
+                                  color: Color(0xFF455A64),
                                 ),
                               ),
                             ),
@@ -143,13 +145,26 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 20),
+
+                  // --- TEKNİK GÖRSEL (DOĞRUDAN EKRANDA) ---
+                  const Padding(
+                    padding: EdgeInsets.only(left: 4, bottom: 12),
+                    child: Text(
+                      "Şaft ve Kapak Detayı",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+                    ),
+                  ),
+                  SectionImage(assetPath: AppAssets.section14SaftDuvarKapi),
+
+                  const SizedBox(height: 12),
                   _buildWarningNote(),
                 ],
               ),
             ),
           ),
-          _buildBottomNav(),
+          _buildBottomAction(),
         ],
       ),
     );
@@ -159,10 +174,10 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
     return Expanded(
       child: Column(
         children: [
-          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w600)),
+          Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
-          Text(unit, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
+          Text(value, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
+          Text(unit, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -170,33 +185,44 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
 
   Widget _buildWarningNote() {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.05),
+        color: const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Text(
-        "Not: Bu değerler BYKHY Madde 24 ve 25 uyarınca binanızın mimari verilerine göre otomatik hesaplanmıştır.",
-        style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic, color: Colors.blueGrey),
+      child: const Row(
+        children: [
+          Icon(Icons.info_outline, size: 18, color: Color(0xFF1565C0)),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              "Bu değerler binanızın mimari verilerine göre otomatik hesaplanmıştır.",
+              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Color(0xFF1565C0)),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildBottomNav() {
+  Widget _buildBottomAction() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
       ),
       child: SafeArea(
         top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _onNextPressed,
-            child: const Text("ANALİZİ ONAYLA VE DEVAM ET"),
+        child: ElevatedButton(
+          onPressed: _onNextPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1A237E),
+            foregroundColor: Colors.white,
+            minimumSize: const Size(double.infinity, 54),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
+          child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
         ),
       ),
     );

@@ -213,38 +213,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _startNewAnalysis(BuildContext context) {
     final TextEditingController nameCtrl = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text("Yeni Yangın Risk Analizi"),
+        title: const Text("Yeni Yangın Risk Analizi", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Analiz edilecek binanın adını veya referans numarasını giriniz:"),
+            const Text("Analiz edilecek binanın adını veya adresini giriniz:"),
             const SizedBox(height: 15),
             TextField(
               controller: nameCtrl,
-              autofocus: true,
-              decoration: const InputDecoration(
-                hintText: "Örn: Huzur Apartmanı A Blok",
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(hintText: "Örn: Huzur Apartmanı / A Blok", border: OutlineInputBorder()),
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Vazgeç", style: TextStyle(color: Colors.grey))),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Vazgeç")),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white),
             onPressed: () {
-              if (nameCtrl.text.trim().isEmpty) return;
-              BinaStore.instance.createNewBuilding(nameCtrl.text.trim());
-              Navigator.pop(ctx);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum1Screen())).then((_) {
-                setState(() {}); // Geri dönüldüğünde dashboard'u tazele
-              });
+              if (nameCtrl.text.isNotEmpty) {
+                BinaStore.instance.createNewBuilding(nameCtrl.text);
+                Navigator.pop(ctx);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum1Screen()));
+              }
             },
             child: const Text("Başlat"),
           ),

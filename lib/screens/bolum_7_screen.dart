@@ -5,6 +5,7 @@ import 'bolum_8_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
+import '../../utils/app_assets.dart'; // Görsel yolları için eklendi
 
 class Bolum7Screen extends StatefulWidget {
   const Bolum7Screen({super.key});
@@ -61,12 +62,11 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   @override
   Widget build(BuildContext context) {
     final b6 = BinaStore.instance.bolum6;
-    // Bölüm 6'daki herhangi bir otopark seçimi (A, B, C, D) hasOtopark'ı true yapar.
     final bool isOtoparkLocked = b6?.hasOtopark ?? false;
     final bool isDepoLocked = b6?.hasDepo ?? false;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA), // Ofis ortamı için ferah arka plan
+      backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
           ModernHeader(
@@ -88,7 +88,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
                     ),
                   ),
 
-                  // --- OTOPARK (Bölüm 6'dan otomatik gelir) ---
+                  // --- OTOPARK (Kilitli) ---
                   _buildSyncCard(
                     isLocked: isOtoparkLocked,
                     choice: Bolum7Content.otopark,
@@ -97,14 +97,31 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
                     message: "Otopark varlığı Bölüm-6 seçimlerinize göre kilitlenmiştir.",
                   ),
 
+                  // --- KAZAN DAİRESİ ---
                   _buildOption(Bolum7Content.kazan, _model.hasKazan, () => _toggleOption('kazan')),
-                  _buildOption(Bolum7Content.asansor, _model.hasAsansor, () => _toggleOption('asansor')),
-                  _buildOption(Bolum7Content.cati, _model.hasCati, () => _toggleOption('cati')),
-                  _buildOption(Bolum7Content.jenerator, _model.hasJenerator, () => _toggleOption('jenerator')),
-                  _buildOption(Bolum7Content.elektrik, _model.hasElektrik, () => _toggleOption('elektrik')),
-                  _buildOption(Bolum7Content.trafo, _model.hasTrafo, () => _toggleOption('trafo')),
+                  TechnicalDrawingButton(assetPath: AppAssets.section7Kazan, title: "Kazan Dairesi Teknik Detayı"),
+                  const SizedBox(height: 8),
 
-                  // --- DEPO (Bölüm 6'dan otomatik gelir) ---
+                  // --- ASANSÖR ---
+                  _buildOption(Bolum7Content.asansor, _model.hasAsansor, () => _toggleOption('asansor')),
+                  TechnicalDrawingButton(assetPath: AppAssets.section7Asansor, title: "Asansör Kuyusu ve Makine Dairesi"),
+                  const SizedBox(height: 8),
+
+                  _buildOption(Bolum7Content.cati, _model.hasCati, () => _toggleOption('cati')),
+
+                  // --- JENERATÖR ---
+                  _buildOption(Bolum7Content.jenerator, _model.hasJenerator, () => _toggleOption('jenerator')),
+                  TechnicalDrawingButton(assetPath: AppAssets.section7Jenerator, title: "Jeneratör Odası Yerleşimi"),
+                  const SizedBox(height: 8),
+
+                  _buildOption(Bolum7Content.elektrik, _model.hasElektrik, () => _toggleOption('elektrik')),
+
+                  // --- TRAFO ---
+                  _buildOption(Bolum7Content.trafo, _model.hasTrafo, () => _toggleOption('trafo')),
+                  TechnicalDrawingButton(assetPath: AppAssets.section7Trafo, title: "Trafo Odası ve Yağ Çukuru"),
+                  const SizedBox(height: 8),
+
+                  // --- DEPO (Kilitli) ---
                   _buildSyncCard(
                     isLocked: isDepoLocked,
                     choice: Bolum7Content.depo,
@@ -115,7 +132,11 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
 
                   _buildOption(Bolum7Content.cop, _model.hasCop, () => _toggleOption('cop')),
                   _buildOption(Bolum7Content.siginak, _model.hasSiginak, () => _toggleOption('siginak')),
+
+                  // --- ORTAK DUVAR ---
                   _buildOption(Bolum7Content.duvar, _model.hasDuvar, () => _toggleOption('duvar')),
+                  TechnicalDrawingButton(assetPath: AppAssets.section7OrtakDuvar, title: "Bitişik Nizam Ortak Duvar Detayı"),
+                  const SizedBox(height: 8),
 
                   const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider(color: Color(0xFFECEFF1))),
                   
@@ -132,7 +153,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
 
   Widget _buildOption(dynamic choice, bool isSelected, VoidCallback onTap) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 4),
       child: SelectableCard(
         choice: choice, 
         isSelected: isSelected, 
@@ -150,15 +171,11 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFBBDEFB)),
       ),
-      child: Column(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.lock_outline, color: Color(0xFF1565C0), size: 20),
-            title: Text(choice.uiTitle, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1565C0))),
-            subtitle: Text(message, style: const TextStyle(fontSize: 11, color: Color(0xFF1976D2))),
-            trailing: const Icon(Icons.check_circle, color: Color(0xFF1565C0), size: 20),
-          ),
-        ],
+      child: ListTile(
+        leading: const Icon(Icons.lock_outline, color: Color(0xFF1565C0), size: 20),
+        title: Text(choice.uiTitle, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1565C0))),
+        subtitle: Text(message, style: const TextStyle(fontSize: 11, color: Color(0xFF1976D2))),
+        trailing: const Icon(Icons.check_circle, color: Color(0xFF1565C0), size: 20),
       ),
     );
   }
@@ -184,7 +201,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             minimumSize: const Size(double.infinity, 54),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, letterSpacing: 1)),
+          child: const Text("DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, letterSpacing: 1)),
         ),
       ),
     );

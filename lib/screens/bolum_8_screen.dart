@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_8_model.dart';
-import 'bolum_9_screen.dart'; // Sonraki ekran
+import 'bolum_9_screen.dart'; 
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_assets.dart'; // Görsel yolları için eklendi
 
 class Bolum8Screen extends StatefulWidget {
   const Bolum8Screen({super.key});
@@ -23,66 +24,57 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
     });
   }
 
-  void _onNextPressed() {
-    if (_model.secim == null) return;
-    
-    BinaStore.instance.bolum8 = _model;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const Bolum9Screen()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Bina Yerleşimi",
+      subtitle: "Ayrık veya bitişik nizam tespiti",
+      screenType: widget.runtimeType,
+      isNextEnabled: _model.secim != null,
+      onNext: () {
+        BinaStore.instance.bolum8 = _model;
+        // saveToDisk() işlemi AnalysisPageLayout içinde otomatik yapılmaktadır.
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum9Screen()));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernHeader(
-            title: "Bölüm-8: Bina Nizamı",
-            subtitle: "...",
-            screenType: widget.runtimeType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  QuestionCard(
-                    child: Column(
-                      children: [
-                        SelectableCard(
-                          choice: Bolum8Content.ayrikNizam,
-                          isSelected: _model.secim?.label == Bolum8Content.ayrikNizam.label,
-                          onTap: () => _handleSelection(Bolum8Content.ayrikNizam),
-                        ),
-                        SelectableCard(
-                          choice: Bolum8Content.bitisikNizam,
-                          isSelected: _model.secim?.label == Bolum8Content.bitisikNizam.label,
-                          onTap: () => _handleSelection(Bolum8Content.bitisikNizam),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+          const Padding(
+            padding: EdgeInsets.only(left: 4, bottom: 16),
+            child: Text(
+              "Binanızın yerleşim durumu nedir?",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _model.secim == null ? null : _onNextPressed,
-                  child: const Text("DEVAM ET"),
+          
+          QuestionCard(
+            child: Column(
+              children: [
+                // --- AYRIK NİZAM ---
+                SelectableCard(
+                  choice: Bolum8Content.ayrikNizam,
+                  isSelected: _model.secim?.label == Bolum8Content.ayrikNizam.label,
+                  onTap: () => _handleSelection(Bolum8Content.ayrikNizam),
                 ),
-              ),
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section8Ayrik,
+                  title: "Ayrık Nizam Yerleşim Detayı",
+                ),
+                
+                const SizedBox(height: 16),
+                const Divider(height: 32),
+
+                // --- BİTİŞİK NİZAM ---
+                SelectableCard(
+                  choice: Bolum8Content.bitisikNizam,
+                  isSelected: _model.secim?.label == Bolum8Content.bitisikNizam.label,
+                  onTap: () => _handleSelection(Bolum8Content.bitisikNizam),
+                ),
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section8Bitisik,
+                  title: "Bitişik Nizam Yerleşim Detayı",
+                ),
+              ],
             ),
           ),
         ],
