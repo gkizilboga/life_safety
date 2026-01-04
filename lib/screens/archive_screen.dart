@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import 'report_summary_screen.dart';
+import '../services/pdf_service.dart';
+import 'paywall_screen.dart';
 
 class ArchiveScreen extends StatefulWidget {
   const ArchiveScreen({super.key});
@@ -50,9 +52,8 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       padding: const EdgeInsets.all(16),
       itemCount: archive.length,
       itemBuilder: (context, index) {
-        // Arşivdeki binaları en yeni en üstte olacak şekilde ters sıralıyoruz
         final item = archive.reversed.toList()[index];
-        final String dateStr = item['date'].toString().split('T')[0]; // YYYY-MM-DD
+        final String dateStr = item['date'].toString().split('T')[0];
 
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
@@ -82,7 +83,26 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                 Text("Tarih: $dateStr", style: const TextStyle(fontSize: 11, color: Colors.grey)),
               ],
             ),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.picture_as_pdf_outlined, color: Colors.redAccent),
+                  onPressed: () async {
+                    if (BinaStore.instance.isPremium) {
+                      BinaStore.instance.loadBuildingFromArchive(item['id']);
+                      await PdfService.generateAndShowPdf();
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const PaywallScreen()),
+                      );
+                    }
+                  },
+                ),
+                const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+              ],
+            ),
             onTap: () => _viewReport(item['id']),
             onLongPress: () => _showDeleteDialog(item['id'], item['name']),
           ),
@@ -92,9 +112,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
   }
 
   void _viewReport(String id) {
-    // Seçilen binayı hafızaya yükle
     BinaStore.instance.loadBuildingFromArchive(id);
-    // Doğrudan rapor ekranına git
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ReportSummaryScreen()),

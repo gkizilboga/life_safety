@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'bolum_1_screen.dart';
 import 'archive_screen.dart';
-import 'building_setup_screen.dart'; // YENİ EKLENDİ
+import 'building_setup_screen.dart';
+import 'legislation_library_screen.dart';
+import 'legal_text_screen.dart';
 import '../../data/bina_store.dart';
+import '../services/pdf_service.dart';
+import 'paywall_screen.dart';
+import '../logic/report_engine.dart';
+import '../utils/app_theme.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -14,23 +20,28 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    bool hasOngoing = BinaStore.instance.bolum1 != null;
-    String buildingName = BinaStore.instance.currentBinaName ?? "İsimsiz Bina";
+    final metrics = ReportEngine.calculateRiskMetrics();
+    final bool hasOngoing = BinaStore.instance.currentBinaId != null && BinaStore.instance.bolum1 != null;
+    final String buildingName = BinaStore.instance.currentBinaName ?? "İsimsiz Analiz";
+    final currentModule = _getCurrentModule(metrics['completion']);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.backgroundGrey,
       body: Column(
         children: [
-          _buildHeader(context),
+          _buildHeader(context, metrics, currentModule),
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               children: [
-                if (hasOngoing) _buildOngoingCard(context, buildingName),
+                if (hasOngoing) _buildOngoingCard(context, buildingName, metrics, currentModule),
                 const SizedBox(height: 20),
+                _buildSectionLabel("HIZLI ERİŞİM"),
                 _buildMainActions(context),
                 const SizedBox(height: 25),
+                _buildSectionLabel("BİLGİLER VE AYARLAR"),
                 _buildSecondaryMenu(context),
+                const SizedBox(height: 30),
               ],
             ),
           ),
@@ -39,41 +50,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, Map<String, dynamic> metrics, ReportModule module) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(24, 60, 24, 30),
       decoration: const BoxDecoration(
-        color: Color(0xFF1A237E),
+        color: AppColors.primaryBlue,
         borderRadius: BorderRadius.only(bottomRight: Radius.circular(40)),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("YANGIN RİSK ANALİZİ", 
-            style: TextStyle(color: Colors.white70, fontSize: 14, letterSpacing: 1.2, fontWeight: FontWeight.w500)),
-          SizedBox(height: 12),
-          Text("HOŞ GELDİNİZ,", 
-            style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold)),
-          Text("Analiz Uzmanı", 
-            style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w300)),
-          SizedBox(height: 20),
+          const Text("BİNA YANGIN RİSK ANALİZİ", 
+            style: TextStyle(color: Colors.white70, fontSize: 12, letterSpacing: 1.5, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("HOŞ GELDİNİZ,", 
+                    style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                  Text(module.rankName.toUpperCase(), 
+                    style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w300)),
+                ],
+              ),
+              _buildRankBadge(module),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildOngoingCard(BuildContext context, String name) {
+  Widget _buildRankBadge(ReportModule module) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white24),
+      ),
+      child: const Column(
+        children: [
+          Icon(Icons.shield_outlined, color: Color(0xFFFFD700), size: 24),
+          SizedBox(height: 4),
+          Text("KADEME", style: TextStyle(color: Colors.white70, fontSize: 8, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOngoingCard(BuildContext context, String name, Map<String, dynamic> metrics, ReportModule module) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF283593), Color(0xFF1A237E)]
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, 10))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,34 +116,88 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("AKTİF ANALİZ", 
-                style: TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1)),
-              Icon(Icons.analytics_outlined, color: Colors.white.withOpacity(0.5), size: 20),
+              _buildStatusChip(),
+              Text("%${metrics['completion']} Tamamlandı", 
+                style: const TextStyle(color: AppColors.textLight, fontSize: 12, fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 15),
-          Text(name, 
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 5),
-          const Text("Yarım kalan yangın risk analizine kaldığınız yerden devam edebilirsiniz.", 
-            style: TextStyle(color: Colors.white60, fontSize: 12)),
+          Text(name, style: AppStyles.questionTitle),
+          const SizedBox(height: 8),
+          Text(module.rankDescription, 
+            maxLines: 2, overflow: TextOverflow.ellipsis,
+            style: const TextStyle(color: AppColors.textLight, fontSize: 12, height: 1.4)),
           const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white, 
-                foregroundColor: const Color(0xFF1A237E),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+          _buildProgressBar(metrics['completion']),
+          const SizedBox(height: 25),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: const BorderSide(color: AppColors.primaryBlue),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                  ),
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum1Screen())),
+                  child: const Text("ANALİZE DÖN", style: TextStyle(color: AppColors.primaryBlue, fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
               ),
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum1Screen()));
-              },
-              child: const Text("ANALİZE DÖN", style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.warningOrange,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
+                  ),
+                  onPressed: () async {
+                    if (BinaStore.instance.isPremium) {
+                      await PdfService.generateAndShowPdf();
+                    } else {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const PaywallScreen()));
+                    }
+                  },
+                  child: const Text("ÖN RAPORU GÖR", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                ),
+              ),
+            ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStatusChip() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.primaryBlue.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Text("AKTİF ANALİZ", 
+        style: TextStyle(color: AppColors.primaryBlue, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 0.5)),
+    );
+  }
+
+  Widget _buildProgressBar(int percent) {
+    return Stack(
+      children: [
+        Container(
+          height: 8,
+          width: double.infinity,
+          decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(4)),
+        ),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 800),
+          height: 8,
+          width: (MediaQuery.of(context).size.width - 80) * (percent / 100),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [Color(0xFF3949AB), AppColors.primaryBlue]),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      ],
     );
   }
 
@@ -119,9 +208,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: _buildActionCard(
             context,
             "Yeni Analiz",
-            "Yeni Analizi Başlat",
+            "Sıfırdan Başlat",
             Icons.add_moderator_outlined,
-            Colors.green.shade700,
+            AppColors.successGreen,
             () => _startNewAnalysis(context),
           ),
         ),
@@ -130,12 +219,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: _buildActionCard(
             context,
             "Arşiv",
-            "Tamamlanan Analizler",
+            "Geçmiş Kayıtlar",
             Icons.inventory_2_outlined,
-            const Color(0xFF1A237E),
-            () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const ArchiveScreen()));
-            },
+            AppColors.primaryBlue,
+            () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ArchiveScreen())),
           ),
         ),
       ],
@@ -151,16 +238,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
         decoration: BoxDecoration(
           color: Colors.white, 
           borderRadius: BorderRadius.circular(20), 
-          border: Border.all(color: Colors.grey.shade200)
+          border: Border.all(color: Colors.grey.shade100)
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: color, size: 30),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+              child: Icon(icon, color: color, size: 24),
+            ),
             const SizedBox(height: 15),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF2C3E50))),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
             const SizedBox(height: 4),
-            Text(sub, style: TextStyle(color: Colors.grey.shade600, fontSize: 11, height: 1.2)),
+            Text(sub, style: const TextStyle(color: AppColors.textLight, fontSize: 10)),
           ],
         ),
       ),
@@ -169,47 +260,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildSecondaryMenu(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 5, bottom: 15),
-          child: Text("BİLGİLER VE AYARLAR", 
-            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+        _buildMenuTile(
+          Icons.menu_book_outlined, 
+          "Yangın Yönetmeliği", 
+          "Yönetmelik Hükümleri",
+          () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LegislationLibraryScreen())),
         ),
-        _buildMenuTile(Icons.menu_book_outlined, "Yangın Yönetmeliği", "BYKHY Hükümleri"),
-        _buildMenuTile(Icons.calculate_outlined, "Hesaplama Araçları", "İlgili Kapasite ve Mesafe Tabloları"),
-        _buildMenuTile(Icons.settings_outlined, "Uygulama Ayarları", "Profil ve Tercihler"),
+        _buildMenuTile(
+          Icons.gavel_outlined, 
+          "Yasal Bilgilendirme", 
+          "KVKK ve Kullanım Şartları",
+          () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LegalTextScreen())),
+        ),
+        _buildMenuTile(
+          Icons.settings_outlined, 
+          "Uygulama Ayarları", 
+          "Profil ve Tercihler",
+          () {},
+        ),
       ],
     );
   }
 
-  Widget _buildMenuTile(IconData icon, String title, String sub) {
+  Widget _buildMenuTile(IconData icon, String title, String sub, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: Colors.white, 
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade100)
       ),
       child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(color: const Color(0xFF1A237E).withOpacity(0.05), borderRadius: BorderRadius.circular(10)),
-          child: Icon(icon, color: const Color(0xFF1A237E), size: 22),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF2C3E50))),
-        subtitle: Text(sub, style: const TextStyle(fontSize: 12)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-        onTap: () {},
+        leading: Icon(icon, color: AppColors.primaryBlue, size: 22),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
+        subtitle: Text(sub, style: const TextStyle(fontSize: 11, color: AppColors.textLight)),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
+        onTap: onTap,
       ),
     );
   }
 
-  void _startNewAnalysis(BuildContext context) {
-    // Hata veren dialog yerine doğrudan kurulum ekranına yönlendiriyoruz
-    Navigator.push(
-      context, 
-      MaterialPageRoute(builder: (context) => const BuildingSetupScreen())
+  Widget _buildSectionLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 15),
+      child: Text(label, 
+        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textLight, letterSpacing: 1.2)),
     );
+  }
+
+  ReportModule _getCurrentModule(int completion) {
+    if (completion <= 27) return ReportModule.binaBilgileri;
+    if (completion <= 41) return ReportModule.modul1;
+    if (completion <= 55) return ReportModule.modul2;
+    if (completion <= 69) return ReportModule.modul3;
+    if (completion <= 83) return ReportModule.modul4;
+    return ReportModule.modul5;
+  }
+
+  void _startNewAnalysis(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const BuildingSetupScreen()));
   }
 }

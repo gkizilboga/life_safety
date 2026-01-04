@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_20_model.dart';
 import 'bolum_21_screen.dart'; 
@@ -6,7 +7,9 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import '../../utils/app_assets.dart'; // Görsel yolları için eklendi
+import '../../utils/app_assets.dart';
+import 'module_transition_screen.dart';
+import '../../logic/report_engine.dart';
 
 class Bolum20Screen extends StatefulWidget {
   const Bolum20Screen({super.key});
@@ -91,6 +94,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     if (_hasBodrum && _model.bodrumMerdivenDevami == null) return false;
 
     BinaStore.instance.bolum20 = _model;
+    BinaStore.instance.saveToDisk();
     return true;
   }
 
@@ -100,10 +104,23 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       title: "Kaçış Merdivenleri",
       subtitle: "Binadaki merdiven tipleri ve adetleri",
       screenType: widget.runtimeType,
-      isNextEnabled: true, // Validasyon onNext içinde yapılacak
+      isNextEnabled: true,
       onNext: () {
         if (_validateAndSave()) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum21Screen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ModuleTransitionScreen(
+                module: ReportModule.modul2,
+                onContinue: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Bolum21Screen()),
+                  );
+                },
+              ),
+            ),
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Lütfen gerekli alanları doldurunuz.")),
@@ -128,7 +145,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             QuestionCard(
               child: Column(
                 children: [
-                  // 1. Normal Merdiven
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption1.uiTitle,
                     ctrl: _normalCtrl,
@@ -136,8 +152,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     assetTitle: "Normal Apartman Merdiveni",
                   ),
                   const Divider(height: 32),
-
-                  // 2. Bina İçi Kapalı
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption2.uiTitle,
                     ctrl: _icKapaliCtrl,
@@ -145,8 +159,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     assetTitle: "Bina İçi Kapalı Yangın Merdiveni",
                   ),
                   const Divider(height: 32),
-
-                  // 3. Bina Dışı Kapalı
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption3.uiTitle,
                     ctrl: _disKapaliCtrl,
@@ -154,25 +166,19 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     assetTitle: "Bina Dışı Kapalı Yangın Merdiveni",
                   ),
                   const Divider(height: 32),
-
-                  // 4. Bina Dışı Açık (3 Görsel)
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption4.uiTitle,
                     ctrl: _disAcikCtrl,
                     assetPaths: [
                       AppAssets.section20DisAcik1,
                       AppAssets.section20DisAcik2,
-                      AppAssets.section20DisAcik3,
                     ],
                     assetTitles: [
                       "Dış Açık Merdiven Örnek 1",
                       "Dış Açık Merdiven Örnek 2",
-                      "Dış Açık Merdiven Örnek 3",
                     ],
                   ),
                   const Divider(height: 32),
-
-                  // 5. Döner Merdiven
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption5.uiTitle,
                     ctrl: _donerCtrl,
@@ -180,12 +186,9 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     assetTitle: "Döner (Spiral) Merdiven",
                   ),
                   const Divider(height: 32),
-
-                  // 6. Sahanlıksız Merdiven
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption6.uiTitle,
                     ctrl: _sahanliksizCtrl,
-                    assetPath: AppAssets.section20Sahanliksiz,
                     assetTitle: "Sahanlıksız (Dönemeçli) Merdiven",
                   ),
                 ],
@@ -201,7 +204,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     );
   }
 
-  // Merdiven girişi ve görsel butonunu birleştiren yardımcı widget
   Widget _buildStairInputGroup({
     required String label, 
     required TextEditingController ctrl, 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_15_model.dart';
 import 'bolum_16_screen.dart';
@@ -7,6 +8,8 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_assets.dart';
+import 'module_transition_screen.dart';
+import '../../logic/report_engine.dart';
 
 class Bolum15Screen extends StatefulWidget {
   const Bolum15Screen({super.key});
@@ -58,12 +61,26 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "İç Mekan Analizi",
-      subtitle: "Kaplama, yalıtım ve tavan detayları",
+      subtitle: " ",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
         BinaStore.instance.bolum15 = _model;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum16Screen()));
+        BinaStore.instance.saveToDisk();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ModuleTransitionScreen(
+              module: ReportModule.modul1,
+              onContinue: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Bolum16Screen()),
+        );
+      },
+    ),
+  ),
+);
       },
       child: Column(
         children: [

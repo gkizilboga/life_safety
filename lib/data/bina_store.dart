@@ -38,6 +38,7 @@ import '../models/bolum_34_model.dart';
 import '../models/bolum_35_model.dart';
 import '../models/bolum_36_model.dart';
 import '../models/choice_result.dart';
+import '../utils/app_content.dart';
 
 class BinaStore {
   static final BinaStore _instance = BinaStore._internal();
@@ -47,7 +48,11 @@ class BinaStore {
 
   String? currentBinaId;
   String? currentBinaName;
+  String? currentBinaCity;
+  String? currentBinaDistrict;
   List<Map<String, dynamic>> archive = [];
+  bool isPremium = false;
+  bool isRegistered = false;
 
   Bolum1Model? bolum1;
   Bolum2Model? bolum2;
@@ -88,12 +93,13 @@ class BinaStore {
 
   Future<void> saveToDisk() async {
     final prefs = await SharedPreferences.getInstance();
-    
     currentBinaId ??= DateTime.now().millisecondsSinceEpoch.toString();
 
     final currentData = {
       'id': currentBinaId,
       'name': currentBinaName ?? "İsimsiz Bina",
+      'city': currentBinaCity ?? "",
+      'district': currentBinaDistrict ?? "",
       'date': DateTime.now().toIso8601String(),
       'sections': {
         'bolum1': bolum1?.toMap(),
@@ -144,12 +150,16 @@ class BinaStore {
 
     await prefs.setString('bina_archive', json.encode(archive));
     await prefs.setString('active_bina_id', currentBinaId!);
+    await prefs.setBool('is_premium', isPremium);
+    await prefs.setBool('is_registered', isRegistered);
   }
 
   Future<void> loadFromDisk() async {
     final prefs = await SharedPreferences.getInstance();
     final archiveRaw = prefs.getString('bina_archive');
     final activeId = prefs.getString('active_bina_id');
+    isPremium = prefs.getBool('is_premium') ?? false;
+    isRegistered = prefs.getBool('is_registered') ?? false;
 
     if (archiveRaw != null) {
       archive = List<Map<String, dynamic>>.from(json.decode(archiveRaw));
@@ -162,9 +172,23 @@ class BinaStore {
     }
   }
 
+  Future<void> setPremiumStatus(bool status) async {
+    isPremium = status;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_premium', status);
+  }
+
+  Future<void> setRegistrationStatus(bool status) async {
+    isRegistered = status;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('is_registered', status);
+  }
+
   void _loadBuildingFromMap(Map<String, dynamic> data) {
     currentBinaId = data['id'];
     currentBinaName = data['name'];
+    currentBinaCity = data['city'];
+    currentBinaDistrict = data['district'];
     final s = data['sections'];
     if (s['bolum1'] != null) bolum1 = Bolum1Model.fromMap(s['bolum1']);
     if (s['bolum2'] != null) bolum2 = Bolum2Model.fromMap(s['bolum2']);
@@ -205,10 +229,11 @@ class BinaStore {
   }
 
   void createNewBuilding({required String name, required String city, required String district}) {
-    reset(); // Eski verileri temizle
+    reset();
     currentBinaId = DateTime.now().millisecondsSinceEpoch.toString();
     currentBinaName = name;
-    // İleride city ve district bilgilerini de bir Map içinde saklayabiliriz
+    currentBinaCity = city;
+    currentBinaDistrict = district;
     saveToDisk();
   }
 
@@ -222,37 +247,45 @@ class BinaStore {
     switch (id) {
       case 1: return bolum1?.secim;
       case 2: return bolum2?.secim;
-      case 3: return ChoiceResult(label: "3", uiTitle: "Kat Sayısı", uiSubtitle: "H_Bina: ${bolum3?.hBina}m", reportText: "");
+      case 3: return bolum3?.yukseklikTercihi;
       case 4: return bolum4?.binaYukseklikSinifi;
-      case 5: return ChoiceResult(label: "5", uiTitle: "Alan Bilgisi", uiSubtitle: "${bolum5?.toplamInsaatAlani} m²", reportText: "");
-      case 6: return ChoiceResult(label: "6", uiTitle: "Riskli Alanlar", uiSubtitle: "Tespit Yapıldı", reportText: "");
-      case 7: return ChoiceResult(label: "7", uiTitle: "Teknik Hacimler", uiSubtitle: "Beyan Edildi", reportText: "");
+      case 5: return ChoiceResult(label: "5", uiTitle: "${bolum5?.toplamInsaatAlani} m²", uiSubtitle: "", reportText: "Toplam İnşaat Alanı: ${bolum5?.toplamInsaatAlani} m²");
+      case 6: return bolum6?.isSadeceKonut == true ? Bolum6Content.sadeceKonut : Bolum6Content.ticariVar;
+      case 7: return bolum7?.isHicbiri == true ? Bolum7Content.hicbiri : Bolum7Content.kazan;
       case 8: return bolum8?.secim;
       case 9: return bolum9?.secim;
-      case 10: return bolum10?.secim;
+      case 10: return bolum10?.zemin;
       case 11: return bolum11?.mesafe;
       case 12: return bolum12?.secim;
-      case 13: return bolum13?.otoparkKapi ?? bolum13?.kazanKapi ?? bolum13?.asansorKapi;
+      case 13: 
+        final m = bolum13;
+        return m?.kazanKapi ?? m?.otoparkKapi ?? m?.asansorKapi ?? m?.ticariKapi;
       case 14: return bolum14?.secim;
       case 15: return bolum15?.kaplama;
-      case 16: return bolum16?.secim;
+      case 16: return bolum16?.mantolama;
       case 17: return bolum17?.kaplama;
       case 18: return bolum18?.secim;
       case 19: return bolum19?.levha;
-      case 20: return ChoiceResult(label: "20", uiTitle: "Merdiven Tipleri", uiSubtitle: "Sayısal Tespit", reportText: "");
-      case 21: return bolum21?.secim;
-      case 22: return bolum22?.secim;
-      case 23: return bolum23?.secim;
-      case 24: return bolum24?.secim;
+      case 20: 
+        final m = bolum20;
+        if (m == null) return null;
+        if (m.tekKatCikis != null) return m.tekKatCikis;
+        return ChoiceResult(label: "20", uiTitle: "Merdiven Analizi", uiSubtitle: "", reportText: "Binada merdiven sayıları ve tipleri belirlenmiştir.");
+      case 21: return bolum21?.varlik;
+      case 22: return bolum22?.varlik;
+      case 23: return bolum23?.yanginModu;
+      case 24: return bolum24?.tip;
       case 25: return bolum25?.kapasite;
-      case 26: return bolum26?.secim;
+      case 26: return bolum26?.varlik;
       case 27: return bolum27?.boyut;
       case 28: return bolum28?.mesafe;
-      case 29: return bolum29?.otopark ?? bolum29?.kazan ?? bolum29?.cati;
+      case 29: 
+        final m = bolum29;
+        return m?.kazan ?? m?.otopark ?? m?.asansor ?? m?.pano;
       case 30: return bolum30?.konum;
       case 31: return bolum31?.yapi;
       case 32: return bolum32?.yapi;
-      case 33: return bolum33?.zeminKatSonuc;
+      case 33: return bolum33?.normalKatSonuc;
       case 34: return bolum34?.zemin;
       case 35: return bolum35?.tekYon ?? bolum35?.ciftYon;
       case 36: return bolum36?.gorunurluk;
@@ -270,22 +303,18 @@ class BinaStore {
     bolum25 = null; bolum26 = null; bolum27 = null; bolum28 = null;
     bolum29 = null; bolum30 = null; bolum31 = null; bolum32 = null;
     bolum33 = null; bolum34 = null; bolum35 = null; bolum36 = null;
-    currentBinaId = null;
-    currentBinaName = null;
+    currentBinaId = null; currentBinaName = null; currentBinaCity = null; currentBinaDistrict = null;
   }
 
   void loadBuildingFromArchive(String id) {
     final data = archive.firstWhere((e) => e['id'] == id, orElse: () => {});
     if (data.isNotEmpty) {
-      reset(); // Mevcut modelleri temizle
-      _loadBuildingFromMap(data); // Arşivdeki veriyi modellere doldur
-      currentBinaId = id;
-      currentBinaName = data['name'];
-      saveToDisk(); // Bu binayı "aktif" bina olarak işaretle
+      reset();
+      _loadBuildingFromMap(data);
+      saveToDisk();
     }
   }
 
-  // Arşivden bir binayı siler
   void deleteFromArchive(String id) {
     archive.removeWhere((element) => element['id'] == id);
     if (currentBinaId == id) reset();

@@ -6,7 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import '../../utils/app_assets.dart'; // Görsel yolu için gerekli
+import '../../utils/app_assets.dart';
 
 class Bolum3Screen extends StatefulWidget {
   const Bolum3Screen({super.key});
@@ -15,18 +15,33 @@ class Bolum3Screen extends StatefulWidget {
   State<Bolum3Screen> createState() => _Bolum3ScreenState();
 }
 
-class _Bolum3ScreenState extends State<Bolum3Screen> {
+class _Bolum3ScreenState extends State<Bolum3Screen> with SingleTickerProviderStateMixin {
   Bolum3Model _model = Bolum3Model();
-
-  // Controller'lar
+  
   final _normalKatCtrl = TextEditingController();
   final _bodrumKatCtrl = TextEditingController();
   final _zeminHCtrl = TextEditingController();
   final _normalHCtrl = TextEditingController();
   final _bodrumHCtrl = TextEditingController();
+  
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _summaryKey = GlobalKey(); // Özet kısmı için anahtar
 
   bool _showSummary = false; 
   bool _isConfirmed = false; 
+
+  late AnimationController _blinkController;
+  late Animation<double> _blinkAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _blinkController = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    )..repeat(reverse: true);
+    _blinkAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(_blinkController);
+  }
 
   @override
   void dispose() {
@@ -35,6 +50,8 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     _zeminHCtrl.dispose();
     _normalHCtrl.dispose();
     _bodrumHCtrl.dispose();
+    _scrollController.dispose();
+    _blinkController.dispose();
     super.dispose();
   }
 
@@ -47,6 +64,8 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   }
 
   void _hesaplaVeGoster() {
+    FocusScope.of(context).unfocus(); // Klavyeyi kapat
+    
     int? nKat = int.tryParse(_normalKatCtrl.text);
     int? bKat = int.tryParse(_bodrumKatCtrl.text);
 
@@ -89,13 +108,19 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
       _isConfirmed = false;
     });
 
-    FocusScope.of(context).unfocus();
+    // Otomatik Scroll: Özet kısmına kaydır
+    Future.delayed(const Duration(milliseconds: 300), () {
+      Scrollable.ensureVisible(
+        _summaryKey.currentContext!, 
+        duration: const Duration(milliseconds: 800), 
+        curve: Curves.easeInOut
+      );
+    });
   }
 
   void _onNextPressed() {
-    if (!_isConfirmed) return;
     BinaStore.instance.bolum3 = _model;
-    BinaStore.instance.saveToDisk(); // EKLE
+    BinaStore.instance.saveToDisk();
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum4Screen()));
   }
 
@@ -116,18 +141,16 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // --- TEKNİK GÖRSEL BUTONU ---
                   TechnicalDrawingButton(
                     assetPath: AppAssets.section3Katlar,
                     title: "Kat Grupları ve Yükseklik Tanımları",
                   ),
                   const SizedBox(height: 12),
-
-                  // --- KAT SAYILARI ---
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,8 +183,6 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                       ],
                     ),
                   ),
-
-                  // --- YÜKSEKLİK TERCİHİ ---
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,12 +210,14 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                       ],
                     ),
                   ),
-
+                  
+                  // HESAPLA BUTONU (Artık daha yukarıda ve belirgin)
                   if (!_showSummary)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 20),
                       child: SizedBox(
                         width: double.infinity,
+                        height: 54,
                         child: ElevatedButton.icon(
                           onPressed: _hesaplaVeGoster,
                           icon: const Icon(Icons.calculate_outlined),
@@ -202,7 +225,6 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange.shade800,
                             foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 15),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
                         ),
@@ -212,6 +234,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                   if (_showSummary) ...[
                     const SizedBox(height: 10),
                     Container(
+                      key: _summaryKey, // Scroll hedefi
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: const Color(0xFFE3F2FD),
@@ -242,14 +265,24 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                               style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          CheckboxListTile(
-                            value: _isConfirmed,
-                            onChanged: (val) => setState(() => _isConfirmed = val ?? false),
-                            title: const Text("Hesaplanan yükseklik değerlerini onaylıyorum.", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            contentPadding: EdgeInsets.zero,
-                            activeColor: const Color(0xFF1A237E),
+                          const SizedBox(height: 15),
+                          // YANIP SÖNEN ONAY KUTUSU
+                          FadeTransition(
+                            opacity: _blinkAnimation,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: const Color(0xFF1A237E), width: 2),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: CheckboxListTile(
+                                value: _isConfirmed,
+                                onChanged: (val) => setState(() => _isConfirmed = val ?? false),
+                                title: const Text("Yukarıdaki kat ve yükseklik bilgilerinin doğruluğunu teyit ediyorum.", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                controlAffinity: ListTileControlAffinity.leading,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                                activeColor: const Color(0xFF1A237E),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -260,29 +293,27 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
             ),
           ),
           
-          if (_showSummary)
-            Container(
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
-              ),
-              child: SafeArea(
-                top: false,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isConfirmed ? _onNextPressed : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1A237E),
-                      minimumSize: const Size(double.infinity, 54),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text("ONAYLA VE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                  ),
+          // ALT BUTON (Sadece onaylandıktan sonra aktif)
+          Container(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: ElevatedButton(
+                onPressed: _isConfirmed ? _onNextPressed : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1A237E),
+                  disabledBackgroundColor: Colors.grey.shade300,
+                  minimumSize: const Size(double.infinity, 54),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
+                child: const Text("ONAYLA VE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ),
             ),
+          ),
         ],
       ),
     );

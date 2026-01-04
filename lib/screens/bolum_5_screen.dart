@@ -31,6 +31,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     final Bolum3Model? b3 = BinaStore.instance.bolum3;
     _nKat = b3?.normalKatSayisi ?? 0;
     _bKat = b3?.bodrumKatSayisi ?? 0;
+
+    // Eğer kullanıcı manuel giriş yaparsa butonu aktif etmek için listener ekliyoruz
+    _toplamCtrl.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -43,6 +48,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
   }
 
   void _otomatikHesapla() {
+    FocusScope.of(context).unfocus(); // Klavyeyi kapat
+    
     double? tAlani = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
     double? nAlani = double.tryParse(_normalCtrl.text.replaceAll(',', '.'));
     double? bAlani = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0;
@@ -53,7 +60,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
         _toplamCtrl.text = toplam.toStringAsFixed(2);
         _isCalculated = true;
       });
-      FocusScope.of(context).unfocus(); // Klavyeyi kapat
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Lütfen Zemin ve Normal Kat alanlarını giriniz.")),
@@ -62,13 +68,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
   }
 
   void _onNextPressed() {
-    if (_toplamCtrl.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen Toplam İnşaat Alanını giriniz.")),
-      );
-      return;
-    }
-
     _model = _model.copyWith(
       tabanAlani: double.tryParse(_tabanCtrl.text.replaceAll(',', '.')),
       normalKatAlani: double.tryParse(_normalCtrl.text.replaceAll(',', '.')),
@@ -76,17 +75,24 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       toplamInsaatAlani: double.tryParse(_toplamCtrl.text.replaceAll(',', '.')),
     );
 
-    // KRİTİK: Veriyi Store'a yaz ve diske kaydet
     BinaStore.instance.bolum5 = _model;
     BinaStore.instance.saveToDisk(); 
 
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum6Screen()));
   }
 
+  // Butonun aktif olup olmadığını kontrol eden fonksiyon
+  bool _isFormValid() {
+    // Toplam alan doluysa ve (hesaplanmışsa veya manuel girilmişse)
+    return _toplamCtrl.text.isNotEmpty && (double.tryParse(_toplamCtrl.text.replaceAll(',', '.')) != null);
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isButtonEnabled = _isFormValid();
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA), // Ofis Standartı Arka Plan
+      backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
           ModernHeader(
@@ -156,7 +162,29 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
               ),
             ),
           ),
-          _buildBottomAction(),
+          
+          // ALT BUTON ALANI (REVİZE EDİLDİ)
+          Container(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
+            ),
+            child: SafeArea(
+              top: false,
+              child: ElevatedButton(
+                onPressed: isButtonEnabled ? _onNextPressed : null, // Geçerli değilse null (pasif)
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1A237E),
+                  disabledBackgroundColor: Colors.grey.shade300, // Pasif renk
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 54),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text("KAYDET VE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -222,29 +250,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
           Text(label, style: TextStyle(fontSize: 13, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal)),
           Text(value, style: TextStyle(fontSize: 13, fontWeight: isTotal ? FontWeight.bold : FontWeight.w600)),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomAction() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
-      ),
-      child: SafeArea(
-        top: false,
-        child: ElevatedButton(
-          onPressed: _onNextPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1A237E),
-            foregroundColor: Colors.white,
-            minimumSize: const Size(double.infinity, 54),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          child: const Text("KAYDET VE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-        ),
       ),
     );
   }

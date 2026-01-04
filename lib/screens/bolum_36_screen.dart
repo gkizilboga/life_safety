@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_36_model.dart';
 import '../../widgets/custom_widgets.dart';
@@ -6,6 +7,8 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import 'report_summary_screen.dart';
+import 'module_transition_screen.dart';
+import '../../logic/report_engine.dart';
 
 class Bolum36Screen extends StatefulWidget {
   const Bolum36Screen({super.key});
@@ -19,7 +22,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   final _genislikCtrl = TextEditingController();
   final _kapiGenislikCtrl = TextEditingController();
 
-  // Nokta atışı kaydırma için anahtarlar
   final GlobalKey _qKonumKey = GlobalKey();
   final GlobalKey _qGenislikKey = GlobalKey();
   final GlobalKey _qKapiTipiKey = GlobalKey();
@@ -68,7 +70,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     });
   }
 
-  // Belirli bir widget'a yumuşak kaydırma fonksiyonu
   void _scrollToKey(GlobalKey key) {
     Future.delayed(const Duration(milliseconds: 300), () {
       if (key.currentContext != null) {
@@ -93,7 +94,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     setState(() {
       if (type == 'disMerd') {
         _model = _model.copyWith(disMerd: choice);
-        // Dış merdiven seçilince varsa Konum'a, yoksa Genişlik'e kaydır
         if ((_model.totalValidCikisSayisi ?? 0) > 1) {
           _scrollToKey(_qKonumKey);
         } else {
@@ -132,30 +132,20 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
     BinaStore.instance.bolum36 = _model;
     BinaStore.instance.saveToDisk();
-    _showFinishDialog();
-  }
 
-  void _showFinishDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text("Analiz Tamamlandı", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-        content: const Text("Tüm veriler başarıyla işlendi. Binanızın Yangın Risk Analiz Ön Raporu hazırlandı."),
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const ReportSummaryScreen()),
-                (route) => false,
-              );
-            },
-            child: const Text("Ön Raporu Görüntüle"),
-          ),
-        ],
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ModuleTransitionScreen(
+          module: ReportModule.modul5,
+          onContinue: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const ReportSummaryScreen()),
+              (route) => false,
+            );
+          },
+        ),
       ),
     );
   }
@@ -173,14 +163,12 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         children: [
           if (_showStep0Warning) _buildStep0Card(),
           
-          // --- SORU 1: DIŞ MERDİVEN ---
           if (_cntDisCelik > 0) ...[
             if (_isHighBuilding) _buildHighBuildingWarning(),
             _buildSoruHeader("1. Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?"),
             _buildSoruCard('disMerd', [Bolum36Content.disMerdOptionA, Bolum36Content.disMerdOptionB, Bolum36Content.disMerdOptionC], _model.disMerd),
           ],
 
-          // --- SORU 2: KONUM ---
           if ((_model.totalValidCikisSayisi ?? 0) > 1) ...[
             SizedBox(key: _qKonumKey, height: 1),
             _buildInfoNote("Binada birden fazla çıkış tespit edildiği için konum değerlendirmesi gereklidir."),
@@ -188,7 +176,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             _buildSoruCard('konum', [Bolum36Content.konumOptionA, Bolum36Content.konumOptionB, Bolum36Content.konumOptionC], _model.konum),
           ],
 
-          // --- SORU 3: GENİŞLİK ---
           SizedBox(key: _qGenislikKey, height: 1),
           _buildSoruHeader("3. Merdiven/Koridor temiz genişliği (cm) kaçtır?"),
           QuestionCard(
@@ -215,12 +202,10 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             ),
           ),
 
-          // --- SORU 4: KAPI TİPİ ---
           SizedBox(key: _qKapiTipiKey, height: 1),
           _buildSoruHeader("4. Merdivenlere açılan çıkış kapılarınızın tipi nedir?"),
           _buildSoruCard('kapiTipi', [Bolum36Content.kapiTipiOptionA, Bolum36Content.kapiTipiOptionB, Bolum36Content.kapiTipiOptionC], _model.kapiTipi),
 
-          // --- SORU 5: KAPI GENİŞLİK ---
           SizedBox(key: _qKapiGenislikKey, height: 1),
           _buildSoruHeader("5. Kapı net geçiş genişliği (cm) kaçtır?"),
           QuestionCard(
@@ -247,7 +232,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             ),
           ),
 
-          // --- SORU 6: GÖRÜNÜRLÜK ---
           SizedBox(key: _qGorunurlukKey, height: 1),
           _buildSoruHeader("6. Kaçış yolları açıkça görülebiliyor mu?"),
           _buildSoruCard('gorunurluk', [Bolum36Content.gorunurlukOptionA, Bolum36Content.gorunurlukOptionB, Bolum36Content.gorunurlukOptionC], _model.gorunurluk),

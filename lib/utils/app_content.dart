@@ -2548,14 +2548,15 @@ class Bolum33Content {
     label: "Normal Kat (Yeterli)",
     uiTitle: "Normal Kat Çıkış İmkanı Yeterli",
     uiSubtitle: "",
-    reportText: "✅ OLUMLU: Normal katlardaki çıkış sayısı yeterli görünüyor."
+    reportText: "✅ OLUMLU: Normal katlardaki çıkış sayısı Yönetmelik şartlarını sağlamaktadır."
   );
 
   static final normalKatYetersiz = ChoiceResult(
     label: "Normal Kat (Yetersiz)",
     uiTitle: "Normal Kat Çıkış İmkanı Yetersiz",
     uiSubtitle: "",
-    reportText: "☢️ RİSK: Normal katlarda kullanıcı yüküne göre [GEREKEN] çıkış gerekirken, sadece [MEVCUT] çıkış var. YETERSİZ."
+    // "kullanıcı yüküne göre" ifadesini kaldırdık, daha kapsayıcı yaptık:
+    reportText: "☢️ RİSK: Normal katlarda Yönetmelik kriterlerine (Kullanıcı Yükü ve Bina Yüksekliği) göre en az [GEREKEN] çıkış gerekirken, sadece [MEVCUT] çıkış var. YETERSİZ."
   );
 
   static final zeminKatYeterli = ChoiceResult(
@@ -2569,7 +2570,7 @@ class Bolum33Content {
     label: "Zemin Kat (Yetersiz)",
     uiTitle: "Zemin Kat Çıkış İmkanı Yetersiz",
     uiSubtitle: "",
-    reportText: "⚠️ UYARI: Zemin kattaki yoğunluk (Örn: Dükkan/Restoran) nedeniyle [GEREKEN] adet bağımsız çıkış kapısı gerekmektedir."
+    reportText: "⚠️ UYARI: Zemin kattaki yoğunluk ve yapısal kriterler nedeniyle [GEREKEN] adet bağımsız çıkış kapısı gerekmektedir."
   );
 
   static final bodrumKatYeterli = ChoiceResult(
@@ -2583,7 +2584,7 @@ class Bolum33Content {
     label: "Bodrum Kat (Yetersiz)",
     uiTitle: "Bodrum Kat Çıkış Sayısı Yetersiz",
     uiSubtitle: "",
-    reportText: "☢️ RİSK: Bodrum katlarda kullanıcı yüküne göre [GEREKEN] çıkış gerekirken, bodruma inen sadece [MEVCUT] adet merdiven var. YETERSİZ."
+    reportText: "☢️ RİSK: Bodrum katlarda Yönetmelik kriterlerine göre [GEREKEN] çıkış gerekirken, bodruma inen sadece [MEVCUT] adet merdiven var. YETERSİZ."
   );
 }
 class Bolum34Content {

@@ -34,10 +34,9 @@ import '../screens/bolum_33_screen.dart';
 import '../screens/bolum_34_screen.dart';
 import '../screens/bolum_35_screen.dart';
 import '../screens/bolum_36_screen.dart';
+import '../logic/report_engine.dart';
 
 class AppProgress {
-  // Uygulamanın tam akış sırası burasıdır.
-  // Araya yeni bir sayfa eklersen sadece buraya eklemen yeterli.
   static final List<Type> _order = [
     Bolum1Screen, Bolum2Screen, Bolum3Screen, Bolum4Screen, Bolum5Screen,
     Bolum6Screen, Bolum7Screen, Bolum8Screen, Bolum9Screen, Bolum10Screen,
@@ -49,5 +48,19 @@ class AppProgress {
     Bolum36Screen,
   ];
 
-static int currentStep(Type screenType) => _order.indexOf(screenType) + 1;  static int get totalSteps => _order.length;
+  static int currentStep(Type screenType) => _order.indexOf(screenType) + 1;
+  static int get totalSteps => _order.length;
+
+  static bool isEndOfModule(int sectionId) {
+    return [10, 15, 20, 25, 30, 36].contains(sectionId);
+  }
+
+  static ReportModule getModuleForSection(int sectionId) {
+    if (sectionId <= 10) return ReportModule.binaBilgileri;
+    if (sectionId <= 15) return ReportModule.modul1;
+    if (sectionId <= 20) return ReportModule.modul2;
+    if (sectionId <= 25) return ReportModule.modul3;
+    if (sectionId <= 30) return ReportModule.modul4;
+    return ReportModule.modul5;
+  }
 }

@@ -37,6 +37,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         if (type == 'ticari') newTicari = !newTicari;
         if (type == 'depo') newDepo = !newDepo;
         
+        // Eğer herhangi bir riskli alan seçildiyse, "Sadece Konut" otomatik kapanır
         if (newOtopark || newTicari || newDepo) {
           newKonut = false;
         }
@@ -47,6 +48,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         hasTicari: newTicari,
         hasDepo: newDepo,
         isSadeceKonut: newKonut,
+        // Otopark seçimi kaldırıldıysa tipini de sıfırla
         otoparkTipi: newOtopark ? _model.otoparkTipi : null, 
       );
     });
@@ -58,21 +60,20 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
     });
   }
 
-  void _onNextPressed() {
-    if (_model.hasOtopark && _model.otoparkTipi == null) {
-       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen otopark tipini seçiniz.")),
-      );
-      return;
-    }
+  // Formun geçerliliğini kontrol eden fonksiyon
+  bool _isFormValid() {
+    // 1. Kural: Eğer otopark var dendiyse, tipi de seçilmiş olmalı
+    if (_model.hasOtopark && _model.otoparkTipi == null) return false;
 
+    // 2. Kural: En az bir ana seçenek işaretlenmiş olmalı
     if (!_model.hasOtopark && !_model.hasTicari && !_model.hasDepo && !_model.isSadeceKonut) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen binadaki farklı kullanım alanlarını işaretleyiniz.")),
-      );
-      return;
+      return false;
     }
 
+    return true;
+  }
+
+  void _onNextPressed() {
     // KRİTİK: Veriyi Store'a yaz ve diske kaydet
     BinaStore.instance.bolum6 = _model;
     BinaStore.instance.saveToDisk(); 
@@ -82,6 +83,8 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isButtonEnabled = _isFormValid();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA), // Ofis Standartı Arka Plan
       body: Column(
@@ -171,7 +174,8 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
               ),
             ),
           ),
-          // ALT BUTON ALANI
+          
+          // ALT BUTON ALANI (REVİZE EDİLDİ)
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
             decoration: const BoxDecoration(
@@ -181,13 +185,15 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
             child: SafeArea(
               top: false,
               child: ElevatedButton(
-                onPressed: _onNextPressed,
+                onPressed: isButtonEnabled ? _onNextPressed : null, // Geçerli değilse null (pasif)
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1A237E),
+                  disabledBackgroundColor: Colors.grey.shade300, // Pasif renk
+                  foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 54),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text("DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ),
             ),
           ),

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'screens/dashboard_screen.dart';
+import 'screens/register_screen.dart';
 import 'data/bina_store.dart';
 import 'utils/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await BinaStore.instance.loadFromDisk();
-  runApp(const BinaKarnesiApp());
+  runApp(const BinaYanginRiskAnaliziApp());
 }
 
-class BinaKarnesiApp extends StatelessWidget {
-  const BinaKarnesiApp({super.key});
+class BinaYanginRiskAnaliziApp extends StatelessWidget {
+  const BinaYanginRiskAnaliziApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BinaKarnesi',
+      title: 'Bina Yangın Risk Analizi',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: AppColors.primaryBlue,
@@ -24,7 +25,9 @@ class BinaKarnesiApp extends StatelessWidget {
         fontFamily: 'Roboto',
         elevatedButtonTheme: ElevatedButtonThemeData(style: AppStyles.mainButton),
       ),
-      home: const DashboardScreen(),
+      home: BinaStore.instance.isRegistered 
+          ? const DashboardScreen() 
+          : const RegisterScreen(),
     );
   }
 }

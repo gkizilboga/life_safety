@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_30_model.dart';
 import 'bolum_31_screen.dart'; 
@@ -6,6 +7,8 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import 'module_transition_screen.dart';
+import '../../logic/report_engine.dart'; 
 
 class Bolum30Screen extends StatefulWidget {
   const Bolum30Screen({super.key});
@@ -97,7 +100,21 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
 
     BinaStore.instance.bolum30 = _model;
     BinaStore.instance.saveToDisk();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum31Screen()));
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ModuleTransitionScreen(
+          module: ReportModule.modul4,
+          onContinue: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const Bolum31Screen()),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   void _showError(String msg) {

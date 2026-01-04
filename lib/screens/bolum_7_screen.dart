@@ -5,7 +5,7 @@ import 'bolum_8_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
-import '../../utils/app_assets.dart'; // Görsel yolları için eklendi
+import '../../utils/app_assets.dart';
 
 class Bolum7Screen extends StatefulWidget {
   const Bolum7Screen({super.key});
@@ -88,52 +88,43 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
                     ),
                   ),
 
-                  // --- OTOPARK (Kilitli) ---
+                  // --- OTOPARK (Kilitli Görünüm) ---
                   _buildSyncCard(
                     isLocked: isOtoparkLocked,
                     choice: Bolum7Content.otopark,
-                    isSelected: _model.hasOtopark,
-                    onTap: () => _toggleOption('otopark'),
-                    message: "Otopark varlığı Bölüm-6 seçimlerinize göre kilitlenmiştir.",
+                    message: "Otopark varlığı Bölüm-6'dan aktarılmıştır.",
                   ),
 
-                  // --- KAZAN DAİRESİ ---
                   _buildOption(Bolum7Content.kazan, _model.hasKazan, () => _toggleOption('kazan')),
                   TechnicalDrawingButton(assetPath: AppAssets.section7Kazan, title: "Kazan Dairesi Teknik Detayı"),
                   const SizedBox(height: 8),
 
-                  // --- ASANSÖR ---
                   _buildOption(Bolum7Content.asansor, _model.hasAsansor, () => _toggleOption('asansor')),
                   TechnicalDrawingButton(assetPath: AppAssets.section7Asansor, title: "Asansör Kuyusu ve Makine Dairesi"),
                   const SizedBox(height: 8),
 
                   _buildOption(Bolum7Content.cati, _model.hasCati, () => _toggleOption('cati')),
 
-                  // --- JENERATÖR ---
                   _buildOption(Bolum7Content.jenerator, _model.hasJenerator, () => _toggleOption('jenerator')),
                   TechnicalDrawingButton(assetPath: AppAssets.section7Jenerator, title: "Jeneratör Odası Yerleşimi"),
                   const SizedBox(height: 8),
 
                   _buildOption(Bolum7Content.elektrik, _model.hasElektrik, () => _toggleOption('elektrik')),
 
-                  // --- TRAFO ---
                   _buildOption(Bolum7Content.trafo, _model.hasTrafo, () => _toggleOption('trafo')),
                   TechnicalDrawingButton(assetPath: AppAssets.section7Trafo, title: "Trafo Odası ve Yağ Çukuru"),
                   const SizedBox(height: 8),
 
-                  // --- DEPO (Kilitli) ---
+                  // --- DEPO (Kilitli Görünüm) ---
                   _buildSyncCard(
                     isLocked: isDepoLocked,
                     choice: Bolum7Content.depo,
-                    isSelected: _model.hasDepo,
-                    onTap: () => _toggleOption('depo'),
-                    message: "Depo alanı varlığı Bölüm-6 seçimlerinize göre kilitlenmiştir.",
+                    message: "Depo alanı varlığı Bölüm-6'dan aktarılmıştır.",
                   ),
 
                   _buildOption(Bolum7Content.cop, _model.hasCop, () => _toggleOption('cop')),
                   _buildOption(Bolum7Content.siginak, _model.hasSiginak, () => _toggleOption('siginak')),
 
-                  // --- ORTAK DUVAR ---
                   _buildOption(Bolum7Content.duvar, _model.hasDuvar, () => _toggleOption('duvar')),
                   TechnicalDrawingButton(assetPath: AppAssets.section7OrtakDuvar, title: "Bitişik Nizam Ortak Duvar Detayı"),
                   const SizedBox(height: 8),
@@ -162,20 +153,43 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
     );
   }
 
-  Widget _buildSyncCard({required bool isLocked, required dynamic choice, required bool isSelected, required VoidCallback onTap, required String message}) {
-    if (!isLocked) return _buildOption(choice, isSelected, onTap);
+  // YENİ: Kilitli ve Senkronize Kart Tasarımı
+  Widget _buildSyncCard({required bool isLocked, required dynamic choice, required String message}) {
+    if (!isLocked) return _buildOption(choice, false, () => _toggleOption('otopark'));
+    
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFE3F2FD),
+        color: Colors.grey.shade100, // Kilitli olduğunu belirten gri arka plan
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFBBDEFB)),
+        border: Border.all(color: Colors.grey.shade300),
       ),
-      child: ListTile(
-        leading: const Icon(Icons.lock_outline, color: Color(0xFF1565C0), size: 20),
-        title: Text(choice.uiTitle, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF1565C0))),
-        subtitle: Text(message, style: const TextStyle(fontSize: 11, color: Color(0xFF1976D2))),
-        trailing: const Icon(Icons.check_circle, color: Color(0xFF1565C0), size: 20),
+      child: Stack(
+        children: [
+          ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            leading: Icon(Icons.lock_rounded, color: Colors.grey.shade500, size: 24),
+            title: Text(
+              choice.uiTitle, 
+              style: TextStyle(color: Colors.grey.shade600, fontWeight: FontWeight.bold, fontSize: 15)
+            ),
+            subtitle: Text(
+              message, 
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 11)
+            ),
+            trailing: const Icon(Icons.check_circle, color: Colors.green, size: 20),
+          ),
+          // Sağ üstte küçük bir senkronizasyon ikonu
+          Positioned(
+            right: 8,
+            top: 8,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(color: Colors.blue.withOpacity(0.1), shape: BoxShape.circle),
+              child: const Icon(Icons.sync, size: 12, color: Colors.blue),
+            ),
+          ),
+        ],
       ),
     );
   }

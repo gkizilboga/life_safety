@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_10_model.dart';
 import 'bolum_11_screen.dart';
+import 'module_transition_screen.dart';
+import '../../logic/report_engine.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -97,7 +100,22 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
       onNext: () {
         BinaStore.instance.bolum10 = _model;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum11Screen()));
+        BinaStore.instance.saveToDisk();
+        
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ModuleTransitionScreen(
+              module: ReportModule.binaBilgileri,
+              onContinue: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Bolum11Screen()),
+                );
+              },
+            ),
+          ),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,9 +232,9 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.withValues(alpha: 0.05),
+        color: Colors.green.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.green.withValues(alpha: 0.2)),
+        border: Border.all(color: Colors.green.withOpacity(0.2)),
       ),
       child: Column(
         children: [

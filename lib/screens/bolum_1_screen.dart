@@ -98,7 +98,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
         children: [
           ModernHeader(
             title: "Bölüm-1: Yapı Ruhsat / İnşa Tarihi",
-            subtitle: "Binanın tabi olduğu yönetmelik tespiti",
+            subtitle: " ",
             screenType: widget.runtimeType, // Hata veren ScreenType yerine orijinali
           ),
           Expanded(

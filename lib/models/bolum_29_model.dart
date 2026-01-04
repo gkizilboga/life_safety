@@ -11,7 +11,7 @@ class Bolum29Model {
   final ChoiceResult? trafo;
   final ChoiceResult? depo;
   final ChoiceResult? cop;
-  final ChoiceResult? siginak; // Yeni eklendi
+  final ChoiceResult? siginak;
 
   Bolum29Model({
     this.otopark,
@@ -69,6 +69,7 @@ class Bolum29Model {
 
   factory Bolum29Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? label, List<ChoiceResult> options) {
+      if (label == null) return null;
       try {
         return options.firstWhere((e) => e.label == label);
       } catch (_) {

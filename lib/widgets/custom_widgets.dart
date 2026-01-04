@@ -63,19 +63,32 @@ class ModernHeader extends StatelessWidget {
             subtitle,
             style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
           ),
-          const SizedBox(height: 15),
-          Stack(
+          const SizedBox(height: 18),
+          // YÜZDE GÖSTERGESİ VE İLERLEME ÇUBUĞU
+          Column(
             children: [
-              Container(
-                height: 4,
-                width: double.infinity,
-                decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(2)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Analiz İlerlemesi",
+                    style: TextStyle(color: Colors.white60, fontSize: 11, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    "%${(progress * 100).toInt()}",
+                    style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                height: 4,
-                width: MediaQuery.of(context).size.width * progress,
-                decoration: BoxDecoration(color: const Color(0xFF4CAF50), borderRadius: BorderRadius.circular(2)),
+              const SizedBox(height: 6),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 4,
+                  backgroundColor: Colors.white.withValues(alpha: 0.1),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4CAF50)),
+                ),
               ),
             ],
           ),
@@ -107,7 +120,6 @@ class QuestionCard extends StatelessWidget {
   }
 }
 
-// DOĞRUDAN EKRANDA GÖRÜNEN GÖRSEL BİLEŞENİ
 class SectionImage extends StatelessWidget {
   final String assetPath;
   const SectionImage({super.key, required this.assetPath});
@@ -143,34 +155,34 @@ class TechnicalDrawingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () => _showImagePopup(context),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           width: double.infinity, 
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFF1A237E).withValues(alpha: 0.04),
+            color: const Color(0xFF1A237E).withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.1)),
+            border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.25), width: 1.2),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.image_search_rounded, 
-                color: const Color(0xFF1A237E).withValues(alpha: 0.6),
-                size: 22
+                color: Color(0xFF1A237E),
+                size: 24
               ),
-              const SizedBox(width: 10),
-              Text(
+              const SizedBox(width: 12),
+              const Text(
                 "TEKNİK GÖRSELİ İNCELE",
                 style: TextStyle(
-                  color: const Color(0xFF1A237E).withValues(alpha: 0.7),
-                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF1A237E),
+                  fontWeight: FontWeight.bold,
                   fontSize: 13,
-                  letterSpacing: 0.3
+                  letterSpacing: 0.5
                 ),
               ),
             ],
@@ -186,18 +198,33 @@ class TechnicalDrawingButton extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.8,
-        padding: const EdgeInsets.all(24),
+        height: MediaQuery.of(context).size.height * 0.6,
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
         ),
         child: Column(
           children: [
-            Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
+            Container(
+              width: 40, 
+              height: 4, 
+              decoration: BoxDecoration(
+                color: Colors.grey[300], 
+                borderRadius: BorderRadius.circular(10)
+              )
+            ),
             const SizedBox(height: 20),
-            Text(title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1A237E))),
-            const SizedBox(height: 20),
+            Text(
+              title, 
+              textAlign: TextAlign.center, 
+              style: const TextStyle(
+                fontWeight: FontWeight.bold, 
+                fontSize: 18, 
+                color: Color(0xFF1A237E)
+              )
+            ),
+            const SizedBox(height: 15),
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
@@ -208,20 +235,28 @@ class TechnicalDrawingButton extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 10),
+            const Text(
+              "İki parmağınızla görseli yakınlaştırabilirsiniz.", 
+              style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic)
+            ),
             const SizedBox(height: 15),
-            const Text("Görseli büyütmek için iki parmağınızla yakınlaştırabilirsiniz.", style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic)),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1A237E),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 25),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1A237E),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("ANLADIM", style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
                 ),
-                onPressed: () => Navigator.pop(context),
-                child: const Text("ANLADIM, DEVAM ET", style: TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -267,7 +302,7 @@ class AnalysisPageLayout extends StatelessWidget {
             ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 35),
             decoration: const BoxDecoration(
               color: Colors.white,
               boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
@@ -284,7 +319,7 @@ class AnalysisPageLayout extends StatelessWidget {
                   minimumSize: const Size(double.infinity, 54),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                child: const Text("DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               ),
             ),
           ),

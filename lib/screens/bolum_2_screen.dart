@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../data/bina_store.dart';
-import '../../models/bolum_2_model.dart';
+import '../data/bina_store.dart';
+import '../models/bolum_2_model.dart';
 import 'bolum_3_screen.dart'; 
-import '../../widgets/custom_widgets.dart';
-import '../../widgets/selectable_card.dart';
-import '../../utils/app_content.dart';
-import '../../models/choice_result.dart';
-import '../../utils/app_assets.dart'; // Görsel yolu için
+import '../widgets/custom_widgets.dart';
+import '../widgets/selectable_card.dart';
+import '../utils/app_content.dart';
+import '../models/choice_result.dart';
+import '../utils/app_assets.dart'; // Görsel yolu için
 
 class Bolum2Screen extends StatefulWidget {
   const Bolum2Screen({super.key});

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_widgets.dart';
 import '../logic/report_engine.dart';
 import '../data/bina_store.dart';
+import '../utils/app_strings.dart';
 
 class ReportSummaryScreen extends StatelessWidget {
   const ReportSummaryScreen({super.key});
@@ -15,8 +16,8 @@ class ReportSummaryScreen extends StatelessWidget {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Yangın Risk Analiz Raporu",
-            subtitle: "Bina Durum Karnesi ve Modüler Tespitler",
+            title: "Yangın Risk Analizi Ön Raporu",
+            subtitle: "Kullanıcı Beyanına Dayalı Teknik Tespitler",
             screenType: ReportSummaryScreen,
           ),
           Expanded(
@@ -24,14 +25,44 @@ class ReportSummaryScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               children: [
                 _buildRiskPanel(metrics),
+                const SizedBox(height: 16),
+                _buildLegalWarningCard(),
                 const SizedBox(height: 20),
                 const Padding(
                   padding: EdgeInsets.only(left: 8, bottom: 12),
-                  child: Text("MODÜLER ANALİZ DETAYLARI", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
+                  child: Text("ANALİZ DETAYLARI", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
                 ),
-...ReportModule.values.map((module) => _buildModuleCard(context, module)),
+                ...ReportModule.values.map((module) => _buildModuleCard(context, module)),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegalWarningCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.amber.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.amber.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.gavel_rounded, color: Colors.amber.shade900, size: 20),
+              const SizedBox(width: 8),
+              Text("HUKUKİ BİLGİLENDİRME", style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold, fontSize: 12)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            AppStrings.legalDisclaimerContent,
+            style: TextStyle(fontSize: 11, color: Colors.black87, height: 1.4),
           ),
         ],
       ),
@@ -84,7 +115,7 @@ class ReportSummaryScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      "Acil müdahale gereken alanlar: ${m['criticals'].join(', ')}...",
+                      "Acil müdahale gereken konular: ${m['criticals'].join(', ')}...",
                       style: const TextStyle(color: Colors.white70, fontSize: 12),
                     ),
                   ),

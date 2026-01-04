@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math; // Max fonksiyonu için gerekli
 import '../../data/bina_store.dart';
 import '../../models/bolum_33_model.dart';
 import 'bolum_34_screen.dart'; 
@@ -62,19 +63,45 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   }
 
   void _hesapla() {
+    final b3 = BinaStore.instance.bolum3;
     final b5 = BinaStore.instance.bolum5;
     final b10 = BinaStore.instance.bolum10;
     final b20 = BinaStore.instance.bolum20;
 
-    if (b5 == null || b10 == null) {
-      _showError("Hata: Bölüm 5 veya Bölüm 10 verileri eksik!");
+    if (b5 == null || b10 == null || b3 == null) {
+      _showError("Hata: Bina verileri eksik!");
       return;
     }
 
+    double hBina = b3.hBina ?? 0.0;
+
+    // 1. KULLANICI YÜKÜ HESABI
     double kZemin = _getKatsayi(b10.zemin);
     double kNormal = _getKatsayi(b10.normaller.isNotEmpty ? b10.normaller.first : null);
     double kBodrum = _getKatsayi(b10.bodrumlar.isNotEmpty ? b10.bodrumlar.first : null);
 
+    double yukZemin = (b5.tabanAlani ?? 0) / kZemin;
+    double yukNormal = (b5.normalKatAlani ?? 0) / kNormal;
+    double yukBodrum = (b5.bodrumKatAlani ?? 0) / kBodrum;
+
+    // 2. YÜK BAZLI GEREKLİ ÇIKIŞ (BYKHY Madde 39)
+    int gZeminLoad = _hesaplaGerekliCikis(yukZemin);
+    int gNormalLoad = _hesaplaGerekliCikis(yukNormal);
+    int gBodrumLoad = _hesaplaGerekliCikis(yukBodrum);
+
+    // 3. YÜKSEKLİK BAZLI MİNİMUM ÇIKIŞ (BYKHY Madde 48 - Konutlar)
+    // Yönetmelik: 21.50m üzeri konutlarda en az 2 merdiven zorunludur.
+    int minCikisByHeight = 1;
+    if (hBina > 21.50) {
+      minCikisByHeight = 2;
+    }
+
+    // 4. NİHAİ GEREKLİ ÇIKIŞ (Yük veya Yükseklik hangisi büyükse o geçerlidir)
+    int gZemin = math.max(gZeminLoad, minCikisByHeight);
+    int gNormal = math.max(gNormalLoad, minCikisByHeight);
+    int gBodrum = gBodrumLoad; // Bodrumlar için yükseklik kuralı farklı (derinlik) işler
+
+    // Mevcut Çıkışlar
     int mevcutUst = (b20?.normalMerdivenSayisi ?? 0) + 
                     (b20?.binaIciYanginMerdiveniSayisi ?? 0) + 
                     (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) + 
@@ -82,26 +109,22 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     
     int mevcutBodrum = (b20?.bodrumMerdivenDevami?.label == "20-Bodrum-A") ? mevcutUst : 1;
 
-    double yukZemin = (b5.tabanAlani ?? 0) / kZemin;
-    double yukNormal = (b5.normalKatAlani ?? 0) / kNormal;
-    double yukBodrum = (b5.bodrumKatAlani ?? 0) / kBodrum;
-
-    int gZemin = _hesaplaGerekliCikis(yukZemin);
-    int gNormal = _hesaplaGerekliCikis(yukNormal);
-    int gBodrum = _hesaplaGerekliCikis(yukBodrum);
-
     setState(() {
-      _model = Bolum33Model(
-        alanZemin: b5.tabanAlani, alanNormal: b5.normalKatAlani, alanBodrumMax: b5.bodrumKatAlani,
+      _model = _model.copyWith(
         yukZemin: yukZemin, yukNormal: yukNormal, yukBodrum: yukBodrum,
         gerekliZemin: gZemin, gerekliNormal: gNormal, gerekliBodrum: gBodrum,
         mevcutUst: mevcutUst, mevcutBodrum: mevcutBodrum,
         zeminKatSonuc: (mevcutUst >= gZemin) ? Bolum33Content.zeminKatYeterli : Bolum33Content.zeminKatYetersiz,
         normalKatSonuc: (mevcutUst >= gNormal) ? Bolum33Content.normalKatYeterli : Bolum33Content.normalKatYetersiz,
-        bodrumKatSonuc: _hasBodrum ? (mevcutBodrum >= gBodrum ? Bolum33Content.bodrumKatYeterli : Bolum33Content.bodrumKatYetersiz) : null,
+        bodrumKatSonuc: (mevcutBodrum >= gBodrum) ? Bolum33Content.bodrumKatYeterli : Bolum33Content.bodrumKatYetersiz,
       );
       _showSummary = true;
     });
+  }
+
+  void _onNextPressed() {
+    BinaStore.instance.bolum33 = _model;
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum34Screen()));
   }
 
   void _showError(String msg) {
@@ -110,17 +133,12 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
 
   @override
   Widget build(BuildContext context) {
-    // AnalysisPageLayout kullanarak butonun silikleşme (disabled) mantığını standartlaştırdık
     return AnalysisPageLayout(
       title: "Çıkış İmkanı",
       subtitle: "Kullanıcı yükü Değerlendirmesi",
       screenType: widget.runtimeType,
-      // BUTON MANTIĞI: Sadece özet gösteriliyorsa VE onay kutusu işaretliyse buton aktif olur
       isNextEnabled: _showSummary && _isConfirmed,
-      onNext: () {
-        BinaStore.instance.bolum33 = _model;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum34Screen()));
-      },
+      onNext: _onNextPressed,
       child: Column(
         children: [
           QuestionCard(
@@ -190,7 +208,6 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
               
               const SizedBox(height: 25),
               
-              // --- YENİ EKLENEN KRİTİK NOT ---
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -211,7 +228,6 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
               
               const SizedBox(height: 20),
 
-              // --- VURGULANMIŞ ONAY ALANI ---
               Container(
                 decoration: BoxDecoration(
                   color: _isConfirmed ? Colors.blue.withOpacity(0.05) : Colors.transparent,

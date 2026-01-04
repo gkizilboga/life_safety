@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="life_safety"
+        android:label="Bina Yangın Risk Analizi"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
