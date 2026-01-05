@@ -25,14 +25,20 @@ class ReportEngine {
     int warnings = 0;
     List<String> criticalTitles = [];
 
+    double hBina = BinaStore.instance.bolum4?.hesaplananBinaYuksekligi ?? 0.0;
+
     for (int i = 1; i <= totalSections; i++) {
       final result = BinaStore.instance.getResultForSection(i);
       if (result != null) {
         filledSections++;
-        final color = getStatusColor(result);
+        final color = getStatusColor(result, sectionId: i);
         if (color == const Color(0xFFE53935)) {
-          criticalRisks++;
-          criticalTitles.add("Bölüm $i");
+          if ((i == 21 || i == 22) && hBina < 51.50) {
+            // 51.50m alti binalarda Bolum 21 ve 22 kritik risk sayilmaz
+          } else {
+            criticalRisks++;
+            criticalTitles.add("Bölüm $i");
+          }
         } else if (color == Colors.orange.shade600) {
           warnings++;
         }
@@ -50,8 +56,16 @@ class ReportEngine {
     };
   }
 
-  static Color getStatusColor(ChoiceResult? result) {
+  static Color getStatusColor(ChoiceResult? result, {int? sectionId}) {
     if (result == null) return Colors.grey.shade300;
+
+    if (sectionId == 21 || sectionId == 22) {
+      double hBina = BinaStore.instance.bolum4?.hesaplananBinaYuksekligi ?? 0.0;
+      if (hBina < 51.50) {
+        return const Color(0xFF1E88E5);
+      }
+    }
+
     final text = result.reportText;
     if (text.contains("☢️") || text.contains("🚨") || text.contains("KRİTİK RİSK") || text.contains("YETERSİZ")) {
       return const Color(0xFFE53935);
@@ -73,7 +87,22 @@ class ReportEngine {
 
   static String getSectionFullReport(int id) {
     final store = BinaStore.instance;
-    
+    double hBina = store.bolum4?.hesaplananBinaYuksekligi ?? 0.0;
+
+    if (id == 21) {
+      final result = store.getResultForSection(21);
+      if (hBina < 51.50 && result != null && result.label.contains("21-Varlik-B")) {
+        return "BİLGİ: Bina yapı yüksekliği ($hBina m), 51.50 metrenin altında olduğu için yönetmelik gereği Yangın Güvenlik Holü (YGH) zorunluluğu bulunmamaktadır.";
+      }
+    }
+
+    if (id == 22) {
+      final result = store.getResultForSection(22);
+      if (hBina < 51.50 && result != null && (result.label.contains("22-1-A") || result.label.contains("22-1-C"))) {
+        return "BİLGİ: Bina yapı yüksekliği ($hBina m), 51.50 metrenin altında olduğu için yönetmelik gereği itfaiye asansörü zorunluluğu bulunmamaktadır. Mevcut normal asansörler tahliye amaçlı kullanılabilir.";
+      }
+    }
+
     if (id == 13 && store.bolum13 != null) {
       final m = store.bolum13!;
       List<String> reports = [];

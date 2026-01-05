@@ -42,8 +42,11 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
       if (type == 'yalitimSap') _model = _model.copyWith(yalitimSap: choice);
       if (type == 'tavan') {
         _model = _model.copyWith(tavan: choice);
-        if (choice.label == Bolum15Content.tavanOptionB.label) _scrollToKey(_tavanMalzemeKey);
-        else _model = _model.copyWith(tavanMalzeme: null);
+        if (choice.label == Bolum15Content.tavanOptionB.label || choice.label == Bolum15Content.tavanOptionC.label) {
+          _scrollToKey(_tavanMalzemeKey);
+        } else {
+          _model = _model.copyWith(tavanMalzeme: null);
+        }
       }
       if (type == 'tavanMalzeme') _model = _model.copyWith(tavanMalzeme: choice);
       if (type == 'tesisat') _model = _model.copyWith(tesisat: choice);
@@ -53,7 +56,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
   bool _isReady() {
     if (_model.kaplama == null || _model.yalitim == null || _model.tavan == null || _model.tesisat == null) return false;
     if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label && _model.yalitimSap == null) return false;
-    if (_model.tavan?.label == Bolum15Content.tavanOptionB.label && _model.tavanMalzeme == null) return false;
+    if ((_model.tavan?.label == Bolum15Content.tavanOptionB.label || _model.tavan?.label == Bolum15Content.tavanOptionC.label) && _model.tavanMalzeme == null) return false;
     return true;
   }
 
@@ -76,30 +79,58 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const Bolum16Screen()),
+                );
+              },
+            ),
+          ),
         );
-      },
-    ),
-  ),
-);
       },
       child: Column(
         children: [
-          _buildSoru("1. Zemin kaplama malzemesi nedir?", 'kaplama', [Bolum15Content.kaplamaOptionA, Bolum15Content.kaplamaOptionB, Bolum15Content.kaplamaOptionC], _model.kaplama),
-          _buildSoru("2. Isı yalıtım malzemesi (strafor vb.) var mı?", 'yalitim', [Bolum15Content.yalitimOptionA, Bolum15Content.yalitimOptionB, Bolum15Content.yalitimOptionC], _model.yalitim, assetPath: AppAssets.section15DosemeYalitim),
+          _buildSoru("1. Zemin kaplama malzemesi nedir?", 'kaplama', [
+            Bolum15Content.kaplamaOptionA, 
+            Bolum15Content.kaplamaOptionB, 
+            Bolum15Content.kaplamaOptionD,
+            Bolum15Content.kaplamaOptionC
+          ], _model.kaplama),
+          
+          _buildSoru("2. Isı yalıtım malzemesi (strafor vb.) var mı?", 'yalitim', [
+            Bolum15Content.yalitimOptionA, 
+            Bolum15Content.yalitimOptionB, 
+            Bolum15Content.yalitimOptionC
+          ], _model.yalitim, assetPath: AppAssets.section15DosemeYalitim),
           
           if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) ...[
             _buildInfoNote("Yalıtım tespit edildiği için şap sorgulanmaktadır.", key: _yalitimSapKey),
-            _buildSoru("Yalıtım üzerinde en az 2 cm şap var mı?", 'yalitimSap', [Bolum15Content.yalitimSapOptionA, Bolum15Content.yalitimSapOptionB, Bolum15Content.yalitimSapOptionC], _model.yalitimSap),
+            _buildSoru("Yalıtım üzerinde en az 2 cm şap var mı?", 'yalitimSap', [
+              Bolum15Content.yalitimSapOptionA, 
+              Bolum15Content.yalitimSapOptionB, 
+              Bolum15Content.yalitimSapOptionC
+            ], _model.yalitimSap),
           ],
 
-          _buildSoru("3. Asma Tavan var mı?", 'tavan', [Bolum15Content.tavanOptionA, Bolum15Content.tavanOptionB, Bolum15Content.tavanOptionC], _model.tavan),
+          _buildSoru("3. Asma Tavan var mı?", 'tavan', [
+            Bolum15Content.tavanOptionA, 
+            Bolum15Content.tavanOptionB, 
+            Bolum15Content.tavanOptionC,
+            Bolum15Content.tavanOptionD
+          ], _model.tavan),
 
-          if (_model.tavan?.label == Bolum15Content.tavanOptionB.label) ...[
+          if (_model.tavan?.label == Bolum15Content.tavanOptionB.label || _model.tavan?.label == Bolum15Content.tavanOptionC.label) ...[
             _buildInfoNote("Asma tavan malzemesi sorgulanmaktadır.", key: _tavanMalzemeKey),
-            _buildSoru("Asma tavan malzemesi nedir?", 'tavanMalzeme', [Bolum15Content.tavanMalzemeOptionA, Bolum15Content.tavanMalzemeOptionB, Bolum15Content.tavanMalzemeOptionC], _model.tavanMalzeme),
+            _buildSoru("Asma tavan malzemesi nedir?", 'tavanMalzeme', [
+              Bolum15Content.tavanMalzemeOptionA, 
+              Bolum15Content.tavanMalzemeOptionB, 
+              Bolum15Content.tavanMalzemeOptionC
+            ], _model.tavanMalzeme),
           ],
 
-          _buildSoru("4. Tesisat boşlukları nasıl kapatılmış?", 'tesisat', [Bolum15Content.tesisatOptionA, Bolum15Content.tesisatOptionB, Bolum15Content.tesisatOptionC], _model.tesisat, assetPath: AppAssets.section15Gecis),
+          _buildSoru("4. Tesisat boşlukları nasıl kapatılmış?", 'tesisat', [
+            Bolum15Content.tesisatOptionA, 
+            Bolum15Content.tesisatOptionB, 
+            Bolum15Content.tesisatOptionC,
+            Bolum15Content.tesisatOptionD
+          ], _model.tesisat, assetPath: AppAssets.section15Gecis),
         ],
       ),
     );

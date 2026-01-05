@@ -81,7 +81,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
             ),
           ),
           _buildSoru("Yönlendirme levhaları asılı mı?", 'levha', [Bolum19Content.levhaOptionA, Bolum19Content.levhaOptionB, Bolum19Content.levhaOptionC], _model.levha),
-          _buildSoru("Yanıltıcı kapılar var mı?", 'yaniltici', [Bolum19Content.yanilticiOptionA, Bolum19Content.yanilticiOptionB], _model.yanilticiKapi),
+          _buildSoru("Yanıltıcı kapılar var mı? (Çıkış kapısına veya merdivene ulaşırken kafanızı karıştırabilecek kapılar)", 'yaniltici', [Bolum19Content.yanilticiOptionA, Bolum19Content.yanilticiOptionB], _model.yanilticiKapi),
           
           if (_model.yanilticiKapi?.label == Bolum19Content.yanilticiOptionB.label) ...[
             _buildInfoNote("Yanıltıcı kapılar için etiketleme sorgulanmaktadır.", key: _etiketKey),

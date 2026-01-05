@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math; // Max fonksiyonu için gerekli
+import 'dart:math' as math;
 import '../../data/bina_store.dart';
 import '../../models/bolum_33_model.dart';
 import 'bolum_34_screen.dart'; 
@@ -54,7 +54,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     return 20.0;
   }
 
-  int _hesaplaGerekliCikis(double kisi) {
+  int _hesaplaGerekliCikis(int kisi) {
     if (kisi <= 0) return 0;
     if (kisi <= 50) return 1;
     if (kisi <= 500) return 2;
@@ -75,33 +75,27 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
 
     double hBina = b3.hBina ?? 0.0;
 
-    // 1. KULLANICI YÜKÜ HESABI
     double kZemin = _getKatsayi(b10.zemin);
     double kNormal = _getKatsayi(b10.normaller.isNotEmpty ? b10.normaller.first : null);
     double kBodrum = _getKatsayi(b10.bodrumlar.isNotEmpty ? b10.bodrumlar.first : null);
 
-    double yukZemin = (b5.tabanAlani ?? 0) / kZemin;
-    double yukNormal = (b5.normalKatAlani ?? 0) / kNormal;
-    double yukBodrum = (b5.bodrumKatAlani ?? 0) / kBodrum;
+    int yukZemin = ((b5.tabanAlani ?? 0) / kZemin).ceil();
+    int yukNormal = ((b5.normalKatAlani ?? 0) / kNormal).ceil();
+    int yukBodrum = ((b5.bodrumKatAlani ?? 0) / kBodrum).ceil();
 
-    // 2. YÜK BAZLI GEREKLİ ÇIKIŞ (BYKHY Madde 39)
     int gZeminLoad = _hesaplaGerekliCikis(yukZemin);
     int gNormalLoad = _hesaplaGerekliCikis(yukNormal);
     int gBodrumLoad = _hesaplaGerekliCikis(yukBodrum);
 
-    // 3. YÜKSEKLİK BAZLI MİNİMUM ÇIKIŞ (BYKHY Madde 48 - Konutlar)
-    // Yönetmelik: 21.50m üzeri konutlarda en az 2 merdiven zorunludur.
     int minCikisByHeight = 1;
     if (hBina > 21.50) {
       minCikisByHeight = 2;
     }
 
-    // 4. NİHAİ GEREKLİ ÇIKIŞ (Yük veya Yükseklik hangisi büyükse o geçerlidir)
     int gZemin = math.max(gZeminLoad, minCikisByHeight);
     int gNormal = math.max(gNormalLoad, minCikisByHeight);
-    int gBodrum = gBodrumLoad; // Bodrumlar için yükseklik kuralı farklı (derinlik) işler
+    int gBodrum = gBodrumLoad;
 
-    // Mevcut Çıkışlar
     int mevcutUst = (b20?.normalMerdivenSayisi ?? 0) + 
                     (b20?.binaIciYanginMerdiveniSayisi ?? 0) + 
                     (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) + 
@@ -255,14 +249,14 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     );
   }
 
-  Widget _buildResultRow(String title, double? yuk, int? gerekli, int? mevcut) {
+  Widget _buildResultRow(String title, int? yuk, int? gerekli, int? mevcut) {
     bool isOk = (mevcut ?? 0) >= (gerekli ?? 0);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Color(0xFF2C3E50))),
         const SizedBox(height: 4),
-        Text("• Tahmini Kişi Sayısı: ${yuk?.toStringAsFixed(1)} Kişi", style: const TextStyle(fontSize: 13)),
+        Text("• Tahmini Kişi Sayısı: ${yuk ?? 0} Kişi", style: const TextStyle(fontSize: 13)),
         Text("• Gereken Çıkış: $gerekli | Mevcut Çıkış: $mevcut", style: const TextStyle(fontSize: 13)),
         const SizedBox(height: 6),
         Container(

@@ -5,9 +5,9 @@ class Bolum33Model {
   final double? alanZemin;
   final double? alanNormal;
   final double? alanBodrumMax;
-  final double? yukZemin;
-  final double? yukNormal;
-  final double? yukBodrum;
+  final int? yukZemin;
+  final int? yukNormal;
+  final int? yukBodrum;
   final int? gerekliZemin;
   final int? gerekliNormal;
   final int? gerekliBodrum;
@@ -27,7 +27,7 @@ class Bolum33Model {
 
   Bolum33Model copyWith({
     double? alanZemin, double? alanNormal, double? alanBodrumMax,
-    double? yukZemin, double? yukNormal, double? yukBodrum,
+    int? yukZemin, int? yukNormal, int? yukBodrum,
     int? gerekliZemin, int? gerekliNormal, int? gerekliBodrum,
     int? mevcutUst, int? mevcutBodrum,
     ChoiceResult? normalKatSonuc, ChoiceResult? zeminKatSonuc, ChoiceResult? bodrumKatSonuc,

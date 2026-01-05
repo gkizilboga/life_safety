@@ -47,17 +47,17 @@ class Bolum15Model {
     };
   }
 
-factory Bolum15Model.fromMap(Map<String, dynamic> map) {
+  factory Bolum15Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? label) {
       if (label == null) return null;
       try {
         return [
-          Bolum15Content.kaplamaOptionA, Bolum15Content.kaplamaOptionB, Bolum15Content.kaplamaOptionC,
+          Bolum15Content.kaplamaOptionA, Bolum15Content.kaplamaOptionB, Bolum15Content.kaplamaOptionC, Bolum15Content.kaplamaOptionD,
           Bolum15Content.yalitimOptionA, Bolum15Content.yalitimOptionB, Bolum15Content.yalitimOptionC,
           Bolum15Content.yalitimSapOptionA, Bolum15Content.yalitimSapOptionB, Bolum15Content.yalitimSapOptionC,
-          Bolum15Content.tavanOptionA, Bolum15Content.tavanOptionB, Bolum15Content.tavanOptionC,
+          Bolum15Content.tavanOptionA, Bolum15Content.tavanOptionB, Bolum15Content.tavanOptionC, Bolum15Content.tavanOptionD,
           Bolum15Content.tavanMalzemeOptionA, Bolum15Content.tavanMalzemeOptionB, Bolum15Content.tavanMalzemeOptionC,
-          Bolum15Content.tesisatOptionA, Bolum15Content.tesisatOptionB, Bolum15Content.tesisatOptionC,
+          Bolum15Content.tesisatOptionA, Bolum15Content.tesisatOptionB, Bolum15Content.tesisatOptionC, Bolum15Content.tesisatOptionD,
         ].firstWhere((e) => e.label == label);
       } catch (_) {
         return null;
@@ -73,4 +73,4 @@ factory Bolum15Model.fromMap(Map<String, dynamic> map) {
       tesisat: find(map['tesisat']),
     );
   }
- }
+}

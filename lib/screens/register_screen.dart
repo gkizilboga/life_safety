@@ -14,35 +14,37 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   bool _kvkkAccepted = false;
   bool _disclaimerAccepted = false;
   String? _selectedProfession;
 
   final List<String> _professions = [
-    "Vatandaş / Apartman Sakini"
-    "Bina Yöneticisi"
-    "Bina Sorumlusu"
-    "Tekniker"   
-    "İtfaiye / Kamu Personeli"
     "Mimar",
-    "Mühendis",
+    "İnşaat Mühendisi",
+    "Makine Mühendisi",
+    "Elektrik Mühendisi",
     "İSG Uzmanı",
-    "Yangın Uzmanı",
-    "Diğer"
+    "Yangın Güvenlik Danışmanı",
+    "Bina Yöneticisi",
+    "Vatandaş / Diğer"
   ];
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   void _onRegisterPressed() {
     if (_formKey.currentState!.validate()) {
       if (!_kvkkAccepted || !_disclaimerAccepted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Devam etmek için yasal bilgilendirmeleri ve kullanım şartlarını onaylamanız gerekmektedir."),
-            backgroundColor: Color(0xFFB71C1C),
-          ),
-        );
+        _showError("Devam etmek için yasal bilgilendirmeleri ve kullanım şartlarını onaylamanız gerekmektedir.");
         return;
       }
       
+      BinaStore.instance.userName = _nameController.text;
+      BinaStore.instance.userProfession = _selectedProfession ?? "Vatandaş / Diğer";
       BinaStore.instance.isRegistered = true;
       
       Navigator.pushReplacement(
@@ -50,6 +52,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         MaterialPageRoute(builder: (context) => const DashboardScreen()),
       );
     }
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: const Color(0xFFB71C1C),
+      ),
+    );
   }
 
   @override
@@ -60,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           const ModernHeader(
             title: "Yeni Kayıt",
-            subtitle: "Profilinizi Oluşturun",
+            subtitle: "Analiz Uzmanı Profilinizi Oluşturun",
             screenType: RegisterScreen,
           ),
           Expanded(
@@ -71,9 +82,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildTextField("Ad Soyad", Icons.person_outline),
+                    _buildTextField("Ad Soyad", Icons.person_outline, _nameController),
                     const SizedBox(height: 16),
-                    _buildTextField("E-Posta", Icons.email_outlined),
+                    _buildTextField("E-Posta", Icons.email_outlined, null),
                     const SizedBox(height: 16),
                     _buildDropdownField("Meslek / Unvan", Icons.work_outline),
                     const SizedBox(height: 30),
@@ -91,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 12),
                     _buildConsentTile(
                       title: "Kullanım Şartları ve Sorumluluk Reddi",
-                      content: "Üretilen belgenin resmi bir rapor olmadığını, yerinde kontrol ve Yangın Uzmanı onayı olmadan hukuki geçerliliği bulunmadığını kabul ediyorum.",
+                      content: "Üretilen belgenin resmi rapor olmadığını, saha ziyareti ve uzman onayı olmadan hukuki geçerliliği bulunmadığını kabul ediyorum.",
                       value: _disclaimerAccepted,
                       onChanged: (val) => setState(() => _disclaimerAccepted = val!),
                     ),
@@ -116,8 +127,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildTextField(String label, IconData icon) {
+  Widget _buildTextField(String label, IconData icon, TextEditingController? controller) {
     return TextFormField(
+      controller: controller,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: const Color(0xFF1A237E)),

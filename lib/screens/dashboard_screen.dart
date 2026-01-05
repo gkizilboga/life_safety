@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_safety/screens/settings_screen.dart';
 import 'bolum_1_screen.dart';
 import 'archive_screen.dart';
 import 'building_setup_screen.dart';
@@ -67,14 +68,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("HOŞ GELDİNİZ,", 
-                    style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text(module.rankName.toUpperCase(), 
-                    style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w300)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("HOŞ GELDİNİZ,", 
+                      style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                    Text(BinaStore.instance.userName.toUpperCase(), 
+                      style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.ellipsis)),
+                  ],
+                ),
               ),
               _buildRankBadge(module),
             ],
@@ -117,8 +120,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStatusChip(),
-              Text("%${metrics['completion']} Tamamlandı", 
-                style: const TextStyle(color: AppColors.textLight, fontSize: 12, fontWeight: FontWeight.bold)),
+              IconButton(
+                onPressed: () => _showResetConfirmation(context),
+                icon: Icon(Icons.delete_sweep_outlined, color: Colors.red.shade300, size: 22),
+                tooltip: "Analizi Sıfırla",
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+              ),
             ],
           ),
           const SizedBox(height: 15),
@@ -168,6 +176,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  void _showResetConfirmation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text("Analizi Sıfırla", style: TextStyle(fontWeight: FontWeight.bold)),
+        content: const Text("Mevcut analize ait tüm veriler temizlenecektir. Bu işlem geri alınamaz. Emin misiniz?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("VAZGEÇ", style: TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade800,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: () {
+              setState(() {
+                BinaStore.instance.clearCurrentAnalysis();
+              });
+              Navigator.pop(context);
+            },
+            child: const Text("EVET, SIFIRLA"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildStatusChip() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -181,20 +220,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildProgressBar(int percent) {
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          height: 8,
-          width: double.infinity,
-          decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(4)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("İlerleme Durumu", style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w600)),
+            Text("%$percent", style: const TextStyle(fontSize: 10, color: AppColors.primaryBlue, fontWeight: FontWeight.bold)),
+          ],
         ),
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 800),
-          height: 8,
-          width: (MediaQuery.of(context).size.width - 80) * (percent / 100),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: [Color(0xFF3949AB), AppColors.primaryBlue]),
-            borderRadius: BorderRadius.circular(4),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: percent / 100,
+            minHeight: 6,
+            backgroundColor: Colors.grey.shade100,
+            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
           ),
         ),
       ],
@@ -263,7 +306,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       children: [
         _buildMenuTile(
           Icons.menu_book_outlined, 
-          "Yangın Yönetmeliği", 
+          "Mevzuatlar", 
           "Yönetmelik Hükümleri",
           () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LegislationLibraryScreen())),
         ),
@@ -277,7 +320,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Icons.settings_outlined, 
           "Uygulama Ayarları", 
           "Profil ve Tercihler",
-          () {},
+          () => Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingsScreen())),
         ),
       ],
     );

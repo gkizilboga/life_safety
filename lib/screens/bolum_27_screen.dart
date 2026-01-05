@@ -19,7 +19,7 @@ class Bolum27Screen extends StatefulWidget {
 class _Bolum27ScreenState extends State<Bolum27Screen> {
   Bolum27Model _model = Bolum27Model();
   bool _needsFireDoor = false; 
-  double _maxUserLoad = 0;
+  int _maxUserLoad = 0; // double yerine int yapıldı
 
   @override
   void initState() {
@@ -30,17 +30,17 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   void _loadLogicData() {
     final b20 = BinaStore.instance.bolum20;
     
-    // KRİTİK MANTIK: Sadece 2. ve 3. tip merdivenler varsa Adım-4 açılır
     int closedStairsCount = 0;
     if (b20 != null) {
-      closedStairsCount += b20.binaIciYanginMerdiveniSayisi; // Tip 2
-      closedStairsCount += b20.binaDisiKapaliYanginMerdiveniSayisi; // Tip 3
+      closedStairsCount += b20.binaIciYanginMerdiveniSayisi; 
+      closedStairsCount += b20.binaDisiKapaliYanginMerdiveniSayisi; 
     }
     bool needsFireDoor = closedStairsCount > 0;
 
     final b33 = BinaStore.instance.bolum33;
-    double maxLoad = 0;
+    int maxLoad = 0; // double yerine int yapıldı
     if (b33 != null) {
+      // Bölüm 33'ten gelen veriler artık int olduğu için math.max int döner
       maxLoad = math.max(b33.yukZemin ?? 0, math.max(b33.yukNormal ?? 0, b33.yukBodrum ?? 0));
     }
 
@@ -97,22 +97,18 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
         children: [
           _buildEnZayifHalkaUyarisi(),
 
-          // --- ADIM 1 ---
           _buildSoruHeader("1. Kaçış kapılarının genişliği ve zemini ne durumdadır?"),
           TechnicalDrawingButton(assetPath: AppAssets.section27YanginKapisi, title: "Kapı Genişliği ve Eşik Standartı"),
           _buildSoruCard('boyut', [Bolum27Content.boyutOptionA, Bolum27Content.boyutOptionB, Bolum27Content.boyutOptionC], _model.boyut),
 
-          // --- ADIM 2 ---
           _buildSoruHeader("2. Kaçış kapıları hangi yöne açılıyor?"),
           TechnicalDrawingButton(assetPath: AppAssets.section27KacisYonu, title: "Kapı Açılış Yönü Kriterleri"),
           _buildSoruCard('yon', [Bolum27Content.yonOptionA, Bolum27Content.yonOptionB, Bolum27Content.yonOptionC, Bolum27Content.yonOptionD], _model.yon),
 
-          // --- ADIM 3 ---
           _buildSoruHeader("3. Kapı kilit mekanizması nasıldır?"),
           TechnicalDrawingButton(assetPath: AppAssets.section27KilitTipi, title: "Kilit ve Panik Bar Tipleri"),
           _buildSoruCard('kilit', [Bolum27Content.kilitOptionA, Bolum27Content.kilitOptionB, Bolum27Content.kilitOptionC, Bolum27Content.kilitOptionD], _model.kilit),
 
-          // --- ADIM 4 (Şartlı) ---
           if (_needsFireDoor) ...[
             const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider(thickness: 1.5)),
             _buildInfoNote("Binada kapalı yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır."),

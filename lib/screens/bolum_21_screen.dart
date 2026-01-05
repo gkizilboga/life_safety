@@ -6,7 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import '../../utils/app_assets.dart'; // Görsel yolu için eklendi
+import '../../utils/app_assets.dart';
 
 class Bolum21Screen extends StatefulWidget {
   const Bolum21Screen({super.key});
@@ -17,12 +17,26 @@ class Bolum21Screen extends StatefulWidget {
 
 class _Bolum21ScreenState extends State<Bolum21Screen> {
   Bolum21Model _model = Bolum21Model();
+  bool _isMandatory = false;
+  double _currentHeight = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkHeight();
+  }
+
+  void _checkHeight() {
+    _currentHeight = BinaStore.instance.bolum4?.hesaplananBinaYuksekligi ?? 0.0;
+    setState(() {
+      _isMandatory = _currentHeight >= 51.50;
+    });
+  }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'varlik') {
         _model = _model.copyWith(varlik: choice);
-        // Eğer "YGH Yok" seçilirse, diğer cevapları temizle
         if (choice.label == Bolum21Content.varlikOptionB.label) {
           _model = _model.copyWith(malzeme: null, kapi: null, esya: null);
         }
@@ -38,11 +52,10 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
 
   bool _isReady() {
     if (_model.varlik == null) return false;
-    // Eğer YGH varsa, diğer tüm sorular zorunludur
     if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) {
       return _model.malzeme != null && _model.kapi != null && _model.esya != null;
     }
-    return true; // YGH yoksa sadece varlık sorusu yeterli
+    return true;
   }
 
   @override
@@ -54,28 +67,27 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       isNextEnabled: _isReady(),
       onNext: () {
         BinaStore.instance.bolum21 = _model;
-        // saveToDisk() işlemi AnalysisPageLayout içinde otomatik yapılmaktadır.
+        BinaStore.instance.saveToDisk();
         Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum22Screen()));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Varlık Sorusu
+          _buildHeightInfoCard(),
           _buildSoru(
             "1. Daire kapınızdan çıktığınızda merdivene girmeden evvel ufak bir odadan (yangın güvenlik holünden) geçiyor musunuz?", 
             'varlik', 
             [Bolum21Content.varlikOptionA, Bolum21Content.varlikOptionB], 
-            _model.varlik
+            _model.varlik,
+            description: "Yönetmelik gereği 51.50 m ve üzeri binalarda zorunludur.",
           ),
 
-          // Diğer sorular SADECE YGH VARSA gösterilir
           if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) ...[
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Divider(color: Color(0xFFECEFF1)),
             ),
             
-            // 2. Malzeme Sorusu (GÖRSEL BUTONU BURADA)
             _buildSoru(
               "2. YGH duvarlarında, zemininde ve tavanında kullanılan malzeme nedir?", 
               'malzeme', 
@@ -89,7 +101,6 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               assetTitle: "Yangın Güvenlik Holü Uygulama Detayı",
             ),
 
-            // 3. Kapı Sorusu
             _buildSoru(
               "3. Bu YGH'ye giriş-çıkış sağlayan kapıların özelliği nedir?", 
               'kapi', 
@@ -101,7 +112,6 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               _model.kapi
             ),
 
-            // 4. Eşya Sorusu
             _buildSoru(
               "4. YGH'nin içinde kaçışa engel olabilecek herhangi bir eşya (bisiklet, dolap vb.) bekletiliyor mu?", 
               'esya', 
@@ -118,14 +128,49 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected, {String? assetPath, String? assetTitle}) {
+  Widget _buildHeightInfoCard() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _isMandatory ? Colors.orange.shade50 : Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _isMandatory ? Colors.orange.shade200 : Colors.blue.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            _isMandatory ? Icons.warning_amber_rounded : Icons.info_outline,
+            color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              _isMandatory 
+                ? "Bina yüksekliğiniz $_currentHeight m olduğu için Yangın Güvenlik Holü (YGH) ZORUNLUDUR."
+                : "Bina yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için YGH zorunlu değildir. Ancak varlığı denetlenmektedir.",
+              style: TextStyle(
+                fontSize: 13, 
+                fontWeight: FontWeight.bold, 
+                color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected, {String? description, String? assetPath, String? assetTitle}) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
-          
-          // Eğer assetPath dolu gelirse teknik görsel butonunu yerleştir
+          if (description != null) ...[
+            const SizedBox(height: 4),
+            Text(description, style: TextStyle(fontSize: 12, color: Colors.blue.shade800, fontWeight: FontWeight.w500)),
+          ],
           if (assetPath != null) ...[
             const SizedBox(height: 12),
             TechnicalDrawingButton(
@@ -133,7 +178,6 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               title: assetTitle ?? "Teknik Detay",
             ),
           ],
-
           const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
             choice: opt,

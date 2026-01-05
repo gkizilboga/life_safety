@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/bolum_1_model.dart';
 import '../models/bolum_2_model.dart';
@@ -46,13 +45,32 @@ class BinaStore {
   BinaStore._internal();
   static BinaStore get instance => _instance;
 
+  SharedPreferences? _prefs;
+
   String? currentBinaId;
   String? currentBinaName;
   String? currentBinaCity;
   String? currentBinaDistrict;
   List<Map<String, dynamic>> archive = [];
-  bool isPremium = false;
-  bool isRegistered = false;
+
+  String get userName => _prefs?.getString('userName') ?? "Analiz Uzmanı";
+  set userName(String value) => _prefs?.setString('userName', value);
+
+  bool get isPremium => _prefs?.getBool('isPremium') ?? false;
+  set isPremium(bool value) => _prefs?.setBool('isPremium', value);
+
+  bool get isRegistered => _prefs?.getBool('isRegistered') ?? false;
+  set isRegistered(bool value) => _prefs?.setBool('isRegistered', value);
+
+  void setPremiumStatus(bool status) {
+    isPremium = status;
+  }
+  String get userProfession => _prefs?.getString('userProfession') ?? "Vatandaş / Diğer";
+  set userProfession(String value) => _prefs?.setString('userProfession', value);
+
+  bool get hapticEnabled => _prefs?.getBool('hapticEnabled') ?? true;
+  set hapticEnabled(bool value) => _prefs?.setBool('hapticEnabled', value);
+
 
   Bolum1Model? bolum1;
   Bolum2Model? bolum2;
@@ -91,8 +109,23 @@ class BinaStore {
   Bolum35Model? bolum35;
   Bolum36Model? bolum36;
 
-  Future<void> saveToDisk() async {
-    final prefs = await SharedPreferences.getInstance();
+  Future<void> loadFromDisk() async {
+    _prefs = await SharedPreferences.getInstance();
+    final archiveRaw = _prefs?.getString('bina_archive');
+    final activeId = _prefs?.getString('active_bina_id');
+
+    if (archiveRaw != null) {
+      archive = List<Map<String, dynamic>>.from(json.decode(archiveRaw));
+      if (activeId != null && activeId.isNotEmpty) {
+        final activeData = archive.firstWhere((e) => e['id'] == activeId, orElse: () => {});
+        if (activeData.isNotEmpty) {
+          _loadBuildingFromMap(activeData);
+        }
+      }
+    }
+  }
+
+  void saveToDisk() {
     currentBinaId ??= DateTime.now().millisecondsSinceEpoch.toString();
 
     final currentData = {
@@ -148,40 +181,8 @@ class BinaStore {
       archive.add(currentData);
     }
 
-    await prefs.setString('bina_archive', json.encode(archive));
-    await prefs.setString('active_bina_id', currentBinaId!);
-    await prefs.setBool('is_premium', isPremium);
-    await prefs.setBool('is_registered', isRegistered);
-  }
-
-  Future<void> loadFromDisk() async {
-    final prefs = await SharedPreferences.getInstance();
-    final archiveRaw = prefs.getString('bina_archive');
-    final activeId = prefs.getString('active_bina_id');
-    isPremium = prefs.getBool('is_premium') ?? false;
-    isRegistered = prefs.getBool('is_registered') ?? false;
-
-    if (archiveRaw != null) {
-      archive = List<Map<String, dynamic>>.from(json.decode(archiveRaw));
-      if (activeId != null && activeId.isNotEmpty) {
-        final activeData = archive.firstWhere((e) => e['id'] == activeId, orElse: () => {});
-        if (activeData.isNotEmpty) {
-          _loadBuildingFromMap(activeData);
-        }
-      }
-    }
-  }
-
-  Future<void> setPremiumStatus(bool status) async {
-    isPremium = status;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('is_premium', status);
-  }
-
-  Future<void> setRegistrationStatus(bool status) async {
-    isRegistered = status;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('is_registered', status);
+    _prefs?.setString('bina_archive', json.encode(archive));
+    _prefs?.setString('active_bina_id', currentBinaId!);
   }
 
   void _loadBuildingFromMap(Map<String, dynamic> data) {
@@ -237,10 +238,9 @@ class BinaStore {
     saveToDisk();
   }
 
-  void clearAfter(int sectionNumber) {
-    if (sectionNumber <= 3) { bolum4 = null; bolum5 = null; bolum14 = null; bolum33 = null; }
-    if (sectionNumber <= 6) { bolum10 = null; bolum13 = null; bolum34 = null; }
-    saveToDisk();
+  void clearCurrentAnalysis() {
+    reset();
+    _prefs?.remove('active_bina_id');
   }
 
   ChoiceResult? getResultForSection(int id) {
@@ -318,6 +318,7 @@ class BinaStore {
   void deleteFromArchive(String id) {
     archive.removeWhere((element) => element['id'] == id);
     if (currentBinaId == id) reset();
-    saveToDisk();
+    _prefs?.setString('bina_archive', json.encode(archive));
+    _prefs?.remove('active_bina_id');
   }
 }

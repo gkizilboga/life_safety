@@ -17,6 +17,21 @@ class Bolum22Screen extends StatefulWidget {
 
 class _Bolum22ScreenState extends State<Bolum22Screen> {
   Bolum22Model _model = Bolum22Model();
+  bool _isMandatory = false;
+  double _currentHeight = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkHeight();
+  }
+
+  void _checkHeight() {
+    _currentHeight = BinaStore.instance.bolum4?.hesaplananBinaYuksekligi ?? 0.0;
+    setState(() {
+      _isMandatory = _currentHeight >= 51.50;
+    });
+  }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
@@ -62,12 +77,13 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
       isNextEnabled: _isReady(),
       onNext: () {
         BinaStore.instance.bolum22 = _model;
+        BinaStore.instance.saveToDisk();
         Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum23Screen()));
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Varlık Sorusu
+          _buildHeightInfoCard(),
           _buildSoru(
             "1. Binanızda İtfaiye (acil durum) asansörü var mı?", 
             'varlik', 
@@ -78,22 +94,18 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             assetTitle: "İtfaiye Asansörü ve Hol Uygulama Detayı",
           ),
 
-          // Alt Sorular (Adım 2)
           if (_model.varlik?.label == Bolum22Content.varlikOptionB.label) ...[
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Divider(color: Color(0xFFECEFF1)),
             ),
             
-            // Adım 2 - Soru 1: Konum
             _buildSoru("2. Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?", 'konum', 
               [Bolum22Content.konumOptionA, Bolum22Content.konumOptionB, Bolum22Content.konumOptionC], _model.konum),
 
-            // Adım 2 - Soru 2: Boyut
             _buildSoru("3. İtfaiye asansörünün açıldığı yangın güvenlik holünün taban alanı yaklaşık kaç metrekaredir?", 'boyut', 
               [Bolum22Content.boyutOptionA, Bolum22Content.boyutOptionB, Bolum22Content.boyutOptionC, Bolum22Content.boyutOptionD], _model.boyut),
 
-            // Adım 2 - Soru 3: Kabin (GÖRSEL BUTONU BURADA)
             _buildSoru(
               "4. Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?", 
               'kabin', 
@@ -103,11 +115,9 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               assetTitle: "İtfaiye Asansörü Kabin Ölçüleri",
             ),
 
-            // Adım 2 - Soru 4: Enerji
             _buildSoru("5. Bu asansör, elektrik kesildiğinde en az 60 dakika çalışabilen bir jeneratöre bağlı mı?", 'enerji', 
               [Bolum22Content.enerjiOptionA, Bolum22Content.enerjiOptionB, Bolum22Content.enerjiOptionC], _model.enerji),
 
-            // Adım 2 - Soru 5: Basınçlandırma (GÖRSEL BUTONU BURADA)
             _buildSoru(
               "6. İtfaiye asansörünün kuyusu basınçlandırılmış mı?", 
               'basinc', 
@@ -117,6 +127,39 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               assetTitle: "Asansör Kuyusu Basınçlandırma Sistemi",
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeightInfoCard() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _isMandatory ? Colors.orange.shade50 : Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _isMandatory ? Colors.orange.shade200 : Colors.blue.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            _isMandatory ? Icons.warning_amber_rounded : Icons.info_outline,
+            color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              _isMandatory 
+                ? "Bina yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
+                : "Bina yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
+              style: TextStyle(
+                fontSize: 13, 
+                fontWeight: FontWeight.bold, 
+                color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900
+              ),
+            ),
+          ),
         ],
       ),
     );

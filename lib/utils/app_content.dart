@@ -759,6 +759,13 @@ class Bolum15Content {
     reportText: "❓ BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor."
   );
 
+  static final kaplamaOptionD = ChoiceResult(
+    label: "15-1-D",
+    uiTitle: "Karma zemin kaplama tipleri",
+    uiSubtitle: "Farklı mahallerde farklı kaplamalar mevcut.",
+    reportText: "⚠️ UYARI: Binada karma zemin kaplaması mevcuttur. Yönetmelik gereği yüksek binalarda döşeme kaplamalarının en az zor alevlenici olması gerekmektedir; aksi durumda yanıcı kaplamalar risk teşkil eder."
+  );
+
   static final yalitimOptionA = ChoiceResult(
     label: "15-2-A",
     uiTitle: "Hayır, ısı yalıtım yok.",
@@ -817,6 +824,13 @@ class Bolum15Content {
 
   static final tavanOptionC = ChoiceResult(
     label: "15-3-C",
+    uiTitle: "Karma (Bazı alanlarda var, bazı alanlarda yok)",
+    uiSubtitle: "Binanın genelinde farklı tavan yapıları mevcut.",
+    reportText: "⚠️ UYARI: Binanın bazı bölümlerinde asma tavan tespit edilmiştir; kullanılan malzemenin yanıcılık sınıfı ve tavan içi tesisat yalıtımı kontrol edilmelidir."
+  );
+
+  static final tavanOptionD = ChoiceResult(
+    label: "15-3-D",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Tavan yapısı belirsiz.",
     reportText: "❓ BİLİNMİYOR: Tavan yapısı hakkında bilgi yok."
@@ -859,6 +873,13 @@ class Bolum15Content {
 
   static final tesisatOptionC = ChoiceResult(
     label: "15-4-C",
+    uiTitle: "Karma (Bazı boru geçişleri yalıtımlı, bazıları açık)",
+    uiSubtitle: "Tesisat şaftlarında standart dışı uygulamalar mevcut.",
+    reportText: "☢️ KRİTİK RİSK: Tesisat geçişlerinin bir kısmında sızdırmazlık sağlanmamıştır; katlar arası duman ve alev yayılımı riski bulunmaktadır."
+  );
+
+  static final tesisatOptionD = ChoiceResult(
+    label: "15-4-D",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Tesisat geçişleri kapalı durumda.",
     reportText: "❓ BİLİNMİYOR: Tesisat şaft yalıtımı bilinmiyor."
@@ -1156,14 +1177,14 @@ class Bolum19Content {
 
   static final yanilticiOptionA = ChoiceResult(
     label: "19-3-A",
-    uiTitle: "Hayır, yanıltıcı kapı yok.",
+    uiTitle: "Hayır, yanıltıcı kapı yok, çıkış kapısını kolayca bulabilirim.",
     uiSubtitle: "Tüm kapılar amacına uygun.",
     reportText: "✅ OLUMLU: Kaçış yollarında kullanıcıyı yanıltacak kapı bulunmamaktadır."
   );
 
   static final yanilticiOptionB = ChoiceResult(
     label: "19-3-B",
-    uiTitle: "Evet, yanıltıcı kapılar var.",
+    uiTitle: "Evet, yanıltıcı kapı var, çıkış kapısını bulmakta güçlük çekebilirim.",
     uiSubtitle: "Depo/Elektrik odası kapıları merdiven kapısına benziyor.",
     reportText: "⚠️ RİSK: Kaçış yollarında yangın merdiveni ile karıştırılabilecek yanıltıcı kapılar mevcuttur."
   );
