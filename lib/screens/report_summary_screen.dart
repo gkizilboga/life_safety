@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_widgets.dart';
 import '../logic/report_engine.dart';
 import '../data/bina_store.dart';
-import '../utils/app_strings.dart';
+import 'dashboard_screen.dart';
 
 class ReportSummaryScreen extends StatelessWidget {
   const ReportSummaryScreen({super.key});
@@ -17,7 +17,7 @@ class ReportSummaryScreen extends StatelessWidget {
         children: [
           const ModernHeader(
             title: "Yangın Risk Analizi Ön Raporu",
-            subtitle: "Kullanıcı Beyanına Dayalı Teknik Tespitler",
+            subtitle: " ",
             screenType: ReportSummaryScreen,
           ),
           Expanded(
@@ -25,14 +25,15 @@ class ReportSummaryScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               children: [
                 _buildRiskPanel(metrics),
-                const SizedBox(height: 16),
-                _buildLegalWarningCard(),
                 const SizedBox(height: 20),
                 const Padding(
                   padding: EdgeInsets.only(left: 8, bottom: 12),
                   child: Text("ANALİZ DETAYLARI", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
                 ),
                 ...ReportModule.values.map((module) => _buildModuleCard(context, module)),
+                const SizedBox(height: 30),
+                _buildDashboardButton(context),
+                const SizedBox(height: 40),
               ],
             ),
           ),
@@ -41,30 +42,24 @@ class ReportSummaryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLegalWarningCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.amber.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.amber.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.gavel_rounded, color: Colors.amber.shade900, size: 20),
-              const SizedBox(width: 8),
-              Text("HUKUKİ BİLGİLENDİRME", style: TextStyle(color: Colors.amber.shade900, fontWeight: FontWeight.bold, fontSize: 12)),
-            ],
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            AppStrings.legalDisclaimerContent,
-            style: TextStyle(fontSize: 11, color: Colors.black87, height: 1.4),
-          ),
-        ],
+  Widget _buildDashboardButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF1A237E),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 4,
+        ),
+        onPressed: () {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const DashboardScreen()),
+            (Route<dynamic> route) => false,
+          );
+        },
+        child: const Text("ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN", 
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14)),
       ),
     );
   }
@@ -104,25 +99,6 @@ class ReportSummaryScreen extends StatelessWidget {
               _buildStatItem("Tamamlanma", "%${m['completion']}", Colors.blueAccent),
             ],
           ),
-          if (m['criticalCount'] > 0) ...[
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(12)),
-              child: Row(
-                children: [
-                  const Icon(Icons.warning_amber_rounded, color: Color(0xFFEF5350), size: 18),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      "Acil müdahale gereken konular: ${m['criticals'].join(', ')}...",
-                      style: const TextStyle(color: Colors.white70, fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
         ],
       ),
     );
@@ -158,6 +134,23 @@ class ReportSummaryScreen extends StatelessWidget {
   }
 
   Widget _buildModuleCard(BuildContext context, ReportModule module) {
+    List<Widget> visibleSections = [];
+    for (int id in module.sectionIds) {
+      // Bölüm 7 Filtresi
+      if (id == 7 && BinaStore.instance.bolum7?.isHicbiri == true) continue;
+      
+      // Bölüm 12 Filtresi
+      if (id == 12) {
+        int katSayisi = (BinaStore.instance.bolum3?.normalKatSayisi ?? 0) + (BinaStore.instance.bolum3?.bodrumKatSayisi ?? 0);
+        double alan = BinaStore.instance.bolum5?.toplamInsaatAlani ?? 0;
+        if (katSayisi < 2 || alan <= 5000) continue;
+      }
+
+      visibleSections.add(_buildSectionTile(context, id));
+    }
+
+    if (visibleSections.isEmpty) return const SizedBox.shrink();
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -170,7 +163,7 @@ class ReportSummaryScreen extends StatelessWidget {
         child: ExpansionTile(
           leading: const Icon(Icons.fact_check_outlined, color: Color(0xFF1A237E)),
           title: Text(module.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E), fontSize: 15)),
-          children: module.sectionIds.map((id) => _buildSectionTile(context, id)).toList(),
+          children: visibleSections,
         ),
       ),
     );
@@ -179,7 +172,7 @@ class ReportSummaryScreen extends StatelessWidget {
   Widget _buildSectionTile(BuildContext context, int id) {
     final summary = ReportEngine.getSectionSummary(id);
     final result = BinaStore.instance.getResultForSection(id);
-    final statusColor = ReportEngine.getStatusColor(result);
+    final statusColor = ReportEngine.getStatusColor(result, sectionId: id);
     final fullReport = ReportEngine.getSectionFullReport(id);
 
     return ListTile(
@@ -199,31 +192,33 @@ class ReportSummaryScreen extends StatelessWidget {
       builder: (context) => Container(
         padding: const EdgeInsets.all(24),
         decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
-            const SizedBox(height: 25),
-            Text("Bölüm $id: $title", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-            const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(15), border: Border.all(color: color.withOpacity(0.1))),
-              child: Text(report, style: const TextStyle(fontSize: 15, color: Color(0xFF2C3E50), height: 1.5, fontWeight: FontWeight.w500)),
-            ),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 15), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                onPressed: () => Navigator.pop(context),
-                child: const Text("ANLADIM", style: TextStyle(fontWeight: FontWeight.bold)),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)))),
+              const SizedBox(height: 25),
+              Text("Bölüm $id: $title", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(color: color.withOpacity(0.05), borderRadius: BorderRadius.circular(15), border: Border.all(color: color.withOpacity(0.1))),
+                child: Text(report, style: const TextStyle(fontSize: 15, color: Color(0xFF2C3E50), height: 1.5, fontWeight: FontWeight.w500)),
               ),
-            ),
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 15), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("ANLADIM", style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: 40), // Alt boşluk artırıldı
+            ],
+          ),
         ),
       ),
     );

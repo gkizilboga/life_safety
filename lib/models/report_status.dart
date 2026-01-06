@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum ReportStatus {
-  compliant(Colors.green, "Mevzuata Uygun"),
+  compliant(Colors.green, "Yeterli Görünüyor"),
   risk(Colors.red, "Kritik Risk"),
   warning(Colors.orange, "Uyarı / İyileştirme"),
   unknown(Colors.grey, "İnceleme Gerekiyor"),

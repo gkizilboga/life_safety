@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_25_model.dart';
 import 'bolum_26_screen.dart';
@@ -7,8 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import 'module_transition_screen.dart';
-import '../../logic/report_engine.dart';
+import '../../utils/app_assets.dart';
 
 class Bolum25Screen extends StatefulWidget {
   const Bolum25Screen({super.key});
@@ -19,34 +17,22 @@ class Bolum25Screen extends StatefulWidget {
 
 class _Bolum25ScreenState extends State<Bolum25Screen> {
   Bolum25Model _model = Bolum25Model();
-  bool _hasDonerMerdiven = false;
   bool _isCommercial = false;
 
   @override
   void initState() {
     super.initState();
-    _checkAndRedirect();
+    _checkLogicAndRedirect();
   }
 
-  void _checkAndRedirect() {
+  void _checkLogicAndRedirect() {
     final b20 = BinaStore.instance.bolum20;
     final b6 = BinaStore.instance.bolum6;
     final b10 = BinaStore.instance.bolum10;
-    
-    int donerCount = int.tryParse(b20?.donerMerdivenSayisi.toString() ?? "0") ?? 0;
-    int sahanliksizCount = int.tryParse(b20?.sahanliksizMerdivenSayisi.toString() ?? "0") ?? 0;
 
-    bool hasTicari = (b6?.hasTicari ?? false) ||
-                     (b10?.zemin?.label.contains("Ticari") ?? false) ||
-                     (b10?.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false) ?? false) ||
-                     (b10?.normaller.any((e) => e?.label.contains("Ticari") ?? false) ?? false);
+    int donerCount = b20?.donerMerdivenSayisi ?? 0;
 
-    if (donerCount > 0 || sahanliksizCount > 0) {
-      setState(() {
-        _hasDonerMerdiven = true;
-        _isCommercial = hasTicari;
-      });
-    } else {
+    if (donerCount == 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
           context,
@@ -54,6 +40,15 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
         );
       });
     }
+
+    bool hasTicari = (b6?.hasTicari ?? false) ||
+        (b10?.zemin?.label.contains("Ticari") ?? false) ||
+        (b10?.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false) ?? false) ||
+        (b10?.normaller.any((e) => e?.label.contains("Ticari") ?? false) ?? false);
+
+    setState(() {
+      _isCommercial = hasTicari;
+    });
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
@@ -64,121 +59,76 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
     });
   }
 
-  void _onNextPressed() {
-    if (_model.kapasite == null || _model.basamak == null || _model.basKurtarma == null) {
-      _showError("Lütfen tüm soruları yanıtlayınız.");
-      return;
-    }
-
-    BinaStore.instance.bolum25 = _model;
-    BinaStore.instance.saveToDisk();
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ModuleTransitionScreen(
-          module: ReportModule.modul3,
-          onContinue: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const Bolum26Screen()),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  bool _isReady() {
+    return _model.kapasite != null && _model.basamak != null && _model.basKurtarma != null;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_hasDonerMerdiven) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Döner Merdiven Analizi",
+      subtitle: "Dairesel merdivenlerin tahliye uygunluğu",
+      screenType: widget.runtimeType,
+      isNextEnabled: _isReady(),
+      onNext: () {
+        BinaStore.instance.bolum25 = _model;
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum26Screen()));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernHeader(
-            title: "Bölüm-25: Döner (Dairesel) Merdiven",
-            subtitle: "Dairesel merdivenlerin tahliye uygunluğu",
-            screenType: widget.runtimeType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  if (_isCommercial) _buildCriticalWarning(),
-                  _buildSoru("Mevcut döner (dairesel) merdiveninizin kol genişliği ne kadar?", 'kapasite', 
-                    [Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB, Bolum25Content.kapasiteOptionC], _model.kapasite),
-                  _buildSoru("Dairesel merdivenin basamak genişliği ne kadar?", 'basamak', 
-                    [Bolum25Content.basamakOptionA, Bolum25Content.basamakOptionB, Bolum25Content.basamakOptionC], _model.basamak),
-                  _buildSoru("Dairesel merdivenden inerken üstteki basamakla aranızdaki boşluk ne kadar?", 'basKurtarma', 
-                    [Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB, Bolum25Content.basKurtarmaOptionC], _model.basKurtarma),
-                ],
-              ),
+          if (_isCommercial) _buildCommercialWarning(),
+          const Padding(
+            padding: EdgeInsets.only(left: 4, bottom: 12),
+            child: Text(
+              "Dairesel merdiven teknik ölçümleri:",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
             ),
           ),
-          _buildBottomNav(),
+          const SizedBox(height: 8),
+          _buildSoru(
+            "1. Merdiven kol genişliği ve hizmet verdiği kişi sayısı nedir?",
+            'kapasite',
+            [Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB, Bolum25Content.kapasiteOptionC],
+            _model.kapasite,
+          ),
+          _buildSoru(
+            "2. Basamak genişliği (basış yüzeyi) yeterli mi?",
+            'basamak',
+            [Bolum25Content.basamakOptionA, Bolum25Content.basamakOptionB, Bolum25Content.basamakOptionC],
+            _model.basamak,
+          ),
+          _buildSoru(
+            "3. Baş kurtarma yüksekliği ne kadardır?",
+            'basKurtarma',
+            [Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB, Bolum25Content.basKurtarmaOptionC],
+            _model.basKurtarma,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildCriticalWarning() {
+  Widget _buildCommercialWarning() {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.red.shade50,
+        color: const Color(0xFFFFEBEE),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.shade200),
+        border: Border.all(color: const Color(0xFFEF9A9A)),
       ),
-      child: Row(
+      child: const Row(
         children: [
-          Icon(Icons.gavel_rounded, color: Colors.red.shade900, size: 28),
-          const SizedBox(width: 15),
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "TİCARİ ALAN UYARISI",
-                  style: TextStyle(color: Color(0xFFB71C1C), fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  "Yönetmelik gereği ticari alanlarda döner merdiven ana kaçış yolu olarak kullanılamaz.",
-                  style: TextStyle(color: Colors.black87, fontSize: 12),
-                ),
-              ],
+          Icon(Icons.gavel_rounded, color: Color(0xFFC62828), size: 28),
+          SizedBox(width: 15),
+          Expanded(
+            child: Text(
+              "YÖNETMELİK KISITLAMASI: Binada ticari alan bulunduğu için döner merdivenler kaçış yolu olarak kabul edilemez. Lütfen teknik ölçümleri yine de yapınız.",
+              style: TextStyle(color: Color(0xFFB71C1C), fontSize: 12, fontWeight: FontWeight.bold),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _onNextPressed,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
       ),
     );
   }
@@ -188,13 +138,13 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
+          Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+          const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+                choice: opt,
+                isSelected: selected?.label == opt.label,
+                onTap: () => _handleSelection(key, opt),
+              )),
         ],
       ),
     );

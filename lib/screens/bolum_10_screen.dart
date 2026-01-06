@@ -95,7 +95,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kat Kullanım Amaçları",
-      subtitle: "Her katın fonksiyonel yükünü belirleyin",
+      subtitle: "Katların kullanıcı yoğunluğunu belirleyin",
       screenType: widget.runtimeType,
       isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
       onNext: () {
@@ -120,13 +120,13 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle("Zemin Kat"),
+          _buildSectionTitle("Zemin Katın Kullanım Amacı"),
           _buildChoiceGrid('zemin', null, _model.zemin),
 
           if (_model.bodrumlar.isNotEmpty) ...[
-            SizedBox(key: _bodrumKey, height: 20),
-            _buildSectionTitle("Bodrum Katlar"),
-            _buildToggleRow("Tüm bodrumlar aynı", _model.bodrumlarAyni, (val) {
+            SizedBox(key: _bodrumKey, height: 30),
+            _buildSectionTitle("Bodrum Katların Baskın Kullanım Amacı"),
+            _buildToggleRow("Tüm bodrumlar aynı fonksiyona sahip", _model.bodrumlarAyni, (val) {
               setState(() => _model = _model.copyWith(bodrumlarAyni: val));
             }),
             if (_model.bodrumlarAyni)
@@ -137,8 +137,8 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 8, left: 4),
-                      child: Text("${i + 1}. Bodrum Kat", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      padding: const EdgeInsets.only(top: 12, bottom: 8, left: 4),
+                      child: Text("${i + 1}. Bodrum Katın Kullanım Amacı", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                     ),
                     _buildChoiceGrid('bodrum', i, _model.bodrumlar[i]),
                   ],
@@ -147,9 +147,9 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           ],
 
           if (_model.normaller.isNotEmpty) ...[
-            SizedBox(key: _normalKey, height: 20),
-            _buildSectionTitle("Normal Katlar"),
-            _buildToggleRow("Tüm normal katlar aynı", _model.normallerAyni, (val) {
+            SizedBox(key: _normalKey, height: 30),
+            _buildSectionTitle("Normal Katların Baskın Kullanım Amacı"),
+            _buildToggleRow("Tüm normal katlar aynı fonksiyona sahip", _model.normallerAyni, (val) {
               setState(() => _model = _model.copyWith(normallerAyni: val));
             }),
             if (_model.normallerAyni)
@@ -160,8 +160,8 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 8, left: 4),
-                      child: Text("${i + 1}. Normal Kat", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      padding: const EdgeInsets.only(top: 12, bottom: 8, left: 4),
+                      child: Text("${i + 1}. Normal Katın Kullanım Amacı", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                     ),
                     _buildChoiceGrid('normal', i, _model.normaller[i]),
                   ],
@@ -172,7 +172,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           if (_checkIfComplete()) 
             Padding(
               key: _summaryKey,
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 30),
               child: _buildSummaryCard(),
             ),
         ],
@@ -209,7 +209,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12, left: 4),
-      child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
+      child: Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
     );
   }
 
@@ -246,7 +246,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
             ],
           ),
           CheckboxListTile(
-            title: const Text("Kat kullanım amaçlarını doğru işaretlediğimi onaylıyorum.", style: TextStyle(fontSize: 13)),
+            title: const Text("Katların kullanım amaçlarını doğru işaretlediğimi onaylıyorum.", style: TextStyle(fontSize: 13)),
             value: _isSummaryAccepted,
             onChanged: (val) => setState(() => _isSummaryAccepted = val ?? false),
             controlAffinity: ListTileControlAffinity.leading,

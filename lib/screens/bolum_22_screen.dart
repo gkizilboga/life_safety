@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_22_model.dart';
-import 'bolum_23_screen.dart'; 
+import 'bolum_23_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -27,7 +27,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
   }
 
   void _checkHeight() {
-    _currentHeight = BinaStore.instance.bolum4?.hesaplananBinaYuksekligi ?? 0.0;
+    _currentHeight = BinaStore.instance.bolum3?.hYapi ?? 0.0;
     setState(() {
       _isMandatory = _currentHeight >= 51.50;
     });
@@ -84,6 +84,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeightInfoCard(),
+          
           _buildSoru(
             "1. Binanızda İtfaiye (acil durum) asansörü var mı?", 
             'varlik', 
@@ -151,8 +152,8 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
           Expanded(
             child: Text(
               _isMandatory 
-                ? "Bina yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
-                : "Bina yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
+                ? "Yapı yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
+                : "Yapı yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
               style: TextStyle(
                 fontSize: 13, 
                 fontWeight: FontWeight.bold, 

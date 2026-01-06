@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum25Model {
@@ -33,19 +33,31 @@ class Bolum25Model {
   }
 
   factory Bolum25Model.fromMap(Map<String, dynamic> map) {
-    ChoiceResult? find(String? l) {
+    ChoiceResult? find(String? l, List<ChoiceResult> options) {
       if (l == null) return null;
-      return [
-        Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB, Bolum25Content.kapasiteOptionC,
-        Bolum25Content.basamakOptionA, Bolum25Content.basamakOptionB, Bolum25Content.basamakOptionC,
-        Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB, Bolum25Content.basKurtarmaOptionC,
-      ].firstWhere((e) => e.label == l, orElse: () => Bolum25Content.kapasiteOptionC);
+      try {
+        return options.firstWhere((e) => e.label == l);
+      } catch (_) {
+        return null;
+      }
     }
 
     return Bolum25Model(
-      kapasite: find(map['kapasite_label']),
-      basamak: find(map['basamak_label']),
-      basKurtarma: find(map['basKurtarma_label']),
+      kapasite: find(map['kapasite_label'], [
+        Bolum25Content.kapasiteOptionA,
+        Bolum25Content.kapasiteOptionB,
+        Bolum25Content.kapasiteOptionC
+      ]),
+      basamak: find(map['basamak_label'], [
+        Bolum25Content.basamakOptionA,
+        Bolum25Content.basamakOptionB,
+        Bolum25Content.basamakOptionC
+      ]),
+      basKurtarma: find(map['basKurtarma_label'], [
+        Bolum25Content.basKurtarmaOptionA,
+        Bolum25Content.basKurtarmaOptionB,
+        Bolum25Content.basKurtarmaOptionC
+      ]),
     );
   }
 }

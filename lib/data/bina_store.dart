@@ -38,6 +38,7 @@ import '../models/bolum_35_model.dart';
 import '../models/bolum_36_model.dart';
 import '../models/choice_result.dart';
 import '../utils/app_content.dart';
+import '../logic/report_engine.dart';
 
 class BinaStore {
   static final BinaStore _instance = BinaStore._internal();

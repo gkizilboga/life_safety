@@ -38,9 +38,9 @@ class Bolum27Model {
     }
     return Bolum27Model(
       boyut: find(map['boyut_label'], [Bolum27Content.boyutOptionA, Bolum27Content.boyutOptionB, Bolum27Content.boyutOptionC]),
-      yon: find(map['yon_label'], [Bolum27Content.yonOptionA, Bolum27Content.yonOptionB, Bolum27Content.yonOptionC, Bolum27Content.yonOptionD]),
-      kilit: find(map['kilit_label'], [Bolum27Content.kilitOptionA, Bolum27Content.kilitOptionB, Bolum27Content.kilitOptionC, Bolum27Content.kilitOptionD]),
-      dayanim: find(map['dayanim_label'], [Bolum27Content.dayanimOptionA, Bolum27Content.dayanimOptionB, Bolum27Content.dayanimOptionC, Bolum27Content.dayanimOptionD]),
+      yon: find(map['yon_label'], [Bolum27Content.yonOptionA, Bolum27Content.yonOptionB, Bolum27Content.yonOptionC, Bolum27Content.yonOptionD, Bolum27Content.yonOptionE]),
+      kilit: find(map['kilit_label'], [Bolum27Content.kilitOptionA, Bolum27Content.kilitOptionB, Bolum27Content.kilitOptionC, Bolum27Content.kilitOptionD, Bolum27Content.kilitOptionE]),
+      dayanim: find(map['dayanim_label'], [Bolum27Content.dayanimOptionA, Bolum27Content.dayanimOptionB, Bolum27Content.dayanimOptionC, Bolum27Content.dayanimOptionD, Bolum27Content.dayanimOptionE]),
     );
   }
 }

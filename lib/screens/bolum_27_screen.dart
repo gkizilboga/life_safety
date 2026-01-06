@@ -19,7 +19,7 @@ class Bolum27Screen extends StatefulWidget {
 class _Bolum27ScreenState extends State<Bolum27Screen> {
   Bolum27Model _model = Bolum27Model();
   bool _needsFireDoor = false; 
-  int _maxUserLoad = 0; // double yerine int yapıldı
+  int _maxUserLoad = 0;
 
   @override
   void initState() {
@@ -29,7 +29,6 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
 
   void _loadLogicData() {
     final b20 = BinaStore.instance.bolum20;
-    
     int closedStairsCount = 0;
     if (b20 != null) {
       closedStairsCount += b20.binaIciYanginMerdiveniSayisi; 
@@ -38,9 +37,8 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
     bool needsFireDoor = closedStairsCount > 0;
 
     final b33 = BinaStore.instance.bolum33;
-    int maxLoad = 0; // double yerine int yapıldı
+    int maxLoad = 0;
     if (b33 != null) {
-      // Bölüm 33'ten gelen veriler artık int olduğu için math.max int döner
       maxLoad = math.max(b33.yukZemin ?? 0, math.max(b33.yukNormal ?? 0, b33.yukBodrum ?? 0));
     }
 
@@ -55,14 +53,14 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
       if (type == 'boyut') _model = _model.copyWith(boyut: choice);
       if (type == 'yon') {
         _model = _model.copyWith(yon: choice);
-        if (_maxUserLoad > 50 && choice.label == Bolum27Content.yonOptionB.label) {
-          _showWarning("⚠️ DİKKAT: Kullanıcı yükü 50 kişiyi aştığı için kapıların kaçış yönüne açılması zorunludur!");
+        if (_maxUserLoad > 50 && (choice.label == Bolum27Content.yonOptionB.label || choice.label == Bolum27Content.yonOptionD.label)) {
+          _showWarning("⚠️ DİKKAT: Kullanıcı yükü 50 kişiyi aştığı için tüm kapıların kaçış yönüne açılması zorunludur!");
         }
       }
       if (type == 'kilit') {
         _model = _model.copyWith(kilit: choice);
-        if (_maxUserLoad > 100 && choice.label == Bolum27Content.kilitOptionB.label) {
-          _showWarning("⚠️ DİKKAT: Kullanıcı yükü 100 kişiyi aştığı için PANİK BAR zorunludur!");
+        if (_maxUserLoad > 100 && (choice.label == Bolum27Content.kilitOptionB.label || choice.label == Bolum27Content.kilitOptionD.label)) {
+          _showWarning("⚠️ DİKKAT: Kullanıcı yükü 100 kişiyi aştığı için tüm kapılarda hem kaçış yönünde açılma hem de PANİK BAR zorunludur!");
         }
       }
       if (type == 'dayanim') _model = _model.copyWith(dayanim: choice);
@@ -85,11 +83,12 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kaçış Yolu Kapıları",
-      subtitle: "Kapıların yön, kilit ve dayanım analizi",
+      subtitle: " ",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
         BinaStore.instance.bolum27 = _model;
+        BinaStore.instance.saveToDisk();
         Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum28Screen()));
       },
       child: Column(
@@ -97,23 +96,23 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
         children: [
           _buildEnZayifHalkaUyarisi(),
 
-          _buildSoruHeader("1. Kaçış kapılarının genişliği ve zemini ne durumdadır?"),
+          _buildSoruHeader("1. Kaçış kapılarının genişliği ve zemini ne durumdadır? (daire kapısı hariç)"),
           TechnicalDrawingButton(assetPath: AppAssets.section27YanginKapisi, title: "Kapı Genişliği ve Eşik Standartı"),
           _buildSoruCard('boyut', [Bolum27Content.boyutOptionA, Bolum27Content.boyutOptionB, Bolum27Content.boyutOptionC], _model.boyut),
 
-          _buildSoruHeader("2. Kaçış kapıları hangi yöne açılıyor?"),
+          _buildSoruHeader("2. Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)"),
           TechnicalDrawingButton(assetPath: AppAssets.section27KacisYonu, title: "Kapı Açılış Yönü Kriterleri"),
-          _buildSoruCard('yon', [Bolum27Content.yonOptionA, Bolum27Content.yonOptionB, Bolum27Content.yonOptionC, Bolum27Content.yonOptionD], _model.yon),
+          _buildSoruCard('yon', [Bolum27Content.yonOptionA, Bolum27Content.yonOptionB, Bolum27Content.yonOptionC, Bolum27Content.yonOptionD, Bolum27Content.yonOptionE], _model.yon),
 
-          _buildSoruHeader("3. Kapı kilit mekanizması nasıldır?"),
+          _buildSoruHeader("3. Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)"),
           TechnicalDrawingButton(assetPath: AppAssets.section27KilitTipi, title: "Kilit ve Panik Bar Tipleri"),
-          _buildSoruCard('kilit', [Bolum27Content.kilitOptionA, Bolum27Content.kilitOptionB, Bolum27Content.kilitOptionC, Bolum27Content.kilitOptionD], _model.kilit),
+          _buildSoruCard('kilit', [Bolum27Content.kilitOptionA, Bolum27Content.kilitOptionB, Bolum27Content.kilitOptionC, Bolum27Content.kilitOptionD, Bolum27Content.kilitOptionE], _model.kilit),
 
           if (_needsFireDoor) ...[
             const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider(thickness: 1.5)),
             _buildInfoNote("Binada kapalı yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır."),
             _buildSoruHeader("4. Kapalı yangın merdiveni kapısının malzemesi nedir?"),
-            _buildSoruCard('dayanim', [Bolum27Content.dayanimOptionA, Bolum27Content.dayanimOptionB, Bolum27Content.dayanimOptionC, Bolum27Content.dayanimOptionD], _model.dayanim),
+            _buildSoruCard('dayanim', [Bolum27Content.dayanimOptionA, Bolum27Content.dayanimOptionB, Bolum27Content.dayanimOptionC, Bolum27Content.dayanimOptionD, Bolum27Content.dayanimOptionE], _model.dayanim),
           ],
         ],
       ),
@@ -147,7 +146,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
       child: const Row(children: [
         Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24),
         SizedBox(width: 12),
-        Expanded(child: Text("Lütfen kaçış yolunuz üzerindeki durumu EN KÖTÜ olan kapıyı baz alarak cevap veriniz.", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12))),
+        Expanded(child: Text("Lütfen kaçış yolunuz üzerinde EN KÖTÜ durumdaki kapıyı baz alarak cevap veriniz. (daire kapısı hariç)", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12))),
       ]),
     );
   }
