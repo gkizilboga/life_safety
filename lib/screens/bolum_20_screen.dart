@@ -23,6 +23,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
   bool _isTekKatli = false;
   bool _hasBodrum = false;
+  bool _showBasinclandirma = false;
 
   final _normalCtrl = TextEditingController();
   final _icKapaliCtrl = TextEditingController();
@@ -35,6 +36,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   void initState() {
     super.initState();
     _loadBuildingInfo();
+    _icKapaliCtrl.addListener(_checkBasinclandirmaVisibility);
+    _disKapaliCtrl.addListener(_checkBasinclandirmaVisibility);
   }
 
   void _loadBuildingInfo() {
@@ -46,6 +49,15 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     setState(() {
       _isTekKatli = (toplamKat == 1);
       _hasBodrum = (bKat > 0);
+    });
+  }
+
+  void _checkBasinclandirmaVisibility() {
+    int ic = int.tryParse(_icKapaliCtrl.text) ?? 0;
+    int dis = int.tryParse(_disKapaliCtrl.text) ?? 0;
+    setState(() {
+      _showBasinclandirma = (ic >= 1 || dis >= 1);
+      if (!_showBasinclandirma) _model = _model.copyWith(basinclandirma: null);
     });
   }
 
@@ -64,6 +76,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     setState(() {
       if (type == 'tekKatCikis') _model = _model.copyWith(tekKatCikis: choice);
       if (type == 'tekKatRampa') _model = _model.copyWith(tekKatRampa: choice);
+      if (type == 'basinclandirma') _model = _model.copyWith(basinclandirma: choice);
       if (type == 'bodrum') _model = _model.copyWith(bodrumMerdivenDevami: choice);
     });
   }
@@ -80,6 +93,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       int sahanliksiz = int.tryParse(_sahanliksizCtrl.text) ?? 0;
 
       if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz == 0) return false;
+      if (_showBasinclandirma && _model.basinclandirma == null) return false;
 
       _model = _model.copyWith(
         normalMerdivenSayisi: normal,
@@ -195,6 +209,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               ),
             ),
           ],
+
+          if (_showBasinclandirma)
+            _buildSoru("Merdivende basınçlandırma sistemi var mı?", 'basinclandirma', 
+              [Bolum20Content.basYghOptionA, Bolum20Content.basYghOptionB, Bolum20Content.basYghOptionC], _model.basinclandirma),
 
           if (_hasBodrum)
             _buildSoru("Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?", 'bodrum', 

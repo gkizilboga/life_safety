@@ -5,9 +5,9 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../data/bina_store.dart';
 import '../models/choice_result.dart';
+import '../logic/report_engine.dart';
 
 class PdfService {
-  // Emojileri temizlemek için yardımcı fonksiyon
   static String _sanitizeText(String text) {
     return text
         .replaceAll('✅', '[UYGUN]')
@@ -15,7 +15,8 @@ class PdfService {
         .replaceAll('🚨', '[KRITIK]')
         .replaceAll('☢️', '[TEHLIKE]')
         .replaceAll('❓', '[BILINMIYOR]')
-        .replaceAll('❌', '[OLUMSUZ]');
+        .replaceAll('❌', '[OLUMSUZ]')
+        .replaceAll('<br>', '\n');
   }
 
   static Future<void> generateAndShowPdf() async {
@@ -27,8 +28,8 @@ class PdfService {
     final ttfBold = pw.Font.ttf(boldFontData);
 
     final store = BinaStore.instance;
+    final yghReasons = ReportEngine.evaluateYghRequirement();
 
-    // 1. KAPAK SAYFASI
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -83,7 +84,6 @@ class PdfService {
       ),
     );
 
-    // 2. İÇERİK SAYFALARI (MultiPage)
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
@@ -120,6 +120,40 @@ class PdfService {
             pw.Text("Aşağıdaki veriler kullanıcı beyanına göre ön değerlendirmeye tabi tutulmuştur.",
                 style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700)),
             pw.SizedBox(height: 20),
+
+            if (yghReasons.isNotEmpty) ...[
+              pw.Container(
+                margin: const pw.EdgeInsets.only(bottom: 25),
+                padding: const pw.EdgeInsets.all(15),
+                decoration: pw.BoxDecoration(
+                  color: PdfColors.orange50,
+                  border: pw.Border.all(color: PdfColors.orange200, width: 1),
+                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                ),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text("YGH (YANGIN GÜVENLİK HOLÜ) ZORUNLULUK DEĞERLENDİRMESİ",
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 11, color: PdfColors.orange900)),
+                    pw.SizedBox(height: 8),
+                    pw.Text("Yönetmelik Madde 48 ve ilgili hükümler uyarınca binanızda YGH zorunluluğu aşağıdaki gerekçelerle tespit edilmiştir:",
+                        style: const pw.TextStyle(fontSize: 9, color: PdfColors.black)),
+                    pw.SizedBox(height: 10),
+                    ...yghReasons.map((reason) => pw.Padding(
+                      padding: const pw.EdgeInsets.only(bottom: 4),
+                      child: pw.Row(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text("• ", style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                          pw.Expanded(child: pw.Text(reason, style: const pw.TextStyle(fontSize: 9))),
+                        ],
+                      ),
+                    )),
+                  ],
+                ),
+              ),
+            ],
+
             ...List.generate(36, (index) {
               final sectionId = index + 1;
               final ChoiceResult? result = store.getResultForSection(sectionId);

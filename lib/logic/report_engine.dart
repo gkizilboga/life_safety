@@ -20,6 +20,41 @@ enum ReportModule {
 class ReportEngine {
   static double get _hYapi => BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? 0.0;
 
+  static List<String> evaluateYghRequirement() {
+    final store = BinaStore.instance;
+    List<String> reasons = [];
+
+    if (_hYapi >= 51.50) {
+      reasons.add("Yapı yüksekliğinin 51.50 metre ve üzerinde olması nedeniyle tüm kaçış merdivenleri önünde YGH yapılması mecburidir.");
+    }
+
+    if (store.bolum10 != null) {
+      bool hasBasementRisk = store.bolum10!.bodrumlar.any((c) => 
+        c != null && (c.label == "10-B" || c.label == "10-C" || c.label == "10-D" || c.label == "10-E")
+      );
+      if (hasBasementRisk) {
+        reasons.add("Bodrum katlarda konut harici (Ticari, Depo, Otopark veya Teknik Hacim) kullanım beyan edildiği için bu katlarda merdiven önünde YGH zorunludur.");
+      }
+    }
+
+    if (store.bolum22?.varlik?.label == "22-1-B") {
+      reasons.add("Binada İtfaiye Asansörü bulunduğu için, asansörün her katta bir yangın güvenlik holüne açılması teknik bir zorunluluktur.");
+    }
+
+    int bodrumSayisi = int.tryParse(store.bolum3?.bodrumKatSayisi?.toString() ?? "0") ?? 0;
+    if (bodrumSayisi >= 1 && store.bolum23 != null) {
+      if (store.bolum23!.bodrum?.label == "23-1-B" || store.bolum23!.bodrum?.label == "23-1-C") {
+        reasons.add("Bodrum kata inen asansörün/merdivenin direkt riskli alanlara (Otopark, Kazan Dairesi vb.) açılması nedeniyle duman sızdırmaz hol (YGH) yapılması şarttır.");
+      }
+    }
+
+    if (_hYapi > 30.50 && store.bolum20?.basinclandirma?.label == "20-BAS-B") {
+      reasons.add("Yapı yüksekliği 30.50 metreyi aşan ve merdiven basınçlandırma sistemi bulunmayan binalarda YGH yapılması yönetmelik gereği zorunludur.");
+    }
+
+    return reasons;
+  }
+
   static Map<String, dynamic> calculateRiskMetrics() {
     int totalSections = 36;
     int filledSections = 0;

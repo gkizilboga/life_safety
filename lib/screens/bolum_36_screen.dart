@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_36_model.dart';
 import '../../widgets/custom_widgets.dart';
@@ -7,6 +8,8 @@ import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_assets.dart';
 import 'report_summary_screen.dart';
+import 'module_transition_screen.dart';
+import '../../logic/report_engine.dart';
 
 class Bolum36Screen extends StatefulWidget {
   const Bolum36Screen({super.key});
@@ -25,46 +28,20 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   final GlobalKey _kapiKey = GlobalKey();
   final GlobalKey _gorunurlukKey = GlobalKey();
 
-  int _cntDisCelik = 0;
-  bool _isHighBuilding = false;
-  bool _showStep0Warning = false;
   bool _genislikBilinmiyor = false;
   bool _kapiGenislikBilinmiyor = false;
+  int _cntDisCelik = 0;
+  int _totalValidCikisSayisi = 0;
 
   @override
   void initState() {
     super.initState();
-    _performPreCalculations();
-  }
-
-  void _performPreCalculations() {
-    final b4 = BinaStore.instance.bolum4;
-    final b20 = BinaStore.instance.bolum20;
-    
-    double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
-    _isHighBuilding = hBina >= 21.50;
-
-    int rawDoner = b20?.donerMerdivenSayisi ?? 0;
-    int validDoner = (hBina <= 9.50) ? rawDoner : 0;
-    bool donerElendi = (rawDoner > 0 && validDoner == 0);
-
-    _cntDisCelik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
-    int validDisCelik = (hBina <= 21.50) ? _cntDisCelik : 0;
-    bool disCelikElendi = (_cntDisCelik > 0 && validDisCelik == 0);
-
-    int totalValid = (b20?.normalMerdivenSayisi ?? 0) + 
-                     (b20?.binaIciYanginMerdiveniSayisi ?? 0) + 
-                     (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) + 
-                     validDoner + validDisCelik;
-
-    setState(() {
-      _model = _model.copyWith(
-        totalValidCikisSayisi: totalValid,
-        donerElendi: donerElendi,
-        disCelikElendi: disCelikElendi,
-      );
-      _showStep0Warning = donerElendi || disCelikElendi;
-    });
+    _cntDisCelik = BinaStore.instance.bolum20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
+    _totalValidCikisSayisi = (BinaStore.instance.bolum20?.normalMerdivenSayisi ?? 0) + 
+                             (BinaStore.instance.bolum20?.binaIciYanginMerdiveniSayisi ?? 0) + 
+                             (BinaStore.instance.bolum20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) + 
+                             (BinaStore.instance.bolum20?.donerMerdivenSayisi ?? 0) + 
+                             _cntDisCelik;
   }
 
   void _scrollToKey(GlobalKey key) {
@@ -84,6 +61,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
+      if (type == 'cikisKati') _model = _model.copyWith(cikisKati: choice);
       if (type == 'disMerd') {
         _model = _model.copyWith(disMerd: choice);
         _scrollToKey(_konumKey);
@@ -100,35 +78,104 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     });
   }
 
+  String _evaluateStairsAndExits() {
+    final store = BinaStore.instance;
+    final b4 = store.bolum4;
+    final b20 = store.bolum20;
+    final b33 = store.bolum33;
+
+    double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
+    double hYapi = b4?.hesaplananYapiYuksekligi ?? 0.0;
+
+    int korunumlu = (b20?.binaIciYanginMerdiveniSayisi ?? 0) + (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0);
+    // int korunumsuz = (b20?.normalMerdivenSayisi ?? 0) + (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0) + (b20?.donerMerdivenSayisi ?? 0); // Kullanılmadığı için kaldırıldı
+    int sahanliksiz = b20?.sahanliksizMerdivenSayisi ?? 0;
+    int doner = b20?.donerMerdivenSayisi ?? 0;
+    int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
+    bool basinclandirmaVar = b20?.basinclandirma?.label == "20-BAS-A";
+
+    List<String> notes = [];
+
+    // 1. Yasaklı Merdiven Kontrolleri
+    if (sahanliksiz > 0) {
+      notes.add("🚨 KRİTİK RİSK: Binada 'Sahanlıksız Merdiven' tespit edilmiştir. Bu merdiven tipi hiçbir binada kaçış yolu olarak kabul edilemez.");
+    }
+    if (hBina > 9.50 && doner > 0) {
+      notes.add("🚨 KRİTİK RİSK: Bina yüksekliği 9.50m üzerinde olduğu için 'Döner Merdiven' kullanımı yasaktır.");
+    }
+    if (hBina > 21.50 && disAcik > 0) {
+      notes.add("🚨 KRİTİK RİSK: Bina yüksekliği 21.50m üzerinde olduğu için 'Bina Dışı Açık Çelik Merdiven' kullanımı yasaktır.");
+    }
+
+    // 2. Yapı Yüksekliğine Göre Gereksinimler
+    if (hYapi < 21.50) {
+      notes.add("✅ BİLGİ: Yapı yüksekliği 21.50m altındadır. Sahanlıksız merdiven hariç tüm merdiven tipleri (Korunumlu/Korunumsuz) kullanılabilir.");
+    } else if (hYapi >= 21.50 && hYapi < 30.50) {
+      if (korunumlu >= 1) {
+        notes.add("✅ UYGUN: Yapı yüksekliği 21.50m-30.50m arasındadır ve en az 1 adet korunumlu merdiven mevcuttur.");
+      } else {
+        notes.add("🚨 RİSK: Yapı yüksekliği 21.50m-30.50m arasındadır. En az 1 adet 'Korunumlu Merdiven' zorunludur.");
+      }
+      notes.add("ℹ️ NOT: Her daireden her iki merdivene de ulaşım sağlanması gerekmektedir.");
+    } else if (hYapi >= 30.50 && hYapi < 51.50) {
+      if (korunumlu >= 2) {
+        notes.add("✅ UYGUN: Yapı yüksekliği 30.50m-51.50m arasındadır ve en az 2 adet korunumlu merdiven mevcuttur.");
+      } else {
+        notes.add("🚨 RİSK: Yapı yüksekliği 30.50m-51.50m arasındadır. En az 2 adet 'Korunumlu Merdiven' zorunludur.");
+      }
+      notes.add("ℹ️ NOT: Korunumlu merdivenlerden en az birinin önünde YGH veya Basınçlandırma Sistemi olmalıdır.");
+    } else if (hYapi >= 51.50) {
+      if (korunumlu >= 2) {
+        notes.add("✅ UYGUN: Yapı yüksekliği 51.50m üzerindedir ve en az 2 adet korunumlu merdiven mevcuttur.");
+      } else {
+        notes.add("🚨 RİSK: Yapı yüksekliği 51.50m üzerindedir. En az 2 adet 'Korunumlu Merdiven' zorunludur.");
+      }
+      if (!basinclandirmaVar) {
+        notes.add("🚨 RİSK: 51.50m üzeri binalarda her iki korunumlu merdivende de YGH ve Basınçlandırma Sistemi zorunludur.");
+      }
+    }
+
+    // 3. Çıkış Sayısı Değerlendirmesi (Bölüm 33 Entegrasyonu)
+    int gerekli = b33?.gerekliNormal ?? 0;
+    int mevcut = b33?.mevcutUst ?? 0;
+    
+    if (mevcut >= gerekli) {
+      notes.add("✅ ÇIKIŞ SAYISI: Mevcut çıkış sayısı ($mevcut), gereken sayıdan ($gerekli) fazladır veya eşittir.");
+    } else {
+      notes.add("🚨 ÇIKIŞ SAYISI YETERSİZ: Yönetmelik gereği $gerekli çıkış gerekirken, binada sadece $mevcut çıkış bulunmaktadır.");
+    }
+
+    return notes.join("\n\n");
+  }
+
   void _onFinishPressed() {
     double? gen = _genislikBilinmiyor ? null : double.tryParse(_genislikCtrl.text.replaceAll(',', '.'));
     double? kGen = _kapiGenislikBilinmiyor ? null : double.tryParse(_kapiGenislikCtrl.text.replaceAll(',', '.'));
     
-    _model = _model.copyWith(genislik: gen, kapiGenislik: kGen);
+    String finalReport = _evaluateStairsAndExits();
+
+    _model = _model.copyWith(
+      genislik: gen, 
+      kapiGenislik: kGen,
+      merdivenDegerlendirme: finalReport
+    );
 
     BinaStore.instance.bolum36 = _model;
     BinaStore.instance.saveToDisk();
-    _showFinishDialog();
-  }
-
-  void _showFinishDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text("Analiz Tamamlandı", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
-        content: const Text("Tüm veriler başarıyla işlendi. Binanızın yangın risk analiz raporu hazırlandı."),
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ReportSummaryScreen()), (route) => false);
-            },
-            child: const Text("RAPORU GÖRÜNTÜLE"),
-          ),
-        ],
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ModuleTransitionScreen(
+          module: ReportModule.modul5,
+          onContinue: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const ReportSummaryScreen()),
+              (route) => false,
+            );
+          },
+        ),
       ),
     );
   }
@@ -136,23 +183,27 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Kapasite Kontrol",
+      title: "Kapasite ve Uygunluk",
       subtitle: "Son ölçümler ve erişim denetimi",
       screenType: widget.runtimeType,
       onNext: _onFinishPressed,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (_showStep0Warning) _buildStep0Card(),
-          
+          _buildSoruHeader("Binadan dış havaya (atmosfere) çıktığınız kat hangisidir?"),
+          _buildSoruCard('cikisKati', [
+            Bolum36Content.cikisKatiOptionA,
+            Bolum36Content.cikisKatiOptionB,
+            Bolum36Content.cikisKatiOptionC
+          ], _model.cikisKati),
+
           if (_cntDisCelik > 0) ...[
-            if (_isHighBuilding) _buildHighBuildingWarning(),
             _buildSoruHeader("Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?"),
             _buildSoruCard('disMerd', [Bolum36Content.disMerdOptionA, Bolum36Content.disMerdOptionB, Bolum36Content.disMerdOptionC], _model.disMerd),
           ],
 
           SizedBox(key: _konumKey, height: 1),
-          if ((_model.totalValidCikisSayisi ?? 0) > 1) ...[
+          if (_totalValidCikisSayisi > 1) ...[
             _buildInfoNote("Binada birden fazla çıkış tespit edildiği için konum analizi gereklidir."),
             _buildSoruHeader("Kaçış merdivenleri birbirine göre nasıl konumlanmış?"),
             _buildSoruCard('konum', [Bolum36Content.konumOptionA, Bolum36Content.konumOptionB, Bolum36Content.konumOptionC], _model.konum),
@@ -229,13 +280,5 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
   Widget _buildInfoNote(String text) {
     return Container(margin: const EdgeInsets.only(bottom: 16), padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: const Color(0xFFFFF3E0), borderRadius: BorderRadius.circular(12), border: Border.all(color: const Color(0xFFFFE0B2))), child: Row(children: [const Icon(Icons.arrow_downward, color: Color(0xFFE65100), size: 20), const SizedBox(width: 12), Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13)))]));
-  }
-
-  Widget _buildStep0Card() {
-    return Container(margin: const EdgeInsets.only(bottom: 20), padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: Colors.amber.shade50, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.amber.shade200)), child: Column(children: [const Row(children: [Icon(Icons.warning_amber_rounded, color: Colors.orange), SizedBox(width: 10), Text("BAZI ÇIKIŞLAR GEÇERSİZ", style: TextStyle(fontWeight: FontWeight.bold))]), const SizedBox(height: 10), Text("Bina yüksekliğinden dolayı; ${_model.donerElendi! ? 'Döner merdivenler, ' : ''}${_model.disCelikElendi! ? 'Dış açık merdivenler, ' : ''}yasal kaçış yolu sayılmamıştır.", style: const TextStyle(fontSize: 12))]));
-  }
-
-  Widget _buildHighBuildingWarning() {
-    return Container(margin: const EdgeInsets.only(bottom: 15), padding: const EdgeInsets.all(12), decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.red.shade200)), child: const Text("🚨 KRİTİK: 21.50m üzeri binalarda dış açık merdivenler yönetmeliğe aykırıdır.", style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold)));
   }
 }

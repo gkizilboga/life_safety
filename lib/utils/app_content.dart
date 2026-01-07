@@ -1219,8 +1219,6 @@ class Bolum20Content {
     reportText: "✅ OLUMLU: Tek katlı binada düz ayak, engelsiz çıkış imkanı mevcuttur."
   );
 
-  // Not: Aşağıdaki çok katlı seçenekleri sayısal veri girişi içindir ancak
-  // metinleri buradan çekilecektir.
   static final cokKatOption1 = ChoiceResult(
     label: "20-1 (Çok Kat)",
     uiTitle: "Normal Apartman Merdiveni (Kapısız).",
@@ -1263,6 +1261,27 @@ class Bolum20Content {
     reportText: "(Sayısal veri olarak saklanır)"
   );
 
+  static final basYghOptionA = ChoiceResult(
+    label: "20-BAS-A",
+    uiTitle: "Evet, var.",
+    uiSubtitle: "Merdiven kovasında pozitif basınç sağlayan fan sistemi mevcut.",
+    reportText: "✅ OLUMLU: Kapalı yangın merdivenlerinde basınçlandırma sistemi olduğu beyan edilmiştir."
+  );
+
+  static final basYghOptionB = ChoiceResult(
+    label: "20-BAS-B",
+    uiTitle: "Hayır, yok.",
+    uiSubtitle: "Herhangi bir mekanik basınçlandırma sistemi bulunmuyor.",
+    reportText: "⚠️ UYARI: Kapalı yangın merdivenlerinde basınçlandırma sistemi bulunmamaktadır."
+  );
+
+  static final basYghOptionC = ChoiceResult(
+    label: "20-BAS-C",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Sistemin varlığı hakkında bilgi sahibi değilim.",
+    reportText: "❓ BİLİNMİYOR: Merdiven basınçlandırma durumu belirsizdir."
+  );
+
   static final bodrumOptionA = ChoiceResult(
     label: "20-Bodrum-A",
     uiTitle: "Evet, aynı merdiven devam ediyor.",
@@ -1292,17 +1311,42 @@ class Bolum20Content {
   );
 }
 class Bolum21Content {
-  static final varlikOptionA = ChoiceResult(label: "21-1-A", uiTitle: "Evet, var.", uiSubtitle: "Çift kapılı hol mevcut.", reportText: "Yangın merdiveni önünde Yangın Güvenlik Holü (YGH) mevcuttur.");
-  static final varlikOptionB = ChoiceResult(label: "21-1-B", uiTitle: "Hayır, yok.", uiSubtitle: "Direkt merdivene çıkılıyor.", reportText: "Binada YGH bulunmamaktadır. Yapı yüksekliği 30.50m üzeri binalarda veya riskli bodrum kat geçişlerinde YGH tesisi mecburidir.");
-  static final malzemeOptionA = ChoiceResult(label: "21-2-A", uiTitle: "Sıva, boya, beton, mermer vb.", uiSubtitle: "Hol içinde yanmaz malzemeler kullanılmış.", reportText: "YGH içindeki kaplamalar yanmaz özelliktedir.");
-  static final malzemeOptionB = ChoiceResult(label: "21-2-B", uiTitle: "Ahşap, duvar kağıdı, plastik.", uiSubtitle: "Hol içinde yanıcı kaplama veya dekorasyon var.", reportText: "Yangın güvenlik holleri 'Kaçış Yolu'nun bir parçasıdır. Duvar, tavan ve tabanında hiçbir yanıcı malzeme kullanılamaz.");
-  static final malzemeOptionC = ChoiceResult(label: "21-2-C", uiTitle: "Bilmiyorum.", uiSubtitle: "Malzemenin cinsini bilmiyorum.", reportText: "Holdeki malzemelerin yanıcılıkları bilinmiyor. Kaçış yollarında yanıcı malzeme kullanımı risk teşkil eder.");
-  static final kapiOptionA = ChoiceResult(label: "21-3-A", uiTitle: "YGH kapıları yangına dayanıklı, duman sızdırmaz ve kendiliğinden kapanan özelliktedir.", uiSubtitle: "", reportText: "YGH kapıları yangına dayanıklı ve duman sızdırmaz özelliktedir.");
-  static final kapiOptionB = ChoiceResult(label: "21-3-B", uiTitle: "YGH kapıları yangına dayanıklı değil.", uiSubtitle: "", reportText: "YGH kapıları en az 90 dakika yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.");
-  static final kapiOptionC = ChoiceResult(label: "21-3-C", uiTitle: "YGH kapıları hakkında fikrim yok.", uiSubtitle: "", reportText: "Kapıların yangın dayanımı bilinmiyor. YGH kapıları test raporlu ve sertifikalı olmalıdır.");
-  static final esyaOptionA = ChoiceResult(label: "21-4-A", uiTitle: "Hayır, tamamen boş.", uiSubtitle: "Hol içinde hiçbir eşya yok.", reportText: "YGH içi temiz ve boş olduğundan güvenli sayılır.");
-  static final esyaOptionB = ChoiceResult(label: "21-4-B", uiTitle: "Evet, eşya var.", uiSubtitle: "Bisiklet, ayakkabılık, dolap vb.", reportText: "Yangın güvenlik hollerinde kaçışı engelleyecek hiçbir eşya bulundurulamaz.");
-  static final esyaOptionC = ChoiceResult(label: "21-4-C", uiTitle: "Bazen konuluyor.", uiSubtitle: "Geçici depolama yapılıyor.", reportText: "YGH alanları depo olarak kullanılamaz, her an boş tutulmalıdır.");
+  static final varlikOptionA = ChoiceResult(
+    label: "21-1-A", 
+    uiTitle: "Evet, var.", 
+    uiSubtitle: "Giriş-çıkış kapıları olan odacık mevcut.", 
+    reportText: "Yangın merdiveni önünde Yangın Güvenlik Holü (YGH) mevcuttur.");
+  static final varlikOptionB = ChoiceResult(
+    label: "21-1-B", uiTitle: "Hayır, yok.", 
+    uiSubtitle: "Holden geçmeden direkt merdivene çıkılıyor.", 
+    reportText: "Binada YGH bulunmamaktadır.");
+  static final malzemeOptionA = ChoiceResult(label: "21-2-A", 
+    uiTitle: "Sıva, boya, beton, mermer vb.", uiSubtitle: "Hol içinde yanmaz malzemeler kullanılmış.", 
+  reportText: "YGH içindeki kaplamalar yanmaz özelliktedir.");
+  static final malzemeOptionB = ChoiceResult(label: "21-2-B", 
+    uiTitle: "Ahşap, duvar kağıdı, plastik.", 
+  uiSubtitle: "Hol içinde yanıcı kaplama veya dekorasyon var.", reportText: "Yangın güvenlik holleri kaçış yolunun bir parçasıdır. Duvar, tavan ve tabanında hiçbir yanıcı malzeme kullanılamaz.");
+  static final malzemeOptionC = ChoiceResult(label: "21-2-C", 
+    uiTitle: "Bilmiyorum.", 
+  uiSubtitle: "Malzemenin cinsini bilmiyorum.", reportText: "Holdeki malzemelerin yanıcılık özellikleri bilinmiyor. Kaçış yollarında yanıcı malzeme kullanımı risk teşkil eder.");
+  static final kapiOptionA = ChoiceResult(label: "21-3-A", 
+    uiTitle: "YGH kapıları yangına dayanıklı, duman sızdırmaz ve kendiliğinden kapanan özelliktedir.", 
+    uiSubtitle: "", reportText: "YGH kapıları uygun gözükmektedir.");
+  static final kapiOptionB = ChoiceResult(label: "21-3-B", 
+    uiTitle: "YGH kapıları yangına dayanıklı değil.", 
+  uiSubtitle: "", reportText: "YGH kapıları en az 90 dakika yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.");
+  static final kapiOptionC = ChoiceResult(label: "21-3-C", 
+    uiTitle: "YGH kapıları hakkında fikrim yok.", 
+  uiSubtitle: "", reportText: "Kapıların yangın dayanımı bilinmiyor. YGH kapıları en az 90 dakika yangına dayanıklı olmalıdır.");
+  static final esyaOptionA = ChoiceResult(label: "21-4-A", 
+    uiTitle: "Hayır, tamamen boş.", 
+    uiSubtitle: "Hol içinde hiçbir eşya yok.", reportText: "YGH içi temiz ve boş olduğundan güvenli sayılır.");
+  static final esyaOptionB = ChoiceResult(label: "21-4-B", 
+    uiTitle: "Evet, eşya var.", 
+    uiSubtitle: "Bisiklet, ayakkabılık, dolap vb.", reportText: "Yangın güvenlik hollerinde kaçışı engelleyecek hiçbir eşya bulundurulamaz.");
+  static final esyaOptionC = ChoiceResult(label: "21-4-C", 
+    uiTitle: "Bazen konuluyor.", 
+    uiSubtitle: "Geçici depolama yapılıyor.", reportText: "YGH alanları depo olarak kullanılamaz, her an boş tutulmalıdır.");
 }
 class Bolum22Content {
   static final varlikOptionA = ChoiceResult(
@@ -2522,48 +2566,7 @@ class Bolum32Content {
   );
 }
 class Bolum33Content {
-  static final normalKatYeterli = ChoiceResult(
-    label: "Normal Kat (Yeterli)",
-    uiTitle: "Normal Kat Çıkış İmkanı Yeterli",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU: Normal katlardaki çıkış sayısı Yönetmelik şartlarını sağlamaktadır."
-  );
-
-  static final normalKatYetersiz = ChoiceResult(
-    label: "Normal Kat (Yetersiz)",
-    uiTitle: "Normal Kat Çıkış İmkanı Yetersiz",
-    uiSubtitle: "",
-    // "kullanıcı yüküne göre" ifadesini kaldırdık, daha kapsayıcı yaptık:
-    reportText: "☢️ RİSK: Normal katlarda Yönetmelik kriterlerine (Kullanıcı Yükü ve Bina Yüksekliği) göre en az [GEREKEN] çıkış gerekirken, sadece [MEVCUT] çıkış var. YETERSİZ."
-  );
-
-  static final zeminKatYeterli = ChoiceResult(
-    label: "Zemin Kat (Yeterli)",
-    uiTitle: "Zemin Kat Çıkış İmkanı Yeterli",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU: Zemin kat çıkış kapasitesi yeterli görünüyor."
-  );
-
-  static final zeminKatYetersiz = ChoiceResult(
-    label: "Zemin Kat (Yetersiz)",
-    uiTitle: "Zemin Kat Çıkış İmkanı Yetersiz",
-    uiSubtitle: "",
-    reportText: "⚠️ UYARI: Zemin kattaki yoğunluk ve yapısal kriterler nedeniyle [GEREKEN] adet bağımsız çıkış kapısı gerekmektedir."
-  );
-
-  static final bodrumKatYeterli = ChoiceResult(
-    label: "Bodrum Kat (Yeterli)",
-    uiTitle: "Bodrum Kat Çıkış İmkanı Yeterli",
-    uiSubtitle: "",
-    reportText: "✅ OLUMLU: Bodrum katlardaki çıkış sayısı yeterli görünüyor."
-  );
-
-  static final bodrumKatYetersiz = ChoiceResult(
-    label: "Bodrum Kat (Yetersiz)",
-    uiTitle: "Bodrum Kat Çıkış Sayısı Yetersiz",
-    uiSubtitle: "",
-    reportText: "☢️ RİSK: Bodrum katlarda Yönetmelik kriterlerine göre [GEREKEN] çıkış gerekirken, bodruma inen sadece [MEVCUT] adet merdiven var. YETERSİZ."
-  );
+    static final bos = ChoiceResult(label: "", uiTitle: "", uiSubtitle: "", reportText: "");
 }
 class Bolum34Content {
   static final zeminOptionA = ChoiceResult(
@@ -2700,62 +2703,83 @@ class Bolum35Content {
   );
 }
 class Bolum36Content {
+  static final cikisKatiOptionA = ChoiceResult(
+    label: "36-0-A",
+    uiTitle: "A) Zemin kattan çıkabiliyorum.",
+    uiSubtitle: "Bina çıkışı zemin kottadır.",
+    reportText: "ℹ️ BİLGİ: Binadan dış havaya (atmosfere) çıkış Zemin Kattan sağlanmaktadır."
+  );
+
+  static final cikisKatiOptionB = ChoiceResult(
+    label: "36-0-B",
+    uiTitle: "B) Yalnızca (zemin üstü) normal kattan çıkabiliyorum.",
+    uiSubtitle: "Çıkış üst katlardadır.",
+    reportText: "ℹ️ BİLGİ: Binadan dış havaya çıkış Normal Kattan sağlanmaktadır."
+  );
+
+  static final cikisKatiOptionC = ChoiceResult(
+    label: "36-0-C",
+    uiTitle: "C) Yalnızca (zemin altı) bodrum kattan çıkabiliyorum.",
+    uiSubtitle: "Çıkış alt kottadır.",
+    reportText: "ℹ️ BİLGİ: Binadan dış havaya çıkış Bodrum Kattan sağlanmaktadır."
+  );
+
   static final disMerdOptionA = ChoiceResult(
     label: "36-1-A",
     uiTitle: "Hayır, merdiven etrafındaki duvarlar tamamen sağır (düz duvar).",
     uiSubtitle: "Merdiven etrafında pencere yok.",
-    reportText: "✅ OLUMLU GÖRÜNÜYOR: Dış kaçış merdiveni etrafında alev sıçrayabilecek açıklık bulunmamaktadır."
+    reportText: "✅ OLUMLU: Dış kaçış merdiveni etrafında alev sıçrayabilecek açıklık bulunmamaktadır."
   );
   static final disMerdOptionB = ChoiceResult(
     label: "36-1-B",
     uiTitle: "Evet, merdivenin hemen yanında/altında daire pencereleri veya kapılar var.",
     uiSubtitle: "Merdivenin hemen yanında açıklık var.",
-    reportText: "🚨 RİSK: Açık dış kaçış merdiveninin 3 metre yakınında korunumsuz pencere veya kapı bulunamaz. Daireden çıkan alevler merdiveni sarabilir ve kaçışı imkansız hale getirebilir."
+    reportText: "🚨 RİSK: Açık dış kaçış merdiveninin 3 metre yakınında korunumsuz pencere veya kapı bulunamaz."
   );
   static final disMerdOptionC = ChoiceResult(
     label: "36-1-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Duvar durumunu bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Dış merdiven çevresindeki açıklıklar bilinmiyor. Yangın anında alevlerin merdivene sıçrama riski kontrol edilmelidir."
+    reportText: "❓ BİLİNMİYOR: Dış merdiven çevresindeki açıklıklar bilinmiyor."
   );
 
   static final konumOptionA = ChoiceResult(
     label: "36-2-A",
     uiTitle: "Birbirlerine uzaklar (Koridorun zıt uçlarındalar / Farklı cephedeler).",
     uiSubtitle: "Koridorun zıt uçlarındalar.",
-    reportText: "✅ OLUMLU GÖRÜNÜYOR: Merdivenlerin zıt yönlerde olması, alternatif kaçış imkanı sağlar."
+    reportText: "✅ OLUMLU: Merdivenlerin zıt yönlerde olması, alternatif kaçış imkanı sağlar."
   );
   static final konumOptionB = ChoiceResult(
     label: "36-2-B",
     uiTitle: "Yan yanalar veya birbirlerine çok yakınlar.",
     uiSubtitle: "Birbirlerine bitişikler.",
-    reportText: "🚨 KRİTİK RİSK: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış' sayılmaz."
+    reportText: "🚨 RİSK: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış' sayılmaz."
   );
   static final konumOptionC = ChoiceResult(
     label: "36-2-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Konumlarını bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Merdiven konumları net değil. Çıkışlar arası mesafe yönetmelik kriterlerine göre incelenmelidir."
+    reportText: "❓ BİLİNMİYOR: Merdiven konumları net değil."
   );
 
   static final genislikBilinmiyor = ChoiceResult(
     label: "36-3-BILMIYORUM",
     uiTitle: "Merdiven/Koridor genişliğini bilmiyorum.",
     uiSubtitle: "Ölçüm yapılamadı.",
-    reportText: "⚠️ UYARI: Kaçış yolu genişliği ölçülemediği için tahliye kapasitesi doğrulaması yapılamamıştır."
+    reportText: "⚠️ UYARI: Kaçış yolu genişliği ölçülemedi."
   );
 
   static final kapiTipiOptionA = ChoiceResult(
     label: "36-4-A",
     uiTitle: "Tek Kanatlı Kapı.",
     uiSubtitle: "Normal oda kapısı gibi.",
-    reportText: "ℹ️ BİLGİ: Çıkış kapısı tek kanatlı olarak beyan edilmiştir."
+    reportText: "ℹ️ BİLGİ: Çıkış kapısı tek kanatlıdır."
   );
   static final kapiTipiOptionB = ChoiceResult(
     label: "36-4-B",
     uiTitle: "Çift Kanatlı Kapı.",
     uiSubtitle: "İki yana açılan kapı.",
-    reportText: "ℹ️ BİLGİ: Çıkış kapısı çift kanatlı olarak beyan edilmiştir."
+    reportText: "ℹ️ BİLGİ: Çıkış kapısı çift kanatlıdır."
   );
   static final kapiTipiOptionC = ChoiceResult(
     label: "36-4-C",
@@ -2768,14 +2792,14 @@ class Bolum36Content {
     label: "36-4-ALT-BILMIYORUM",
     uiTitle: "Kapı net geçiş genişliğini bilmiyorum.",
     uiSubtitle: "Ölçüm yapılamadı.",
-    reportText: "⚠️ UYARI: Çıkış kapısı net genişliği bilinmiyor. Kapı genişliği kullanıcı yüküne göre yetersiz olabilir."
+    reportText: "⚠️ UYARI: Çıkış kapısı net genişliği bilinmiyor."
   );
 
   static final gorunurlukOptionA = ChoiceResult(
     label: "36-5-A",
     uiTitle: "Evet, açıkça görünüyor ve engel yok.",
     uiSubtitle: "Engel yok.",
-    reportText: "✅ OLUMLU GÖRÜNÜYOR: Kaçış yolları ve çıkış kapıları açıkça görülebilir durumdadır."
+    reportText: "✅ OLUMLU: Kaçış yolları ve çıkış kapıları açıkça görülebilir durumdadır."
   );
   static final gorunurlukOptionB = ChoiceResult(
     label: "36-5-B",
@@ -2787,6 +2811,6 @@ class Bolum36Content {
     label: "36-5-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Durumu bilmiyorum.",
-    reportText: "❓ BİLİNMİYOR: Çıkışların erişilebilirliği ve görünürlüğü tespit edilememiştir."
+    reportText: "❓ BİLİNMİYOR: Çıkışların erişilebilirliği tespit edilememiştir."
   );
 }

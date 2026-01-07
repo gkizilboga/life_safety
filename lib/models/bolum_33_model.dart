@@ -1,5 +1,4 @@
 import 'choice_result.dart'; 
-import '../utils/app_content.dart';
 
 class Bolum33Model {
   final double? alanZemin;
@@ -13,16 +12,12 @@ class Bolum33Model {
   final int? gerekliBodrum;
   final int? mevcutUst;
   final int? mevcutBodrum;
-  final ChoiceResult? normalKatSonuc;
-  final ChoiceResult? zeminKatSonuc;
-  final ChoiceResult? bodrumKatSonuc;
 
   Bolum33Model({
     this.alanZemin, this.alanNormal, this.alanBodrumMax,
     this.yukZemin, this.yukNormal, this.yukBodrum,
     this.gerekliZemin, this.gerekliNormal, this.gerekliBodrum,
     this.mevcutUst, this.mevcutBodrum,
-    this.normalKatSonuc, this.zeminKatSonuc, this.bodrumKatSonuc,
   });
 
   Bolum33Model copyWith({
@@ -30,7 +25,6 @@ class Bolum33Model {
     int? yukZemin, int? yukNormal, int? yukBodrum,
     int? gerekliZemin, int? gerekliNormal, int? gerekliBodrum,
     int? mevcutUst, int? mevcutBodrum,
-    ChoiceResult? normalKatSonuc, ChoiceResult? zeminKatSonuc, ChoiceResult? bodrumKatSonuc,
   }) {
     return Bolum33Model(
       alanZemin: alanZemin ?? this.alanZemin,
@@ -44,9 +38,6 @@ class Bolum33Model {
       gerekliBodrum: gerekliBodrum ?? this.gerekliBodrum,
       mevcutUst: mevcutUst ?? this.mevcutUst,
       mevcutBodrum: mevcutBodrum ?? this.mevcutBodrum,
-      normalKatSonuc: normalKatSonuc ?? this.normalKatSonuc,
-      zeminKatSonuc: zeminKatSonuc ?? this.zeminKatSonuc,
-      bodrumKatSonuc: bodrumKatSonuc ?? this.bodrumKatSonuc,
     );
   }
 
@@ -63,21 +54,10 @@ class Bolum33Model {
       'gerekliBodrum': gerekliBodrum,
       'mevcutUst': mevcutUst,
       'mevcutBodrum': mevcutBodrum,
-      'normalKatSonuc_label': normalKatSonuc?.label,
-      'zeminKatSonuc_label': zeminKatSonuc?.label,
-      'bodrumKatSonuc_label': bodrumKatSonuc?.label,
     };
   }
 
   factory Bolum33Model.fromMap(Map<String, dynamic> map) {
-    ChoiceResult? find(String? label) {
-      if (label == null) return null;
-      return [
-        Bolum33Content.normalKatYeterli, Bolum33Content.normalKatYetersiz,
-        Bolum33Content.zeminKatYeterli, Bolum33Content.zeminKatYetersiz,
-        Bolum33Content.bodrumKatYeterli, Bolum33Content.bodrumKatYetersiz
-      ].firstWhere((e) => e.label == label, orElse: () => Bolum33Content.normalKatYetersiz);
-    }
     return Bolum33Model(
       alanZemin: map['alanZemin'],
       alanNormal: map['alanNormal'],
@@ -90,9 +70,6 @@ class Bolum33Model {
       gerekliBodrum: map['gerekliBodrum'],
       mevcutUst: map['mevcutUst'],
       mevcutBodrum: map['mevcutBodrum'],
-      normalKatSonuc: find(map['normalKatSonuc_label']),
-      zeminKatSonuc: find(map['zeminKatSonuc_label']),
-      bodrumKatSonuc: find(map['bodrumKatSonuc_label']),
     );
   }
 }

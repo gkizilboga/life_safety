@@ -286,10 +286,21 @@ class BinaStore {
       case 30: return bolum30?.konum;
       case 31: return bolum31?.yapi;
       case 32: return bolum32?.yapi;
-      case 33: return bolum33?.normalKatSonuc;
+      case 33: 
+        // Bölüm 33 artık sadece sayısal veri tutuyor, rapor metni Bölüm 36'da birleştirildi.
+        // Ancak rapor motorunun hata vermemesi için boş bir ChoiceResult döndürüyoruz.
+        return ChoiceResult(label: "33", uiTitle: "Kullanıcı Yükü", uiSubtitle: "", reportText: "Kullanıcı yükü ve çıkış sayıları hesaplanmıştır.");
       case 34: return bolum34?.zemin;
       case 35: return bolum35?.tekYon ?? bolum35?.ciftYon;
-      case 36: return bolum36?.gorunurluk;
+      case 36: 
+        final m = bolum36;
+        if (m == null) return null;
+        return ChoiceResult(
+          label: "36", 
+          uiTitle: "Genel Değerlendirme", 
+          uiSubtitle: "", 
+          reportText: m.merdivenDegerlendirme ?? "Değerlendirme yapılamadı."
+        );
       default: return null;
     }
   }

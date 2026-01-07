@@ -39,7 +39,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Yangın Güvenlik Holü (YGH)",
-      subtitle: "Merdiven önü korunumlu alan denetimi",
+      subtitle: " ",
       screenType: widget.runtimeType,
       isNextEnabled: _model.varlik != null,
       onNext: () {
@@ -50,7 +50,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       child: Column(
         children: [
           _buildHeightCard(),
-          _buildSoru("1. Merdiven önünde Yangın Güvenlik Holü var mı?", 'varlik', [Bolum21Content.varlikOptionA, Bolum21Content.varlikOptionB], _model.varlik),
+          _buildSoru("Merdivenlerin önünde Yangın Güvenlik Holü var mı?", 'varlik', [Bolum21Content.varlikOptionA, Bolum21Content.varlikOptionB], _model.varlik),
         ],
       ),
     );
@@ -64,7 +64,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       child: Row(children: [
         Icon(_isMandatory ? Icons.warning_amber : Icons.info_outline, color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900),
         const SizedBox(width: 12),
-        Expanded(child: Text("Yapı Yüksekliği: $_hYapi m. ${_isMandatory ? 'YGH ZORUNLUDUR.' : 'YGH zorunlu değildir.'}", style: TextStyle(fontWeight: FontWeight.bold, color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900))),
+        Expanded(child: Text("Yapı Yüksekliği: $_hYapi m. ${_isMandatory ? 'YGH zorunludur.' : 'YGH zorunlu değildir.'}", style: TextStyle(fontWeight: FontWeight.bold, color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900))),
       ]),
     );
   }

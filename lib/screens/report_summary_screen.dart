@@ -10,6 +10,7 @@ class ReportSummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final metrics = ReportEngine.calculateRiskMetrics();
+    final yghReasons = ReportEngine.evaluateYghRequirement();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
@@ -17,7 +18,7 @@ class ReportSummaryScreen extends StatelessWidget {
         children: [
           const ModernHeader(
             title: "Yangın Risk Analizi Ön Raporu",
-            subtitle: " ",
+            subtitle: "Kullanıcı Beyanına Dayalı Teknik Tespitler",
             screenType: ReportSummaryScreen,
           ),
           Expanded(
@@ -25,6 +26,10 @@ class ReportSummaryScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               children: [
                 _buildRiskPanel(metrics),
+                if (yghReasons.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  _buildYghEvaluationPanel(yghReasons),
+                ],
                 const SizedBox(height: 20),
                 const Padding(
                   padding: EdgeInsets.only(left: 8, bottom: 12),
@@ -33,10 +38,52 @@ class ReportSummaryScreen extends StatelessWidget {
                 ...ReportModule.values.map((module) => _buildModuleCard(context, module)),
                 const SizedBox(height: 30),
                 _buildDashboardButton(context),
-                const SizedBox(height: 40),
+                const SizedBox(height: 50),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildYghEvaluationPanel(List<String> reasons) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.orange.shade200, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.security_rounded, color: Colors.orange.shade900, size: 24),
+              const SizedBox(width: 10),
+              Text(
+                "YGH ZORUNLULUK DEĞERLENDİRMESİ",
+                style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 0.5),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          const Text(
+            "Yönetmelik Madde 48 ve ilgili hükümler uyarınca binanızda Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmiştir:",
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
+          ),
+          const SizedBox(height: 12),
+          ...reasons.map((reason) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("• ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Expanded(child: Text(reason, style: const TextStyle(fontSize: 12, height: 1.4))),
+              ],
+            ),
+          )),
         ],
       ),
     );
@@ -136,16 +183,12 @@ class ReportSummaryScreen extends StatelessWidget {
   Widget _buildModuleCard(BuildContext context, ReportModule module) {
     List<Widget> visibleSections = [];
     for (int id in module.sectionIds) {
-      // Bölüm 7 Filtresi
       if (id == 7 && BinaStore.instance.bolum7?.isHicbiri == true) continue;
-      
-      // Bölüm 12 Filtresi
       if (id == 12) {
         int katSayisi = (BinaStore.instance.bolum3?.normalKatSayisi ?? 0) + (BinaStore.instance.bolum3?.bodrumKatSayisi ?? 0);
         double alan = BinaStore.instance.bolum5?.toplamInsaatAlani ?? 0;
         if (katSayisi < 2 || alan <= 5000) continue;
       }
-
       visibleSections.add(_buildSectionTile(context, id));
     }
 
@@ -216,7 +259,7 @@ class ReportSummaryScreen extends StatelessWidget {
                   child: const Text("ANLADIM", style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
-              const SizedBox(height: 40), // Alt boşluk artırıldı
+              const SizedBox(height: 20),
             ],
           ),
         ),
