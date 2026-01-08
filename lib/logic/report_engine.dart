@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data/bina_store.dart';
-import '../models/choice_result.dart';
+import 'package:life_safety/data/bina_store.dart';
+import 'package:life_safety/models/choice_result.dart';
 
 enum ReportModule {
   binaBilgileri("Bina Hakkında Genel Bilgiler", [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], "Aquarius", "Çeşme, sarnıç ve su kemerlerinin yerlerini avucunun içi gibi bilen kişiler."),
@@ -18,6 +18,7 @@ enum ReportModule {
 }
 
 class ReportEngine {
+  static double get _hBina => BinaStore.instance.bolum4?.hesaplananBinaYuksekligi ?? 0.0;
   static double get _hYapi => BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? 0.0;
 
   static List<String> evaluateYghRequirement() {
@@ -25,31 +26,32 @@ class ReportEngine {
     List<String> reasons = [];
 
     if (_hYapi >= 51.50) {
-      reasons.add("Yapı yüksekliğinin 51.50 metre ve üzerinde olması nedeniyle tüm kaçış merdivenleri önünde YGH yapılması mecburidir.");
+      reasons.add("Yapı yüksekliğinin 51.50 metre ve üzerinde olması.");
     }
 
     if (store.bolum10 != null) {
-      bool hasBasementRisk = store.bolum10!.bodrumlar.any((c) => 
-        c != null && (c.label == "10-B" || c.label == "10-C" || c.label == "10-D" || c.label == "10-E")
+      bool hasBasementRisk = store.bolum10!.bodrumlar.any((ChoiceResult? c) => 
+        c != null && (c.label.contains("10-B") || c.label.contains("10-C") || c.label.contains("10-D") || c.label.contains("10-E"))
       );
       if (hasBasementRisk) {
-        reasons.add("Bodrum katlarda konut harici (Ticari, Depo, Otopark veya Teknik Hacim) kullanım beyan edildiği için bu katlarda merdiven önünde YGH zorunludur.");
+        reasons.add("Bodrum katlarda konut harici kullanım.");
       }
     }
 
-    if (store.bolum22?.varlik?.label == "22-1-B") {
-      reasons.add("Binada İtfaiye Asansörü bulunduğu için, asansörün her katta bir yangın güvenlik holüne açılması teknik bir zorunluluktur.");
+    if (store.bolum22?.varlik?.label.contains("22-1-B") ?? false) {
+      reasons.add("İtfaiye Asansörü varlığı.");
     }
 
     int bodrumSayisi = int.tryParse(store.bolum3?.bodrumKatSayisi?.toString() ?? "0") ?? 0;
     if (bodrumSayisi >= 1 && store.bolum23 != null) {
-      if (store.bolum23!.bodrum?.label == "23-1-B" || store.bolum23!.bodrum?.label == "23-1-C") {
-        reasons.add("Bodrum kata inen asansörün/merdivenin direkt riskli alanlara (Otopark, Kazan Dairesi vb.) açılması nedeniyle duman sızdırmaz hol (YGH) yapılması şarttır.");
+      final String label = store.bolum23!.bodrum?.label ?? "";
+      if (label.contains("23-1-B") || label.contains("23-1-C")) {
+        reasons.add("Bodrum kata inen asansörün/merdivenin riskli açılımı.");
       }
     }
 
-    if (_hYapi > 30.50 && store.bolum20?.basinclandirma?.label == "20-BAS-B") {
-      reasons.add("Yapı yüksekliği 30.50 metreyi aşan ve merdiven basınçlandırma sistemi bulunmayan binalarda YGH yapılması yönetmelik gereği zorunludur.");
+    if (_hYapi > 30.50 && (store.bolum20?.basinclandirma?.label.contains("20-BAS-B") ?? false)) {
+      reasons.add("30.50m üzeri ve basınçlandırma yok.");
     }
 
     return reasons;
@@ -63,7 +65,7 @@ class ReportEngine {
     List<String> criticalTitles = [];
 
     for (int i = 1; i <= totalSections; i++) {
-      final result = BinaStore.instance.getResultForSection(i);
+      final ChoiceResult? result = BinaStore.instance.getResultForSection(i);
       if (result != null) {
         filledSections++;
         final Color color = getStatusColor(result, sectionId: i);
@@ -76,9 +78,25 @@ class ReportEngine {
       }
     }
 
-    double safetyScore = filledSections == 0 ? 0 : ((filledSections - criticalRisks) / filledSections) * 100;
+    // YGH Eksikliği Kritik Risk Olarak Sayılmalı
+    final yghReasons = evaluateYghRequirement();
+    final bool hasYgh = BinaStore.instance.bolum21?.varlik?.label.contains("21-1-A") ?? false;
+    if (yghReasons.isNotEmpty && !hasYgh) {
+      criticalRisks++;
+      if (!criticalTitles.contains("Bölüm 21")) criticalTitles.add("Bölüm 21");
+    }
+
+    double baseScore = filledSections == 0 ? 0 : ((filledSections - criticalRisks) / filledSections) * 100;
+    double penaltyScore = baseScore - (criticalRisks * 15) - (warnings * 2);
+
+    if (criticalRisks >= 3) {
+      penaltyScore = 30;
+    } else if (criticalRisks > 0 && penaltyScore > 60) {
+      penaltyScore = 60;
+    }
+
     return {
-      'score': safetyScore.toInt(),
+      'score': penaltyScore.toInt().clamp(0, 100),
       'criticalCount': criticalRisks,
       'warningCount': warnings,
       'completion': (filledSections / totalSections * 100).toInt(),
@@ -91,11 +109,11 @@ class ReportEngine {
     
     if (sectionId == 21 && _hYapi < 30.50 && result.label.contains("21-1-B")) return const Color(0xFF1E88E5);
     if (sectionId == 22 && _hYapi < 51.50 && result.label.contains("22-1-A")) return const Color(0xFF1E88E5);
-    if (sectionId == 25 && _hYapi < 21.50 && result.label.contains("25-1-A")) return Colors.orange.shade600;
-    if (sectionId == 36 && _hYapi < 21.50 && result.label.contains("36-1-B")) return Colors.orange.shade600;
+    if (sectionId == 25 && _hBina < 9.50 && result.label.contains("25-1-A")) return const Color(0xFF43A047);
+    if (sectionId == 36 && _hBina < 21.50 && result.label.contains("36-1-B")) return Colors.orange.shade600;
 
-    final String text = result.reportText;
-    if (text.contains("☢️") || text.contains("🚨") || text.contains("KRİTİK RİSK") || text.contains("YETERSİZ") || text.contains("TEHLİKE")) {
+    final String text = result.reportText.toUpperCase();
+    if (text.contains("🚨") || text.contains("☢️") || text.contains("KRİTİK RİSK") || text.contains("YETERSİZ") || text.contains("TEHLİKE")) {
       return const Color(0xFFE53935);
     }
     if (text.contains("⚠️") || text.contains("❓") || text.contains("BİLİNMİYOR") || text.contains("UYARI")) {
@@ -106,30 +124,21 @@ class ReportEngine {
 
   static String getSectionSummary(int id) {
     final ChoiceResult? result = BinaStore.instance.getResultForSection(id);
-    if (result == null) return "Veri Girilmedi";
+    if (result == null) return "Kapsam Dışı";
     return result.uiTitle.isNotEmpty ? result.uiTitle : result.label;
   }
 
   static String getSectionFullReport(int id) {
-    final store = BinaStore.instance;
-    final ChoiceResult? result = store.getResultForSection(id);
-    if (result == null) return "Veri Girilmedi";
+    final ChoiceResult? result = BinaStore.instance.getResultForSection(id);
+    if (result == null) return "Bu bölüm değerlendirme kapsamı dışındadır.";
 
     String prefix = "";
     final Color color = getStatusColor(result, sectionId: id);
     if (color == const Color(0xFFE53935)) prefix = "🚨 KRİTİK RİSK: ";
     else if (color == Colors.orange.shade600) prefix = "⚠️ UYARI: ";
     else if (color == const Color(0xFF1E88E5)) prefix = "ℹ️ BİLGİ: ";
-    else prefix = "✅ UYGUN: ";
+    else prefix = "✅ OLUMLU: ";
 
-    String cleanText = result.reportText
-      .replaceAll(RegExp(r'[🚨☢️⚠️✅❓ℹ️]'), '')
-      .replaceAll('KRİTİK RİSK:', '')
-      .replaceAll('RİSK:', '')
-      .replaceAll('UYARI:', '')
-      .replaceAll('OLUMLU:', '')
-      .trim();
-
-    return "$prefix$cleanText";
+    return "$prefix${result.reportText.replaceAll(RegExp(r'[🚨☢️⚠️✅❓ℹ️]'), '').trim()}";
   }
 }

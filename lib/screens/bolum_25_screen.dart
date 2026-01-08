@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_25_model.dart';
 import 'bolum_26_screen.dart';
@@ -7,6 +8,8 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_assets.dart';
+import 'module_transition_screen.dart';
+import '../../logic/report_engine.dart';
 
 class Bolum25Screen extends StatefulWidget {
   const Bolum25Screen({super.key});
@@ -53,14 +56,14 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'kapasite') _model = _model.copyWith(kapasite: choice);
+      if (type == 'genislik') _model = _model.copyWith(genislik: choice);
       if (type == 'basamak') _model = _model.copyWith(basamak: choice);
       if (type == 'basKurtarma') _model = _model.copyWith(basKurtarma: choice);
     });
   }
 
   bool _isReady() {
-    return _model.kapasite != null && _model.basamak != null && _model.basKurtarma != null;
+    return _model.genislik != null && _model.basamak != null && _model.basKurtarma != null;
   }
 
   @override
@@ -72,7 +75,22 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       isNextEnabled: _isReady(),
       onNext: () {
         BinaStore.instance.bolum25 = _model;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum26Screen()));
+        BinaStore.instance.saveToDisk();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ModuleTransitionScreen(
+              module: ReportModule.modul3,
+              onContinue: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Bolum26Screen()),
+                );
+              },
+            ),
+          ),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,10 +105,10 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
           ),
           const SizedBox(height: 8),
           _buildSoru(
-            "1. Merdiven kol genişliği ve hizmet verdiği kişi sayısı nedir?",
-            'kapasite',
-            [Bolum25Content.kapasiteOptionA, Bolum25Content.kapasiteOptionB, Bolum25Content.kapasiteOptionC],
-            _model.kapasite,
+            "1. Merdiven kol genişliği nedir?",
+            'genislik',
+            [Bolum25Content.genislikOptionA, Bolum25Content.genislikOptionB, Bolum25Content.genislikOptionC],
+            _model.genislik,
           ),
           _buildSoru(
             "2. Basamak genişliği (basış yüzeyi) yeterli mi?",

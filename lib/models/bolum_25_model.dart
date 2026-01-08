@@ -2,23 +2,23 @@ import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum25Model {
-  final ChoiceResult? kapasite;
+  final ChoiceResult? genislik;
   final ChoiceResult? basamak;
   final ChoiceResult? basKurtarma;
 
   Bolum25Model({
-    this.kapasite,
+    this.genislik,
     this.basamak,
     this.basKurtarma,
   });
 
   Bolum25Model copyWith({
-    ChoiceResult? kapasite,
+    ChoiceResult? genislik,
     ChoiceResult? basamak,
     ChoiceResult? basKurtarma,
   }) {
     return Bolum25Model(
-      kapasite: kapasite ?? this.kapasite,
+      genislik: genislik ?? this.genislik,
       basamak: basamak ?? this.basamak,
       basKurtarma: basKurtarma ?? this.basKurtarma,
     );
@@ -26,7 +26,7 @@ class Bolum25Model {
 
   Map<String, dynamic> toMap() {
     return {
-      'kapasite_label': kapasite?.label,
+      'genislik_label': genislik?.label,
       'basamak_label': basamak?.label,
       'basKurtarma_label': basKurtarma?.label,
     };
@@ -43,10 +43,10 @@ class Bolum25Model {
     }
 
     return Bolum25Model(
-      kapasite: find(map['kapasite_label'], [
-        Bolum25Content.kapasiteOptionA,
-        Bolum25Content.kapasiteOptionB,
-        Bolum25Content.kapasiteOptionC
+      genislik: find(map['genislik_label'], [
+        Bolum25Content.genislikOptionA,
+        Bolum25Content.genislikOptionB,
+        Bolum25Content.genislikOptionC
       ]),
       basamak: find(map['basamak_label'], [
         Bolum25Content.basamakOptionA,

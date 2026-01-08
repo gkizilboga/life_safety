@@ -26,15 +26,8 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
   void _hesaplaVeAnalizEt() {
     final Bolum3Model? bolum3 = BinaStore.instance.bolum3;
     
-    double zeminH = double.tryParse(bolum3?.zeminKatYuksekligi?.toString() ?? "3.5") ?? 3.5;
-    double normalH = double.tryParse(bolum3?.normalKatYuksekligi?.toString() ?? "3.0") ?? 3.0;
-    double bodrumH = double.tryParse(bolum3?.bodrumKatYuksekligi?.toString() ?? "3.5") ?? 3.5;
-    
-    int nKat = int.tryParse(bolum3?.normalKatSayisi?.toString() ?? "0") ?? 0;
-    int bKat = int.tryParse(bolum3?.bodrumKatSayisi?.toString() ?? "0") ?? 0;
-
-    double hBinaYonetmelik = zeminH + (nKat * normalH);
-    double hBodrum = bKat * bodrumH;
+    double hBinaYonetmelik = bolum3?.hBina ?? 0.0;
+    double hBodrum = (bolum3?.hYapi ?? 0.0) - hBinaYonetmelik;
 
     int duvarDk = 60;
     int kapakDk = 30;
@@ -69,7 +62,6 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
 
   void _onNextPressed() {
     BinaStore.instance.bolum14 = _model;
-    // KRİTİK: Veriyi diske kaydet
     BinaStore.instance.saveToDisk(); 
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum15Screen()));
   }
@@ -77,7 +69,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA), // Ofis Standartı Arka Plan
+      backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
           ModernHeader(
@@ -98,8 +90,6 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                       style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
                     ),
                   ),
-                  
-                  // --- ANALİZ SONUÇ KARTI ---
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
@@ -145,10 +135,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
-                  // --- TEKNİK GÖRSEL (DOĞRUDAN EKRANDA) ---
                   const Padding(
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
@@ -157,7 +144,6 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                     ),
                   ),
                   SectionImage(assetPath: AppAssets.section14SaftDuvarKapi),
-
                   const SizedBox(height: 12),
                   _buildWarningNote(),
                 ],

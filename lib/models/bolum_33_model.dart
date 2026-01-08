@@ -1,4 +1,5 @@
 import 'choice_result.dart'; 
+import '../utils/app_content.dart';
 
 class Bolum33Model {
   final double? alanZemin;
@@ -19,6 +20,28 @@ class Bolum33Model {
     this.gerekliZemin, this.gerekliNormal, this.gerekliBodrum,
     this.mevcutUst, this.mevcutBodrum,
   });
+
+  // AKILLI HESAPLAMA GETTER'LARI
+  ChoiceResult? get normalKatSonuc {
+    if (mevcutUst == null || gerekliNormal == null) return null;
+    return (mevcutUst! >= gerekliNormal!) 
+        ? Bolum33Content.normalKatYeterli 
+        : Bolum33Content.normalKatYetersiz;
+  }
+
+  ChoiceResult? get zeminKatSonuc {
+    if (mevcutUst == null || gerekliZemin == null) return null;
+    return (mevcutUst! >= gerekliZemin!) 
+        ? Bolum33Content.zeminKatYeterli 
+        : Bolum33Content.zeminKatYetersiz;
+  }
+
+  ChoiceResult? get bodrumKatSonuc {
+    if (mevcutBodrum == null || gerekliBodrum == null) return null;
+    return (mevcutBodrum! >= gerekliBodrum!) 
+        ? Bolum33Content.bodrumKatYeterli 
+        : Bolum33Content.bodrumKatYetersiz;
+  }
 
   Bolum33Model copyWith({
     double? alanZemin, double? alanNormal, double? alanBodrumMax,

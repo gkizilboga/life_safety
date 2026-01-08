@@ -1,349 +1,82 @@
 import 'package:flutter/material.dart';
-import '../../data/bina_store.dart';
+import 'package:life_safety/data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
-import 'bolum_4_screen.dart'; 
+import 'bolum_4_screen.dart';
 import '../../widgets/custom_widgets.dart';
-import '../../widgets/selectable_card.dart';
-import '../../utils/app_content.dart';
-import '../../models/choice_result.dart';
-import '../../utils/app_assets.dart';
 
 class Bolum3Screen extends StatefulWidget {
   const Bolum3Screen({super.key});
-
   @override
   State<Bolum3Screen> createState() => _Bolum3ScreenState();
 }
 
-class _Bolum3ScreenState extends State<Bolum3Screen> with SingleTickerProviderStateMixin {
-  Bolum3Model _model = Bolum3Model();
-  
-  final _normalKatCtrl = TextEditingController();
-  final _bodrumKatCtrl = TextEditingController();
-  final _zeminHCtrl = TextEditingController();
-  final _normalHCtrl = TextEditingController();
-  final _bodrumHCtrl = TextEditingController();
-  
-  final ScrollController _scrollController = ScrollController();
-  final GlobalKey _summaryKey = GlobalKey(); // Özet kısmı için anahtar
-
-  bool _showSummary = false; 
-  bool _isConfirmed = false; 
-
-  late AnimationController _blinkController;
-  late Animation<double> _blinkAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _blinkController = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    )..repeat(reverse: true);
-    _blinkAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(_blinkController);
-  }
-
-  @override
-  void dispose() {
-    _normalKatCtrl.dispose();
-    _bodrumKatCtrl.dispose();
-    _zeminHCtrl.dispose();
-    _normalHCtrl.dispose();
-    _bodrumHCtrl.dispose();
-    _scrollController.dispose();
-    _blinkController.dispose();
-    super.dispose();
-  }
-
-  void _handleYukseklikTercihi(ChoiceResult choice) {
-    setState(() {
-      _model = _model.copyWith(yukseklikTercihi: choice);
-      _showSummary = false; 
-      _isConfirmed = false;
-    });
-  }
-
-  void _hesaplaVeGoster() {
-    FocusScope.of(context).unfocus(); // Klavyeyi kapat
-    
-    int? nKat = int.tryParse(_normalKatCtrl.text);
-    int? bKat = int.tryParse(_bodrumKatCtrl.text);
-
-    if (nKat == null) return _showError("Lütfen normal kat sayısını giriniz.");
-    if (nKat > 20) return _showError("Normal kat sayısı 20'den fazla olamaz.");
-    if (bKat != null && bKat > 10) return _showError("Bodrum kat sayısı 10'dan fazla olamaz.");
-    if (_model.yukseklikTercihi == null) return _showError("Lütfen yükseklik tercihini seçiniz.");
-
-    double zH = 3.50;
-    double nH = 3.00;
-    double bH = 3.50;
-
-    if (_model.yukseklikTercihi?.label == Bolum3Content.yukseklikBiliniyor.label) {
-      zH = double.tryParse(_zeminHCtrl.text.replaceAll(',', '.')) ?? 0;
-      nH = double.tryParse(_normalHCtrl.text.replaceAll(',', '.')) ?? 0;
-      bH = double.tryParse(_bodrumHCtrl.text.replaceAll(',', '.')) ?? 0;
-
-      if (zH < 2.0 || zH > 7.0) return _showError("Zemin kat yüksekliği 2.00m - 7.00m arasında olmalıdır.");
-      if (nKat > 0 && (nH < 2.0 || nH > 4.5)) return _showError("Normal kat yüksekliği 2.00m - 4.50m arasında olmalıdır.");
-      if ((bKat ?? 0) > 0 && (bH < 2.0 || bH > 7.0)) return _showError("Bodrum kat yüksekliği 2.00m - 7.00m arasında olmalıdır.");
-    }
-
-    double hBina = zH + (nKat * nH);
-    double hBodrum = (bKat ?? 0) * bH;
-    double hYapi = hBina + hBodrum;
-    bool isYuksek = hBina > 21.50;
-
-    setState(() {
-      _model = _model.copyWith(
-        normalKatSayisi: nKat,
-        bodrumKatSayisi: bKat ?? 0,
-        zeminKatYuksekligi: zH,
-        normalKatYuksekligi: nH,
-        bodrumKatYuksekligi: bH,
-        hBina: hBina,
-        hYapi: hYapi,
-        isYuksekBina: isYuksek,
-      );
-      _showSummary = true;
-      _isConfirmed = false;
-    });
-
-    // Otomatik Scroll: Özet kısmına kaydır
-    Future.delayed(const Duration(milliseconds: 300), () {
-      Scrollable.ensureVisible(
-        _summaryKey.currentContext!, 
-        duration: const Duration(milliseconds: 800), 
-        curve: Curves.easeInOut
-      );
-    });
-  }
+class _Bolum3ScreenState extends State<Bolum3Screen> {
+  final _normalCtrl = TextEditingController();
+  final _bodrumCtrl = TextEditingController();
+  final _yukseklikCtrl = TextEditingController();
 
   void _onNextPressed() {
-    BinaStore.instance.bolum3 = _model;
+    int n = int.tryParse(_normalCtrl.text) ?? 0;
+    int b = int.tryParse(_bodrumCtrl.text) ?? 0;
+    double h = double.tryParse(_yukseklikCtrl.text.replaceAll(',', '.')) ?? 0.0;
+
+    double hBina = n * h;
+    double hYapi = (n + b) * h;
+    bool isYuksek = (hBina >= 21.50) || (hYapi >= 30.50);
+
+    BinaStore.instance.bolum3 = Bolum3Model(
+      normalKatSayisi: n,
+      bodrumKatSayisi: b,
+      katYuksekligi: h,
+      hBina: hBina,
+      hYapi: hYapi,
+      isYuksekBina: isYuksek,
+    );
     BinaStore.instance.saveToDisk();
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum4Screen()));
-  }
-
-  void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
-          ModernHeader(
-            title: "Kat ve Yükseklik Bilgileri",
-            subtitle: "Binanın kat adetleri ve yükseklik analizi",
-            screenType: widget.runtimeType,
-          ),
+          ModernHeader(title: "Kat Adetleri ve Yükseklik", subtitle: "Binanın dikey ölçülerini giriniz", screenType: widget.runtimeType),
           Expanded(
             child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TechnicalDrawingButton(
-                    assetPath: AppAssets.section3Katlar,
-                    title: "Kat Grupları ve Yükseklik Tanımları",
-                  ),
-                  const SizedBox(height: 12),
-                  QuestionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(Bolum3Content.normalKatGiris.uiTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: _normalKatCtrl,
-                          keyboardType: TextInputType.number,
-                          onChanged: (_) => setState(() => _showSummary = false),
-                          decoration: InputDecoration(
-                            hintText: "Örn: 5",
-                            helperText: Bolum3Content.normalKatGiris.uiSubtitle,
-                            border: const OutlineInputBorder(),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(Bolum3Content.bodrumKatGiris.uiTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: _bodrumKatCtrl,
-                          keyboardType: TextInputType.number,
-                          onChanged: (_) => setState(() => _showSummary = false),
-                          decoration: InputDecoration(
-                            hintText: "Örn: 1",
-                            helperText: Bolum3Content.bodrumKatGiris.uiSubtitle,
-                            border: const OutlineInputBorder(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  QuestionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Kat Yükseklik Detayları", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                        const SizedBox(height: 12),
-                        SelectableCard(
-                          choice: Bolum3Content.yukseklikStandart,
-                          isSelected: _model.yukseklikTercihi?.label == Bolum3Content.yukseklikStandart.label,
-                          onTap: () => _handleYukseklikTercihi(Bolum3Content.yukseklikStandart),
-                        ),
-                        SelectableCard(
-                          choice: Bolum3Content.yukseklikBiliniyor,
-                          isSelected: _model.yukseklikTercihi?.label == Bolum3Content.yukseklikBiliniyor.label,
-                          onTap: () => _handleYukseklikTercihi(Bolum3Content.yukseklikBiliniyor),
-                        ),
-                        if (_model.yukseklikTercihi?.label == Bolum3Content.yukseklikBiliniyor.label) ...[
-                          const Divider(height: 30),
-                          _buildHeightInput("Zemin Kat Yüksekliği (m)", _zeminHCtrl),
-                          const SizedBox(height: 12),
-                          _buildHeightInput("Normal Kat Yüksekliği (m)", _normalHCtrl),
-                          const SizedBox(height: 12),
-                          _buildHeightInput("Bodrum Kat Yüksekliği (m)", _bodrumHCtrl),
-                        ],
-                      ],
-                    ),
-                  ),
-                  
-                  // HESAPLA BUTONU (Artık daha yukarıda ve belirgin)
-                  if (!_showSummary)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 54,
-                        child: ElevatedButton.icon(
-                          onPressed: _hesaplaVeGoster,
-                          icon: const Icon(Icons.calculate_outlined),
-                          label: const Text("HESAPLA VE ÖZETİ GÖSTER"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange.shade800,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  if (_showSummary) ...[
-                    const SizedBox(height: 10),
-                    Container(
-                      key: _summaryKey, // Scroll hedefi
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE3F2FD),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: const Color(0xFFBBDEFB), width: 1.5),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Center(child: Text("YÜKSEKLİK HESAP ÖZETİ", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF1565C0)))),
-                          const Divider(height: 25),
-                          _buildSummaryRow("Zemin Üstü:", "${_model.normalKatSayisi} Kat"),
-                          _buildSummaryRow("Zemin Altı:", "${_model.bodrumKatSayisi} Kat"),
-                          const SizedBox(height: 12),
-                          _buildSummaryRow("Bina Yüksekliği (H):", "${_model.hBina?.toStringAsFixed(2)} m"),
-                          _buildSummaryRow("Yapı Yüksekliği (H_yapı):", "${_model.hYapi?.toStringAsFixed(2)} m"),
-                          const SizedBox(height: 15),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: (_model.isYuksekBina ?? false) ? const Color(0xFFC62828) : const Color(0xFF2E7D32),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Text(
-                              (_model.isYuksekBina ?? false) ? "SINIF: YÜKSEK BİNA" : "SINIF: YÜKSEK OLMAYAN BİNA",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          // YANIP SÖNEN ONAY KUTUSU
-                          FadeTransition(
-                            opacity: _blinkAnimation,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: const Color(0xFF1A237E), width: 2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: CheckboxListTile(
-                                value: _isConfirmed,
-                                onChanged: (val) => setState(() => _isConfirmed = val ?? false),
-                                title: const Text("Yukarıdaki kat ve yükseklik bilgilerinin doğruluğunu teyit ediyorum.", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                                controlAffinity: ListTileControlAffinity.leading,
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-                                activeColor: const Color(0xFF1A237E),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  _buildInput("Normal Kat Sayısı (Zemin Dahil)", _normalCtrl),
+                  _buildInput("Bodrum Kat Sayısı", _bodrumCtrl),
+                  _buildInput("Ortalama Kat Yüksekliği (Metre)", _yukseklikCtrl, isDecimal: true),
                 ],
               ),
             ),
           ),
-          
-          // ALT BUTON (Sadece onaylandıktan sonra aktif)
-          Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: ElevatedButton(
-                onPressed: _isConfirmed ? _onNextPressed : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1A237E),
-                  disabledBackgroundColor: Colors.grey.shade300,
-                  minimumSize: const Size(double.infinity, 54),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: const Text("ONAYLA VE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              ),
-            ),
-          ),
+          _buildBottomAction(),
         ],
       ),
     );
   }
 
-  Widget _buildHeightInput(String label, TextEditingController controller) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      onChanged: (_) => setState(() => _showSummary = false),
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: "Örn: 3.00",
-        suffixText: "m",
-        border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      ),
-    );
-  }
-
-  Widget _buildSummaryRow(String label, String value) {
+  Widget _buildInput(String label, TextEditingController ctrl, {bool isDecimal = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF455A64))),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF263238))),
-        ],
+      padding: const EdgeInsets.only(bottom: 20),
+      child: TextFormField(
+        controller: ctrl,
+        keyboardType: TextInputType.numberWithOptions(decimal: isDecimal),
+        decoration: InputDecoration(labelText: label, border: const OutlineInputBorder()),
       ),
+    );
+  }
+
+  Widget _buildBottomAction() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+      decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))]),
+      child: ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET")),
     );
   }
 }

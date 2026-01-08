@@ -67,14 +67,14 @@ class Bolum3Content {
     reportText: "(Sayısal veri olarak saklanır: \"Zemin Altı: Y Kat\")"
   );
 
-  static final yukseklikBiliniyor = ChoiceResult(
+  static final biliniyor = ChoiceResult(
     label: "3-3-A (Yükseklik)",
     uiTitle: "Kat yüksekliklerini biliyorum.",
     uiSubtitle: "(Hassas Giriş)",
-    reportText: "(Girilen metre değerleri rapora işlenir)"
+    reportText: "Bina yükseklik analizi, kullanıcı tarafından beyan edilen kat adetleri ve yükseklik değerleri üzerinden hesaplanmıştır."
   );
 
-  static final yukseklikStandart = ChoiceResult(
+  static final bilinmiyor = ChoiceResult(
     label: "3-3-B (Yükseklik)",
     uiTitle: "Bilmiyorum / Standart değerleri kabul et.",
     uiSubtitle: "Standart Değerler: Zemin: 3.5m, Normal: 3m, Bodrum: 3.5m",
@@ -1660,67 +1660,67 @@ class Bolum24Content {
   );
 }
 class Bolum25Content {
-  static final kapasiteOptionA = ChoiceResult(
+  static final genislikOptionA = ChoiceResult(
     label: "25-1-A",
-    uiTitle: "Genişlik < 100 cm VEYA Kişi > 25.",
-    uiSubtitle: "Merdiven dar veya çok kalabalık bir kata hizmet ediyor.",
-    reportText: "☢️ KIRMIZI RİSK: Döner merdivenler 'Zorunlu Çıkış' olarak kabul edilebilmesi için en az 100 cm genişlikte olmalı ve en fazla 25 kişiye hizmet etmelidir. Mevcut durum yönetmelik sınırlarının dışındadır."
+    uiTitle: "Genişlik < 100 cm",
+    uiSubtitle: "Merdiven kol genişliği 100 cm'den az.",
+    reportText: "Döner merdiven genişliği 100 cm'den azdır. Yönetmelik gereği döner merdivenlerin kaçış yolu sayılabilmesi için en az 100 cm genişlik şarttır."
   );
 
-  static final kapasiteOptionB = ChoiceResult(
+  static final genislikOptionB = ChoiceResult(
     label: "25-1-B",
-    uiTitle: "Genişlik ≥ 100 cm VE Kişi ≤ 25.",
-    uiSubtitle: "Merdiven geniş ve az kişiye hizmet ediyor.",
-    reportText: "✅ OLUMLU: Döner merdiven genişliği ve kullanıcı yükü yönetmelik sınırları (100cm / 25 kişi) içerisindedir."
+    uiTitle: "Genişlik ≥ 100 cm",
+    uiSubtitle: "Merdiven kol genişliği yeterli.",
+    reportText: "Döner merdiven genişliği 100 cm ve üzerindedir."
   );
 
-  static final kapasiteOptionC = ChoiceResult(
+  static final genislikOptionC = ChoiceResult(
     label: "25-1-C",
     uiTitle: "Bilmiyorum / Ölçüm yapamadım.",
-    uiSubtitle: "Genişlik ve kullanıcı kapasitesi belirsiz.",
-    reportText: "❓ BİLİNMİYOR: Döner merdiven genişliği ve hizmet verdiği kişi sayısı bilinmiyor. 100 cm altındaki genişlikler acil durumlarda yığılmaya neden olabilir."
+    uiSubtitle: "Genişlik belirsiz.",
+    reportText: "Döner merdiven genişliği tespit edilememiştir."
   );
 
   static final basamakOptionA = ChoiceResult(
     label: "25-2-A",
     uiTitle: "Evet, rahat basılıyor.",
-    uiSubtitle: "Basamağın orta kısmı (basılan yer) en az 25 cm genişlikte.",
-    reportText: "✅ OLUMLU: Döner merdiven basamak genişliği (basış yüzeyi) yeterlidir."
+    uiSubtitle: "Basamağın orta kısmı en az 25 cm genişlikte.",
+    reportText: "Döner merdiven basamak genişliği (basış yüzeyi) yeterli seviyededir."
   );
 
   static final basamakOptionB = ChoiceResult(
     label: "25-2-B",
     uiTitle: "Hayır, basamaklar çok dar.",
-    uiSubtitle: "Basamaklar üçgen şeklinde, sadece en dıştan basılabiliyor.",
-    reportText: "⚠️ UYARI: Döner merdivenlerde basamak genişliği, merkezden 50 cm uzaklıkta en az 25 cm olmalıdır. Çok dar basamaklar panik anında düşme riskini artırır."
+    uiSubtitle: "Basamaklar üçgen şeklinde, basış alanı yetersiz.",
+    reportText: "Döner merdiven basamak genişliği yetersizdir. Dar basamaklar tahliye sırasında düşme riski oluşturur."
   );
 
   static final basamakOptionC = ChoiceResult(
     label: "25-2-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Basamak yapısı analiz edilemedi.",
-    reportText: "❓ BİLİNMİYOR: Döner merdiven basamak genişliği bilinmiyor. Basamakların dar olması tahliye hızını ciddi oranda düşürür."
+    reportText: "Döner merdiven basamak genişliği bilinmemektedir."
   );
 
   static final basKurtarmaOptionA = ChoiceResult(
     label: "25-3-A",
     uiTitle: "Ferah (2.50 metreden yüksek).",
     uiSubtitle: "İnerken başınız tavana veya üst basamağa değmiyor.",
-    reportText: "✅ OLUMLU: Baş kurtarma yüksekliği yeterlidir."
+    reportText: "Baş kurtarma yüksekliği yeterli seviyededir."
   );
 
   static final basKurtarmaOptionB = ChoiceResult(
     label: "25-3-B",
-    uiTitle: "Standart (2.10 - 2.50 metre arası).",
+    uiTitle: "Standart (2.10 ila 2.50 metre arası).",
     uiSubtitle: "Tavan alçak, baş çarpma riski var.",
-    reportText: "⚠️ UYARI: Döner merdivenlerde baş kurtarma yüksekliği, normal merdivenlerden daha fazla (en az 2.50 m) olmalıdır."
+    reportText: "Baş kurtarma yüksekliği sınır değerlerin altındadır (2.50m altı)."
   );
 
   static final basKurtarmaOptionC = ChoiceResult(
     label: "25-3-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Yükseklik ölçümü yapılamadı.",
-    reportText: "❓ BİLİNMİYOR: Döner merdiven baş kurtarma yüksekliği bilinmiyor. Alçak tavanlar tahliye sırasında yaralanmalara yol açabilir."
+    reportText: "Baş kurtarma yüksekliği tespit edilememiştir."
   );
 }
 class Bolum26Content {
@@ -2566,7 +2566,49 @@ class Bolum32Content {
   );
 }
 class Bolum33Content {
-    static final bos = ChoiceResult(label: "", uiTitle: "", uiSubtitle: "", reportText: "");
+  static final normalKatYeterli = ChoiceResult(
+    label: "33-NORMAL-OK",
+    uiTitle: "Yeterli",
+    uiSubtitle: "Çıkış sayısı uygun.",
+    reportText: "✅ OLUMLU: Mevcut çıkış sayısı, kişi sayısına göre yeterli görünmektedir. Ancak katta kaçış mesafeleri ve çıkmaz koridor durumları mimari projeden ayrıca kontrol edilmelidir."
+  );
+
+  static final normalKatYetersiz = ChoiceResult(
+    label: "33-NORMAL-FAIL",
+    uiTitle: "Yetersiz",
+    uiSubtitle: "Çıkış sayısı eksik.",
+    reportText: "🚨 KRİTİK RİSK: Normal katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış gereklidir."
+  );
+
+  static final zeminKatYeterli = ChoiceResult(
+    label: "33-ZEMIN-OK",
+    uiTitle: "Yeterli",
+    uiSubtitle: "Çıkış sayısı uygun.",
+    reportText: "✅ OLUMLU: Zemin kattaki mevcut çıkış sayısı, hesaplanan kullanıcı yükünü karşılamaktadır."
+  );
+
+  static final zeminKatYetersiz = ChoiceResult(
+    label: "33-ZEMIN-FAIL",
+    uiTitle: "Yetersiz",
+    uiSubtitle: "Çıkış sayısı eksik.",
+    reportText: "🚨 KRİTİK RİSK: Zemin kattaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir."
+  );
+
+  static final bodrumKatYeterli = ChoiceResult(
+    label: "33-BODRUM-OK",
+    uiTitle: "Yeterli",
+    uiSubtitle: "Çıkış sayısı uygun.",
+    reportText: "✅ OLUMLU: Bodrum katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükünü karşılamaktadır."
+  );
+
+  static final bodrumKatYetersiz = ChoiceResult(
+    label: "33-BODRUM-FAIL",
+    uiTitle: "Yetersiz",
+    uiSubtitle: "Çıkış sayısı eksik.",
+    reportText: "🚨 KRİTİK RİSK: Bodrum katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir."
+  );
+  
+  static final bos = ChoiceResult(label: "", uiTitle: "", uiSubtitle: "", reportText: "");
 }
 class Bolum34Content {
   static final zeminOptionA = ChoiceResult(
@@ -2813,4 +2855,47 @@ class Bolum36Content {
     uiSubtitle: "Durumu bilmiyorum.",
     reportText: "❓ BİLİNMİYOR: Çıkışların erişilebilirliği tespit edilememiştir."
   );
+}
+class AppContent {
+  static String getQuestionText(int id) {
+    switch (id) {
+      case 1: return "Binanızın yapı ruhsatı hangi tarihte alındı?";
+      case 2: return "Binanın taşıyıcı sistem ve yapı türü nedir?";
+      case 3: return "Binanın kat adetleri ve kat yükseklikleri nedir?";
+      case 4: return "Hesaplanan bina ve yapı yükseklik sınıfları nedir?";
+      case 5: return "Binanın toplam inşaat alanı ve kat alanları nedir?";
+      case 6: return "Binada konut harici ticari alanlar bulunmakta mıdır?";
+      case 7: return "Binada hangi teknik hacimler mevcuttur?";
+      case 8: return "Bina dış cephe malzemesinin yanıcılık sınıfı nedir?";
+      case 9: return "Binada otomatik yağmurlama (sprinkler) sistemi var mı?";
+      case 10: return "Katların baskın kullanım amaçları nelerdir?";
+      case 11: return "İtfaiye araçlarının binaya yaklaşma mesafesi uygun mu?";
+      case 12: return "Bina çevresinde itfaiye araçları için ring yolu var mı?";
+      case 13: return "Yangın kompartımanları ve kapıların ayrımı yapılmış mı?";
+      case 14: return "İç mekan tavan ve duvar kaplamalarının yanıcılık durumu nedir?";
+      case 15: return "Zemin kaplamaları ve tesisat geçişleri yalıtılmış mı?";
+      case 16: return "Dış cephe mantolama malzemesi nedir?";
+      case 17: return "Çatı kaplama malzemesi ve yalıtımı nedir?";
+      case 18: return "Acil durum aydınlatma sistemi mevcut mu?";
+      case 19: return "Acil durum yönlendirme levhaları mevcut mu?";
+      case 20: return "Kaçış merdivenlerinin tipleri ve adetleri nedir?";
+      case 21: return "Kaçış merdivenleri önünde Yangın Güvenlik Holü (YGH) var mı?";
+      case 22: return "Binada İtfaiye (acil durum) asansörü mevcut mu?";
+      case 23: return "Asansörlerin yangın anındaki davranış modu nedir?";
+      case 24: return "Kaçış yollarının atmosfere açılan son çıkış noktası nasıldır?";
+      case 25: return "Döner merdiven kol genişliği ve basamak yapısı uygun mu?";
+      case 26: return "Kaçış yollarında rampa kullanımı ve eğimi uygun mu?";
+      case 27: return "Kaçış yolu kapılarının genişliği, yönü ve kilit tipi nedir?";
+      case 28: return "En uzak noktadan çıkışa olan kaçış mesafesi ne kadardır?";
+      case 29: return "Teknik hacimlerin genel temizlik durumu nedir?";
+      case 30: return "Kazan dairesinin konumu ve havalandırması uygun mu?";
+      case 31: return "Trafo odasının yangın güvenliği ve ayrımı yapılmış mı?";
+      case 32: return "Jeneratör odasının yangın güvenliği ve ayrımı yapılmış mı?";
+      case 33: return "Kullanıcı yüküne göre gereken minimum çıkış sayısı nedir?";
+      case 34: return "Zemin kattaki ticari alanların bağımsız çıkışları var mı?";
+      case 35: return "Kaçış mesafeleri yönetmelik sınırları içerisinde mi?";
+      case 36: return "Kaçış yollarının genel görünürlüğü ve engel durumu nedir?";
+      default: return "Bölüm $id Analizi";
+    }
+  }
 }

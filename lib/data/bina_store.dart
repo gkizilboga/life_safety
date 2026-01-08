@@ -38,7 +38,6 @@ import '../models/bolum_35_model.dart';
 import '../models/bolum_36_model.dart';
 import '../models/choice_result.dart';
 import '../utils/app_content.dart';
-import '../logic/report_engine.dart';
 
 class BinaStore {
   static final BinaStore _instance = BinaStore._internal();
@@ -57,22 +56,19 @@ class BinaStore {
   String get userName => _prefs?.getString('userName') ?? "Analiz Uzmanı";
   set userName(String value) => _prefs?.setString('userName', value);
 
+  String get userProfession => _prefs?.getString('userProfession') ?? "Vatandaş / Diğer";
+  set userProfession(String value) => _prefs?.setString('userProfession', value);
+
   bool get isPremium => _prefs?.getBool('isPremium') ?? false;
   set isPremium(bool value) => _prefs?.setBool('isPremium', value);
 
   bool get isRegistered => _prefs?.getBool('isRegistered') ?? false;
   set isRegistered(bool value) => _prefs?.setBool('isRegistered', value);
 
-  void setPremiumStatus(bool status) {
-    isPremium = status;
-  }
-  String get userProfession => _prefs?.getString('userProfession') ?? "Vatandaş / Diğer";
-  set userProfession(String value) => _prefs?.setString('userProfession', value);
-
   bool get hapticEnabled => _prefs?.getBool('hapticEnabled') ?? true;
   set hapticEnabled(bool value) => _prefs?.setBool('hapticEnabled', value);
 
-
+  // Public Değişkenler (Linter Uyarısını Çözer ve Hızlı Erişim Sağlar)
   Bolum1Model? bolum1;
   Bolum2Model? bolum2;
   Bolum3Model? bolum3;
@@ -183,7 +179,9 @@ class BinaStore {
     }
 
     _prefs?.setString('bina_archive', json.encode(archive));
-    _prefs?.setString('active_bina_id', currentBinaId!);
+    if (currentBinaId != null) {
+      _prefs?.setString('active_bina_id', currentBinaId!);
+    }
   }
 
   void _loadBuildingFromMap(Map<String, dynamic> data) {
@@ -244,11 +242,51 @@ class BinaStore {
     _prefs?.remove('active_bina_id');
   }
 
+  void reset() {
+    currentBinaId = null;
+    currentBinaName = null;
+    currentBinaCity = null;
+    currentBinaDistrict = null;
+    bolum1 = null; bolum2 = null; bolum3 = null; bolum4 = null;
+    bolum5 = null; bolum6 = null; bolum7 = null; bolum8 = null;
+    bolum9 = null; bolum10 = null; bolum11 = null; bolum12 = null;
+    bolum13 = null; bolum14 = null; bolum15 = null; bolum16 = null;
+    bolum17 = null; bolum18 = null; bolum19 = null; bolum20 = null;
+    bolum21 = null; bolum22 = null; bolum23 = null; bolum24 = null;
+    bolum25 = null; bolum26 = null; bolum27 = null; bolum28 = null;
+    bolum29 = null; bolum30 = null; bolum31 = null; bolum32 = null;
+    bolum33 = null; bolum34 = null; bolum35 = null; bolum36 = null;
+  }
+
+  // EKSİK OLAN METODLAR EKLENDİ
+  void loadBuildingFromArchive(String id) {
+    final data = archive.firstWhere((e) => e['id'] == id, orElse: () => {});
+    if (data.isNotEmpty) {
+      reset();
+      _loadBuildingFromMap(data);
+      saveToDisk();
+    }
+  }
+
+  void deleteFromArchive(String id) {
+    archive.removeWhere((element) => element['id'] == id);
+    if (currentBinaId == id) reset();
+    _prefs?.setString('bina_archive', json.encode(archive));
+    _prefs?.remove('active_bina_id');
+  }
+
   ChoiceResult? getResultForSection(int id) {
     switch (id) {
       case 1: return bolum1?.secim;
       case 2: return bolum2?.secim;
-      case 3: return bolum3?.yukseklikTercihi;
+      case 3: 
+        if (bolum3 == null) return null;
+        return ChoiceResult(
+          label: "3", 
+          uiTitle: "hBina: ${bolum3?.hBina?.toStringAsFixed(2)}m | hYapi: ${bolum3?.hYapi?.toStringAsFixed(2)}m", 
+          uiSubtitle: "", 
+          reportText: "Bina Yüksekliği (hBina): ${bolum3?.hBina?.toStringAsFixed(2)} m, Yapı Yüksekliği (hYapi): ${bolum3?.hYapi?.toStringAsFixed(2)} m."
+        );
       case 4: return bolum4?.binaYukseklikSinifi;
       case 5: return ChoiceResult(label: "5", uiTitle: "${bolum5?.toplamInsaatAlani} m²", uiSubtitle: "", reportText: "Toplam İnşaat Alanı: ${bolum5?.toplamInsaatAlani} m²");
       case 6: return bolum6?.isSadeceKonut == true ? Bolum6Content.sadeceKonut : Bolum6Content.ticariVar;
@@ -276,7 +314,7 @@ class BinaStore {
       case 22: return bolum22?.varlik;
       case 23: return bolum23?.yanginModu;
       case 24: return bolum24?.tip;
-      case 25: return bolum25?.kapasite;
+      case 25: return bolum25?.genislik;
       case 26: return bolum26?.varlik;
       case 27: return bolum27?.boyut;
       case 28: return bolum28?.mesafe;
@@ -287,9 +325,7 @@ class BinaStore {
       case 31: return bolum31?.yapi;
       case 32: return bolum32?.yapi;
       case 33: 
-        // Bölüm 33 artık sadece sayısal veri tutuyor, rapor metni Bölüm 36'da birleştirildi.
-        // Ancak rapor motorunun hata vermemesi için boş bir ChoiceResult döndürüyoruz.
-        return ChoiceResult(label: "33", uiTitle: "Kullanıcı Yükü", uiSubtitle: "", reportText: "Kullanıcı yükü ve çıkış sayıları hesaplanmıştır.");
+        return bolum33?.normalKatSonuc ?? bolum33?.zeminKatSonuc ?? bolum33?.bodrumKatSonuc;
       case 34: return bolum34?.zemin;
       case 35: return bolum35?.tekYon ?? bolum35?.ciftYon;
       case 36: 
@@ -303,34 +339,5 @@ class BinaStore {
         );
       default: return null;
     }
-  }
-
-  void reset() {
-    bolum1 = null; bolum2 = null; bolum3 = null; bolum4 = null;
-    bolum5 = null; bolum6 = null; bolum7 = null; bolum8 = null;
-    bolum9 = null; bolum10 = null; bolum11 = null; bolum12 = null;
-    bolum13 = null; bolum14 = null; bolum15 = null; bolum16 = null;
-    bolum17 = null; bolum18 = null; bolum19 = null; bolum20 = null;
-    bolum21 = null; bolum22 = null; bolum23 = null; bolum24 = null;
-    bolum25 = null; bolum26 = null; bolum27 = null; bolum28 = null;
-    bolum29 = null; bolum30 = null; bolum31 = null; bolum32 = null;
-    bolum33 = null; bolum34 = null; bolum35 = null; bolum36 = null;
-    currentBinaId = null; currentBinaName = null; currentBinaCity = null; currentBinaDistrict = null;
-  }
-
-  void loadBuildingFromArchive(String id) {
-    final data = archive.firstWhere((e) => e['id'] == id, orElse: () => {});
-    if (data.isNotEmpty) {
-      reset();
-      _loadBuildingFromMap(data);
-      saveToDisk();
-    }
-  }
-
-  void deleteFromArchive(String id) {
-    archive.removeWhere((element) => element['id'] == id);
-    if (currentBinaId == id) reset();
-    _prefs?.setString('bina_archive', json.encode(archive));
-    _prefs?.remove('active_bina_id');
   }
 }

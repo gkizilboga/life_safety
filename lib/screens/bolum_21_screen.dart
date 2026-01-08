@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../data/bina_store.dart';
+import 'package:life_safety/data/bina_store.dart';
 import '../../models/bolum_21_model.dart';
 import 'bolum_22_screen.dart'; 
 import '../../widgets/custom_widgets.dart';

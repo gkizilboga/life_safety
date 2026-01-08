@@ -35,7 +35,7 @@ class ReportSummaryScreen extends StatelessWidget {
                   padding: EdgeInsets.only(left: 8, bottom: 12),
                   child: Text("ANALİZ DETAYLARI", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
                 ),
-                ...ReportModule.values.map((module) => _buildModuleCard(context, module)),
+                ...ReportModule.values.map((ReportModule module) => _buildModuleCard(context, module)),
                 const SizedBox(height: 30),
                 _buildDashboardButton(context),
                 const SizedBox(height: 50),
