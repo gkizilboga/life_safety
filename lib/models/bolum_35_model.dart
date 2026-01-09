@@ -6,7 +6,7 @@ class Bolum35Model {
   final ChoiceResult? ciftYon;
   final ChoiceResult? cikmaz;
   final ChoiceResult? cikmazMesafe;
-  final double? manuelMesafe; // Sayısal giriş için
+  final double? manuelMesafe;
 
   Bolum35Model({
     this.tekYon,
@@ -52,7 +52,7 @@ class Bolum35Model {
       ciftYon: find(map['ciftYon_label'], [Bolum35Content.ciftYonOptionA, Bolum35Content.ciftYonOptionB, Bolum35Content.ciftYonOptionC, Bolum35Content.ciftYonOptionD]),
       cikmaz: find(map['cikmaz_label'], [Bolum35Content.cikmazOptionA, Bolum35Content.cikmazOptionB]),
       cikmazMesafe: find(map['cikmazMesafe_label'], [Bolum35Content.cikmazMesafeOptionA, Bolum35Content.cikmazMesafeOptionB, Bolum35Content.cikmazMesafeOptionC, Bolum35Content.cikmazMesafeOptionD]),
-      manuelMesafe: map['manuelMesafe'],
+      manuelMesafe: (map['manuelMesafe'] as num?)?.toDouble(),
     );
   }
 }

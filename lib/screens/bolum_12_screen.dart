@@ -6,7 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import '../../utils/app_assets.dart'; // GÖRSEL YOLU İÇİN EKLENDİ
+import '../../utils/app_assets.dart';
 
 class Bolum12Screen extends StatefulWidget {
   const Bolum12Screen({super.key});
@@ -20,18 +20,42 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
   String? _tasiyiciSistemLabel;
   final _kolonPaspayiCtrl = TextEditingController();
   final _kirisPaspayiCtrl = TextEditingController();
+  final _dosemePaspayiCtrl = TextEditingController();
+
+  String? _kolonErr;
+  String? _kirisErr;
+  String? _dosemeErr;
 
   @override
   void initState() {
     super.initState();
     final bolum2 = BinaStore.instance.bolum2;
     _tasiyiciSistemLabel = bolum2?.secim?.label;
+    _kolonPaspayiCtrl.addListener(_validate);
+    _kirisPaspayiCtrl.addListener(_validate);
+    _dosemePaspayiCtrl.addListener(_validate);
+  }
+
+  void _validate() {
+    setState(() {
+      _kolonErr = _checkLimit(_kolonPaspayiCtrl.text);
+      _kirisErr = _checkLimit(_kirisPaspayiCtrl.text);
+      _dosemeErr = _checkLimit(_dosemePaspayiCtrl.text);
+    });
+  }
+
+  String? _checkLimit(String text) {
+    if (text.isEmpty) return null;
+    double? val = double.tryParse(text.replaceAll(',', '.'));
+    if (val == null || val < 5 || val > 100) return "5-100 mm arası giriniz";
+    return null;
   }
 
   @override
   void dispose() {
     _kolonPaspayiCtrl.dispose();
     _kirisPaspayiCtrl.dispose();
+    _dosemePaspayiCtrl.dispose();
     super.dispose();
   }
 
@@ -51,7 +75,10 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     
     if (_model.betonPaspayi == null) return false;
     if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
-      return _kolonPaspayiCtrl.text.isNotEmpty && _kirisPaspayiCtrl.text.isNotEmpty;
+      bool filled = _kolonPaspayiCtrl.text.isNotEmpty && 
+                   _kirisPaspayiCtrl.text.isNotEmpty && 
+                   _dosemePaspayiCtrl.text.isNotEmpty;
+      return filled && _kolonErr == null && _kirisErr == null && _dosemeErr == null;
     }
     return true;
   }
@@ -68,9 +95,11 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
           _model = _model.copyWith(
             kolonPaspayi: double.tryParse(_kolonPaspayiCtrl.text.replaceAll(',', '.')),
             kirisPaspayi: double.tryParse(_kirisPaspayiCtrl.text.replaceAll(',', '.')),
+            dosemePaspayi: double.tryParse(_dosemePaspayiCtrl.text.replaceAll(',', '.')),
           );
         }
         BinaStore.instance.bolum12 = _model;
+        BinaStore.instance.saveToDisk();
         Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum13Screen()));
       },
       child: _buildContent(),
@@ -93,44 +122,24 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
           child: Text("Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?", 
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
         ),
-        
-        // --- TEKNİK GÖRSEL BUTONU BURAYA EKLENDİ ---
-        TechnicalDrawingButton(
-          assetPath: AppAssets.section12Paspayi,
-          title: "Paspayı (Beton Koruma Tabakası) Detayı",
-        ),
+        TechnicalDrawingButton(assetPath: AppAssets.section12Paspayi, title: "Paspayı Detayı"),
         const SizedBox(height: 12),
-
         QuestionCard(
           child: Column(
             children: [
-              SelectableCard(
-                choice: Bolum12Content.betonOptionA,
-                isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionA.label,
-                onTap: () => _handleSelection('beton', Bolum12Content.betonOptionA),
-              ),
-              SelectableCard(
-                choice: Bolum12Content.betonOptionB,
-                isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionB.label,
-                onTap: () => _handleSelection('beton', Bolum12Content.betonOptionB),
-              ),
+              SelectableCard(choice: Bolum12Content.betonOptionA, isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionA.label, onTap: () => _handleSelection('beton', Bolum12Content.betonOptionA)),
+              SelectableCard(choice: Bolum12Content.betonOptionB, isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionB.label, onTap: () => _handleSelection('beton', Bolum12Content.betonOptionB)),
               if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) ...[
                 const SizedBox(height: 12),
-                _buildManualInput("Kolon Paspayı (mm)", _kolonPaspayiCtrl),
+                _buildManualInput("Kolon Paspayı (mm)", _kolonPaspayiCtrl, _kolonErr),
                 const SizedBox(height: 12),
-                _buildManualInput("Kiriş Paspayı (mm)", _kirisPaspayiCtrl),
+                _buildManualInput("Kiriş Paspayı (mm)", _kirisPaspayiCtrl, _kirisErr),
+                const SizedBox(height: 12),
+                _buildManualInput("Döşeme Paspayı (mm)", _dosemePaspayiCtrl, _dosemeErr),
                 const SizedBox(height: 12),
               ],
-              SelectableCard(
-                choice: Bolum12Content.betonOptionC,
-                isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionC.label,
-                onTap: () => _handleSelection('beton', Bolum12Content.betonOptionC),
-              ),
-              SelectableCard(
-                choice: Bolum12Content.betonOptionD,
-                isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionD.label,
-                onTap: () => _handleSelection('beton', Bolum12Content.betonOptionD),
-              ),
+              SelectableCard(choice: Bolum12Content.betonOptionC, isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionC.label, onTap: () => _handleSelection('beton', Bolum12Content.betonOptionC)),
+              SelectableCard(choice: Bolum12Content.betonOptionD, isSelected: _model.betonPaspayi?.label == Bolum12Content.betonOptionD.label, onTap: () => _handleSelection('beton', Bolum12Content.betonOptionD)),
             ],
           ),
         ),
@@ -138,17 +147,17 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     );
   }
 
-  Widget _buildManualInput(String label, TextEditingController ctrl) {
+  Widget _buildManualInput(String label, TextEditingController ctrl, String? error) {
     return TextFormField(
       controller: ctrl,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(
         labelText: label,
+        errorText: error,
         suffixText: "mm",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       ),
-      onChanged: (_) => setState(() {}),
     );
   }
 
@@ -156,8 +165,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?", 
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const Text("Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         QuestionCard(
           child: Column(
@@ -176,8 +184,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Ahşap taşıyıcılarınızın kalınlığı (kesiti) nasıldır?", 
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const Text("Ahşap taşıyıcılarınızın kalınlığı (kesiti) nasıldır?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         QuestionCard(
           child: Column(
@@ -195,8 +202,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Binanızın taşıyıcı duvarlarının kalınlığı en az 19 cm var mı?", 
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const Text("Binanızın taşıyıcı duvarlarının kalınlığı en az 19 cm var mı?", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 12),
         QuestionCard(
           child: Column(

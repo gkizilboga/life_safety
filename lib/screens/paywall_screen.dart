@@ -1,13 +1,17 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../data/bina_store.dart';
+import '../logic/report_engine.dart';
 import '../utils/app_theme.dart';
-import '../widgets/custom_widgets.dart';
 
 class PaywallScreen extends StatelessWidget {
   const PaywallScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final metrics = ReportEngine.calculateRiskMetrics();
+    final String profession = BinaStore.instance.userProfession;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -18,53 +22,113 @@ class PaywallScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildScoreHeader(metrics),
+            const SizedBox(height: 30),
+            _buildBlurredPreview(),
+            const SizedBox(height: 30),
+            _buildValueProposition(profession, metrics['criticalCount']),
+            const SizedBox(height: 40),
+            _buildPricingOptions(context),
+            const SizedBox(height: 40),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildScoreHeader(Map<String, dynamic> metrics) {
+    return Column(
+      children: [
+        const Text("BİNANIZIN YANGIN GÜVENLİK SKORU", 
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.5, color: Colors.grey)),
+        const SizedBox(height: 10),
+        Text("%${metrics['score']}", 
+          style: const TextStyle(fontSize: 64, fontWeight: FontWeight.w900, color: AppColors.primaryBlue)),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(20)),
+          child: Text("${metrics['criticalCount']} ADET KRİTİK RİSK TESPİT EDİLDİ", 
+            style: TextStyle(color: Colors.red.shade900, fontSize: 12, fontWeight: FontWeight.bold)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBlurredPreview() {
+    return Container(
+      height: 220,
+      margin: const EdgeInsets.symmetric(horizontal: 30),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 30, offset: const Offset(0, 10))],
+        color: AppColors.backgroundGrey,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.verified_user_rounded, size: 80, color: AppColors.primaryBlue),
-                  const SizedBox(height: 24),
-                  const Text(
-                    "Profesyonel Rapor Erişimi",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textDark),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    "36 bölümden oluşan detaylı risk analiz raporunuzu PDF formatında almak ve arşivlemek için premium erişim gereklidir.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 15, color: AppColors.textLight, height: 1.5),
-                  ),
-                  const SizedBox(height: 40),
-                  _buildFeatureRow(Icons.picture_as_pdf, "Kapsamlı PDF Raporu"),
-                  _buildFeatureRow(Icons.analytics_outlined, "Detaylı Risk Skorlaması"),
-                  _buildFeatureRow(Icons.gavel_outlined, "Mevzuata Uygun Teknik Dil"),
-                  _buildFeatureRow(Icons.cloud_done_outlined, "Sınırsız Arşivleme İmkanı"),
-                  const SizedBox(height: 50),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundGrey,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.primaryBlue.withOpacity(0.1)),
-                    ),
-                    child: const Column(
-                      children: [
-                        Text("TEK SEFERLİK ÖDEME", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryBlue, letterSpacing: 1)),
-                        SizedBox(height: 8),
-                        Text("₺499,99", style: TextStyle(fontSize: 36, fontWeight: FontWeight.w900, color: AppColors.textDark)),
-                        Text("Tüm özellikler süresiz açılır", style: TextStyle(fontSize: 12, color: AppColors.textLight)),
-                      ],
-                    ),
-                  ),
+                  Container(height: 15, width: 150, color: Colors.grey.shade300),
+                  const SizedBox(height: 10),
+                  Container(height: 10, width: 250, color: Colors.grey.shade200),
+                  const SizedBox(height: 20),
+                  Container(height: 40, width: double.infinity, color: Colors.orange.shade50),
+                  const SizedBox(height: 10),
+                  Container(height: 10, width: 200, color: Colors.grey.shade200),
                 ],
               ),
             ),
-          ),
-          _buildBottomAction(context),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.white.withOpacity(0.1),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: const BoxDecoration(color: AppColors.primaryBlue, shape: BoxShape.circle),
+                      child: const Icon(Icons.lock_outline, color: Colors.white, size: 32),
+                    ),
+                    const SizedBox(height: 15),
+                    const Text("MÜHENDİSLİK ÇÖZÜMLERİ KİLİTLİ", 
+                      style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryBlue, fontSize: 14)),
+                    const Text("Tam raporu satın alarak çözüm yollarını görün", 
+                      style: TextStyle(color: AppColors.textLight, fontSize: 11)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildValueProposition(String profession, int criticalCount) {
+    String nudgeText = "Binanızdaki $criticalCount kritik uygunsuzluğu Yönetmelik maddeleriyle belgeleyin.";
+    if (profession.contains("Yönetici")) nudgeText = "634 sayılı KMK uyarınca yasal sorumluluğunuzu dökümante edin.";
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Column(
+        children: [
+          Text(nudgeText, 
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textDark)),
+          const SizedBox(height: 25),
+          _buildFeatureRow(Icons.fact_check_outlined, "36 Bölüm Detaylı Teknik Analiz"),
+          _buildFeatureRow(Icons.auto_fix_high_outlined, "Yangın Güvenliği İyileştirme Çözümleri"),
+          _buildFeatureRow(Icons.gavel_outlined, "Yasal Mevzuat ve Dayanakları"),
+          _buildFeatureRow(Icons.picture_as_pdf_outlined, "Paylaşılabilir Profesyonel PDF Çıktısı"),
         ],
       ),
     );
@@ -72,50 +136,66 @@ class PaywallScreen extends StatelessWidget {
 
   Widget _buildFeatureRow(IconData icon, String text) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.successGreen, size: 24),
-          const SizedBox(width: 16),
-          Text(text, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: AppColors.textDark)),
+          Icon(icon, color: AppColors.successGreen, size: 20),
+          const SizedBox(width: 12),
+          Text(text, style: const TextStyle(fontSize: 13, color: AppColors.textDark, fontWeight: FontWeight.w500)),
         ],
       ),
     );
   }
 
-  Widget _buildBottomAction(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
-      ),
+  Widget _buildPricingOptions(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryBlue,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              ),
-              onPressed: () {
-                // HATA BURADA DÜZELTİLDİ: setPremiumStatus yerine doğrudan isPremium kullanıldı
-                BinaStore.instance.isPremium = true;
-                
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Premium erişim aktif edildi. Raporunuzu şimdi alabilirsiniz.")),
-                );
-                Navigator.pop(context);
-              },
-              child: const Text("ŞİMDİ SATIN AL", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
-            ),
-          ),
+          _buildPriceCard(context, "TEKLİ ANALİZ", "499 TL", "Tek bina için tam rapor ve reçete", false, 1),
           const SizedBox(height: 12),
-          const Text("Güvenli ödeme altyapısı ile korunmaktadır.", style: TextStyle(fontSize: 11, color: AppColors.textLight)),
+          _buildPriceCard(context, "ÜÇLÜ PAKET", "1,199 TL", "Rapor başı 399 TL - En Popüler", true, 3),
+          const SizedBox(height: 12),
+          _buildPriceCard(context, "PRO PLAN", "1,999 TL", "Aylık 10 Rapor", false, 10),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPriceCard(BuildContext context, String title, String price, String sub, bool isPopular, int credits) {
+    return InkWell(
+      onTap: () {
+        BinaStore.instance.reportCredits += credits;
+        BinaStore.instance.isPremium = true;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("$title aktif edildi. $credits adet rapor kredisi eklendi.")),
+        );
+        Navigator.pop(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isPopular ? AppColors.primaryBlue : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: isPopular ? AppColors.primaryBlue : Colors.grey.shade200, width: 2),
+          boxShadow: isPopular ? [BoxShadow(color: AppColors.primaryBlue.withOpacity(0.3), blurRadius: 15, offset: const Offset(0, 8))] : [],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: isPopular ? Colors.white : AppColors.textDark, fontSize: 15)),
+                  const SizedBox(height: 2),
+                  Text(sub, style: TextStyle(fontSize: 11, color: isPopular ? Colors.white70 : AppColors.textLight)),
+                ],
+              ),
+            ),
+            Text(price, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isPopular ? Colors.white : AppColors.primaryBlue)),
+          ],
+        ),
       ),
     );
   }

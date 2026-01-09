@@ -1317,33 +1317,46 @@ class Bolum21Content {
     uiSubtitle: "Giriş-çıkış kapıları olan odacık mevcut.", 
     reportText: "Yangın merdiveni önünde Yangın Güvenlik Holü (YGH) mevcuttur.");
   static final varlikOptionB = ChoiceResult(
-    label: "21-1-B", uiTitle: "Hayır, yok.", 
+    label: "21-1-B", 
+    uiTitle: "Hayır, yok.", 
     uiSubtitle: "Holden geçmeden direkt merdivene çıkılıyor.", 
-    reportText: "Binada YGH bulunmamaktadır.");
+    reportText: "Binada YGH bulunmamaktadır.",
+    adviceText: "Mimari zorunluluklar nedeniyle YGH yapılamıyorsa, Madde 89 uyarınca kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilmelidir.");
+      
   static final malzemeOptionA = ChoiceResult(label: "21-2-A", 
-    uiTitle: "Sıva, boya, beton, mermer vb.", uiSubtitle: "Hol içinde yanmaz malzemeler kullanılmış.", 
-  reportText: "YGH içindeki kaplamalar yanmaz özelliktedir.");
-  static final malzemeOptionB = ChoiceResult(label: "21-2-B", 
+    uiTitle: "Sıva, boya, beton, mermer vb.", 
+    uiSubtitle: "Hol içinde yanmaz malzemeler kullanılmış.", 
+    reportText: "YGH içindeki kaplamalar yanmaz özelliktedir.");
+    static final malzemeOptionB = ChoiceResult(
+    label: "21-2-B", 
     uiTitle: "Ahşap, duvar kağıdı, plastik.", 
-  uiSubtitle: "Hol içinde yanıcı kaplama veya dekorasyon var.", reportText: "Yangın güvenlik holleri kaçış yolunun bir parçasıdır. Duvar, tavan ve tabanında hiçbir yanıcı malzeme kullanılamaz.");
+    uiSubtitle: "Hol içinde yanıcı kaplama veya dekorasyon var.", 
+    reportText: "Yangın güvenlik holleri kaçış yolunun bir parçasıdır. Duvar, tavan ve tabanında hiçbir yanıcı malzeme kullanılamaz.",
+    adviceText: "Hol içindeki yanıcı kaplamaların sökülerek A1 sınıfı (yanmaz) malzemelerle (sıva, boya, seramik vb.) yenilenmesi gerekmektedir.");
   static final malzemeOptionC = ChoiceResult(label: "21-2-C", 
     uiTitle: "Bilmiyorum.", 
   uiSubtitle: "Malzemenin cinsini bilmiyorum.", reportText: "Holdeki malzemelerin yanıcılık özellikleri bilinmiyor. Kaçış yollarında yanıcı malzeme kullanımı risk teşkil eder.");
   static final kapiOptionA = ChoiceResult(label: "21-3-A", 
     uiTitle: "YGH kapıları yangına dayanıklı, duman sızdırmaz ve kendiliğinden kapanan özelliktedir.", 
     uiSubtitle: "", reportText: "YGH kapıları uygun gözükmektedir.");
-  static final kapiOptionB = ChoiceResult(label: "21-3-B", 
+    static final kapiOptionB = ChoiceResult(
+    label: "21-3-B", 
     uiTitle: "YGH kapıları yangına dayanıklı değil.", 
-  uiSubtitle: "", reportText: "YGH kapıları en az 90 dakika yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.");
+    uiSubtitle: "", 
+    reportText: "YGH kapıları en az 90 dakika yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.",
+    adviceText: "Mevcut kapıların sertifikalı, duman sızdırmazlık fitilli ve hidrolik kapatıcılı 'Yangın Kapıları' ile değiştirilmesi hayati önem taşır.");
   static final kapiOptionC = ChoiceResult(label: "21-3-C", 
     uiTitle: "YGH kapıları hakkında fikrim yok.", 
   uiSubtitle: "", reportText: "Kapıların yangın dayanımı bilinmiyor. YGH kapıları en az 90 dakika yangına dayanıklı olmalıdır.");
   static final esyaOptionA = ChoiceResult(label: "21-4-A", 
     uiTitle: "Hayır, tamamen boş.", 
     uiSubtitle: "Hol içinde hiçbir eşya yok.", reportText: "YGH içi temiz ve boş olduğundan güvenli sayılır.");
-  static final esyaOptionB = ChoiceResult(label: "21-4-B", 
+    static final esyaOptionB = ChoiceResult(
+    label: "21-4-B", 
     uiTitle: "Evet, eşya var.", 
-    uiSubtitle: "Bisiklet, ayakkabılık, dolap vb.", reportText: "Yangın güvenlik hollerinde kaçışı engelleyecek hiçbir eşya bulundurulamaz.");
+    uiSubtitle: "Bisiklet, ayakkabılık, dolap vb.", 
+    reportText: "Yangın güvenlik hollerinde kaçışı engelleyecek hiçbir eşya bulundurulamaz.",
+    adviceText: "YGH alanındaki tüm eşyaların derhal tahliye edilmesi ve bu alanın 'Sıfır Yanıcı Yük' prensibiyle boş tutulması gerekmektedir.");
   static final esyaOptionC = ChoiceResult(label: "21-4-C", 
     uiTitle: "Bazen konuluyor.", 
     uiSubtitle: "Geçici depolama yapılıyor.", reportText: "YGH alanları depo olarak kullanılamaz, her an boş tutulmalıdır.");
@@ -1664,7 +1677,8 @@ class Bolum25Content {
     label: "25-1-A",
     uiTitle: "Genişlik < 100 cm",
     uiSubtitle: "Merdiven kol genişliği 100 cm'den az.",
-    reportText: "Döner merdiven genişliği 100 cm'den azdır. Yönetmelik gereği döner merdivenlerin kaçış yolu sayılabilmesi için en az 100 cm genişlik şarttır."
+    reportText: "Döner merdiven genişliği 100 cm'den azdır. Yönetmelik gereği döner merdivenlerin kaçış yolu sayılabilmesi için en az 100 cm genişlik şarttır.",
+    adviceText: "Genişliği 100 cm altında kalan döner merdivenler yasal kaçış yolu kabul edilmez. Binaya yönetmelik standartlarında ikinci bir kaçış yolu (dış açık çelik merdiven vb.) eklenmesi önerilir."
   );
 
   static final genislikOptionB = ChoiceResult(
@@ -1692,7 +1706,8 @@ class Bolum25Content {
     label: "25-2-B",
     uiTitle: "Hayır, basamaklar çok dar.",
     uiSubtitle: "Basamaklar üçgen şeklinde, basış alanı yetersiz.",
-    reportText: "Döner merdiven basamak genişliği yetersizdir. Dar basamaklar tahliye sırasında düşme riski oluşturur."
+    reportText: "Döner merdiven basamak genişliği yetersizdir. Dar basamaklar tahliye sırasında düşme riski oluşturur.",
+    adviceText: "Basamakların en dar noktasında basış genişliğinin artırılması için basamak yapısının revize edilmesi veya merdivenin ana kaçış yolu olarak kullanılmaması planlanmalıdır."
   );
 
   static final basamakOptionC = ChoiceResult(
@@ -1713,7 +1728,8 @@ class Bolum25Content {
     label: "25-3-B",
     uiTitle: "Standart (2.10 ila 2.50 metre arası).",
     uiSubtitle: "Tavan alçak, baş çarpma riski var.",
-    reportText: "Baş kurtarma yüksekliği sınır değerlerin altındadır (2.50m altı)."
+    reportText: "Baş kurtarma yüksekliği sınır değerlerin altındadır (2.50m altı).",
+    adviceText: "Tahliye anında yaralanmaları önlemek için tavanın alçak olduğu noktalara yumuşak koruyucu pedler ve fosforlu uyarı işaretleri yerleştirilmelidir."
   );
 
   static final basKurtarmaOptionC = ChoiceResult(
@@ -2577,7 +2593,8 @@ class Bolum33Content {
     label: "33-NORMAL-FAIL",
     uiTitle: "Yetersiz",
     uiSubtitle: "Çıkış sayısı eksik.",
-    reportText: "🚨 KRİTİK RİSK: Normal katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış gereklidir."
+    reportText: "🚨 KRİTİK RİSK: Normal katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış gereklidir.",
+    adviceText: "Kullanıcı yükü kapasiteyi aştığı için binaya yönetmelik standartlarında ilave bir kaçış merdiveni eklenmesi veya kat alanlarının yangın kompartımanlarına bölünerek her bölge için ayrı çıkış tasarlanması gerekmektedir."
   );
 
   static final zeminKatYeterli = ChoiceResult(
@@ -2776,7 +2793,8 @@ class Bolum36Content {
     label: "36-1-B",
     uiTitle: "Evet, merdivenin hemen yanında/altında daire pencereleri veya kapılar var.",
     uiSubtitle: "Merdivenin hemen yanında açıklık var.",
-    reportText: "🚨 RİSK: Açık dış kaçış merdiveninin 3 metre yakınında korunumsuz pencere veya kapı bulunamaz."
+    reportText: "🚨 RİSK: Açık dış kaçış merdiveninin 3 metre yakınında korunumsuz pencere veya kapı bulunamaz.",
+    adviceText: "Merdivene 3 metre mesafedeki pencerelerin yangına en az 60 dakika dayanıklı (E60) sabit camlar ile değiştirilmesi veya bu açıklıkların tuğla örülerek kapatılması gerekmektedir."
   );
   static final disMerdOptionC = ChoiceResult(
     label: "36-1-C",
@@ -2795,7 +2813,8 @@ class Bolum36Content {
     label: "36-2-B",
     uiTitle: "Yan yanalar veya birbirlerine çok yakınlar.",
     uiSubtitle: "Birbirlerine bitişikler.",
-    reportText: "🚨 RİSK: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış' sayılmaz."
+    reportText: "🚨 RİSK: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış' sayılmaz.",
+    adviceText: "Merdivenlerin birbirine olan mesafesi, katın en uzak iki noktasına hizmet edecek şekilde artırılmalı veya merdivenler arasında yangına dayanıklı duman sızdırmaz bölmeler oluşturulmalıdır."
   );
   static final konumOptionC = ChoiceResult(
     label: "36-2-C",
@@ -2847,7 +2866,8 @@ class Bolum36Content {
     label: "36-5-B",
     uiTitle: "Hayır, önünde eşyalar var veya görmekte zorlanıyorum.",
     uiSubtitle: "Çıkışlar kapalı veya görünmüyor.",
-    reportText: "🚨 RİSK: Çıkışlar her an kullanılabilir durumda ve engelsiz olmalıdır."
+    reportText: "🚨 RİSK: Çıkışlar her an kullanılabilir durumda ve engelsiz olmalıdır.",
+    adviceText: "Kaçış yollarındaki tüm engellerin (dolap, saksı, bisiklet vb.) derhal kaldırılması ve çıkış kapılarının önünün 7/24 açık tutulması yasal zorunluluktur."
   );
   static final gorunurlukOptionC = ChoiceResult(
     label: "36-5-C",

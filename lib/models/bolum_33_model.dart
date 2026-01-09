@@ -21,26 +21,19 @@ class Bolum33Model {
     this.mevcutUst, this.mevcutBodrum,
   });
 
-  // AKILLI HESAPLAMA GETTER'LARI
   ChoiceResult? get normalKatSonuc {
     if (mevcutUst == null || gerekliNormal == null) return null;
-    return (mevcutUst! >= gerekliNormal!) 
-        ? Bolum33Content.normalKatYeterli 
-        : Bolum33Content.normalKatYetersiz;
+    return (mevcutUst! >= gerekliNormal!) ? Bolum33Content.normalKatYeterli : Bolum33Content.normalKatYetersiz;
   }
 
   ChoiceResult? get zeminKatSonuc {
     if (mevcutUst == null || gerekliZemin == null) return null;
-    return (mevcutUst! >= gerekliZemin!) 
-        ? Bolum33Content.zeminKatYeterli 
-        : Bolum33Content.zeminKatYetersiz;
+    return (mevcutUst! >= gerekliZemin!) ? Bolum33Content.zeminKatYeterli : Bolum33Content.zeminKatYetersiz;
   }
 
   ChoiceResult? get bodrumKatSonuc {
     if (mevcutBodrum == null || gerekliBodrum == null) return null;
-    return (mevcutBodrum! >= gerekliBodrum!) 
-        ? Bolum33Content.bodrumKatYeterli 
-        : Bolum33Content.bodrumKatYetersiz;
+    return (mevcutBodrum! >= gerekliBodrum!) ? Bolum33Content.bodrumKatYeterli : Bolum33Content.bodrumKatYetersiz;
   }
 
   Bolum33Model copyWith({
@@ -66,33 +59,19 @@ class Bolum33Model {
 
   Map<String, dynamic> toMap() {
     return {
-      'alanZemin': alanZemin,
-      'alanNormal': alanNormal,
-      'alanBodrumMax': alanBodrumMax,
-      'yukZemin': yukZemin,
-      'yukNormal': yukNormal,
-      'yukBodrum': yukBodrum,
-      'gerekliZemin': gerekliZemin,
-      'gerekliNormal': gerekliNormal,
-      'gerekliBodrum': gerekliBodrum,
-      'mevcutUst': mevcutUst,
-      'mevcutBodrum': mevcutBodrum,
+      'alanZemin': alanZemin, 'alanNormal': alanNormal, 'alanBodrumMax': alanBodrumMax,
+      'yukZemin': yukZemin, 'yukNormal': yukNormal, 'yukBodrum': yukBodrum,
+      'gerekliZemin': gerekliZemin, 'gerekliNormal': gerekliNormal, 'gerekliBodrum': gerekliBodrum,
+      'mevcutUst': mevcutUst, 'mevcutBodrum': mevcutBodrum,
     };
   }
 
   factory Bolum33Model.fromMap(Map<String, dynamic> map) {
     return Bolum33Model(
-      alanZemin: map['alanZemin'],
-      alanNormal: map['alanNormal'],
-      alanBodrumMax: map['alanBodrumMax'],
-      yukZemin: map['yukZemin'],
-      yukNormal: map['yukNormal'],
-      yukBodrum: map['yukBodrum'],
-      gerekliZemin: map['gerekliZemin'],
-      gerekliNormal: map['gerekliNormal'],
-      gerekliBodrum: map['gerekliBodrum'],
-      mevcutUst: map['mevcutUst'],
-      mevcutBodrum: map['mevcutBodrum'],
+      alanZemin: map['alanZemin'], alanNormal: map['alanNormal'], alanBodrumMax: map['alanBodrumMax'],
+      yukZemin: map['yukZemin'], yukNormal: map['yukNormal'], yukBodrum: map['yukBodrum'],
+      gerekliZemin: map['gerekliZemin'], gerekliNormal: map['gerekliNormal'], gerekliBodrum: map['gerekliBodrum'],
+      mevcutUst: map['mevcutUst'], mevcutBodrum: map['mevcutBodrum'],
     );
   }
 }

@@ -3,7 +3,7 @@ import '../utils/app_content.dart';
 
 class Bolum30Model {
   final ChoiceResult? konum;
-  final double? kapasite;
+  final int? kapasite;
   final bool kapasiteBilinmiyor;
   final ChoiceResult? kapi;
   final ChoiceResult? hava;
@@ -24,7 +24,7 @@ class Bolum30Model {
 
   Bolum30Model copyWith({
     ChoiceResult? konum,
-    double? kapasite,
+    int? kapasite,
     bool? kapasiteBilinmiyor,
     ChoiceResult? kapi,
     ChoiceResult? hava,

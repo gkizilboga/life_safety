@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_20_model.dart';
@@ -32,12 +33,23 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   final _donerCtrl = TextEditingController();
   final _sahanliksizCtrl = TextEditingController();
 
+  String? _normalErr;
+  String? _icKapaliErr;
+  String? _disKapaliErr;
+  String? _disAcikErr;
+  String? _donerErr;
+  String? _sahanliksizErr;
+
   @override
   void initState() {
     super.initState();
     _loadBuildingInfo();
-    _icKapaliCtrl.addListener(_checkBasinclandirmaVisibility);
-    _disKapaliCtrl.addListener(_checkBasinclandirmaVisibility);
+    _normalCtrl.addListener(_validateLimits);
+    _icKapaliCtrl.addListener(_validateLimits);
+    _disKapaliCtrl.addListener(_validateLimits);
+    _disAcikCtrl.addListener(_validateLimits);
+    _donerCtrl.addListener(_validateLimits);
+    _sahanliksizCtrl.addListener(_validateLimits);
   }
 
   void _loadBuildingInfo() {
@@ -52,13 +64,32 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     });
   }
 
-  void _checkBasinclandirmaVisibility() {
-    int ic = int.tryParse(_icKapaliCtrl.text) ?? 0;
-    int dis = int.tryParse(_disKapaliCtrl.text) ?? 0;
+  void _validateLimits() {
     setState(() {
+      _normalErr = _checkLimit(_normalCtrl.text);
+      _icKapaliErr = _checkLimit(_icKapaliCtrl.text);
+      _disKapaliErr = _checkLimit(_disKapaliCtrl.text);
+      _disAcikErr = _checkLimit(_disAcikCtrl.text);
+      _donerErr = _checkLimit(_donerCtrl.text);
+      _sahanliksizErr = _checkLimit(_sahanliksizCtrl.text);
+
+      int ic = int.tryParse(_icKapaliCtrl.text) ?? 0;
+      int dis = int.tryParse(_disKapaliCtrl.text) ?? 0;
       _showBasinclandirma = (ic >= 1 || dis >= 1);
       if (!_showBasinclandirma) _model = _model.copyWith(basinclandirma: null);
     });
+  }
+
+  String? _checkLimit(String text) {
+    if (text.isEmpty) return null;
+    int? val = int.tryParse(text);
+    if (val != null && val > 6) return "Maks: 6";
+    return null;
+  }
+
+  bool get _isLimitValid {
+    return _normalErr == null && _icKapaliErr == null && _disKapaliErr == null && 
+           _disAcikErr == null && _donerErr == null && _sahanliksizErr == null;
   }
 
   @override
@@ -118,7 +149,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       title: "Kaçış Merdivenleri",
       subtitle: "Binadaki merdiven tipleri ve adetleri",
       screenType: widget.runtimeType,
-      isNextEnabled: true,
+      isNextEnabled: _isLimitValid,
       onNext: () {
         if (_validateAndSave()) {
           Navigator.push(
@@ -137,7 +168,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Lütfen gerekli alanları doldurunuz.")),
+            const SnackBar(content: Text("Lütfen gerekli alanları doğru şekilde doldurunuz.")),
           );
         }
       },
@@ -152,7 +183,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ] else ...[
             const Padding(
               padding: EdgeInsets.only(left: 4, bottom: 16),
-              child: Text("Binanızda aşağıdaki merdiven türlerinden kaçar tane var?", 
+              child: Text("Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Maks: 6)", 
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
             ),
             
@@ -162,48 +193,42 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption1.uiTitle,
                     ctrl: _normalCtrl,
+                    error: _normalErr,
                     assetPath: AppAssets.section20Normal,
-                    assetTitle: "Normal Apartman Merdiveni",
                   ),
                   const Divider(height: 32),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption2.uiTitle,
                     ctrl: _icKapaliCtrl,
+                    error: _icKapaliErr,
                     assetPath: AppAssets.section20IcKapali,
-                    assetTitle: "Bina İçi Kapalı Yangın Merdiveni",
                   ),
                   const Divider(height: 32),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption3.uiTitle,
                     ctrl: _disKapaliCtrl,
+                    error: _disKapaliErr,
                     assetPath: AppAssets.section20DisKapali,
-                    assetTitle: "Bina Dışı Kapalı Yangın Merdiveni",
                   ),
                   const Divider(height: 32),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption4.uiTitle,
                     ctrl: _disAcikCtrl,
-                    assetPaths: [
-                      AppAssets.section20DisAcik1,
-                      AppAssets.section20DisAcik2,
-                    ],
-                    assetTitles: [
-                      "Dış Açık Merdiven Örnek 1",
-                      "Dış Açık Merdiven Örnek 2",
-                    ],
+                    error: _disAcikErr,
+                    assetPaths: [AppAssets.section20DisAcik1, AppAssets.section20DisAcik2],
                   ),
                   const Divider(height: 32),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption5.uiTitle,
                     ctrl: _donerCtrl,
+                    error: _donerErr,
                     assetPath: AppAssets.section20Dairesel,
-                    assetTitle: "Döner (Spiral) Merdiven",
                   ),
                   const Divider(height: 32),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption6.uiTitle,
                     ctrl: _sahanliksizCtrl,
-                    assetTitle: "Sahanlıksız (Dönemeçli) Merdiven",
+                    error: _sahanliksizErr,
                   ),
                 ],
               ),
@@ -225,10 +250,9 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   Widget _buildStairInputGroup({
     required String label, 
     required TextEditingController ctrl, 
+    String? error,
     String? assetPath, 
-    String? assetTitle,
     List<String>? assetPaths,
-    List<String>? assetTitles,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,23 +262,31 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             Expanded(child: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
             const SizedBox(width: 10),
             SizedBox(
-              width: 60,
+              width: 70,
               child: TextFormField(
                 controller: ctrl,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
-                decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 8), border: OutlineInputBorder(), hintText: "0"),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(1),
+                ],
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4), 
+                  border: const OutlineInputBorder(), 
+                  hintText: "0",
+                  errorText: error,
+                  errorStyle: const TextStyle(fontSize: 10),
+                ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 8),
         if (assetPath != null)
-          TechnicalDrawingButton(assetPath: assetPath, title: assetTitle ?? label),
+          TechnicalDrawingButton(assetPath: assetPath, title: label),
         if (assetPaths != null)
-          ...List.generate(assetPaths.length, (index) => 
-            TechnicalDrawingButton(assetPath: assetPaths[index], title: assetTitles![index])
-          ),
+          ...assetPaths.map((path) => TechnicalDrawingButton(assetPath: path, title: label)),
       ],
     );
   }

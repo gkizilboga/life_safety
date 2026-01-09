@@ -1,14 +1,16 @@
 class ChoiceResult {
-  final String label; // A, B, C...
-  final String uiTitle; // Ekranda görünen kısa başlık
-  final String uiSubtitle; // Ekranda görünen ipucu
-  final String reportText; // Raporda çıkacak teknik metin
+  final String label;
+  final String uiTitle;
+  final String uiSubtitle;
+  final String reportText;
+  final String? adviceText;
 
   ChoiceResult({
     required this.label,
     required this.uiTitle,
     required this.uiSubtitle,
     required this.reportText,
+    this.adviceText,
   });
   
   @override

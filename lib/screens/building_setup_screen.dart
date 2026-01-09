@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'onboarding_screen.dart';
+import 'bolum_1_screen.dart';
 import '../data/bina_store.dart';
 import '../data/turkiye_data.dart';
 
@@ -16,11 +16,11 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   String? _selectedDistrict;
   bool _isAgreed = false;
 
-List<String> get _cities => TurkiyeData.ilIlceMap.keys.toList()..sort();
+  List<String> get _cities => TurkiyeData.ilIlceMap.keys.toList()..sort();
 
-List<String> get _districts => _selectedCity != null 
-    ? (List<String>.from(TurkiyeData.ilIlceMap[_selectedCity]!)..sort()) 
-    : [];
+  List<String> get _districts => _selectedCity != null 
+      ? (List<String>.from(TurkiyeData.ilIlceMap[_selectedCity]!)..sort()) 
+      : [];
 
   void _start() {
     if (_nameCtrl.text.isEmpty || _selectedCity == null || _selectedDistrict == null) {
@@ -38,7 +38,7 @@ List<String> get _districts => _selectedCity != null
       district: _selectedDistrict!,
     );
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => OnboardingScreen(buildingName: _nameCtrl.text)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum1Screen()));
   }
 
   void _showSnackBar(String msg) {

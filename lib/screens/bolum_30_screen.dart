@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_30_model.dart';
@@ -22,11 +23,13 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
   final TextEditingController _kapasiteCtrl = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _hasKazan = false;
+  String? _kapasiteErr;
 
   @override
   void initState() {
     super.initState();
     _checkKazanAndRedirect();
+    _kapasiteCtrl.addListener(_validate);
   }
 
   void _checkKazanAndRedirect() {
@@ -38,6 +41,25 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Bolum31Screen()));
       });
     }
+  }
+
+  void _validate() {
+    setState(() {
+      if (_model.kapasiteBilinmiyor) {
+        _kapasiteErr = null;
+        return;
+      }
+      if (_kapasiteCtrl.text.isNotEmpty) {
+        int? val = int.tryParse(_kapasiteCtrl.text);
+        if (val == null || val < 10 || val > 1500) {
+          _kapasiteErr = "10 ile 1500 kW arasında bir tam sayı giriniz.";
+        } else {
+          _kapasiteErr = null;
+        }
+      } else {
+        _kapasiteErr = null;
+      }
+    });
   }
 
   void _scrollToBottom() {
@@ -78,24 +100,26 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     });
   }
 
+  bool get _isFormValid {
+    if (!_hasKazan) return true;
+    if (_model.konum == null) return false;
+    if (!_model.kapasiteBilinmiyor && (_kapasiteCtrl.text.isEmpty || _kapasiteErr != null)) return false;
+    if (_model.kapi == null) return false;
+    if (_model.hava == null) return false;
+    if (_model.yakit == null) return false;
+    if (_model.yakit?.label == Bolum30Content.yakitOptionB.label && _model.drenaj == null) return false;
+    if (_model.tup == null) return false;
+    return true;
+  }
+
   void _onNextPressed() {
     if (_hasKazan) {
-      if (_model.konum == null) return _showError("Lütfen kazan dairesinin konumunu seçiniz.");
-      
-      double? kap = double.tryParse(_kapasiteCtrl.text.replaceAll(',', '.'));
+      int? kap = _model.kapasiteBilinmiyor ? null : int.tryParse(_kapasiteCtrl.text);
       _model = _model.copyWith(kapasite: kap);
 
       if (!_model.kapasiteBilinmiyor && kap != null && kap > 350 && _model.kapi?.label == Bolum30Content.kapiOptionA.label) {
         return _showError("350 kW üzerindeki kazan dairelerinde en az 2 adet çıkış kapısı zorunludur.");
       }
-
-      if (_model.kapi == null) return _showError("Lütfen çıkış kapısı sayısını seçiniz.");
-      if (_model.hava == null) return _showError("Lütfen havalandırma durumunu seçiniz.");
-      if (_model.yakit == null) return _showError("Lütfen yakıt türünü seçiniz.");
-      if (_model.yakit?.label == Bolum30Content.yakitOptionB.label && _model.drenaj == null) {
-        return _showError("Lütfen drenaj kanalı durumunu seçiniz.");
-      }
-      if (_model.tup == null) return _showError("Lütfen yangın söndürme ekipmanı durumunu seçiniz.");
     }
 
     BinaStore.instance.bolum30 = _model;
@@ -126,6 +150,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     if (!_hasKazan) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
           ModernHeader(
@@ -146,13 +171,19 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Kazan kapasitesi (kW/kcal) biliniyorsa giriniz (Opsiyonel):", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("Kazan kapasitesi (kW) giriniz:", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _kapasiteCtrl,
                           enabled: !_model.kapasiteBilinmiyor,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          decoration: const InputDecoration(hintText: "Örn: 350", suffixText: "kW", border: OutlineInputBorder()),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          decoration: InputDecoration(
+                            hintText: "Örn: 350", 
+                            suffixText: "kW", 
+                            border: const OutlineInputBorder(),
+                            errorText: _kapasiteErr,
+                          ),
                         ),
                         const SizedBox(height: 10),
                         SelectableCard(
@@ -161,7 +192,10 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
                           onTap: () {
                             setState(() {
                               _model = _model.copyWith(kapasiteBilinmiyor: !_model.kapasiteBilinmiyor);
-                              if (_model.kapasiteBilinmiyor) _kapasiteCtrl.clear();
+                              if (_model.kapasiteBilinmiyor) {
+                                _kapasiteCtrl.clear();
+                                _kapasiteErr = null;
+                              }
                             });
                           },
                         ),
@@ -226,7 +260,16 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
         top: false,
         child: SizedBox(
           width: double.infinity,
-          child: ElevatedButton(onPressed: _onNextPressed, child: const Text("DEVAM ET")),
+          child: ElevatedButton(
+            onPressed: _isFormValid ? _onNextPressed : null, 
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1A237E),
+              disabledBackgroundColor: Colors.grey.shade300,
+              minimumSize: const Size(double.infinity, 54),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text("DEVAM ET", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          ),
         ),
       ),
     );

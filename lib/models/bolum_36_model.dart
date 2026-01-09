@@ -4,9 +4,9 @@ class Bolum36Model {
   final ChoiceResult? cikisKati;
   final ChoiceResult? disMerd;
   final ChoiceResult? konum;
-  final double? genislik;
+  final int? genislik;
   final ChoiceResult? kapiTipi;
-  final double? kapiGenislik;
+  final int? kapiGenislik;
   final ChoiceResult? gorunurluk;
   final String? merdivenDegerlendirme;
 
@@ -25,9 +25,9 @@ class Bolum36Model {
     ChoiceResult? cikisKati,
     ChoiceResult? disMerd,
     ChoiceResult? konum,
-    double? genislik,
+    int? genislik,
     ChoiceResult? kapiTipi,
-    double? kapiGenislik,
+    int? kapiGenislik,
     ChoiceResult? gorunurluk,
     String? merdivenDegerlendirme,
   }) {
@@ -58,8 +58,8 @@ class Bolum36Model {
 
   factory Bolum36Model.fromMap(Map<String, dynamic> map) {
     return Bolum36Model(
-      genislik: map['genislik'],
-      kapiGenislik: map['kapiGenislik'],
+      genislik: map['genislik'] as int?,
+      kapiGenislik: map['kapiGenislik'] as int?,
       merdivenDegerlendirme: map['merdivenDegerlendirme'],
     );
   }

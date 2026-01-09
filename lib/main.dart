@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/onboarding_screen.dart';
 import 'data/bina_store.dart';
 import 'utils/app_theme.dart';
 
@@ -25,9 +26,18 @@ class BinaYanginRiskAnaliziApp extends StatelessWidget {
         fontFamily: 'Roboto',
         elevatedButtonTheme: ElevatedButtonThemeData(style: AppStyles.mainButton),
       ),
-      home: BinaStore.instance.isRegistered 
-          ? const DashboardScreen() 
-          : const RegisterScreen(),
+      home: _getInitialScreen(),
     );
+  }
+
+  Widget _getInitialScreen() {
+    final store = BinaStore.instance;
+    if (!store.hasSeenOnboarding) {
+  return const OnboardingScreen(); // buildingName parametresi OLMAMALI
+}
+    if (!store.isRegistered) {
+      return const RegisterScreen();
+    }
+    return const DashboardScreen();
   }
 }

@@ -25,6 +25,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
   int _bKat = 0;
   bool _isCalculated = false;
 
+  String? _tabanError;
+  String? _normalError;
+  String? _bodrumError;
+  String? _toplamError;
+
   @override
   void initState() {
     super.initState();
@@ -32,9 +37,41 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     _nKat = b3?.normalKatSayisi ?? 0;
     _bKat = b3?.bodrumKatSayisi ?? 0;
 
-    // Eğer kullanıcı manuel giriş yaparsa butonu aktif etmek için listener ekliyoruz
-    _toplamCtrl.addListener(() {
-      setState(() {});
+    _tabanCtrl.addListener(_validate);
+    _normalCtrl.addListener(_validate);
+    _bodrumCtrl.addListener(_validate);
+    _toplamCtrl.addListener(_validate);
+  }
+
+  void _validate() {
+    setState(() {
+      double? t = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
+      if (_tabanCtrl.text.isNotEmpty && t != null && t > 2500) {
+        _tabanError = "Zemin kat alanı 2500 m²'den büyük olamaz.";
+      } else {
+        _tabanError = null;
+      }
+
+      double? n = double.tryParse(_normalCtrl.text.replaceAll(',', '.'));
+      if (_normalCtrl.text.isNotEmpty && n != null && n > 2500) {
+        _normalError = "Normal kat alanı 2500 m²'den büyük olamaz.";
+      } else {
+        _normalError = null;
+      }
+
+      double? b = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.'));
+      if (_bodrumCtrl.text.isNotEmpty && b != null && b > 10000) {
+        _bodrumError = "Bodrum kat alanı 10.000 m²'den büyük olamaz.";
+      } else {
+        _bodrumError = null;
+      }
+
+      double? tot = double.tryParse(_toplamCtrl.text.replaceAll(',', '.'));
+      if (_toplamCtrl.text.isNotEmpty && tot != null && tot > 150000) {
+        _toplamError = "Toplam inşaat alanı 150.000 m²'den büyük olamaz.";
+      } else {
+        _toplamError = null;
+      }
     });
   }
 
@@ -48,8 +85,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
   }
 
   void _otomatikHesapla() {
-    FocusScope.of(context).unfocus(); // Klavyeyi kapat
-    
+    FocusScope.of(context).unfocus();
     double? tAlani = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
     double? nAlani = double.tryParse(_normalCtrl.text.replaceAll(',', '.'));
     double? bAlani = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0;
@@ -74,24 +110,20 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       bodrumKatAlani: double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')),
       toplamInsaatAlani: double.tryParse(_toplamCtrl.text.replaceAll(',', '.')),
     );
-
     BinaStore.instance.bolum5 = _model;
     BinaStore.instance.saveToDisk(); 
-
     Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum6Screen()));
   }
 
-  // Butonun aktif olup olmadığını kontrol eden fonksiyon
   bool _isFormValid() {
-    // Toplam alan doluysa ve (hesaplanmışsa veya manuel girilmişse)
-    return _toplamCtrl.text.isNotEmpty && (double.tryParse(_toplamCtrl.text.replaceAll(',', '.')) != null);
+    if (_toplamCtrl.text.isEmpty) return false;
+    return _tabanError == null && _normalError == null && _bodrumError == null && _toplamError == null;
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isButtonEnabled = _isFormValid();
-
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
@@ -118,16 +150,16 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildInputLabel(Bolum5Content.oturumAlani),
-                        _buildNumberInput(_tabanCtrl, "Örn: 250"),
+                        _buildNumberInput(_tabanCtrl, "Örn: 250", error: _tabanError),
                         
                         const SizedBox(height: 16),
                         _buildInputLabel(Bolum5Content.normalKatAlani),
-                        _buildNumberInput(_normalCtrl, "Örn: 250"),
+                        _buildNumberInput(_normalCtrl, "Örn: 250", error: _normalError),
 
                         if (_bKat > 0) ...[
                           const SizedBox(height: 16),
                           _buildInputLabel(Bolum5Content.bodrumKatAlani),
-                          _buildNumberInput(_bodrumCtrl, "Örn: 250"),
+                          _buildNumberInput(_bodrumCtrl, "Örn: 250", error: _bodrumError),
                         ],
 
                         const SizedBox(height: 20),
@@ -152,7 +184,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
                         ),
 
                         _buildInputLabel(Bolum5Content.toplamInsaat),
-                        _buildNumberInput(_toplamCtrl, "Toplam m²", isBold: true),
+                        _buildNumberInput(_toplamCtrl, "Toplam m²", isBold: true, error: _toplamError),
 
                         if (_isCalculated) _buildSummaryCard(),
                       ],
@@ -162,8 +194,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
               ),
             ),
           ),
-          
-          // ALT BUTON ALANI (REVİZE EDİLDİ)
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
             decoration: const BoxDecoration(
@@ -173,10 +203,10 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
             child: SafeArea(
               top: false,
               child: ElevatedButton(
-                onPressed: isButtonEnabled ? _onNextPressed : null, // Geçerli değilse null (pasif)
+                onPressed: _isFormValid() ? _onNextPressed : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1A237E),
-                  disabledBackgroundColor: Colors.grey.shade300, // Pasif renk
+                  disabledBackgroundColor: Colors.grey.shade300,
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 54),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -201,13 +231,14 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     );
   }
 
-  Widget _buildNumberInput(TextEditingController controller, String hint, {bool isBold = false}) {
+  Widget _buildNumberInput(TextEditingController controller, String hint, {bool isBold = false, String? error}) {
     return TextFormField(
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal, fontSize: 16),
       decoration: InputDecoration(
         hintText: hint,
+        errorText: error,
         suffixText: "m²",
         filled: true,
         fillColor: isBold ? const Color(0xFFECEFF1) : Colors.white,

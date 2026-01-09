@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart'; // Color sınıfı için bu ŞART
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:life_safety/logic/report_engine.dart';
 import 'package:life_safety/data/bina_store.dart';
 import 'package:life_safety/models/bolum_33_model.dart';
@@ -11,6 +12,10 @@ import 'package:life_safety/models/choice_result.dart';
 import 'package:life_safety/utils/app_content.dart';
 
 void main() {
+  setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   final store = BinaStore.instance;
 
   setUp(() {
@@ -20,17 +25,12 @@ void main() {
   group('Mühendislik ve Kapasite Hesaplama Testleri', () {
     
     test('YGH Analizi: Yapı yüksekliği 52m (51.50m üstü) ve YGH yoksa KRİTİK RİSK sayılmalı', () {
-      // 1. Binayı yüksek yapalım
       store.bolum4 = Bolum4Model(hesaplananYapiYuksekligi: 52.0);
-      
-      // 2. YGH "Yok" diyelim (Bölüm 21)
       store.bolum21 = Bolum21Model(
         varlik: ChoiceResult(label: "21-1-B", uiTitle: "Hayır", uiSubtitle: "", reportText: "")
       );
 
       final metrics = ReportEngine.calculateRiskMetrics();
-      
-      // Beklenti: Sistem bunu "Kritik Risk" olarak saymalı
       expect(metrics['criticalCount'] >= 1, true);
     });
 
@@ -52,7 +52,7 @@ void main() {
       );
       
       final Color color = ReportEngine.getStatusColor(store.bolum25?.genislik, sectionId: 25);
-      expect(color, const Color(0xFFE53935)); // Kırmızı
+      expect(color, const Color(0xFFE53935));
     });
 
     test('Bölüm 25: Genişlik >= 100cm ama Kişi Sayısı > 25 ise KRİTİK RİSK oluşmalı', () {
@@ -60,20 +60,26 @@ void main() {
       store.bolum33 = Bolum33Model(yukNormal: 30); // 25 sınırını aşıyor
       
       final Color color = ReportEngine.getStatusColor(store.bolum25?.genislik, sectionId: 25);
-      expect(color, const Color(0xFFE53935)); // Kırmızı
+      expect(color, const Color(0xFFE53935));
     });
 
     test('Bölüm 25: Genişlik >= 100cm ve Kişi Sayısı <= 25 ise OLUMLU sayılmalı', () {
       store.bolum25 = Bolum25Model(genislik: Bolum25Content.genislikOptionB);
-      store.bolum33 = Bolum33Model(yukNormal: 20); // 25 sınırının altında
+      store.bolum33 = Bolum33Model(yukNormal: 20); // 25 sınırını aşıyor
       
       final Color color = ReportEngine.getStatusColor(store.bolum25?.genislik, sectionId: 25);
-      expect(color, const Color(0xFF43A047)); // Yeşil
+      expect(color, const Color(0xFF43A047));
     });
 
     test('Skorlama: 3 ve üzeri kritik riskte puan %30 bandına düşmeli', () {
+      // 1. Risk: Yüksek Bina + YGH Yok
       store.bolum4 = Bolum4Model(hesaplananYapiYuksekligi: 55.0);
+      store.bolum21 = Bolum21Model(varlik: ChoiceResult(label: "21-1-B", uiTitle: "", uiSubtitle: "", reportText: ""));
+      
+      // 2. Risk: Çıkış Yetersiz
       store.bolum33 = Bolum33Model(yukNormal: 600, gerekliNormal: 3, mevcutUst: 1);
+      
+      // 3. Risk: Sahanlıksız Merdiven
       store.bolum20 = Bolum20Model(sahanliksizMerdivenSayisi: 1);
 
       final metrics = ReportEngine.calculateRiskMetrics();
