@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/app_progress.dart';
 import '../data/bina_store.dart';
+import '../models/choice_result.dart';
 
 class ModernHeader extends StatelessWidget {
   final String title;
@@ -25,7 +26,7 @@ class ModernHeader extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 45, 20, 20),
+      padding: const EdgeInsets.fromLTRB(20, 40, 20, 15),
       decoration: const BoxDecoration(
         color: Color(0xFF1A237E),
         borderRadius: BorderRadius.only(
@@ -42,42 +43,34 @@ class ModernHeader extends StatelessWidget {
               if (canPop)
                 GestureDetector(
                   onTap: onBack ?? () => Navigator.pop(context),
-                  child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle),
+                    child: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 16),
+                  ),
                 )
               else
-                const SizedBox(width: 20),
+                const SizedBox(width: 28),
               Text(
                 "ADIM $currentStep / $totalSteps",
-                style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 1.2),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 28),
             ],
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 10),
           Text(
             title,
-            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: -0.5),
           ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
-          ),
-          const SizedBox(height: 18),
-          // YÜZDE GÖSTERGESİ VE İLERLEME ÇUBUĞU
+          const SizedBox(height: 15),
           Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Analiz İlerlemesi",
-                    style: TextStyle(color: Colors.white60, fontSize: 11, fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    "%${(progress * 100).toInt()}",
-                    style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                  ),
+                  const Text("İlerleme", style: TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.bold)),
+                  Text("%${(progress * 100).toInt()}", style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900)),
                 ],
               ),
               const SizedBox(height: 6),
@@ -85,7 +78,7 @@ class ModernHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 child: LinearProgressIndicator(
                   value: progress,
-                  minHeight: 4,
+                  minHeight: 5,
                   backgroundColor: Colors.white.withValues(alpha: 0.1),
                   valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4CAF50)),
                 ),
@@ -108,14 +101,19 @@ class QuestionCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE0E0E0)),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4)),
-        ],
+        color: const Color(0xFFF5F7F9),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE1E8ED), width: 1.5),
       ),
-      child: child,
+      child: DefaultTextStyle(
+        style: const TextStyle(
+          fontSize: 16, 
+          fontWeight: FontWeight.w900, 
+          color: Color(0xFF1A237E), 
+          height: 1.4,
+        ),
+        child: child,
+      ),
     );
   }
 }
@@ -129,7 +127,7 @@ class SectionImage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: Image.asset(
           assetPath,
           width: double.infinity,
@@ -146,11 +144,7 @@ class TechnicalDrawingButton extends StatelessWidget {
   final String assetPath;
   final String title;
 
-  const TechnicalDrawingButton({
-    super.key, 
-    required this.assetPath, 
-    required this.title
-  });
+  const TechnicalDrawingButton({super.key, required this.assetPath, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -163,27 +157,18 @@ class TechnicalDrawingButton extends StatelessWidget {
           width: double.infinity, 
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFF1A237E).withValues(alpha: 0.08),
+            color: const Color(0xFF1A237E).withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.25), width: 1.2),
+            border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.2), width: 1.2),
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.image_search_rounded, 
-                color: Color(0xFF1A237E),
-                size: 24
-              ),
-              const SizedBox(width: 12),
-              const Text(
-                "TEKNİK GÖRSELİ İNCELE",
-                style: TextStyle(
-                  color: Color(0xFF1A237E),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                  letterSpacing: 0.5
-                ),
+              Icon(Icons.zoom_in_rounded, color: Color(0xFF1A237E), size: 22),
+              SizedBox(width: 12),
+              Text(
+                "İLGİLİ GÖRSELİ İNCELE",
+                style: TextStyle(color: Color(0xFF1A237E), fontWeight: FontWeight.w800, fontSize: 12, letterSpacing: 0.5),
               ),
             ],
           ),
@@ -198,67 +183,20 @@ class TechnicalDrawingButton extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.6,
+        height: MediaQuery.of(context).size.height * 0.7,
         padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        ),
+        decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(35))),
         child: Column(
           children: [
-            Container(
-              width: 40, 
-              height: 4, 
-              decoration: BoxDecoration(
-                color: Colors.grey[300], 
-                borderRadius: BorderRadius.circular(10)
-              )
-            ),
+            Container(width: 45, height: 5, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
+            const SizedBox(height: 25),
+            Text(title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF1A237E))),
             const SizedBox(height: 20),
-            Text(
-              title, 
-              textAlign: TextAlign.center, 
-              style: const TextStyle(
-                fontWeight: FontWeight.bold, 
-                fontSize: 18, 
-                color: Color(0xFF1A237E)
-              )
-            ),
+            Expanded(child: ClipRRect(borderRadius: BorderRadius.circular(20), child: InteractiveViewer(minScale: 1.0, maxScale: 5.0, child: Image.asset(assetPath, fit: BoxFit.contain)))),
             const SizedBox(height: 15),
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: InteractiveViewer(
-                  minScale: 1.0,
-                  maxScale: 4.0,
-                  child: Image.asset(assetPath, fit: BoxFit.contain),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              "İki parmağınızla görseli yakınlaştırabilirsiniz.", 
-              style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic)
-            ),
-            const SizedBox(height: 15),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 25),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1A237E),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("ANLADIM", style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              ),
-            ),
+            const Text("Görseli iki parmağınızla büyütebilirsiniz.", style: TextStyle(fontSize: 11, color: Colors.grey, fontStyle: FontStyle.italic)),
+            const SizedBox(height: 20),
+            SafeArea(child: Padding(padding: const EdgeInsets.only(bottom: 30), child: SizedBox(width: double.infinity, height: 54, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))), onPressed: () => Navigator.pop(context), child: const Text("ANLADIM", style: TextStyle(fontWeight: FontWeight.bold)))))),
           ],
         ),
       ),
@@ -290,36 +228,22 @@ class AnalysisPageLayout extends StatelessWidget {
       backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
-          ModernHeader(
-            title: title,
-            subtitle: subtitle,
-            screenType: screenType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: child,
-            ),
-          ),
+          ModernHeader(title: title, subtitle: subtitle, screenType: screenType),
+          Expanded(child: SingleChildScrollView(padding: const EdgeInsets.all(18.0), child: child)),
           Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 35),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
-            ),
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+            decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 15, offset: Offset(0, -5))]),
             child: SafeArea(
               top: false,
               child: ElevatedButton(
-                onPressed: isNextEnabled ? () {
-                  BinaStore.instance.saveToDisk();
-                  if (onNext != null) onNext!();
-                } : null,
+                onPressed: isNextEnabled ? () { BinaStore.instance.saveToDisk(); if (onNext != null) onNext!(); } : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1A237E),
-                  minimumSize: const Size(double.infinity, 54),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 0,
                 ),
-                child: const Text("DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                child: const Text("DEVAM ET", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
               ),
             ),
           ),

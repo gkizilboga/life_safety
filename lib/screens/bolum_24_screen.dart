@@ -80,7 +80,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
         children: [
           // --- SORU 1 ---
           _buildSoru(
-            "1. Daire kapınızdan veya kat koridorlarınızdan bina dışına çıkarken nasıl çıkıyorsunuz?", 
+            "Daire kapınızdan veya kat koridorlarınızdan bina dışına çıkarken nasıl çıkıyorsunuz?", 
             'tip', 
             [Bolum24Content.tipOptionA, Bolum24Content.tipOptionB, Bolum24Content.tipOptionC], 
             _model.tip,
@@ -99,7 +99,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
             ),
             
             _buildSoru(
-              "2. Bu açık kaçış yoluna bakan dairelere ait pencereler var mı?", 
+              "Bu açık kaçış yoluna bakan dairelere ait pencereler var mı?", 
               'pencere', 
               [Bolum24Content.pencereOptionA, Bolum24Content.pencereOptionB, Bolum24Content.pencereOptionC], 
               _model.pencere
@@ -109,7 +109,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
             SizedBox(key: _q3Key, height: 1),
 
             _buildSoru(
-              "3. Bu açık kaçış yoluna açılan daire kapınızın özelliği nedir?", 
+              "Bu açık kaçış yoluna açılan daire kapınızın özelliği nedir?", 
               'kapi', 
               [Bolum24Content.kapiOptionA, Bolum24Content.kapiOptionB, Bolum24Content.kapiOptionC], 
               _model.kapi

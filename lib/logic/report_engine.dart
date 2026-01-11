@@ -18,11 +18,10 @@ enum ReportModule {
 }
 
 class ReportEngine {
-  // Helper: Store verilmezse Singleton'ı kullan
   static BinaStore _getStore(BinaStore? store) => store ?? BinaStore.instance;
 
-  static double _getHYapi(BinaStore? store) => _getStore(store).bolum4?.hesaplananYapiYuksekligi ?? 0.0;
-  static double _getHBina(BinaStore? store) => _getStore(store).bolum4?.hesaplananBinaYuksekligi ?? 0.0;
+  static double _getHYapi(BinaStore? store) => _getStore(store).bolum3?.hYapi ?? 0.0;
+  static double _getHBina(BinaStore? store) => _getStore(store).bolum3?.hBina ?? 0.0;
 
   static List<String> evaluateYghRequirement({BinaStore? store}) {
     final s = _getStore(store);
@@ -58,6 +57,10 @@ class ReportEngine {
       reasons.add("30.50m üzeri ve basınçlandırma yok.");
     }
 
+    if (bodrumSayisi >= 1 && (s.bolum20?.bodrumMerdivenDevami?.label.contains("20-Bodrum-A") ?? false)) {
+      reasons.add("Kaçış merdiveninin bodrum kata kesintisiz devam etmesi.");
+    }
+
     return reasons;
   }
 
@@ -83,11 +86,11 @@ class ReportEngine {
       }
     }
 
-    // Ekstra Kritik Risk Kontrolleri
-    if (s.bolum20 != null && (s.bolum20!.sahanliksizMerdivenSayisi) > 0) {
-      if (!criticalTitles.contains("Bölüm 20")) {
-        criticalRisks++;
-        criticalTitles.add("Bölüm 20");
+    // EKLENEN KISIM: Sahanlıksız merdiven kontrolü
+    if (s.bolum20 != null && s.bolum20!.sahanliksizMerdivenSayisi > 0) {
+      if (!criticalTitles.contains("Bölüm 20")) { 
+        criticalRisks++; 
+        criticalTitles.add("Bölüm 20"); 
       }
     }
 
@@ -105,8 +108,8 @@ class ReportEngine {
 
     if (criticalRisks >= 3) {
       penaltyScore = 30.0;
-    } else if (criticalRisks > 0 && penaltyScore > 60.0) {
-      penaltyScore = 60.0;
+    } else if (criticalRisks >= 1) {
+      if (penaltyScore > 60.0) penaltyScore = 60.0;
     }
 
     return {
@@ -138,6 +141,9 @@ class ReportEngine {
 
     if (sectionId == 21 && hYapi < 30.50 && result.label.contains("21-1-B")) return const Color(0xFF1E88E5);
     if (sectionId == 22 && hYapi < 51.50 && result.label.contains("22-1-A")) return const Color(0xFF1E88E5);
+    
+    // Döner Merdiven (Bölüm 25) ve Dış Açık Merdiven (Bölüm 36) için hBina (Bodrum Hariç) kullanılır
+    if (sectionId == 25 && hBina < 9.50 && result.label.contains("25-1-A")) return const Color(0xFF43A047);
     if (sectionId == 36 && hBina < 21.50 && result.label.contains("36-1-B")) return Colors.orange.shade600;
 
     final String text = result.reportText.toUpperCase();
@@ -169,7 +175,7 @@ class ReportEngine {
     else if (color == const Color(0xFF1E88E5)) prefix = "ℹ️ BİLGİ: ";
     else prefix = "✅ OLUMLU: ";
 
-    return "$prefix${result.reportText.replaceAll(RegExp(r'[🚨☢️⚠️✅❓ℹ️]'), '').trim()}";
+    return "$prefix${result.reportText.replaceAll(RegExp(r'[🚨☢️⚠️✅❓ℹ️]'), '').replaceAll("UYGUN", "OLUMLU").trim()}";
   }
   
   static List<Map<String, String>> getActionPlan() {
@@ -191,16 +197,18 @@ class ReportEngine {
   static Map<ReportModule, double> calculateModuleScores() {
     Map<ReportModule, double> scores = {};
     for (var module in ReportModule.values) {
-      int total = module.sectionIds.length;
+      int total = 0;
       int criticals = 0;
       for (int id in module.sectionIds) {
         final res = BinaStore.instance.getResultForSection(id);
-        if (res != null && getStatusColor(res, sectionId: id) == const Color(0xFFE53935)) {
-          criticals++;
+        if (res != null) {
+          total++;
+          if (getStatusColor(res, sectionId: id) == const Color(0xFFE53935)) {
+            criticals++;
+          }
         }
       }
-      double score = total == 0 ? 0 : ((total - criticals) / total) * 100.0;
-      scores[module] = score;
+      scores[module] = total == 0 ? 0 : ((total - criticals) / total) * 100.0;
     }
     return scores;
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
 import '../../models/bolum_4_model.dart';
-import 'bolum_5_screen.dart'; 
+import 'bolum_5_screen.dart';
 import '../../utils/app_content.dart';
 
 class Bolum4Screen extends StatefulWidget {
@@ -25,17 +25,18 @@ class _Bolum4ScreenState extends State<Bolum4Screen> {
     double hYapi = b3?.hYapi ?? 0.0;
 
     var secilenSinif = Bolum4Content.yukseklikSinifiDusuk;
-    if (hYapi >= 51.50) {
+    
+    if (hBina >= 51.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiMaksimum;
-    } else if (hYapi >= 30.50) {
+    } else if (hBina >= 30.50 || hYapi >= 30.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiCokYuksek;
-    } else if (hYapi >= 21.50) {
+    } else if (hBina >= 21.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiYuksek;
     }
 
     Bolum4Model model = Bolum4Model(
       binaYukseklikSinifi: secilenSinif,
-      yapiYuksekligiUyarisi: (hYapi > 30.50) ? Bolum4Content.yapiYuksekligiUyari : null,
+      yapiYuksekligiUyarisi: (hYapi >= 30.50) ? Bolum4Content.yapiYuksekligiUyari : null,
       hesaplananBinaYuksekligi: hBina,
       hesaplananYapiYuksekligi: hYapi,
     );

@@ -27,7 +27,7 @@ class Bolum2Content {
     label: "2-B",
     uiTitle: "Çelik",
     uiSubtitle: "Türkiye'deki konut sektöründe nadiren görülür. Binanın iskeleti kalın çelik profillerden oluşur.",
-    reportText: "⚠️ BİLGİ: Binanın taşıyıcı sistemi ÇELİK olarak beyan edilmiştir. Çelik yapılar yüksek sıcaklıkta (540°C) taşıma gücünü hızla kaybettiği için, yangın yalıtımı (boya/kaplama) kritik önem taşımaktadır."
+    reportText: "ℹ️ BİLGİ: Binanın taşıyıcı sistemi ÇELİK olarak beyan edilmiştir. Çelik yapılar yüksek sıcaklıkta (540°C) taşıma gücünü hızla kaybettiği için, yangın yalıtımı (boya/kaplama) kritik önem taşımaktadır."
   );
 
   static final ahsap = ChoiceResult(
@@ -53,32 +53,18 @@ class Bolum2Content {
 }
 
 class Bolum3Content {
-  static final normalKatGiris = ChoiceResult(
-    label: "3-1 (Normal Kat)",
-    uiTitle: "Normal Kat Adedi (Zemin Üstü)",
-    uiSubtitle: "Örn: 5 (Sadece 0-20 arası tam sayı).",
-    reportText: "(Sayısal veri olarak saklanır: \"Zemin Üstü: X Kat\")"
-  );
-
-  static final bodrumKatGiris = ChoiceResult(
-    label: "3-2 (Bodrum Kat)",
-    uiTitle: "Bodrum Kat Adedi (Zemin Altı)",
-    uiSubtitle: "Bodrum yoksa 0 yazınız.",
-    reportText: "(Sayısal veri olarak saklanır: \"Zemin Altı: Y Kat\")"
-  );
-
   static final biliniyor = ChoiceResult(
-    label: "3-3-A (Yükseklik)",
+    label: "3-3-A",
     uiTitle: "Kat yüksekliklerini biliyorum.",
-    uiSubtitle: "(Hassas Giriş)",
-    reportText: "Bina yükseklik analizi, kullanıcı tarafından beyan edilen kat adetleri ve yükseklik değerleri üzerinden hesaplanmıştır."
+    uiSubtitle: "Hassas ölçüm değerlerini gireceğim.",
+    reportText: "Bina yükseklik analizi beyan edilen değerler üzerinden yapılmıştır."
   );
 
   static final bilinmiyor = ChoiceResult(
-    label: "3-3-B (Yükseklik)",
-    uiTitle: "Bilmiyorum / Standart değerleri kabul et.",
-    uiSubtitle: "Standart Değerler: Zemin: 3.5m, Normal: 3m, Bodrum: 3.5m",
-    reportText: "ℹ️ BİLGİ: Bina kat yükseklikleri kullanıcı tarafından bilinmediği için, analizde standart kabul edilen değerler kullanılacaktır."
+    label: "3-3-B",
+    uiTitle: "Bilmiyorum / Standart değerleri kullan.",
+    uiSubtitle: "Zemin: 3.5m, Normal: 3m, Bodrum: 3.5m kabul edilir.",
+    reportText: "ℹ️ BİLGİ: Kat yükseklikleri bilinmediği için standart mühendislik değerleri kullanılmıştır."
   );
 }
 
@@ -427,28 +413,27 @@ class Bolum11Content {
     reportText: "☢️ KIRMIZI RİSK: İtfaiye erişimini engelleyen duvarlarda, acil durum geçişi için zayıflatılmış ve işaretlenmiş özel bir bölüm bulunmak zorundadır. Aksi takdirde itfaiye binaya ulaşamaz."
   );
 }
- class Bolum12Content {
+class Bolum12Content {
   static final celikOptionA = ChoiceResult(
     label: "12-A (Çelik)",
     uiTitle: "Evet, var.",
     uiSubtitle: "Çelik kolon ve kirişlerin üzeri yangın geciktirici boya, püskürtme sıva, alçıpanel vb. ile kaplanmıştır.",
-    reportText: "✅ OLUMLU: Çelik taşıyıcı sistem üzerinde pasif yangın yalıtım uygulaması mevcuttur. Bu uygulama, yangın anında çeliğin kritik sıcaklık olan 540°C'ye ulaşmasını geciktirerek binanın çökme riskini minimize eder."
+    reportText: "Çelik taşıyıcı sistem üzerinde pasif yangın yalıtım uygulaması mevcuttur. Bu uygulama, yangın anında çeliğin kritik sıcaklık olan 540°C'ye ulaşmasını geciktirerek binanın çökme riskini minimize eder."
   );
 
   static final celikOptionB = ChoiceResult(
     label: "12-B (Çelik)",
     uiTitle: "Hayır yok, çelik taşıyıcı profiller çıplak halde.",
     uiSubtitle: "Binanın iskeletini oluşturan çelik elemanlar üzerinde herhangi bir kaplama bulunmamaktadır.",
-    reportText: "☢️ KIRMIZI RİSK: Çok katlı veya 5000 m²'den büyük çelik yapılarda çıplak çelik kullanımı hayati risk taşır! 540°C sıcaklıkta çelik taşıma gücünü kaybeder ve bina aniden çökebilir. Acilen yangın yalıtımı planlanmalıdır."
+    reportText: "Çelik taşıyıcı elemanlar üzerinde herhangi bir pasif yangın yalıtımı bulunmamaktadır."
   );
 
   static final celikOptionC = ChoiceResult(
     label: "12-C (Çelik)",
     uiTitle: "Bilmiyorum, bir gözlemim yok.",
     uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Çelik elemanlarda yangın koruması olup olmadığı bilinmiyor. Koruma yoksa, yangın anında bina taşıma kapasitesini hızla kaybedebilir. Uzman Görüşü alınarak yalıtım durumu netleştirilmesi önerilir."
+    reportText: "Çelik elemanlarda yangın koruması olup olmadığı bilinmiyor. Koruma yoksa, yangın anında bina taşıma kapasitesini hızla kaybedebilir."
   );
-
     static final betonOptionA = ChoiceResult(
     label: "12-A (Beton)",
     uiTitle: "Bina yapım tarihimiz 2000 yılı sonrası.",
@@ -887,11 +872,11 @@ class Bolum15Content {
   );
 }
 class Bolum16Content {
-  static final mantolamaOptionA = ChoiceResult(
+static final mantolamaOptionA = ChoiceResult(
     label: "16-1-A (Mantolama)",
     uiTitle: "Klasik Mantolama (EPS, XPS vb.).",
     uiSubtitle: "Dış cephede sıva altında köpük esaslı ısı yalıtım levhaları kullanılmıştır.",
-    reportText: "(Yüksek Bina İse) ☢️ KIRMIZI RİSK: 28.50 metreden yüksek binalarda EPS, XPS vb. gibi yanıcı malzemeler kullanılamaz. Cephe malzemesinin 'Hiç Yanmaz' (A1) veya 'Zor Yanıcı' (A2) olması gerekir. Mevcut cephe, yangını çatıya kadar taşıyabilir.<br>(Alçak Bina İse) ⚠️ UYARI (BARİYER KONTROLÜ): 28.50m altındaki binalarda EPS, XPS kullanılabilir ANCAK pencerelerin etrafında ve zemin seviyesinde (1.5m) taşyünü gibi yanmaz malzemeden 'Yangın Bariyeri' yapılması ZORUNLUDUR."
+    reportText: "Dış cephede yanıcı özellikli (EPS, XPS vb.) ısı yalıtım levhaları kullanılmıştır. 28.50m üzerindeki binalarda bu uygulama yasaktır. Daha alçak binalarda ise pencerelerin etrafında ve zemin seviyesinde taşyünü yangın bariyerleri bulunması zorunludur."
   );
 
   static final mantolamaOptionB = ChoiceResult(
@@ -2586,14 +2571,14 @@ class Bolum33Content {
     label: "33-NORMAL-OK",
     uiTitle: "Yeterli",
     uiSubtitle: "Çıkış sayısı uygun.",
-    reportText: "✅ OLUMLU: Mevcut çıkış sayısı, kişi sayısına göre yeterli görünmektedir. Ancak katta kaçış mesafeleri ve çıkmaz koridor durumları mimari projeden ayrıca kontrol edilmelidir."
+    reportText: "✅ KAPASİTE UYGUN: Mevcut çıkış sayısı, kişi yoğunluğuna göre yeterli görünmektedir. (NOT: Kaçış mesafeleri ve kör koridor durumları mimari projeden ayrıca kontrol edilmelidir.)"
   );
 
   static final normalKatYetersiz = ChoiceResult(
     label: "33-NORMAL-FAIL",
     uiTitle: "Yetersiz",
     uiSubtitle: "Çıkış sayısı eksik.",
-    reportText: "🚨 KRİTİK RİSK: Normal katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış gereklidir.",
+    reportText: "🚨 KAPASİTE YETERSİZ: Normal katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış gereklidir.",
     adviceText: "Kullanıcı yükü kapasiteyi aştığı için binaya yönetmelik standartlarında ilave bir kaçış merdiveni eklenmesi veya kat alanlarının yangın kompartımanlarına bölünerek her bölge için ayrı çıkış tasarlanması gerekmektedir."
   );
 
@@ -2601,28 +2586,28 @@ class Bolum33Content {
     label: "33-ZEMIN-OK",
     uiTitle: "Yeterli",
     uiSubtitle: "Çıkış sayısı uygun.",
-    reportText: "✅ OLUMLU: Zemin kattaki mevcut çıkış sayısı, hesaplanan kullanıcı yükünü karşılamaktadır."
+    reportText: "✅ KAPASİTE UYGUN: Zemin kattaki mevcut çıkış sayısı yeterli görünmektedir."
   );
 
   static final zeminKatYetersiz = ChoiceResult(
     label: "33-ZEMIN-FAIL",
     uiTitle: "Yetersiz",
     uiSubtitle: "Çıkış sayısı eksik.",
-    reportText: "🚨 KRİTİK RİSK: Zemin kattaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir."
+    reportText: "🚨 KAPASİTE YETERSİZ: Zemin kattaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir."
   );
 
   static final bodrumKatYeterli = ChoiceResult(
     label: "33-BODRUM-OK",
     uiTitle: "Yeterli",
     uiSubtitle: "Çıkış sayısı uygun.",
-    reportText: "✅ OLUMLU: Bodrum katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükünü karşılamaktadır."
+    reportText: "✅ KAPASİTE UYGUN: Bodrum katlardaki mevcut çıkış sayısı yeterli görünmektedir."
   );
 
   static final bodrumKatYetersiz = ChoiceResult(
     label: "33-BODRUM-FAIL",
     uiTitle: "Yetersiz",
     uiSubtitle: "Çıkış sayısı eksik.",
-    reportText: "🚨 KRİTİK RİSK: Bodrum katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir."
+    reportText: "🚨 KAPASİTE YETERSİZ: Bodrum katlardaki mevcut çıkış sayısı, hesaplanan kullanıcı yükü için yetersizdir."
   );
   
   static final bos = ChoiceResult(label: "", uiTitle: "", uiSubtitle: "", reportText: "");

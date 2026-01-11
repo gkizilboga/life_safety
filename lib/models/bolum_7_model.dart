@@ -1,8 +1,5 @@
 class Bolum7Model {
-  // Not: Otopark bilgisi Bölüm 6'dan okunur, burada tutmaya gerek yok ama
-  // raporlama kolaylığı için buraya da kaydedebiliriz.
   final bool hasOtopark; 
-  
   final bool hasKazan;
   final bool hasAsansor;
   final bool hasCati;

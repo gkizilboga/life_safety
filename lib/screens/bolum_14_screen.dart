@@ -86,7 +86,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                   const Padding(
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
-                      "Yönetmelik Analiz Sonucu",
+                      "SonuÇ",
                       style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
                     ),
                   ),
@@ -107,7 +107,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                           children: [
                             _buildResultBox("Şaft Duvarı", "${_model.gerekenDuvarDk}", "dakika"),
                             Container(width: 1, height: 40, color: const Color(0xFFECEFF1)),
-                            _buildResultBox("Şaft Kapağı", "${_model.gerekenKapakDk}", "dakika"),
+                            _buildResultBox("Şaft Kapağı / Kapısı ", "${_model.gerekenKapakDk}", "dakika"),
                           ],
                         ),
                         const Padding(
@@ -208,7 +208,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
             minimumSize: const Size(double.infinity, 54),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+          child: const Text("DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
         ),
       ),
     );

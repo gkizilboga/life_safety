@@ -1,5 +1,13 @@
 class AppStrings {
-  // ... diğer sabitler aynı kalacak ...
+  static const String appName = "Bina Yangın Risk Analizi";
+  static const String stepLabel = "Adım";
+  static const String completeLabel = "Tamamlandı";
+  static const String nextButton = "DEVAM ET";
+  static const String backButton = "GERİ DÖN";
+  
+  static const String b1Title = "Yapı Ruhsat / İnşa Tarihi";
+  static const String b1Question = " ";
+  static const String b1SubQuestion = "Binanızın yapı ruhsatı hangi tarihte alındı veya yapım tarihi nedir?";
 
   static const String kvkkTitle = "KVKK ve Veri Güvenliği Aydınlatma Metni";
   static const String kvkkContent = """6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) kapsamında veri sorumlusu sıfatıyla beyan ederiz:

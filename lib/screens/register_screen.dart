@@ -20,14 +20,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _selectedProfession;
 
   final List<String> _professions = [
-    "Mimar",
-    "İnşaat Mühendisi",
-    "Makine Mühendisi",
-    "Elektrik Mühendisi",
-    "İSG Uzmanı",
-    "Yangın Güvenlik Danışmanı",
-    "Bina Yöneticisi",
-    "Vatandaş / Diğer"
+    "Bina Sakini / Vatandaş"
+    "Apartman Yöneticisi / Görevlisi"
+    "Proje Mimarı / Mühendisi"
+    "İtfaiye / Kamu Personeli"
+    "Yangın Güvenlik Uzmanı"
   ];
 
   @override
@@ -44,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
       
       BinaStore.instance.userName = _nameController.text;
-      BinaStore.instance.userProfession = _selectedProfession ?? "Vatandaş / Diğer";
+      BinaStore.instance.userProfession = _selectedProfession ?? "Bina Sakini / Vatandaş";
       BinaStore.instance.isRegistered = true;
       
       Navigator.pushReplacement(
@@ -71,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           const ModernHeader(
             title: "Yeni Kayıt",
-            subtitle: "Analiz Uzmanı Profilinizi Oluşturun",
+            subtitle: "Profilinizi Oluşturun",
             screenType: RegisterScreen,
           ),
           Expanded(

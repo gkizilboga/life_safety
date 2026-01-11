@@ -54,7 +54,7 @@ class BinaStore {
   String? currentBinaDistrict;
   List<Map<String, dynamic>> archive = [];
 
-  // Kullanıcı Bilgileri
+  // Kullanıcı Tercihleri
   String get userName => _prefs?.getString('userName') ?? "Analiz Uzmanı";
   set userName(String value) => _prefs?.setString('userName', value);
 
@@ -73,20 +73,15 @@ class BinaStore {
   bool get hasSeenOnboarding => _prefs?.getBool('hasSeenOnboarding') ?? false;
   set hasSeenOnboarding(bool value) => _prefs?.setBool('hasSeenOnboarding', value);
 
-  // Kredi Sistemi
   int get reportCredits => _prefs?.getInt('reportCredits') ?? 0;
   set reportCredits(int value) => _prefs?.setInt('reportCredits', value);
 
   bool get isProUser => _prefs?.getBool('isProUser') ?? false;
   set isProUser(bool value) => _prefs?.setBool('isProUser', value);
 
-  void useCredit() {
-    if (reportCredits > 0) {
-      reportCredits = reportCredits - 1;
-    }
-  }
+  void useCredit() { if (reportCredits > 0) reportCredits = reportCredits - 1; }
 
-  // Private Değişkenler (Memory First)
+  // Private Hafıza Alanları
   Bolum1Model? _bolum1; Bolum2Model? _bolum2; Bolum3Model? _bolum3;
   Bolum4Model? _bolum4; Bolum5Model? _bolum5; Bolum6Model? _bolum6;
   Bolum7Model? _bolum7; Bolum8Model? _bolum8; Bolum9Model? _bolum9;
@@ -100,7 +95,7 @@ class BinaStore {
   Bolum31Model? _bolum31; Bolum32Model? _bolum32; Bolum33Model? _bolum33;
   Bolum34Model? _bolum34; Bolum35Model? _bolum35; Bolum36Model? _bolum36;
 
-  // Public Getters & Setters
+  // Public Erişimciler
   Bolum1Model? get bolum1 => _bolum1; set bolum1(Bolum1Model? v) => _bolum1 = v;
   Bolum2Model? get bolum2 => _bolum2; set bolum2(Bolum2Model? v) => _bolum2 = v;
   Bolum3Model? get bolum3 => _bolum3; set bolum3(Bolum3Model? v) => _bolum3 = v;
@@ -142,26 +137,20 @@ class BinaStore {
     _prefs = await SharedPreferences.getInstance();
     final archiveRaw = _prefs?.getString('bina_archive');
     final activeId = _prefs?.getString('active_bina_id');
-
     if (archiveRaw != null) {
       archive = List<Map<String, dynamic>>.from(json.decode(archiveRaw));
       if (activeId != null && activeId.isNotEmpty) {
         final activeData = archive.firstWhere((e) => e['id'] == activeId, orElse: () => {});
-        if (activeData.isNotEmpty) {
-          _loadBuildingFromMap(activeData);
-        }
+        if (activeData.isNotEmpty) _loadBuildingFromMap(activeData);
       }
     }
   }
 
   void saveToDisk() {
     currentBinaId ??= DateTime.now().millisecondsSinceEpoch.toString();
-
     final currentData = {
-      'id': currentBinaId,
-      'name': currentBinaName ?? "İsimsiz Bina",
-      'city': currentBinaCity ?? "",
-      'district': currentBinaDistrict ?? "",
+      'id': currentBinaId, 'name': currentBinaName ?? "İsimsiz Bina",
+      'city': currentBinaCity ?? "", 'district': currentBinaDistrict ?? "",
       'date': DateTime.now().toIso8601String(),
       'sections': {
         'bolum1': _bolum1?.toMap(), 'bolum2': _bolum2?.toMap(), 'bolum3': _bolum3?.toMap(),
@@ -178,25 +167,15 @@ class BinaStore {
         'bolum34': _bolum34?.toMap(), 'bolum35': _bolum35?.toMap(), 'bolum36': _bolum36?.toMap(),
       }
     };
-
     int index = archive.indexWhere((element) => element['id'] == currentBinaId);
-    if (index != -1) {
-      archive[index] = currentData;
-    } else {
-      archive.add(currentData);
-    }
-
+    if (index != -1) archive[index] = currentData; else archive.add(currentData);
     _prefs?.setString('bina_archive', json.encode(archive));
-    if (currentBinaId != null) {
-      _prefs?.setString('active_bina_id', currentBinaId!);
-    }
+    if (currentBinaId != null) _prefs?.setString('active_bina_id', currentBinaId!);
   }
 
   void _loadBuildingFromMap(Map<String, dynamic> data) {
-    currentBinaId = data['id'];
-    currentBinaName = data['name'];
-    currentBinaCity = data['city'];
-    currentBinaDistrict = data['district'];
+    currentBinaId = data['id']; currentBinaName = data['name'];
+    currentBinaCity = data['city']; currentBinaDistrict = data['district'];
     final s = data['sections'];
     if (s['bolum1'] != null) _bolum1 = Bolum1Model.fromMap(s['bolum1']);
     if (s['bolum2'] != null) _bolum2 = Bolum2Model.fromMap(s['bolum2']);
@@ -245,10 +224,7 @@ class BinaStore {
     saveToDisk();
   }
 
-  void clearCurrentAnalysis() {
-    reset();
-    _prefs?.remove('active_bina_id');
-  }
+  void clearCurrentAnalysis() { reset(); _prefs?.remove('active_bina_id'); }
 
   void reset() {
     currentBinaId = null; currentBinaName = null; currentBinaCity = null; currentBinaDistrict = null;
@@ -262,11 +238,7 @@ class BinaStore {
 
   void loadBuildingFromArchive(String id) {
     final data = archive.firstWhere((e) => e['id'] == id, orElse: () => {});
-    if (data.isNotEmpty) {
-      reset();
-      _loadBuildingFromMap(data);
-      saveToDisk();
-    }
+    if (data.isNotEmpty) { reset(); _loadBuildingFromMap(data); saveToDisk(); }
   }
 
   void deleteFromArchive(String id) {
@@ -286,26 +258,23 @@ class BinaStore {
       case 4: return _bolum4?.binaYukseklikSinifi;
       case 5: return ChoiceResult(label: "5", uiTitle: "${_bolum5?.toplamInsaatAlani} m²", uiSubtitle: "", reportText: "Toplam İnşaat Alanı: ${_bolum5?.toplamInsaatAlani} m²");
       case 6: return _bolum6?.isSadeceKonut == true ? Bolum6Content.sadeceKonut : Bolum6Content.ticariVar;
-      case 7: return _bolum7?.isHicbiri == true ? Bolum7Content.hicbiri : Bolum7Content.kazan;
+      case 7: 
+        if (_bolum7 == null || _bolum7!.isHicbiri) return null;
+        if (_bolum7!.hasKazan) return Bolum7Content.kazan;
+        return null;
       case 8: return _bolum8?.secim;
       case 9: return _bolum9?.secim;
       case 10: return _bolum10?.zemin;
       case 11: return _bolum11?.mesafe;
       case 12: return _bolum12?.secim;
-      case 13: 
-        final m = _bolum13;
-        return m?.kazanKapi ?? m?.otoparkKapi ?? m?.asansorKapi ?? m?.ticariKapi;
+      case 13: final m = _bolum13; return m?.kazanKapi ?? m?.otoparkKapi ?? m?.asansorKapi ?? m?.ticariKapi;
       case 14: return _bolum14?.secim;
       case 15: return _bolum15?.kaplama;
       case 16: return _bolum16?.mantolama;
       case 17: return _bolum17?.kaplama;
       case 18: return _bolum18?.secim;
       case 19: return _bolum19?.levha;
-      case 20: 
-        final m = _bolum20;
-        if (m == null) return null;
-        if (m.tekKatCikis != null) return m.tekKatCikis;
-        return ChoiceResult(label: "20", uiTitle: "Merdiven Analizi", uiSubtitle: "", reportText: "Binada merdiven sayıları ve tipleri belirlenmiştir.");
+      case 20: final m = _bolum20; if (m == null) return null; if (m.tekKatCikis != null) return m.tekKatCikis; return ChoiceResult(label: "20", uiTitle: "Merdiven Analizi", uiSubtitle: "", reportText: "Binada merdiven sayıları ve tipleri belirlenmiştir.");
       case 21: return _bolum21?.varlik;
       case 22: return _bolum22?.varlik;
       case 23: return _bolum23?.yanginModu;
@@ -314,25 +283,14 @@ class BinaStore {
       case 26: return _bolum26?.varlik;
       case 27: return _bolum27?.boyut;
       case 28: return _bolum28?.mesafe;
-      case 29: 
-        final m = _bolum29;
-        return m?.kazan ?? m?.otopark ?? m?.asansor ?? m?.pano;
+      case 29: final m = _bolum29; return m?.kazan ?? m?.otopark ?? m?.asansor ?? m?.pano;
       case 30: return _bolum30?.konum;
       case 31: return _bolum31?.yapi;
       case 32: return _bolum32?.yapi;
-      case 33: 
-        return _bolum33?.normalKatSonuc ?? _bolum33?.zeminKatSonuc ?? _bolum33?.bodrumKatSonuc;
+      case 33: return _bolum33?.normalKatSonuc ?? _bolum33?.zeminKatSonuc ?? _bolum33?.bodrumKatSonuc;
       case 34: return _bolum34?.zemin;
       case 35: return _bolum35?.tekYon ?? _bolum35?.ciftYon;
-      case 36: 
-        final m = _bolum36;
-        if (m == null) return null;
-        return ChoiceResult(
-          label: "36", 
-          uiTitle: "Genel Değerlendirme", 
-          uiSubtitle: "", 
-          reportText: m.merdivenDegerlendirme ?? "Değerlendirme yapılamadı."
-        );
+      case 36: final m = _bolum36; if (m == null) return null; return ChoiceResult(label: "36", uiTitle: "Genel Değerlendirme", uiSubtitle: "", reportText: m.merdivenDegerlendirme ?? "Değerlendirme yapılamadı.");
       default: return null;
     }
   }

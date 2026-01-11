@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:life_safety/data/bina_store.dart';
+import '../../data/bina_store.dart';
 import '../../models/bolum_22_model.dart';
 import 'bolum_23_screen.dart';
+import 'bolum_24_screen.dart'; // Atlama için gerekli
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -23,7 +24,20 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
   @override
   void initState() {
     super.initState();
-    _checkHeight();
+    
+    // AKILLI ATLAMA MANTIĞI
+    final b7 = BinaStore.instance.bolum7;
+    // Eğer Bölüm 7'de normal asansör "Yok" (false) işaretlendiyse burayı atla
+    if (b7 != null && b7.hasAsansor == false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum24Screen()), // 23'ü de atlar çünkü o da asansörle ilgili
+        );
+      });
+    } else {
+      _checkHeight();
+    }
   }
 
   void _checkHeight() {
@@ -70,6 +84,12 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
 
   @override
   Widget build(BuildContext context) {
+    // Eğer asansör yoksa boş ekran göster (Zaten initState hemen yönlendirecek)
+    final b7 = BinaStore.instance.bolum7;
+    if (b7 != null && b7.hasAsansor == false) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return AnalysisPageLayout(
       title: "İtfaiye Asansörü",
       subtitle: "Yüksek binalar için erişim denetimi",

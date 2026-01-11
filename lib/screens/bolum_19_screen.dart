@@ -66,10 +66,12 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
       isNextEnabled: _isReady(),
       onNext: () {
         BinaStore.instance.bolum19 = _model;
+        BinaStore.instance.saveToDisk();
         Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum20Screen()));
       },
       child: Column(
         children: [
+          _buildTopInfoNote("Not: Yönetmelik gereği tek çıkışlı/merdivenli binalarda acil durum yönlendirme levhası zorunluluğu aranmaz. Analiz sonunda bu durum otomatik değerlendirilecektir."),
           QuestionCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,6 +91,15 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildTopInfoNote(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.blue.shade100)),
+      child: Row(children: [const Icon(Icons.info_outline, color: Color(0xFF1A237E), size: 20), const SizedBox(width: 12), Expanded(child: Text(text, style: const TextStyle(color: Color(0xFF1A237E), fontSize: 12, fontWeight: FontWeight.w500)))]),
     );
   }
 

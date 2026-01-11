@@ -51,7 +51,7 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
                   const Padding(
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
-                      "Taşıyıcı Sistem ve Yapı Türü",
+                      "Binanızın taşıyıcı sistemi (yapı türü) nedir?",
                       style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
                     ),
                   ),
