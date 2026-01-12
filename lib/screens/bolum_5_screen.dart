@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
+import '../../models/bolum_4_model.dart';
 import '../../models/bolum_5_model.dart';
 import 'bolum_6_screen.dart';
 import '../../widgets/custom_widgets.dart';
@@ -46,29 +48,29 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
   void _validate() {
     setState(() {
       double? t = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
-      if (_tabanCtrl.text.isNotEmpty && t != null && t > 2500) {
-        _tabanError = "Zemin kat alanı 2500 m²'den büyük olamaz.";
+      if (_tabanCtrl.text.isNotEmpty && t != null && t > 5000) {
+        _tabanError = "Zemin kat alanı 5000 m²'den büyük olamaz.";
       } else {
         _tabanError = null;
       }
 
       double? n = double.tryParse(_normalCtrl.text.replaceAll(',', '.'));
-      if (_normalCtrl.text.isNotEmpty && n != null && n > 2500) {
-        _normalError = "Normal kat alanı 2500 m²'den büyük olamaz.";
+      if (_normalCtrl.text.isNotEmpty && n != null && n > 5000) {
+        _normalError = "Normal kat alanı 5000 m²'den büyük olamaz.";
       } else {
         _normalError = null;
       }
 
       double? b = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.'));
-      if (_bodrumCtrl.text.isNotEmpty && b != null && b > 10000) {
-        _bodrumError = "Bodrum kat alanı 10.000 m²'den büyük olamaz.";
+      if (_bodrumCtrl.text.isNotEmpty && b != null && b > 15000) {
+        _bodrumError = "Bodrum kat alanı 15.000 m²'den büyük olamaz.";
       } else {
         _bodrumError = null;
       }
 
       double? tot = double.tryParse(_toplamCtrl.text.replaceAll(',', '.'));
-      if (_toplamCtrl.text.isNotEmpty && tot != null && tot > 150000) {
-        _toplamError = "Toplam inşaat alanı 150.000 m²'den büyük olamaz.";
+      if (_toplamCtrl.text.isNotEmpty && tot != null && tot > 250000) {
+        _toplamError = "Toplam inşaat alanı 250.000 m²'den büyük olamaz.";
       } else {
         _toplamError = null;
       }
@@ -86,11 +88,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _otomatikHesapla() {
     FocusScope.of(context).unfocus();
-    double? tAlani = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
-    double? nAlani = double.tryParse(_normalCtrl.text.replaceAll(',', '.'));
-    double? bAlani = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0;
+    double tAlani = double.tryParse(_tabanCtrl.text.replaceAll(',', '.')) ?? 0.0;
+    double nAlani = double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0.0;
+    double bAlani = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0.0;
 
-    if (tAlani != null && nAlani != null) {
+    if (tAlani > 0 && nAlani > 0) {
       double toplam = tAlani + (_nKat * nAlani) + (_bKat * bAlani);
       setState(() {
         _toplamCtrl.text = toplam.toStringAsFixed(2);
@@ -122,97 +124,65 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Kat Alan Bilgileri",
+      subtitle: "",
+      screenType: widget.runtimeType,
+      isNextEnabled: _isFormValid(),
+      onNext: _onNextPressed,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernHeader(
-            title: "Kat Alan Bilgileri",
-            subtitle: "İnşaat alanı ve kullanıcı yükü temeli",
-            screenType: widget.runtimeType,
+          const Padding(
+            padding: EdgeInsets.only(left: 4, bottom: 12),
+            child: Text(
+              "Bina Brüt Alan Girişi (m²)",
+              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+            ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 4, bottom: 12),
-                    child: Text(
-                      "Bina Brüt Alan Girişi (m²)",
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
-                    ),
-                  ),
-                  QuestionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildInputLabel(Bolum5Content.oturumAlani),
-                        _buildNumberInput(_tabanCtrl, "Örn: 250", error: _tabanError),
-                        
-                        const SizedBox(height: 16),
-                        _buildInputLabel(Bolum5Content.normalKatAlani),
-                        _buildNumberInput(_normalCtrl, "Örn: 250", error: _normalError),
+          QuestionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildInputLabel(Bolum5Content.oturumAlani),
+                _buildNumberInput(_tabanCtrl, "Örn: 250.50", error: _tabanError),
+                
+                const SizedBox(height: 16),
+                _buildInputLabel(Bolum5Content.normalKatAlani),
+                _buildNumberInput(_normalCtrl, "Örn: 250.00", error: _normalError),
 
-                        if (_bKat > 0) ...[
-                          const SizedBox(height: 16),
-                          _buildInputLabel(Bolum5Content.bodrumKatAlani),
-                          _buildNumberInput(_bodrumCtrl, "Örn: 250", error: _bodrumError),
-                        ],
-
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: _otomatikHesapla,
-                            icon: const Icon(Icons.calculate_outlined, size: 20),
-                            label: const Text("TOPLAM ALANI HESAPLA"),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange.shade800,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                          ),
-                        ),
-                        
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          child: Divider(thickness: 1, color: Color(0xFFECEFF1)),
-                        ),
-
-                        _buildInputLabel(Bolum5Content.toplamInsaat),
-                        _buildNumberInput(_toplamCtrl, "Toplam m²", isBold: true, error: _toplamError),
-
-                        if (_isCalculated) _buildSummaryCard(),
-                      ],
-                    ),
-                  ),
+                if (_bKat > 0) ...[
+                  const SizedBox(height: 16),
+                  _buildInputLabel(Bolum5Content.bodrumKatAlani),
+                  _buildNumberInput(_bodrumCtrl, "Örn: 250.00", error: _bodrumError),
                 ],
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
-            ),
-            child: SafeArea(
-              top: false,
-              child: ElevatedButton(
-                onPressed: _isFormValid() ? _onNextPressed : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1A237E),
-                  disabledBackgroundColor: Colors.grey.shade300,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 54),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _otomatikHesapla,
+                    icon: const Icon(Icons.calculate_outlined, size: 20),
+                    label: const Text("TOPLAM ALANI HESAPLA"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange.shade800,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
                 ),
-                child: const Text("KAYDET VE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-              ),
+                
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Divider(thickness: 1, color: Color(0xFFECEFF1)),
+                ),
+
+                _buildInputLabel(Bolum5Content.toplamInsaat),
+                _buildNumberInput(_toplamCtrl, "Toplam m²", isBold: true, error: _toplamError),
+
+                if (_isCalculated) _buildSummaryCard(),
+              ],
             ),
           ),
         ],
@@ -235,6 +205,9 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     return TextFormField(
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+      ],
       style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal, fontSize: 16),
       decoration: InputDecoration(
         hintText: hint,
@@ -263,8 +236,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
           const Text("HESAPLAMA DETAYI", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2E7D32), fontSize: 13)),
           const SizedBox(height: 8),
           _buildSummaryRow("Zemin Kat:", "${_tabanCtrl.text} m²"),
-          _buildSummaryRow("Normal Katlar ($_nKat adet):", "${(double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0) * _nKat} m²"),
-          if (_bKat > 0) _buildSummaryRow("Bodrum Katlar ($_bKat adet):", "${(double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0) * _bKat} m²"),
+          _buildSummaryRow("Normal Katlar ($_nKat adet):", "${((double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0) * _nKat).toStringAsFixed(2)} m²"),
+          if (_bKat > 0) _buildSummaryRow("Bodrum Katlar ($_bKat adet):", "${((double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0) * _bKat).toStringAsFixed(2)} m²"),
           const Divider(),
           _buildSummaryRow("Toplam İnşaat Alanı:", "${_toplamCtrl.text} m²", isTotal: true),
         ],

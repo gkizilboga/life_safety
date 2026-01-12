@@ -17,19 +17,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> _pages = [
     {
-      "title": "Neden Yangın Risk Analizi Yapıyoruz?",
-      "desc": "Yangın, sadece bir kaza değil; çoğunlukla yapının mimari eksikliklerinin sonucudur. Bu analiz, binanızdaki gizli riskleri profesyonel bir gözle fark etmenizi sağlar.",
+      "title": "Neden Binanımızda Yangın Risk Analizi Yapmalıyız?",
+      "desc": "Yangın, sadece bir kaza değil; çoğunlukla yapının mimari eksikliklerinin sonucudur. Bu analizde, binanızdaki gizli risklerin ve alınması gereken önlemlerin sizin tarafınızdan fark edilmesini sağlamak amaçlanır.",
     },
     {
-      "title": "36 Adımda Kapsamlı İnceleme",
-      "desc": "Binanızı taşıyıcı sistemden kaçış yollarına, asansörlerden tesisat şaftlarına kadar 36 farklı teknik başlıkta titizlikle inceliyoruz.",
+      "title": "Kapsamlı İnceleme",
+      "desc": "Binanız taşıyıcı sistemden kaçış yollarına, asansörlerden tesisat şaftlarına kadar birçok farklı teknik başlıkta kontrol edilir.",
     },
     {
-      "title": "Yönetmelikle Uyum ve Çözüm Önerileri",
-      "desc": "Analiz sonuçlarını Yangın Yönetmeliği (BYKHY) kriterlerine göre yorumluyor ve size özel iyileştirme önerileri sunuyoruz.",
+      "title": "Çözüm Önerileri",
+      "desc": "Analiz sonuçları Yangın Yönetmeliği (BYKHY) kriterlerine göre değerlendirilir ve size özel iyileştirme önerileri sunulur.",
     },
     {
-      "title": "Veri Gizliliği ve Güvenlik",
+      "title": "Veri Gizliliği",
       "desc": "Girdiğiniz tüm teknik veriler ve bina bilgileri sadece bu cihazda saklanır. Hiçbir veri sunucuya aktarılmaz.",
     },
   ];

@@ -272,7 +272,7 @@ class BinaStore {
       case 15: return _bolum15?.kaplama;
       case 16: return _bolum16?.mantolama;
       case 17: return _bolum17?.kaplama;
-      case 18: return _bolum18?.secim;
+      case 18: return _bolum18?.boruTipi ?? _bolum18?.duvarKaplama;
       case 19: return _bolum19?.levha;
       case 20: final m = _bolum20; if (m == null) return null; if (m.tekKatCikis != null) return m.tekKatCikis; return ChoiceResult(label: "20", uiTitle: "Merdiven Analizi", uiSubtitle: "", reportText: "Binada merdiven sayıları ve tipleri belirlenmiştir.");
       case 21: return _bolum21?.varlik;

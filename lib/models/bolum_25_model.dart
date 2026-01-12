@@ -55,8 +55,7 @@ class Bolum25Model {
       ]),
       basKurtarma: find(map['basKurtarma_label'], [
         Bolum25Content.basKurtarmaOptionA,
-        Bolum25Content.basKurtarmaOptionB,
-        Bolum25Content.basKurtarmaOptionC
+        Bolum25Content.basKurtarmaOptionB
       ]),
     );
   }

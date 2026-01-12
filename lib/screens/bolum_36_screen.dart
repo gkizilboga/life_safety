@@ -19,8 +19,12 @@ class Bolum36Screen extends StatefulWidget {
 
 class _Bolum36ScreenState extends State<Bolum36Screen> {
   Bolum36Model _model = Bolum36Model();
-  final _genislikCtrl = TextEditingController();
-  final _kapiGenislikCtrl = TextEditingController();
+  
+  final _genislikKorunumluCtrl = TextEditingController();
+  final _genislikKorunumsuzCtrl = TextEditingController();
+  final _kapiGenislikKorunumluCtrl = TextEditingController();
+  final _kapiGenislikKorunumsuzCtrl = TextEditingController();
+
   final GlobalKey _konumKey = GlobalKey();
   final GlobalKey _genislikKey = GlobalKey();
   final GlobalKey _kapiKey = GlobalKey();
@@ -28,50 +32,29 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   
   bool _genislikBilinmiyor = false;
   bool _kapiGenislikBilinmiyor = false;
+  
   int _cntDisCelik = 0;
   int _totalValidCikisSayisi = 0;
-
-  String? _genislikErr;
-  String? _kapiGenislikErr;
+  bool _hasKorunumlu = false;
+  bool _hasKorunumsuz = false;
 
   @override
   void initState() {
     super.initState();
-    _cntDisCelik = BinaStore.instance.bolum20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
-    _totalValidCikisSayisi = (BinaStore.instance.bolum20?.normalMerdivenSayisi ?? 0) + 
-                             (BinaStore.instance.bolum20?.binaIciYanginMerdiveniSayisi ?? 0) + 
-                             (BinaStore.instance.bolum20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) + 
-                             (BinaStore.instance.bolum20?.donerMerdivenSayisi ?? 0) + 
-                             _cntDisCelik;
+    final b20 = BinaStore.instance.bolum20;
     
-    _genislikCtrl.addListener(_validate);
-    _kapiGenislikCtrl.addListener(_validate);
-  }
+    int icKapali = b20?.binaIciYanginMerdiveniSayisi ?? 0;
+    int disKapali = b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0;
+    int normal = b20?.normalMerdivenSayisi ?? 0;
+    int doner = b20?.donerMerdivenSayisi ?? 0;
+    int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
+    int sahanliksiz = b20?.sahanliksizMerdivenSayisi ?? 0;
 
-  void _validate() {
-    setState(() {
-      if (!_genislikBilinmiyor && _genislikCtrl.text.isNotEmpty) {
-        int? val = int.tryParse(_genislikCtrl.text);
-        if (val == null || val < 50 || val > 200) {
-          _genislikErr = "50 ile 200 cm arasında bir tam sayı giriniz.";
-        } else {
-          _genislikErr = null;
-        }
-      } else {
-        _genislikErr = null;
-      }
-
-      if (!_kapiGenislikBilinmiyor && _kapiGenislikCtrl.text.isNotEmpty) {
-        int? val = int.tryParse(_kapiGenislikCtrl.text);
-        if (val == null || val < 50 || val > 200) {
-          _kapiGenislikErr = "50 ile 200 cm arasında bir tam sayı giriniz.";
-        } else {
-          _kapiGenislikErr = null;
-        }
-      } else {
-        _kapiGenislikErr = null;
-      }
-    });
+    _cntDisCelik = disAcik;
+    _totalValidCikisSayisi = icKapali + disKapali + normal + doner + disAcik;
+    
+    _hasKorunumlu = (icKapali + disKapali) > 0;
+    _hasKorunumsuz = (normal + doner + disAcik + sahanliksiz) > 0;
   }
 
   void _scrollToKey(GlobalKey key) {
@@ -82,8 +65,10 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
   @override
   void dispose() {
-    _genislikCtrl.dispose(); 
-    _kapiGenislikCtrl.dispose();
+    _genislikKorunumluCtrl.dispose();
+    _genislikKorunumsuzCtrl.dispose();
+    _kapiGenislikKorunumluCtrl.dispose();
+    _kapiGenislikKorunumsuzCtrl.dispose();
     super.dispose();
   }
 
@@ -136,18 +121,37 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     if (_model.cikisKati == null) return false;
     if (_cntDisCelik > 0 && _model.disMerd == null) return false;
     if (_totalValidCikisSayisi > 1 && _model.konum == null) return false;
-    if (!_genislikBilinmiyor && (_genislikCtrl.text.isEmpty || _genislikErr != null)) return false;
+    
+    if (!_genislikBilinmiyor) {
+      if (_hasKorunumlu && _genislikKorunumluCtrl.text.isEmpty) return false;
+      if (_hasKorunumsuz && _genislikKorunumsuzCtrl.text.isEmpty) return false;
+    }
+    
     if (_model.kapiTipi == null) return false;
-    if (!_kapiGenislikBilinmiyor && (_kapiGenislikCtrl.text.isEmpty || _kapiGenislikErr != null)) return false;
+    
+    if (!_kapiGenislikBilinmiyor) {
+      if (_hasKorunumlu && _kapiGenislikKorunumluCtrl.text.isEmpty) return false;
+      if (_hasKorunumsuz && _kapiGenislikKorunumsuzCtrl.text.isEmpty) return false;
+    }
+    
     if (_model.gorunurluk == null) return false;
     return true;
   }
 
   void _onFinishPressed() {
-    int? gen = _genislikBilinmiyor ? null : int.tryParse(_genislikCtrl.text);
-    int? kGen = _kapiGenislikBilinmiyor ? null : int.tryParse(_kapiGenislikCtrl.text);
+    int? genK = _genislikBilinmiyor ? null : int.tryParse(_genislikKorunumluCtrl.text);
+    int? genKS = _genislikBilinmiyor ? null : int.tryParse(_genislikKorunumsuzCtrl.text);
+    int? kGenK = _kapiGenislikBilinmiyor ? null : int.tryParse(_kapiGenislikKorunumluCtrl.text);
+    int? kGenKS = _kapiGenislikBilinmiyor ? null : int.tryParse(_kapiGenislikKorunumsuzCtrl.text);
+    
     String finalReport = _evaluateStairsAndExits();
-    _model = _model.copyWith(genislik: gen, kapiGenislik: kGen, merdivenDegerlendirme: finalReport);
+    _model = _model.copyWith(
+      genislikKorunumlu: genK,
+      genislikKorunumsuz: genKS,
+      kapiGenislikKorunumlu: kGenK,
+      kapiGenislikKorunumsuz: kGenKS,
+      merdivenDegerlendirme: finalReport
+    );
     BinaStore.instance.bolum36 = _model;
     BinaStore.instance.saveToDisk();
     Navigator.push(context, MaterialPageRoute(builder: (context) => ModuleTransitionScreen(module: ReportModule.modul5, onContinue: () {
@@ -184,30 +188,20 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                   SizedBox(key: _genislikKey, height: 1),
                   _buildSoruHeader("Merdiven/Koridor temiz genişliği (cm) kaçtır?"),
                   QuestionCard(child: Column(children: [
-                    TextFormField(
-                      controller: _genislikCtrl, 
-                      enabled: !_genislikBilinmiyor, 
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(hintText: "Örn: 120", suffixText: "cm", border: const OutlineInputBorder(), errorText: _genislikErr)
-                    ),
+                    if (_hasKorunumlu) _buildInput("Korunumlu (Yangın) Merdiveni Genişliği", _genislikKorunumluCtrl, _genislikBilinmiyor),
+                    if (_hasKorunumsuz) _buildInput("Korunumsuz (Normal) Merdiven Genişliği", _genislikKorunumsuzCtrl, _genislikBilinmiyor),
                     const SizedBox(height: 10),
-                    SelectableCard(choice: Bolum36Content.genislikBilinmiyor, isSelected: _genislikBilinmiyor, onTap: () => setState(() { _genislikBilinmiyor = !_genislikBilinmiyor; if (_genislikBilinmiyor) { _genislikCtrl.clear(); _genislikErr = null; } _scrollToKey(_kapiKey); })),
+                    SelectableCard(choice: Bolum36Content.genislikBilinmiyor, isSelected: _genislikBilinmiyor, onTap: () => setState(() { _genislikBilinmiyor = !_genislikBilinmiyor; if (_genislikBilinmiyor) { _genislikKorunumluCtrl.clear(); _genislikKorunumsuzCtrl.clear(); } _scrollToKey(_kapiKey); })),
                   ])),
                   _buildSoruHeader("Çıkış kapınızın tipi nedir?"),
                   _buildSoruCard('kapiTipi', [Bolum36Content.kapiTipiOptionA, Bolum36Content.kapiTipiOptionB, Bolum36Content.kapiTipiOptionC], _model.kapiTipi),
                   SizedBox(key: _kapiKey, height: 1),
                   _buildSoruHeader("Kapı net geçiş genişliği (cm) kaçtır?"),
                   QuestionCard(child: Column(children: [
-                    TextFormField(
-                      controller: _kapiGenislikCtrl, 
-                      enabled: !_kapiGenislikBilinmiyor, 
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(hintText: "Örn: 90", suffixText: "cm", border: const OutlineInputBorder(), errorText: _kapiGenislikErr)
-                    ),
+                    if (_hasKorunumlu) _buildInput("Korunumlu Merdiven Kapı Genişliği", _kapiGenislikKorunumluCtrl, _kapiGenislikBilinmiyor),
+                    if (_hasKorunumsuz) _buildInput("Korunumsuz Merdiven Kapı Genişliği", _kapiGenislikKorunumsuzCtrl, _kapiGenislikBilinmiyor),
                     const SizedBox(height: 10),
-                    SelectableCard(choice: Bolum36Content.kapiGenislikBilinmiyor, isSelected: _kapiGenislikBilinmiyor, onTap: () => setState(() { _kapiGenislikBilinmiyor = !_kapiGenislikBilinmiyor; if (_kapiGenislikBilinmiyor) { _kapiGenislikCtrl.clear(); _kapiGenislikErr = null; } _scrollToKey(_gorunurlukKey); })),
+                    SelectableCard(choice: Bolum36Content.kapiGenislikBilinmiyor, isSelected: _kapiGenislikBilinmiyor, onTap: () => setState(() { _kapiGenislikBilinmiyor = !_kapiGenislikBilinmiyor; if (_kapiGenislikBilinmiyor) { _kapiGenislikKorunumluCtrl.clear(); _kapiGenislikKorunumsuzCtrl.clear(); } _scrollToKey(_gorunurlukKey); })),
                   ])),
                   SizedBox(key: _gorunurlukKey, height: 1),
                   _buildSoruHeader("Kaçış yolları açıkça görülebiliyor mu?"),
@@ -234,6 +228,19 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildInput(String label, TextEditingController ctrl, bool isDisabled) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: TextFormField(
+        controller: ctrl,
+        enabled: !isDisabled,
+        keyboardType: TextInputType.number,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        decoration: InputDecoration(labelText: label, hintText: "Örn: 120", suffixText: "cm", border: const OutlineInputBorder()),
       ),
     );
   }

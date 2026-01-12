@@ -50,7 +50,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text("Bina Kimlik Bilgileri", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        title: const Text("Bina Bilgileri", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         backgroundColor: const Color(0xFF1A237E),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -66,7 +66,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
 
             _buildLabel("İl Seçimi"),
             _buildSearchableDropdown(
-              hint: "İl seçiniz veya yazınız",
+              hint: "İl seçiniz",
               items: _cities,
               value: _selectedCity,
               onChanged: (val) {
@@ -82,7 +82,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
 
             _buildLabel("İlçe Seçimi"),
             _buildSearchableDropdown(
-              hint: _selectedCity == null ? "Önce il seçiniz" : "İlçe seçiniz veya yazınız",
+              hint: _selectedCity == null ? "Önce il seçiniz" : "İlçe seçiniz.",
               items: _districts,
               value: _selectedDistrict,
               onChanged: _selectedCity == null ? null : (val) => setState(() => _selectedDistrict = val),

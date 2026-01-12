@@ -69,11 +69,11 @@ class ModernHeader extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("İlerleme", style: TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.bold)),
+                  const Text("Analiz İlerlemesi", style: TextStyle(color: Colors.white60, fontSize: 10, fontWeight: FontWeight.bold)),
                   Text("%${(progress * 100).toInt()}", style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900)),
                 ],
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: LinearProgressIndicator(
@@ -231,7 +231,7 @@ class AnalysisPageLayout extends StatelessWidget {
           ModernHeader(title: title, subtitle: subtitle, screenType: screenType),
           Expanded(child: SingleChildScrollView(padding: const EdgeInsets.all(18.0), child: child)),
           Container(
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 55), // Samsung alt bar için padding artırıldı
             decoration: const BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 15, offset: Offset(0, -5))]),
             child: SafeArea(
               top: false,

@@ -8,9 +8,9 @@ class Bolum16Model {
   final bool? sagirYuzeySprinkler;
   final ChoiceResult? bitisikNizam;
   
-  final bool? bariyerYan;
-  final bool? bariyerUst;
-  final bool? bariyerZemin;
+  final int? bariyerYan;
+  final int? bariyerUst;
+  final int? bariyerZemin;
 
   Bolum16Model({
     this.mantolama,
@@ -29,9 +29,9 @@ class Bolum16Model {
     ChoiceResult? sagirYuzey,
     bool? sagirYuzeySprinkler,
     ChoiceResult? bitisikNizam,
-    bool? bariyerYan,
-    bool? bariyerUst,
-    bool? bariyerZemin,
+    int? bariyerYan,
+    int? bariyerUst,
+    int? bariyerZemin,
   }) {
     return Bolum16Model(
       mantolama: mantolama ?? this.mantolama,

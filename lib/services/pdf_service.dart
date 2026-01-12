@@ -9,7 +9,6 @@ import '../utils/app_strings.dart';
 import '../utils/app_content.dart';
 
 class PdfService {
-  // Emojileri ve prefixleri temizleyen fonksiyon
   static String _cleanText(String t) {
     return t.replaceAll(RegExp(r'[🚨☢️⚠️✅❓ℹ️]'), '')
             .replaceAll('KRİTİK RİSK:', '')
@@ -17,15 +16,15 @@ class PdfService {
             .replaceAll('UYARI:', '')
             .replaceAll('OLUMLU:', '')
             .replaceAll('BİLGİ:', '')
+            .replaceAll('UYGUN', 'OLUMLU')
             .trim();
   }
 
-  // Risk durumuna göre renk belirleyen fonksiyon
   static PdfColor _getRiskColor(String text) {
     if (text.contains("KRİTİK RİSK") || text.contains("RİSK")) return PdfColors.red900;
     if (text.contains("UYARI")) return PdfColors.orange900;
     if (text.contains("BİLGİ")) return PdfColors.blue900;
-    return PdfColors.green900; // OLUMLU
+    return PdfColors.green900;
   }
 
   static Future<void> generateAndShowPdf() async {
@@ -67,7 +66,7 @@ class PdfService {
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
             pw.Column(children: [
-              pw.Text("YANGIN GÜVENLİĞİ RİSK ANALİZİ", style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, color: PdfColors.blue900), textAlign: pw.TextAlign.center),
+              pw.Text("YANGIN GÜVENLİĞİ RİSK ANALİZİ", style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold, color: PdfColors.blue900), textAlign: pw.TextAlign.center),
               pw.SizedBox(height: 10),
               pw.Text("ÖN RAPOR", style: pw.TextStyle(fontSize: 14, color: PdfColors.grey700)),
               pw.SizedBox(height: 40),
@@ -106,7 +105,7 @@ class PdfService {
       header: (context) => pw.Container(alignment: pw.Alignment.centerRight, child: pw.Text("Bina Yangın Güvenliği Risk Analizi", style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500))),
       footer: (context) => pw.Container(alignment: pw.Alignment.center, child: pw.Text("Sayfa ${context.pageNumber} / ${context.pagesCount} - RESMİ EVRAK DEĞİLDİR", style: const pw.TextStyle(fontSize: 7, color: PdfColors.red900))),
       build: (context) => [
-        pw.Text("YANGIN GÜVENLİĞİ RİSK ANALİZİ", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColors.blue900)),
+        pw.Text("YANGIN RİSK ANALİZİ", style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold, color: PdfColors.blue900)),
         pw.SizedBox(height: 10),
         pw.Table(
           border: pw.TableBorder.all(color: PdfColors.grey400, width: 0.5),
@@ -116,48 +115,30 @@ class PdfService {
           ])).toList(),
         ),
         pw.SizedBox(height: 20),
-        pw.Text("RİSK DURUMU", style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, color: PdfColors.blue900)),
+        pw.Text("ANALİZ VE RİSK DURUMU", style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold, color: PdfColors.blue900)),
         pw.SizedBox(height: 15),
-        
-        // TABLO BAŞLANGICI
         ...List.generate(36, (index) {
           int id = index + 1;
           final res = store.getResultForSection(id);
-          if (res == null) return pw.SizedBox(); // Boş bölümleri atla
-
+          if (res == null) return pw.SizedBox();
           final fullReport = ReportEngine.getSectionFullReport(id);
           final riskColor = _getRiskColor(fullReport);
           final cleanReport = _cleanText(fullReport);
-
           return pw.Container(
             margin: const pw.EdgeInsets.only(bottom: 10),
-            decoration: pw.BoxDecoration(
-              border: pw.Border(left: pw.BorderSide(color: riskColor, width: 4)),
-              color: PdfColors.grey50,
-            ),
+            decoration: pw.BoxDecoration(border: pw.Border(left: pw.BorderSide(color: riskColor, width: 4)), color: PdfColors.grey50),
             padding: const pw.EdgeInsets.all(8),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text("BÖLÜM $id", style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
-                    pw.Text(
-                      riskColor == PdfColors.red900 ? "KRİTİK RİSK" : 
-                      riskColor == PdfColors.orange900 ? "UYARI" : 
-                      riskColor == PdfColors.green900 ? "OLUMLU" : "BİLGİ",
-                      style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: riskColor)
-                    ),
-                  ]
-                ),
-                pw.SizedBox(height: 4),
-                pw.Text("SORU: ${AppContent.getQuestionText(id)}", style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey800)),
-                pw.Text("YANIT: ${res.uiTitle}", style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
-                pw.SizedBox(height: 4),
-                pw.Text(cleanReport, style: const pw.TextStyle(fontSize: 9)),
-              ],
-            ),
+            child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+              pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [
+                pw.Text("BÖLÜM $id", style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: PdfColors.grey700)),
+                pw.Text(riskColor == PdfColors.red900 ? "KRİTİK RİSK" : riskColor == PdfColors.orange900 ? "UYARI" : riskColor == PdfColors.green900 ? "OLUMLU" : "BİLGİ", style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold, color: riskColor)),
+              ]),
+              pw.SizedBox(height: 4),
+              pw.Text("SORU: ${AppContent.getQuestionText(id)}", style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey800)),
+              pw.Text("YANIT: ${res.uiTitle}", style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
+              pw.SizedBox(height: 4),
+              pw.Text(cleanReport, style: const pw.TextStyle(fontSize: 9)),
+            ]),
           );
         }),
       ],
@@ -180,21 +161,14 @@ class PdfService {
             ]),
           )),
           pw.SizedBox(height: 40),
-          // İLETİŞİM ALANI (Buton yerine)
           pw.Container(
             padding: const pw.EdgeInsets.all(15),
             decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey300), borderRadius: const pw.BorderRadius.all(pw.Radius.circular(5))),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text("UZMAN İLETİŞİM VE DANIŞMANLIK", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10, color: PdfColors.blue900)),
-                pw.SizedBox(height: 5),
-                pw.Text("Detaylı saha incelemesi ve raporlama hizmetleri için WhatsApp üzerinden iletişime geçebilirsiniz.", style: const pw.TextStyle(fontSize: 9)),
-                pw.SizedBox(height: 5),
-                pw.Text(" ", style: const pw.TextStyle(fontSize: 9)),
-                pw.Text(" ", style: const pw.TextStyle(fontSize: 9)),
-              ]
-            ),
+            child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+              pw.Text("İLETİŞİM", style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10, color: PdfColors.blue900)),
+              pw.SizedBox(height: 5),
+              pw.Text("Detaylı saha incelemesi ve raporlama hizmetleri için Yangın Güvenlik Uzmanı 'yla WhatsApp üzerinden iletişime geçebilirsiniz.", style: const pw.TextStyle(fontSize: 9)),
+            ]),
           ),
         ]),
       ));

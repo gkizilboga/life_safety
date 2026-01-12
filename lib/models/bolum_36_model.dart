@@ -4,9 +4,16 @@ class Bolum36Model {
   final ChoiceResult? cikisKati;
   final ChoiceResult? disMerd;
   final ChoiceResult? konum;
-  final int? genislik;
+  
+  // Yeni Ayrıştırılmış Alanlar
+  final int? genislikKorunumlu;
+  final int? genislikKorunumsuz;
+  
   final ChoiceResult? kapiTipi;
-  final int? kapiGenislik;
+  
+  final int? kapiGenislikKorunumlu;
+  final int? kapiGenislikKorunumsuz;
+  
   final ChoiceResult? gorunurluk;
   final String? merdivenDegerlendirme;
 
@@ -14,9 +21,11 @@ class Bolum36Model {
     this.cikisKati,
     this.disMerd,
     this.konum,
-    this.genislik,
+    this.genislikKorunumlu,
+    this.genislikKorunumsuz,
     this.kapiTipi,
-    this.kapiGenislik,
+    this.kapiGenislikKorunumlu,
+    this.kapiGenislikKorunumsuz,
     this.gorunurluk,
     this.merdivenDegerlendirme,
   });
@@ -25,9 +34,11 @@ class Bolum36Model {
     ChoiceResult? cikisKati,
     ChoiceResult? disMerd,
     ChoiceResult? konum,
-    int? genislik,
+    int? genislikKorunumlu,
+    int? genislikKorunumsuz,
     ChoiceResult? kapiTipi,
-    int? kapiGenislik,
+    int? kapiGenislikKorunumlu,
+    int? kapiGenislikKorunumsuz,
     ChoiceResult? gorunurluk,
     String? merdivenDegerlendirme,
   }) {
@@ -35,9 +46,11 @@ class Bolum36Model {
       cikisKati: cikisKati ?? this.cikisKati,
       disMerd: disMerd ?? this.disMerd,
       konum: konum ?? this.konum,
-      genislik: genislik ?? this.genislik,
+      genislikKorunumlu: genislikKorunumlu ?? this.genislikKorunumlu,
+      genislikKorunumsuz: genislikKorunumsuz ?? this.genislikKorunumsuz,
       kapiTipi: kapiTipi ?? this.kapiTipi,
-      kapiGenislik: kapiGenislik ?? this.kapiGenislik,
+      kapiGenislikKorunumlu: kapiGenislikKorunumlu ?? this.kapiGenislikKorunumlu,
+      kapiGenislikKorunumsuz: kapiGenislikKorunumsuz ?? this.kapiGenislikKorunumsuz,
       gorunurluk: gorunurluk ?? this.gorunurluk,
       merdivenDegerlendirme: merdivenDegerlendirme ?? this.merdivenDegerlendirme,
     );
@@ -48,9 +61,11 @@ class Bolum36Model {
       'cikisKati_label': cikisKati?.label,
       'disMerd_label': disMerd?.label,
       'konum_label': konum?.label,
-      'genislik': genislik,
+      'genislikKorunumlu': genislikKorunumlu,
+      'genislikKorunumsuz': genislikKorunumsuz,
       'kapiTipi_label': kapiTipi?.label,
-      'kapiGenislik': kapiGenislik,
+      'kapiGenislikKorunumlu': kapiGenislikKorunumlu,
+      'kapiGenislikKorunumsuz': kapiGenislikKorunumsuz,
       'gorunurluk_label': gorunurluk?.label,
       'merdivenDegerlendirme': merdivenDegerlendirme,
     };
@@ -58,8 +73,10 @@ class Bolum36Model {
 
   factory Bolum36Model.fromMap(Map<String, dynamic> map) {
     return Bolum36Model(
-      genislik: map['genislik'] as int?,
-      kapiGenislik: map['kapiGenislik'] as int?,
+      genislikKorunumlu: map['genislikKorunumlu'] as int?,
+      genislikKorunumsuz: map['genislikKorunumsuz'] as int?,
+      kapiGenislikKorunumlu: map['kapiGenislikKorunumlu'] as int?,
+      kapiGenislikKorunumsuz: map['kapiGenislikKorunumsuz'] as int?,
       merdivenDegerlendirme: map['merdivenDegerlendirme'],
     );
   }

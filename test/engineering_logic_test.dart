@@ -52,7 +52,7 @@ void main() {
       expect(color, const Color(0xFFE53935));
     });
 
-    test('Skorlama: Sahanlıksız Merdiven (Ölümcül Risk) varsa puan %60 altına düşmeli', () {
+    test('Skorlama: Sahanlıksız Merdiven varsa puan %60 altına düşmeli', () {
       store.bolum20 = Bolum20Model(sahanliksizMerdivenSayisi: 1);
 
       final metrics = ReportEngine.calculateRiskMetrics(store: store);

@@ -1,10 +1,11 @@
+import 'choice_result.dart';
+
 class Bolum5Model {
   final double? tabanAlani;
   final double? normalKatAlani;
   final double? bodrumKatAlani;
   final double? toplamInsaatAlani;
 
-  // ESKİ KODLARIN ÇALIŞMASI İÇİN GETTER EKLEDİK
   double? get katAlani => normalKatAlani;
 
   Bolum5Model({
@@ -39,10 +40,10 @@ class Bolum5Model {
 
   factory Bolum5Model.fromMap(Map<String, dynamic> map) {
     return Bolum5Model(
-      tabanAlani: map['tabanAlani'],
-      normalKatAlani: map['normalKatAlani'],
-      bodrumKatAlani: map['bodrumKatAlani'],
-      toplamInsaatAlani: map['toplamInsaatAlani'],
+      tabanAlani: (map['tabanAlani'] as num?)?.toDouble(),
+      normalKatAlani: (map['normalKatAlani'] as num?)?.toDouble(),
+      bodrumKatAlani: (map['bodrumKatAlani'] as num?)?.toDouble(),
+      toplamInsaatAlani: (map['toplamInsaatAlani'] as num?)?.toDouble(),
     );
   }
 }

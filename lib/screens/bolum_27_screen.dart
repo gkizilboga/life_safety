@@ -96,22 +96,22 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
         children: [
           _buildEnZayifHalkaUyarisi(),
 
-          _buildSoruHeader("1. Kaçış kapılarının genişliği ve zemini ne durumdadır? (daire kapısı hariç)"),
+          _buildSoruHeader("Kaçış kapılarının genişliği ve zemini ne durumdadır? (daire kapısı hariç)"),
           TechnicalDrawingButton(assetPath: AppAssets.section27YanginKapisi, title: "Kapı Genişliği ve Eşik Standartı"),
           _buildSoruCard('boyut', [Bolum27Content.boyutOptionA, Bolum27Content.boyutOptionB, Bolum27Content.boyutOptionC], _model.boyut),
 
-          _buildSoruHeader("2. Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)"),
+          _buildSoruHeader("Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)"),
           TechnicalDrawingButton(assetPath: AppAssets.section27KacisYonu, title: "Kapı Açılış Yönü Kriterleri"),
           _buildSoruCard('yon', [Bolum27Content.yonOptionA, Bolum27Content.yonOptionB, Bolum27Content.yonOptionC, Bolum27Content.yonOptionD, Bolum27Content.yonOptionE], _model.yon),
 
-          _buildSoruHeader("3. Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)"),
+          _buildSoruHeader("Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)"),
           TechnicalDrawingButton(assetPath: AppAssets.section27KilitTipi, title: "Kilit ve Panik Bar Tipleri"),
           _buildSoruCard('kilit', [Bolum27Content.kilitOptionA, Bolum27Content.kilitOptionB, Bolum27Content.kilitOptionC, Bolum27Content.kilitOptionD, Bolum27Content.kilitOptionE], _model.kilit),
 
           if (_needsFireDoor) ...[
             const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Divider(thickness: 1.5)),
-            _buildInfoNote("Binada kapalı yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır."),
-            _buildSoruHeader("4. Kapalı yangın merdiveni kapısının malzemesi nedir?"),
+            _buildInfoNote("Binada korunumlu yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır."),
+            _buildSoruHeader("Kapalı yangın merdiveni kapısının malzemesi nedir?"),
             _buildSoruCard('dayanim', [Bolum27Content.dayanimOptionA, Bolum27Content.dayanimOptionB, Bolum27Content.dayanimOptionC, Bolum27Content.dayanimOptionD, Bolum27Content.dayanimOptionE], _model.dayanim),
           ],
         ],

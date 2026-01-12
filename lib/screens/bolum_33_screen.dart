@@ -98,10 +98,10 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     // 450/600m² UYARISI (Sadece Normal Kat İçin Örnek)
     if (gNormal == 1) {
       if (hasSprinkler && alanNormal > 450) {
-        _specialWarning = "Normal kat alanı 450 m² üzerindedir. Sprinkler olsa bile tek yön kaçış mesafesi (30m) aşılabilir. İkinci çıkış gerekebilir.";
+        _specialWarning = "Normal kat alanı belli büyüklüğün üzerindedir. Sprinkler olsa bile tek yön kaçış mesafesi (30m) aşılabilir. 2. çıkış gerekebilir.";
       } else if (!hasSprinkler && alanNormal > 600) { // Yönetmelikte 600m2 sınırı sprinklersiz için değil, genel bir sınırdır ama senin mantığına göre:
          // Düzeltme: Sprinklersiz ise sınır daha düşüktür ama senin metnine sadık kalıyorum.
-        _specialWarning = "Normal kat alanı büyüktür. Tek yön kaçış mesafesi aşılabilir. İkinci çıkış gerekebilir.";
+        _specialWarning = "Normal kat alanı belli büyükküğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. 2. çıkış gerekebilir.";
       }
     }
 
@@ -118,8 +118,8 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Çıkış İmkanları",
-      subtitle: "Kullanıcı yükü analizi",
+      title: "Kullanıcı Yükü Hesabı ve Çıkış Adedi",
+      subtitle: "Merdiven uygunluk kontrolü hariç",
       screenType: widget.runtimeType,
       isNextEnabled: _isConfirmed,
       onNext: () {
@@ -151,7 +151,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
           CheckboxListTile(
             value: _isConfirmed, 
             onChanged: (v) => setState(() => _isConfirmed = v!), 
-            title: const Text("Hesaplanan değerleri okudum.", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+            title: const Text("Hesaplanan değerleri okudum, onaylıyorum.", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
             controlAffinity: ListTileControlAffinity.leading,
             contentPadding: EdgeInsets.zero,
             activeColor: const Color(0xFF1A237E),

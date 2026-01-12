@@ -62,7 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("BİNA YANGIN RİSK ANALİZİ", 
+          const Text("YANGIN RİSK ANALİZİ", 
             style: TextStyle(color: Colors.white70, fontSize: 12, letterSpacing: 1.5, fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
           Row(

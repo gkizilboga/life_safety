@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../data/bina_store.dart';
 import '../widgets/custom_widgets.dart';
+import '../widgets/selectable_card.dart';
 import '../utils/app_strings.dart';
 import 'dashboard_screen.dart';
 import 'legal_text_screen.dart';
@@ -15,21 +17,23 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
   bool _kvkkAccepted = false;
   bool _disclaimerAccepted = false;
   String? _selectedProfession;
 
   final List<String> _professions = [
-    "Bina Sakini / Vatandaş"
-    "Apartman Yöneticisi / Görevlisi"
-    "Proje Mimarı / Mühendisi"
-    "İtfaiye / Kamu Personeli"
+    "Bina Sakini / Vatandaş",
+    "Apartman Yöneticisi / Görevlisi",
+    "Proje Mimarı / Mühendisi",
+    "İtfaiye / Kamu Personeli",
     "Yangın Güvenlik Uzmanı"
   ];
 
   @override
   void dispose() {
     _nameController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
@@ -43,6 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       BinaStore.instance.userName = _nameController.text;
       BinaStore.instance.userProfession = _selectedProfession ?? "Bina Sakini / Vatandaş";
       BinaStore.instance.isRegistered = true;
+      BinaStore.instance.saveToDisk();
       
       Navigator.pushReplacement(
         context,
@@ -79,9 +84,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildTextField("Ad Soyad", Icons.person_outline, _nameController),
+                    _buildTextField(
+                      label: "Ad Soyad", 
+                      icon: Icons.person_outline, 
+                      controller: _nameController,
+                      limit: 40,
+                    ),
                     const SizedBox(height: 16),
-                    _buildTextField("E-Posta", Icons.email_outlined, null),
+                    _buildTextField(
+                      label: "E-Posta", 
+                      icon: Icons.email_outlined, 
+                      controller: _emailController,
+                      limit: 50,
+                      isEmail: true,
+                    ),
                     const SizedBox(height: 16),
                     _buildDropdownField("Meslek / Unvan", Icons.work_outline),
                     const SizedBox(height: 30),
@@ -99,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 12),
                     _buildConsentTile(
                       title: "Kullanım Şartları ve Sorumluluk Reddi",
-                      content: "Üretilen belgenin resmi rapor olmadığını, saha ziyareti ve uzman onayı olmadan hukuki geçerliliği bulunmadığını kabul ediyorum.",
+                      content: "Üretilen belgenin resmi bir rapor olmadığını, saha ziyareti ve Yangın Güvenlik Uzmanı'nın onayı olmadan hukuki geçerliliği bulunmadığını kabul ediyorum.",
                       value: _disclaimerAccepted,
                       onChanged: (val) => setState(() => _disclaimerAccepted = val!),
                     ),
@@ -124,9 +140,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildTextField(String label, IconData icon, TextEditingController? controller) {
+  Widget _buildTextField({
+    required String label, 
+    required IconData icon, 
+    required TextEditingController controller,
+    required int limit,
+    bool isEmail = false,
+  }) {
     return TextFormField(
       controller: controller,
+      inputFormatters: [LengthLimitingTextInputFormatter(limit)],
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: const Color(0xFF1A237E)),
@@ -140,12 +163,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
           borderSide: const BorderSide(color: Color(0xFF1A237E), width: 2),
         ),
       ),
-      validator: (value) => value!.isEmpty ? "Bu alan boş bırakılamaz" : null,
+      validator: (value) {
+        if (value == null || value.isEmpty) return "Bu alan boş bırakılamaz";
+        if (isEmail) {
+          final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+          if (!emailRegex.hasMatch(value)) return "Geçerli bir e-posta adresi giriniz";
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildDropdownField(String label, IconData icon) {
     return DropdownButtonFormField<String>(
+      isExpanded: true,
       value: _selectedProfession,
       decoration: InputDecoration(
         labelText: label,
@@ -163,7 +194,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       items: _professions.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value, style: const TextStyle(fontSize: 14)),
+          child: Text(value, style: const TextStyle(fontSize: 14), overflow: TextOverflow.ellipsis),
         );
       }).toList(),
       onChanged: (newValue) {
@@ -206,23 +237,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildBottomAction() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 60),
       decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
       ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 54,
-        child: ElevatedButton(
-          onPressed: _onRegisterPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1A237E),
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          width: double.infinity,
+          height: 54,
+          child: ElevatedButton(
+            onPressed: _onRegisterPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1A237E),
+              foregroundColor: Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text("KAYDI TAMAMLA VE BAŞLA", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5)),
           ),
-          child: const Text("KAYDI TAMAMLA VE BAŞLA", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5)),
         ),
       ),
     );

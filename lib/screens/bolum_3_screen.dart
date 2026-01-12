@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
-import '../../models/bolum_4_model.dart';
-import 'bolum_5_screen.dart';
+import 'bolum_4_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -21,23 +21,42 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   final _bodrumHCtrl = TextEditingController();
 
   bool _isUnknown = false;
+  String? _zeminErr;
+  String? _normalErr;
+  String? _bodrumErr;
 
   @override
   void initState() {
     super.initState();
     _normalCountCtrl.addListener(() => setState(() {}));
     _bodrumCountCtrl.addListener(() => setState(() {}));
-    _zeminHCtrl.addListener(() => setState(() {}));
-    _normalHCtrl.addListener(() => setState(() {}));
-    _bodrumHCtrl.addListener(() => setState(() {}));
+    _zeminHCtrl.addListener(_validate);
+    _normalHCtrl.addListener(_validate);
+    _bodrumHCtrl.addListener(_validate);
+  }
+
+  void _validate() {
+    setState(() {
+      _zeminErr = _checkLimit(_zeminHCtrl.text, 2.0, 7.0);
+      _normalErr = _checkLimit(_normalHCtrl.text, 2.0, 4.5);
+      _bodrumErr = _checkLimit(_bodrumHCtrl.text, 2.0, 7.0);
+    });
+  }
+
+  String? _checkLimit(String text, double min, double max) {
+    if (text.isEmpty) return null;
+    double? val = double.tryParse(text.replaceAll(',', '.'));
+    if (val == null || val < min || val > max) return "$min - $max m arası giriniz";
+    return null;
   }
 
   Map<String, dynamic> _calculateValues() {
     int n = int.tryParse(_normalCountCtrl.text) ?? 0;
     int b = int.tryParse(_bodrumCountCtrl.text) ?? 0;
-    double zH = _isUnknown ? 3.50 : (double.tryParse(_zeminHCtrl.text.replaceAll(',', '.')) ?? 3.50);
-    double nH = _isUnknown ? 3.00 : (double.tryParse(_normalHCtrl.text.replaceAll(',', '.')) ?? 3.00);
-    double bH = _isUnknown ? 3.50 : (double.tryParse(_bodrumHCtrl.text.replaceAll(',', '.')) ?? 3.50);
+    
+    double zH = _isUnknown ? 3.50 : (double.tryParse(_zeminHCtrl.text.replaceAll(',', '.')) ?? 0.0);
+    double nH = _isUnknown ? 3.00 : (double.tryParse(_normalHCtrl.text.replaceAll(',', '.')) ?? 0.0);
+    double bH = _isUnknown ? 3.50 : (double.tryParse(_bodrumHCtrl.text.replaceAll(',', '.')) ?? 0.0);
 
     double hBina = zH + (n * nH);
     double hYapi = hBina + (b * bH);
@@ -55,47 +74,29 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
       if (_zeminHCtrl.text.isEmpty || _normalHCtrl.text.isEmpty) return false;
       int bCount = int.tryParse(_bodrumCountCtrl.text) ?? 0;
       if (bCount > 0 && _bodrumHCtrl.text.isEmpty) return false;
+      if (_zeminErr != null || _normalErr != null || _bodrumErr != null) return false;
     }
     return true;
   }
 
   void _onNextPressed() {
     final vals = _calculateValues();
-    double hBina = vals['hBina'];
-    double hYapi = vals['hYapi'];
-
+    
     BinaStore.instance.bolum3 = Bolum3Model(
       normalKatSayisi: vals['n'],
       bodrumKatSayisi: vals['b'],
       zeminYuksekligi: vals['zH'],
       normalYuksekligi: vals['nH'],
       bodrumYuksekligi: vals['bH'],
-      hBina: hBina,
-      hYapi: hYapi,
+      hBina: vals['hBina'],
+      hYapi: vals['hYapi'],
       isYuksekBina: vals['isYuksek'],
       yukseklikBilinmiyor: _isUnknown,
+      isConfirmed: true, // Ekran içinde gördüğü için otomatik onaylı sayıyoruz
     );
-
-    var secilenSinif = Bolum4Content.yukseklikSinifiDusuk;
-    if (hBina >= 51.50) {
-      secilenSinif = Bolum4Content.yukseklikSinifiMaksimum;
-    } else if (hBina >= 30.50) {
-      secilenSinif = Bolum4Content.yukseklikSinifiCokYuksek;
-    } else if (hBina >= 21.50) {
-      secilenSinif = Bolum4Content.yukseklikSinifiYuksek;
-    } else if (hYapi >= 30.50) {
-      secilenSinif = Bolum4Content.yukseklikSinifiYuksek;
-    }
-
-    BinaStore.instance.bolum4 = Bolum4Model(
-      binaYukseklikSinifi: secilenSinif,
-      yapiYuksekligiUyarisi: (hYapi >= 30.50) ? Bolum4Content.yapiYuksekligiUyari : null,
-      hesaplananBinaYuksekligi: hBina,
-      hesaplananYapiYuksekligi: hYapi,
-    );
-
+    
     BinaStore.instance.saveToDisk();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum5Screen()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum4Screen()));
   }
 
   @override
@@ -114,17 +115,20 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
           _buildSectionTitle("1. Kat Adetleri"),
           _buildInput("Normal Kat Sayısı (Zemin Üstü)", _normalCountCtrl),
           _buildInput("Bodrum Kat Sayısı (Zemin Altı)", _bodrumCountCtrl),
+          
           const SizedBox(height: 10),
           _buildSectionTitle("2. Kat Yükseklikleri"),
           SelectableCard(choice: Bolum3Content.biliniyor, isSelected: !_isUnknown, onTap: () => setState(() => _isUnknown = false)),
           SelectableCard(choice: Bolum3Content.bilinmiyor, isSelected: _isUnknown, onTap: () => setState(() => _isUnknown = true)),
+
           if (!_isUnknown) ...[
-            const SizedBox(height: 15),
-            _buildInput("Zemin Kat Yüksekliği (Metre)", _zeminHCtrl, isDecimal: true, hint: "Örn: 3.50"),
-            _buildInput("Normal Kat Yüksekliği (Metre)", _normalHCtrl, isDecimal: true, hint: "Örn: 3.00"),
+            const SizedBox(height: 20),
+            _buildInput("Zemin Kat Yüksekliği (Metre)", _zeminHCtrl, isDecimal: true, hint: "Örn: 3.50", error: _zeminErr),
+            _buildInput("Normal Kat Yüksekliği (Metre)", _normalHCtrl, isDecimal: true, hint: "Örn: 3.00", error: _normalErr),
             if ((int.tryParse(_bodrumCountCtrl.text) ?? 0) > 0)
-              _buildInput("Bodrum Kat Yüksekliği (Metre)", _bodrumHCtrl, isDecimal: true, hint: "Örn: 3.50"),
+              _buildInput("Bodrum Kat Yüksekliği (Metre)", _bodrumHCtrl, isDecimal: true, hint: "Örn: 3.50", error: _bodrumErr),
           ],
+
           if (_isReady()) ...[
             const SizedBox(height: 20),
             _buildSectionTitle("3. Yükseklik Bilgisi"),
@@ -141,17 +145,17 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A237E).withOpacity(0.05),
+        color: const Color(0xFF1A237E).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF1A237E).withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildMetric("hBina", "${vals['hBina'].toStringAsFixed(2)}m"),
-              _buildMetric("hYapi", "${vals['hYapi'].toStringAsFixed(2)}m"),
+              _buildMetric("hBina (Bodrum Hariç)", "${vals['hBina'].toStringAsFixed(2)}m"),
+              _buildMetric("hYapi (Bodrum Dahil)", "${vals['hYapi'].toStringAsFixed(2)}m"),
             ],
           ),
           const Divider(height: 30),
@@ -174,8 +178,8 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   Widget _buildMetric(String label, String value) {
     return Column(
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
+        Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.bold)),
+        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
       ],
     );
   }
@@ -184,13 +188,21 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     return Padding(padding: const EdgeInsets.only(bottom: 15, left: 4), child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))));
   }
 
-  Widget _buildInput(String label, TextEditingController ctrl, {bool isDecimal = false, String? hint}) {
+  Widget _buildInput(String label, TextEditingController ctrl, {bool isDecimal = false, String? hint, String? error}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: TextFormField(
         controller: ctrl,
         keyboardType: TextInputType.numberWithOptions(decimal: isDecimal),
-        decoration: InputDecoration(labelText: label, hintText: hint, filled: true, fillColor: Colors.white, border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))),
+        inputFormatters: isDecimal ? [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))] : [FilteringTextInputFormatter.digitsOnly],
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          errorText: error,
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
       ),
     );
   }

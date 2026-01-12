@@ -120,7 +120,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle("Zemin Katın Kullanım Amacı"),
+          _buildSectionTitle("Zemin Katın Baskın Kullanım Amacı"),
           _buildChoiceGrid('zemin', null, _model.zemin),
 
           if (_model.bodrumlar.isNotEmpty) ...[

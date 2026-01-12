@@ -106,7 +106,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
           _buildHeightInfoCard(),
           
           _buildSoru(
-            "1. Binanızda İtfaiye (acil durum) asansörü var mı?", 
+            "Binanızda İtfaiye (acil durum) asansörü var mı?", 
             'varlik', 
             [Bolum22Content.varlikOptionA, Bolum22Content.varlikOptionB, Bolum22Content.varlikOptionC], 
             _model.varlik,
@@ -121,14 +121,14 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               child: Divider(color: Color(0xFFECEFF1)),
             ),
             
-            _buildSoru("2. Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?", 'konum', 
+            _buildSoru("Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?", 'konum', 
               [Bolum22Content.konumOptionA, Bolum22Content.konumOptionB, Bolum22Content.konumOptionC], _model.konum),
 
-            _buildSoru("3. İtfaiye asansörünün açıldığı yangın güvenlik holünün taban alanı yaklaşık kaç metrekaredir?", 'boyut', 
+            _buildSoru("İtfaiye asansörünün açıldığı yangın güvenlik holünün taban alanı yaklaşık kaç metrekaredir?", 'boyut', 
               [Bolum22Content.boyutOptionA, Bolum22Content.boyutOptionB, Bolum22Content.boyutOptionC, Bolum22Content.boyutOptionD], _model.boyut),
 
             _buildSoru(
-              "4. Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?", 
+              "Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?", 
               'kabin', 
               [Bolum22Content.kabinOptionA, Bolum22Content.kabinOptionB, Bolum22Content.kabinOptionC], 
               _model.kabin,
@@ -140,7 +140,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               [Bolum22Content.enerjiOptionA, Bolum22Content.enerjiOptionB, Bolum22Content.enerjiOptionC], _model.enerji),
 
             _buildSoru(
-              "6. İtfaiye asansörünün kuyusu basınçlandırılmış mı?", 
+              "İtfaiye asansörünün kuyusu basınçlandırılmış mı?", 
               'basinc', 
               [Bolum22Content.basincOptionA, Bolum22Content.basincOptionB, Bolum22Content.basincOptionC], 
               _model.basinc,

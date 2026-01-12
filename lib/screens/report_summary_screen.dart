@@ -24,7 +24,7 @@ class ReportSummaryScreen extends StatelessWidget {
         children: [
           const ModernHeader(
             title: "Yangın Risk Analizi Ön Raporu",
-            subtitle: "Kullanıcı Beyanına Dayalı Tespitler",
+            subtitle: "(Kullanıcı Beyanına Dayalı)",
             screenType: ReportSummaryScreen,
           ),
           Expanded(
@@ -90,7 +90,7 @@ class ReportSummaryScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  "DETAYLI ANALİZ VE ÖNERİLER KİLİTLİ",
+                  "DETAYLI ÖN RAPOR VE İYİLEŞTİRME ÖNERİLERİ KİLİTLİ",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
                 ),
                 const Padding(

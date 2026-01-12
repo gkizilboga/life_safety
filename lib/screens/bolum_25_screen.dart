@@ -7,7 +7,6 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import '../../utils/app_assets.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
 
@@ -34,8 +33,9 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
     final b10 = BinaStore.instance.bolum10;
 
     int donerCount = b20?.donerMerdivenSayisi ?? 0;
+    int sahanliksizCount = b20?.sahanliksizMerdivenSayisi ?? 0;
 
-    if (donerCount == 0) {
+    if (donerCount == 0 && sahanliksizCount == 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
           context,
@@ -100,7 +100,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
             padding: EdgeInsets.only(left: 4, bottom: 12),
             child: Text(
               "Dairesel merdiven teknik ölçümleri:",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
             ),
           ),
           const SizedBox(height: 8),
@@ -119,7 +119,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
           _buildSoru(
             "3. Baş kurtarma yüksekliği ne kadardır?",
             'basKurtarma',
-            [Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB, Bolum25Content.basKurtarmaOptionC],
+            [Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB],
             _model.basKurtarma,
           ),
         ],
@@ -156,7 +156,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+          Text(title),
           const SizedBox(height: 12),
           ...options.map((opt) => SelectableCard(
                 choice: opt,
