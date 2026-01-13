@@ -7,6 +7,48 @@ import '../utils/app_strings.dart';
 class LegislationLibraryScreen extends StatelessWidget {
   const LegislationLibraryScreen({super.key});
 
+  static const List<Map<String, dynamic>> _items = [
+    {
+      "title": "Binaların Yangından Korunması Hakkında Yönetmelik (BYKHY)",
+      "subtitle": "Resmi Gazete Mevzuat Sistemi",
+      "icon": Icons.local_fire_department_outlined,
+      "color": Color(0xFFB71C1C), // Red 900
+      "desc":
+          "Yangın güvenliğine ilişkin temel yasal düzenleme ve zorunluluklar.",
+      "url":
+          "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=200712937&MevzuatTur=21&MevzuatTertip=5",
+    },
+    {
+      "title": "Binaların Yangından Korunması Hakkında Yönetmelik Kılavuzu",
+      "subtitle": "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
+      "icon": Icons.auto_stories_outlined,
+      "color": Color(0xFF0D47A1), // Blue 900
+      "desc":
+          "Yönetmelik hükümlerinin teknik açıklamaları ve uygulama detayları.",
+      "url":
+          "https://webdosya.csb.gov.tr/db/meslekihizmetler/haberler/r2-b-nalarin-yangin-korunmasi-hakkinda-yonetmel-k-kilavuzu-etk-les-ml--20241221082232.pdf",
+    },
+    {
+      "title": "Yapı Malzemeleri Yönetmeliği",
+      "subtitle": "Resmi Gazete Mevzuat Sistemi",
+      "icon": Icons.category_outlined,
+      "color": Color(0xFFE65100), // Orange 900
+      "desc":
+          "Binalarda kullanılacak malzemelerin standartları ve uygunluk kriterleri.",
+      "url":
+          "https://mevzuat.gov.tr/mevzuat?MevzuatNo=18568&MevzuatTur=7&MevzuatTertip=5",
+    },
+    {
+      "title": "Planlı Alanlar İmar Yönetmeliği",
+      "subtitle": "Resmi Gazete Mevzuat Sistemi",
+      "icon": Icons.architecture_outlined,
+      "color": Color(0xFF1B5E20), // Green 900
+      "desc": "Yapılaşma koşulları ve imar disiplinine dair temel hükümler.",
+      "url":
+          "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=23722&MevzuatTur=7&MevzuatTertip=5",
+    },
+  ];
+
   Future<void> _launchURL(String urlString) async {
     final Uri url = Uri.parse(urlString);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -26,46 +68,21 @@ class LegislationLibraryScreen extends StatelessWidget {
             screenType: LegislationLibraryScreen,
           ),
           Expanded(
-            child: ListView(
+            child: ListView.builder(
               padding: const EdgeInsets.all(20),
-              children: [
-                _buildLegislationCard(
+              itemCount: _items.length,
+              itemBuilder: (context, index) {
+                final item = _items[index];
+                return _buildLegislationCard(
                   context,
-                  "Binaların Yangından Korunması Hakkında Yönetmelik (BYKHY)",
-                  "Resmi Gazete Mevzuat Sistemi",
-                  Icons.local_fire_department_outlined, // HATA BURADA DÜZELTİLDİ
-                  Colors.red.shade900,
-                  "Yangın güvenliğine ilişkin temel yasal düzenleme ve zorunluluklar.",
-                  "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=200712937&MevzuatTur=21&MevzuatTertip=5",
-                ),
-                _buildLegislationCard(
-                  context,
-                  "Binaların Yangından Korunması Hakkında Yönetmelik Kılavuzu (BYKHY Kılavuzu)",
-                  "Çevre, Şehircilik ve İklim Değişikliği Bakanlığı",
-                  Icons.auto_stories_outlined,
-                  Colors.blue.shade900,
-                  "Yönetmelik hükümlerinin teknik açıklamaları ve uygulama detayları.",
-                  "https://webdosya.csb.gov.tr/db/meslekihizmetler/haberler/r2-b-nalarin-yangin-korunmasi-hakkinda-yonetmel-k-kilavuzu-etk-les-ml--20241221082232.pdf",
-                ),
-                _buildLegislationCard(
-                  context,
-                  "Yapı Malzemeleri Yönetmeliği",
-                  "Resmi Gazete Mevzuat Sistemi",
-                  Icons.category_outlined,
-                  Colors.orange.shade900,
-                  "Binalarda kullanılacak malzemelerin standartları ve uygunluk kriterleri.",
-                  "https://mevzuat.gov.tr/mevzuat?MevzuatNo=18568&MevzuatTur=7&MevzuatTertip=5",
-                ),
-                _buildLegislationCard(
-                  context,
-                  "Planlı Alanlar İmar Yönetmeliği",
-                  "Resmi Gazete Mevzuat Sistemi",
-                  Icons.architecture_outlined,
-                  Colors.green.shade900,
-                  "Yapılaşma koşulları ve imar disiplinine dair temel hükümler.",
-                  "https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=23722&MevzuatTur=7&MevzuatTertip=5",
-                ),
-              ],
+                  item["title"] as String,
+                  item["subtitle"] as String,
+                  item["icon"] as IconData,
+                  item["color"] as Color,
+                  item["desc"] as String,
+                  item["url"] as String,
+                );
+              },
             ),
           ),
         ],
@@ -73,7 +90,15 @@ class LegislationLibraryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLegislationCard(BuildContext context, String title, String subtitle, IconData icon, Color color, String description, String url) {
+  Widget _buildLegislationCard(
+    BuildContext context,
+    String title,
+    String subtitle,
+    IconData icon,
+    Color color,
+    String description,
+    String url,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -85,7 +110,7 @@ class LegislationLibraryScreen extends StatelessWidget {
             color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Padding(

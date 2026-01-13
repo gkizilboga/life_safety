@@ -35,7 +35,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 55,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.white, foregroundColor: const Color(0xFF1A237E), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                  onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashboardScreen())),
+                  onPressed: () {
+                    if (_emailCtrl.text.isEmpty || _passCtrl.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Lütfen e-posta adresinizi ve şifrenizi giriniz."), backgroundColor: Colors.red),
+                      );
+                      return;
+                    }
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashboardScreen()));
+                  },
                   child: const Text("GİRİŞ YAP", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),

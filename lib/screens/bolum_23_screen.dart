@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_23_model.dart';
-import 'bolum_24_screen.dart'; 
+import 'bolum_24_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -21,7 +21,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
   @override
   void initState() {
     super.initState();
-    
+
     // AKILLI ATLAMA MANTIĞI
     final b7 = BinaStore.instance.bolum7;
     // Eğer Bölüm 7'de normal asansör "Yok" (false) işaretlendiyse burayı atla
@@ -41,13 +41,17 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
       if (type == 'yanginModu') _model = _model.copyWith(yanginModu: choice);
       if (type == 'konum') _model = _model.copyWith(konum: choice);
       if (type == 'levha') _model = _model.copyWith(levha: choice);
-      if (type == 'havalandirma') _model = _model.copyWith(havalandirma: choice);
+      if (type == 'havalandirma')
+        _model = _model.copyWith(havalandirma: choice);
     });
   }
 
   void _onNextPressed() {
-    if (_model.bodrum == null || _model.yanginModu == null || 
-        _model.konum == null || _model.levha == null || _model.havalandirma == null) {
+    if (_model.bodrum == null ||
+        _model.yanginModu == null ||
+        _model.konum == null ||
+        _model.levha == null ||
+        _model.havalandirma == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Lütfen tüm soruları yanıtlayınız.")),
       );
@@ -74,7 +78,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
         children: [
           ModernHeader(
             title: "Bölüm-23: Normal Asansör",
-            subtitle: "İnsan taşıma asansörlerinin güvenlik analizi",
+            subtitle: "İnsan taşıma asansörlerinin analizi",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -83,20 +87,61 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru("Normal asansörünüz bodrum katlara da iniyor mu?", 'bodrum', 
-                    [Bolum23Content.bodrumOptionA, Bolum23Content.bodrumOptionB, Bolum23Content.bodrumOptionC, Bolum23Content.bodrumOptionD], _model.bodrum),
+                  _buildSoru(
+                    "Normal asansörünüz bodrum katlara da iniyor mu?",
+                    'bodrum',
+                    [
+                      Bolum23Content.bodrumOptionA,
+                      Bolum23Content.bodrumOptionB,
+                      Bolum23Content.bodrumOptionC,
+                      Bolum23Content.bodrumOptionD,
+                    ],
+                    _model.bodrum,
+                  ),
 
-                  _buildSoru("Yangın anında asansörler otomatik olarak zemin kata iniyor mu?", 'yanginModu', 
-                    [Bolum23Content.yanginModuOptionA, Bolum23Content.yanginModuOptionB, Bolum23Content.yanginModuOptionC], _model.yanginModu),
+                  _buildSoru(
+                    "Yangın anında asansörler otomatik olarak zemin kata iniyor mu?",
+                    'yanginModu',
+                    [
+                      Bolum23Content.yanginModuOptionA,
+                      Bolum23Content.yanginModuOptionB,
+                      Bolum23Content.yanginModuOptionC,
+                    ],
+                    _model.yanginModu,
+                  ),
 
-                  _buildSoru("Asansör kapıları normal katlarda nereye açılıyor?", 'konum', 
-                    [Bolum23Content.konumOptionA, Bolum23Content.konumOptionB, Bolum23Content.konumOptionC], _model.konum),
+                  _buildSoru(
+                    "Asansör kapıları normal katlarda nereye açılıyor?",
+                    'konum',
+                    [
+                      Bolum23Content.konumOptionA,
+                      Bolum23Content.konumOptionB,
+                      Bolum23Content.konumOptionC,
+                    ],
+                    _model.konum,
+                  ),
 
-                  _buildSoru("Asansör kapılarında 'YANGIN ANINDA KULLANILMAZ' uyarısı var mı?", 'levha', 
-                    [Bolum23Content.levhaOptionA, Bolum23Content.levhaOptionB, Bolum23Content.levhaOptionC], _model.levha),
+                  _buildSoru(
+                    "Asansör kapılarında 'YANGIN ANINDA KULLANILMAZ' uyarısı var mı?",
+                    'levha',
+                    [
+                      Bolum23Content.levhaOptionA,
+                      Bolum23Content.levhaOptionB,
+                      Bolum23Content.levhaOptionC,
+                    ],
+                    _model.levha,
+                  ),
 
-                  _buildSoru("Asansör kuyusunun tepesinde havalandırma penceresi var mı?", 'havalandirma', 
-                    [Bolum23Content.havalandirmaOptionA, Bolum23Content.havalandirmaOptionB, Bolum23Content.havalandirmaOptionC], _model.havalandirma),
+                  _buildSoru(
+                    "Asansör kuyusunun tepesinde havalandırma penceresi var mı?",
+                    'havalandirma',
+                    [
+                      Bolum23Content.havalandirmaOptionA,
+                      Bolum23Content.havalandirmaOptionB,
+                      Bolum23Content.havalandirmaOptionC,
+                    ],
+                    _model.havalandirma,
+                  ),
                 ],
               ),
             ),
@@ -112,7 +157,13 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, -5),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,
@@ -127,18 +178,25 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

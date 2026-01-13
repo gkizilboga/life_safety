@@ -22,10 +22,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
   final TextEditingController _normalCtrl = TextEditingController();
   final TextEditingController _bodrumCtrl = TextEditingController();
   final TextEditingController _toplamCtrl = TextEditingController();
-  
+
   int _nKat = 0;
   int _bKat = 0;
   bool _isCalculated = false;
+  bool _isConfirmed = false;
 
   String? _tabanError;
   String? _normalError;
@@ -88,9 +89,12 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _otomatikHesapla() {
     FocusScope.of(context).unfocus();
-    double tAlani = double.tryParse(_tabanCtrl.text.replaceAll(',', '.')) ?? 0.0;
-    double nAlani = double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0.0;
-    double bAlani = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0.0;
+    double tAlani =
+        double.tryParse(_tabanCtrl.text.replaceAll(',', '.')) ?? 0.0;
+    double nAlani =
+        double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0.0;
+    double bAlani =
+        double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0.0;
 
     if (tAlani > 0 && nAlani > 0) {
       double toplam = tAlani + (_nKat * nAlani) + (_bKat * bAlani);
@@ -100,7 +104,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen Zemin ve Normal Kat alanlarını giriniz.")),
+        const SnackBar(
+          content: Text(
+            "Lütfen zemin ve normal katlara ait alan bilgilerini giriniz.",
+          ),
+        ),
       );
     }
   }
@@ -113,13 +121,20 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       toplamInsaatAlani: double.tryParse(_toplamCtrl.text.replaceAll(',', '.')),
     );
     BinaStore.instance.bolum5 = _model;
-    BinaStore.instance.saveToDisk(); 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum6Screen()));
+    BinaStore.instance.saveToDisk();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum6Screen()),
+    );
   }
 
   bool _isFormValid() {
+    if (!_isConfirmed) return false;
     if (_toplamCtrl.text.isEmpty) return false;
-    return _tabanError == null && _normalError == null && _bodrumError == null && _toplamError == null;
+    return _tabanError == null &&
+        _normalError == null &&
+        _bodrumError == null &&
+        _toplamError == null;
   }
 
   @override
@@ -136,8 +151,12 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
           const Padding(
             padding: EdgeInsets.only(left: 4, bottom: 12),
             child: Text(
-              "Bina Brüt Alan Girişi (m²)",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+              "Brüt Alan Girişi (m²)",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF263238),
+              ),
             ),
           ),
           QuestionCard(
@@ -145,43 +164,57 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildInputLabel(Bolum5Content.oturumAlani),
-                _buildNumberInput(_tabanCtrl, "Örn: 250.50", error: _tabanError),
-                
+                _buildNumberInput(_tabanCtrl, "Örn: 500", error: _tabanError),
+
                 const SizedBox(height: 16),
                 _buildInputLabel(Bolum5Content.normalKatAlani),
-                _buildNumberInput(_normalCtrl, "Örn: 250.00", error: _normalError),
+                _buildNumberInput(_normalCtrl, "Örn: 500", error: _normalError),
 
                 if (_bKat > 0) ...[
                   const SizedBox(height: 16),
                   _buildInputLabel(Bolum5Content.bodrumKatAlani),
-                  _buildNumberInput(_bodrumCtrl, "Örn: 250.00", error: _bodrumError),
+                  _buildNumberInput(
+                    _bodrumCtrl,
+                    "Örn: 500",
+                    error: _bodrumError,
+                  ),
                 ],
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: _otomatikHesapla,
                     icon: const Icon(Icons.calculate_outlined, size: 20),
-                    label: const Text("TOPLAM ALANI HESAPLA"),
+                    label: const Text("TOPLAM BRÜT ALANI HESAPLA"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange.shade800,
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
                 ),
-                
+
                 const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
+                  padding: EdgeInsets.symmetric(vertical: 12),
                   child: Divider(thickness: 1, color: Color(0xFFECEFF1)),
                 ),
 
                 _buildInputLabel(Bolum5Content.toplamInsaat),
-                _buildNumberInput(_toplamCtrl, "Toplam m²", isBold: true, error: _toplamError),
+                _buildNumberInput(
+                  _toplamCtrl,
+                  "Toplam m²",
+                  isBold: true,
+                  error: _toplamError,
+                ),
 
                 if (_isCalculated) _buildSummaryCard(),
+
+                const SizedBox(height: 20),
+                _buildConfirmationBox(),
               ],
             ),
           ),
@@ -190,33 +223,86 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     );
   }
 
+  Widget _buildConfirmationBox() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: _isConfirmed
+              ? const Color(0xFF1A237E)
+              : const Color(0xFFE0E0E0),
+        ),
+      ),
+      child: CheckboxListTile(
+        value: _isConfirmed,
+        onChanged: (val) => setState(() => _isConfirmed = val ?? false),
+        activeColor: const Color(0xFF1A237E),
+        title: const Text(
+          "Yukarıdaki bilgilerin doğruluğunu teyit ediyorum.",
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        controlAffinity: ListTileControlAffinity.leading,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+        dense: true,
+      ),
+    );
+  }
+
   Widget _buildInputLabel(ChoiceResult content) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(content.uiTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF455A64))),
-        Text(content.uiSubtitle, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        const SizedBox(height: 8),
+        Text(
+          content.uiTitle,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+            color: Color(0xFF455A64),
+          ),
+        ),
+        if (content.uiSubtitle.isNotEmpty)
+          Text(
+            content.uiSubtitle,
+            style: const TextStyle(fontSize: 11, color: Colors.grey),
+          ),
+        const SizedBox(height: 6),
       ],
     );
   }
 
-  Widget _buildNumberInput(TextEditingController controller, String hint, {bool isBold = false, String? error}) {
+  Widget _buildNumberInput(
+    TextEditingController controller,
+    String hint, {
+    bool isBold = false,
+    String? error,
+  }) {
     return TextFormField(
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
       ],
-      style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal, fontSize: 16),
+      style: TextStyle(
+        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        fontSize: 14,
+      ),
       decoration: InputDecoration(
         hintText: hint,
         errorText: error,
         suffixText: "m²",
         filled: true,
         fillColor: isBold ? const Color(0xFFECEFF1) : Colors.white,
+        isDense: true,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
       ),
     );
   }
@@ -233,13 +319,31 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("HESAPLAMA DETAYI", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF2E7D32), fontSize: 13)),
+          const Text(
+            "HESAPLAMA DETAYI",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF2E7D32),
+              fontSize: 13,
+            ),
+          ),
           const SizedBox(height: 8),
           _buildSummaryRow("Zemin Kat:", "${_tabanCtrl.text} m²"),
-          _buildSummaryRow("Normal Katlar ($_nKat adet):", "${((double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0) * _nKat).toStringAsFixed(2)} m²"),
-          if (_bKat > 0) _buildSummaryRow("Bodrum Katlar ($_bKat adet):", "${((double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0) * _bKat).toStringAsFixed(2)} m²"),
+          _buildSummaryRow(
+            "Normal Katlar ($_nKat adet):",
+            "${((double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0) * _nKat).toStringAsFixed(2)} m²",
+          ),
+          if (_bKat > 0)
+            _buildSummaryRow(
+              "Bodrum Katlar ($_bKat adet):",
+              "${((double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0) * _bKat).toStringAsFixed(2)} m²",
+            ),
           const Divider(),
-          _buildSummaryRow("Toplam İnşaat Alanı:", "${_toplamCtrl.text} m²", isTotal: true),
+          _buildSummaryRow(
+            "Toplam İnşaat Alanı:",
+            "${_toplamCtrl.text} m²",
+            isTotal: true,
+          ),
         ],
       ),
     );
@@ -251,8 +355,20 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 13, fontWeight: isTotal ? FontWeight.bold : FontWeight.normal)),
-          Text(value, style: TextStyle(fontSize: 13, fontWeight: isTotal ? FontWeight.bold : FontWeight.w600)),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_6_model.dart';
-import 'bolum_7_screen.dart'; 
+import 'bolum_7_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -36,7 +36,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         if (type == 'otopark') newOtopark = !newOtopark;
         if (type == 'ticari') newTicari = !newTicari;
         if (type == 'depo') newDepo = !newDepo;
-        
+
         // Eğer herhangi bir riskli alan seçildiyse, "Sadece Konut" otomatik kapanır
         if (newOtopark || newTicari || newDepo) {
           newKonut = false;
@@ -49,7 +49,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         hasDepo: newDepo,
         isSadeceKonut: newKonut,
         // Otopark seçimi kaldırıldıysa tipini de sıfırla
-        otoparkTipi: newOtopark ? _model.otoparkTipi : null, 
+        otoparkTipi: newOtopark ? _model.otoparkTipi : null,
       );
     });
   }
@@ -66,7 +66,10 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
     if (_model.hasOtopark && _model.otoparkTipi == null) return false;
 
     // 2. Kural: En az bir ana seçenek işaretlenmiş olmalı
-    if (!_model.hasOtopark && !_model.hasTicari && !_model.hasDepo && !_model.isSadeceKonut) {
+    if (!_model.hasOtopark &&
+        !_model.hasTicari &&
+        !_model.hasDepo &&
+        !_model.isSadeceKonut) {
       return false;
     }
 
@@ -76,9 +79,12 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
   void _onNextPressed() {
     // KRİTİK: Veriyi Store'a yaz ve diske kaydet
     BinaStore.instance.bolum6 = _model;
-    BinaStore.instance.saveToDisk(); 
+    BinaStore.instance.saveToDisk();
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum7Screen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum7Screen()),
+    );
   }
 
   @override
@@ -91,7 +97,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         children: [
           ModernHeader(
             title: "Kullanım Amaçları",
-            subtitle: "Konut harici fonksiyonların tespiti",
+            subtitle: "Konut harici fonksiyonlar",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -103,8 +109,12 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                   const Padding(
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
-                      "Binanızda aşağıdaki alanlardan hangileri mevcut?",
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+                      "Binanızda konut haricinde aşağıdakilerden hangileri mevcut?",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF263238),
+                      ),
                     ),
                   ),
 
@@ -150,50 +160,76 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                     const Padding(
                       padding: EdgeInsets.only(left: 4, bottom: 12),
                       child: Text(
-                        "Otopark Yapısal Tipi",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
+                        "Otoparkınızın tipi nedir?",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1A237E),
+                        ),
                       ),
                     ),
                     SelectableCard(
                       choice: Bolum6Content.otoparkKapali,
-                      isSelected: _model.otoparkTipi?.label == Bolum6Content.otoparkKapali.label,
-                      onTap: () => _handleOtoparkTipi(Bolum6Content.otoparkKapali),
+                      isSelected:
+                          _model.otoparkTipi?.label ==
+                          Bolum6Content.otoparkKapali.label,
+                      onTap: () =>
+                          _handleOtoparkTipi(Bolum6Content.otoparkKapali),
                     ),
                     SelectableCard(
                       choice: Bolum6Content.otoparkAcik,
-                      isSelected: _model.otoparkTipi?.label == Bolum6Content.otoparkAcik.label,
-                      onTap: () => _handleOtoparkTipi(Bolum6Content.otoparkAcik),
+                      isSelected:
+                          _model.otoparkTipi?.label ==
+                          Bolum6Content.otoparkAcik.label,
+                      onTap: () =>
+                          _handleOtoparkTipi(Bolum6Content.otoparkAcik),
                     ),
                     SelectableCard(
                       choice: Bolum6Content.otoparkYariAcik,
-                      isSelected: _model.otoparkTipi?.label == Bolum6Content.otoparkYariAcik.label,
-                      onTap: () => _handleOtoparkTipi(Bolum6Content.otoparkYariAcik),
+                      isSelected:
+                          _model.otoparkTipi?.label ==
+                          Bolum6Content.otoparkYariAcik.label,
+                      onTap: () =>
+                          _handleOtoparkTipi(Bolum6Content.otoparkYariAcik),
                     ),
                   ],
                 ],
               ),
             ),
           ),
-          
+
           // ALT BUTON ALANI (REVİZE EDİLDİ)
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
             decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: Offset(0, -4),
+                ),
+              ],
             ),
             child: SafeArea(
               top: false,
               child: ElevatedButton(
-                onPressed: isButtonEnabled ? _onNextPressed : null, // Geçerli değilse null (pasif)
+                onPressed: isButtonEnabled
+                    ? _onNextPressed
+                    : null, // Geçerli değilse null (pasif)
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1A237E),
                   disabledBackgroundColor: Colors.grey.shade300, // Pasif renk
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 54),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text("ANALİZE DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  "DEVAM ET",
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),

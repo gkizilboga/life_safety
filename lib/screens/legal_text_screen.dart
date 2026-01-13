@@ -27,12 +27,18 @@ class LegalTextScreen extends StatelessWidget {
                   const SizedBox(height: 30),
                   const Divider(),
                   const SizedBox(height: 30),
-                  _buildSection(AppStrings.legalDisclaimerTitle, AppStrings.legalDisclaimerContent),
+                  _buildSection(
+                    AppStrings.legalDisclaimerTitle,
+                    AppStrings.legalDisclaimerContent,
+                  ),
                   const SizedBox(height: 40),
                   Center(
                     child: Text(
-                      "Son Güncelleme: 04.01.2026",
-                      style: TextStyle(color: Colors.grey.shade400, fontSize: 11),
+                      "Son Güncelleme: 18.01.2026",
+                      style: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 11,
+                      ),
                     ),
                   ),
                 ],
@@ -48,11 +54,22 @@ class LegalTextScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryBlue)),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: AppColors.primaryBlue,
+          ),
+        ),
         const SizedBox(height: 15),
         Text(
           content,
-          style: const TextStyle(fontSize: 14, color: AppColors.textDark, height: 1.6),
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppColors.textDark,
+            height: 1.6,
+          ),
         ),
       ],
     );

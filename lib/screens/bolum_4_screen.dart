@@ -52,7 +52,10 @@ class _Bolum4ScreenState extends State<Bolum4Screen> {
 
     BinaStore.instance.bolum4 = model;
     BinaStore.instance.saveToDisk();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Bolum5Screen()));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum5Screen()),
+    );
   }
 
   @override

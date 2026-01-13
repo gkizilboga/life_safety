@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/bina_store.dart'; 
+import '../data/bina_store.dart';
 import '../models/bolum_1_model.dart';
 import 'bolum_2_screen.dart';
 import '../widgets/custom_widgets.dart';
@@ -36,7 +36,10 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
   void _navigateToNext() {
     BinaStore.instance.bolum1 = _model;
     BinaStore.instance.saveToDisk();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum2Screen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum2Screen()),
+    );
   }
 
   Future<void> _showWarningDialog() async {
@@ -45,22 +48,35 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           title: const Row(
             children: [
               Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 30),
               SizedBox(width: 10),
-              Expanded(child: Text('UYARI', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+              Expanded(
+                child: Text(
+                  'UYARI',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
             ],
           ),
           content: const Text(
-            '⚠️ DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsat almış olmasına rağmen güncel yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Kesin risk analizi için uzman kontrolü ve görüşü almanız tavsiye edilir.',
+            '⚠️ DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen güncel yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Uzman görüşüne başvurmanız tavsiye edilir.',
             style: TextStyle(fontSize: 14, height: 1.4),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Vazgeç', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+              child: const Text(
+                'Vazgeç',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -70,7 +86,9 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1A237E),
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: const Text('Anladım, Devam Et'),
             ),
@@ -95,16 +113,20 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Binanızın yapı ruhsatı hangi tarihte alındı veya yapım tarihi nedir?"),
+                const Text(
+                  "Binanızın yapı ruhsatı hangi tarihte alındı veya yapım tarihi nedir?",
+                ),
                 const SizedBox(height: 20),
                 SelectableCard(
                   choice: Bolum1Content.ruhsatSonrasi,
-                  isSelected: _model.secim?.label == Bolum1Content.ruhsatSonrasi.label,
+                  isSelected:
+                      _model.secim?.label == Bolum1Content.ruhsatSonrasi.label,
                   onTap: () => _handleSelection(Bolum1Content.ruhsatSonrasi),
                 ),
                 SelectableCard(
                   choice: Bolum1Content.ruhsatOncesi,
-                  isSelected: _model.secim?.label == Bolum1Content.ruhsatOncesi.label,
+                  isSelected:
+                      _model.secim?.label == Bolum1Content.ruhsatOncesi.label,
                   onTap: () => _handleSelection(Bolum1Content.ruhsatOncesi),
                 ),
               ],
