@@ -90,7 +90,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text('Anladım, Devam Et'),
+              child: const Text('Devam Et'),
             ),
           ],
         );

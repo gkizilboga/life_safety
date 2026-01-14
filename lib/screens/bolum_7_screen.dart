@@ -77,7 +77,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
         children: [
           ModernHeader(
             title: "Teknik Hacimler",
-            subtitle: "Binadaki özel riskli alanların tespiti",
+            subtitle: "Binadaki özel riskli alanlar",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -210,7 +210,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
                         });
                       },
                       title: const Text(
-                        "Belirttiğim otopark tipi dışında yukarıda yer alan diğer özel riskli hacimlerin hiçbiri binamda bulunmamaktadır.",
+                        "Belirttiğim otopark tipi dışında yukarıda yer alan diğer özel riskli hacimlerin hiçbiri binada bulunmamaktadır.",
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
