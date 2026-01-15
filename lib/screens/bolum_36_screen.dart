@@ -115,61 +115,61 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     List<String> notes = [];
     if (sahanliksiz > 0)
       notes.add(
-        "🚨 KRİTİK RİSK: Binada 'Sahanlıksız Merdiven' tespit edilmiştir. Bu merdiven tipi hiçbir binada kaçış yolu olarak kabul edilemez.",
+        "Binada 'Sahanlıksız Merdiven' tespit edilmiştir. Bu merdiven tipi hiçbir binada kaçış yolu olarak kabul edilemez. YENİ BİNA 'larda tüm merdiven tiplerinde insanların tahliye esnasında dinlenebileceği sahanlıkların bulunması Yönetmeliğe göre zorunludur.",
       );
     if (hBina > 9.50 && doner > 0)
       notes.add(
-        "🚨 KRİTİK RİSK: Bina yüksekliği 9.50m üzerinde olduğu için 'Döner Merdiven' kullanımı yasaktır.",
+        "Bina yüksekliği 9.50m üzerinde olduğu için 'Dairesel Merdiven' kullanımı yasaktır. Dairesel merdiven ile özel çözüm gereken katlar varsa Uzman görüşü alınarak ilerlenmesi önerilir.",
       );
     if (hBina > 21.50 && disAcik > 0)
       notes.add(
-        "🚨 KRİTİK RİSK: Bina yüksekliği 21.50m üzerinde olduğu için 'Bina Dışı Açık Çelik Merdiven' kullanımı yasaktır.",
+        "Bina yüksekliği 21.50m üzerinde olduğu için 'Bina Dışı Açık Çelik Merdiven' kullanımı yasaktır.",
       );
     if (hYapi < 21.50)
       notes.add(
-        "✅ BİLGİ: Yapı yüksekliği 21.50m altındadır. Sahanlıksız merdiven hariç tüm merdiven tipleri kullanılabilir.",
+        "Yapı yüksekliği 21.50m altındadır. Sahanlıksız merdiven hariç tüm merdiven tipleri kullanılabilir.",
       );
     else if (hYapi >= 21.50 && hYapi < 30.50) {
       if (korunumlu >= 1)
         notes.add(
-          "✅ OLUMLU: Yapı yüksekliği 21.50m-30.50m arasındadır ve en az 1 adet korunumlu merdiven mevcuttur.",
+          "Yapı yüksekliği 21.50m-30.50m arasındadır ve en az 1 adet korunumlu merdiven mevcuttur.",
         );
       else
         notes.add(
-          "🚨 RİSK: Yapı yüksekliği 21.50m-30.50m arasındadır. En az 1 adet 'Korunumlu Merdiven' zorunludur.",
+          "Yapı yüksekliği 21.50m-30.50m arasındadır. En az 1 adet 'Korunumlu Merdiven' zorunludur.",
         );
     } else if (hYapi >= 30.50 && hYapi < 51.50) {
       if (korunumlu >= 2)
         notes.add(
-          "✅ OLUMLU: Yapı yüksekliği 30.50m-51.50m arasındadır ve en az 2 adet korunumlu merdiven mevcuttur.",
+          "Yapı yüksekliği 30.50m-51.50m arasındadır ve en az 2 adet korunumlu merdiven mevcuttur.",
         );
       else
         notes.add(
-          "🚨 RİSK: Yapı yüksekliği 30.50m-51.50m arasındadır. En az 2 adet 'Korunumlu Merdiven' zorunludur.",
+          "Yapı yüksekliği 30.50m-51.50m arasındadır. En az 2 adet 'Korunumlu Merdiven' zorunludur.",
         );
     } else if (hYapi >= 51.50) {
       if (korunumlu >= 2)
         notes.add(
-          "✅ OLUMLU: Yapı yüksekliği 51.50m üzerindedir ve en az 2 adet korunumlu merdiven mevcuttur.",
+          "Yapı yüksekliği 51.50m üzerindedir ve en az 2 adet korunumlu merdiven mevcuttur.",
         );
       else
         notes.add(
-          "🚨 RİSK: Yapı yüksekliği 51.50m üzerindedir. En az 2 adet 'Korunumlu Merdiven' zorunludur.",
+          "Yapı yüksekliği 51.50m üzerindedir. En az 2 adet 'Korunumlu Merdiven' zorunludur.",
         );
       if (!basinclandirmaVar)
         notes.add(
-          "🚨 RİSK: 51.50m üzeri binalarda her iki korunumlu merdivende de YGH ve Basınçlandırma Sistemi zorunludur.",
+          "51.50m üzeri binalarda her iki korunumlu merdivende hem YGH hem de Basınçlandırma Sistemi tesis edilmesi zorunludur.",
         );
     }
     int gerekli = b33?.gerekliNormal ?? 0;
     int mevcut = b33?.mevcutUst ?? 0;
     if (mevcut >= gerekli)
       notes.add(
-        "✅ ÇIKIŞ SAYISI: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla olduğundan, çıkış sayısı bakından yeterli gözükmektedir. Ancak bu durum tek başına yeterli olmayıp, binadaki merdiven tiplerinin ve adedinin kriterleri de yeterli olması gereklidir.",
+        "✅ ÇIKIŞ SAYISI YETERLİ: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla olduğundan, çıkış sayısı bakımından yeterli gözükmektedir. Ancak bu durum tek başına yeterli olmayıp, binadaki merdiven tiplerinin ve adedinin kriterleri de uygun olması gereklidir.",
       );
     else
       notes.add(
-        "🚨 ÇIKIŞ SAYISI YETERSİZ: Yönetmelik gereği $gerekli çıkış gerekirken, binada sadece $mevcut çıkış bulunmaktadır.",
+        "🚨 ÇIKIŞ SAYISI YETERSİZ: Yönetmelik gereği $gerekli çıkış gerekirken, binada sadece $mevcut çıkış bulunmaktadır. Çıkış sayısı bakımından yetersiz gözükmektedir. Bu durumla birlikte binadaki merdiven tiplerinin ve adetlerinin de Yönetmelik kriterlerini karşılaması beklenir.",
       );
     return notes.join("\n\n");
   }
@@ -243,8 +243,8 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Kapasite ve Uygunluk",
-      subtitle: "Son ölçümler ve erişim denetimi",
+      title: "Merdiven Ölçüleri ve Çıkış Esnasında Güvenlik",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isFormValid,
       onNext: _onFinishPressed,
@@ -272,7 +272,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           SizedBox(key: _konumKey, height: 1),
           if (_totalValidCikisSayisi > 1) ...[
             _buildInfoNote(
-              "Binada birden fazla çıkış tespit edildiği için konum analizi gereklidir.",
+              "Binada birden fazla çıkış tespit edildiği için konumlarının hususi olarak değerlendirilmesi gereklidir.",
             ),
             _buildSoruHeader(
               "Kaçış merdivenleri birbirine göre nasıl konumlanmış?",
@@ -316,26 +316,28 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               ],
             ),
           ),
-          _buildSoruHeader("Çıkış kapınızın tipi nedir?"),
+          _buildSoruHeader("Katınızdaki çıkış kapılarının tipi nedir?"),
           _buildSoruCard('kapiTipi', [
             Bolum36Content.kapiTipiOptionA,
             Bolum36Content.kapiTipiOptionB,
             Bolum36Content.kapiTipiOptionC,
           ], _model.kapiTipi),
           SizedBox(key: _kapiKey, height: 1),
-          _buildSoruHeader("Kapı net geçiş genişliği (cm) kaçtır?"),
+          _buildSoruHeader(
+            "Katınızdaki çıkış kapılarının temiz (net geçiş) genişliği kaç santimetredir?",
+          ),
           QuestionCard(
             child: Column(
               children: [
                 if (_hasKorunumlu)
                   _buildInput(
-                    "Korunumlu Merdiven Kapı Genişliği",
+                    "Korunumlu (Yangın) Merdiven Kapı Genişliği",
                     _kapiGenislikKorunumluCtrl,
                     _kapiGenislikBilinmiyor,
                   ),
                 if (_hasKorunumsuz)
                   _buildInput(
-                    "Korunumsuz Merdiven Kapı Genişliği",
+                    "Korunumsuz (Normal) Merdiven Kapı Genişliği",
                     _kapiGenislikKorunumsuzCtrl,
                     _kapiGenislikBilinmiyor,
                   ),

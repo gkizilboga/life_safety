@@ -77,8 +77,8 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-23: Normal Asansör",
-            subtitle: "İnsan taşıma asansörlerinin analizi",
+            title: "Normal (İnsan Taşıma) Asansör",
+            subtitle: "",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -88,7 +88,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
               child: Column(
                 children: [
                   _buildSoru(
-                    "Normal asansörünüz bodrum katlara da iniyor mu?",
+                    "Asansörünüz bodrum katlara da iniyor mu?",
                     'bodrum',
                     [
                       Bolum23Content.bodrumOptionA,
@@ -100,7 +100,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
                   ),
 
                   _buildSoru(
-                    "Yangın anında asansörler otomatik olarak zemin kata iniyor mu?",
+                    "Yangın anında asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?",
                     'yanginModu',
                     [
                       Bolum23Content.yanginModuOptionA,
@@ -122,7 +122,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
                   ),
 
                   _buildSoru(
-                    "Asansör kapılarında 'YANGIN ANINDA KULLANILMAZ' uyarısı var mı?",
+                    "Asansör kapılarında 'YANGIN ANINDA KULLANMAYINIZ' uyarısı var mı?",
                     'levha',
                     [
                       Bolum23Content.levhaOptionA,

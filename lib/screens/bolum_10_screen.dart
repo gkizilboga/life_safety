@@ -96,8 +96,8 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Kat Kullanım Amaçları",
-      subtitle: "Katların kullanıcı yoğunluğunu belirleyin",
+      title: "Katların Kullanım Amacı ve Yoğunlukları",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
       onNext: () {
@@ -152,7 +152,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                         left: 4,
                       ),
                       child: Text(
-                        "${i + 1}. Bodrum Katın Kullanım Amacı",
+                        "${i + 1}. Bodrum Katların Baskın  Kullanım Amacı",
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

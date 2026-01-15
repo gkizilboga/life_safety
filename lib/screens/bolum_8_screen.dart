@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_8_model.dart';
-import 'bolum_9_screen.dart'; 
+import 'bolum_9_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -34,7 +34,10 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
       onNext: () {
         BinaStore.instance.bolum8 = _model;
         // saveToDisk() işlemi AnalysisPageLayout içinde otomatik yapılmaktadır.
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum9Screen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum9Screen()),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,31 +46,37 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
             padding: EdgeInsets.only(left: 4, bottom: 16),
             child: Text(
               "Binanızın yerleşim durumu nedir?",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF263238),
+              ),
             ),
           ),
-          
+
           QuestionCard(
             child: Column(
               children: [
                 // --- AYRIK NİZAM ---
                 SelectableCard(
                   choice: Bolum8Content.ayrikNizam,
-                  isSelected: _model.secim?.label == Bolum8Content.ayrikNizam.label,
+                  isSelected:
+                      _model.secim?.label == Bolum8Content.ayrikNizam.label,
                   onTap: () => _handleSelection(Bolum8Content.ayrikNizam),
                 ),
                 TechnicalDrawingButton(
                   assetPath: AppAssets.section8Ayrik,
                   title: "Ayrık Nizam Yerleşim Detayı",
                 ),
-                
+
                 const SizedBox(height: 16),
                 const Divider(height: 32),
 
                 // --- BİTİŞİK NİZAM ---
                 SelectableCard(
                   choice: Bolum8Content.bitisikNizam,
-                  isSelected: _model.secim?.label == Bolum8Content.bitisikNizam.label,
+                  isSelected:
+                      _model.secim?.label == Bolum8Content.bitisikNizam.label,
                   onTap: () => _handleSelection(Bolum8Content.bitisikNizam),
                 ),
                 TechnicalDrawingButton(

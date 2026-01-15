@@ -32,7 +32,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   void initState() {
     super.initState();
     _loadVisibilityLogic();
-    
+
     // KRİTİK: Eğer hiçbir soru sorulmayacaksa otomatik olarak sonraki ekrana geç
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_shouldShowAnyQuestion()) {
@@ -42,8 +42,16 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   }
 
   bool _shouldShowAnyQuestion() {
-    return _askOtopark || _askKazan || _askAsansor || _askJenerator || 
-           _askElektrik || _askTrafo || _askDepo || _askCop || _askDuvar || _askTicari;
+    return _askOtopark ||
+        _askKazan ||
+        _askAsansor ||
+        _askJenerator ||
+        _askElektrik ||
+        _askTrafo ||
+        _askDepo ||
+        _askCop ||
+        _askDuvar ||
+        _askTicari;
   }
 
   void _loadVisibilityLogic() {
@@ -54,9 +62,10 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     // Bölüm 10'da herhangi bir katta "Ticari" seçilmiş mi kontrolü
     bool hasTicariInB10 = false;
     if (b10 != null) {
-      hasTicariInB10 = (b10.zemin?.label.contains("Ticari") ?? false) ||
-                       (b10.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false)) ||
-                       (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
+      hasTicariInB10 =
+          (b10.zemin?.label.contains("Ticari") ?? false) ||
+          (b10.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false)) ||
+          (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
     }
 
     setState(() {
@@ -76,26 +85,38 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'otopark') _model = _model.copyWith(otoparkKapi: choice);
-      else if (type == 'kazan') _model = _model.copyWith(kazanKapi: choice);
-      else if (type == 'asansor') _model = _model.copyWith(asansorKapi: choice);
-      else if (type == 'jenerator') _model = _model.copyWith(jeneratorKapi: choice);
-      else if (type == 'elektrik') _model = _model.copyWith(elektrikKapi: choice);
-      else if (type == 'trafo') _model = _model.copyWith(trafoKapi: choice);
-      else if (type == 'depo') _model = _model.copyWith(depoKapi: choice);
-      else if (type == 'cop') _model = _model.copyWith(copKapi: choice);
-      else if (type == 'duvar') _model = _model.copyWith(ortakDuvar: choice);
-      else if (type == 'ticari') _model = _model.copyWith(ticariKapi: choice);
+      if (type == 'otopark')
+        _model = _model.copyWith(otoparkKapi: choice);
+      else if (type == 'kazan')
+        _model = _model.copyWith(kazanKapi: choice);
+      else if (type == 'asansor')
+        _model = _model.copyWith(asansorKapi: choice);
+      else if (type == 'jenerator')
+        _model = _model.copyWith(jeneratorKapi: choice);
+      else if (type == 'elektrik')
+        _model = _model.copyWith(elektrikKapi: choice);
+      else if (type == 'trafo')
+        _model = _model.copyWith(trafoKapi: choice);
+      else if (type == 'depo')
+        _model = _model.copyWith(depoKapi: choice);
+      else if (type == 'cop')
+        _model = _model.copyWith(copKapi: choice);
+      else if (type == 'duvar')
+        _model = _model.copyWith(ortakDuvar: choice);
+      else if (type == 'ticari')
+        _model = _model.copyWith(ticariKapi: choice);
     });
   }
 
   void _onNextPressed() {
     BinaStore.instance.bolum13 = _model;
-    Navigator.pushReplacement( // pushReplacement kullanarak geri dönüldüğünde boş ekrana düşmeyi engelliyoruz
+    Navigator.pushReplacement(
+      // pushReplacement kullanarak geri dönüldüğünde boş ekrana düşmeyi engelliyoruz
       context,
       MaterialPageRoute(builder: (context) => const Bolum14Screen()),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     // Eğer hiçbir soru yoksa boş bir Scaffold döndür (Zaten initState otomatik geçirecek)
@@ -107,7 +128,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-13: Teknik Hacimler",
+            title: "Teknik Hacimler",
             subtitle: "Özel riskli alanların duvar ve kapı özellikleri",
             screenType: widget.runtimeType,
           ),
@@ -116,35 +137,112 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  if (_askOtopark) _buildSoru("Otoparktan bina içine açılan kapının özelliği nedir?", 'otopark', 
-                    [Bolum13Content.otoparkOptionA, Bolum13Content.otoparkOptionB, Bolum13Content.otoparkOptionC, Bolum13Content.otoparkOptionD], _model.otoparkKapi),
+                  if (_askOtopark)
+                    _buildSoru(
+                      "Otoparktan bina içine açılan kapının özelliği nedir?",
+                      'otopark',
+                      [
+                        Bolum13Content.otoparkOptionA,
+                        Bolum13Content.otoparkOptionB,
+                        Bolum13Content.otoparkOptionC,
+                        Bolum13Content.otoparkOptionD,
+                      ],
+                      _model.otoparkKapi,
+                    ),
 
-                  if (_askKazan) _buildSoru("Kazan dairesinin duvarları ve kapısı nasıldır?", 'kazan', 
-                    [Bolum13Content.kazanOptionA, Bolum13Content.kazanOptionB, Bolum13Content.kazanOptionC, Bolum13Content.kazanOptionD], _model.kazanKapi),
+                  if (_askKazan)
+                    _buildSoru(
+                      "Kazan dairesinin duvarları ve kapısı nasıldır?",
+                      'kazan',
+                      [
+                        Bolum13Content.kazanOptionA,
+                        Bolum13Content.kazanOptionB,
+                        Bolum13Content.kazanOptionC,
+                        Bolum13Content.kazanOptionD,
+                      ],
+                      _model.kazanKapi,
+                    ),
 
-                  if (_askAsansor) _buildSoru("Asansör kapısı nasıldır?", 'asansor', 
-                    [Bolum13Content.asansorOptionA, Bolum13Content.asansorOptionB, Bolum13Content.asansorOptionC], _model.asansorKapi),
+                  if (_askAsansor)
+                    _buildSoru("Asansör kapısı nasıldır?", 'asansor', [
+                      Bolum13Content.asansorOptionA,
+                      Bolum13Content.asansorOptionB,
+                      Bolum13Content.asansorOptionC,
+                    ], _model.asansorKapi),
 
-                  if (_askJenerator) _buildSoru("Jeneratör odasının duvar ve kapısı nasıldır?", 'jenerator', 
-                    [Bolum13Content.jeneratorOptionA, Bolum13Content.jeneratorOptionB, Bolum13Content.jeneratorOptionC], _model.jeneratorKapi),
+                  if (_askJenerator)
+                    _buildSoru(
+                      "Jeneratör odasının duvar ve kapısı nasıldır?",
+                      'jenerator',
+                      [
+                        Bolum13Content.jeneratorOptionA,
+                        Bolum13Content.jeneratorOptionB,
+                        Bolum13Content.jeneratorOptionC,
+                      ],
+                      _model.jeneratorKapi,
+                    ),
 
-                  if (_askElektrik) _buildSoru("Elektrik odalarının duvarları ve kapıları nasıldır?", 'elektrik', 
-                    [Bolum13Content.elekOdasiOptionA, Bolum13Content.elekOdasiOptionB, Bolum13Content.elekOdasiOptionC], _model.elektrikKapi),
+                  if (_askElektrik)
+                    _buildSoru(
+                      "Elektrik odalarının duvarları ve kapıları nasıldır?",
+                      'elektrik',
+                      [
+                        Bolum13Content.elekOdasiOptionA,
+                        Bolum13Content.elekOdasiOptionB,
+                        Bolum13Content.elekOdasiOptionC,
+                      ],
+                      _model.elektrikKapi,
+                    ),
 
-                  if (_askTrafo) _buildSoru("Trafo odasının kapısı nasıldır?", 'trafo', 
-                    [Bolum13Content.trafoOptionA, Bolum13Content.trafoOptionB, Bolum13Content.trafoOptionC], _model.trafoKapi),
+                  if (_askTrafo)
+                    _buildSoru("Trafo odasının kapısı nasıldır?", 'trafo', [
+                      Bolum13Content.trafoOptionA,
+                      Bolum13Content.trafoOptionB,
+                      Bolum13Content.trafoOptionC,
+                    ], _model.trafoKapi),
 
-                  if (_askDepo) _buildSoru("Eşya depolarının kapıları nasıldır?", 'depo', 
-                    [Bolum13Content.depoOptionA, Bolum13Content.depoOptionB, Bolum13Content.depoOptionC], _model.depoKapi),
+                  if (_askDepo)
+                    _buildSoru("Eşya depolarının kapıları nasıldır?", 'depo', [
+                      Bolum13Content.depoOptionA,
+                      Bolum13Content.depoOptionB,
+                      Bolum13Content.depoOptionC,
+                    ], _model.depoKapi),
 
-                  if (_askCop) _buildSoru("Çöp toplama odalarının kapıları nasıldır?", 'cop', 
-                    [Bolum13Content.copOptionA, Bolum13Content.copOptionB, Bolum13Content.copOptionC], _model.copKapi),
+                  if (_askCop)
+                    _buildSoru(
+                      "Çöp toplama odalarının kapıları nasıldır?",
+                      'cop',
+                      [
+                        Bolum13Content.copOptionA,
+                        Bolum13Content.copOptionB,
+                        Bolum13Content.copOptionC,
+                      ],
+                      _model.copKapi,
+                    ),
 
-                  if (_askDuvar) _buildSoru("Yan bina ile ortak kullandığınız duvarın özelliği nedir?", 'duvar', 
-                    [Bolum13Content.ortakDuvarOptionA, Bolum13Content.ortakDuvarOptionB, Bolum13Content.ortakDuvarOptionC], _model.ortakDuvar),
+                  if (_askDuvar)
+                    _buildSoru(
+                      "Yan bina ile ortak kullandığınız duvarın özelliği nedir?",
+                      'duvar',
+                      [
+                        Bolum13Content.ortakDuvarOptionA,
+                        Bolum13Content.ortakDuvarOptionB,
+                        Bolum13Content.ortakDuvarOptionC,
+                      ],
+                      _model.ortakDuvar,
+                    ),
 
-                  if (_askTicari) _buildSoru("Ticari alanlardan konut merdivenine geçiş nasıldır?", 'ticari', 
-                    [Bolum13Content.ticariOptionA, Bolum13Content.ticariOptionB, Bolum13Content.ticariOptionC], _model.ticariKapi),
+                  if (_askTicari)
+                    _buildSoru(
+                      "Ticari alanlardan konut merdivenine geçiş nasıldır?",
+                      'ticari',
+                      [
+                        Bolum13Content.ticariOptionA,
+                        Bolum13Content.ticariOptionB,
+                        Bolum13Content.ticariOptionC,
+                      ],
+                      _model.ticariKapi,
+                    ),
                 ],
               ),
             ),
@@ -153,7 +251,13 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
             decoration: const BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: Offset(0, -5),
+                ),
+              ],
             ),
             child: SafeArea(
               top: false,
@@ -171,18 +275,25 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

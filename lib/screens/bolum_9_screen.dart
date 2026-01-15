@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_9_model.dart';
-import 'bolum_10_screen.dart'; 
+import 'bolum_10_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -27,14 +27,17 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Yağmurlama Sistemi",
-      subtitle: "Binadaki otomatik söndürme sistemi varlığı",
+      title: "Otomatik Yağmurlama (Sprinkler) Sistemi Varlığı",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,
       onNext: () {
         BinaStore.instance.bolum9 = _model;
         // saveToDisk() işlemi AnalysisPageLayout içinde otomatik yapılmaktadır.
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum10Screen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum10Screen()),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,8 +45,12 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
           const Padding(
             padding: EdgeInsets.only(left: 4, bottom: 16),
             child: Text(
-              "Otomatik Yağmurlama (Sprinkler) Sistemi Durumu:",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+              "Binada otomatik yağmurlama (sprinkler) sistemi var mı?",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF263238),
+              ),
             ),
           ),
 
@@ -52,7 +59,7 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
             assetPath: AppAssets.section9Sprinkler,
             title: "Sprinkler Detayı",
           ),
-          
+
           const SizedBox(height: 12),
 
           QuestionCard(
@@ -60,7 +67,8 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
               children: [
                 SelectableCard(
                   choice: Bolum9Content.tamKapsam,
-                  isSelected: _model.secim?.label == Bolum9Content.tamKapsam.label,
+                  isSelected:
+                      _model.secim?.label == Bolum9Content.tamKapsam.label,
                   onTap: () => _handleSelection(Bolum9Content.tamKapsam),
                 ),
                 SelectableCard(

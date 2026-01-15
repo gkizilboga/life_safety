@@ -23,10 +23,30 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(" ", style: TextStyle(color: Colors.white70, fontSize: 16, letterSpacing: 2)),
-              const Text("YANGIN RİSK\nANALİZİ", style: TextStyle(color: Colors.white, fontSize: 38, fontWeight: FontWeight.bold, height: 1.1)),
+              const Text(
+                " ",
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                  letterSpacing: 2,
+                ),
+              ),
+              const Text(
+                "YANGIN RİSK\nANALİZİ",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 38,
+                  fontWeight: FontWeight.bold,
+                  height: 1.1,
+                ),
+              ),
               const SizedBox(height: 40),
-              _buildInput("E-Posta Adresi", _emailCtrl, Icons.email_outlined, false),
+              _buildInput(
+                "E-Posta Adresi",
+                _emailCtrl,
+                Icons.email_outlined,
+                false,
+              ),
               const SizedBox(height: 20),
               _buildInput("Şifre", _passCtrl, Icons.lock_outline, true),
               const SizedBox(height: 30),
@@ -34,21 +54,48 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.white, foregroundColor: const Color(0xFF1A237E), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: const Color(0xFF1A237E),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   onPressed: () {
                     if (_emailCtrl.text.isEmpty || _passCtrl.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Lütfen e-posta adresinizi ve şifrenizi giriniz."), backgroundColor: Colors.red),
+                        const SnackBar(
+                          content: Text(
+                            "Lütfen e-posta adresinizi ve şifrenizi giriniz.",
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                       return;
                     }
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashboardScreen()));
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DashboardScreen(),
+                      ),
+                    );
                   },
-                  child: const Text("GİRİŞ YAP", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  child: const Text(
+                    "GİRİŞ YAP",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
-              Center(child: TextButton(onPressed: () {}, child: const Text("Yeni Hesap Oluştur", style: TextStyle(color: Colors.white70)))),
+              Center(
+                child: TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Yeni Hesap Oluştur",
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -56,7 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildInput(String label, TextEditingController ctrl, IconData icon, bool isPass) {
+  Widget _buildInput(
+    String label,
+    TextEditingController ctrl,
+    IconData icon,
+    bool isPass,
+  ) {
     return TextField(
       controller: ctrl,
       obscureText: isPass,
@@ -65,8 +117,14 @@ class _LoginScreenState extends State<LoginScreen> {
         labelText: label,
         labelStyle: const TextStyle(color: Colors.white70),
         prefixIcon: Icon(icon, color: Colors.white70),
-        enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.white24), borderRadius: BorderRadius.circular(12)),
-        focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(12)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.white24),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }

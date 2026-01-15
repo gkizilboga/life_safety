@@ -23,7 +23,8 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
   void initState() {
     super.initState();
     final b8 = BinaStore.instance.bolum8;
-    if (b8?.secim?.label.contains("Bitişik") == true || b8?.secim?.label == "8-1-B") {
+    if (b8?.secim?.label.contains("Bitişik") == true ||
+        b8?.secim?.label == "8-1-B") {
       _askBitisik = true;
     }
   }
@@ -45,7 +46,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       if (type == 'kaplama') _model = _model.copyWith(kaplama: choice);
       if (type == 'iskelet') _model = _model.copyWith(iskelet: choice);
       if (type == 'duvar') _model = _model.copyWith(bitisikDuvar: choice);
-      
+
       if (type == 'isiklik') {
         _model = _model.copyWith(isiklik: choice);
         if (choice.label != Bolum17Content.isiklikOptionB.label) {
@@ -58,17 +59,27 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
   }
 
   void _onNextPressed() {
-    if (_model.kaplama == null) return _showError("Lütfen çatı kaplama malzemesini seçiniz.");
-    if (_model.iskelet == null) return _showError("Lütfen çatı iskeleti ve yalıtımı sorusunu yanıtlayınız.");
-    if (_askBitisik && _model.bitisikDuvar == null) return _showError("Lütfen çatı arası duvar sorusunu yanıtlayınız.");
-    if (_model.isiklik == null) return _showError("Lütfen çatı ışıklık durumunu belirtiniz.");
-    
-    if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label && _model.isiklikMalzemesi == null) {
+    if (_model.kaplama == null)
+      return _showError("Lütfen çatı kaplama malzemesini seçiniz.");
+    if (_model.iskelet == null)
+      return _showError(
+        "Lütfen çatı iskeleti ve yalıtımı sorusunu yanıtlayınız.",
+      );
+    if (_askBitisik && _model.bitisikDuvar == null)
+      return _showError("Lütfen çatı arası duvar sorusunu yanıtlayınız.");
+    if (_model.isiklik == null)
+      return _showError("Lütfen çatı ışıklık durumunu belirtiniz.");
+
+    if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label &&
+        _model.isiklikMalzemesi == null) {
       return _showError("Lütfen ışıklık malzemesini seçiniz.");
     }
 
     BinaStore.instance.bolum17 = _model;
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum18Screen()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum18Screen()),
+    );
   }
 
   void _showError(String msg) {
@@ -81,8 +92,8 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-17: Çatı",
-            subtitle: "Çatı katmanları ve ışıklık analizi",
+            title: "Çatı",
+            subtitle: "Çatı katmanları ve ışıklık",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -91,53 +102,95 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru("Çatınızın en üst katmanında hangi malzeme kullanılıyor?", 'kaplama', 
+                  _buildSoru(
+                    "Çatınızın en üst katmanında hangi malzeme kullanılıyor?",
+                    'kaplama',
                     [
-                      Bolum17Content.kaplamaOptionA, 
-                      Bolum17Content.kaplamaOptionB, 
+                      Bolum17Content.kaplamaOptionA,
+                      Bolum17Content.kaplamaOptionB,
                       Bolum17Content.kaplamaOptionC,
                       Bolum17Content.kaplamaOptionD,
                       Bolum17Content.kaplamaOptionE,
-                      Bolum17Content.kaplamaOptionF
-                    ], _model.kaplama),
+                      Bolum17Content.kaplamaOptionF,
+                    ],
+                    _model.kaplama,
+                  ),
 
-                  _buildSoru("Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?", 'iskelet', 
-                    [Bolum17Content.iskeletOptionA, Bolum17Content.iskeletOptionB, Bolum17Content.iskeletOptionC], _model.iskelet),
+                  _buildSoru(
+                    "Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?",
+                    'iskelet',
+                    [
+                      Bolum17Content.iskeletOptionA,
+                      Bolum17Content.iskeletOptionB,
+                      Bolum17Content.iskeletOptionC,
+                    ],
+                    _model.iskelet,
+                  ),
 
                   if (_askBitisik)
-                    _buildSoru("Çatılar arasında yangını kesecek bir duvar var mı?", 'duvar', 
-                      [Bolum17Content.bitisikOptionA, Bolum17Content.bitisikOptionB, Bolum17Content.bitisikOptionC], _model.bitisikDuvar),
+                    _buildSoru(
+                      "Çatılar arasında yangını kesecek bir duvar var mı?",
+                      'duvar',
+                      [
+                        Bolum17Content.bitisikOptionA,
+                        Bolum17Content.bitisikOptionB,
+                        Bolum17Content.bitisikOptionC,
+                      ],
+                      _model.bitisikDuvar,
+                    ),
 
-                  _buildSoru("Çatınızda camlı ışıklık veya aydınlatma kubbesi var mı?", 'isiklik', 
-                    [Bolum17Content.isiklikOptionA, Bolum17Content.isiklikOptionB, Bolum17Content.isiklikOptionC], _model.isiklik),
+                  _buildSoru(
+                    "Çatınızda camlı ışıklık veya aydınlatma kubbesi var mı?",
+                    'isiklik',
+                    [
+                      Bolum17Content.isiklikOptionA,
+                      Bolum17Content.isiklikOptionB,
+                      Bolum17Content.isiklikOptionC,
+                    ],
+                    _model.isiklik,
+                  ),
 
-                  if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label) ...[
-                    _buildInfoNote("Işıklık bulunduğu için malzeme türü seçilmelidir."),
+                  if (_model.isiklik?.label ==
+                      Bolum17Content.isiklikOptionB.label) ...[
+                    _buildInfoNote(
+                      "Işıklık bulunduğu için malzeme türü seçilmelidir.",
+                    ),
                     QuestionCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Işıklık malzemesi nedir?", style: TextStyle(fontWeight: FontWeight.bold)),
+                          const Text(
+                            "Işıklık malzemesi nedir?",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: 10),
                           Row(
                             children: [
                               Radio<String>(
-                                value: "cam", 
-                                groupValue: _model.isiklikMalzemesi, 
+                                value: "cam",
+                                groupValue: _model.isiklikMalzemesi,
                                 activeColor: const Color(0xFF1A237E),
-                                onChanged: (v) => setState(() => _model = _model.copyWith(isiklikMalzemesi: v))
+                                onChanged: (v) => setState(
+                                  () => _model = _model.copyWith(
+                                    isiklikMalzemesi: v,
+                                  ),
+                                ),
                               ),
                               const Text("Cam"),
                               const SizedBox(width: 20),
                               Radio<String>(
-                                value: "plastik", 
-                                groupValue: _model.isiklikMalzemesi, 
+                                value: "plastik",
+                                groupValue: _model.isiklikMalzemesi,
                                 activeColor: const Color(0xFF1A237E),
-                                onChanged: (v) => setState(() => _model = _model.copyWith(isiklikMalzemesi: v))
+                                onChanged: (v) => setState(
+                                  () => _model = _model.copyWith(
+                                    isiklikMalzemesi: v,
+                                  ),
+                                ),
                               ),
                               const Expanded(child: Text("Plastik, mika vb.")),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -157,7 +210,13 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, -5),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,
@@ -185,24 +244,40 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
         children: [
           const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
           const SizedBox(width: 12),
-          Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13))),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Color(0xFFE65100),
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

@@ -16,7 +16,7 @@ class Bolum18Screen extends StatefulWidget {
 
 class _Bolum18ScreenState extends State<Bolum18Screen> {
   Bolum18Model _model = Bolum18Model();
-  
+
   // Boru sorusunu sadece Yüksek Binalarda soracağız
   bool _askBoru = false;
 
@@ -47,10 +47,12 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
   }
 
   void _onNextPressed() {
-    if (_model.duvarKaplama == null) return _showError("Lütfen duvar kaplama sorusunu yanıtlayınız.");
-    
+    if (_model.duvarKaplama == null)
+      return _showError("Lütfen duvar kaplama sorusunu yanıtlayınız.");
+
     // Yüksek binaysa boru sorusu zorunlu
-    if (_askBoru && _model.boruTipi == null) return _showError("Lütfen tesisat borusu sorusunu yanıtlayınız.");
+    if (_askBoru && _model.boruTipi == null)
+      return _showError("Lütfen tesisat borusu sorusunu yanıtlayınız.");
 
     BinaStore.instance.bolum18 = _model;
     Navigator.push(
@@ -79,30 +81,44 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
               child: Column(
                 children: [
                   // 1. Duvar Kaplaması
-                  _buildSoru("Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük (içten yalıtım) gibi bir kaplama var mı?", 'duvar', 
+                  _buildSoru(
+                    "Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük (içten yalıtım) gibi bir kaplama var mı?",
+                    'duvar',
                     [
-                      Bolum18Content.duvarOptionA, 
-                      Bolum18Content.duvarOptionB, 
+                      Bolum18Content.duvarOptionA,
+                      Bolum18Content.duvarOptionB,
                       Bolum18Content.duvarOptionC,
-                      Bolum18Content.duvarOptionD
-                    ], _model.duvarKaplama),
+                      Bolum18Content.duvarOptionD,
+                    ],
+                    _model.duvarKaplama,
+                  ),
 
                   // 2. Tesisat Borusu (Sadece Yüksek Binalarda)
                   if (_askBoru) ...[
                     const Divider(height: 30),
                     Container(
                       padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(10)),
-                      child: const Text("⚠️ Binanız 'Yüksek Bina' sınıfında olduğu için aşağıdaki soru açılmıştır.", style: TextStyle(color: Colors.red, fontSize: 12)),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Text(
+                        "⚠️ Binanız 'Yüksek Bina' statüsünde olduğu için aşağıdaki soru açılmıştır.",
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
                     ),
                     const SizedBox(height: 10),
-                    _buildSoru("Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?", 'boru', 
+                    _buildSoru(
+                      "Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?",
+                      'boru',
                       [
-                        Bolum18Content.boruOptionA, 
-                        Bolum18Content.boruOptionB, 
+                        Bolum18Content.boruOptionA,
+                        Bolum18Content.boruOptionB,
                         Bolum18Content.boruOptionC,
-                        Bolum18Content.boruOptionD
-                      ], _model.boruTipi),
+                        Bolum18Content.boruOptionD,
+                      ],
+                      _model.boruTipi,
+                    ),
                   ],
                 ],
               ),
@@ -112,7 +128,13 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
             decoration: BoxDecoration(
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: const Offset(0, -5))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
             ),
             child: SafeArea(
               top: false,
@@ -130,18 +152,25 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

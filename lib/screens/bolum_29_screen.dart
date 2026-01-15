@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_29_model.dart';
-import 'bolum_30_screen.dart'; 
+import 'bolum_30_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -32,19 +32,29 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
   void initState() {
     super.initState();
     _loadVisibility();
-    
+
     // Eğer hiçbir teknik hacim yoksa otomatik atla
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_shouldShowAnyQuestion()) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Bolum30Screen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum30Screen()),
+        );
       }
     });
   }
 
   bool _shouldShowAnyQuestion() {
-    return _askOtopark || _askKazan || _askCati || _askAsansor || 
-           _askJenerator || _askPano || _askTrafo || _askDepo || 
-           _askCop || _askSiginak;
+    return _askOtopark ||
+        _askKazan ||
+        _askCati ||
+        _askAsansor ||
+        _askJenerator ||
+        _askPano ||
+        _askTrafo ||
+        _askDepo ||
+        _askCop ||
+        _askSiginak;
   }
 
   void _loadVisibility() {
@@ -55,7 +65,8 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
       _askOtopark = (b6?.hasOtopark ?? false) || (b7?.hasOtopark ?? false);
       _askKazan = b7?.hasKazan ?? false;
       _askCati = b7?.hasCati ?? false;
-      _askAsansor = b7?.hasAsansor ?? false; // KRİTİK: Burası asansör varlığına bakıyor
+      _askAsansor =
+          b7?.hasAsansor ?? false; // KRİTİK: Burası asansör varlığına bakıyor
       _askJenerator = b7?.hasJenerator ?? false;
       _askPano = b7?.hasElektrik ?? false;
       _askTrafo = b7?.hasTrafo ?? false;
@@ -67,16 +78,26 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'otopark') _model = _model.copyWith(otopark: choice);
-      else if (type == 'kazan') _model = _model.copyWith(kazan: choice);
-      else if (type == 'cati') _model = _model.copyWith(cati: choice);
-      else if (type == 'asansor') _model = _model.copyWith(asansor: choice);
-      else if (type == 'jenerator') _model = _model.copyWith(jenerator: choice);
-      else if (type == 'pano') _model = _model.copyWith(pano: choice);
-      else if (type == 'trafo') _model = _model.copyWith(trafo: choice);
-      else if (type == 'depo') _model = _model.copyWith(depo: choice);
-      else if (type == 'cop') _model = _model.copyWith(cop: choice);
-      else if (type == 'siginak') _model = _model.copyWith(siginak: choice);
+      if (type == 'otopark')
+        _model = _model.copyWith(otopark: choice);
+      else if (type == 'kazan')
+        _model = _model.copyWith(kazan: choice);
+      else if (type == 'cati')
+        _model = _model.copyWith(cati: choice);
+      else if (type == 'asansor')
+        _model = _model.copyWith(asansor: choice);
+      else if (type == 'jenerator')
+        _model = _model.copyWith(jenerator: choice);
+      else if (type == 'pano')
+        _model = _model.copyWith(pano: choice);
+      else if (type == 'trafo')
+        _model = _model.copyWith(trafo: choice);
+      else if (type == 'depo')
+        _model = _model.copyWith(depo: choice);
+      else if (type == 'cop')
+        _model = _model.copyWith(cop: choice);
+      else if (type == 'siginak')
+        _model = _model.copyWith(siginak: choice);
     });
   }
 
@@ -109,57 +130,154 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
       isNextEnabled: _isReady(),
       onNext: () {
         BinaStore.instance.bolum29 = _model;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum30Screen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum30Screen()),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (_askOtopark) _buildSoru("Otoparkta yanıcı eşyalar (lastik, boya vb.) yığılıyor mu?", 'otopark', 
-            [Bolum29Content.otoparkOptionA, Bolum29Content.otoparkOptionB, Bolum29Content.otoparkOptionC], _model.otopark),
+          if (_askOtopark)
+            _buildSoru(
+              "Otoparkta yanıcı türden eşyalar (lastik, boya, eşya vb.) bulunuyor mu?",
+              'otopark',
+              [
+                Bolum29Content.otoparkOptionA,
+                Bolum29Content.otoparkOptionB,
+                Bolum29Content.otoparkOptionC,
+              ],
+              _model.otopark,
+            ),
 
-          if (_askKazan) _buildSoru("Kazan dairesinde ilgisiz eski eşya, karton vb. saklanıyor mu?", 'kazan', 
-            [Bolum29Content.kazanOptionA, Bolum29Content.kazanOptionB, Bolum29Content.kazanOptionC], _model.kazan),
+          if (_askKazan)
+            _buildSoru(
+              "Kazan dairesinde eski eşya, mobilya, karton vb. bulunuyor mu?",
+              'kazan',
+              [
+                Bolum29Content.kazanOptionA,
+                Bolum29Content.kazanOptionB,
+                Bolum29Content.kazanOptionC,
+              ],
+              _model.kazan,
+            ),
 
-          if (_askCati) _buildSoru("Çatı arasında yanıcı malzemeler saklanıyor mu?", 'cati', 
-            [Bolum29Content.catiOptionA, Bolum29Content.catiOptionB, Bolum29Content.catiOptionC], _model.cati),
+          if (_askCati)
+            _buildSoru(
+              "Çatı arasında yanıcı malzemeler bulunuyor mu?",
+              'cati',
+              [
+                Bolum29Content.catiOptionA,
+                Bolum29Content.catiOptionB,
+                Bolum29Content.catiOptionC,
+              ],
+              _model.cati,
+            ),
 
-          if (_askAsansor) _buildSoru("Asansör makine dairesinde yanıcı ürünler var mı?", 'asansor', 
-            [Bolum29Content.asansorOptionA, Bolum29Content.asansorOptionB, Bolum29Content.asansorOptionC], _model.asansor),
+          if (_askAsansor)
+            _buildSoru(
+              "Asansör makine dairesinde yanıcı malzemeler bulunuyor mu?",
+              'asansor',
+              [
+                Bolum29Content.asansorOptionA,
+                Bolum29Content.asansorOptionB,
+                Bolum29Content.asansorOptionC,
+              ],
+              _model.asansor,
+            ),
 
-          if (_askJenerator) _buildSoru("Jeneratör odasında ilgisiz malzemeler depolanıyor mu?", 'jenerator', 
-            [Bolum29Content.jeneratorOptionA, Bolum29Content.jeneratorOptionB, Bolum29Content.jeneratorOptionC], _model.jenerator),
+          if (_askJenerator)
+            _buildSoru(
+              "Jeneratör odasında ilgisiz malzemeler bulunuyor mu?",
+              'jenerator',
+              [
+                Bolum29Content.jeneratorOptionA,
+                Bolum29Content.jeneratorOptionB,
+                Bolum29Content.jeneratorOptionC,
+              ],
+              _model.jenerator,
+            ),
 
-          if (_askPano) _buildSoru("Elektrik pano odasında temizlik malzemesi, kağıt vb. var mı?", 'pano', 
-            [Bolum29Content.panoOptionA, Bolum29Content.panoOptionB, Bolum29Content.panoOptionC], _model.pano),
+          if (_askPano)
+            _buildSoru(
+              "Elektrik pano odasında temizlik malzemesi, kağıt, eşya vb. bulunuyor mu?",
+              'pano',
+              [
+                Bolum29Content.panoOptionA,
+                Bolum29Content.panoOptionB,
+                Bolum29Content.panoOptionC,
+              ],
+              _model.pano,
+            ),
 
-          if (_askTrafo) _buildSoru("Trafo odası temiz mi ve menfezler açık mı?", 'trafo', 
-            [Bolum29Content.trafoOptionA, Bolum29Content.trafoOptionB, Bolum29Content.trafoOptionC], _model.trafo),
+          if (_askTrafo)
+            _buildSoru("Trafo odası temiz mi ve menfezler açık mı?", 'trafo', [
+              Bolum29Content.trafoOptionA,
+              Bolum29Content.trafoOptionB,
+              Bolum29Content.trafoOptionC,
+            ], _model.trafo),
 
-          if (_askDepo) _buildSoru("Depolarda parlayıcı maddeler (tiner, tüp vb.) saklanıyor mu?", 'depo', 
-            [Bolum29Content.depoOptionA, Bolum29Content.depoOptionB, Bolum29Content.depoOptionC], _model.depo),
+          if (_askDepo)
+            _buildSoru(
+              "Depolarda parlayıcı maddeler (tiner, tüp, boya vb.) saklanıyor mu?",
+              'depo',
+              [
+                Bolum29Content.depoOptionA,
+                Bolum29Content.depoOptionB,
+                Bolum29Content.depoOptionC,
+              ],
+              _model.depo,
+            ),
 
-          if (_askCop) _buildSoru("Çöp odası düzenli temizleniyor mu?", 'cop', 
-            [Bolum29Content.copOptionA, Bolum29Content.copOptionB, Bolum29Content.copOptionC], _model.cop),
+          if (_askCop)
+            _buildSoru("Çöp odası düzenli temizleniyor mu?", 'cop', [
+              Bolum29Content.copOptionA,
+              Bolum29Content.copOptionB,
+              Bolum29Content.copOptionC,
+            ], _model.cop),
 
-          if (_askSiginak) _buildSoru("Sığınakta yanıcı/patlayıcı maddeler depolanıyor mu?", 'siginak', 
-            [Bolum29Content.siginakOptionA, Bolum29Content.siginakOptionB, Bolum29Content.siginakOptionC], _model.siginak),
+          if (_askSiginak)
+            _buildSoru(
+              "Sığınakta yanıcı/patlayıcı maddeler depolanıyor mu?",
+              'siginak',
+              [
+                Bolum29Content.siginakOptionA,
+                Bolum29Content.siginakOptionB,
+                Bolum29Content.siginakOptionC,
+              ],
+              _model.siginak,
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF263238),
+            ),
+          ),
           const SizedBox(height: 12),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

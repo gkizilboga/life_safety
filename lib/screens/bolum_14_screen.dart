@@ -25,7 +25,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
 
   void _hesaplaVeAnalizEt() {
     final Bolum3Model? bolum3 = BinaStore.instance.bolum3;
-    
+
     double hBinaYonetmelik = bolum3?.hBina ?? 0.0;
     double hBodrum = (bolum3?.hYapi ?? 0.0) - hBinaYonetmelik;
 
@@ -62,8 +62,11 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
 
   void _onNextPressed() {
     BinaStore.instance.bolum14 = _model;
-    BinaStore.instance.saveToDisk(); 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum15Screen()));
+    BinaStore.instance.saveToDisk();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const Bolum15Screen()),
+    );
   }
 
   @override
@@ -87,7 +90,11 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
                       "SonuÇ",
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF263238),
+                      ),
                     ),
                   ),
                   Container(
@@ -98,16 +105,32 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: const Color(0xFFE0E0E0)),
                       boxShadow: [
-                        BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4)),
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.03),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
                       ],
                     ),
                     child: Column(
                       children: [
                         Row(
                           children: [
-                            _buildResultBox("Şaft Duvarı", "${_model.gerekenDuvarDk}", "dakika"),
-                            Container(width: 1, height: 40, color: const Color(0xFFECEFF1)),
-                            _buildResultBox("Şaft Kapağı / Kapısı ", "${_model.gerekenKapakDk}", "dakika"),
+                            _buildResultBox(
+                              "Şaft Duvarı",
+                              "${_model.gerekenDuvarDk}",
+                              "dakika",
+                            ),
+                            Container(
+                              width: 1,
+                              height: 40,
+                              color: const Color(0xFFECEFF1),
+                            ),
+                            _buildResultBox(
+                              "Şaft Kapağı / Kapısı ",
+                              "${_model.gerekenKapakDk}",
+                              "dakika",
+                            ),
                           ],
                         ),
                         const Padding(
@@ -117,7 +140,11 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(Icons.gavel_rounded, color: Color(0xFF1A237E), size: 20),
+                            const Icon(
+                              Icons.gavel_rounded,
+                              color: Color(0xFF1A237E),
+                              size: 20,
+                            ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
@@ -140,7 +167,11 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
                       "Şaft ve Kapak Detayı",
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Color(0xFF263238)),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF263238),
+                      ),
                     ),
                   ),
                   SectionImage(assetPath: AppAssets.section14SaftDuvarKapi),
@@ -160,10 +191,32 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
     return Expanded(
       child: Column(
         children: [
-          Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w600, letterSpacing: 0.5)),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 11,
+              color: Colors.grey,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Color(0xFF1A237E))),
-          Text(unit, style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.w500)),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF1A237E),
+            ),
+          ),
+          Text(
+            unit,
+            style: const TextStyle(
+              fontSize: 10,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ],
       ),
     );
@@ -183,7 +236,11 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
           Expanded(
             child: Text(
               "Bu değerler binanızın mimari verilerine göre otomatik hesaplanmıştır.",
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Color(0xFF1565C0)),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF1565C0),
+              ),
             ),
           ),
         ],
@@ -196,7 +253,13 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, -4),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,
@@ -206,9 +269,14 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
             backgroundColor: const Color(0xFF1A237E),
             foregroundColor: Colors.white,
             minimumSize: const Size(double.infinity, 54),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
-          child: const Text("DEVAM ET", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+          child: const Text(
+            "DEVAM ET",
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );

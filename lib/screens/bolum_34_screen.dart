@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_34_model.dart';
-import 'bolum_35_screen.dart'; 
+import 'bolum_35_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -35,9 +35,10 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     // Bölüm 10'da herhangi bir katta ticari seçilmiş mi?
     bool hasTicariInB10 = false;
     if (b10 != null) {
-      hasTicariInB10 = (b10.zemin?.label.contains("Ticari") ?? false) ||
-                       (b10.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false)) ||
-                       (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
+      hasTicariInB10 =
+          (b10.zemin?.label.contains("Ticari") ?? false) ||
+          (b10.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false)) ||
+          (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
     }
 
     if (hasTicariInB6 || hasTicariInB10) {
@@ -81,8 +82,10 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
 
   void _onNextPressed() {
     if (_isEligible) {
-      if (_model.zemin == null) return _showError("Lütfen zemin kat ticari çıkış durumunu seçiniz.");
-      if (_model.bodrum == null) return _showError("Lütfen bodrum kat ticari çıkış durumunu seçiniz.");
+      if (_model.zemin == null)
+        return _showError("Lütfen zemin kat ticari çıkış durumunu seçiniz.");
+      if (_model.bodrum == null)
+        return _showError("Lütfen bodrum kat ticari çıkış durumunu seçiniz.");
     }
 
     BinaStore.instance.bolum34 = _model;
@@ -108,8 +111,8 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-34: Ticari Alanlar",
-            subtitle: "Dükkan ve mağazaların tahliye bağımsızlığı",
+            title: "Ticari Alanlar",
+            subtitle: "İşyeri vb. hacimlerin tahliyesi",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -119,19 +122,29 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
               child: Column(
                 children: [
                   _buildSoru(
-                    "1. Zemin kattaki dükkan, mağaza veya restoranların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?", 
-                    'zemin', 
-                    [Bolum34Content.zeminOptionA, Bolum34Content.zeminOptionB, Bolum34Content.zeminOptionC], 
-                    _model.zemin
+                    "Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?",
+                    'zemin',
+                    [
+                      Bolum34Content.zeminOptionA,
+                      Bolum34Content.zeminOptionB,
+                      Bolum34Content.zeminOptionC,
+                    ],
+                    _model.zemin,
                   ),
 
                   if (_model.zemin != null) ...[
-                    _buildInfoNote("Zemin kat tespiti yapıldı. Lütfen bodrum kat ticari alan çıkışlarını da kontrol ediniz."),
+                    _buildInfoNote(
+                      "Zemin kat tespiti yapıldı. Lütfen bodrum kat ticari alan çıkışlarını da kontrol ediniz.",
+                    ),
                     _buildSoru(
-                      "2. Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait bir merdiveni veya rampası var mı?", 
-                      'bodrum', 
-                      [Bolum34Content.bodrumOptionA, Bolum34Content.bodrumOptionB, Bolum34Content.bodrumOptionC], 
-                      _model.bodrum
+                      "Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?",
+                      'bodrum',
+                      [
+                        Bolum34Content.bodrumOptionA,
+                        Bolum34Content.bodrumOptionB,
+                        Bolum34Content.bodrumOptionC,
+                      ],
+                      _model.bodrum,
                     ),
                   ],
                 ],
@@ -160,7 +173,11 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13),
+              style: const TextStyle(
+                color: Color(0xFFE65100),
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
             ),
           ),
         ],
@@ -173,7 +190,13 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, -5),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,
@@ -188,18 +211,28 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
           const SizedBox(height: 12),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

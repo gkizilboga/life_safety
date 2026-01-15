@@ -19,7 +19,10 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text("Analiz Arşivi", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        title: const Text(
+          "Analiz Arşivi",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: const Color(0xFF1A237E),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -34,14 +37,25 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.inventory_2_outlined, size: 80, color: Colors.grey.shade300),
+          Icon(
+            Icons.inventory_2_outlined,
+            size: 80,
+            color: Colors.grey.shade300,
+          ),
           const SizedBox(height: 20),
           Text(
             "Henüz kayıtlı bir analiz bulunamadı.",
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 10),
-          const Text("Yeni bir analiz başlatarak arşivi doldurabilirsiniz.", style: TextStyle(color: Colors.grey, fontSize: 13)),
+          const Text(
+            "Yeni bir analiz başlatarak arşivi doldurabilirsiniz.",
+            style: TextStyle(color: Colors.grey, fontSize: 13),
+          ),
         ],
       ),
     );
@@ -61,33 +75,61 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: const Color(0xFFE0E0E0)),
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.03),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 12,
+            ),
             leading: Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: const Color(0xFF1A237E).withValues(alpha: 0.05), shape: BoxShape.circle),
-              child: const Icon(Icons.business_rounded, color: Color(0xFF1A237E)),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A237E).withValues(alpha: 0.05),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.business_rounded,
+                color: Color(0xFF1A237E),
+              ),
             ),
             title: Text(
               item['name'] ?? "İsimsiz Bina",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF2C3E50)),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Color(0xFF2C3E50),
+              ),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 4),
-                Text("${item['city']} / ${item['district']}", style: const TextStyle(fontSize: 13, color: Colors.blueGrey)),
+                Text(
+                  "${item['city']} / ${item['district']}",
+                  style: const TextStyle(fontSize: 13, color: Colors.blueGrey),
+                ),
                 const SizedBox(height: 2),
-                Text("Tarih: $dateStr", style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                Text(
+                  "Tarih: $dateStr",
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                ),
               ],
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.picture_as_pdf_outlined, color: Colors.redAccent),
+                  icon: const Icon(
+                    Icons.picture_as_pdf_outlined,
+                    color: Colors.redAccent,
+                  ),
                   onPressed: () async {
                     if (BinaStore.instance.isPremium) {
                       BinaStore.instance.loadBuildingFromArchive(item['id']);
@@ -95,12 +137,18 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                     } else {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const PaywallScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const PaywallScreen(),
+                        ),
                       );
                     }
                   },
                 ),
-                const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey,
+                ),
               ],
             ),
             onTap: () => _viewReport(item['id']),
@@ -125,11 +173,19 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Text("Analizi Sil"),
-        content: Text("'$name' binasına ait tüm veriler kalıcı olarak silinecektir. Bu işlem geri alınamaz."),
+        content: Text(
+          "'$name' binasına ait tüm veriler kalıcı olarak silinecektir. Bu işlem geri alınamaz.",
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Vazgeç")),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Vazgeç"),
+          ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade800, foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red.shade800,
+              foregroundColor: Colors.white,
+            ),
             onPressed: () {
               setState(() {
                 BinaStore.instance.deleteFromArchive(id);

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_20_model.dart';
-import 'bolum_21_screen.dart'; 
+import 'bolum_21_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -88,8 +88,12 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   }
 
   bool get _isLimitValid {
-    return _normalErr == null && _icKapaliErr == null && _disKapaliErr == null && 
-           _disAcikErr == null && _donerErr == null && _sahanliksizErr == null;
+    return _normalErr == null &&
+        _icKapaliErr == null &&
+        _disKapaliErr == null &&
+        _disAcikErr == null &&
+        _donerErr == null &&
+        _sahanliksizErr == null;
   }
 
   @override
@@ -107,14 +111,17 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     setState(() {
       if (type == 'tekKatCikis') _model = _model.copyWith(tekKatCikis: choice);
       if (type == 'tekKatRampa') _model = _model.copyWith(tekKatRampa: choice);
-      if (type == 'basinclandirma') _model = _model.copyWith(basinclandirma: choice);
-      if (type == 'bodrum') _model = _model.copyWith(bodrumMerdivenDevami: choice);
+      if (type == 'basinclandirma')
+        _model = _model.copyWith(basinclandirma: choice);
+      if (type == 'bodrum')
+        _model = _model.copyWith(bodrumMerdivenDevami: choice);
     });
   }
 
   bool _validateAndSave() {
     if (_isTekKatli) {
-      if (_model.tekKatCikis == null || _model.tekKatRampa == null) return false;
+      if (_model.tekKatCikis == null || _model.tekKatRampa == null)
+        return false;
     } else {
       int normal = int.tryParse(_normalCtrl.text) ?? 0;
       int icKapali = int.tryParse(_icKapaliCtrl.text) ?? 0;
@@ -123,7 +130,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       int doner = int.tryParse(_donerCtrl.text) ?? 0;
       int sahanliksiz = int.tryParse(_sahanliksizCtrl.text) ?? 0;
 
-      if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz == 0) return false;
+      if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz == 0)
+        return false;
       if (_showBasinclandirma && _model.basinclandirma == null) return false;
 
       _model = _model.copyWith(
@@ -147,7 +155,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kaçış Merdivenleri",
-      subtitle: "Binadaki merdiven tipleri ve adetleri",
+      subtitle: "Merdiven tipleri ve adetleri",
       screenType: widget.runtimeType,
       isNextEnabled: _isLimitValid,
       onNext: () {
@@ -160,7 +168,9 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                 onContinue: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const Bolum21Screen()),
+                    MaterialPageRoute(
+                      builder: (context) => const Bolum21Screen(),
+                    ),
                   );
                 },
               ),
@@ -168,7 +178,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Lütfen gerekli alanları doğru şekilde doldurunuz.")),
+            const SnackBar(
+              content: Text(
+                "Lütfen gerekli alanları doğru şekilde doldurunuz.",
+              ),
+            ),
           );
         }
       },
@@ -176,17 +190,31 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_isTekKatli) ...[
-            _buildSoru("Binadan dışarıya (sokağa/caddeye) çıkışınız nasıl?", 'tekKatCikis', 
-              [Bolum20Content.tekKatOptionA], _model.tekKatCikis),
-            _buildSoru("Binadan sokağa çıkarken rampa kullanmak zorunda kalıyor musunuz?", 'tekKatRampa', 
-              [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC], _model.tekKatRampa),
+            _buildSoru(
+              "Binadan dışarıya (sokağa/caddeye) çıkışınız nasıl?",
+              'tekKatCikis',
+              [Bolum20Content.tekKatOptionA],
+              _model.tekKatCikis,
+            ),
+            _buildSoru(
+              "Binadan sokağa çıkarken rampa kullanmak zorunda kalıyor musunuz?",
+              'tekKatRampa',
+              [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC],
+              _model.tekKatRampa,
+            ),
           ] else ...[
             const Padding(
               padding: EdgeInsets.only(left: 4, bottom: 16),
-              child: Text("Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Maks: 6)", 
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+              child: Text(
+                "Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Maks: 6)",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF263238),
+                ),
+              ),
             ),
-            
+
             QuestionCard(
               child: Column(
                 children: [
@@ -215,7 +243,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     label: Bolum20Content.cokKatOption4.uiTitle,
                     ctrl: _disAcikCtrl,
                     error: _disAcikErr,
-                    assetPaths: [AppAssets.section20DisAcik1, AppAssets.section20DisAcik2],
+                    assetPaths: [
+                      AppAssets.section20DisAcik1,
+                      AppAssets.section20DisAcik2,
+                    ],
                   ),
                   const Divider(height: 32),
                   _buildStairInputGroup(
@@ -236,22 +267,34 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ],
 
           if (_showBasinclandirma)
-            _buildSoru("Merdivende basınçlandırma sistemi var mı?", 'basinclandirma', 
-              [Bolum20Content.basYghOptionA, Bolum20Content.basYghOptionB, Bolum20Content.basYghOptionC], _model.basinclandirma),
+            _buildSoru(
+              "Merdivenlerde basınçlandırma sistemi var mı?",
+              'basinclandirma',
+              [
+                Bolum20Content.basYghOptionA,
+                Bolum20Content.basYghOptionB,
+                Bolum20Content.basYghOptionC,
+              ],
+              _model.basinclandirma,
+            ),
 
           if (_hasBodrum)
-            _buildSoru("Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?", 'bodrum', 
-              [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB], _model.bodrumMerdivenDevami),
+            _buildSoru(
+              "Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?",
+              'bodrum',
+              [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB],
+              _model.bodrumMerdivenDevami,
+            ),
         ],
       ),
     );
   }
 
   Widget _buildStairInputGroup({
-    required String label, 
-    required TextEditingController ctrl, 
+    required String label,
+    required TextEditingController ctrl,
     String? error,
-    String? assetPath, 
+    String? assetPath,
     List<String>? assetPaths,
   }) {
     return Column(
@@ -259,7 +302,15 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       children: [
         Row(
           children: [
-            Expanded(child: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
             const SizedBox(width: 10),
             SizedBox(
               width: 70,
@@ -272,8 +323,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                   LengthLimitingTextInputFormatter(1),
                 ],
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4), 
-                  border: const OutlineInputBorder(), 
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 4,
+                  ),
+                  border: const OutlineInputBorder(),
                   hintText: "0",
                   errorText: error,
                   errorStyle: const TextStyle(fontSize: 10),
@@ -286,23 +340,35 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         if (assetPath != null)
           TechnicalDrawingButton(assetPath: assetPath, title: label),
         if (assetPaths != null)
-          ...assetPaths.map((path) => TechnicalDrawingButton(assetPath: path, title: label)),
+          ...assetPaths.map(
+            (path) => TechnicalDrawingButton(assetPath: path, title: label),
+          ),
       ],
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
           const SizedBox(height: 12),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

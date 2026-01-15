@@ -44,10 +44,13 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       });
     }
 
-    bool hasTicari = (b6?.hasTicari ?? false) ||
+    bool hasTicari =
+        (b6?.hasTicari ?? false) ||
         (b10?.zemin?.label.contains("Ticari") ?? false) ||
-        (b10?.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false) ?? false) ||
-        (b10?.normaller.any((e) => e?.label.contains("Ticari") ?? false) ?? false);
+        (b10?.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false) ??
+            false) ||
+        (b10?.normaller.any((e) => e?.label.contains("Ticari") ?? false) ??
+            false);
 
     setState(() {
       _isCommercial = hasTicari;
@@ -63,14 +66,16 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
   }
 
   bool _isReady() {
-    return _model.genislik != null && _model.basamak != null && _model.basKurtarma != null;
+    return _model.genislik != null &&
+        _model.basamak != null &&
+        _model.basKurtarma != null;
   }
 
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Döner Merdiven Analizi",
-      subtitle: "Dairesel merdivenlerin tahliye uygunluğu",
+      title: "Dairesel Merdiven",
+      subtitle: "Dairesel (döner, spiral) merdiven ölçüleri",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -85,7 +90,9 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
               onContinue: () {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const Bolum26Screen()),
+                  MaterialPageRoute(
+                    builder: (context) => const Bolum26Screen(),
+                  ),
                 );
               },
             ),
@@ -100,26 +107,31 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
             padding: EdgeInsets.only(left: 4, bottom: 12),
             child: Text(
               "Dairesel merdiven teknik ölçümleri:",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1A237E),
+              ),
             ),
           ),
           const SizedBox(height: 8),
+          _buildSoru("Merdiven kol genişliği yeterli mi?", 'genislik', [
+            Bolum25Content.genislikOptionA,
+            Bolum25Content.genislikOptionB,
+            Bolum25Content.genislikOptionC,
+          ], _model.genislik),
+          _buildSoru("Basamak genişliği yeterli mi?", 'basamak', [
+            Bolum25Content.basamakOptionA,
+            Bolum25Content.basamakOptionB,
+            Bolum25Content.basamakOptionC,
+          ], _model.basamak),
           _buildSoru(
-            "1. Merdiven kol genişliği nedir?",
-            'genislik',
-            [Bolum25Content.genislikOptionA, Bolum25Content.genislikOptionB, Bolum25Content.genislikOptionC],
-            _model.genislik,
-          ),
-          _buildSoru(
-            "2. Basamak genişliği (basış yüzeyi) yeterli mi?",
-            'basamak',
-            [Bolum25Content.basamakOptionA, Bolum25Content.basamakOptionB, Bolum25Content.basamakOptionC],
-            _model.basamak,
-          ),
-          _buildSoru(
-            "3. Baş kurtarma yüksekliği ne kadardır?",
+            "Baş kurtarma yüksekliği yeterli mi?",
             'basKurtarma',
-            [Bolum25Content.basKurtarmaOptionA, Bolum25Content.basKurtarmaOptionB],
+            [
+              Bolum25Content.basKurtarmaOptionA,
+              Bolum25Content.basKurtarmaOptionB,
+            ],
             _model.basKurtarma,
           ),
         ],
@@ -142,8 +154,12 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
           SizedBox(width: 15),
           Expanded(
             child: Text(
-              "YÖNETMELİK KISITLAMASI: Binada ticari alan bulunduğu için döner merdivenler kaçış yolu olarak kabul edilemez. Lütfen teknik ölçümleri yine de yapınız.",
-              style: TextStyle(color: Color(0xFFB71C1C), fontSize: 12, fontWeight: FontWeight.bold),
+              "YÖNETMELİK KISITLAMASI: Binada ticari alan bulunduğu için dairesel merdivenler kaçış yolu olarak kabul edilemez. Lütfen teknik ölçümleri yine de yapınız.",
+              style: TextStyle(
+                color: Color(0xFFB71C1C),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -151,18 +167,25 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title),
           const SizedBox(height: 12),
-          ...options.map((opt) => SelectableCard(
-                choice: opt,
-                isSelected: selected?.label == opt.label,
-                onTap: () => _handleSelection(key, opt),
-              )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

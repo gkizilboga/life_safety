@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_30_model.dart';
-import 'bolum_31_screen.dart'; 
+import 'bolum_31_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import 'module_transition_screen.dart';
-import '../../logic/report_engine.dart'; 
+import '../../logic/report_engine.dart';
 
 class Bolum30Screen extends StatefulWidget {
   const Bolum30Screen({super.key});
@@ -38,7 +38,10 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       setState(() => _hasKazan = true);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Bolum31Screen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum31Screen()),
+        );
       });
     }
   }
@@ -87,7 +90,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       if (type == 'kapi') _model = _model.copyWith(kapi: choice);
       if (type == 'hava') _model = _model.copyWith(hava: choice);
       if (type == 'tup') _model = _model.copyWith(tup: choice);
-      
+
       if (type == 'yakit') {
         _model = _model.copyWith(yakit: choice);
         if (choice.label == Bolum30Content.yakitOptionB.label) {
@@ -103,22 +106,33 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
   bool get _isFormValid {
     if (!_hasKazan) return true;
     if (_model.konum == null) return false;
-    if (!_model.kapasiteBilinmiyor && (_kapasiteCtrl.text.isEmpty || _kapasiteErr != null)) return false;
+    if (!_model.kapasiteBilinmiyor &&
+        (_kapasiteCtrl.text.isEmpty || _kapasiteErr != null))
+      return false;
     if (_model.kapi == null) return false;
     if (_model.hava == null) return false;
     if (_model.yakit == null) return false;
-    if (_model.yakit?.label == Bolum30Content.yakitOptionB.label && _model.drenaj == null) return false;
+    if (_model.yakit?.label == Bolum30Content.yakitOptionB.label &&
+        _model.drenaj == null)
+      return false;
     if (_model.tup == null) return false;
     return true;
   }
 
   void _onNextPressed() {
     if (_hasKazan) {
-      int? kap = _model.kapasiteBilinmiyor ? null : int.tryParse(_kapasiteCtrl.text);
+      int? kap = _model.kapasiteBilinmiyor
+          ? null
+          : int.tryParse(_kapasiteCtrl.text);
       _model = _model.copyWith(kapasite: kap);
 
-      if (!_model.kapasiteBilinmiyor && kap != null && kap > 350 && _model.kapi?.label == Bolum30Content.kapiOptionA.label) {
-        return _showError("350 kW üzerindeki kazan dairelerinde en az 2 adet çıkış kapısı zorunludur.");
+      if (!_model.kapasiteBilinmiyor &&
+          kap != null &&
+          kap > 350 &&
+          _model.kapi?.label == Bolum30Content.kapiOptionA.label) {
+        return _showError(
+          "350 kW üzerindeki kazan dairelerinde en az 2 adet çıkış kapısı zorunludur.",
+        );
       }
     }
 
@@ -142,20 +156,23 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_hasKazan) return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (!_hasKazan)
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
           ModernHeader(
-            title: "Bölüm-30: Kazan Dairesi / Isı Merkezi",
-            subtitle: "Isıl kapasite ve havalandırma analizi",
+            title: "Kazan Dairesi (Isı Merkezi)",
+            subtitle: "",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -164,23 +181,37 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru("Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?", 'konum', 
-                    [Bolum30Content.konumOptionA, Bolum30Content.konumOptionB, Bolum30Content.konumOptionC, Bolum30Content.konumOptionD], _model.konum),
+                  _buildSoru(
+                    "Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?",
+                    'konum',
+                    [
+                      Bolum30Content.konumOptionA,
+                      Bolum30Content.konumOptionB,
+                      Bolum30Content.konumOptionC,
+                      Bolum30Content.konumOptionD,
+                    ],
+                    _model.konum,
+                  ),
 
                   QuestionCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Kazan kapasitesi (kW) giriniz:", style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text(
+                          "Kazan kapasitesini (kW) giriniz:",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(height: 10),
                         TextFormField(
                           controller: _kapasiteCtrl,
                           enabled: !_model.kapasiteBilinmiyor,
                           keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           decoration: InputDecoration(
-                            hintText: "Örn: 350", 
-                            suffixText: "kW", 
+                            hintText: "Örn: 400",
+                            suffixText: "kW",
                             border: const OutlineInputBorder(),
                             errorText: _kapasiteErr,
                           ),
@@ -191,7 +222,9 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
                           isSelected: _model.kapasiteBilinmiyor,
                           onTap: () {
                             setState(() {
-                              _model = _model.copyWith(kapasiteBilinmiyor: !_model.kapasiteBilinmiyor);
+                              _model = _model.copyWith(
+                                kapasiteBilinmiyor: !_model.kapasiteBilinmiyor,
+                              );
                               if (_model.kapasiteBilinmiyor) {
                                 _kapasiteCtrl.clear();
                                 _kapasiteErr = null;
@@ -203,23 +236,67 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
                     ),
                   ),
 
-                  _buildSoru("Kazan dairesinin kaç adet çıkış kapısı var?", 'kapi', 
-                    [Bolum30Content.kapiOptionA, Bolum30Content.kapiOptionB, Bolum30Content.kapiOptionC], _model.kapi),
+                  _buildSoru(
+                    "Kazan dairesinin kaç adet çıkış kapısı var?",
+                    'kapi',
+                    [
+                      Bolum30Content.kapiOptionA,
+                      Bolum30Content.kapiOptionB,
+                      Bolum30Content.kapiOptionC,
+                    ],
+                    _model.kapi,
+                  ),
 
-                  _buildSoru("İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?", 'hava', 
-                    [Bolum30Content.havaOptionA, Bolum30Content.havaOptionB, Bolum30Content.havaOptionC], _model.hava),
+                  _buildSoru(
+                    "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?",
+                    'hava',
+                    [
+                      Bolum30Content.havaOptionA,
+                      Bolum30Content.havaOptionB,
+                      Bolum30Content.havaOptionC,
+                    ],
+                    _model.hava,
+                  ),
 
-                  _buildSoru("Kazanınız sıvı yakıtlı (Mazot/Fuel-oil) mı?", 'yakit', 
-                    [Bolum30Content.yakitOptionA, Bolum30Content.yakitOptionB, Bolum30Content.yakitOptionC], _model.yakit),
+                  _buildSoru(
+                    "Kazanınız sıvı yakıtlı (Mazot/Fuel-oil) mı?",
+                    'yakit',
+                    [
+                      Bolum30Content.yakitOptionA,
+                      Bolum30Content.yakitOptionB,
+                      Bolum30Content.yakitOptionC,
+                    ],
+                    _model.yakit,
+                  ),
 
-                  if (_model.yakit?.label == Bolum30Content.yakitOptionB.label) ...[
-                    _buildInfoNote("Sıvı yakıtlı kazanlar için drenaj ve sızıntı kontrolü gereklidir."),
-                    _buildSoru("Zeminde dökülen yakıtı toplayacak kanallar ve bir pis su çukuru var mı?", 'drenaj', 
-                      [Bolum30Content.drenajOptionA, Bolum30Content.drenajOptionB, Bolum30Content.drenajOptionC], _model.drenaj),
+                  if (_model.yakit?.label ==
+                      Bolum30Content.yakitOptionB.label) ...[
+                    _buildInfoNote(
+                      "Sıvı yakıtlı kazanlar için drenaj ve sızıntı kontrolü gereklidir.",
+                    ),
+                    _buildSoru(
+                      "Zeminde dökülen yakıtı toplayacak kanallar ve bir pis su çukuru var mı?",
+                      'drenaj',
+                      [
+                        Bolum30Content.drenajOptionA,
+                        Bolum30Content.drenajOptionB,
+                        Bolum30Content.drenajOptionC,
+                      ],
+                      _model.drenaj,
+                    ),
                   ],
 
-                  _buildSoru("Kazan dairesinde yangın söndürme tüpü ve yangın dolabı var mı?", 'tup', 
-                    [Bolum30Content.tupOptionA, Bolum30Content.tupOptionB, Bolum30Content.tupOptionC, Bolum30Content.tupOptionD], _model.tup),
+                  _buildSoru(
+                    "Kazan dairesinde yangın söndürme tüpü ve yangın dolabı var mı?",
+                    'tup',
+                    [
+                      Bolum30Content.tupOptionA,
+                      Bolum30Content.tupOptionB,
+                      Bolum30Content.tupOptionC,
+                      Bolum30Content.tupOptionD,
+                    ],
+                    _model.tup,
+                  ),
                 ],
               ),
             ),
@@ -243,7 +320,16 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
         children: [
           const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
           const SizedBox(width: 12),
-          Expanded(child: Text(text, style: const TextStyle(color: Color(0xFFE65100), fontWeight: FontWeight.bold, fontSize: 13))),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Color(0xFFE65100),
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -254,39 +340,63 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, -5),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: _isFormValid ? _onNextPressed : null, 
+            onPressed: _isFormValid ? _onNextPressed : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1A237E),
               disabledBackgroundColor: Colors.grey.shade300,
               minimumSize: const Size(double.infinity, 54),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
-            child: const Text("DEVAM ET", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+            child: const Text(
+              "DEVAM ET",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
           const SizedBox(height: 12),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );

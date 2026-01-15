@@ -24,7 +24,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
   @override
   void initState() {
     super.initState();
-    
+
     // AKILLI ATLAMA MANTIĞI
     final b7 = BinaStore.instance.bolum7;
     // Eğer Bölüm 7'de normal asansör "Yok" (false) işaretlendiyse burayı atla
@@ -32,7 +32,9 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Bolum24Screen()), // 23'ü de atlar çünkü o da asansörle ilgili
+          MaterialPageRoute(
+            builder: (context) => const Bolum24Screen(),
+          ), // 23'ü de atlar çünkü o da asansörle ilgili
         );
       });
     } else {
@@ -53,7 +55,11 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
         _model = _model.copyWith(varlik: choice);
         if (choice.label != Bolum22Content.varlikOptionB.label) {
           _model = _model.copyWith(
-            konum: null, boyut: null, kabin: null, enerji: null, basinc: null
+            konum: null,
+            boyut: null,
+            kabin: null,
+            enerji: null,
+            basinc: null,
           );
         }
       } else if (type == 'konum') {
@@ -73,11 +79,11 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
   bool _isReady() {
     if (_model.varlik == null) return false;
     if (_model.varlik?.label == Bolum22Content.varlikOptionB.label) {
-      return _model.konum != null && 
-             _model.boyut != null && 
-             _model.kabin != null && 
-             _model.enerji != null && 
-             _model.basinc != null;
+      return _model.konum != null &&
+          _model.boyut != null &&
+          _model.kabin != null &&
+          _model.enerji != null &&
+          _model.basinc != null;
     }
     return true;
   }
@@ -91,26 +97,34 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
     }
 
     return AnalysisPageLayout(
-      title: "İtfaiye Asansörü",
-      subtitle: "Yüksek binalar için erişim denetimi",
+      title: "İtfaiye (Acil Durum) Asansörü",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
         BinaStore.instance.bolum22 = _model;
         BinaStore.instance.saveToDisk();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Bolum23Screen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum23Screen()),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeightInfoCard(),
-          
+
           _buildSoru(
-            "Binanızda İtfaiye (acil durum) asansörü var mı?", 
-            'varlik', 
-            [Bolum22Content.varlikOptionA, Bolum22Content.varlikOptionB, Bolum22Content.varlikOptionC], 
+            "Binanızda İtfaiye (acil durum) asansörü var mı?",
+            'varlik',
+            [
+              Bolum22Content.varlikOptionA,
+              Bolum22Content.varlikOptionB,
+              Bolum22Content.varlikOptionC,
+            ],
             _model.varlik,
-            description: "Yalnızca 51,5 m ve üzeri binalarda zorunludur. Binanızda normal (insan taşıma) asansörü varsa bu soru için 'Hayır' yanıtını işaretleyiniz.",
+            description:
+                "Yalnızca 51,5 m ve üzeri binalarda zorunludur. Binanızda normal (insan taşıma) asansörü varsa bu soru için 'Hayır' yanıtını işaretleyiniz.",
             assetPath: AppAssets.section22ItfaiyeHol,
             assetTitle: "İtfaiye Asansörü ve Hol Uygulama Detayı",
           ),
@@ -120,29 +134,62 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Divider(color: Color(0xFFECEFF1)),
             ),
-            
-            _buildSoru("Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?", 'konum', 
-              [Bolum22Content.konumOptionA, Bolum22Content.konumOptionB, Bolum22Content.konumOptionC], _model.konum),
-
-            _buildSoru("İtfaiye asansörünün açıldığı yangın güvenlik holünün taban alanı yaklaşık kaç metrekaredir?", 'boyut', 
-              [Bolum22Content.boyutOptionA, Bolum22Content.boyutOptionB, Bolum22Content.boyutOptionC, Bolum22Content.boyutOptionD], _model.boyut),
 
             _buildSoru(
-              "Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?", 
-              'kabin', 
-              [Bolum22Content.kabinOptionA, Bolum22Content.kabinOptionB, Bolum22Content.kabinOptionC], 
+              "Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?",
+              'konum',
+              [
+                Bolum22Content.konumOptionA,
+                Bolum22Content.konumOptionB,
+                Bolum22Content.konumOptionC,
+              ],
+              _model.konum,
+            ),
+
+            _buildSoru(
+              "İtfaiye asansörünün açıldığı yangın güvenlik holünün taban alanı kaç metrekaredir?",
+              'boyut',
+              [
+                Bolum22Content.boyutOptionA,
+                Bolum22Content.boyutOptionB,
+                Bolum22Content.boyutOptionC,
+                Bolum22Content.boyutOptionD,
+              ],
+              _model.boyut,
+            ),
+
+            _buildSoru(
+              "Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?",
+              'kabin',
+              [
+                Bolum22Content.kabinOptionA,
+                Bolum22Content.kabinOptionB,
+                Bolum22Content.kabinOptionC,
+              ],
               _model.kabin,
               assetPath: AppAssets.section22ItfaiyeKabin,
               assetTitle: "İtfaiye Asansörü Kabin Ölçüleri",
             ),
 
-            _buildSoru("5. Bu asansör, elektrik kesildiğinde en az 60 dakika çalışabilen bir jeneratöre bağlı mı?", 'enerji', 
-              [Bolum22Content.enerjiOptionA, Bolum22Content.enerjiOptionB, Bolum22Content.enerjiOptionC], _model.enerji),
+            _buildSoru(
+              "Bu asansör, elektrik kesildiğinde en az 60 dakika çalışabilen bir jeneratöre bağlı mı?",
+              'enerji',
+              [
+                Bolum22Content.enerjiOptionA,
+                Bolum22Content.enerjiOptionB,
+                Bolum22Content.enerjiOptionC,
+              ],
+              _model.enerji,
+            ),
 
             _buildSoru(
-              "İtfaiye asansörünün kuyusu basınçlandırılmış mı?", 
-              'basinc', 
-              [Bolum22Content.basincOptionA, Bolum22Content.basincOptionB, Bolum22Content.basincOptionC], 
+              "İtfaiye asansörünün kuyusu basınçlandırılmış mı?",
+              'basinc',
+              [
+                Bolum22Content.basincOptionA,
+                Bolum22Content.basincOptionB,
+                Bolum22Content.basincOptionC,
+              ],
               _model.basinc,
               assetPath: AppAssets.section22Basinclandirma,
               assetTitle: "Asansör Kuyusu Basınçlandırma Sistemi",
@@ -160,7 +207,9 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
       decoration: BoxDecoration(
         color: _isMandatory ? Colors.orange.shade50 : Colors.blue.shade50,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _isMandatory ? Colors.orange.shade200 : Colors.blue.shade200),
+        border: Border.all(
+          color: _isMandatory ? Colors.orange.shade200 : Colors.blue.shade200,
+        ),
       ),
       child: Row(
         children: [
@@ -171,13 +220,15 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              _isMandatory 
-                ? "Yapı yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
-                : "Yapı yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
+              _isMandatory
+                  ? "Yapı yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
+                  : "Yapı yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
               style: TextStyle(
-                fontSize: 13, 
-                fontWeight: FontWeight.bold, 
-                color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: _isMandatory
+                    ? Colors.orange.shade900
+                    : Colors.blue.shade900,
               ),
             ),
           ),
@@ -186,20 +237,40 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
     );
   }
 
-  Widget _buildSoru(String title, String key, List<ChoiceResult> options, ChoiceResult? selected, {String? description, String? assetPath, String? assetTitle}) {
+  Widget _buildSoru(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected, {
+    String? description,
+    String? assetPath,
+    String? assetTitle,
+  }) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF263238))),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF263238),
+            ),
+          ),
           if (description != null) ...[
             const SizedBox(height: 6),
             Text(
               description,
-              style: TextStyle(fontSize: 12, color: Colors.blue.shade800, fontWeight: FontWeight.w500, height: 1.3),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.blue.shade800,
+                fontWeight: FontWeight.w500,
+                height: 1.3,
+              ),
             ),
           ],
-          
+
           if (assetPath != null) ...[
             const SizedBox(height: 12),
             TechnicalDrawingButton(
@@ -209,11 +280,13 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
           ],
 
           const SizedBox(height: 12),
-          ...options.map((opt) => SelectableCard(
-            choice: opt,
-            isSelected: selected?.label == opt.label,
-            onTap: () => _handleSelection(key, opt),
-          )),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
         ],
       ),
     );
