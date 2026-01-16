@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_36_model.dart';
@@ -11,6 +10,7 @@ import 'report_summary_screen.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/input_validator.dart';
 
 class Bolum36Screen extends StatefulWidget {
   const Bolum36Screen({super.key});
@@ -39,6 +39,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   bool _hasKorunumlu = false;
   bool _hasKorunumsuz = false;
 
+  String? _genKerr;
+  String? _genKSerr;
+  String? _kGenKerr;
+  String? _kGenKSerr;
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +61,68 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
     _hasKorunumlu = (icKapali + disKapali) > 0;
     _hasKorunumsuz = (normal + doner + disAcik + sahanliksiz) > 0;
+
+    _genislikKorunumluCtrl.addListener(_validate);
+    _genislikKorunumsuzCtrl.addListener(_validate);
+    _kapiGenislikKorunumluCtrl.addListener(_validate);
+    _kapiGenislikKorunumsuzCtrl.addListener(_validate);
+  }
+
+  void _validate() {
+    setState(() {
+      if (!_genislikBilinmiyor) {
+        if (_hasKorunumlu) {
+          _genKerr = InputValidator.validateNumber(
+            _genislikKorunumluCtrl.text,
+            min: 50,
+            max: 250,
+            unit: "cm",
+          );
+        } else {
+          _genKerr = null;
+        }
+        if (_hasKorunumsuz) {
+          _genKSerr = InputValidator.validateNumber(
+            _genislikKorunumsuzCtrl.text,
+            min: 50,
+            max: 250,
+            unit: "cm",
+          );
+        } else {
+          _genKSerr = null;
+        }
+      } else {
+        _genKerr = null;
+        _genKSerr = null;
+      }
+
+      if (!_kapiGenislikBilinmiyor) {
+        if (_hasKorunumlu) {
+          _kapiGenislikKorunumluCtrl.text.isNotEmpty;
+          _kGenKerr = InputValidator.validateNumber(
+            _kapiGenislikKorunumluCtrl.text,
+            min: 50,
+            max: 250,
+            unit: "cm",
+          );
+        } else {
+          _kGenKerr = null;
+        }
+        if (_hasKorunumsuz) {
+          _kGenKSerr = InputValidator.validateNumber(
+            _kapiGenislikKorunumsuzCtrl.text,
+            min: 50,
+            max: 250,
+            unit: "cm",
+          );
+        } else {
+          _kGenKSerr = null;
+        }
+      } else {
+        _kGenKerr = null;
+        _kGenKSerr = null;
+      }
+    });
   }
 
   void _scrollToKey(GlobalKey key) {
@@ -180,16 +247,22 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     if (_totalValidCikisSayisi > 1 && _model.konum == null) return false;
 
     if (!_genislikBilinmiyor) {
-      if (_hasKorunumlu && _genislikKorunumluCtrl.text.isEmpty) return false;
-      if (_hasKorunumsuz && _genislikKorunumsuzCtrl.text.isEmpty) return false;
+      if (_hasKorunumlu &&
+          (_genislikKorunumluCtrl.text.isEmpty || _genKerr != null))
+        return false;
+      if (_hasKorunumsuz &&
+          (_genislikKorunumsuzCtrl.text.isEmpty || _genKSerr != null))
+        return false;
     }
 
     if (_model.kapiTipi == null) return false;
 
     if (!_kapiGenislikBilinmiyor) {
-      if (_hasKorunumlu && _kapiGenislikKorunumluCtrl.text.isEmpty)
+      if (_hasKorunumlu &&
+          (_kapiGenislikKorunumluCtrl.text.isEmpty || _kGenKerr != null))
         return false;
-      if (_hasKorunumsuz && _kapiGenislikKorunumsuzCtrl.text.isEmpty)
+      if (_hasKorunumsuz &&
+          (_kapiGenislikKorunumsuzCtrl.text.isEmpty || _kGenKSerr != null))
         return false;
     }
 
@@ -293,12 +366,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                     "Korunumlu (Yangın) Merdiveni Genişliği",
                     _genislikKorunumluCtrl,
                     _genislikBilinmiyor,
+                    _genKerr,
                   ),
                 if (_hasKorunumsuz)
                   _buildInput(
                     "Korunumsuz (Normal) Merdiven Genişliği",
                     _genislikKorunumsuzCtrl,
                     _genislikBilinmiyor,
+                    _genKSerr,
                   ),
                 const SizedBox(height: 10),
                 SelectableCard(
@@ -334,12 +409,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                     "Korunumlu (Yangın) Merdiven Kapı Genişliği",
                     _kapiGenislikKorunumluCtrl,
                     _kapiGenislikBilinmiyor,
+                    _kGenKerr,
                   ),
                 if (_hasKorunumsuz)
                   _buildInput(
                     "Korunumsuz (Normal) Merdiven Kapı Genişliği",
                     _kapiGenislikKorunumsuzCtrl,
                     _kapiGenislikBilinmiyor,
+                    _kGenKSerr,
                   ),
                 const SizedBox(height: 10),
                 SelectableCard(
@@ -373,19 +450,22 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     String label,
     TextEditingController ctrl,
     bool isDisabled,
+    String? error,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
         controller: ctrl,
         enabled: !isDisabled,
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [InputValidator.flexDecimal],
         style: const TextStyle(fontSize: 14),
-        decoration: AppStyles.inputDecoration(
-          label,
-          suffix: "cm",
-        ).copyWith(labelText: label, hintText: "Örn: 120"),
+        decoration: AppStyles.inputDecoration(label, suffix: "cm").copyWith(
+          labelText: label,
+          hintText: "Örn: 120",
+          errorText: error,
+          errorMaxLines: 2,
+        ),
       ),
     );
   }

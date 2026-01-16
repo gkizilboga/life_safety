@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
 import '../../models/bolum_4_model.dart';
@@ -7,6 +6,7 @@ import '../../models/bolum_5_model.dart';
 import 'bolum_6_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../utils/app_content.dart';
+import '../../utils/input_validator.dart';
 import '../../models/choice_result.dart';
 
 class Bolum5Screen extends StatefulWidget {
@@ -48,27 +48,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _validate() {
     setState(() {
-      double? t = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
-      if (_tabanCtrl.text.isNotEmpty && t != null && t > 5000) {
-        _tabanError = "Zemin kat alanı 5000 m²'den büyük olamaz.";
-      } else {
-        _tabanError = null;
-      }
-
-      double? n = double.tryParse(_normalCtrl.text.replaceAll(',', '.'));
-      if (_normalCtrl.text.isNotEmpty && n != null && n > 5000) {
-        _normalError = "Normal kat alanı 5000 m²'den büyük olamaz.";
-      } else {
-        _normalError = null;
-      }
-
-      double? b = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.'));
-      if (_bodrumCtrl.text.isNotEmpty && b != null && b > 15000) {
-        _bodrumError = "Bodrum kat alanı 15.000 m²'den büyük olamaz.";
-      } else {
-        _bodrumError = null;
-      }
-
       double? tot = double.tryParse(_toplamCtrl.text.replaceAll(',', '.'));
       if (_toplamCtrl.text.isNotEmpty && tot != null && tot > 250000) {
         _toplamError = "Toplam inşaat alanı 250.000 m²'den büyük olamaz.";
@@ -89,12 +68,9 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _otomatikHesapla() {
     FocusScope.of(context).unfocus();
-    double tAlani =
-        double.tryParse(_tabanCtrl.text.replaceAll(',', '.')) ?? 0.0;
-    double nAlani =
-        double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0.0;
-    double bAlani =
-        double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0.0;
+    double tAlani = InputValidator.parseFlex(_tabanCtrl.text) ?? 0.0;
+    double nAlani = InputValidator.parseFlex(_normalCtrl.text) ?? 0.0;
+    double bAlani = InputValidator.parseFlex(_bodrumCtrl.text) ?? 0.0;
 
     if (tAlani > 0 && nAlani > 0) {
       double toplam = tAlani + (_nKat * nAlani) + (_bKat * bAlani);
@@ -115,10 +91,10 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _onNextPressed() {
     _model = _model.copyWith(
-      tabanAlani: double.tryParse(_tabanCtrl.text.replaceAll(',', '.')),
-      normalKatAlani: double.tryParse(_normalCtrl.text.replaceAll(',', '.')),
-      bodrumKatAlani: double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')),
-      toplamInsaatAlani: double.tryParse(_toplamCtrl.text.replaceAll(',', '.')),
+      tabanAlani: InputValidator.parseFlex(_tabanCtrl.text),
+      normalKatAlani: InputValidator.parseFlex(_normalCtrl.text),
+      bodrumKatAlani: InputValidator.parseFlex(_bodrumCtrl.text),
+      toplamInsaatAlani: InputValidator.parseFlex(_toplamCtrl.text),
     );
     BinaStore.instance.bolum5 = _model;
     BinaStore.instance.saveToDisk();
@@ -284,9 +260,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     return TextFormField(
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-      ],
+      inputFormatters: [InputValidator.flexDecimal],
       style: TextStyle(
         fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
         fontSize: 14,
@@ -331,12 +305,12 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
           _buildSummaryRow("Zemin Kat:", "${_tabanCtrl.text} m²"),
           _buildSummaryRow(
             "Normal Katlar ($_nKat adet):",
-            "${((double.tryParse(_normalCtrl.text.replaceAll(',', '.')) ?? 0) * _nKat).toStringAsFixed(2)} m²",
+            "${((InputValidator.parseFlex(_normalCtrl.text) ?? 0) * _nKat).toStringAsFixed(2)} m²",
           ),
           if (_bKat > 0)
             _buildSummaryRow(
               "Bodrum Katlar ($_bKat adet):",
-              "${((double.tryParse(_bodrumCtrl.text.replaceAll(',', '.')) ?? 0) * _bKat).toStringAsFixed(2)} m²",
+              "${((InputValidator.parseFlex(_bodrumCtrl.text) ?? 0) * _bKat).toStringAsFixed(2)} m²",
             ),
           const Divider(),
           _buildSummaryRow(

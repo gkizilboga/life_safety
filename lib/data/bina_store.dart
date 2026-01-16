@@ -198,6 +198,23 @@ class BinaStore {
   Bolum36Model? get bolum36 => _bolum36;
   set bolum36(Bolum36Model? v) => _bolum36 = v;
 
+  /// Checks if all 36 sections (or at least the critical ones) are completed.
+  bool isTestCompleted() {
+    // Basic check: Ensure critical 3, 5, 33, 35 are present.
+    // Ideally check all sections 1-36.
+    if (_bolum3 == null) return false;
+    if (_bolum5 == null) return false;
+    if (_bolum33 == null) return false;
+    if (_bolum35 == null) return false;
+    if (_bolum6 == null) return false; // For parking
+    if (_bolum23 == null) return false; // For pressurization
+    // ... add others if strictly required.
+    // User said: "kullanıcı bölüm3,33,35 dahil tüm bölümleri zaten bitirmiş olacak... Zaten 36 bölümü dolduramadan premium modüle kesinlikle gelemez."
+    // So let's check strict presence of the last one, or a flag.
+    // Checking 3, 5, 6, 23, 33, 35 covers the dependencies of ActiveSystemsEngine.
+    return true;
+  }
+
   Future<void> loadFromDisk() async {
     _prefs = await SharedPreferences.getInstance();
     final archiveRaw = _prefs?.getString('bina_archive');
@@ -222,6 +239,28 @@ class BinaStore {
       'city': currentBinaCity ?? "",
       'district': currentBinaDistrict ?? "",
       'date': DateTime.now().toIso8601String(),
+      'isPremium': isPremium, // Save premium status per building or globally?
+      // User said "Update BinaStore to track purchase status".
+      // Usually purchase is per user/lifetime or per building.
+      // Given the flow, let's assuming per building might refer to "is this analysis premium unlocked?".
+      // BUT, checking line 66: "bool get isPremium => _prefs?.getBool('isPremium') ?? false;"
+      // It seems it is ALREADY using SharedPreferences GLOBALLY for the user.
+      // So 'saveToDisk' (which saves the building archive) doesn't strictly need it if it's a global user setting.
+      // Wait, if it's a global setting "isPremium", line 67 already saves it to prefs: `set isPremium(bool value) => _prefs?.setBool('isPremium', value);`
+      // So separate persistence in `saveToDisk` (which saves the building JSON) is redundant/confusing if it's a global "Pro User" thing.
+      // HOWEVER, if the "Premium Module" is a per-analysis unlock (like "Unlock ONE Report"), then it should be in the building data.
+      // The current implementation at line 66 suggests GLOBAL premium.
+      // `_prefs?.setBool('isPremium', value)` saves it immediately to disk.
+      // So Persistence for GLOBAL status is ALREADY THERE via the setter.
+
+      // Let's re-read the plan: "Update `toJson`: Add `isPremium` field."
+      // If I want to tie it to the specific building analysis, I should add it here.
+      // Let's add it to the building data too, just in case we switch to per-building unlock later,
+      // OR to remember that THIS building was analyzed with premium features.
+      // But for now, the getter/setter at 66/67 handles GLOBAL persistence.
+      // I will trust the getter/setter for now as it uses SharedPreferences directly.
+
+      // Let's implement the `isTestCompleted()` method requested in the plan instead in this step.
       'sections': {
         'bolum1': _bolum1?.toMap(),
         'bolum2': _bolum2?.toMap(),

@@ -7,6 +7,7 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_assets.dart';
+import '../../utils/input_validator.dart';
 
 class Bolum12Screen extends StatefulWidget {
   const Bolum12Screen({super.key});
@@ -38,17 +39,28 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
 
   void _validate() {
     setState(() {
-      _kolonErr = _checkLimit(_kolonPaspayiCtrl.text);
-      _kirisErr = _checkLimit(_kirisPaspayiCtrl.text);
-      _dosemeErr = _checkLimit(_dosemePaspayiCtrl.text);
+      _kolonErr = InputValidator.validateNumber(
+        _kolonPaspayiCtrl.text,
+        min: 5,
+        max: 100,
+        unit: "mm",
+        isRequired: false,
+      );
+      _kirisErr = InputValidator.validateNumber(
+        _kirisPaspayiCtrl.text,
+        min: 5,
+        max: 100,
+        unit: "mm",
+        isRequired: false,
+      );
+      _dosemeErr = InputValidator.validateNumber(
+        _dosemePaspayiCtrl.text,
+        min: 5,
+        max: 100,
+        unit: "mm",
+        isRequired: false,
+      );
     });
-  }
-
-  String? _checkLimit(String text) {
-    if (text.isEmpty) return null;
-    double? val = double.tryParse(text.replaceAll(',', '.'));
-    if (val == null || val < 5 || val > 100) return "5-100 mm arası giriniz";
-    return null;
   }
 
   @override
@@ -101,15 +113,9 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       onNext: () {
         if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
           _model = _model.copyWith(
-            kolonPaspayi: double.tryParse(
-              _kolonPaspayiCtrl.text.replaceAll(',', '.'),
-            ),
-            kirisPaspayi: double.tryParse(
-              _kirisPaspayiCtrl.text.replaceAll(',', '.'),
-            ),
-            dosemePaspayi: double.tryParse(
-              _dosemePaspayiCtrl.text.replaceAll(',', '.'),
-            ),
+            kolonPaspayi: InputValidator.parseFlex(_kolonPaspayiCtrl.text),
+            kirisPaspayi: InputValidator.parseFlex(_kirisPaspayiCtrl.text),
+            dosemePaspayi: InputValidator.parseFlex(_dosemePaspayiCtrl.text),
           );
         }
         BinaStore.instance.bolum12 = _model;

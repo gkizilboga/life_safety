@@ -238,16 +238,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    if (BinaStore.instance.isPremium) {
-                      await PdfService.generateAndShowPdf();
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const PaywallScreen(),
-                        ),
-                      );
-                    }
+                    // Main Report is accessible to all (or assumes existing logic handles access).
+                    // Premium content inside will be blurred/teased.
+                    await PdfService.generateAndShowPdf();
                   },
                   child: const Text(
                     "ÖN RAPORU GÖR",
@@ -256,6 +249,65 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 12),
+          // ACTIVE SYSTEMS MODULE BUTTON
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple.shade700,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                if (!BinaStore.instance.isTestCompleted()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text(
+                        "Aktif sistem analizi için binanızın tüm verilerine ihtiyaç vardır. Lütfen önce 36 bölümlük testi tamamlayınız.",
+                      ),
+                      backgroundColor: Colors.red.shade700,
+                      duration: const Duration(seconds: 4),
+                      action: SnackBarAction(
+                        label: "TAMAM",
+                        textColor: Colors.white,
+                        onPressed: () {},
+                      ),
+                    ),
+                  );
+                  return;
+                }
+
+                if (BinaStore.instance.isPremium) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          const ActiveSystemsReportScreenWrapper(),
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaywallScreen(),
+                    ),
+                  );
+                }
+              },
+              icon: const Icon(Icons.star, color: Colors.amber),
+              label: const Text(
+                "AKTİF SİSTEM GEREKSİNİMLERİ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
         ],
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_30_model.dart';
@@ -8,6 +7,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/input_validator.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
 
@@ -52,16 +52,12 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
         _kapasiteErr = null;
         return;
       }
-      if (_kapasiteCtrl.text.isNotEmpty) {
-        int? val = int.tryParse(_kapasiteCtrl.text);
-        if (val == null || val < 10 || val > 1500) {
-          _kapasiteErr = "10 ile 1500 kW arasında bir tam sayı giriniz.";
-        } else {
-          _kapasiteErr = null;
-        }
-      } else {
-        _kapasiteErr = null;
-      }
+      _kapasiteErr = InputValidator.validateNumber(
+        _kapasiteCtrl.text,
+        min: 10,
+        max: 5000,
+        unit: "kW",
+      );
     });
   }
 
@@ -123,7 +119,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     if (_hasKazan) {
       int? kap = _model.kapasiteBilinmiyor
           ? null
-          : int.tryParse(_kapasiteCtrl.text);
+          : InputValidator.parseFlex(_kapasiteCtrl.text)?.toInt();
       _model = _model.copyWith(kapasite: kap);
 
       if (!_model.kapasiteBilinmiyor &&
@@ -205,10 +201,10 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
                         TextFormField(
                           controller: _kapasiteCtrl,
                           enabled: !_model.kapasiteBilinmiyor,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          inputFormatters: [InputValidator.flexDecimal],
                           decoration: InputDecoration(
                             hintText: "Örn: 400",
                             suffixText: "kW",

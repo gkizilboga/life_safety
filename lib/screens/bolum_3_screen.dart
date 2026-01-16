@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
 import 'bolum_4_screen.dart';
 import '../../widgets/custom_widgets.dart';
+import '../../utils/input_validator.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 
@@ -45,11 +45,13 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   }
 
   String? _checkLimit(String text, double min, double max) {
-    if (text.isEmpty) return null;
-    double? val = double.tryParse(text.replaceAll(',', '.'));
-    if (val == null || val < min || val > max)
-      return "$min - $max m arası giriniz";
-    return null;
+    return InputValidator.validateNumber(
+      text,
+      min: min,
+      max: max,
+      unit: "m",
+      isRequired: false,
+    );
   }
 
   Map<String, dynamic> _calculateValues() {
@@ -58,13 +60,13 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
 
     double zH = _isUnknown
         ? 3.50
-        : (double.tryParse(_zeminHCtrl.text.replaceAll(',', '.')) ?? 0.0);
+        : (InputValidator.parseFlex(_zeminHCtrl.text) ?? 0.0);
     double nH = _isUnknown
         ? 3.00
-        : (double.tryParse(_normalHCtrl.text.replaceAll(',', '.')) ?? 0.0);
+        : (InputValidator.parseFlex(_normalHCtrl.text) ?? 0.0);
     double bH = _isUnknown
         ? 3.50
-        : (double.tryParse(_bodrumHCtrl.text.replaceAll(',', '.')) ?? 0.0);
+        : (InputValidator.parseFlex(_bodrumHCtrl.text) ?? 0.0);
 
     double hBina = zH + (n * nH);
     double hYapi = hBina + (b * bH);
@@ -316,8 +318,8 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
         controller: ctrl,
         keyboardType: TextInputType.numberWithOptions(decimal: isDecimal),
         inputFormatters: isDecimal
-            ? [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}'))]
-            : [FilteringTextInputFormatter.digitsOnly],
+            ? [InputValidator.flexDecimal]
+            : [InputValidator.positiveInteger],
         style: const TextStyle(fontSize: 14),
         decoration: InputDecoration(
           labelText: label,

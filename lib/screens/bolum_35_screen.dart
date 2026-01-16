@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_35_model.dart';
 import 'bolum_36_screen.dart';
@@ -9,17 +8,7 @@ import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_assets.dart';
 
-class _DecimalTextInputFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    final regEx = RegExp(r'^\d*[.,]?\d{0,1}');
-    final String newString = regEx.stringMatch(newValue.text) ?? "";
-    return newString == newValue.text ? newValue : oldValue;
-  }
-}
+import '../../utils/input_validator.dart';
 
 class Bolum35Screen extends StatefulWidget {
   const Bolum35Screen({super.key});
@@ -70,16 +59,12 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
 
   void _validateMesafe() {
     setState(() {
-      if (_mesafeCtrl.text.isNotEmpty) {
-        double? val = double.tryParse(_mesafeCtrl.text.replaceAll(',', '.'));
-        if (val == null || val < 0 || val > 100) {
-          _mesafeErr = "0 ile 100 metre arasında bir değer giriniz.";
-        } else {
-          _mesafeErr = null;
-        }
-      } else {
-        _mesafeErr = null;
-      }
+      _mesafeErr = InputValidator.validateNumber(
+        _mesafeCtrl.text,
+        min: 0,
+        max: 200,
+        unit: "m",
+      );
     });
   }
 
@@ -141,9 +126,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
       onNext: () {
         if (_mesafeCtrl.text.isNotEmpty) {
           _model = _model.copyWith(
-            manuelMesafe: double.tryParse(
-              _mesafeCtrl.text.replaceAll(',', '.'),
-            ),
+            manuelMesafe: InputValidator.parseFlex(_mesafeCtrl.text),
           );
         }
         BinaStore.instance.bolum35 = _model;
@@ -221,7 +204,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
-                inputFormatters: [_DecimalTextInputFormatter()],
+                inputFormatters: [InputValidator.flexDecimal],
                 decoration: InputDecoration(
                   labelText: "Net Mesafeyi Giriniz (m)",
                   suffixText: "metre",

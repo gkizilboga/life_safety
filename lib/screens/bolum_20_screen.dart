@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:life_safety/screens/module_transition.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_20_model.dart';
@@ -9,6 +8,7 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_assets.dart';
+import '../../utils/input_validator.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
 
@@ -81,10 +81,13 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   }
 
   String? _checkLimit(String text) {
-    if (text.isEmpty) return null;
-    int? val = int.tryParse(text);
-    if (val != null && val > 6) return "Maks: 6";
-    return null;
+    return InputValidator.validateNumber(
+      text,
+      min: 0,
+      max: 20,
+      unit: "adet",
+      isRequired: false,
+    );
   }
 
   bool get _isLimitValid {
@@ -318,10 +321,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                 controller: ctrl,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(1),
-                ],
+                inputFormatters: [InputValidator.positiveInteger],
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 8,
