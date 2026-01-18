@@ -6,6 +6,7 @@ import '../widgets/custom_widgets.dart';
 import '../widgets/selectable_card.dart';
 import '../utils/app_content.dart';
 import '../models/choice_result.dart';
+import '../utils/app_theme.dart';
 import '../utils/app_assets.dart'; // Görsel yolu için
 
 class Bolum2Screen extends StatefulWidget {
@@ -132,9 +133,9 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   "DEVAM ET",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  style: AppStyles.questionTitle,
                 ),
               ),
             ),

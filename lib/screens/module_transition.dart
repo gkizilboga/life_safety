@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../logic/report_engine.dart';
+import '../widgets/confetti_particles.dart';
 
 class ModuleTransitionScreen extends StatelessWidget {
   final ReportModule module;
@@ -15,7 +16,8 @@ class ModuleTransitionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1A237E),
-      body: Container(
+      body: ConfettiParticles(
+        child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 40),
         child: Column(
@@ -71,6 +73,7 @@ class ModuleTransitionScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
       ),
     );
   }

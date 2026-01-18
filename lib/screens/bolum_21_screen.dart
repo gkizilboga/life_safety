@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum21Screen extends StatefulWidget {
   const Bolum21Screen({super.key});
@@ -50,7 +51,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       setState(() {
         _isMandatory = true;
         _mandatoryReason =
-            "Bodrum katlardaki kullanım amacı (Ticari/Teknik) nedeniyle YGH zorunludur.";
+            "Bodrum katlardaki farklı kullanım amacı nedeniyle YGH zorunludur.";
       });
     } else {
       setState(() {
@@ -79,7 +80,15 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
         children: [
           _buildInfoCard(),
           _buildSoru(
-            "Merdivenlerin önünde Yangın Güvenlik Holü var mı?",
+            Row(
+              children: [
+                Expanded(child: Text("Merdivenlerin önünde Yangın Güvenlik Holü var mı?", style: TextStyle(fontWeight: FontWeight.bold))),
+                DefinitionButton(
+                  term: "Yangın Güvenlik Holü (YGH)",
+                  definition: AppDefinitions.yanginGuvenlikHolu,
+                ),
+              ],
+            ),
             'varlik',
             [Bolum21Content.varlikOptionA, Bolum21Content.varlikOptionB],
             _model.varlik,
@@ -166,22 +175,34 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     );
   }
 
-  Widget _buildSoru(String t, String k, List<ChoiceResult> o, ChoiceResult? s) {
+  Widget _buildSoru(
+    dynamic title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(t, style: const TextStyle(fontWeight: FontWeight.bold)),
+          if (title is String)
+            Text(
+              title,
+              style: AppStyles.questionTitle,
+            )
+          else if (title is Widget)
+            title,
           const SizedBox(height: 12),
-          ...o.map(
+          ...options.map(
             (opt) => SelectableCard(
               choice: opt,
-              isSelected: s?.label == opt.label,
+              isSelected: selected?.label == opt.label,
               onTap: () => setState(() {
-                if (k == 'varlik') _model = _model.copyWith(varlik: opt);
-                if (k == 'malzeme') _model = _model.copyWith(malzeme: opt);
-                if (k == 'kapi') _model = _model.copyWith(kapi: opt);
-                if (k == 'esya') _model = _model.copyWith(esya: opt);
+                if (key == 'varlik') _model = _model.copyWith(varlik: options[options.indexOf(opt)]);
+                if (key == 'malzeme') _model = _model.copyWith(malzeme: opt);
+                if (key == 'kapi') _model = _model.copyWith(kapi: opt);
+                if (key == 'esya') _model = _model.copyWith(esya: opt);
+                _checkMandatory();
               }),
             ),
           ),

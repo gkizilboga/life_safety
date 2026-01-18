@@ -195,7 +195,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
                       children: [
                         const Text(
                           "Kazan kapasitesini (kW) giriniz:",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: AppStyles.questionTitle,
                         ),
                         const SizedBox(height: 10),
                         TextFormField(
@@ -383,7 +383,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
         children: [
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: AppStyles.questionTitle,
           ),
           const SizedBox(height: 12),
           ...options.map(

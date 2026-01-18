@@ -1,6 +1,13 @@
 pluginManagement {
-    // Senin bilgisayarındaki tam adres:
-    includeBuild("C:/Users/SGM/Desktop/Flutter1/flutter/packages/flutter_tools/gradle")
+    val localPropertiesFile = File(rootProject.projectDir, "local.properties")
+    val properties = java.util.Properties()
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { properties.load(it) }
+    }
+    val flutterSdkPath = properties.getProperty("flutter.sdk")
+        ?: throw GradleException("flutter.sdk not found in local.properties")
+
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
     repositories {
         google()

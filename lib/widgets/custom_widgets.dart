@@ -189,26 +189,30 @@ class TechnicalDrawingButton extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: AppColors.primaryBlue.withValues(alpha: 0.06),
+            gradient: LinearGradient(
+              colors: [Colors.teal.shade50, Colors.cyan.shade50],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.primaryBlue.withValues(alpha: 0.2),
-              width: 1.0,
+              color: Colors.teal.shade400,
+              width: 1.5,
             ),
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                Icons.zoom_in_rounded,
-                color: AppColors.primaryBlue,
-                size: 20,
+                Icons.image_search_rounded,
+                color: Colors.teal.shade700,
+                size: 22,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 "İLGİLİ GÖRSELİ İNCELE",
                 style: TextStyle(
-                  color: AppColors.primaryBlue,
+                  color: Colors.teal.shade800,
                   fontWeight: FontWeight.w800,
                   fontSize: 12,
                   letterSpacing: 0.5,
@@ -362,6 +366,112 @@ class AnalysisPageLayout extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DefinitionButton extends StatelessWidget {
+  final String term;
+  final String definition;
+
+  const DefinitionButton({
+    super.key,
+    required this.term,
+    required this.definition,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showDefinition(context),
+      child: Container(
+        margin: const EdgeInsets.only(left: 8),
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: Colors.orange.shade100,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.orange.shade400, width: 1.5),
+        ),
+        child: Icon(
+          Icons.help_outline_rounded,
+          size: 18,
+          color: Colors.orange.shade800,
+        ),
+      ),
+    );
+  }
+
+  void _showDefinition(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => SafeArea(
+        top: false,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+          margin: const EdgeInsets.only(bottom: 16), // Extra bottom margin for nav bar
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.orange.shade800),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      term,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange.shade900,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Text(
+                definition,
+                style: const TextStyle(
+                  fontSize: 15,
+                  height: 1.5,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryBlue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("KAPAT", style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

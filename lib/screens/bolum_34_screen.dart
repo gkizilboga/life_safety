@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum34Screen extends StatefulWidget {
   const Bolum34Screen({super.key});
@@ -223,7 +224,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
         children: [
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: AppStyles.questionTitle,
           ),
           const SizedBox(height: 12),
           ...options.map(

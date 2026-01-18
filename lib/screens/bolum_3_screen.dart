@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
+import '../../utils/app_theme.dart';
 import 'bolum_4_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../utils/input_validator.dart';
@@ -25,15 +26,45 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   String? _zeminErr;
   String? _normalErr;
   String? _bodrumErr;
+  String? _normalCountErr;
+  String? _bodrumCountErr;
 
   @override
   void initState() {
     super.initState();
-    _normalCountCtrl.addListener(() => setState(() {}));
-    _bodrumCountCtrl.addListener(() => setState(() {}));
+    _normalCountCtrl.addListener(_validateCounts);
+    _bodrumCountCtrl.addListener(_validateCounts);
     _zeminHCtrl.addListener(_validate);
     _normalHCtrl.addListener(_validate);
     _bodrumHCtrl.addListener(_validate);
+  }
+
+  void _validateCounts() {
+    setState(() {
+      // Normal kat: 0-20
+      int? normalCount = int.tryParse(_normalCountCtrl.text);
+      if (_normalCountCtrl.text.isNotEmpty) {
+        if (normalCount == null || normalCount < 0 || normalCount > 20) {
+          _normalCountErr = "0 ile 20 arasında bir değer giriniz.";
+        } else {
+          _normalCountErr = null;
+        }
+      } else {
+        _normalCountErr = null;
+      }
+
+      // Bodrum kat: 0-10
+      int? bodrumCount = int.tryParse(_bodrumCountCtrl.text);
+      if (_bodrumCountCtrl.text.isNotEmpty) {
+        if (bodrumCount == null || bodrumCount < 0 || bodrumCount > 10) {
+          _bodrumCountErr = "0 ile 10 arasında bir değer giriniz.";
+        } else {
+          _bodrumCountErr = null;
+        }
+      } else {
+        _bodrumCountErr = null;
+      }
+    });
   }
 
   void _validate() {
@@ -88,6 +119,8 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     if (!_isConfirmed) return false;
     if (_normalCountCtrl.text.isEmpty || _bodrumCountCtrl.text.isEmpty)
       return false;
+    // Kat sayısı limit kontrolü
+    if (_normalCountErr != null || _bodrumCountErr != null) return false;
     if (!_isUnknown) {
       if (_zeminHCtrl.text.isEmpty || _normalHCtrl.text.isEmpty) return false;
       int bCount = int.tryParse(_bodrumCountCtrl.text) ?? 0;
@@ -135,8 +168,10 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionTitle("Kat Sayıları"),
-          _buildInput("Normal Kat Sayısı (Zemin Üstü)", _normalCountCtrl),
-          _buildInput("Bodrum Kat Sayısı (Zemin Altı)", _bodrumCountCtrl),
+          _buildInput("Normal Kat Sayısı (Zemin Üstü)", _normalCountCtrl, 
+              hint: "0 - 20 arası", error: _normalCountErr),
+          _buildInput("Bodrum Kat Sayısı (Zemin Altı)", _bodrumCountCtrl,
+              hint: "0 - 10 arası", error: _bodrumCountErr),
 
           const SizedBox(height: 10),
           _buildSectionTitle("Kat Yükseklikleri"),
@@ -228,7 +263,6 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
               isYuksek ? "YÜKSEK BİNA" : "YÜKSEK OLMAYAN BİNA",
               style: const TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
                 fontSize: 15,
               ),
             ),

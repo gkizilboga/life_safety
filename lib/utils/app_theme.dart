@@ -26,7 +26,6 @@ class AppColors {
 }
 
 class AppStyles {
-  // --- Text Styles ---
   static const TextStyle headerTitle = TextStyle(
     color: Colors.white,
     fontSize: 20, // Reduced from 22
@@ -34,10 +33,20 @@ class AppStyles {
     letterSpacing: -0.5,
   );
 
+  // SORU metinleri için özel stil - Dikkat çekici renk
   static const TextStyle questionTitle = TextStyle(
-    fontSize: 16, // Reduced from 18
-    fontWeight: FontWeight.bold,
-    color: AppColors.textHeader,
+    fontSize: 16,
+    fontWeight: FontWeight.w900,
+    color: Color(0xFF4A148C), // Koyu Mor - Sorular için dikkat çekici
+    height: 1.4,
+    letterSpacing: -0.3,
+  );
+
+  // YANIT metinleri için stil - Daha nötr
+  static const TextStyle answerTitle = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w700,
+    color: Color(0xFF263238), // Koyu Gri - Yanıtlar için
     height: 1.3,
   );
 

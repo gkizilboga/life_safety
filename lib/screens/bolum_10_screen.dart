@@ -9,6 +9,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum10Screen extends StatefulWidget {
   const Bolum10Screen({super.key});
@@ -296,8 +297,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
               SizedBox(width: 10),
               Text(
                 "Kat Bilgileri Tamamlandı",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                style: AppStyles.questionTitle.copyWith(
                   color: Colors.green,
                 ),
               ),

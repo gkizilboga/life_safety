@@ -10,6 +10,7 @@ class Bolum6Model {
 
   // Alt Sorular
   final ChoiceResult? otoparkTipi; // Sadece hasOtopark true ise
+  final double? kapaliOtoparkAlani; // Kapalı otopark m² (A veya C şıkkı seçildiğinde)
 
   Bolum6Model({
     this.hasOtopark = false,
@@ -17,6 +18,7 @@ class Bolum6Model {
     this.hasDepo = false,
     this.isSadeceKonut = false,
     this.otoparkTipi,
+    this.kapaliOtoparkAlani,
   });
 
   Bolum6Model copyWith({
@@ -25,6 +27,8 @@ class Bolum6Model {
     bool? hasDepo,
     bool? isSadeceKonut,
     ChoiceResult? otoparkTipi,
+    double? kapaliOtoparkAlani,
+    bool clearKapaliOtoparkAlani = false,
   }) {
     return Bolum6Model(
       hasOtopark: hasOtopark ?? this.hasOtopark,
@@ -32,7 +36,16 @@ class Bolum6Model {
       hasDepo: hasDepo ?? this.hasDepo,
       isSadeceKonut: isSadeceKonut ?? this.isSadeceKonut,
       otoparkTipi: otoparkTipi ?? this.otoparkTipi,
+      kapaliOtoparkAlani: clearKapaliOtoparkAlani ? null : (kapaliOtoparkAlani ?? this.kapaliOtoparkAlani),
     );
+  }
+
+  // Kapalı otopark alanı sorulmalı mı?
+  bool get needsKapaliOtoparkAlani {
+    if (!hasOtopark || otoparkTipi == null) return false;
+    // A şıkkı (Tamamen Kapalı) veya C şıkkı (Tek cephede pencere)
+    return otoparkTipi!.label == Bolum6Content.otoparkKapali.label ||
+           otoparkTipi!.label == Bolum6Content.otoparkYariAcik.label;
   }
 
   Map<String, dynamic> toMap() {
@@ -42,6 +55,7 @@ class Bolum6Model {
       'hasDepo': hasDepo,
       'isSadeceKonut': isSadeceKonut,
       'otoparkTipi_label': otoparkTipi?.label,
+      'kapaliOtoparkAlani': kapaliOtoparkAlani,
     };
   }
 
@@ -60,6 +74,7 @@ class Bolum6Model {
       hasDepo: map['hasDepo'] ?? false,
       isSadeceKonut: map['isSadeceKonut'] ?? false,
       otoparkTipi: otoparkSecim,
+      kapaliOtoparkAlani: map['kapaliOtoparkAlani']?.toDouble(),
     );
   }
 }

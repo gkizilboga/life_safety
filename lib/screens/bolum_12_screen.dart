@@ -4,8 +4,10 @@ import '../../models/bolum_12_model.dart';
 import 'bolum_13_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/input_validator.dart';
 
@@ -228,8 +230,12 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     return TextFormField(
       controller: ctrl,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [InputValidator.flexDecimal],
+      onChanged: (_) => setState(() {}), // Force rebuild for Next button state
       decoration: InputDecoration(
         labelText: label,
+        hintText: "5 - 100",
+        helperText: "Min: 5mm, Max: 100mm (2 ondalık)",
         errorText: error,
         suffixText: "mm",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
@@ -245,9 +251,19 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                "Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+            DefinitionButton(
+              term: "Pasif Yangın Yalıtımı (Çelik)",
+              definition: AppDefinitions.pasifYanginYalitimiCelik,
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         QuestionCard(

@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 
 class Bolum26Screen extends StatefulWidget {
@@ -107,11 +108,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
             padding: EdgeInsets.only(left: 4, bottom: 12),
             child: Text(
               "Binada kullanmak zorunda kaldığınız eğimli bir rampa var mı?",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF263238),
-              ),
+              style: AppStyles.questionTitle,
             ),
           ),
 

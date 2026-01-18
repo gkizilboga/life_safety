@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 
 class Bolum11Screen extends StatefulWidget {
@@ -144,7 +145,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: AppStyles.questionTitle,
           ),
           if (assetPath != null)
             TechnicalDrawingButton(assetPath: assetPath, title: "Teknik Detay"),

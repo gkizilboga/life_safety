@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_14_model.dart';
-import '../../models/bolum_3_model.dart';
+import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import 'bolum_15_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../utils/app_content.dart';
@@ -273,9 +274,9 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child: const Text(
+          child: Text(
             "DEVAM ET",
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ),
       ),

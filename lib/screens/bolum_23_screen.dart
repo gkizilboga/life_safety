@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum23Screen extends StatefulWidget {
   const Bolum23Screen({super.key});
@@ -17,10 +18,15 @@ class Bolum23Screen extends StatefulWidget {
 class _Bolum23ScreenState extends State<Bolum23Screen> {
   Bolum23Model _model = Bolum23Model();
   final ScrollController _scrollController = ScrollController();
+  bool _hasBodrum = false;
 
   @override
   void initState() {
     super.initState();
+
+    // Bodrum kat var mı kontrol et
+    final b3 = BinaStore.instance.bolum3;
+    _hasBodrum = (b3?.bodrumKatSayisi ?? 0) >= 1;
 
     // AKILLI ATLAMA MANTIĞI
     final b7 = BinaStore.instance.bolum7;
@@ -47,8 +53,14 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
   }
 
   void _onNextPressed() {
-    if (_model.bodrum == null ||
-        _model.yanginModu == null ||
+    // Bodrum sorusu sadece bodrum varsa zorunlu
+    if (_hasBodrum && _model.bodrum == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Lütfen tüm soruları yanıtlayınız.")),
+      );
+      return;
+    }
+    if (_model.yanginModu == null ||
         _model.konum == null ||
         _model.levha == null ||
         _model.havalandirma == null) {
@@ -87,17 +99,19 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru(
-                    "Asansörünüz bodrum katlara da iniyor mu?",
-                    'bodrum',
-                    [
-                      Bolum23Content.bodrumOptionA,
-                      Bolum23Content.bodrumOptionB,
-                      Bolum23Content.bodrumOptionC,
-                      Bolum23Content.bodrumOptionD,
-                    ],
-                    _model.bodrum,
-                  ),
+                  // BODRUM SORUSU: Sadece bodrumKatSayisi >= 1 ise göster
+                  if (_hasBodrum)
+                    _buildSoru(
+                      "Asansörünüz bodrum katlara da iniyor mu?",
+                      'bodrum',
+                      [
+                        Bolum23Content.bodrumOptionA,
+                        Bolum23Content.bodrumOptionB,
+                        Bolum23Content.bodrumOptionC,
+                        Bolum23Content.bodrumOptionD,
+                      ],
+                      _model.bodrum,
+                    ),
 
                   _buildSoru(
                     "Yangın anında asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?",
@@ -188,7 +202,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 10),
           ...options.map(
             (opt) => SelectableCard(

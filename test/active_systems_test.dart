@@ -45,13 +45,11 @@ void main() {
         hasOtopark: true,
         hasTicari: false,
         hasDepo: false,
-        isSadeceKonut: true,
+        isSadeceKonut: false,
         otoparkTipi: null,
+        kapaliOtoparkAlani: 601,
       );
-      final reqs = ActiveSystemsEngine.calculateRequirements(
-        store,
-        parkingArea: 601,
-      );
+      final reqs = ActiveSystemsEngine.calculateRequirements(store);
       final item = reqs.firstWhere((e) => e.name.contains("Sprinkler"));
       expect(item.isMandatory, true);
     });

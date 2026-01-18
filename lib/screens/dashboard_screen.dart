@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:life_safety/screens/settings_screen.dart';
 import 'bolum_1_screen.dart';
 import 'archive_screen.dart';
@@ -51,6 +52,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 25),
                 _buildSectionLabel("BİLGİLER VE AYARLAR"),
                 _buildSecondaryMenu(context),
+                const SizedBox(height: 25),
+                _buildSectionLabel("DESTEK VE İLETİŞİM"),
+                _buildSupportCard(context),
                 const SizedBox(height: 30),
               ],
             ),
@@ -594,5 +598,153 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context,
       MaterialPageRoute(builder: (context) => const BuildingSetupScreen()),
     );
+  }
+
+  Widget _buildSupportCard(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.green.shade600, Colors.green.shade800],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.green.withOpacity(0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.support_agent_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 15),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Uzman Desteği Alın",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "Yangın güvenliği uzmanımızla görüşün",
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.green.shade800,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: _launchWhatsApp,
+                  icon: const Icon(Icons.chat_bubble_outline_rounded, size: 20),
+                  label: const Text("WhatsApp"),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white.withOpacity(0.2),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: _launchEmail,
+                  icon: const Icon(Icons.email_outlined, size: 20),
+                  label: const Text("E-Posta"),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _launchWhatsApp() async {
+    // TODO: Update with actual phone number
+    const String phoneNumber = "905555555555"; 
+    final Uri url = Uri.parse("https://wa.me/$phoneNumber");
+    
+    try {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        debugPrint('Could not launch WhatsApp');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("WhatsApp açılamadı.")),
+        );
+      }
+    } catch (e) {
+      debugPrint("WhatsApp error: $e");
+    }
+  }
+
+  Future<void> _launchEmail() async {
+     // TODO: Update with actual email
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'destek@yanginguvenlik.com',
+      query: _encodeQueryParameters(<String, String>{
+        'subject': 'Yangın Risk Analizi Destek',
+      }),
+    );
+
+    try {
+      if (!await launchUrl(emailLaunchUri)) {
+        debugPrint('Could not launch Email');
+         ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("E-posta uygulaması açılamadı.")),
+        );
+      }
+    } catch (e) {
+      debugPrint("Email error: $e");
+    }
+  }
+
+  String? _encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
   }
 }

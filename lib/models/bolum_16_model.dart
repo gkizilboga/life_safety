@@ -12,6 +12,8 @@ class Bolum16Model {
   final int? bariyerUst;
   final int? bariyerZemin;
 
+  final double? enUzunCephe; // Yeni alan
+
   Bolum16Model({
     this.mantolama,
     this.giydirmeBoslukYalitim,
@@ -21,6 +23,7 @@ class Bolum16Model {
     this.bariyerYan,
     this.bariyerUst,
     this.bariyerZemin,
+    this.enUzunCephe,
   });
 
   Bolum16Model copyWith({
@@ -32,6 +35,7 @@ class Bolum16Model {
     int? bariyerYan,
     int? bariyerUst,
     int? bariyerZemin,
+    double? enUzunCephe,
   }) {
     return Bolum16Model(
       mantolama: mantolama ?? this.mantolama,
@@ -42,6 +46,7 @@ class Bolum16Model {
       bariyerYan: bariyerYan ?? this.bariyerYan,
       bariyerUst: bariyerUst ?? this.bariyerUst,
       bariyerZemin: bariyerZemin ?? this.bariyerZemin,
+      enUzunCephe: enUzunCephe ?? this.enUzunCephe,
     );
   }
 
@@ -55,6 +60,7 @@ class Bolum16Model {
       'bariyerYan': bariyerYan,
       'bariyerUst': bariyerUst,
       'bariyerZemin': bariyerZemin,
+      'enUzunCephe': enUzunCephe,
     };
   }
 
@@ -87,6 +93,7 @@ class Bolum16Model {
       bariyerYan: map['bariyerYan'],
       bariyerUst: map['bariyerUst'],
       bariyerZemin: map['bariyerZemin'],
+      enUzunCephe: map['enUzunCephe'],
     );
   }
 }

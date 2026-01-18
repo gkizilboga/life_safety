@@ -44,7 +44,7 @@ class ReportSummaryScreen extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.only(left: 8, bottom: 12),
                       child: Text(
-                        "RİSK ANALİZİ DETAYLARI",
+                        "RİSK ANALİZİ",
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -108,7 +108,7 @@ class ReportSummaryScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  "DETAYLI ÖN RAPOR VE İYİLEŞTİRME ÖNERİLERİ KİLİTLİ",
+                  "ÖN RAPOR VE İYİLEŞTİRME ÖNERİLERİ KİLİTLİ",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -338,9 +338,9 @@ class ReportSummaryScreen extends StatelessWidget {
                 const Color(0xFFEF5350),
               ),
               _buildStatItem(
-                "Gri Alan",
+                "Uyarı",
                 "${m['warningCount']}",
-                Colors.orangeAccent,
+                const Color(0xFFFFC107),
               ),
               _buildStatItem(
                 "Tamamlanma",
@@ -574,51 +574,54 @@ class ReportSummaryScreen extends StatelessWidget {
   }
 
   Widget _buildBottomAction(BuildContext context, bool isPremium) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 54,
-        child: ElevatedButton(
-          onPressed: () {
-            if (isPremium) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => const DashboardScreen(),
-                ),
-                (r) => false,
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const PaywallScreen()),
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1A237E),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, -4),
             ),
-          ),
-          child: Text(
-            isPremium
-                ? "ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN"
-                : "ÖN RAPORUN TAMAMINI VE ÖNERİLERİ AL",
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              fontSize: 13,
+          ],
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          height: 54,
+          child: ElevatedButton(
+            onPressed: () {
+              if (isPremium) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardScreen(),
+                  ),
+                  (r) => false,
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PaywallScreen()),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1A237E),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: Text(
+              isPremium
+                  ? "ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN"
+                  : "ÖN RAPORUN TAMAMINI VE İYİLEŞTİRME ÖNERİLERİNİ AL",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 13,
+              ),
             ),
           ),
         ),

@@ -7,6 +7,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
 
@@ -103,16 +104,9 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_isCommercial) _buildCommercialWarning(),
-          const Padding(
-            padding: EdgeInsets.only(left: 4, bottom: 12),
-            child: Text(
-              "Dairesel merdiven teknik ölçümleri:",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1A237E),
-              ),
-            ),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 12),
+            child: Text("Dairesel merdiven teknik ölçümleri:", style: AppStyles.questionTitle),
           ),
           const SizedBox(height: 8),
           _buildSoru("Merdiven kol genişliği yeterli mi?", 'genislik', [
@@ -154,7 +148,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
           SizedBox(width: 15),
           Expanded(
             child: Text(
-              "YÖNETMELİK KISITLAMASI: Binada ticari alan bulunduğu için dairesel merdivenler kaçış yolu olarak kabul edilemez. Lütfen teknik ölçümleri yine de yapınız.",
+              "",
               style: TextStyle(
                 color: Color(0xFFB71C1C),
                 fontSize: 12,

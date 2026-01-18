@@ -6,6 +6,9 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
+
+import '../../utils/input_validator.dart';
 
 class Bolum16Screen extends StatefulWidget {
   const Bolum16Screen({super.key});
@@ -20,11 +23,24 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
   double _hBina = 0.0;
 
   final GlobalKey _bariyerYanKey = GlobalKey();
+  
+  // En uzun cephe kontrolcüsü
+  final TextEditingController _enUzunCepheController = TextEditingController();
+  final _formKey = GlobalKey<FormState>(); // Form key for validation
 
   @override
   void initState() {
     super.initState();
     _hBina = BinaStore.instance.bolum3?.hBina ?? 0.0;
+    
+    // Load existing data if available
+    final savedModel = BinaStore.instance.bolum16;
+    if (savedModel != null) {
+      if (savedModel.enUzunCephe != null) {
+        _enUzunCepheController.text = savedModel.enUzunCephe.toString();
+      }
+    }
+
     final b8 = BinaStore.instance.bolum8;
     if (b8?.secim?.label.contains("Bitişik") == true ||
         b8?.secim?.label == "8-1-B") {
@@ -99,6 +115,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
         _model.sagirYuzeySprinkler == null)
       return false;
     if (_askBitisik && _model.bitisikNizam == null) return false;
+    
+    // Validate facade length input exists but actual validation happens in Form
+    if (_enUzunCepheController.text.isEmpty) return false;
+    
     return true;
   }
 
@@ -110,12 +130,24 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
-        BinaStore.instance.bolum16 = _model;
-        BinaStore.instance.saveToDisk();
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Bolum17Screen()),
-        );
+        if (_formKey.currentState!.validate()) {
+          // Save valid value to model before proceeding
+           _model = _model.copyWith(
+            enUzunCephe: double.tryParse(_enUzunCepheController.text),
+          );
+          
+          BinaStore.instance.bolum16 = _model;
+          BinaStore.instance.saveToDisk();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Bolum17Screen()),
+          );
+        } else {
+           // Show error if validation fails despite button being enabled
+           ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Lütfen tüm alanları doğru şekilde doldurunuz.")),
+           );
+        }
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +220,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
 
           if (_askBitisik)
             _buildSoru(
-              "3. Binanız bitişik nizamda ve yan binadan daha yüksek mi?",
+              "Binanız bitişik nizamda ve yan binadan daha yüksek mi?",
               'bitisik',
               [
                 Bolum16Content.bitisikOptionA,
@@ -197,17 +229,59 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               ],
               _model.bitisikNizam,
             ),
+          
+           const SizedBox(height: 16),
+           QuestionCard(
+             child: Form(
+               key: _formKey,
+               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Binanızın en uzun cephesinin uzunluğu kaç metredir?",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    "İtfaiye su verme bağlantısı zorunluluğu için bu bilgi gereklidir.",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    controller: _enUzunCepheController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [InputValidator.flexDecimal],
+                    onChanged: (val) {
+                       setState(() {}); // Trigget button state update
+                    },
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Örn: 45",
+                      suffixText: "m",
+                      helperText: "Min: 5m, Max: 200m",
+                    ),
+                    validator: (value) => InputValidator.validateNumber(
+                      value,
+                      min: 5,
+                      max: 200,
+                      unit: "m",
+                    ),
+                  ),
+                ],
+               ),
+             ),
+           ),
         ],
       ),
     );
   }
 
-  Widget _buildSoru(String t, String k, List<ChoiceResult> o, ChoiceResult? s) {
+  Widget _buildSoru(String title, String k, List<ChoiceResult> o, ChoiceResult? s) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(t, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...o.map(
             (opt) => SelectableCard(

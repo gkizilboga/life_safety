@@ -7,10 +7,12 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/input_validator.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum20Screen extends StatefulWidget {
   const Bolum20Screen({super.key});
@@ -210,11 +212,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               padding: EdgeInsets.only(left: 4, bottom: 16),
               child: Text(
                 "Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Maks: 6)",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF263238),
-                ),
+                style: AppStyles.questionTitle,
               ),
             ),
 
@@ -270,8 +268,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ],
 
           if (_showBasinclandirma)
-            _buildSoru(
+            _buildSoruWithDef(
               "Merdivenlerde basınçlandırma sistemi var mı?",
+              AppDefinitions.basinclandirma,
+              "Basınçlandırma Sistemi",
               'basinclandirma',
               [
                 Bolum20Content.basYghOptionA,
@@ -360,6 +360,42 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           Text(
             title,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          const SizedBox(height: 12),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSoruWithDef(
+    String title,
+    String def,
+    String term,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+              ),
+              DefinitionButton(term: term, definition: def),
+            ],
           ),
           const SizedBox(height: 12),
           ...options.map(

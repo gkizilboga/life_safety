@@ -7,6 +7,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 
 class Bolum27Screen extends StatefulWidget {
@@ -187,11 +188,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
       padding: const EdgeInsets.only(left: 4, bottom: 8, top: 12),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF263238),
-        ),
+        style: AppStyles.questionTitle,
       ),
     );
   }

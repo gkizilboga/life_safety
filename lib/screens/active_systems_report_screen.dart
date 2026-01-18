@@ -2,27 +2,17 @@ import 'package:flutter/material.dart';
 import '../data/bina_store.dart';
 import '../logic/active_systems_engine.dart';
 import '../models/active_system_requirement.dart';
+import '../widgets/custom_widgets.dart';
 
 class ActiveSystemsReportScreen extends StatelessWidget {
-  final double? facadeWidth;
-  final double? parkingArea;
-
-  const ActiveSystemsReportScreen({
-    super.key,
-    this.facadeWidth,
-    this.parkingArea,
-  });
+  const ActiveSystemsReportScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final store = BinaStore.instance;
 
     // Gereksinimleri Hesapla
-    final requirements = ActiveSystemsEngine.calculateRequirements(
-      store,
-      facadeWidth: facadeWidth,
-      parkingArea: parkingArea,
-    );
+    final requirements = ActiveSystemsEngine.calculateRequirements(store);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +24,7 @@ class ActiveSystemsReportScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
-                    "Bu özellik (PDF Raporu) ayrıca satın alınmalıdır.",
+                    "Bu özellik (Aktif Sistem Gereksinimleri Çıktısı) ayrıca satın alınmalıdır.",
                   ),
                 ),
               );
@@ -52,7 +42,7 @@ class ActiveSystemsReportScreen extends StatelessWidget {
           Color cardBgColor = Colors.white;
           Color borderColor = Colors.grey.shade300;
           Color badgeColor = Colors.grey.shade400;
-          String badgeText = "SEÇİMLİK";
+          String badgeText = "ZORUNLU DEĞİL";
 
           if (req.isMandatory) {
             cardBgColor = Colors.red.shade50;
@@ -82,14 +72,25 @@ class ActiveSystemsReportScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Text(
-                          req.name,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue.shade900,
+                        child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  req.name,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue.shade900,
+                                  ),
+                                ),
+                              ),
+                              if (req.definitionTerm != null && req.definitionText != null)
+                                DefinitionButton(
+                                  term: req.definitionTerm!,
+                                  definition: req.definitionText!,
+                                ),
+                            ],
                           ),
-                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -114,9 +115,9 @@ class ActiveSystemsReportScreen extends StatelessWidget {
                   const Divider(),
                   const SizedBox(height: 4),
                   Text(
-                    "ZORUNLULUK DURUMU VE GEREKÇESİ:",
+                    "Gerekçe:",
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.grey.shade700,
                     ),

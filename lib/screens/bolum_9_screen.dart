@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart'; // Görsel yolu için eklendi
 
 class Bolum9Screen extends StatefulWidget {
@@ -42,15 +43,11 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 4, bottom: 16),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 16),
             child: Text(
               "Binada otomatik yağmurlama (sprinkler) sistemi var mı?",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF263238),
-              ),
+              style: AppStyles.questionTitle,
             ),
           ),
 

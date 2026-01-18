@@ -163,33 +163,93 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                             "Işıklık malzemesi nedir?",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Radio<String>(
-                                value: "cam",
-                                groupValue: _model.isiklikMalzemesi,
-                                activeColor: const Color(0xFF1A237E),
-                                onChanged: (v) => setState(
-                                  () => _model = _model.copyWith(
-                                    isiklikMalzemesi: v,
-                                  ),
+                          const SizedBox(height: 16),
+                          // Temperli Cam seçeneği
+                          InkWell(
+                            onTap: () => setState(
+                              () => _model = _model.copyWith(
+                                isiklikMalzemesi: "cam",
+                              ),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              margin: const EdgeInsets.only(bottom: 8),
+                              decoration: BoxDecoration(
+                                color: _model.isiklikMalzemesi == "cam"
+                                    ? const Color(0xFF1A237E).withOpacity(0.1)
+                                    : Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: _model.isiklikMalzemesi == "cam"
+                                      ? const Color(0xFF1A237E)
+                                      : Colors.grey.shade300,
+                                  width: _model.isiklikMalzemesi == "cam" ? 2 : 1,
                                 ),
                               ),
-                              const Text("Cam"),
-                              const SizedBox(width: 20),
-                              Radio<String>(
-                                value: "plastik",
-                                groupValue: _model.isiklikMalzemesi,
-                                activeColor: const Color(0xFF1A237E),
-                                onChanged: (v) => setState(
-                                  () => _model = _model.copyWith(
-                                    isiklikMalzemesi: v,
+                              child: Row(
+                                children: [
+                                  Radio<String>(
+                                    value: "cam",
+                                    groupValue: _model.isiklikMalzemesi,
+                                    activeColor: const Color(0xFF1A237E),
+                                    onChanged: (v) => setState(
+                                      () => _model = _model.copyWith(
+                                        isiklikMalzemesi: v,
+                                      ),
+                                    ),
                                   ),
+                                  const Expanded(
+                                    child: Text(
+                                      "Temperli ve yangına dayanıklı cam ışıklık",
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          // Plastik seçeneği
+                          InkWell(
+                            onTap: () => setState(
+                              () => _model = _model.copyWith(
+                                isiklikMalzemesi: "plastik",
+                              ),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: _model.isiklikMalzemesi == "plastik"
+                                    ? const Color(0xFF1A237E).withOpacity(0.1)
+                                    : Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: _model.isiklikMalzemesi == "plastik"
+                                      ? const Color(0xFF1A237E)
+                                      : Colors.grey.shade300,
+                                  width: _model.isiklikMalzemesi == "plastik" ? 2 : 1,
                                 ),
                               ),
-                              const Expanded(child: Text("Plastik, mika vb.")),
-                            ],
+                              child: Row(
+                                children: [
+                                  Radio<String>(
+                                    value: "plastik",
+                                    groupValue: _model.isiklikMalzemesi,
+                                    activeColor: const Color(0xFF1A237E),
+                                    onChanged: (v) => setState(
+                                      () => _model = _model.copyWith(
+                                        isiklikMalzemesi: v,
+                                      ),
+                                    ),
+                                  ),
+                                  const Expanded(
+                                    child: Text(
+                                      "Plastik, Pleksi veya Polikarbon ışıklık",
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -269,7 +329,11 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(title, style: const TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
+            color: Color(0xFF4A148C),
+          )),
           const SizedBox(height: 10),
           ...options.map(
             (opt) => SelectableCard(

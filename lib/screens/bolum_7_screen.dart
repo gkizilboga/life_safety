@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_7_model.dart';
+import '../../utils/app_theme.dart';
 import 'bolum_8_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
@@ -210,7 +211,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
                         });
                       },
                       title: const Text(
-                        "Belirttiğim otopark tipi dışında yukarıda yer alan diğer özel riskli hacimlerin hiçbiri binada bulunmamaktadır.",
+                        "Belirttiğim özel riskli hacimlerin binada mevcut olduğunu teyit ediyorum.",
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,

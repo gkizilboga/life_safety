@@ -16,6 +16,18 @@ class Bolum13Screen extends StatefulWidget {
 
 class _Bolum13ScreenState extends State<Bolum13Screen> {
   Bolum13Model _model = Bolum13Model();
+  final ScrollController _scrollController = ScrollController();
+  
+  final GlobalKey _otoparkKey = GlobalKey();
+  final GlobalKey _kazanKey = GlobalKey();
+  final GlobalKey _asansorKey = GlobalKey();
+  final GlobalKey _jeneratorKey = GlobalKey();
+  final GlobalKey _elektrikKey = GlobalKey();
+  final GlobalKey _trafoKey = GlobalKey();
+  final GlobalKey _depoKey = GlobalKey();
+  final GlobalKey _copKey = GlobalKey();
+  final GlobalKey _duvarKey = GlobalKey();
+  final GlobalKey _ticariKey = GlobalKey();
 
   bool _askOtopark = false;
   bool _askKazan = false;
@@ -105,7 +117,75 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _model = _model.copyWith(ortakDuvar: choice);
       else if (type == 'ticari')
         _model = _model.copyWith(ticariKapi: choice);
+      
+      _scrollToNextAfter(type);
     });
+  }
+
+  void _scrollToNextAfter(String currentKey) {
+    // Define the order of keys
+    final order = [
+      'otopark', 'kazan', 'asansor', 'jenerator', 'elektrik', 
+      'trafo', 'depo', 'cop', 'duvar', 'ticari'
+    ];
+    
+    int index = order.indexOf(currentKey);
+    if (index == -1 || index == order.length - 1) return;
+
+    // Find the next visible question
+    GlobalKey? targetKey;
+    for (int i = index + 1; i < order.length; i++) {
+      String nextType = order[i];
+      if (_shouldAsk(nextType)) {
+        targetKey = _getKeyForType(nextType);
+        break;
+      }
+    }
+
+    if (targetKey != null) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (targetKey!.currentContext != null) {
+          Scrollable.ensureVisible(
+            targetKey.currentContext!,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeInOut,
+            alignment: 0.1, // Aligns to near top
+          );
+        }
+      });
+    }
+  }
+
+  bool _shouldAsk(String type) {
+    switch (type) {
+      case 'otopark': return _askOtopark;
+      case 'kazan': return _askKazan;
+      case 'asansor': return _askAsansor;
+      case 'jenerator': return _askJenerator;
+      case 'elektrik': return _askElektrik;
+      case 'trafo': return _askTrafo;
+      case 'depo': return _askDepo;
+      case 'cop': return _askCop;
+      case 'duvar': return _askDuvar;
+      case 'ticari': return _askTicari;
+      default: return false;
+    }
+  }
+
+  GlobalKey _getKeyForType(String type) {
+    switch (type) {
+      case 'otopark': return _otoparkKey;
+      case 'kazan': return _kazanKey;
+      case 'asansor': return _asansorKey;
+      case 'jenerator': return _jeneratorKey;
+      case 'elektrik': return _elektrikKey;
+      case 'trafo': return _trafoKey;
+      case 'depo': return _depoKey;
+      case 'cop': return _copKey;
+      case 'duvar': return _duvarKey;
+      case 'ticari': return _ticariKey;
+      default: return GlobalKey();
+    }
   }
 
   void _onNextPressed() {
@@ -134,6 +214,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
           ),
           Expanded(
             child: SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
@@ -148,11 +229,14 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.otoparkOptionD,
                       ],
                       _model.otoparkKapi,
+                      keyParam: _otoparkKey,
                     ),
 
                   if (_askKazan)
-                    _buildSoru(
+                    _buildSoruWithDef(
                       "Kazan dairesinin duvarları ve kapısı nasıldır?",
+                      "Yangın Kompartımanı",
+                      AppDefinitions.yanginKompartimani,
                       'kazan',
                       [
                         Bolum13Content.kazanOptionA,
@@ -161,6 +245,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.kazanOptionD,
                       ],
                       _model.kazanKapi,
+                      keyParam: _kazanKey,
                     ),
 
                   if (_askAsansor)
@@ -168,7 +253,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                       Bolum13Content.asansorOptionA,
                       Bolum13Content.asansorOptionB,
                       Bolum13Content.asansorOptionC,
-                    ], _model.asansorKapi),
+                    ], _model.asansorKapi, keyParam: _asansorKey),
 
                   if (_askJenerator)
                     _buildSoru(
@@ -180,6 +265,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.jeneratorOptionC,
                       ],
                       _model.jeneratorKapi,
+                      keyParam: _jeneratorKey,
                     ),
 
                   if (_askElektrik)
@@ -192,6 +278,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.elekOdasiOptionC,
                       ],
                       _model.elektrikKapi,
+                      keyParam: _elektrikKey,
                     ),
 
                   if (_askTrafo)
@@ -199,14 +286,14 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                       Bolum13Content.trafoOptionA,
                       Bolum13Content.trafoOptionB,
                       Bolum13Content.trafoOptionC,
-                    ], _model.trafoKapi),
+                    ], _model.trafoKapi, keyParam: _trafoKey),
 
                   if (_askDepo)
                     _buildSoru("Eşya depolarının kapıları nasıldır?", 'depo', [
                       Bolum13Content.depoOptionA,
                       Bolum13Content.depoOptionB,
                       Bolum13Content.depoOptionC,
-                    ], _model.depoKapi),
+                    ], _model.depoKapi, keyParam: _depoKey),
 
                   if (_askCop)
                     _buildSoru(
@@ -218,6 +305,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.copOptionC,
                       ],
                       _model.copKapi,
+                      keyParam: _copKey,
                     ),
 
                   if (_askDuvar)
@@ -230,6 +318,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.ortakDuvarOptionC,
                       ],
                       _model.ortakDuvar,
+                      keyParam: _duvarKey,
                     ),
 
                   if (_askTicari)
@@ -242,6 +331,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.ticariOptionC,
                       ],
                       _model.ticariKapi,
+                      keyParam: _ticariKey,
                     ),
                 ],
               ),
@@ -279,13 +369,58 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     String title,
     String key,
     List<ChoiceResult> options,
-    ChoiceResult? selected,
-  ) {
+    ChoiceResult? selected, {
+    Key? keyParam,
+  }) {
     return QuestionCard(
+      key: keyParam,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(title, style: const TextStyle(
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
+            color: Color(0xFF4A148C), // Koyu Mor - Soru rengi
+          )),
+          const SizedBox(height: 10),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSoruWithDef(
+    String title,
+    String term,
+    String def,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected, {
+    Key? keyParam,
+  }) {
+    return QuestionCard(
+      key: keyParam,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(title, style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                  color: Color(0xFF4A148C),
+                )),
+              ),
+              DefinitionButton(term: term, definition: def),
+            ],
+          ),
           const SizedBox(height: 10),
           ...options.map(
             (opt) => SelectableCard(

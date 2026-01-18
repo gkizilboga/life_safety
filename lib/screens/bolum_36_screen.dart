@@ -186,7 +186,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       );
     if (hBina > 9.50 && doner > 0)
       notes.add(
-        "Bina yüksekliği 9.50m üzerinde olduğu için 'Dairesel Merdiven' kullanımı yasaktır. Dairesel merdiven ile özel çözüm gereken katlar varsa Uzman görüşü alınarak ilerlenmesi önerilir.",
+        "Bina yüksekliği 9.50m üzerinde olduğu için 'Dairesel Merdiven' kullanılamaz. Dairesel merdiven ile özel çözüm gereken katlar varsa Uzman görüşü alınması önerilir.",
       );
     if (hBina > 21.50 && disAcik > 0)
       notes.add(
@@ -232,7 +232,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     int mevcut = b33?.mevcutUst ?? 0;
     if (mevcut >= gerekli)
       notes.add(
-        "✅ ÇIKIŞ SAYISI YETERLİ: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla olduğundan, çıkış sayısı bakımından yeterli gözükmektedir. Ancak bu durum tek başına yeterli olmayıp, binadaki merdiven tiplerinin ve adedinin kriterleri de uygun olması gereklidir.",
+        "✅ ÇIKIŞ SAYISI YETERLİ: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla veya eşit olduğundan, çıkış sayısı bakımından yeterli gözükmektedir. Ancak bu durum tek başına yeterli olmayıp, binadaki merdiven tiplerinin ve adedinin kriterleri de uygun olması gereklidir.",
       );
     else
       notes.add(

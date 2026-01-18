@@ -7,6 +7,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 
 class Bolum22Screen extends StatefulWidget {
@@ -224,8 +225,6 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
                   ? "Yapı yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
                   : "Yapı yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
               style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
                 color: _isMandatory
                     ? Colors.orange.shade900
                     : Colors.blue.shade900,

@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart'; // Görsel yolları için eklendi
 
 class Bolum8Screen extends StatefulWidget {
@@ -41,16 +42,13 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 4, bottom: 16),
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 16),
             child: Text(
               "Binanızın yerleşim durumu nedir?",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF263238),
-              ),
+              style: AppStyles.questionTitle,
             ),
           ),
 

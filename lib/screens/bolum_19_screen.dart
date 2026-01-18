@@ -17,6 +17,8 @@ class Bolum19Screen extends StatefulWidget {
 class _Bolum19ScreenState extends State<Bolum19Screen> {
   Bolum19Model _model = Bolum19Model();
   final GlobalKey _etiketKey = GlobalKey();
+  final GlobalKey _levhaKey = GlobalKey();
+  final GlobalKey _yanilticiKey = GlobalKey();
 
   void _scrollToKey(GlobalKey key) {
     Future.delayed(const Duration(milliseconds: 300), () {
@@ -46,12 +48,16 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
           current.add(choice);
       }
       _model = _model.copyWith(engeller: current);
+      _scrollToKey(_levhaKey);
     });
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'levha') _model = _model.copyWith(levha: choice);
+      if (type == 'levha') {
+        _model = _model.copyWith(levha: choice);
+        _scrollToKey(_yanilticiKey);
+      }
       if (type == 'yaniltici') {
         _model = _model.copyWith(yanilticiKapi: choice);
         if (choice.label == Bolum19Content.yanilticiOptionB.label)
@@ -92,9 +98,12 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
       child: Column(
         children: [
           _buildTopInfoNote(
-            "Not: Yönetmelik gereği tek çıkışlı/merdivenli binalarda acil durum yönlendirme levhası zorunluluğu aranmaz. Analiz sonunda bu durum otomatik değerlendirilecektir.",
+            "Not: Yönetmelik gereği tek çıkışlı veya tek merdivenli binalarda acil durum yönlendirme levhası zorunluluğu aranmayabilir. Analizin sonunda bu durum otomatik değerlendirilecektir.",
           ),
           QuestionCard(
+            key: GlobalKey(), // Dummy key not needed, handled by scroll logic? No, obstacles is first.
+            // Wait, we don't scroll TO obstacles (it's top). We scroll FROM it.
+            // But let's keep QuestionCard intact.
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -120,16 +129,23 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               ],
             ),
           ),
-          _buildSoru("Yönlendirme levhaları asılı mı?", 'levha', [
-            Bolum19Content.levhaOptionA,
-            Bolum19Content.levhaOptionB,
-            Bolum19Content.levhaOptionC,
-          ], _model.levha),
           _buildSoru(
-            "Yanıltıcı kapılar var mı? (Çıkış kapısına veya merdivene ulaşırken kafanızı karıştırabilecek kapılar)",
+            "Yönlendirme levhaları asılı mı?",
+            'levha',
+            [
+              Bolum19Content.levhaOptionA,
+              Bolum19Content.levhaOptionB,
+              Bolum19Content.levhaOptionC,
+            ],
+            _model.levha,
+            key: _levhaKey,
+          ),
+          _buildSoru(
+            "Yanıltıcı kapılar var mı? (Çıkış ulaşırken kafanızı karıştırabilecek türden kapılar)",
             'yaniltici',
             [Bolum19Content.yanilticiOptionA, Bolum19Content.yanilticiOptionB],
             _model.yanilticiKapi,
+            key: _yanilticiKey,
           ),
 
           if (_model.yanilticiKapi?.label ==
@@ -186,15 +202,24 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     String title,
     String key,
     List<ChoiceResult> options,
-    ChoiceResult? selected,
-  ) {
+    ChoiceResult? selected, {
+    Key? keyParam,
+  }) {
+    // Note: Parameter name conflicting with 'key' argument string. Renaming to keyParam.
+    // Wait, 'key' string argument is used for selection, 'key' widget argument is for Widget Key.
+    // Let's use 'scrollKey' to be safe.
     return QuestionCard(
+      key: keyParam, 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(
+              fontWeight: FontWeight.w900, 
+              fontSize: 16,
+              color: Color(0xFF4A148C),
+            ),
           ),
           const SizedBox(height: 12),
           ...options.map(

@@ -7,6 +7,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
@@ -193,7 +194,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: AppStyles.questionTitle,
           ),
           if (assetPath != null)
             TechnicalDrawingButton(assetPath: assetPath, title: "Teknik Detay"),

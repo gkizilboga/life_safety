@@ -6,7 +6,7 @@ class Bolum1Content {
     uiTitle: "19.12.2007 ve sonrasında alındı.",
     uiSubtitle: "Bina, YENİ BİNA statüsünde kabul edilecektir.",
     reportText:
-        "✅ BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 ve sonrası olduğu için, analiz \"Binaların Yangından Korunması Hakkında Yönetmelik\" (BYKHY) kapsamındaki \"YENİ BİNA\" hükümlerine göre yapılmıştır.",
+        "ℹ️ BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 ve sonrası olduğu için, analiz \"Binaların Yangından Korunması Hakkında Yönetmelik\" (BYKHY) kapsamındaki \"YENİ BİNA\" hükümlerine göre yapılmıştır.",
   );
 
   static final ruhsatOncesi = ChoiceResult(
@@ -15,7 +15,7 @@ class Bolum1Content {
     uiSubtitle:
         "Tarih itibarıyla MEVCUT BİNA statüsünde ancak yine de YENİ BİNA hükümlerine göre değerlendirilsin.",
     reportText:
-        "⚠️ UYARI: Bina, ruhsat tarihi itibarıyla \"Mevcut Bina\" statüsünde olmasına rağmen, kullanıcı talebi üzerine güncel yönetmeliğin \"YENİ BİNA\" standartlarına göre değerlendirilmiştir. MEVCUT BİNA 'nın yangın güvenlik gereksinimleri Yangın Yönetmeliği 'nde  YENİ BİNA 'ya göre daha esnek ve daha hafiftir. Bu sebeple MEVCUT BİNA için Yangın Güvenlik Uzmanı tarafından hususi değerlendirme yapılması önerilir.  ",
+        "ℹ️ BİLGİ: Bina, ruhsat tarihi itibarıyla \"Mevcut Bina\" statüsünde olmasına rağmen, kullanıcı talebi üzerine güncel yönetmeliğin \"YENİ BİNA\" standartlarına göre değerlendirilmiştir. MEVCUT BİNA 'nın yangın güvenlik gereksinimleri Yangın Yönetmeliği 'nde  YENİ BİNA 'ya göre daha esnek ve daha hafiftir. Bu sebeple MEVCUT BİNA için Yangın Güvenlik Uzmanı tarafından hususi değerlendirme yapılması önerilir.  ",
   );
 }
 
@@ -26,7 +26,7 @@ class Bolum2Content {
     uiSubtitle:
         "Türkiye'deki binaların tamamına yakını betonarmedir. Binada kolon, kiriş, perde beton vardır.",
     reportText:
-        "✅ BİLGİ: Binanın taşıyıcı sistemi BETONARME olarak beyan edilmiştir. Yangın dayanım hesapları (paspayı vb.) betonarme standartlarına göre değerlendirilmiştir.",
+        "ℹ️ BİLGİ: Binanın taşıyıcı sistemi BETONARME olarak beyan edilmiştir. Yangın dayanım hesapları (paspayı vb.) betonarme standartlarına göre değerlendirilmiştir.",
   );
 
   static final celik = ChoiceResult(
@@ -43,7 +43,7 @@ class Bolum2Content {
     uiTitle: "Ahşap",
     uiSubtitle: "Binanın ana taşıyıcıları kalın ahşap kolon, kirişten oluşur.",
     reportText:
-        "⚠️ BİLGİ: Binanın taşıyıcı sistemi AHŞAP olarak beyan edilmiştir. Ahşap yapıların yangın dayanımı, kullanılan kesitlerin kalınlığına (kömürleşme hızına) bağlı olarak değerlendirilmiştir.",
+        "ℹ️ BİLGİ:Binanın taşıyıcı sistemi AHŞAP olarak beyan edilmiştir. Ahşap yapıların yangın dayanımı, kullanılan kesitlerin kalınlığına (kömürleşme hızına) bağlı olarak değerlendirilmiştir.",
   );
 
   static final yigma = ChoiceResult(
@@ -52,7 +52,7 @@ class Bolum2Content {
     uiSubtitle:
         "Binada kolon, kiriş olmaz. Tüm yükü taşıyan kalın taş duvarlardır.",
     reportText:
-        "✅ BİLGİ: Binanın taşıyıcı sistemi YIĞMA (KAGİR) olarak beyan edilmiştir. Yığma binalarda duvar kalınlıkları (en az 19 cm), yangın dayanım süresini belirleyen ana faktördür.",
+        "ℹ️ BİLGİ: Binanın taşıyıcı sistemi YIĞMA (KAGİR) olarak beyan edilmiştir. Yığma binalarda duvar kalınlıkları (en az 19 cm), yangın dayanım süresini belirleyen ana faktördür.",
   );
 
   static final bilinmiyor = ChoiceResult(
@@ -61,7 +61,7 @@ class Bolum2Content {
     uiSubtitle:
         "Türkiye konut sektörü baz alınarak binanın Betonarme olduğu varsayılacaktır.",
     reportText:
-        "❓ BİLİNMİYOR: Binanın taşıyıcı sistemi net olarak bilinmemektedir. Türkiye'deki yapı stoğunun büyük çoğunluğu betonarme olduğu için analiz BETONARME varsayımıyla yapılmıştır. Kesin sonuç için statik proje incelenmelidir.",
+        "ℹ️ BİLGİ: Binanın taşıyıcı sistemi net olarak bilinmemektedir. Türkiye'deki yapı stoğunun büyük çoğunluğu betonarme olduğu için analiz BETONARME varsayımıyla yapılmıştır. Kesin sonuç için statik proje incelenmelidir.",
   );
 }
 
@@ -71,7 +71,7 @@ class Bolum3Content {
     uiTitle: "Kat yüksekliklerini biliyorum.",
     uiSubtitle: "Hassas ölçüm değerlerini gireceğim.",
     reportText:
-        "Bina yükseklik analizi beyan edilen değerler üzerinden yapılmıştır.",
+        "ℹ️ BİLGİ:Bina yükseklik analizi beyan edilen değerler üzerinden yapılmıştır.",
   );
 
   static final bilinmiyor = ChoiceResult(
@@ -160,17 +160,17 @@ class Bolum5Content {
     uiTitle: "OTOMATİK HESAPLA",
     uiSubtitle: "Kat sayıları ve alan verileriyle toplamı hesaplar.",
     reportText:
-        "ℹ️ BİLGİ: Toplam inşaat alanı sistem tarafından otomatik hesaplanmıştır.",
+        "Toplam inşaat alanı sistem tarafından otomatik hesaplanmıştır.",
   );
 }
 
 class Bolum6Content {
   static final otoparkVar = ChoiceResult(
     label: "6-1-A (Otopark)",
-    uiTitle: "Binanın altında otopark bulunmaktadır.",
-    uiSubtitle: "Bodrum veya zemin katta otopark mevcut.",
+    uiTitle: "Binada (kapalı veya yarı-açık) otopark bulunmaktadır.",
+    uiSubtitle: "Zemin (ve/veya bodrum) katta otopark alanı mevcut.",
     reportText:
-        "ℹ️ BİLGİ: Binada kapalı otopark bulunmaktadır. Otoparkların yangın yükü yüksek olduğundan ek önlemler almak gereklidir.",
+        "ℹ️ BİLGİ: Binada kapalı veya yarı-açık otopark alanı bulunmaktadır. Otoparkların yangın yükü yüksek olduğundan ek önlemler almak gereklidir.",
   );
 
   static final ticariVar = ChoiceResult(
@@ -194,7 +194,7 @@ class Bolum6Content {
     uiTitle: "Binada konut dışında başka amaçlı herhangi bir alan yok.",
     uiSubtitle: "Sadece meskenler var.",
     reportText:
-        "✅ BİLGİ: Bina sadece konut amaçlı kullanılmaktadır. Ekstra yangın yükü yaratabilecek bir kullanım bulunmamaktadır.",
+        "ℹ️ BİLGİ: Bina sadece konut amaçlı kullanılmaktadır. Ekstra yangın yükü yaratabilecek bir kullanım bulunmamaktadır.",
   );
 
   static final otoparkKapali = ChoiceResult(
@@ -210,7 +210,7 @@ class Bolum6Content {
     uiTitle: "Otoparkın karşılıklı iki cephesi tamamen açık.",
     uiSubtitle: "Doğal havalandırma mevcut.",
     reportText:
-        "✅ BİLGİ (AÇIK OTOPARK): Otoparkın karşılıklı cepheleri açık olduğu için doğal havalandırma yeterli kabul edilebilir. İçeride duman birikme ihtimali düşüktür.",
+        "ℹ️ BİLGİ: (AÇIK OTOPARK): Otoparkın karşılıklı cepheleri açık olduğu için doğal havalandırma yeterli kabul edilebilir. İçeride duman birikme ihtimali düşüktür.",
   );
 
   static final otoparkYariAcik = ChoiceResult(
@@ -324,7 +324,7 @@ class Bolum8Content {
     uiSubtitle:
         "Binanın dört cephesi de açıktır, yan binalara yapışık veya bitişik değildir.",
     reportText:
-        "✅ BİLGİ: Bina AYRIK NİZAM olarak beyan edilmiştir. Bu durum, komşu binalardan yangın sirayeti riskini azaltır, cephe ve çatı yangın tedbirlerinde esneklik sağlar.",
+        "ℹ️ BİLGİ: Bina AYRIK NİZAM olarak beyan edilmiştir. Bu durum, komşu binalardan yangın sirayeti riskini azaltır, cephe ve çatı yangın tedbirlerinde esneklik sağlar.",
   );
 
   static final bitisikNizam = ChoiceResult(
@@ -343,7 +343,7 @@ class Bolum9Content {
     uiTitle: "Evet, tüm binada otomatik söndürme sistemi var.",
     uiSubtitle: "Daireler, koridorlar, dükkanlar, otopark dahil.",
     reportText:
-        "✅ OLUMLU: Binada tam kapsamlı otomatik yağmurlama (sprinkler) sistemi mevcuttur. Bu sistem, yangın anında kaçış mesafesi limitlerini artırır ve yangın güvenliğini daha üst seviyeye taşır.",
+        "ℹ️ BİLGİ: Binada tam kapsamlı otomatik yağmurlama (sprinkler) sistemi mevcuttur. Bu sistem, yangın anında kaçış mesafesi limitlerini artırır ve yangın güvenliğini daha üst seviyeye taşır.",
   );
 
   static final yok = ChoiceResult(
@@ -351,7 +351,7 @@ class Bolum9Content {
     uiTitle: "Hayır, hiçbir yerde yok.",
     uiSubtitle: "Binada otomatik söndürme sistemi bulunmuyor.",
     reportText:
-        "⚠️ UYARI: : Binada otomatik yağmurlama (sprinkler) sistemi bulunmamaktadır. Bu durumda kaçış mesafesi limitleri minimum değerler üzerinden değerlendirilmektedir. Sprinkler sistemi olmaması kaçış mesafeleri ve can güvenliği açısından büyük dezavantaj yaratır. Yangın Yönetmeliği-Madde 96 'ya göre belli özelliklerdeki konutlarda, otoparklarda, ticari amaçlı kısımlarda otomatik söndürme sistemi mecburiyeti doğabilmektedir.",
+        "ℹ️ BİLGİ: Binada otomatik yağmurlama (sprinkler) sistemi bulunmamaktadır. Bu durumda kaçış mesafesi limitleri minimum değerler üzerinden değerlendirilmektedir. Sprinkler sistemi olmaması kaçış mesafeleri ve can güvenliği açısından büyük dezavantaj yaratır. Yangın Yönetmeliği-Madde 96 'ya göre belli özelliklerdeki konutlarda, otoparklarda, ticari amaçlı kısımlarda otomatik söndürme sistemi mecburiyeti doğabilmektedir.",
   );
 
   static final kismen = ChoiceResult(
@@ -359,7 +359,7 @@ class Bolum9Content {
     uiTitle: "Kısmen var.",
     uiSubtitle: "Sadece bazı katlarda veya bazı mahallerde var.",
     reportText:
-        "⚠️ UYARI: : Sprinkler sistemi binanın tamamını kapsamıyor. Yönetmelik gereği, kaçış güvenliği hesaplarında sistemin \"YOK\" olduğu varsayılacaktır. Sprinkler sisteminin tüm mahallerde veya katlarda olmaması kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır.",
+        "ℹ️ BİLGİ: Sprinkler sistemi binanın tamamını kapsamıyor. Yönetmelik gereği, kaçış güvenliği hesaplarında sistemin \"YOK\" olduğu varsayılacaktır. Sprinkler sisteminin tüm mahallerde veya katlarda olmaması kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır.",
   );
 }
 
@@ -1449,14 +1449,14 @@ class Bolum20Content {
 
   static final cokKatOption5 = ChoiceResult(
     label: "20-5 (Çok Kat)",
-    uiTitle: "Döner (Spiral, Dairesel) Merdiven.",
+    uiTitle: "Dairesel (Spiral, Döner) Merdiven.",
     uiSubtitle: "Yuvarlak, dönerek inilen çelik merdiven.",
     reportText: "(Sayısal veri olarak saklanır)",
   );
 
   static final cokKatOption6 = ChoiceResult(
     label: "20-6 (Çok Kat)",
-    uiTitle: "Sahanlıksız Merdiven.",
+    uiTitle: "Sahanlıksız (Dairesel) Merdiven.",
     uiSubtitle:
         "Basamak adedi 17'yi aşan ancak buna rağmen sahanlığı olmayan merdiven.",
     reportText: "(Sayısal veri olarak saklanır)",
@@ -1529,9 +1529,9 @@ class Bolum21Content {
     label: "21-1-B",
     uiTitle: "Hayır, yok.",
     uiSubtitle: "Holden geçmeden direkt merdivene çıkılıyor.",
-    reportText: "⚠️ UYARI: Binada YGH bulunmamaktadır.",
+    reportText: "ℹ️ BİLGİ: Binada YGH bulunmamaktadır.",
     adviceText:
-        "Mimari zorunluluklar nedeniyle YGH yapılamıyorsa, Madde 89 uyarınca kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilebilir. Kesin kontrol için Yangın Güvenlik Uzmanı 'ndan bilgi alınmalıdır..",
+        "Bu raporda YGH zorunluluğu belirtildiyse ve binada YGH oluşturulamıyorsa, Madde 89 uyarınca kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilebilir. Kesin değerlendirme için Yangın Güvenlik Uzmanı 'ndan bilgi alınmalıdır..",
   );
 
   static final malzemeOptionA = ChoiceResult(
@@ -1810,7 +1810,7 @@ class Bolum23Content {
 
   static final yanginModuOptionB = ChoiceResult(
     label: "23-2-B (Yangın Modu)",
-    uiTitle: "Hayır, asansör normalin dışında farklı bir aksiyon almıyor.",
+    uiTitle: "Hayır, asansör (normalin dışında) yangın anında herhangi bir aksiyon almıyor.",
     uiSubtitle: "Yangın anında normal çalışmasına devam ediyor.",
     reportText:
         "☢️ KRİTİK RİSK: Asansörlerin yangın anında özel aksiyon alması gereklidir.",
@@ -1818,7 +1818,7 @@ class Bolum23Content {
 
   static final yanginModuOptionC = ChoiceResult(
     label: "23-2-C (Yangın Modu)",
-    uiTitle: "Bilmiyorum, buna dikkat etmedim.",
+    uiTitle: "Bilmiyorum, fark etmedim.",
     uiSubtitle: " ",
     reportText:
         "❓ BİLİNMİYOR: Asansörün yangın senaryosu bilinmiyor. Yangın anında asansörde mahsur kalmamak için bu özelliğin varlığı hayati önem taşır.",
@@ -1826,17 +1826,17 @@ class Bolum23Content {
 
   static final konumOptionA = ChoiceResult(
     label: "23-3-A (Konum)",
-    uiTitle: "Kat koridoruna, kat holüne veya asansör holüne açılıyor.",
+    uiTitle: "Asansör kapıları, koridora veya hole doğru açılıyor.",
     uiSubtitle: " ",
-    reportText: "✅ OLUMLU: Asansör kapıları kat koridoruna açılmaktadır.",
+    reportText: "✅ OLUMLU: Asansör kapıları kat koridoruna veya holüne doğru açılmaktadır.",
   );
 
   static final konumOptionB = ChoiceResult(
     label: "23-3-B (Konum)",
-    uiTitle: "Doğrudan yangın merdiveninin içine açılıyor.",
+    uiTitle: "Doğrudan merdiveninin içine açılıyor.",
     uiSubtitle: " ",
     reportText:
-        "☢️ KRİTİK RİSK: Yönetmeliğe göre asansör kapıları ASLA yangın merdiveni yuvasına açılamaz. Asansör kuyusundan sızan duman, insanların kaçtığı temiz bölgeyi (merdiveni) dumanla doldurur.",
+        "☢️ KRİTİK RİSK: Yönetmeliğe göre asansör kapıları ASLA merdiveni yuvasına açılamaz. Asansör kuyusundan sızan duman, insanların kaçtığı temiz bölgeyi (merdiveni) dumanla doldurur.",
   );
 
   static final konumOptionC = ChoiceResult(
@@ -1996,7 +1996,7 @@ class Bolum25Content {
     uiTitle: "Bilmiyorum / Ölçüm yapamadım.",
     uiSubtitle: "Genişlik belirsiz.",
     reportText:
-        "❓ BİLİNMİYOR: Döner merdiven genişliği tespit edilememiştir. Genişliğin 100 cm altında olması veya kullanıcı yükünün 25 kişiyi aşması durumunda bu merdiven kaçış yolu sayılamaz.",
+        "❓ BİLİNMİYOR: Dairesel (döner) merdiven genişliği tespit edilememiştir. Genişliğin 100 cm altında olması veya kullanıcı yükünün 25 kişiyi aşması durumunda bu merdiven kaçış yolu sayılamaz.",
   );
   static final basamakOptionA = ChoiceResult(
     label: "25-2-A",
@@ -2053,17 +2053,17 @@ class Bolum26Content {
   static final varlikOptionA = ChoiceResult(
     label: "26-1-A",
     uiTitle: "Hayır, sadece merdiven var, rampa yok.",
-    uiSubtitle: "✅OLUMLU: Binada kaçış yolunda hiç rampa yok.",
+    uiSubtitle: "",
     reportText:
-        "Binada rampa bulunmadığından Yönetmeliğe göre bu konuda bir değerlendirme yapılmaz.",
+        "✅ OLUMLU: Binada rampa bulunmadığından Yönetmeliğe göre bu konuda bir değerlendirme yapılmaz.",
   );
 
   static final varlikOptionB = ChoiceResult(
     label: "26-1-B",
     uiTitle: "Evet, rampa var.",
-    uiSubtitle: "⚠️UYARI: Binada kaçış yolunda rampa bulunuyor.",
+    uiSubtitle: "",
     reportText:
-        "Binada kaçış rampası tespit edilmiştir. Eğim ve sahanlık kriterleri analiz edilmelidir.",
+        "⚠️ UYARI: Binada kaçış rampası tespit edilmiştir. Eğim ve sahanlık kriterleri analiz edilmelidir.",
   );
 
   static final varlikOptionC = ChoiceResult(
@@ -3218,7 +3218,7 @@ class Bolum35Content {
 class Bolum36Content {
   static final cikisKatiOptionA = ChoiceResult(
     label: "36-0-A",
-    uiTitle: "A) Zemin kattan çıkabiliyorum.",
+    uiTitle: "Zemin kattan çıkabiliyorum.",
     uiSubtitle: "Bina çıkışı zemin kottadır.",
     reportText:
         "ℹ️ BİLGİ: Binadan dış havaya (atmosfere) çıkış Zemin Kattan sağlanmaktadır.",
@@ -3226,7 +3226,7 @@ class Bolum36Content {
 
   static final cikisKatiOptionB = ChoiceResult(
     label: "36-0-B",
-    uiTitle: "B) Yalnızca (zemin üstü) normal kattan çıkabiliyorum.",
+    uiTitle: "Yalnızca (zemin üstü) normal kattan çıkabiliyorum.",
     uiSubtitle: "Çıkış üst katlardadır.",
     reportText:
         "ℹ️ BİLGİ: Binadan dış havaya çıkış Normal Kattan sağlanmaktadır.",
@@ -3234,7 +3234,7 @@ class Bolum36Content {
 
   static final cikisKatiOptionC = ChoiceResult(
     label: "36-0-C",
-    uiTitle: "C) Yalnızca (zemin altı) bodrum kattan çıkabiliyorum.",
+    uiTitle: "Yalnızca (zemin altı) bodrum kattan çıkabiliyorum.",
     uiSubtitle: "Çıkış alt kottadır.",
     reportText:
         "ℹ️ BİLGİ: Binadan dış havaya çıkış Bodrum Kattan sağlanmaktadır.",
@@ -3293,7 +3293,7 @@ class Bolum36Content {
     label: "36-3-BILMIYORUM",
     uiTitle: "Merdiven/Koridor genişliğini bilmiyorum.",
     uiSubtitle: "Ölçüm yapılamadı.",
-    reportText: "⚠️ UYARI: Kaçış yolu genişliği ölçülemedi.",
+    reportText: "❓ BİLİNMİYOR: Kaçış yolu genişliği ölçülemedi.",
   );
 
   static final kapiTipiOptionA = ChoiceResult(
@@ -3319,7 +3319,7 @@ class Bolum36Content {
     label: "36-4-ALT-BILMIYORUM",
     uiTitle: "Kapı net geçiş genişliğini bilmiyorum.",
     uiSubtitle: "Ölçüm yapılamadı.",
-    reportText: "⚠️ UYARI: Çıkış kapısı net genişliği bilinmiyor.",
+    reportText: "❓ BİLİNMİYOR: Çıkış kapısı net genişliği bilinmiyor.",
   );
 
   static final gorunurlukOptionA = ChoiceResult(
@@ -3426,4 +3426,30 @@ class AppContent {
         return "Bölüm $id Analizi";
     }
   }
+}
+
+class AppDefinitions {
+  static const String yanginGuvenlikHolu =
+      "Yangın anında kaçış merdivenlerine duman sızmasını önlemek ve insanların güvenli bir alanda beklemesini sağlamak için tasarlanmış, yangına dayanıklı kapılarla ayrılmış korunaklı hacimdir.";
+
+  static const String yanginDayanimi =
+      "Binanın taşıyıcı sisteminin (betonarme/çelik) yangın anında çökmeden yük taşıyabilme süresidir. Pasif koruma (boya, kaplama vb.) bu süreyi artırır.";
+
+  static const String kacisMesafesi =
+      "Binadaki herhangi bir noktadan en yakın güvenli çıkışa (merdiven veya dış kapı) kadar olan kuş uçuşu olmayan, yürüme mesafesidir.";
+
+  static const String cikmazKoridor =
+      "Kaçış yönünde ilerlerken sadece tek bir çıkışa ulaşılan ve aksi yöne dönülmedikçe başka çıkış imkanı olmayan koridor kısmıdır.";
+
+  static const String basinclandirma =
+      "Yangın anında dumanın merdiven yuvasına girmesini engellemek için, fanlar yardımıyla bu alanlarda oluşturulan yüksek hava basıncıdır.";
+
+  static const String yanginKompartimani =
+      "Binanın yangına dayanıklı elemanlarla ayrılmış, yangının belirli bir süre boyunca bu alanın dışına çıkması engellenen bölümüdür (Örn: Kazan dairesi).";
+
+  static const String kullaniciYuku =
+      "Bir binanın veya bir katın içinde aynı anda bulunabileceği kabul edilen maksimum insan sayısıdır.";
+
+  static const String pasifYanginYalitimiCelik =
+      "Çelik elemanların yangın anında taşıma kapasitelerini korumaları için kullanılan yangın geciktirici boya veya levha kaplama gibi önlemlerdir.";
 }

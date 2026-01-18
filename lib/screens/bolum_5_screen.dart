@@ -8,6 +8,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../utils/app_content.dart';
 import '../../utils/input_validator.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum5Screen extends StatefulWidget {
   const Bolum5Screen({super.key});
@@ -48,6 +49,43 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _validate() {
     setState(() {
+      // Zemin kat validasyonu (min: 5, max: 2500)
+      double? taban = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
+      if (_tabanCtrl.text.isNotEmpty && taban != null) {
+        if (taban < 5 || taban > 2500) {
+          _tabanError = "Değer 5 ile 2500 m² arasında olmalıdır.";
+        } else {
+          _tabanError = null;
+        }
+      } else {
+        _tabanError = null;
+      }
+
+      // Normal kat validasyonu (min: 5, max: 2500)
+      double? normal = double.tryParse(_normalCtrl.text.replaceAll(',', '.'));
+      if (_normalCtrl.text.isNotEmpty && normal != null) {
+        if (normal < 5 || normal > 2500) {
+          _normalError = "Değer 5 ile 2500 m² arasında olmalıdır.";
+        } else {
+          _normalError = null;
+        }
+      } else {
+        _normalError = null;
+      }
+
+      // Bodrum kat validasyonu (min: 5, max: 20000)
+      double? bodrum = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.'));
+      if (_bodrumCtrl.text.isNotEmpty && bodrum != null) {
+        if (bodrum < 5 || bodrum > 20000) {
+          _bodrumError = "Değer 5 ile 20000 m² arasında olmalıdır.";
+        } else {
+          _bodrumError = null;
+        }
+      } else {
+        _bodrumError = null;
+      }
+
+      // Toplam inşaat alanı validasyonu
       double? tot = double.tryParse(_toplamCtrl.text.replaceAll(',', '.'));
       if (_toplamCtrl.text.isNotEmpty && tot != null && tot > 250000) {
         _toplamError = "Toplam inşaat alanı 250.000 m²'den büyük olamaz.";
@@ -68,6 +106,17 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _otomatikHesapla() {
     FocusScope.of(context).unfocus();
+    
+    // Önce validasyonları kontrol et
+    if (_tabanError != null || _normalError != null || _bodrumError != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Lütfen geçerli alan değerleri giriniz."),
+        ),
+      );
+      return;
+    }
+
     double tAlani = InputValidator.parseFlex(_tabanCtrl.text) ?? 0.0;
     double nAlani = InputValidator.parseFlex(_normalCtrl.text) ?? 0.0;
     double bAlani = InputValidator.parseFlex(_bodrumCtrl.text) ?? 0.0;
@@ -128,11 +177,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
             padding: EdgeInsets.only(left: 4, bottom: 12),
             child: Text(
               "Brüt Alan Girişi (m²)",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF263238),
-              ),
+              style: AppStyles.questionTitle,
             ),
           ),
           QuestionCard(

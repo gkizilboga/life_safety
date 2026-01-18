@@ -1,3 +1,25 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "editor.unicodeHighlight.nonBasicASCIICharacters": false,
+    "editor.unicodeHighlight.invisibleCharacters": false,
+    "editor.unicodeHighlight.includeComments": false,
+    "editor.unicodeHighlight.includeStrings": false,
+    "editor.unicodeHighlight.allowedLocales": {
+        "tr": true
+    },
+    "editor.unicodeHighlight.allowedCharacters": {
+        "ç": true,
+        "ğ": true,
+        "ı": true,
+        "ö": true,
+        "ş": true,
+        "ü": true,
+        "Ç": true,
+        "Ğ": true,
+        "İ": true,
+        "Ö": true,
+        "Ş": true,
+        "Ü": true
+    }
 }

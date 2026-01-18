@@ -10,20 +10,35 @@ class AppStrings {
   static const String b1SubQuestion = "Binanızın yapı ruhsatı hangi tarihte alındı veya yapım tarihi nedir?";
 
   static const String kvkkTitle = "KVKK ve Veri Güvenliği Aydınlatma Metni";
-  static const String kvkkContent = """6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) kapsamında veri sorumlusu sıfatıyla beyan ederiz:
-  
-1. Veri İşleme Sınırı: İşbu uygulama münhasıran yerel cihaz üzerinde çalışmaktadır. Girdiğiniz bina verileri, konum bilgileri ve analiz yanıtları hiçbir suretle merkezi bir sunucuya aktarılmamakta, işlenmemekte ve depolanmamaktadır.
-2. Veri Sorumluluğu: Verilerin güvenliği ve gizliliği tamamen kullanıcının kontrolündeki cihazın güvenliğine bağlıdır. Uygulamanın silinmesi halinde tüm veriler geri döndürülemez şekilde imha edilir.
-3. Üçüncü Taraflar: Verileriniz reklam ve pazarlama amacıyla üçüncü taraflarla paylaşılmamaktadır.""";
-  
-  static const String legalDisclaimerTitle = "Yasal Uyarı ve Kullanım Şartları (KESİN HÜKÜMLER)";
-  static const String legalDisclaimerContent = """DİKKAT: İŞBU METİN HUKUKİ BİR SÖZLEŞME NİTELİĞİNDEDİR.
+  static const String kvkkContent = """6698 sayılı Kişisel Verilerin Korunması Kanunu (“KVKK”) uyarınca Veri Sorumlusu sıfatıyla bilgilendirmedir:
 
-1. BELGE NİTELİĞİ: Uygulama tarafından üretilen çıktı, bir 'Resmi Rapor' veya 'Bilirkişi Raporu' DEĞİLDİR. Bu belge münhasıran bir 'Taslak Ön Bilgilendirme Notu' niteliğindedir.
-2. BEYAN ESASI VE DOĞRULAMA: Analiz sonuçları, tamamen kullanıcının subjektif beyanlarına dayanmaktadır. Uygulama, girilen verilerin doğruluğunu teyit etmez. Yerinde saha incelemesi yapılmadan ve veriler yerinde fiziksel olarak doğrulanmadan üretilen bu taslak, gerçeği yansıtmayabilir.
-3. RESMİ MAKAMLARDA KULLANIM YASAĞI: İşbu taslak belge; Belediye, İtfaiye, Yapı Denetim Kuruluşları, Sigorta Şirketleri, Adli Makamlar veya herhangi bir resmi ruhsatlandırma sürecinde 'DELİL' veya 'DAYANAK' olarak kullanılamaz. Bu yöndeki kullanımlardan doğacak tüm hukuki ve cezai sorumluluk münhasıran kullanıcıya aittir.
-4. UZMAN ONAYI ZORUNLULUĞU: Yangın güvenliği hususunda nihai ve bağlayıcı bir raporun tekemmül edebilmesi için; yetkin bir 'Yangın Güvenlik Uzmanı' tarafından saha kontrolü ve ütüdü yapılması, teknik ölçümlerin yerinde icrası ve raporun ilgili Uzman tarafından ıslak imza/e-imza ile onaylanması ZORUNLUDUR.
-5. SORUMLULUK REDDİ: Kullanıcının hatalı beyanlarından, eksik verilerinden veya işbu taslağın resmi işlerde kullanılmasından kaynaklanabilecek maddi, manevi, bedeni zararlardan veya idari yaptırımlardan uygulama geliştiricileri ve hak sahipleri hiçbir suretle sorumlu tutulamaz.""";
+1. VERİ İŞLEME POLİTİKASI (LOCAL-ONLY): İşbu uygulama "Çevrimdışı/Yerel" mimaride çalışmaktadır. Girdiğiniz bina verileri, kişisel notlar ve analiz sonuçları, doğrudan veya dolaylı olarak uygulama geliştiricisine ait sunuculara AKTARILMAMAKTA ve DEPOLANMAMAKTADIR.
+2. CİHAZ VE YEDEKLEME SORUMLULUĞU: Verileriniz sadece kendi cihazınızın hafızasında tutulur. İşletim sisteminizin (Android/iOS) otomatik yedekleme hizmetleri (Cloud Backups) haricinde, verileriniz hiçbir üçüncü tarafla paylaşılmaz. Cihaz güvenliği ve veri yedekliliği tamamen kullanıcının sorumluluğundadır.
+3. HAKLAR VE İMHA: Uygulama silindiğinde, oluşturulan tüm yerel veritabanı geri döndürülemez şekilde silinir. Geliştirici, erişimi olmayan bir veriyi silemeyeceği veya anonimleştiremeyeceği için, KVKK m.11 kapsamındaki talepleriniz "veri tutulmadığı" gerekçesiyle işleme alınamayabilir.""";
+  
+  static const String legalDisclaimerTitle = "YASAL SORUMLULUK REDDİ (KESİN HÜKÜMLER)";
+  static const String legalDisclaimerContent = """İŞBU METİN, KULLANICI İLE YAŞAM GÜVENLİĞİ ASİSTANI (UYGULAMA) ARASINDAKİ NİHAİ YASAL ÇERÇEVEDİR. KÖTÜ NİYETLİ KULLANIMLARA KARŞI TÜRK CEZA KANUNU HÜKÜMLERİ SAKLIDIR.
+
+1. RESMİ BELGE NİTELİĞİ VE KULLANIM YASAĞI:
+Bu uygulama tarafından üretilen her türlü rapor, analiz, tablo veya çıktı; "Ön Bilgilendirme Amaçlı Taslak" niteliğindedir. İşbu belgeler; Belediyeler, İtfaiye Daire Başkanlıkları, Çevre ve Şehircilik İl Müdürlükleri, Tapu Müdürlükleri veya Yapı Denetim Kuruluşları nezdinde YAPI RUHSATI, YAPI KULLANMA İZİN BELGESİ (İSKAN) veya İTFAİYE UYGUNLUK RAPORU süreçlerinde "RESMİ BELGE" olarak KULLANILAMAZ. Bu yönde yapılacak herhangi bir teşebbüs, kullanıcının şahsi sorumluluğundadır.
+
+2. MEVZUAT KAPSAMI VE YETKİ SINIRI:
+Uygulama algoritmaları temel olarak "Binaların Yangından Korunması Hakkında Yönetmelik (2015)" referans alınarak hazırlanmıştır. ANCAK, bir binanın tam yangın güvenliği; aşağıda sayılı mevzuatların da eksiksiz uygulanmasına bağlıdır ve uygulama bu kapsamı GARANTİ ETMEZ:
+   - 3194 Sayılı İmar Kanunu ve Planlı Alanlar İmar Yönetmeliği,
+   - Elektrik İç Tesisleri Yönetmeliği ve Topraklama Yönetmeliği,
+   - Asansör Yönetmeliği (2014/33/AB) ve ilgili Bakım/İşletme Yönetmelikleri,
+   - Binalarda Isı Yalıtımı Yönetmeliği (TS 825),
+   - Binalarda Enerji Performansı Yönetmeliği,
+   - TS EN 62305 (Yıldırımdan Korunma) ve ilgili diğer TSE Standartları.
+
+3. KÖTÜ NİYETLİ KULLANIM VE CEZAİ SORUMLULUK (TCK UYARISI):
+Uygulama çıktısını tahrif ederek, üzerine ıslak imza/kaşe taklit ederek veya bunu resmi bir belge gibi kamu kurumlarına sunmaya çalışan kullanıcılar; 5237 sayılı Türk Ceza Kanunu'nun 204. Maddesi (Resmi Belgede Sahtecilik) ve 207. Maddesi (Özel Belgede Sahtecilik) uyarınca SUÇ İŞLEMİŞ sayılacaktır. Geliştirici ekip, bu tür kötü niyetli kullanımlardan doğacak hukuki süreçlerde, uygulamanın "Salt Bilgilendirme" amacı taşıdığını ve kullanıcıyı bu konuda açıkça uyardığını delil olarak sunacaktır.
+
+4. SAHA GERÇEKLİĞİ VE İŞVEREN YÜKÜMLÜLÜĞÜ (6331 s.K.):
+Yazılım, kullanıcının beyan ettiği veriyi doğru kabul eder. Sahada paslanmış bir boru, kilitli bir yangın kapısı veya projesine aykırı bir duvarı yazılımın tespit etmesi teknik olarak imkansızdır. 6331 sayılı İş Sağlığı ve Güvenliği Kanunu md. 4 ve md. 10 uyarınca; İşveren/Yönetici'nin "Risk Değerlendirmesi Yapma/Yaptırma" yükümlülüğü, bu uygulama ile DEVREDİLMİŞ SAYILMAZ.
+
+5. FERAGAT VE KABUL:
+Kullanıcı, bu uygulamayı indirdiği ve kullandığı andan itibaren; uygulamanın bir "Mühendislik/Müşavirlik Hizmeti" olmadığını, sadece "Veri İşleme Aracı" olduğunu ve oluşabilecek her türlü maddi/manevi zararda geliştiricinin kusursuz sorumluluğu bulunmadığını gayrikabili rücu kabul, beyan ve taahhüt eder.""";
 
   static const String legislationTitle = "Binaların Yangından Korunması Hakkında Yönetmeliği (BYKHY)";
   static const String legislationSubtitle = " Yönetmelik hükümleri.";

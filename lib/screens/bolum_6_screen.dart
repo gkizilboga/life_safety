@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_6_model.dart';
 import 'bolum_7_screen.dart';
@@ -6,6 +7,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 
 class Bolum6Screen extends StatefulWidget {
@@ -17,6 +19,13 @@ class Bolum6Screen extends StatefulWidget {
 
 class _Bolum6ScreenState extends State<Bolum6Screen> {
   Bolum6Model _model = Bolum6Model();
+  final TextEditingController _kapaliOtoparkController = TextEditingController();
+
+  @override
+  void dispose() {
+    _kapaliOtoparkController.dispose();
+    super.dispose();
+  }
 
   void _toggleUsage(String type) {
     setState(() {
@@ -48,15 +57,25 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         hasTicari: newTicari,
         hasDepo: newDepo,
         isSadeceKonut: newKonut,
-        // Otopark seçimi kaldırıldıysa tipini de sıfırla
+        // Otopark seçimi kaldırıldıysa tipini ve alanı da sıfırla
         otoparkTipi: newOtopark ? _model.otoparkTipi : null,
+        clearKapaliOtoparkAlani: !newOtopark,
       );
+      if (!newOtopark) _kapaliOtoparkController.clear();
     });
   }
 
   void _handleOtoparkTipi(ChoiceResult choice) {
     setState(() {
-      _model = _model.copyWith(otoparkTipi: choice);
+      _model = _model.copyWith(otoparkTipi: choice, clearKapaliOtoparkAlani: true);
+      _kapaliOtoparkController.clear();
+    });
+  }
+
+  void _updateKapaliOtoparkAlani(String value) {
+    final parsed = double.tryParse(value.replaceAll(',', '.'));
+    setState(() {
+      _model = _model.copyWith(kapaliOtoparkAlani: parsed);
     });
   }
 
@@ -65,7 +84,16 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
     // 1. Kural: Eğer otopark var dendiyse, tipi de seçilmiş olmalı
     if (_model.hasOtopark && _model.otoparkTipi == null) return false;
 
-    // 2. Kural: En az bir ana seçenek işaretlenmiş olmalı
+    // 2. Kural: Kapalı otopark alanı gerekiyorsa, geçerli bir değer girilmiş olmalı
+    if (_model.needsKapaliOtoparkAlani) {
+      if (_model.kapaliOtoparkAlani == null ||
+          _model.kapaliOtoparkAlani! < 5 ||
+          _model.kapaliOtoparkAlani! > 20000) {
+        return false;
+      }
+    }
+
+    // 3. Kural: En az bir ana seçenek işaretlenmiş olmalı
     if (!_model.hasOtopark &&
         !_model.hasTicari &&
         !_model.hasDepo &&
@@ -92,7 +120,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
     bool isButtonEnabled = _isFormValid();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA), // Ofis Standartı Arka Plan
+      backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
           ModernHeader(
@@ -110,11 +138,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
                       "Binanızda konut haricinde aşağıdakilerden hangileri mevcut?",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF263238),
-                      ),
+                        style: AppStyles.questionTitle,
                     ),
                   ),
 
@@ -161,11 +185,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                       padding: EdgeInsets.only(left: 4, bottom: 12),
                       child: Text(
                         "Otoparkınızın tipi nedir?",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1A237E),
-                        ),
+                        style: AppStyles.questionTitle,
                       ),
                     ),
                     SelectableCard(
@@ -192,13 +212,77 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                       onTap: () =>
                           _handleOtoparkTipi(Bolum6Content.otoparkYariAcik),
                     ),
+
+                    // KAPALI OTOPARK ALANI SORUSU (Sadece A veya C şıkkı seçiliyse)
+                    if (_model.needsKapaliOtoparkAlani) ...[
+                      const SizedBox(height: 16),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 4, bottom: 8),
+                        child: Text(
+                          "Toplam kapalı otopark alanı kaç m²?",
+                          style: AppStyles.questionTitle,
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: const Color(0xFFE0E0E0)),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _kapaliOtoparkController,
+                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(RegExp(r'^\d*[,.]?\d{0,2}')),
+                                ],
+                                onChanged: _updateKapaliOtoparkAlani,
+                                decoration: const InputDecoration(
+                                  hintText: "Min: 5, Max: 20000",
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFF5F5F5),
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(11),
+                                  bottomRight: Radius.circular(11),
+                                ),
+                              ),
+                              child: const Text(
+                                "m²",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF1A237E),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (_model.kapaliOtoparkAlani != null && 
+                          (_model.kapaliOtoparkAlani! < 5 || _model.kapaliOtoparkAlani! > 20000))
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8, left: 4),
+                          child: Text(
+                            "Değer 5 ile 20000 arasında olmalıdır.",
+                            style: TextStyle(color: Colors.red, fontSize: 12),
+                          ),
+                        ),
+                    ],
                   ],
                 ],
               ),
             ),
           ),
 
-          // ALT BUTON ALANI (REVİZE EDİLDİ)
+          // ALT BUTON ALANI
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
             decoration: const BoxDecoration(
@@ -216,10 +300,10 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
               child: ElevatedButton(
                 onPressed: isButtonEnabled
                     ? _onNextPressed
-                    : null, // Geçerli değilse null (pasif)
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1A237E),
-                  disabledBackgroundColor: Colors.grey.shade300, // Pasif renk
+                  disabledBackgroundColor: Colors.grey.shade300,
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 54),
                   shape: RoundedRectangleBorder(

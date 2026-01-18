@@ -4,6 +4,7 @@ import '../../models/bolum_35_model.dart';
 import 'bolum_36_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
+import '../../utils/app_theme.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_assets.dart';
@@ -140,8 +141,10 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_tekCikis) ...[
-            _buildSoruHeader(
+            _buildSoruHeaderWithDef(
               "Daire kapınızdan çıktığınızda bina merdiven kapısına kadar olan mesafe kaç metredir?",
+              "Kaçış Mesafesi",
+              AppDefinitions.kacisMesafesi,
             ),
             TechnicalDrawingButton(
               assetPath: AppAssets.section35DairedenOlcum,
@@ -154,8 +157,10 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               Bolum35Content.tekYonOptionD,
             ], _model.tekYon),
           ] else ...[
-            _buildSoruHeader(
+            _buildSoruHeaderWithDef(
               "Daire kapınızdan çıktığınızda, size EN YAKIN yangın merdivenine olan mesafe kaç metredir?",
+              "Kaçış Mesafesi",
+              AppDefinitions.kacisMesafesi,
             ),
             TechnicalDrawingButton(
               assetPath: AppAssets.section35KacisGosterim,
@@ -168,8 +173,10 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               Bolum35Content.ciftYonOptionD,
             ], _model.ciftYon),
             const SizedBox(height: 12),
-            _buildSoruHeader(
+            _buildSoruHeaderWithDef(
               "Daireniz koridorun sonunda, 'Çıkmaz' bir noktada mı?",
+              "Çıkmaz Koridor",
+              AppDefinitions.cikmazKoridor,
             ),
             _buildSoruCard('cikmaz', [
               Bolum35Content.cikmazOptionA,
@@ -225,11 +232,24 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
       padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF263238),
-        ),
+        style: AppStyles.questionTitle,
+      ),
+    );
+  }
+
+  Widget _buildSoruHeaderWithDef(String title, String term, String def) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: AppStyles.questionTitle,
+            ),
+          ),
+          DefinitionButton(term: term, definition: def),
+        ],
       ),
     );
   }

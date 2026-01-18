@@ -6,6 +6,7 @@ import 'bolum_34_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum33Screen extends StatefulWidget {
   const Bolum33Screen({super.key});
@@ -149,6 +150,22 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
       },
       child: Column(
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Kullanıcı Yükü Nedir?",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryBlue,
+                ),
+              ),
+              DefinitionButton(
+                  term: "Kullanıcı Yükü",
+                  definition: AppDefinitions.kullaniciYuku),
+            ],
+          ),
+          const SizedBox(height: 12),
           _buildSummaryCard(
             "ZEMİN KAT",
             _model.yukZemin,
@@ -247,7 +264,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
             ),
           ),
           const Divider(),
-          _buildRow("Tahmini Kişi Sayısı:", "$yuk Kişi"),
+          _buildRow("Tahmini Kişi:", "$yuk Kişi"),
           _buildRow("Gereken Çıkış:", "$gerekli Adet"),
           _buildRow("Mevcut Çıkış:", "$mevcut Adet"),
           const SizedBox(height: 10),
