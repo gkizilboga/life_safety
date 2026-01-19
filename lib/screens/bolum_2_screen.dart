@@ -135,7 +135,12 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
                 ),
                 child: Text(
                   "DEVAM ET",
-                  style: AppStyles.questionTitle,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
             ),

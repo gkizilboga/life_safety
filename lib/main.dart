@@ -24,7 +24,9 @@ class BinaYanginRiskAnaliziApp extends StatelessWidget {
         scaffoldBackgroundColor: AppColors.backgroundGrey,
         useMaterial3: true,
         fontFamily: 'Roboto',
-        elevatedButtonTheme: ElevatedButtonThemeData(style: AppStyles.mainButton),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: AppStyles.mainButton,
+        ),
       ),
       home: _getInitialScreen(),
     );
@@ -33,8 +35,8 @@ class BinaYanginRiskAnaliziApp extends StatelessWidget {
   Widget _getInitialScreen() {
     final store = BinaStore.instance;
     if (!store.hasSeenOnboarding) {
-  return const OnboardingScreen(); // buildingName parametresi OLMAMALI
-}
+      return const OnboardingScreen(); // buildingName parametresi OLMAMALI
+    }
     if (!store.isRegistered) {
       return const RegisterScreen();
     }

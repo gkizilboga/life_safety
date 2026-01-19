@@ -241,10 +241,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () async {
-                    // Main Report is accessible to all (or assumes existing logic handles access).
-                    // Premium content inside will be blurred/teased.
-                    await PdfService.generateAndShowPdf();
+                  onPressed: () {
+                    final completion = metrics['completion'];
+                    final progress = (completion is num)
+                        ? completion.toInt()
+                        : 0;
+
+                    if (progress < 100) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            "Raporları görüntülemek için analizi %100 tamamlamanız gerekmektedir.",
+                          ),
+                          backgroundColor: Colors.orange,
+                        ),
+                      );
+                      return;
+                    }
+                    _showReportSelection(context);
                   },
                   child: const Text(
                     "ÖN RAPORU GÖR",
@@ -651,10 +665,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 4),
                     Text(
                       "Yangın güvenliği uzmanımızla görüşün",
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: Colors.white70, fontSize: 12),
                     ),
                   ],
                 ),
@@ -704,16 +715,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _launchWhatsApp() async {
-    // TODO: Update with actual phone number
-    const String phoneNumber = "905555555555"; 
+    const String phoneNumber = "905555555555";
     final Uri url = Uri.parse("https://wa.me/$phoneNumber");
-    
+
     try {
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         debugPrint('Could not launch WhatsApp');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("WhatsApp açılamadı.")),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("WhatsApp açılamadı.")));
+        }
       }
     } catch (e) {
       debugPrint("WhatsApp error: $e");
@@ -721,7 +733,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _launchEmail() async {
-     // TODO: Update with actual email
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',
       path: 'destek@yanginguvenlik.com',
@@ -733,9 +744,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       if (!await launchUrl(emailLaunchUri)) {
         debugPrint('Could not launch Email');
-         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("E-posta uygulaması açılamadı.")),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("E-posta uygulaması açılamadı.")),
+          );
+        }
       }
     } catch (e) {
       debugPrint("Email error: $e");
@@ -744,7 +757,72 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   String? _encodeQueryParameters(Map<String, String> params) {
     return params.entries
-        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .map(
+          (e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
         .join('&');
+  }
+
+  void _showReportSelection(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Rapor Seçimi",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1A237E),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(
+                Icons.picture_as_pdf,
+                color: Color(0xFF1A237E),
+              ),
+              title: const Text(
+                "Yangın Risk Analiz Raporu",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: const Text(
+                "36 Bölümlük detaylı risk ve güvenlik analizi",
+              ),
+              onTap: () async {
+                Navigator.pop(ctx);
+                await PdfService.generateRiskAnalysisPdf();
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(
+                Icons.settings_system_daydream,
+                color: Color(0xFFE53935),
+              ),
+              title: const Text(
+                "Aktif Sistem Gereksinimleri",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: const Text("Zorunlu algılama ve söndürme sistemleri"),
+              onTap: () async {
+                Navigator.pop(ctx);
+                await PdfService.generateActiveSystemsPdf();
+              },
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -110,7 +110,7 @@ class ReportSummaryScreen extends StatelessWidget {
                 const Text(
                   "ÖN RAPOR VE İYİLEŞTİRME ÖNERİLERİ KİLİTLİ",
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1A237E),
                   ),
@@ -151,7 +151,7 @@ class ReportSummaryScreen extends StatelessWidget {
       child: Column(
         children: [
           const Text(
-            "RİSK ANALİZİ",
+            "YANGIN RİSK ANALİZİ",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 13,
@@ -573,6 +573,40 @@ class ReportSummaryScreen extends StatelessWidget {
     );
   }
 
+  void _showExitConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Uyarı"),
+        content: const Text(
+          "Dashboard ekranına dönmek istediğinize emin misiniz?\n\nBu işlem, şu ana kadar verdiğiniz yanıtların TAMAMINI SİLECEKTİR.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text("İptal"),
+          ),
+          TextButton(
+            onPressed: () {
+              BinaStore.instance.reset(); // Verileri temizle
+              Navigator.of(ctx).pop(); // Dialog kapat
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const DashboardScreen(),
+                ),
+                (route) => false,
+              );
+            },
+            child: const Text(
+              "Evet, Sil ve Dön",
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBottomAction(BuildContext context, bool isPremium) {
     return SafeArea(
       top: false,
@@ -588,42 +622,62 @@ class ReportSummaryScreen extends StatelessWidget {
             ),
           ],
         ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 54,
-          child: ElevatedButton(
-            onPressed: () {
-              if (isPremium) {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => const DashboardScreen(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (isPremium) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const DashboardScreen(),
+                      ),
+                      (r) => false,
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PaywallScreen(),
+                      ),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1A237E),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  (r) => false,
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PaywallScreen()),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1A237E),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  isPremium
+                      ? "ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN"
+                      : "ÖN RAPOR VE İYİLEŞTİRME ÖNERİLERİNİ AL",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
               ),
             ),
-            child: Text(
-              isPremium
-                  ? "ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN"
-                  : "ÖN RAPORUN TAMAMINI VE İYİLEŞTİRME ÖNERİLERİNİ AL",
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 13,
+            const SizedBox(height: 12),
+            TextButton(
+              onPressed: () => _showExitConfirmationDialog(context),
+              child: const Text(
+                "Vazgeç ve Dashboard'a Dön (Veriler Silinir)",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

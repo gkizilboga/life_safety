@@ -101,7 +101,8 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
             "Not: Yönetmelik gereği tek çıkışlı veya tek merdivenli binalarda acil durum yönlendirme levhası zorunluluğu aranmayabilir. Analizin sonunda bu durum otomatik değerlendirilecektir.",
           ),
           QuestionCard(
-            key: GlobalKey(), // Dummy key not needed, handled by scroll logic? No, obstacles is first.
+            key:
+                GlobalKey(), // Dummy key not needed, handled by scroll logic? No, obstacles is first.
             // Wait, we don't scroll TO obstacles (it's top). We scroll FROM it.
             // But let's keep QuestionCard intact.
             child: Column(
@@ -138,14 +139,14 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               Bolum19Content.levhaOptionC,
             ],
             _model.levha,
-            key: _levhaKey,
+            keyParam: _levhaKey,
           ),
           _buildSoru(
             "Yanıltıcı kapılar var mı? (Çıkış ulaşırken kafanızı karıştırabilecek türden kapılar)",
             'yaniltici',
             [Bolum19Content.yanilticiOptionA, Bolum19Content.yanilticiOptionB],
             _model.yanilticiKapi,
-            key: _yanilticiKey,
+            keyParam: _yanilticiKey,
           ),
 
           if (_model.yanilticiKapi?.label ==
@@ -209,14 +210,14 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     // Wait, 'key' string argument is used for selection, 'key' widget argument is for Widget Key.
     // Let's use 'scrollKey' to be safe.
     return QuestionCard(
-      key: keyParam, 
+      key: keyParam,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
             style: const TextStyle(
-              fontWeight: FontWeight.w900, 
+              fontWeight: FontWeight.w900,
               fontSize: 16,
               color: Color(0xFF4A148C),
             ),

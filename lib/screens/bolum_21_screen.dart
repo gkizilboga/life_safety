@@ -78,11 +78,27 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       },
       child: Column(
         children: [
+          // YGH görseli - sorulardan bağımsız, her zaman görünür
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              'assets/images/sections/ygh_1.webp',
+              fit: BoxFit.cover,
+              height: 150,
+              width: double.infinity,
+            ),
+          ),
+          const SizedBox(height: 16),
           _buildInfoCard(),
           _buildSoru(
             Row(
               children: [
-                Expanded(child: Text("Merdivenlerin önünde Yangın Güvenlik Holü var mı?", style: TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(
+                  child: Text(
+                    "Merdivenlerin önünde Yangın Güvenlik Holü var mı?",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
                 DefinitionButton(
                   term: "Yangın Güvenlik Holü (YGH)",
                   definition: AppDefinitions.yanginGuvenlikHolu,
@@ -186,10 +202,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (title is String)
-            Text(
-              title,
-              style: AppStyles.questionTitle,
-            )
+            Text(title, style: AppStyles.questionTitle)
           else if (title is Widget)
             title,
           const SizedBox(height: 12),
@@ -198,7 +211,10 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               choice: opt,
               isSelected: selected?.label == opt.label,
               onTap: () => setState(() {
-                if (key == 'varlik') _model = _model.copyWith(varlik: options[options.indexOf(opt)]);
+                if (key == 'varlik')
+                  _model = _model.copyWith(
+                    varlik: options[options.indexOf(opt)],
+                  );
                 if (key == 'malzeme') _model = _model.copyWith(malzeme: opt);
                 if (key == 'kapi') _model = _model.copyWith(kapi: opt);
                 if (key == 'esya') _model = _model.copyWith(esya: opt);

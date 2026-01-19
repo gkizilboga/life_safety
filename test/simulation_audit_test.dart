@@ -32,9 +32,8 @@ void main() {
       hasTicari: true,
       hasDepo: false,
       isSadeceKonut: false,
+      kapaliOtoparkAlani: 1200.0,
     );
-    // Otopark alanı girişi (Paywall'dan sonra gelen input)
-    double simParkingArea = 1200.0;
 
     // 3. Basınçlandırma Parametresi (Bölüm 21)
     store.bolum21 = Bolum21Model(
@@ -75,10 +74,7 @@ void main() {
     print('Kritik Alanlar: ${metrics['criticals']}');
 
     // Aktif Sistem Analizi
-    final activeReqs = ActiveSystemsEngine.calculateRequirements(
-      store,
-      parkingArea: simParkingArea,
-    );
+    final activeReqs = ActiveSystemsEngine.calculateRequirements(store);
 
     print('\n[AKTİF SİSTEM GEREKSİNİMLERİ]');
     for (var req in activeReqs) {

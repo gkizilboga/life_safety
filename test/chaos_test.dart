@@ -21,10 +21,16 @@ void main() {
         normalKatSayisi: 3000,
         bodrumKatSayisi: 50,
       );
-      
+
       // Should not crash, should just return extreme risks/requirements
-      expect(() => ReportEngine.calculateRiskMetrics(store: store), returnsNormally);
-      expect(() => ActiveSystemsEngine.calculateRequirements(store), returnsNormally);
+      expect(
+        () => ReportEngine.calculateRiskMetrics(store: store),
+        returnsNormally,
+      );
+      expect(
+        () => ActiveSystemsEngine.calculateRequirements(store),
+        returnsNormally,
+      );
     });
 
     test('Stress: Near-Zero Building (1mm high)', () {
@@ -33,13 +39,16 @@ void main() {
         normalKatSayisi: 0,
         bodrumKatSayisi: 0,
       );
-      
-      expect(() => ReportEngine.calculateRiskMetrics(store: store), returnsNormally);
+
+      expect(
+        () => ReportEngine.calculateRiskMetrics(store: store),
+        returnsNormally,
+      );
     });
 
     test('Stress: Extreme Area Values (Millions of m2)', () {
       store.bolum5 = Bolum5Model(tabanAlani: 1000000000.0);
-      
+
       final metrics = ReportEngine.calculateRiskMetrics(store: store);
       expect(metrics['score'], isNotNull);
     });
@@ -49,24 +58,28 @@ void main() {
       store.bolum1 = null;
       store.bolum3 = null;
       store.bolum35 = null;
-      
+
       // Engines should handle null gracefully (using default values or returning empty)
-      expect(() => ReportEngine.calculateRiskMetrics(store: store), returnsNormally);
-      expect(() => ActiveSystemsEngine.calculateRequirements(store), returnsNormally);
+      expect(
+        () => ReportEngine.calculateRiskMetrics(store: store),
+        returnsNormally,
+      );
+      expect(
+        () => ActiveSystemsEngine.calculateRequirements(store),
+        returnsNormally,
+      );
     });
 
     test('Robustness: Malformed Choice Labels', () {
       store.bolum1 = null; // Forces defaults
-      final choice = ChoiceResult(
-        label: "CORRUPT_DATA_!@#\$%",
-        uiTitle: "Danger",
-        uiSubtitle: "Data",
-        reportText: "Crash test",
-      );
-      
+      store.bolum1 = null; // Forces defaults
+
       // Set some models with bad data
       // (This simulates corrupted SharedPreferences)
-      expect(() => ActiveSystemsEngine.calculateRequirements(store), returnsNormally);
+      expect(
+        () => ActiveSystemsEngine.calculateRequirements(store),
+        returnsNormally,
+      );
     });
 
     test('Robustness: Large Strings in Choices', () {
@@ -77,7 +90,7 @@ void main() {
         uiSubtitle: megaString,
         reportText: megaString,
       );
-      
+
       // Inject into store if possible (simulating heavy data load)
       // Most of our logic uses .label.contains(), so this checks for performance/memory spikes
       expect(() => ReportEngine.getStatusColor(choice), returnsNormally);

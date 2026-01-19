@@ -64,6 +64,7 @@ class ReportEngine {
     int filledSections = 0;
     int criticalRisks = 0;
     int warnings = 0;
+    int unknowns = 0;
     int totalActiveSections = 0;
     List<String> criticalTitles = [];
 
@@ -86,13 +87,17 @@ class ReportEngine {
           filledSections++;
           // İlk 10 bölüm sadece BİLGİ - skor hesaplamasını etkilemez
           if (i <= 10) continue;
-          
+
           final Color color = getStatusColor(res, sectionId: i, store: s);
           if (color == const Color(0xFFE53935)) {
             criticalRisks++;
             criticalTitles.add("Bölüm $i");
-          } else if (color == const Color(0xFFFFC107)) { // Sarı (UYARI)
+          } else if (color == const Color(0xFFFFC107)) {
+            // Sarı (UYARI)
             warnings++;
+          } else if (color == Colors.grey.shade600) {
+            // Gri (BİLİNMİYOR)
+            unknowns++;
           }
         }
       }
@@ -114,33 +119,20 @@ class ReportEngine {
       }
     }
 
-    double baseScore = filledSections == 0
-        ? 0.0
-        : ((filledSections - criticalRisks) / filledSections) * 100.0;
-    double penaltyScore = baseScore - (criticalRisks * 15.0) - (warnings * 2.0);
-
-    // Graduated Caps: Ensures score doesn't exceed a certain limit based on critical risk count
-    double cap = 100.0;
-    if (criticalRisks >= 5) {
-      cap = 30.0;
-    } else if (criticalRisks == 4) {
-      cap = 40.0;
-    } else if (criticalRisks == 3) {
-      cap = 50.0;
-    } else if (criticalRisks == 2) {
-      cap = 60.0;
-    } else if (criticalRisks == 1) {
-      cap = 70.0;
-    }
-
-    if (penaltyScore > cap) {
-      penaltyScore = cap;
-    }
+    // Yeni Skorlama Formülü (Kullanıcı onaylı):
+    // Başlangıç: 100 puan
+    // Kritik Risk: -10 puan
+    // Uyarı: -2 puan
+    // Bilinmiyor: -1 puan
+    // Olumlu/Bilgi: 0 puan
+    double score =
+        100.0 - (criticalRisks * 10.0) - (warnings * 2.0) - (unknowns * 1.0);
 
     return {
-      'score': penaltyScore.toInt().clamp(0, 100),
+      'score': score.toInt().clamp(0, 100),
       'criticalCount': criticalRisks,
       'warningCount': warnings,
+      'unknownCount': unknowns,
       'completion': (filledSections / totalActiveSections * 100).toInt().clamp(
         0,
         100,
@@ -168,7 +160,9 @@ class ReportEngine {
     // Bölüm 12: Çelik
     if (sectionId == 12 && result.label.contains("12-B (Çelik)")) {
       bool isSafe = (s.bolum5?.toplamInsaatAlani ?? 0.0) < 5000;
-      overrideColor = isSafe ? const Color(0xFF43A047) : const Color(0xFFE53935);
+      overrideColor = isSafe
+          ? const Color(0xFF43A047)
+          : const Color(0xFFE53935);
     }
     // Bölüm 16: Mantolama
     else if (sectionId == 16 && result.label.contains("16-1-A")) {
@@ -180,7 +174,9 @@ class ReportEngine {
         if (m != null) {
           if (m.bariyerYan == 0 || m.bariyerUst == 0 || m.bariyerZemin == 0)
             overrideColor = const Color(0xFFE53935);
-          else if (m.bariyerYan == 2 || m.bariyerUst == 2 || m.bariyerZemin == 2)
+          else if (m.bariyerYan == 2 ||
+              m.bariyerUst == 2 ||
+              m.bariyerZemin == 2)
             overrideColor = Colors.orange.shade600;
           else
             overrideColor = const Color(0xFF43A047);
@@ -190,7 +186,8 @@ class ReportEngine {
     // Bölüm 19: Kaçış Yolu Levhası
     else if (sectionId == 19) {
       final b20 = s.bolum20;
-      int total = (b20?.normalMerdivenSayisi ?? 0) +
+      int total =
+          (b20?.normalMerdivenSayisi ?? 0) +
           (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
           (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
           (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0) +
@@ -208,10 +205,11 @@ class ReportEngine {
       if (b36 != null && b36.merdivenDegerlendirme != null) {
         final eval = b36.merdivenDegerlendirme!.toUpperCase();
         // Eğer değerlendirmede herhangi bir uygunsuzluk varsa KRİTİK RİSK
-        if (eval.contains("UYGUNSUZ") || 
-            eval.contains("YETERSIZ") || 
+        if (eval.contains("UYGUNSUZ") ||
+            eval.contains("YETERSIZ") ||
             eval.contains("YOK") ||
-            eval.contains("KULLANILA") == false) { // "KULLANILAMAZ" içeriyorsa
+            eval.contains("KULLANILA") == false) {
+          // "KULLANILAMAZ" içeriyorsa
           overrideColor = const Color(0xFFE53935); // Kırmızı - KRİTİK RİSK
         } else if (!eval.contains("UYGUNSUZ") && !eval.contains("YETERSIZ")) {
           // Tüm kontroller geçti
@@ -220,7 +218,9 @@ class ReportEngine {
       }
       // Ayrıca reportText'te RİSK, UYGUNSUZ veya YETERSIZ geçiyorsa KRİTİK
       final text36 = result.reportText.toUpperCase();
-      if (text36.contains("UYGUNSUZ") || text36.contains("YETERSIZ") || text36.contains("DAİRESEL MERDİVEN")) {
+      if (text36.contains("UYGUNSUZ") ||
+          text36.contains("YETERSIZ") ||
+          text36.contains("DAİRESEL MERDİVEN")) {
         overrideColor = const Color(0xFFE53935);
       }
     }
@@ -252,7 +252,7 @@ class ReportEngine {
         text.contains("?")) {
       return Colors.grey.shade600; // Gri (Daha koyu gri okunaklılık için)
     }
-    
+
     // Bilgi (Mavi) mi Olumlu (Yeşil) mi ayrımı
     // Genellikle "BİLGİ" kelimesi geçiyorsa mavidir, ama "OLUMLU" veya "UYGUN" ise yeşildir.
     if (text.contains("OLUMLU") ||
@@ -263,8 +263,8 @@ class ReportEngine {
     }
 
     if (text.contains("BİLGİ") || text.contains("ℹ️")) {
-        // Eğer yukarıdaki riskleri içermiyorsa ve sadece bilgi ise mavidir.
-       return const Color(0xFF1E88E5);
+      // Eğer yukarıdaki riskleri içermiyorsa ve sadece bilgi ise mavidir.
+      return const Color(0xFF1E88E5);
     }
 
     // Varsayılan (Eğer hiçbir şey yoksa nötr/olumlu kabul edelim veya gri)
@@ -278,12 +278,12 @@ class ReportEngine {
 
     // Özel Mesaj Override'ları (Sadece gerektiğinde, yoksa AppContent'i kullanır)
     // Ancak bu override metinlerinin de AppContent standardına uyması (Emoji + Kelime + Mesaj) gerekir.
-    
+
     // Bölüm 12 override
     if (id == 12 && res.label.contains("12-B (Çelik)")) {
-        if ((s.bolum5?.toplamInsaatAlani ?? 0.0) < 5000) {
-            return "✅ OLUMLU: Çelik taşıyıcı elemanlar üzerinde pasif yangın yalıtımı bulunmamaktadır. (NOT: Bina toplam inşaat alanı 5000 m² altında olduğu için bu durum yönetmeliğe uygundur.)";
-        }
+      if ((s.bolum5?.toplamInsaatAlani ?? 0.0) < 5000) {
+        return "✅ OLUMLU: Çelik taşıyıcı elemanlar üzerinde pasif yangın yalıtımı bulunmamaktadır. (NOT: Bina toplam inşaat alanı 5000 m² altında olduğu için bu durum yönetmeliğe uygundur.)";
+      }
     }
 
     // Bölüm 16 override
@@ -291,14 +291,14 @@ class ReportEngine {
       final hBina = s.bolum3?.hBina ?? 0.0;
       if (hBina > 28.50)
         return "🚨 KRİTİK RİSK: 28.50 metreden yüksek binalarda yanıcı (EPS/XPS) mantolama kullanımı yönetmelik gereği yasaktır.";
-      
+
       final m = s.bolum16;
       if (m != null) {
         if (m.bariyerYan == 0 || m.bariyerUst == 0 || m.bariyerZemin == 0)
           return "🚨 KRİTİK RİSK: Binada yanıcı mantolama kullanılmasına rağmen yangın bariyerleri bulunmamaktadır.";
         if (m.bariyerYan == 2 || m.bariyerUst == 2 || m.bariyerZemin == 2)
           return "⚠️ UYARI: Binada yanıcı mantolama mevcut olabilir ancak gerekli yangın bariyerlerinin binada tam olarak uygulanmadığı tespit edilmiştir.";
-        if(m.bariyerYan == 1 && m.bariyerUst == 1 && m.bariyerZemin == 1)
+        if (m.bariyerYan == 1 && m.bariyerUst == 1 && m.bariyerZemin == 1)
           return "✅ OLUMLU: Binada (kuvvetle muhtemel) yanıcı mantolama mevcut olsa da, gerekli yangın bariyerlerinin uygulandığı beyan edilmiştir.";
       }
     }
@@ -306,7 +306,8 @@ class ReportEngine {
     // Bölüm 19 override
     if (id == 19) {
       final b20 = s.bolum20;
-      int total = (b20?.normalMerdivenSayisi ?? 0) +
+      int total =
+          (b20?.normalMerdivenSayisi ?? 0) +
           (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
           (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
           (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0) +
@@ -372,15 +373,19 @@ class ReportEngine {
     // 2. Yapı Yüksekliği > 30.50m ve basınçlandırma yoksa
     if (hYapi > 30.50) {
       final b20 = s.bolum20;
-      if (b20 != null && b20.basinclandirma?.label.contains("-B") == true) { // 20-BAS-B: Hayır
+      if (b20 != null && b20.basinclandirma?.label.contains("-B") == true) {
+        // 20-BAS-B: Hayır
         reasons.add("🚨 Yapı Yüksekliği 30.50m üzeri ve Basınçlandırma Yok");
       }
     }
 
     // 3. Bodrum katlarda ticari/teknik kullanım (Bölüm 10)
     final b10 = s.bolum10;
-    if (b10 != null && b10.bodrumlar.any((c) => c?.label.contains("10-C") == true)) {
-      reasons.add("🚨 Bodrum katlarda ticari veya teknik kullanım mevcut (10-C)");
+    if (b10 != null &&
+        b10.bodrumlar.any((c) => c?.label.contains("10-C") == true)) {
+      reasons.add(
+        "🚨 Bodrum katlarda ticari veya teknik kullanım mevcut (10-C)",
+      );
     }
 
     // 4. İtfaiye Asansörü zorunluluğu (Bölüm 22)
@@ -392,17 +397,21 @@ class ReportEngine {
     // 5. Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı (Bölüm 23)
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
-      reasons.add("🚨 Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı sağlanmalı (23-1-C)");
+      reasons.add(
+        "🚨 Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı sağlanmalı (23-1-C)",
+      );
     }
 
     // 6. Bina Yüksekliği > 21.50m (BYKHY Genel)
     if (hBina > 21.50) {
-       reasons.add("🚨 Bina Yüksekliği > 21.50m");
+      reasons.add("🚨 Bina Yüksekliği > 21.50m");
     }
 
     // 7. Bodrum kat sayısı > 3
     if ((s.bolum3?.bodrumKatSayisi ?? 0) > 3) {
-      reasons.add("🚨 Bodrum kat sayısı > 3 olduğu için riskli mahallerde YGH zorunludur.");
+      reasons.add(
+        "🚨 Bodrum kat sayısı > 3 olduğu için riskli mahallerde YGH zorunludur.",
+      );
     }
 
     return reasons;

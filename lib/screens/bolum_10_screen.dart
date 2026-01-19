@@ -126,6 +126,10 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionTitle("Zemin Katın Baskın Kullanım Amacı"),
+          TechnicalDrawingButton(
+            assetPath: 'assets/images/sections/farkli_katlar_1.webp',
+            title: "Kat Kullanım Örnekleri",
+          ),
           _buildChoiceGrid('zemin', null, _model.zemin),
 
           if (_model.bodrumlar.isNotEmpty) ...[
@@ -291,15 +295,13 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       ),
       child: Column(
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Icons.check_circle, color: Colors.green, size: 20),
               SizedBox(width: 10),
               Text(
                 "Kat Bilgileri Tamamlandı",
-                style: AppStyles.questionTitle.copyWith(
-                  color: Colors.green,
-                ),
+                style: AppStyles.questionTitle.copyWith(color: Colors.green),
               ),
             ],
           ),

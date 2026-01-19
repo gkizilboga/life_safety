@@ -42,7 +42,6 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        crossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 16),

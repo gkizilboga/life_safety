@@ -106,7 +106,10 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
           if (_isCommercial) _buildCommercialWarning(),
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 12),
-            child: Text("Dairesel merdiven teknik ölçümleri:", style: AppStyles.questionTitle),
+            child: Text(
+              "Dairesel merdiven teknik ölçümleri:",
+              style: AppStyles.questionTitle,
+            ),
           ),
           const SizedBox(height: 8),
           _buildSoru("Merdiven kol genişliği yeterli mi?", 'genislik', [
@@ -134,31 +137,8 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
   }
 
   Widget _buildCommercialWarning() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFEBEE),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFEF9A9A)),
-      ),
-      child: const Row(
-        children: [
-          Icon(Icons.gavel_rounded, color: Color(0xFFC62828), size: 28),
-          SizedBox(width: 15),
-          Expanded(
-            child: Text(
-              "",
-              style: TextStyle(
-                color: Color(0xFFB71C1C),
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    // Kaldırıldı - artık bu kutuya gerek yok
+    return const SizedBox.shrink();
   }
 
   Widget _buildSoru(

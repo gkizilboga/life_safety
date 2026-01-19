@@ -12,7 +12,6 @@ import '../../utils/app_assets.dart';
 import '../../utils/input_validator.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
-import '../../utils/app_theme.dart';
 
 class Bolum20Screen extends StatefulWidget {
   const Bolum20Screen({super.key});
@@ -196,13 +195,13 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         children: [
           if (_isTekKatli) ...[
             _buildSoru(
-              "Binadan dışarıya (sokağa/caddeye) çıkışınız nasıl?",
+              "Binadan dışarıya (sokağa veya caddeye) çıkışınız nasıl?",
               'tekKatCikis',
               [Bolum20Content.tekKatOptionA],
               _model.tekKatCikis,
             ),
             _buildSoru(
-              "Binadan sokağa çıkarken rampa kullanmak zorunda kalıyor musunuz?",
+              "Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?",
               'tekKatRampa',
               [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC],
               _model.tekKatRampa,
@@ -211,7 +210,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             const Padding(
               padding: EdgeInsets.only(left: 4, bottom: 16),
               child: Text(
-                "Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Maks: 6)",
+                "Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Maks: 6'şar)",
                 style: AppStyles.questionTitle,
               ),
             ),
@@ -391,7 +390,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
               ),
               DefinitionButton(term: term, definition: def),

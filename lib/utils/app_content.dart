@@ -1810,7 +1810,8 @@ class Bolum23Content {
 
   static final yanginModuOptionB = ChoiceResult(
     label: "23-2-B (Yangın Modu)",
-    uiTitle: "Hayır, asansör (normalin dışında) yangın anında herhangi bir aksiyon almıyor.",
+    uiTitle:
+        "Hayır, asansör (normalin dışında) yangın anında herhangi bir aksiyon almıyor.",
     uiSubtitle: "Yangın anında normal çalışmasına devam ediyor.",
     reportText:
         "☢️ KRİTİK RİSK: Asansörlerin yangın anında özel aksiyon alması gereklidir.",
@@ -1828,7 +1829,8 @@ class Bolum23Content {
     label: "23-3-A (Konum)",
     uiTitle: "Asansör kapıları, koridora veya hole doğru açılıyor.",
     uiSubtitle: " ",
-    reportText: "✅ OLUMLU: Asansör kapıları kat koridoruna veya holüne doğru açılmaktadır.",
+    reportText:
+        "✅ OLUMLU: Asansör kapıları kat koridoruna veya holüne doğru açılmaktadır.",
   );
 
   static final konumOptionB = ChoiceResult(

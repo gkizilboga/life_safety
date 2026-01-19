@@ -190,16 +190,16 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       );
     if (hBina > 21.50 && disAcik > 0)
       notes.add(
-        "Bina yüksekliği 21.50m üzerinde olduğu için 'Bina Dışı Açık Çelik Merdiven' kullanımı yasaktır.",
+        "Bina yüksekliği 21.50m üzerinde olduğu için 'Bina Dışı Açık Çelik Merdiven' kullanılamaz.",
       );
     if (hYapi < 21.50)
       notes.add(
-        "Yapı yüksekliği 21.50m altındadır. Sahanlıksız merdiven hariç tüm merdiven tipleri kullanılabilir.",
+        "Yapı yüksekliği 21.50m altındadır. Sahanlıksız Merdiven ve Dengelenmiş Merdiven hariç tüm merdiven tipleri kullanılabilir.",
       );
     else if (hYapi >= 21.50 && hYapi < 30.50) {
       if (korunumlu >= 1)
         notes.add(
-          "Yapı yüksekliği 21.50m-30.50m arasındadır ve en az 1 adet korunumlu merdiven mevcuttur.",
+          "Yapı yüksekliği 21.50m-30.50m arasındadır ve en az 1 adet 'Korunumlu Merdiven' mevcuttur.",
         );
       else
         notes.add(
@@ -208,7 +208,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     } else if (hYapi >= 30.50 && hYapi < 51.50) {
       if (korunumlu >= 2)
         notes.add(
-          "Yapı yüksekliği 30.50m-51.50m arasındadır ve en az 2 adet korunumlu merdiven mevcuttur.",
+          "Yapı yüksekliği 30.50m-51.50m arasındadır ve en az 2 adet 'Korunumlu Merdiven' mevcuttur.",
         );
       else
         notes.add(
@@ -217,7 +217,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     } else if (hYapi >= 51.50) {
       if (korunumlu >= 2)
         notes.add(
-          "Yapı yüksekliği 51.50m üzerindedir ve en az 2 adet korunumlu merdiven mevcuttur.",
+          "Yapı yüksekliği 51.50m üzerindedir ve en az 2 adet 'Korunumlu Merdiven' mevcuttur.",
         );
       else
         notes.add(
@@ -225,7 +225,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         );
       if (!basinclandirmaVar)
         notes.add(
-          "51.50m üzeri binalarda her iki korunumlu merdivende hem YGH hem de Basınçlandırma Sistemi tesis edilmesi zorunludur.",
+          "51.50m üzeri binalarda her iki 'Korunumlu Merdiven'inde hem YGH hem de Basınçlandırma Sistemi tesis edilmesi zorunludur.",
         );
     }
     int gerekli = b33?.gerekliNormal ?? 0;
@@ -316,7 +316,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Merdiven Ölçüleri ve Çıkış Esnasında Güvenlik",
+      title: "Merdiven Ölçüleri ve Tahliye Esnasında Güvenlik",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isFormValid,
@@ -363,14 +363,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               children: [
                 if (_hasKorunumlu)
                   _buildInput(
-                    "Korunumlu (Yangın) Merdiveni Genişliği",
+                    "Korunumlu Merdiveni Genişliği",
                     _genislikKorunumluCtrl,
                     _genislikBilinmiyor,
                     _genKerr,
                   ),
                 if (_hasKorunumsuz)
                   _buildInput(
-                    "Korunumsuz (Normal) Merdiven Genişliği",
+                    "Korunumsuz Merdiven Genişliği",
                     _genislikKorunumsuzCtrl,
                     _genislikBilinmiyor,
                     _genKSerr,
@@ -406,14 +406,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               children: [
                 if (_hasKorunumlu)
                   _buildInput(
-                    "Korunumlu (Yangın) Merdiven Kapı Genişliği",
+                    "Korunumlu Merdiven Kapı Genişliği",
                     _kapiGenislikKorunumluCtrl,
                     _kapiGenislikBilinmiyor,
                     _kGenKerr,
                   ),
                 if (_hasKorunumsuz)
                   _buildInput(
-                    "Korunumsuz (Normal) Merdiven Kapı Genişliği",
+                    "Korunumsuz Merdiven Kapı Genişliği",
                     _kapiGenislikKorunumsuzCtrl,
                     _kapiGenislikBilinmiyor,
                     _kGenKSerr,

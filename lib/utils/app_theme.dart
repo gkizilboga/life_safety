@@ -39,7 +39,7 @@ class AppStyles {
     fontWeight: FontWeight.w900,
     color: Color(0xFF4A148C), // Koyu Mor - Sorular için dikkat çekici
     height: 1.4,
-    letterSpacing: -0.3,
+    letterSpacing: 0.0, // Harfler arası boşluk normal (yanıtlarla aynı)
   );
 
   // YANIT metinleri için stil - Daha nötr

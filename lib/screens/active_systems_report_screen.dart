@@ -73,24 +73,25 @@ class ActiveSystemsReportScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  req.name,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue.shade900,
-                                  ),
+                          children: [
+                            Expanded(
+                              child: Text(
+                                req.name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue.shade900,
                                 ),
                               ),
-                              if (req.definitionTerm != null && req.definitionText != null)
-                                DefinitionButton(
-                                  term: req.definitionTerm!,
-                                  definition: req.definitionText!,
-                                ),
-                            ],
-                          ),
+                            ),
+                            if (req.definitionTerm != null &&
+                                req.definitionText != null)
+                              DefinitionButton(
+                                term: req.definitionTerm!,
+                                definition: req.definitionText!,
+                              ),
+                          ],
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -115,14 +116,9 @@ class ActiveSystemsReportScreen extends StatelessWidget {
                   const Divider(),
                   const SizedBox(height: 4),
                   Text(
-                    "Gerekçe:",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade700,
-                    ),
+                    _cleanReasonText(req.reason),
+                    style: const TextStyle(fontSize: 14),
                   ),
-                  Text(req.reason, style: const TextStyle(fontSize: 14)),
                   if (req.note.isNotEmpty) ...[
                     const SizedBox(height: 8),
                     Container(
@@ -148,5 +144,16 @@ class ActiveSystemsReportScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  /// Cleans reason text by removing emoji prefixes and labels
+  static String _cleanReasonText(String text) {
+    return text
+        .replaceAll('🚨 KRİTİK RİSK: ', '')
+        .replaceAll('✅ OLUMLU: ', '')
+        .replaceAll('⚠️ UYARI: ', '')
+        .replaceAll('❓ BİLİNMİYOR: ', '')
+        .replaceAll('ℹ️ BİLGİ: ', '')
+        .trim();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_14_model.dart';
+import '../../models/bolum_3_model.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_theme.dart';
 import 'bolum_15_screen.dart';

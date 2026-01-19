@@ -23,7 +23,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
   double _hBina = 0.0;
 
   final GlobalKey _bariyerYanKey = GlobalKey();
-  
+
   // En uzun cephe kontrolcüsü
   final TextEditingController _enUzunCepheController = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // Form key for validation
@@ -32,7 +32,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
   void initState() {
     super.initState();
     _hBina = BinaStore.instance.bolum3?.hBina ?? 0.0;
-    
+
     // Load existing data if available
     final savedModel = BinaStore.instance.bolum16;
     if (savedModel != null) {
@@ -115,10 +115,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
         _model.sagirYuzeySprinkler == null)
       return false;
     if (_askBitisik && _model.bitisikNizam == null) return false;
-    
+
     // Validate facade length input exists but actual validation happens in Form
     if (_enUzunCepheController.text.isEmpty) return false;
-    
+
     return true;
   }
 
@@ -132,10 +132,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       onNext: () {
         if (_formKey.currentState!.validate()) {
           // Save valid value to model before proceeding
-           _model = _model.copyWith(
+          _model = _model.copyWith(
             enUzunCephe: double.tryParse(_enUzunCepheController.text),
           );
-          
+
           BinaStore.instance.bolum16 = _model;
           BinaStore.instance.saveToDisk();
           Navigator.push(
@@ -143,10 +143,12 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             MaterialPageRoute(builder: (context) => const Bolum17Screen()),
           );
         } else {
-           // Show error if validation fails despite button being enabled
-           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Lütfen tüm alanları doğru şekilde doldurunuz.")),
-           );
+          // Show error if validation fails despite button being enabled
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Lütfen tüm alanları doğru şekilde doldurunuz."),
+            ),
+          );
         }
       },
       child: Column(
@@ -164,6 +166,35 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ],
             _model.mantolama,
           ),
+          // Mantolama görseleri - kompakt
+          if (_model.mantolama?.label == Bolum16Content.mantolamaOptionA.label)
+            Row(
+              children: [
+                Expanded(
+                  child: TechnicalDrawingButton(
+                    assetPath: 'assets/images/sections/eps_mantolama.webp',
+                    title: "EPS Mantolama",
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TechnicalDrawingButton(
+                    assetPath: 'assets/images/sections/xps_mantolama.webp',
+                    title: "XPS Mantolama",
+                  ),
+                ),
+              ],
+            ),
+          if (_model.mantolama?.label == Bolum16Content.giydirmeOptionC.label)
+            TechnicalDrawingButton(
+              assetPath: 'assets/images/sections/giydirme_cephe.webp',
+              title: "Giydirme Cephe Örneği",
+            ),
+          if (_model.mantolama?.label == Bolum16Content.mantolamaOptionB.label)
+            TechnicalDrawingButton(
+              assetPath: 'assets/images/sections/tasyunu_mantolama.webp',
+              title: "Taşyünü Mantolama",
+            ),
 
           if (_model.mantolama?.label ==
                   Bolum16Content.mantolamaOptionA.label &&
@@ -229,12 +260,12 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               ],
               _model.bitisikNizam,
             ),
-          
-           const SizedBox(height: 16),
-           QuestionCard(
-             child: Form(
-               key: _formKey,
-               child: Column(
+
+          const SizedBox(height: 16),
+          QuestionCard(
+            child: Form(
+              key: _formKey,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
@@ -249,10 +280,12 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _enUzunCepheController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     inputFormatters: [InputValidator.flexDecimal],
                     onChanged: (val) {
-                       setState(() {}); // Trigget button state update
+                      setState(() {}); // Trigget button state update
                     },
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -268,15 +301,20 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                     ),
                   ),
                 ],
-               ),
-             ),
-           ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSoru(String title, String k, List<ChoiceResult> o, ChoiceResult? s) {
+  Widget _buildSoru(
+    String title,
+    String k,
+    List<ChoiceResult> o,
+    ChoiceResult? s,
+  ) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

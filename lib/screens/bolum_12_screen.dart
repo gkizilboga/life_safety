@@ -7,7 +7,7 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import '../../utils/app_theme.dart';
+
 import '../../utils/app_assets.dart';
 import '../../utils/input_validator.dart';
 

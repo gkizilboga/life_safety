@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:life_safety/screens/module_transition.dart';
+import '../../utils/app_theme.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_30_model.dart';
 import 'bolum_31_screen.dart';
@@ -381,10 +382,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: AppStyles.questionTitle,
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(

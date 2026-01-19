@@ -227,27 +227,12 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     );
   }
 
-  Widget _buildSoruHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
-      child: Text(
-        title,
-        style: AppStyles.questionTitle,
-      ),
-    );
-  }
-
   Widget _buildSoruHeaderWithDef(String title, String term, String def) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
       child: Row(
         children: [
-          Expanded(
-            child: Text(
-              title,
-              style: AppStyles.questionTitle,
-            ),
-          ),
+          Expanded(child: Text(title, style: AppStyles.questionTitle)),
           DefinitionButton(term: term, definition: def),
         ],
       ),

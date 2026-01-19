@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../logic/report_engine.dart';
+
 import '../../data/bina_store.dart';
 import 'report_summary_screen.dart';
 import '../services/pdf_service.dart';
@@ -132,8 +134,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   ),
                   onPressed: () async {
                     if (BinaStore.instance.isPremium) {
-                      BinaStore.instance.loadBuildingFromArchive(item['id']);
-                      await PdfService.generateAndShowPdf();
+                      _showReportSelection(item['id'], context);
                     } else {
                       Navigator.push(
                         context,
@@ -195,6 +196,104 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
             child: const Text("Sil"),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showReportSelection(String id, BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Rapor Seçimi",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1A237E),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ListTile(
+              leading: const Icon(
+                Icons.picture_as_pdf,
+                color: Color(0xFF1A237E),
+              ),
+              title: const Text(
+                "Yangın Risk Analiz Raporu",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: const Text(
+                "36 Bölümlük detaylı risk ve güvenlik analizi",
+              ),
+              onTap: () async {
+                Navigator.pop(ctx);
+                BinaStore.instance.loadBuildingFromArchive(id);
+
+                final metrics = ReportEngine.calculateRiskMetrics();
+                final completion = metrics['completion'];
+                final progress = (completion is num) ? completion.toInt() : 0;
+
+                if (progress < 100) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "Raporları görüntülemek için analizi %100 tamamlamanız gerekmektedir.",
+                      ),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                  return;
+                }
+
+                await PdfService.generateRiskAnalysisPdf();
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(
+                Icons.settings_system_daydream,
+                color: Color(0xFFE53935),
+              ),
+              title: const Text(
+                "Aktif Sistem Gereksinimleri",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: const Text("Zorunlu algılama ve söndürme sistemleri"),
+              onTap: () async {
+                Navigator.pop(ctx);
+                BinaStore.instance.loadBuildingFromArchive(id);
+
+                final metrics = ReportEngine.calculateRiskMetrics();
+                final completion = metrics['completion'];
+                final progress = (completion is num) ? completion.toInt() : 0;
+
+                if (progress < 100) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "Raporları görüntülemek için analizi %100 tamamlamanız gerekmektedir.",
+                      ),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                  return;
+                }
+
+                await PdfService.generateActiveSystemsPdf();
+              },
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }

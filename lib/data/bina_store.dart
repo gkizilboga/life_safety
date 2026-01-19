@@ -622,30 +622,34 @@ class BinaStore {
       case 17:
         final m17 = _bolum17;
         if (m17 == null) return null;
-        
+
         // Temel kaplama yanıtı
         String reportText = m17.kaplama?.reportText ?? "";
         String statusPrefix = "ℹ️ BİLGİ: ";
-        
+
         // Işıklık malzemesi ekleme
         if (m17.isiklik != null && m17.isiklik!.label.contains("17-4-A")) {
           // Işıklık var
           if (m17.isiklikMalzemesi == "cam") {
-            reportText += "\n✅ OLUMLU: Işıklık kapağı temperli cam malzemeden yapılmıştır. Yangın güvenliği açısından uygundur.";
+            reportText +=
+                "\n✅ OLUMLU: Işıklık kapağı temperli cam malzemeden yapılmıştır. Yangın güvenliği açısından uygundur.";
             statusPrefix = "✅ OLUMLU: ";
           } else if (m17.isiklikMalzemesi == "plastik") {
-            reportText += "\n⚠️ UYARI: Işıklık kapağı plastik malzemeden yapılmıştır. Yangın durumunda eriyen plastik, yangın yayılımını hızlandırabilir.";
+            reportText +=
+                "\n⚠️ UYARI: Işıklık kapağı plastik malzemeden yapılmıştır. Yangın durumunda eriyen plastik, yangın yayılımını hızlandırabilir.";
             statusPrefix = "⚠️ UYARI: ";
           }
         }
-        
+
         return ChoiceResult(
           label: m17.kaplama?.label ?? "17",
           uiTitle: m17.kaplama?.uiTitle ?? "Çatı Bilgileri",
-          uiSubtitle: m17.isiklikMalzemesi != null 
+          uiSubtitle: m17.isiklikMalzemesi != null
               ? "Işıklık: ${m17.isiklikMalzemesi == 'cam' ? 'Temperli Cam' : 'Plastik'}"
               : "",
-          reportText: reportText.isEmpty ? "${statusPrefix}Çatı bilgileri girilmiştir." : reportText,
+          reportText: reportText.isEmpty
+              ? "$statusPrefixÇatı bilgileri girilmiştir."
+              : reportText,
         );
       case 18:
         return _bolum18?.boruTipi ?? _bolum18?.duvarKaplama;

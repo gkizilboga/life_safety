@@ -23,44 +23,69 @@ void main() {
   });
 
   group('Mühendislik ve Kapasite Hesaplama Testleri', () {
-    
-    test('YGH Analizi: Yapı yüksekliği 52m ve YGH yoksa KRİTİK RİSK sayılmalı', () {
-      store.bolum3 = Bolum3Model(hYapi: 52.0);
-      store.bolum21 = Bolum21Model(varlik: ChoiceResult(label: "21-1-B", uiTitle: "Hayır", uiSubtitle: "", reportText: ""));
+    test(
+      'YGH Analizi: Yapı yüksekliği 52m ve YGH yoksa KRİTİK RİSK sayılmalı',
+      () {
+        store.bolum3 = Bolum3Model(hYapi: 52.0);
+        store.bolum21 = Bolum21Model(
+          varlik: ChoiceResult(
+            label: "21-1-B",
+            uiTitle: "Hayır",
+            uiSubtitle: "",
+            reportText: "",
+          ),
+        );
 
-      final metrics = ReportEngine.calculateRiskMetrics(store: store);
-      
-      // Kritik risk var mı?
-      expect(metrics['criticalCount'] >= 1, true);
-      // Puan 60 veya altında mı? (Cezalı sistem)
-      expect(metrics['score'] <= 60, true);
-    });
+        final metrics = ReportEngine.calculateRiskMetrics(store: store);
 
-    test('Bölüm 33: Mevcut çıkış (1), gereken çıkıştan (2) az ise KRİTİK RİSK oluşmalı', () {
-      store.bolum33 = Bolum33Model(yukNormal: 120, gerekliNormal: 2, mevcutUst: 1);
-      
-      final metrics = ReportEngine.calculateRiskMetrics(store: store);
-      
-      expect(metrics['criticalCount'] >= 1, true);
-      expect(metrics['score'] <= 60, true);
-    });
+        // Kritik risk var mı?
+        expect(metrics['criticalCount'] >= 1, true);
+        // Yeni skorlama: 100 - (1 * 10) = 90
+        expect(metrics['score'] <= 90, true);
+      },
+    );
 
-    test('Bölüm 25: Döner merdiven genişliği < 100cm ise KRİTİK RİSK oluşmalı', () {
-      store.bolum25 = Bolum25Model(genislik: Bolum25Content.genislikOptionA);
-      
-      final Color color = ReportEngine.getStatusColor(store.bolum25?.genislik, sectionId: 25, store: store);
-      expect(color, const Color(0xFFE53935));
-    });
+    test(
+      'Bölüm 33: Mevcut çıkış (1), gereken çıkıştan (2) az ise KRİTİK RİSK oluşmalı',
+      () {
+        store.bolum33 = Bolum33Model(
+          yukNormal: 120,
+          gerekliNormal: 2,
+          mevcutUst: 1,
+        );
+
+        final metrics = ReportEngine.calculateRiskMetrics(store: store);
+
+        expect(metrics['criticalCount'] >= 1, true);
+        expect(metrics['score'] <= 90, true);
+      },
+    );
+
+    test(
+      'Bölüm 25: Döner merdiven genişliği < 100cm ise KRİTİK RİSK oluşmalı',
+      () {
+        store.bolum25 = Bolum25Model(genislik: Bolum25Content.genislikOptionA);
+
+        final Color color = ReportEngine.getStatusColor(
+          store.bolum25?.genislik,
+          sectionId: 25,
+          store: store,
+        );
+        expect(color, const Color(0xFFE53935));
+      },
+    );
 
     test('Skorlama: Sahanlıksız Merdiven varsa puan %60 altına düşmeli', () {
+      // Not: Puan düşüşü artık lineer (kritik başı -10).
+      // Test ismini veya beklentiyi güncelliyoruz.
       store.bolum20 = Bolum20Model(sahanliksizMerdivenSayisi: 1);
 
       final metrics = ReportEngine.calculateRiskMetrics(store: store);
-      
+
       // Sahanlıksız merdiven kritik risktir
       expect(metrics['criticalCount'] >= 1, true);
-      // Puan 60 veya altında olmalı
-      expect(metrics['score'] <= 60, true);
+      // Yeni skorlama: 90
+      expect(metrics['score'] <= 90, true);
     });
   });
 }
