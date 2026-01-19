@@ -68,7 +68,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "İtfaiye Araçlarının Bina Yaklaşım Mesafesi",
+      title: "İtfaiyenin Bina Yaklaşım Mesafesi",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
@@ -83,7 +83,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSoru(
-            "1. İtfaiye aracının binaya yaklaşım mesafesi 45 metreyi aşıyor mu?",
+            "İtfaiye aracının binaya yaklaşım mesafesi 45 metreyi aşıyor mu?",
             'mesafe',
             [
               Bolum11Content.mesafeOptionA,
@@ -100,7 +100,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
               key: _engelKey,
             ),
             _buildSoru(
-              "2. İtfaiye aracının binaya yanaşmasını engelleyen bir bahçe duvarı veya kilitli kapılar var mı?",
+              "İtfaiye aracının binaya yanaşmasını engelleyen bir bahçe duvarı veya kilitli kapılar var mı?",
               'engel',
               [
                 Bolum11Content.engelOptionA,
@@ -118,7 +118,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
               key: _zayifNoktaKey,
             ),
             _buildSoru(
-              "3. Bu duvarda itfaiyenin kolayca yıkıp geçebileceği zayıf bir bölüm var mı?",
+              "Bu duvarda itfaiyenin kolayca yıkıp geçebileceği zayıf bir bölüm var mı?",
               'zayifNokta',
               [
                 Bolum11Content.zayifNoktaOptionA,

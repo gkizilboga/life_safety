@@ -82,7 +82,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "İç Mekan Analizi",
+      title: "İç Mekanlar",
       subtitle: " ",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
@@ -116,7 +116,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
           ], _model.kaplama),
 
           _buildSoru(
-            "Isı yalıtım malzemesi (strafor vb.) var mı?",
+            "Döşeme üzerinde ısı yalıtım malzemesi var mı?",
             'yalitim',
             [
               Bolum15Content.yalitimOptionA,
@@ -165,7 +165,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
           ],
 
           _buildSoru(
-            "Tesisat geçişleri / boşlukları nasıl kapatılmış?",
+            "Tesisat geçişleri nasıl kapatılmış?",
             'tesisat',
             [
               Bolum15Content.tesisatOptionA,

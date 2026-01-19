@@ -375,7 +375,7 @@ class ReportEngine {
       final b20 = s.bolum20;
       if (b20 != null && b20.basinclandirma?.label.contains("-B") == true) {
         // 20-BAS-B: Hayır
-        reasons.add("🚨 Yapı Yüksekliği 30.50m üzeri ve Basınçlandırma Yok");
+        reasons.add("🚨 Yapı Yüksekliği 30.50m üzeri ve en az bir merdivende Basınçlandırma yok ise YGH zorunludur.");
       }
     }
 
@@ -384,33 +384,28 @@ class ReportEngine {
     if (b10 != null &&
         b10.bodrumlar.any((c) => c?.label.contains("10-C") == true)) {
       reasons.add(
-        "🚨 Bodrum katlarda ticari veya teknik kullanım mevcut (10-C)",
+        "🚨 Bodrum katlarda, konuttan farklı fonksiyon mevcut olduğundan(10-C)",
       );
     }
 
     // 4. İtfaiye Asansörü zorunluluğu (Bölüm 22)
     final b22 = s.bolum22;
     if (b22 != null && b22.varlik?.label.contains("22-1-B") == true) {
-      reasons.add("🚨 İtfaiye Asansörü zorunluluğu mevcut (22-1-B)");
+      reasons.add("🚨 İtfaiye Asansörü zorunluluğu mevcut olduğundan (22-1-B)");
     }
 
     // 5. Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı (Bölüm 23)
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "🚨 Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı sağlanmalı (23-1-C)",
+        "🚨 Normal katlara hizmet veren asansör, bBodrum katlara da hizmet verdiğinden (23-1-C)",
       );
     }
 
-    // 6. Bina Yüksekliği > 21.50m (BYKHY Genel)
-    if (hBina > 21.50) {
-      reasons.add("🚨 Bina Yüksekliği > 21.50m");
-    }
-
-    // 7. Bodrum kat sayısı > 3
-    if ((s.bolum3?.bodrumKatSayisi ?? 0) > 3) {
+    // 6. Bodrum kat sayısı > 4
+    if ((s.bolum3?.bodrumKatSayisi ?? 0) > 4) {
       reasons.add(
-        "🚨 Bodrum kat sayısı > 3 olduğu için riskli mahallerde YGH zorunludur.",
+        "🚨 Bodrum kat sayısı > 4 olduğu için bodrum katlardaki merdiven önlerinde YGH zorunludur.",
       );
     }
 

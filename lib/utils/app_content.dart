@@ -856,15 +856,15 @@ class Bolum15Content {
   static final kaplamaOptionA = ChoiceResult(
     label: "15-1-A",
     uiTitle: "Ahşap parke, laminat, pvc vinil, karo halı",
-    uiSubtitle: "Yanıcılık gösterebilen malzemeler.",
+    uiSubtitle: "Yanıcı malzemeler.",
     reportText:
         "⚠️ UYARI: Döşeme kaplamasının yanıcılık sınıfı kontrol edilmelidir.",
   );
 
   static final kaplamaOptionB = ChoiceResult(
     label: "15-1-B",
-    uiTitle: "Taş, seramik, mermer veya özel yanmaz kaplama.",
-    uiSubtitle: "Limitli yanıcılık gösteren malzemeler.",
+    uiTitle: "Taş, seramik, mermer, yanmaz kaplama.",
+    uiSubtitle: "Limitli yanıcı malzemeler.",
     reportText:
         "✅ OLUMLU: Zemin kaplaması yanmaz malzeme olarak beyan edilmiştir.",
   );
@@ -872,8 +872,8 @@ class Bolum15Content {
   static final kaplamaOptionC = ChoiceResult(
     label: "15-1-C",
     uiTitle: "Kaplama malzemesini bilmiyorum.",
-    uiSubtitle: "Zemin kaplamasının cinsi belirsiz.",
-    reportText: "❓ BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor.",
+    uiSubtitle: "",
+    reportText: "❓ BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor.Yönetmelik gereği yüksek binalarda döşeme kaplamalarının en az zor alevlenici olması gerekmektedir; aksi durumda yanıcı kaplamalar risk teşkil eder.",
   );
 
   static final kaplamaOptionD = ChoiceResult(
@@ -911,35 +911,35 @@ class Bolum15Content {
   static final yalitimSapOptionA = ChoiceResult(
     label: "15-2-ALT-A",
     uiTitle: "Evet, en az 2 cm şap var.",
-    uiSubtitle: "Beton koruma katmanı mevcut.",
+    uiSubtitle: "Koruma katmanı mevcut.",
     reportText: "✅ OLUMLU: Yanıcı yalıtım şap ile korunmuştur.",
   );
 
   static final yalitimSapOptionB = ChoiceResult(
     label: "15-2-ALT-B",
     uiTitle: "Hayır, şap yok.",
-    uiSubtitle: "Yalıtım malzemesi çıplak durumda.",
+    uiSubtitle: "Yalıtım malzemesinin üzeri çıplak durumda.",
     reportText: "☢️ KRİTİK RİSK: Yalıtımın üzeri şap ile örtülmelidir.",
   );
 
   static final yalitimSapOptionC = ChoiceResult(
     label: "15-2-ALT-C",
     uiTitle: "Bilmiyorum / Göremiyorum.",
-    uiSubtitle: "Şap tabakası belirsiz.",
+    uiSubtitle: "",
     reportText: "⚠️ UYARI: Koruyucu şap tabakası olup olmadığı bilinmiyor.",
   );
 
   static final tavanOptionA = ChoiceResult(
     label: "15-3-A",
     uiTitle: "Hayır, asma tavan yok.",
-    uiSubtitle: "Tavanlar direkt beton üzeri sıva/boya.",
+    uiSubtitle: "Tavanlar direkt beton üzeri sıva/boya halindedir.",
     reportText: "✅ OLUMLU: Tavanlarda asma tavan bulunmamaktadır.",
   );
 
   static final tavanOptionB = ChoiceResult(
     label: "15-3-B",
     uiTitle: "Evet, asma tavan var.",
-    uiSubtitle: "Tavan seviyesi düşürülmüş uygulama.",
+    uiSubtitle: "",
     reportText: "⚠️ UYARI: Asma tavan malzemesi kontrol edilmelidir.",
   );
 
@@ -954,14 +954,14 @@ class Bolum15Content {
   static final tavanOptionD = ChoiceResult(
     label: "15-3-D",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "Tavan yapısı belirsiz.",
+    uiSubtitle: "",
     reportText: "❓ BİLİNMİYOR: Tavan yapısı hakkında bilgi yok.",
   );
 
   static final tavanMalzemeOptionA = ChoiceResult(
     label: "15-3-ALT-A",
     uiTitle: "Alçıpanel, metal vb. yanmaz malzeme.",
-    uiSubtitle: "A1 veya A2 sınıfı malzemeler.",
+    uiSubtitle: "A1, A2 sınıfı malzemeler.",
     reportText:
         "✅ OLUMLU: Asma tavan malzemesinin yangına tepki sınıfı A1 veya A2 sınıfıdır. Yönetmelikçe sınıf bakımından yeterli olsa da malzemelerin yangına tepki test raporlarının kontrol edilmesi önerilir.",
   );
@@ -977,7 +977,7 @@ class Bolum15Content {
   static final tavanMalzemeOptionC = ChoiceResult(
     label: "15-3-ALT-C",
     uiTitle: "Malzemeyi bilmiyorum.",
-    uiSubtitle: "Yanıcılık sınıfı belirsiz.",
+    uiSubtitle: "",
     reportText:
         "❓ BİLİNMİYOR: Asma tavan malzemesinin yanıcılığı bilinmiyor. Asma tavan malzemelerinin yangına tepki test raporları kontrol edildikten sonra Yönetmelik şartlarını karşılayıp karşılamadığına karar verilir.",
   );
@@ -1116,8 +1116,8 @@ class Bolum16Content {
 class Bolum17Content {
   static final kaplamaOptionA = ChoiceResult(
     label: "17-1-A (Kaplama)",
-    uiTitle: "Kiremit, metal kenet, beton, taş vb. türünde yanmaz malzeme.",
-    uiSubtitle: "Çatı yüzeyi yanmaz (A1 sınıf) malzemeyle kaplanmıştır.",
+    uiTitle: "Kiremit, metal kenet, beton, taş türünde yanmaz malzeme.",
+    uiSubtitle: "Çatı yüzeyi yanmaz malzemeyle kaplanmıştır.",
     reportText:
         "✅ OLUMLU: Çatı kaplamasında hiç yanmaz (A1 sınıfı) malzeme kullanılmıştır. Bu durum, dışarıdan gelebilecek kıvılcımlara karşı koruma sağlar.",
   );
@@ -1133,20 +1133,20 @@ class Bolum17Content {
 
   static final kaplamaOptionC = ChoiceResult(
     label: "17-1-C (Kaplama)",
-    uiTitle: "Sandviç Panel (İçi yanıcı)",
+    uiTitle: "Sandviç Panel (Yanıcı)",
     uiSubtitle:
-        "İçi XPS, EPS, PIR, PUR, poliüretan vb. yanıcı dolgulu panel ile kaplanmıştır.",
+        "İçi XPS, EPS, PIR, PUR, poliüretan vb. malzeme dolgulu sandviç paneller ile kaplanmıştır.",
     reportText:
         "⚠️ UYARI: Yanıcı malzeme dolgulu sandviç paneller yangını çok hızlı yayar ve söndürülmesi zordur. Taşyünü dolgulu paneller tercih edilmesi önerilir. Sandviç panellerin yangına tepki test raporları Uzman tarafından kontrol edilmesinin ardından uygunluğuna karar verilir.",
   );
 
   static final kaplamaOptionD = ChoiceResult(
     label: "17-1-D (Kaplama)",
-    uiTitle: "Sandviç Panel (İçi yanmaz)",
+    uiTitle: "Sandviç Panel (Yanmaz)",
     uiSubtitle:
-        "İçi taşyünü, cam yünü, mineral yünü vb.. yanmaz veya limitli yanıcı dolgu malzemesiyle kaplanmıştır.",
+        "İçi taşyünü, cam yünü, mineral yünü vb. malzeme dolgulu sandviç paneller ile kaplanmıştır.",
     reportText:
-        "✅ OLUMLU: Taşyünü vb. yanmaz veya zor yanıcı malzeme dolgulu sandviç paneller Yönetmelik açısından daha uygun bulunur.",
+        "✅ OLUMLU: Taşyünü vb. A1, A2 sınıf malzeme dolgulu sandviç paneller Yönetmelik açısından daha uygun bulunur.",
   );
 
   static final kaplamaOptionE = ChoiceResult(
@@ -1168,7 +1168,7 @@ class Bolum17Content {
   static final iskeletOptionA = ChoiceResult(
     label: "17-2-A (İskelet)",
     uiTitle:
-        "Taşıyıcılar beton, çelik vb. dir. Yalıtımda ise taşyünü vb. yanmaz ürün kullanılmıştır.",
+        "Taşıyıcılar beton veya çeliktir. Isı yalıtımda ise taşyünü vb. yanmaz ürün kullanılmıştır.",
     uiSubtitle: "",
     reportText:
         "✅ OLUMLU: Çatı taşıyıcı sisteminin ve yalıtımının yanmaz malzemeden olması yangın güvenliği için en ideal durumdur.",
@@ -1176,7 +1176,7 @@ class Bolum17Content {
 
   static final iskeletOptionB = ChoiceResult(
     label: "17-2-B (İskelet)",
-    uiTitle: "Taşıyıcılar ve altındaki ısı yalıtım yanabilir ürünler.",
+    uiTitle: "Taşıyıcılar ve altındaki ısı yalıtım malzemesi yanıcı ürünlerdir.",
     uiSubtitle: "Ahşap, XPS, EPS vb. malzemeler.",
     reportText:
         "(Yüksek Bina İse) ☢️ KRİTİK RİSK: Yüksek binalarda ahşap çatı kullanılması yasaktır.<br>(Alçak Bina İse) ⚠️ UYARI: Ahşap çatılarda yanıcı köpük vb. kullanımı risklidir.",
@@ -1900,7 +1900,7 @@ class Bolum24Content {
   static final tipOptionA = ChoiceResult(
     label: "24-1-A (Tip)",
     uiTitle:
-        "Önce kapalı apartman koridoruna, sonrasında cadde seviyesindeki dış havaya çıkılabiliyor.",
+        "Kapalı kat koridordan geçerek (dış) bina kapısına ulaşabiliyorum.",
     uiSubtitle: " ",
     reportText:
         "✅ OLUMLU: Binadan çıkışta dış kaçış geçidi yer almamaktadır, Yönetmeliğe göre bir değerlendirmeye ihtiyaç bulunmaz.",
@@ -1909,8 +1909,8 @@ class Bolum24Content {
   static final tipOptionB = ChoiceResult(
     label: "24-1-B (Tip)",
     uiTitle:
-        "Daire kapısı veya kat koridorundan çıkışta öncelikle dış cephede bulunan açık bir kaçış yoluna çıkılması gerekiyor.",
-    uiSubtitle: " ",
+        "Bina dışına çıkabilmem için cephede, üstü açık bir geçitten veya yoldan geçmem gerekiyor. ış cephedeki üstü açık bir yoldan geçmek gerekiyor.",
+    uiSubtitle: "Bina içerisindeki kapalı kat koridorundan dışarı çıkış yapamıyorum.",
     reportText:
         "⚠️ UYARI: Binadan çıkışta dış kaçış geçidi yer almaktadır. Yönetmeliğe göre bu geçidin ve dış cephedeki tehlikelerin değerlendirilmesi gereklidir.",
   );
@@ -1918,7 +1918,7 @@ class Bolum24Content {
   static final tipOptionC = ChoiceResult(
     label: "24-1-C (Tip)",
     uiTitle: "Bilmiyorum / Emin değilim.",
-    uiSubtitle: "Çıkış güzergahı tam olarak analiz edilemedi.",
+    uiSubtitle: "",
     reportText:
         "❓ BİLİNMİYOR: Binadan çıkışta dış kaçış geçidi (açık koridor) olup olmadığı tespit edilememiştir. Uzman kontrolü önerilir.",
   );
@@ -2260,9 +2260,9 @@ class Bolum27Content {
   // 4. DAYANIM
   static final dayanimOptionA = ChoiceResult(
     label: "27-4-A",
-    uiTitle: "Çelik, yangına dayanıklı, duman sızdırmaz.",
+    uiTitle: "Çelik, yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanıyor.",
     uiSubtitle:
-        "Kapının üzerinde yangın dayanım özelliğini gösteren özel etiketi var, kendiliğinden kapanıyor.",
+        "",
     reportText:
         "✅ OLUMLU: Yangın kapısı standartlara (EI60/EI90) ve sızdırmazlık şartlarına uygundur.",
   );
@@ -2270,8 +2270,8 @@ class Bolum27Content {
   static final dayanimOptionB = ChoiceResult(
     label: "27-4-B",
     uiTitle:
-        "Çelik, yangına dayanıklı, duman sızdırmaz ancak bırakınca kendiliğinden kapanmıyor.",
-    uiSubtitle: "Hidroliği sorunlu veya menteşeleri arızalı.",
+        "Çelik, yangına dayanıklı, duman sızdırmaz ancak kendiliğinden kapanmıyor.",
+    uiSubtitle: "Hidroliği veya menteşeleri arızalı.",
     reportText:
         "⚠️ UYARI: Yangın kapıları her zaman otomatik kapanır durumda olmalıdır.",
   );
@@ -2279,7 +2279,7 @@ class Bolum27Content {
   static final dayanimOptionC = ChoiceResult(
     label: "27-4-C",
     uiTitle: "Ahşap, PVC veya cam kapı (dayanıksız).",
-    uiSubtitle: "Yangın kapısı değil.",
+    uiSubtitle: "Yangın kapısı değildir.",
     reportText:
         "☢️ KRİTİK RİSK: Yangın merdiveni kapıları yanıcı malzemeden (Ahşap/PVC) yapılamaz. En az 60 dk yangına dayanıklı olmalıdır.",
   );

@@ -84,7 +84,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
         children: [
           // --- SORU 1 ---
           _buildSoru(
-            "Daire kapınızdan veya kat koridorlarından bina dışına çıkışınız nasıl?",
+            "Dairenizden itibaren bina dışına çıkış nasıl?",
             'tip',
             [
               Bolum24Content.tipOptionA,
