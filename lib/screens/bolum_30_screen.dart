@@ -22,13 +22,18 @@ class Bolum30Screen extends StatefulWidget {
 class _Bolum30ScreenState extends State<Bolum30Screen> {
   Bolum30Model _model = Bolum30Model();
   final TextEditingController _kapasiteCtrl = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
   bool _hasKazan = false;
   String? _kapasiteErr;
 
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum30 != null) {
+      _model = BinaStore.instance.bolum30!;
+      if (_model.kapasite != null) {
+        _kapasiteCtrl.text = _model.kapasite.toString();
+      }
+    }
     _checkKazanAndRedirect();
     _kapasiteCtrl.addListener(_validate);
   }
@@ -62,22 +67,9 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     });
   }
 
-  void _scrollToBottom() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
-
   @override
   void dispose() {
     _kapasiteCtrl.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -90,9 +82,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
 
       if (type == 'yakit') {
         _model = _model.copyWith(yakit: choice);
-        if (choice.label == Bolum30Content.yakitOptionB.label) {
-          _scrollToBottom();
-        } else {
+        if (choice.label != Bolum30Content.yakitOptionB.label) {
           _model = _model.copyWith(drenaj: null);
         }
       }
@@ -174,7 +164,6 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [

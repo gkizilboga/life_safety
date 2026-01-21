@@ -19,7 +19,22 @@ class Bolum6Screen extends StatefulWidget {
 
 class _Bolum6ScreenState extends State<Bolum6Screen> {
   Bolum6Model _model = Bolum6Model();
-  final TextEditingController _kapaliOtoparkController = TextEditingController();
+  final TextEditingController _kapaliOtoparkController =
+      TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final existing = BinaStore.instance.bolum6;
+    if (existing != null) {
+      _model = existing;
+      if (existing.kapaliOtoparkAlani != null) {
+        _kapaliOtoparkController.text = existing.kapaliOtoparkAlani!
+            .toStringAsFixed(2)
+            .replaceAll('.', ',');
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -67,7 +82,10 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
 
   void _handleOtoparkTipi(ChoiceResult choice) {
     setState(() {
-      _model = _model.copyWith(otoparkTipi: choice, clearKapaliOtoparkAlani: true);
+      _model = _model.copyWith(
+        otoparkTipi: choice,
+        clearKapaliOtoparkAlani: true,
+      );
       _kapaliOtoparkController.clear();
     });
   }
@@ -138,7 +156,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
                       "Binanızda konut haricinde aşağıdakilerden hangileri mevcut?",
-                        style: AppStyles.questionTitle,
+                      style: AppStyles.questionTitle,
                     ),
                   ),
 
@@ -234,20 +252,31 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                             Expanded(
                               child: TextField(
                                 controller: _kapaliOtoparkController,
-                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
                                 inputFormatters: [
-                                  FilteringTextInputFormatter.allow(RegExp(r'^\d*[,.]?\d{0,2}')),
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*[,.]?\d{0,2}'),
+                                  ),
                                 ],
                                 onChanged: _updateKapaliOtoparkAlani,
                                 decoration: const InputDecoration(
                                   hintText: "Min: 5, Max: 20000",
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 14,
+                                  ),
                                   border: InputBorder.none,
                                 ),
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
                               decoration: const BoxDecoration(
                                 color: Color(0xFFF5F5F5),
                                 borderRadius: BorderRadius.only(
@@ -266,8 +295,9 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                           ],
                         ),
                       ),
-                      if (_model.kapaliOtoparkAlani != null && 
-                          (_model.kapaliOtoparkAlani! < 5 || _model.kapaliOtoparkAlani! > 20000))
+                      if (_model.kapaliOtoparkAlani != null &&
+                          (_model.kapaliOtoparkAlani! < 5 ||
+                              _model.kapaliOtoparkAlani! > 20000))
                         const Padding(
                           padding: EdgeInsets.only(top: 8, left: 4),
                           child: Text(
@@ -298,9 +328,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
             child: SafeArea(
               top: false,
               child: ElevatedButton(
-                onPressed: isButtonEnabled
-                    ? _onNextPressed
-                    : null,
+                onPressed: isButtonEnabled ? _onNextPressed : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1A237E),
                   disabledBackgroundColor: Colors.grey.shade300,

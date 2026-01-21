@@ -7,6 +7,9 @@ import '../../widgets/custom_widgets.dart';
 import '../../utils/input_validator.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
+import '../../models/bolum_4_model.dart';
+import '../../models/choice_result.dart';
+import 'bolum_5_screen.dart';
 
 class Bolum3Screen extends StatefulWidget {
   const Bolum3Screen({super.key});
@@ -21,7 +24,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   final _normalHCtrl = TextEditingController();
   final _bodrumHCtrl = TextEditingController();
 
-  bool _isUnknown = false;
+  bool _isUnknown = true;
   bool _isConfirmed = false;
   String? _zeminErr;
   String? _normalErr;
@@ -32,6 +35,19 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   @override
   void initState() {
     super.initState();
+
+    // Load existing data if available
+    final existing = BinaStore.instance.bolum3;
+    if (existing != null) {
+      _normalCountCtrl.text = existing.normalKatSayisi.toString();
+      _bodrumCountCtrl.text = existing.bodrumKatSayisi.toString();
+      _zeminHCtrl.text = existing.zeminYuksekligi.toString();
+      _normalHCtrl.text = existing.normalYuksekligi.toString();
+      _bodrumHCtrl.text = existing.bodrumYuksekligi.toString();
+      _isUnknown = existing.yukseklikBilinmiyor;
+      _isConfirmed = existing.isConfirmed;
+    }
+
     _normalCountCtrl.addListener(_validateCounts);
     _bodrumCountCtrl.addListener(_validateCounts);
     _zeminHCtrl.addListener(_validate);
@@ -147,10 +163,38 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
       isConfirmed: true,
     );
 
+    // --- INTEGRATED SECTION 4 LOGIC ---
+    double hBina = vals['hBina'] ?? 0.0;
+    double hYapi = vals['hYapi'] ?? 0.0;
+
+    var secilenSinif = Bolum4Content.yukseklikSinifiDusuk;
+    if (hBina >= 51.50) {
+      secilenSinif = Bolum4Content.yukseklikSinifiMaksimum;
+    } else if (hBina >= 30.50) {
+      secilenSinif = Bolum4Content.yukseklikSinifiCokYuksek;
+    } else if (hBina >= 21.50) {
+      secilenSinif = Bolum4Content.yukseklikSinifiYuksek;
+    }
+
+    ChoiceResult? yapiUyari;
+    if (hYapi >= 51.50) {
+      yapiUyari = Bolum4Content.yapiYuksekligiMaksimum;
+    } else if (hYapi >= 30.50) {
+      yapiUyari = Bolum4Content.yapiYuksekligiUyari;
+    }
+
+    BinaStore.instance.bolum4 = Bolum4Model(
+      binaYukseklikSinifi: secilenSinif,
+      yapiYuksekligiUyarisi: yapiUyari,
+      hesaplananBinaYuksekligi: hBina,
+      hesaplananYapiYuksekligi: hYapi,
+    );
+    // ---------------------------------
+
     BinaStore.instance.saveToDisk();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Bolum4Screen()),
+      MaterialPageRoute(builder: (context) => const Bolum5Screen()),
     );
   }
 
@@ -159,7 +203,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     final vals = _calculateValues();
 
     return AnalysisPageLayout(
-      title: "Kat Bilgileri",
+      title: "Kat bilgilerinizi giriniz.",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
@@ -168,10 +212,18 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSectionTitle("Kat Sayıları"),
-          _buildInput("Normal Kat Sayısı (Zemin Üstü)", _normalCountCtrl, 
-              hint: "0 - 20 arası", error: _normalCountErr),
-          _buildInput("Bodrum Kat Sayısı (Zemin Altı)", _bodrumCountCtrl,
-              hint: "0 - 10 arası", error: _bodrumCountErr),
+          _buildInput(
+            "Normal Kat Sayısı (Zemin Üstü)",
+            _normalCountCtrl,
+            hint: "0 - 20 arası",
+            error: _normalCountErr,
+          ),
+          _buildInput(
+            "Bodrum Kat Sayısı (Zemin Altı)",
+            _bodrumCountCtrl,
+            hint: "0 - 10 arası",
+            error: _bodrumCountErr,
+          ),
 
           const SizedBox(height: 10),
           _buildSectionTitle("Kat Yükseklikleri"),
@@ -261,10 +313,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
             ),
             child: Text(
               isYuksek ? "YÜKSEK BİNA" : "YÜKSEK OLMAYAN BİNA",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 15),
             ),
           ),
         ],

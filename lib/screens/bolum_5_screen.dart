@@ -41,6 +41,34 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     _nKat = b3?.normalKatSayisi ?? 0;
     _bKat = b3?.bodrumKatSayisi ?? 0;
 
+    // Load existing data
+    final existing = BinaStore.instance.bolum5;
+    if (existing != null) {
+      _model = existing;
+      if (existing.tabanAlani != null) {
+        _tabanCtrl.text = existing.tabanAlani!
+            .toStringAsFixed(2)
+            .replaceAll('.', ',');
+      }
+      if (existing.normalKatAlani != null) {
+        _normalCtrl.text = existing.normalKatAlani!
+            .toStringAsFixed(2)
+            .replaceAll('.', ',');
+      }
+      if (existing.bodrumKatAlani != null) {
+        _bodrumCtrl.text = existing.bodrumKatAlani!
+            .toStringAsFixed(2)
+            .replaceAll('.', ',');
+      }
+      if (existing.toplamInsaatAlani != null) {
+        _toplamCtrl.text = existing.toplamInsaatAlani!
+            .toStringAsFixed(2)
+            .replaceAll('.', ',');
+        _isCalculated = true;
+      }
+      _isConfirmed = true; // If we have data, they confirmed before
+    }
+
     _tabanCtrl.addListener(_validate);
     _normalCtrl.addListener(_validate);
     _bodrumCtrl.addListener(_validate);
@@ -72,6 +100,9 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       } else {
         _normalError = null;
       }
+
+      // Normal kat sayısı 0 ise hata yok say
+      if (_nKat == 0) _normalError = null;
 
       // Bodrum kat validasyonu (min: 5, max: 20000)
       double? bodrum = double.tryParse(_bodrumCtrl.text.replaceAll(',', '.'));
@@ -106,13 +137,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _otomatikHesapla() {
     FocusScope.of(context).unfocus();
-    
+
     // Önce validasyonları kontrol et
     if (_tabanError != null || _normalError != null || _bodrumError != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Lütfen geçerli alan değerleri giriniz."),
-        ),
+        const SnackBar(content: Text("Lütfen geçerli alan değerleri giriniz.")),
       );
       return;
     }
@@ -121,7 +150,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     double nAlani = InputValidator.parseFlex(_normalCtrl.text) ?? 0.0;
     double bAlani = InputValidator.parseFlex(_bodrumCtrl.text) ?? 0.0;
 
-    if (tAlani > 0 && nAlani > 0) {
+    if (tAlani > 0 && (nAlani > 0 || _nKat == 0)) {
       double toplam = tAlani + (_nKat * nAlani) + (_bKat * bAlani);
       setState(() {
         _toplamCtrl.text = toplam.toStringAsFixed(2);
@@ -131,7 +160,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            "Lütfen zemin ve normal katlara ait alan bilgilerini giriniz.",
+            "Lütfen zemin ve (varsa) normal katlara ait alan bilgilerini giriniz.",
           ),
         ),
       );
@@ -187,9 +216,15 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
                 _buildInputLabel(Bolum5Content.oturumAlani),
                 _buildNumberInput(_tabanCtrl, "Örn: 500", error: _tabanError),
 
-                const SizedBox(height: 16),
-                _buildInputLabel(Bolum5Content.normalKatAlani),
-                _buildNumberInput(_normalCtrl, "Örn: 500", error: _normalError),
+                if (_nKat > 0) ...[
+                  const SizedBox(height: 16),
+                  _buildInputLabel(Bolum5Content.normalKatAlani),
+                  _buildNumberInput(
+                    _normalCtrl,
+                    "Örn: 500",
+                    error: _normalError,
+                  ),
+                ],
 
                 if (_bKat > 0) ...[
                   const SizedBox(height: 16),
@@ -348,10 +383,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
           ),
           const SizedBox(height: 8),
           _buildSummaryRow("Zemin Kat:", "${_tabanCtrl.text} m²"),
-          _buildSummaryRow(
-            "Normal Katlar ($_nKat adet):",
-            "${((InputValidator.parseFlex(_normalCtrl.text) ?? 0) * _nKat).toStringAsFixed(2)} m²",
-          ),
+          if (_nKat > 0)
+            _buildSummaryRow(
+              "Normal Katlar ($_nKat adet):",
+              "${((InputValidator.parseFlex(_normalCtrl.text) ?? 0) * _nKat).toStringAsFixed(2)} m²",
+            ),
           if (_bKat > 0)
             _buildSummaryRow(
               "Bodrum Katlar ($_bKat adet):",

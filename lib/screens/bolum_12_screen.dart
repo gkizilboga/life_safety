@@ -20,6 +20,7 @@ class Bolum12Screen extends StatefulWidget {
 
 class _Bolum12ScreenState extends State<Bolum12Screen> {
   Bolum12Model _model = Bolum12Model();
+
   String? _tasiyiciSistemLabel;
   final _kolonPaspayiCtrl = TextEditingController();
   final _kirisPaspayiCtrl = TextEditingController();
@@ -32,6 +33,17 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum12 != null) {
+      _model = BinaStore.instance.bolum12!;
+      if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
+        if (_model.kolonPaspayi != null)
+          _kolonPaspayiCtrl.text = _model.kolonPaspayi.toString();
+        if (_model.kirisPaspayi != null)
+          _kirisPaspayiCtrl.text = _model.kirisPaspayi.toString();
+        if (_model.dosemePaspayi != null)
+          _dosemePaspayiCtrl.text = _model.dosemePaspayi.toString();
+      }
+    }
     final bolum2 = BinaStore.instance.bolum2;
     _tasiyiciSistemLabel = bolum2?.secim?.label;
     _kolonPaspayiCtrl.addListener(_validate);
@@ -112,6 +124,17 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       subtitle: "Taşıyıcı sistemin yangın anındaki stabilitesi",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
+      onSave: () {
+        if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
+          _model = _model.copyWith(
+            kolonPaspayi: InputValidator.parseFlex(_kolonPaspayiCtrl.text),
+            kirisPaspayi: InputValidator.parseFlex(_kirisPaspayiCtrl.text),
+            dosemePaspayi: InputValidator.parseFlex(_dosemePaspayiCtrl.text),
+          );
+        }
+        BinaStore.instance.bolum12 = _model;
+        BinaStore.instance.saveToDisk();
+      },
       onNext: () {
         if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
           _model = _model.copyWith(

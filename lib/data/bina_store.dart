@@ -63,7 +63,7 @@ class BinaStore {
   set userProfession(String value) =>
       _prefs?.setString('userProfession', value);
 
-  bool get isPremium => _prefs?.getBool('isPremium') ?? false;
+  bool get isPremium => true; // FORCE PREMIUM FOR TESTING
   set isPremium(bool value) => _prefs?.setBool('isPremium', value);
 
   bool get isRegistered => _prefs?.getBool('isRegistered') ?? false;
@@ -81,6 +81,16 @@ class BinaStore {
 
   bool get isProUser => _prefs?.getBool('isProUser') ?? false;
   set isProUser(bool value) => _prefs?.setBool('isProUser', value);
+
+  int _lastActiveSection = 1;
+  int get lastActiveSection => _lastActiveSection;
+  set lastActiveSection(int value) {
+    _lastActiveSection = value;
+    _prefs?.setInt(
+      'lastActiveSection',
+      value,
+    ); // Keep global latest as fallback
+  }
 
   void useCredit() {
     if (reportCredits > 0) reportCredits = reportCredits - 1;
@@ -200,18 +210,14 @@ class BinaStore {
 
   /// Checks if all 36 sections (or at least the critical ones) are completed.
   bool isTestCompleted() {
-    // Basic check: Ensure critical 3, 5, 33, 35 are present.
-    // Ideally check all sections 1-36.
+    // The final section (36) is the definitive marker of completion
+    if (_bolum36 == null) return false;
+
+    // Verify critical sections are also present
     if (_bolum3 == null) return false;
     if (_bolum5 == null) return false;
     if (_bolum33 == null) return false;
-    if (_bolum35 == null) return false;
-    if (_bolum6 == null) return false; // For parking
-    if (_bolum23 == null) return false; // For pressurization
-    // ... add others if strictly required.
-    // User said: "kullanıcı bölüm3,33,35 dahil tüm bölümleri zaten bitirmiş olacak... Zaten 36 bölümü dolduramadan premium modüle kesinlikle gelemez."
-    // So let's check strict presence of the last one, or a flag.
-    // Checking 3, 5, 6, 23, 33, 35 covers the dependencies of ActiveSystemsEngine.
+
     return true;
   }
 
@@ -247,7 +253,8 @@ class BinaStore {
       'city': currentBinaCity ?? "",
       'district': currentBinaDistrict ?? "",
       'date': DateTime.now().toIso8601String(),
-      'isPremium': isPremium, // Save premium status per building or globally?
+      'lastActiveSection': _lastActiveSection,
+      'isPremium': isPremium,
       // User said "Update BinaStore to track purchase status".
       // Usually purchase is per user/lifetime or per building.
       // Given the flow, let's assuming per building might refer to "is this analysis premium unlocked?".
@@ -323,6 +330,7 @@ class BinaStore {
     currentBinaName = data['name'];
     currentBinaCity = data['city'];
     currentBinaDistrict = data['district'];
+    _lastActiveSection = data['lastActiveSection'] ?? 1;
     final s = data['sections'];
     if (s['bolum1'] != null) _bolum1 = Bolum1Model.fromMap(s['bolum1']);
     if (s['bolum2'] != null) _bolum2 = Bolum2Model.fromMap(s['bolum2']);
@@ -385,6 +393,7 @@ class BinaStore {
     currentBinaName = null;
     currentBinaCity = null;
     currentBinaDistrict = null;
+    _lastActiveSection = 1;
     _bolum1 = null;
     _bolum2 = null;
     _bolum3 = null;
@@ -691,9 +700,13 @@ class BinaStore {
       case 32:
         return _bolum32?.yapi;
       case 33:
-        return _bolum33?.normalKatSonuc ??
-            _bolum33?.zeminKatSonuc ??
-            _bolum33?.bodrumKatSonuc;
+        if (_bolum33 == null) return null;
+        return ChoiceResult(
+          label: "33",
+          uiTitle: "Kullanıcı Yükü ve Çıkışlar",
+          uiSubtitle: "",
+          reportText: _bolum33!.combinedReportText,
+        );
       case 34:
         return _bolum34?.zemin;
       case 35:

@@ -18,11 +18,13 @@ class Bolum31Screen extends StatefulWidget {
 class _Bolum31ScreenState extends State<Bolum31Screen> {
   Bolum31Model _model = Bolum31Model();
   bool _hasTrafo = false;
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum31 != null) {
+      _model = BinaStore.instance.bolum31!;
+    }
     _checkAndRedirect();
   }
 
@@ -40,27 +42,13 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
     }
   }
 
-  void _scrollToBottom() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
-
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'yapi') _model = _model.copyWith(yapi: choice);
       if (type == 'cevre') _model = _model.copyWith(cevre: choice);
       if (type == 'tip') {
         _model = _model.copyWith(tip: choice);
-        if (choice.label == Bolum31Content.tipOptionB.label) {
-          _scrollToBottom();
-        } else {
+        if (choice.label != Bolum31Content.tipOptionB.label) {
           _model = _model.copyWith(cukur: null, sondurme: null);
         }
       }
@@ -111,7 +99,6 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [

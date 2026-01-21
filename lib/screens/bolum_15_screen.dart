@@ -21,44 +21,39 @@ class Bolum15Screen extends StatefulWidget {
 
 class _Bolum15ScreenState extends State<Bolum15Screen> {
   Bolum15Model _model = Bolum15Model();
-  final GlobalKey _yalitimSapKey = GlobalKey();
-  final GlobalKey _tavanMalzemeKey = GlobalKey();
 
-  void _scrollToKey(GlobalKey key) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (key.currentContext != null) {
-        Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-          alignment: 0.1,
-        );
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    if (BinaStore.instance.bolum15 != null) {
+      _model = BinaStore.instance.bolum15!;
+    }
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'kaplama') _model = _model.copyWith(kaplama: choice);
+      if (type == 'kaplama') {
+        _model = _model.copyWith(kaplama: choice);
+      }
       if (type == 'yalitim') {
         _model = _model.copyWith(yalitim: choice);
-        if (choice.label == Bolum15Content.yalitimOptionB.label)
-          _scrollToKey(_yalitimSapKey);
-        else
+        if (choice.label != Bolum15Content.yalitimOptionB.label) {
           _model = _model.copyWith(yalitimSap: null);
+        }
       }
-      if (type == 'yalitimSap') _model = _model.copyWith(yalitimSap: choice);
+      if (type == 'yalitimSap') {
+        _model = _model.copyWith(yalitimSap: choice);
+      }
       if (type == 'tavan') {
         _model = _model.copyWith(tavan: choice);
-        if (choice.label == Bolum15Content.tavanOptionB.label ||
-            choice.label == Bolum15Content.tavanOptionC.label) {
-          _scrollToKey(_tavanMalzemeKey);
-        } else {
+        if (choice.label != Bolum15Content.tavanOptionB.label &&
+            choice.label != Bolum15Content.tavanOptionC.label) {
           _model = _model.copyWith(tavanMalzeme: null);
         }
       }
-      if (type == 'tavanMalzeme')
+      if (type == 'tavanMalzeme') {
         _model = _model.copyWith(tavanMalzeme: choice);
+      }
       if (type == 'tesisat') _model = _model.copyWith(tesisat: choice);
     });
   }
@@ -130,7 +125,6 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
           if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) ...[
             _buildInfoNote(
               "Yalıtım tespit edildiği için şap sorgulanmaktadır.",
-              key: _yalitimSapKey,
             ),
             _buildSoru(
               "Yalıtım üzerinde en az 2 cm şap var mı?",
@@ -153,10 +147,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
 
           if (_model.tavan?.label == Bolum15Content.tavanOptionB.label ||
               _model.tavan?.label == Bolum15Content.tavanOptionC.label) ...[
-            _buildInfoNote(
-              "Asma tavan malzemesi sorgulanmaktadır.",
-              key: _tavanMalzemeKey,
-            ),
+            _buildInfoNote("Asma tavan malzemesi sorgulanmaktadır."),
             _buildSoru("Asma tavan malzemesi nedir?", 'tavanMalzeme', [
               Bolum15Content.tavanMalzemeOptionA,
               Bolum15Content.tavanMalzemeOptionB,
@@ -192,10 +183,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: AppStyles.questionTitle,
-          ),
+          Text(title, style: AppStyles.questionTitle),
           if (assetPath != null)
             TechnicalDrawingButton(assetPath: assetPath, title: "Teknik Detay"),
           const SizedBox(height: 12),
@@ -211,9 +199,8 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
     );
   }
 
-  Widget _buildInfoNote(String text, {GlobalKey? key}) {
+  Widget _buildInfoNote(String text) {
     return Container(
-      key: key,
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

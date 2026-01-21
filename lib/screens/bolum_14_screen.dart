@@ -22,7 +22,11 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
   @override
   void initState() {
     super.initState();
-    _hesaplaVeAnalizEt();
+    if (BinaStore.instance.bolum14 != null) {
+      _model = BinaStore.instance.bolum14!;
+    } else {
+      _hesaplaVeAnalizEt();
+    }
   }
 
   void _hesaplaVeAnalizEt() {

@@ -19,6 +19,7 @@ class ReportSummaryScreen extends StatelessWidget {
     final bool isPremium = BinaStore.instance.isPremium;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFF5F7FA),
       body: Column(
         children: [
@@ -577,19 +578,19 @@ class ReportSummaryScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Uyarı"),
+        title: const Text("Çıkış"),
         content: const Text(
-          "Dashboard ekranına dönmek istediğinize emin misiniz?\n\nBu işlem, şu ana kadar verdiğiniz yanıtların TAMAMINI SİLECEKTİR.",
+          "Dashboard ekranına dönmek istediğinize emin misiniz?\n\nVerileriniz kaydedilmiş olarak kalacaktır.",
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text("İptal"),
+            child: const Text("Hayır"),
           ),
           TextButton(
             onPressed: () {
-              BinaStore.instance.reset(); // Verileri temizle
-              Navigator.of(ctx).pop(); // Dialog kapat
+              BinaStore.instance.saveToDisk();
+              Navigator.of(ctx).pop();
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => const DashboardScreen(),
@@ -598,8 +599,11 @@ class ReportSummaryScreen extends StatelessWidget {
               );
             },
             child: const Text(
-              "Evet, Sil ve Dön",
-              style: TextStyle(color: Colors.red),
+              "Evet, Dön",
+              style: TextStyle(
+                color: Color(0xFF1A237E),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -669,7 +673,7 @@ class ReportSummaryScreen extends StatelessWidget {
             TextButton(
               onPressed: () => _showExitConfirmationDialog(context),
               child: const Text(
-                "Vazgeç ve Dashboard'a Dön (Veriler Silinir)",
+                "Kaydet ve Dashboard'a Dön",
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 12,

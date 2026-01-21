@@ -20,14 +20,12 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
   Bolum26Model _model = Bolum26Model();
   bool _askOtopark = false;
 
-  // Nokta atışı kaydırma için anahtarlar
-  final GlobalKey _egimKey = GlobalKey();
-  final GlobalKey _sahanlikKey = GlobalKey();
-  final GlobalKey _otoparkKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum26 != null) {
+      _model = BinaStore.instance.bolum26!;
+    }
     // Bölüm 6'daki otopark varlığına göre şalteri ayarla
     final b6 = BinaStore.instance.bolum6;
     if (b6?.hasOtopark == true) {
@@ -35,42 +33,17 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
     }
   }
 
-  // Belirli bir widget'a yumuşak kaydırma fonksiyonu
-  void _scrollToKey(GlobalKey key) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (key.currentContext != null) {
-        Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-          alignment: 0.1, // Ekranın üst kısmında durmasını sağlar
-        );
-      }
-    });
-  }
-
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'varlik') {
         _model = _model.copyWith(varlik: choice);
-        if (choice.label == Bolum26Content.varlikOptionB.label) {
-          _scrollToKey(_egimKey); // Rampa varsa eğim sorusuna kaydır
-        } else {
+        if (choice.label != Bolum26Content.varlikOptionB.label) {
           _model = _model.copyWith(egim: null, sahanlik: null);
-          if (_askOtopark)
-            _scrollToKey(
-              _otoparkKey,
-            ); // Rampa yok ama otopark varsa oraya kaydır
         }
       } else if (type == 'egim') {
         _model = _model.copyWith(egim: choice);
-        _scrollToKey(_sahanlikKey); // Eğim seçilince sahanlığa kaydır
       } else if (type == 'sahanlik') {
         _model = _model.copyWith(sahanlik: choice);
-        if (_askOtopark)
-          _scrollToKey(
-            _otoparkKey,
-          ); // Sahanlık bitince otopark varsa oraya kaydır
       } else if (type == 'otopark') {
         _model = _model.copyWith(otopark: choice);
       }
@@ -156,16 +129,12 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
               "Rampa tespit edildiği için eğim ve sahanlık soruları açılmıştır.",
             ),
 
-            // EĞİM SORUSU (Key buraya bağlandı)
-            SizedBox(key: _egimKey, height: 1),
             _buildSoru("Bu rampanın eğimi ve zemin kaplaması nasıl?", 'egim', [
               Bolum26Content.egimOptionA,
               Bolum26Content.egimOptionB,
               Bolum26Content.egimOptionC,
             ], _model.egim),
 
-            // SAHANLIK SORUSU (Key buraya bağlandı)
-            SizedBox(key: _sahanlikKey, height: 1),
             _buildSoru(
               "Rampanın başlangıcında ve bitişinde sahanlık (düzlük) var mı?",
               'sahanlik',
@@ -180,8 +149,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
 
           // --- OTOPARK RAMPASI (Sadece Otopark Varsa) ---
           if (_askOtopark) ...[
-            // OTOPARK SORUSU (Key buraya bağlandı)
-            SizedBox(key: _otoparkKey, height: 12),
+            const SizedBox(height: 12),
             const Padding(
               padding: EdgeInsets.only(left: 4, bottom: 12),
               child: Text(

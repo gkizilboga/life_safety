@@ -6,41 +6,61 @@ import '../models/choice_result.dart';
 class SelectableCard extends StatelessWidget {
   final ChoiceResult choice;
   final bool isSelected;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final bool isDisabled;
 
   const SelectableCard({
     super.key,
     required this.choice,
     required this.isSelected,
-    required this.onTap,
+    this.onTap,
+    this.isDisabled = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (BinaStore.instance.hapticEnabled) {
-          HapticFeedback.lightImpact();
-        }
-        onTap();
-      },
+      onTap: isDisabled || onTap == null
+          ? null
+          : () {
+              if (BinaStore.instance.hapticEnabled) {
+                HapticFeedback.lightImpact();
+              }
+              onTap!();
+            },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF1A237E).withValues(alpha: 0.06) : Colors.white,
+          color: isDisabled
+              ? Colors.grey.shade200
+              : (isSelected
+                    ? const Color(0xFF1A237E).withOpacity(0.06)
+                    : Colors.white),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? const Color(0xFF1A237E) : const Color(0xFFCFD8DC),
+            color: isDisabled
+                ? Colors.grey.shade400
+                : (isSelected
+                      ? const Color(0xFF1A237E)
+                      : const Color(0xFFCFD8DC)),
             width: isSelected ? 2.5 : 1.2,
           ),
         ),
         child: Row(
           children: [
             Icon(
-              isSelected ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-              color: isSelected ? const Color(0xFF1A237E) : Colors.grey.shade400,
+              isSelected
+                  ? Icons.check_circle_rounded
+                  : (isDisabled
+                        ? Icons.lock_outline
+                        : Icons.radio_button_unchecked_rounded),
+              color: isDisabled
+                  ? Colors.grey.shade500
+                  : (isSelected
+                        ? const Color(0xFF1A237E)
+                        : Colors.grey.shade400),
               size: 22,
             ),
             const SizedBox(width: 14),
@@ -52,8 +72,12 @@ class SelectableCard extends StatelessWidget {
                     choice.uiTitle,
                     style: TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w800, // Yanıtlar da artık çok kalın ve net
-                      color: isSelected ? const Color(0xFF1A237E) : const Color(0xFF263238), // Koyu Kömür Siyahı
+                      fontWeight: FontWeight.w800,
+                      color: isDisabled
+                          ? Colors.grey.shade600
+                          : (isSelected
+                                ? const Color(0xFF1A237E)
+                                : const Color(0xFF263238)),
                       height: 1.3,
                     ),
                   ),
@@ -62,10 +86,14 @@ class SelectableCard extends StatelessWidget {
                     Text(
                       choice.uiSubtitle,
                       style: TextStyle(
-                        fontSize: 12, 
-                        color: isSelected ? const Color(0xFF1A237E).withValues(alpha: 0.7) : Colors.grey.shade700, 
+                        fontSize: 12,
+                        color: isDisabled
+                            ? Colors.grey.shade500
+                            : (isSelected
+                                  ? const Color(0xFF1A237E).withOpacity(0.7)
+                                  : Colors.grey.shade700),
                         height: 1.4,
-                        fontWeight: FontWeight.w600, // Alt metinler bile artık daha kalın
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],

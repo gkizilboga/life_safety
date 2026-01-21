@@ -31,6 +31,9 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum29 != null) {
+      _model = BinaStore.instance.bolum29!;
+    }
     _loadVisibility();
 
     // Eğer hiçbir teknik hacim yoksa otomatik atla

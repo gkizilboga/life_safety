@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'bolum_1_screen.dart';
 import '../data/bina_store.dart';
 import '../data/turkiye_data.dart';
+import '../utils/turkish_utils.dart';
 
 class BuildingSetupScreen extends StatefulWidget {
   const BuildingSetupScreen({super.key});
@@ -16,11 +17,38 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   String? _selectedDistrict;
   bool _isAgreed = false;
 
-  List<String> get _cities => TurkiyeData.ilIlceMap.keys.toList()..sort();
+  @override
+  void initState() {
+    super.initState();
+    // Load existing data if we are editing or going back
+    final store = BinaStore.instance;
+    if (store.currentBinaName != null) {
+      _nameCtrl.text = store.currentBinaName!;
+    }
+    if (store.currentBinaCity != null) {
+      _selectedCity = store.currentBinaCity;
+    }
+    if (store.currentBinaDistrict != null) {
+      _selectedDistrict = store.currentBinaDistrict;
+    }
+    // Agreement is usually fresh or can be assumed true if we already have a bina id
+    if (store.currentBinaId != null) {
+      _isAgreed = true;
+    }
+  }
 
-  List<String> get _districts => _selectedCity != null
-      ? (List<String>.from(TurkiyeData.ilIlceMap[_selectedCity]!)..sort())
-      : [];
+  List<String> get _cities {
+    final cities = TurkiyeData.ilIlceMap.keys.toList();
+    cities.sort((a, b) => TurkishUtils.compare(a, b));
+    return cities;
+  }
+
+  List<String> get _districts {
+    if (_selectedCity == null) return [];
+    final districts = List<String>.from(TurkiyeData.ilIlceMap[_selectedCity]!);
+    districts.sort((a, b) => TurkishUtils.compare(a, b));
+    return districts;
+  }
 
   void _start() {
     if (_nameCtrl.text.isEmpty ||
@@ -161,38 +189,55 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
     required void Function(String?)? onChanged,
     required IconData icon,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE0E0E0)),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          isExpanded: true,
-          hint: Text(
-            hint,
-            style: const TextStyle(fontSize: 14, color: Colors.grey),
+    return GestureDetector(
+      onTap: onChanged == null
+          ? null
+          : () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                backgroundColor: Colors.transparent,
+                builder: (context) => SearchableListSelector(
+                  title: hint,
+                  items: items,
+                  onSelected: onChanged,
+                ),
+              );
+            },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: onChanged == null
+                ? Colors.grey.shade200
+                : const Color(0xFFE0E0E0),
           ),
-          value: value,
-          icon: Icon(
-            Icons.arrow_drop_down_circle_outlined,
-            color: const Color(0xFF1A237E).withValues(alpha: 0.5),
-          ),
-          items: items.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Row(
-                children: [
-                  Icon(icon, size: 18, color: const Color(0xFF1A237E)),
-                  const SizedBox(width: 12),
-                  Text(item, style: const TextStyle(fontSize: 15)),
-                ],
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: onChanged == null ? Colors.grey : const Color(0xFF1A237E),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                value ?? hint,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: value == null ? Colors.grey : Colors.black87,
+                ),
               ),
-            );
-          }).toList(),
-          onChanged: onChanged,
+            ),
+            Icon(
+              Icons.search,
+              size: 18,
+              color: const Color(0xFF1A237E).withValues(alpha: 0.5),
+            ),
+          ],
         ),
       ),
     );
@@ -247,6 +292,131 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
             letterSpacing: 1,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SearchableListSelector extends StatefulWidget {
+  final String title;
+  final List<String> items;
+  final Function(String) onSelected;
+
+  const SearchableListSelector({
+    super.key,
+    required this.title,
+    required this.items,
+    required this.onSelected,
+  });
+
+  @override
+  State<SearchableListSelector> createState() => _SearchableListSelectorState();
+}
+
+class _SearchableListSelectorState extends State<SearchableListSelector> {
+  final _searchCtrl = TextEditingController();
+  List<String> _filteredItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredItems = widget.items;
+    _searchCtrl.addListener(_filter);
+  }
+
+  void _filter() {
+    final query = _searchCtrl.text;
+    setState(() {
+      if (query.isEmpty) {
+        _filteredItems = widget.items;
+      } else {
+        _filteredItems = widget.items
+            .where((item) => TurkishUtils.contains(item, query))
+            .toList();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.75,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 12),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1A237E),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextField(
+              controller: _searchCtrl,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: "Ara...",
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _filteredItems.length,
+              itemBuilder: (context, index) {
+                final item = _filteredItems[index];
+                return ListTile(
+                  title: Text(item),
+                  onTap: () {
+                    widget.onSelected(item);
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -23,6 +23,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
   final _genislikKorunumluCtrl = TextEditingController();
   final _genislikKorunumsuzCtrl = TextEditingController();
+
+  // Yeni Koridor Kontrolcüleri
+  final _koridorGenislikKorunumluCtrl = TextEditingController();
+  final _koridorGenislikKorunumsuzCtrl = TextEditingController();
+
   final _kapiGenislikKorunumluCtrl = TextEditingController();
   final _kapiGenislikKorunumsuzCtrl = TextEditingController();
 
@@ -34,6 +39,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   bool _genislikBilinmiyor = false;
   bool _kapiGenislikBilinmiyor = false;
 
+  // Genişlik Ayrımı
+  bool _areWidthsSame = true;
+
   int _cntDisCelik = 0;
   int _totalValidCikisSayisi = 0;
   bool _hasKorunumlu = false;
@@ -41,12 +49,40 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
   String? _genKerr;
   String? _genKSerr;
+  String? _korKerr; // Koridor Korunumlu Hata
+  String? _korKSerr; // Koridor Korunumsuz Hata
   String? _kGenKerr;
   String? _kGenKSerr;
 
   @override
   void initState() {
     super.initState();
+    // Load existing model data
+    final saved = BinaStore.instance.bolum36;
+    if (saved != null) {
+      _model = saved;
+      _areWidthsSame = saved.areWidthsSame;
+
+      if (saved.genislikKorunumlu != null)
+        _genislikKorunumluCtrl.text = saved.genislikKorunumlu.toString();
+      if (saved.genislikKorunumsuz != null)
+        _genislikKorunumsuzCtrl.text = saved.genislikKorunumsuz.toString();
+
+      if (saved.koridorGenislikKorunumlu != null)
+        _koridorGenislikKorunumluCtrl.text = saved.koridorGenislikKorunumlu
+            .toString();
+      if (saved.koridorGenislikKorunumsuz != null)
+        _koridorGenislikKorunumsuzCtrl.text = saved.koridorGenislikKorunumsuz
+            .toString();
+
+      if (saved.kapiGenislikKorunumlu != null)
+        _kapiGenislikKorunumluCtrl.text = saved.kapiGenislikKorunumlu
+            .toString();
+      if (saved.kapiGenislikKorunumsuz != null)
+        _kapiGenislikKorunumsuzCtrl.text = saved.kapiGenislikKorunumsuz
+            .toString();
+    }
+
     final b20 = BinaStore.instance.bolum20;
 
     int icKapali = b20?.binaIciYanginMerdiveniSayisi ?? 0;
@@ -64,12 +100,29 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
     _genislikKorunumluCtrl.addListener(_validate);
     _genislikKorunumsuzCtrl.addListener(_validate);
+    _koridorGenislikKorunumluCtrl.addListener(_validate);
+    _koridorGenislikKorunumsuzCtrl.addListener(_validate);
     _kapiGenislikKorunumluCtrl.addListener(_validate);
     _kapiGenislikKorunumsuzCtrl.addListener(_validate);
   }
 
+  List<ChoiceResult> _getFilteredCikisKatiOptions() {
+    final b3 = BinaStore.instance.bolum3;
+    final int nKat = b3?.normalKatSayisi ?? 0;
+    final int bKat = b3?.bodrumKatSayisi ?? 0;
+
+    List<ChoiceResult> options = [
+      Bolum36Content.cikisKatiOptionA,
+    ]; // Zemin her zaman var
+    if (nKat > 0) options.add(Bolum36Content.cikisKatiOptionB);
+    if (bKat > 0) options.add(Bolum36Content.cikisKatiOptionC);
+
+    return options;
+  }
+
   void _validate() {
     setState(() {
+      // 1. Merdiven Genişlikleri
       if (!_genislikBilinmiyor) {
         if (_hasKorunumlu) {
           _genKerr = InputValidator.validateNumber(
@@ -96,18 +149,54 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         _genKSerr = null;
       }
 
+      // 2. Koridor Genişlikleri (Sadece farklıysa kontrol et)
+      if (!_areWidthsSame && !_genislikBilinmiyor) {
+        if (_hasKorunumlu) {
+          _korKerr = InputValidator.validateNumber(
+            _koridorGenislikKorunumluCtrl.text,
+            min: 50,
+            max: 250,
+            unit: "cm",
+          );
+        } else {
+          _korKerr = null;
+        }
+        if (_hasKorunumsuz) {
+          _korKSerr = InputValidator.validateNumber(
+            _koridorGenislikKorunumsuzCtrl.text,
+            min: 50,
+            max: 250,
+            unit: "cm",
+          );
+        } else {
+          _korKSerr = null;
+        }
+      } else {
+        _korKerr = null;
+        _korKSerr = null;
+      }
+
+      // 3. Kapı Genişlikleri
       if (!_kapiGenislikBilinmiyor) {
         if (_hasKorunumlu) {
-          _kapiGenislikKorunumluCtrl.text.isNotEmpty;
           _kGenKerr = InputValidator.validateNumber(
             _kapiGenislikKorunumluCtrl.text,
             min: 50,
             max: 250,
             unit: "cm",
           );
+          // Check if door width > stair width (Compare with Stair Width always)
+          if (_kGenKerr == null && _genKerr == null && !_genislikBilinmiyor) {
+            double? stairW = double.tryParse(_genislikKorunumluCtrl.text);
+            double? doorW = double.tryParse(_kapiGenislikKorunumluCtrl.text);
+            if (stairW != null && doorW != null && doorW > stairW) {
+              _kGenKerr = "Kapı genişliği merdivenden büyük olamaz.";
+            }
+          }
         } else {
           _kGenKerr = null;
         }
+
         if (_hasKorunumsuz) {
           _kGenKSerr = InputValidator.validateNumber(
             _kapiGenislikKorunumsuzCtrl.text,
@@ -115,6 +204,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             max: 250,
             unit: "cm",
           );
+          // Check if door width > stair width
+          if (_kGenKSerr == null && _genKSerr == null && !_genislikBilinmiyor) {
+            double? stairW = double.tryParse(_genislikKorunumsuzCtrl.text);
+            double? doorW = double.tryParse(_kapiGenislikKorunumsuzCtrl.text);
+            if (stairW != null && doorW != null && doorW > stairW) {
+              _kGenKSerr = "Kapı genişliği merdivenden büyük olamaz.";
+            }
+          }
         } else {
           _kGenKSerr = null;
         }
@@ -125,22 +222,12 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     });
   }
 
-  void _scrollToKey(GlobalKey key) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (key.currentContext != null)
-        Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-          alignment: 0.1,
-        );
-    });
-  }
-
   @override
   void dispose() {
     _genislikKorunumluCtrl.dispose();
     _genislikKorunumsuzCtrl.dispose();
+    _koridorGenislikKorunumluCtrl.dispose();
+    _koridorGenislikKorunumsuzCtrl.dispose();
     _kapiGenislikKorunumluCtrl.dispose();
     _kapiGenislikKorunumsuzCtrl.dispose();
     super.dispose();
@@ -151,15 +238,12 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       if (type == 'cikisKati') _model = _model.copyWith(cikisKati: choice);
       if (type == 'disMerd') {
         _model = _model.copyWith(disMerd: choice);
-        _scrollToKey(_konumKey);
       }
       if (type == 'konum') {
         _model = _model.copyWith(konum: choice);
-        _scrollToKey(_genislikKey);
       }
       if (type == 'kapiTipi') {
         _model = _model.copyWith(kapiTipi: choice);
-        _scrollToKey(_kapiKey);
       }
       if (type == 'gorunurluk') _model = _model.copyWith(gorunurluk: choice);
     });
@@ -170,8 +254,10 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     final b4 = store.bolum4;
     final b20 = store.bolum20;
     final b33 = store.bolum33;
+
     double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
     double hYapi = b4?.hesaplananYapiYuksekligi ?? 0.0;
+
     int korunumlu =
         (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
         (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0);
@@ -179,7 +265,10 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     int doner = b20?.donerMerdivenSayisi ?? 0;
     int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
     bool basinclandirmaVar = b20?.basinclandirma?.label == "20-BAS-A";
+
     List<String> notes = [];
+
+    // --- Merdiven Tipi ve Sayısı Kontrolleri (Mevcut Logic) ---
     if (sahanliksiz > 0)
       notes.add(
         "Binada 'Sahanlıksız Merdiven' tespit edilmiştir. Bu merdiven tipi hiçbir binada kaçış yolu olarak kabul edilemez. YENİ BİNA 'larda tüm merdiven tiplerinde insanların tahliye esnasında dinlenebileceği sahanlıkların bulunması Yönetmeliğe göre zorunludur.",
@@ -192,6 +281,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       notes.add(
         "Bina yüksekliği 21.50m üzerinde olduğu için 'Bina Dışı Açık Çelik Merdiven' kullanılamaz.",
       );
+
     if (hYapi < 21.50)
       notes.add(
         "Yapı yüksekliği 21.50m altındadır. Sahanlıksız Merdiven ve Dengelenmiş Merdiven hariç tüm merdiven tipleri kullanılabilir.",
@@ -228,6 +318,85 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           "51.50m üzeri binalarda her iki 'Korunumlu Merdiven'inde hem YGH hem de Basınçlandırma Sistemi tesis edilmesi zorunludur.",
         );
     }
+
+    // --- Genişlik Kontrolleri (Yeni Logic) ---
+    if (!_genislikBilinmiyor && !_kapiGenislikBilinmiyor) {
+      int yukBodrum = b33?.yukBodrum ?? 0;
+
+      int minMerdiven = 0;
+      int minKoridor = 0;
+      int minKapi = 80; // Her durumda 80
+
+      bool isYuksekBina = (hBina >= 21.50 || hYapi >= 30.50);
+
+      // Kural 4: Yük >= 2001
+      if (yukBodrum >= 2001) {
+        minMerdiven = 200;
+        minKoridor = 200;
+      }
+      // Kural 3: 501 <= Yük < 2001 (Her yükseklikte)
+      else if (yukBodrum >= 501) {
+        minMerdiven = 150;
+        minKoridor = 150;
+      }
+      // Kural 2: Yüksek Bina ve Yük < 501
+      else if (isYuksekBina) {
+        minMerdiven = 120;
+        minKoridor = 120;
+      }
+      // Kural 1: Yüksek Değil ve Yük < 501
+      else {
+        minMerdiven =
+            120; // Merdiven min 120? User said "merdiven genişliği minimum 120 cm". Actually Kural 1 says merdiven 120.
+        minKoridor = 110;
+      }
+
+      void checkWidths(String prefix, int uStair, int uCorridor, int uDoor) {
+        List<String> violations = [];
+        if (uStair < minMerdiven)
+          violations.add(
+            "Merdiven genişliği yetersiz (Mevcut: ${uStair}cm, Gerekli: ${minMerdiven}cm)",
+          );
+        if (uCorridor < minKoridor)
+          violations.add(
+            "Koridor genişliği yetersiz (Mevcut: ${uCorridor}cm, Gerekli: ${minKoridor}cm)",
+          );
+        if (uDoor < minKapi)
+          violations.add(
+            "Kapı genişliği yetersiz (Mevcut: ${uDoor}cm, Gerekli: ${minKapi}cm)",
+          );
+
+        if (violations.isNotEmpty) {
+          notes.add(
+            "🚨 $prefix İÇİN GENİŞLİK İHLALLERİ:\n- ${violations.join("\n- ")}",
+          );
+        } else {
+          notes.add(
+            "✅ $prefix genişlikleri Bodrum Kat Kullanıcı Yükü ($yukBodrum Kişi) ve Bina Yüksekliği kriterlerine uygundur.",
+          );
+        }
+      }
+
+      if (_hasKorunumlu) {
+        int s = int.tryParse(_genislikKorunumluCtrl.text) ?? 0;
+        int c = _areWidthsSame
+            ? s
+            : (int.tryParse(_koridorGenislikKorunumluCtrl.text) ?? 0);
+        int d = int.tryParse(_kapiGenislikKorunumluCtrl.text) ?? 0;
+        checkWidths("KORUNUMLU MERDİVEN", s, c, d);
+      }
+
+      if (_hasKorunumsuz) {
+        int s = int.tryParse(_genislikKorunumsuzCtrl.text) ?? 0;
+        int c = _areWidthsSame
+            ? s
+            : (int.tryParse(_koridorGenislikKorunumsuzCtrl.text) ?? 0);
+        int d = int.tryParse(_kapiGenislikKorunumsuzCtrl.text) ?? 0;
+        checkWidths("KORUNUMSUZ MERDİVEN", s, c, d);
+      }
+    }
+
+    // --- Çıkış Sayısı Kontrolü ---
     int gerekli = b33?.gerekliNormal ?? 0;
     int mevcut = b33?.mevcutUst ?? 0;
     if (mevcut >= gerekli)
@@ -247,12 +416,20 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     if (_totalValidCikisSayisi > 1 && _model.konum == null) return false;
 
     if (!_genislikBilinmiyor) {
-      if (_hasKorunumlu &&
-          (_genislikKorunumluCtrl.text.isEmpty || _genKerr != null))
-        return false;
-      if (_hasKorunumsuz &&
-          (_genislikKorunumsuzCtrl.text.isEmpty || _genKSerr != null))
-        return false;
+      if (_hasKorunumlu) {
+        if (_genislikKorunumluCtrl.text.isEmpty || _genKerr != null)
+          return false;
+        if (!_areWidthsSame &&
+            (_koridorGenislikKorunumluCtrl.text.isEmpty || _korKerr != null))
+          return false;
+      }
+      if (_hasKorunumsuz) {
+        if (_genislikKorunumsuzCtrl.text.isEmpty || _genKSerr != null)
+          return false;
+        if (!_areWidthsSame &&
+            (_koridorGenislikKorunumsuzCtrl.text.isEmpty || _korKSerr != null))
+          return false;
+      }
     }
 
     if (_model.kapiTipi == null) return false;
@@ -277,6 +454,16 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     int? genKS = _genislikBilinmiyor
         ? null
         : int.tryParse(_genislikKorunumsuzCtrl.text);
+
+    // Parse Corridor Widths
+    int? korK = (_genislikBilinmiyor || _areWidthsSame)
+        ? null // If same, we don't save separate corridor width? Or duplicate it? Best to save as null and fallback to genK in logic.
+        : int.tryParse(_koridorGenislikKorunumluCtrl.text);
+
+    int? korKS = (_genislikBilinmiyor || _areWidthsSame)
+        ? null
+        : int.tryParse(_koridorGenislikKorunumsuzCtrl.text);
+
     int? kGenK = _kapiGenislikBilinmiyor
         ? null
         : int.tryParse(_kapiGenislikKorunumluCtrl.text);
@@ -286,8 +473,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
     String finalReport = _evaluateStairsAndExits();
     _model = _model.copyWith(
+      areWidthsSame: _areWidthsSame,
       genislikKorunumlu: genK,
       genislikKorunumsuz: genKS,
+      koridorGenislikKorunumlu: korK,
+      koridorGenislikKorunumsuz: korKS,
       kapiGenislikKorunumlu: kGenK,
       kapiGenislikKorunumsuz: kGenKS,
       merdivenDegerlendirme: finalReport,
@@ -327,11 +517,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           _buildSoruHeader(
             "Binadan dış havaya (atmosfere) çıktığınız kat hangisidir?",
           ),
-          _buildSoruCard('cikisKati', [
-            Bolum36Content.cikisKatiOptionA,
-            Bolum36Content.cikisKatiOptionB,
-            Bolum36Content.cikisKatiOptionC,
-          ], _model.cikisKati),
+          _buildSoruCard(
+            'cikisKati',
+            _getFilteredCikisKatiOptions(),
+            _model.cikisKati,
+          ),
           if (_cntDisCelik > 0) ...[
             _buildSoruHeader(
               "Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?",
@@ -357,24 +547,77 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             ], _model.konum),
           ],
           SizedBox(key: _genislikKey, height: 1),
-          _buildSoruHeader("Merdiven/Koridor temiz genişliği (cm) kaçtır?"),
+
+          _buildSoruHeader("Merdiven ve Koridor temiz genişliği (cm) kaçtır?"),
           QuestionCard(
             child: Column(
               children: [
-                if (_hasKorunumlu)
+                // Toggle Switch for Same/Different Widths
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade100),
+                  ),
+                  child: SwitchListTile(
+                    value: _areWidthsSame,
+                    title: const Text(
+                      "Binada merdiven ve koridor genişlikleri aynıdır.",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1565C0),
+                      ),
+                    ),
+                    activeColor: const Color(0xFF1565C0),
+                    onChanged: (val) {
+                      setState(() {
+                        _areWidthsSame = val;
+                        // If turning ON same widths, clear separate corridor inputs to avoid confusion?
+                        // Or keep them. Let's just update UI.
+                      });
+                    },
+                  ),
+                ),
+
+                if (_hasKorunumlu) ...[
                   _buildInput(
-                    "Korunumlu Merdiveni Genişliği",
+                    _areWidthsSame
+                        ? "Korunumlu Merdiven/Koridor Genişliği"
+                        : "Korunumlu Merdiven Genişliği",
                     _genislikKorunumluCtrl,
                     _genislikBilinmiyor,
                     _genKerr,
                   ),
-                if (_hasKorunumsuz)
+                  if (!_areWidthsSame)
+                    _buildInput(
+                      "Korunumlu Koridor Genişliği",
+                      _koridorGenislikKorunumluCtrl,
+                      _genislikBilinmiyor,
+                      _korKerr,
+                    ),
+                ],
+
+                if (_hasKorunumsuz) ...[
                   _buildInput(
-                    "Korunumsuz Merdiven Genişliği",
+                    _areWidthsSame
+                        ? "Korunumsuz Merdiven/Koridor Genişliği"
+                        : "Korunumsuz Merdiven Genişliği",
                     _genislikKorunumsuzCtrl,
                     _genislikBilinmiyor,
                     _genKSerr,
                   ),
+                  if (!_areWidthsSame)
+                    _buildInput(
+                      "Korunumsuz Koridor Genişliği",
+                      _koridorGenislikKorunumsuzCtrl,
+                      _genislikBilinmiyor,
+                      _korKSerr,
+                    ),
+                ],
+
                 const SizedBox(height: 10),
                 SelectableCard(
                   choice: Bolum36Content.genislikBilinmiyor,
@@ -384,8 +627,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                     if (_genislikBilinmiyor) {
                       _genislikKorunumluCtrl.clear();
                       _genislikKorunumsuzCtrl.clear();
+                      _koridorGenislikKorunumluCtrl.clear();
+                      _koridorGenislikKorunumsuzCtrl.clear();
                     }
-                    _scrollToKey(_kapiKey);
                   }),
                 ),
               ],
@@ -428,7 +672,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                       _kapiGenislikKorunumluCtrl.clear();
                       _kapiGenislikKorunumsuzCtrl.clear();
                     }
-                    _scrollToKey(_gorunurlukKey);
                   }),
                 ),
               ],

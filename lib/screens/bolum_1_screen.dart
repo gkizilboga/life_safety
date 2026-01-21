@@ -17,6 +17,14 @@ class Bolum1Screen extends StatefulWidget {
 class _Bolum1ScreenState extends State<Bolum1Screen> {
   Bolum1Model _model = Bolum1Model();
 
+  @override
+  void initState() {
+    super.initState();
+    if (BinaStore.instance.bolum1 != null) {
+      _model = BinaStore.instance.bolum1!;
+    }
+  }
+
   void _handleSelection(ChoiceResult choice) {
     setState(() {
       _model = _model.copyWith(secim: choice);

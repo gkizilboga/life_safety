@@ -17,11 +17,13 @@ class Bolum28Screen extends StatefulWidget {
 
 class _Bolum28ScreenState extends State<Bolum28Screen> {
   Bolum28Model _model = Bolum28Model();
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum28 != null) {
+      _model = BinaStore.instance.bolum28!;
+    }
     _checkMuafiyet();
   }
 
@@ -56,37 +58,21 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
     }
   }
 
-  void _scrollToBottom() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
-
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'mesafe') _model = _model.copyWith(mesafe: choice);
 
       if (type == 'dubleks') {
         _model = _model.copyWith(dubleks: choice);
-        if (choice.label == Bolum28Content.dubleksOptionA.label) {
+        if (choice.label != Bolum28Content.dubleksOptionB.label) {
           _model = _model.copyWith(alan: null, cikis: null);
-        } else {
-          _scrollToBottom();
         }
       }
 
       if (type == 'alan') {
         _model = _model.copyWith(alan: choice);
-        if (choice.label == Bolum28Content.alanOption1.label) {
+        if (choice.label != Bolum28Content.alanOption2.label) {
           _model = _model.copyWith(cikis: null);
-        } else {
-          _scrollToBottom();
         }
       }
 
@@ -135,7 +121,6 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [

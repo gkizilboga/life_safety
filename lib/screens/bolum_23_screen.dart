@@ -23,6 +23,9 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum23 != null) {
+      _model = BinaStore.instance.bolum23!;
+    }
 
     // Bodrum kat var mı kontrol et
     final b3 = BinaStore.instance.bolum3;

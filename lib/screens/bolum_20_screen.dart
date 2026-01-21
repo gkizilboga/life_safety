@@ -26,7 +26,9 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   bool _isTekKatli = false;
   bool _hasBodrum = false;
   bool _showBasinclandirma = false;
+  bool _isBodrumIndependent = false; // Confirmed state
 
+  // Upper/Main Stair Controllers
   final _normalCtrl = TextEditingController();
   final _icKapaliCtrl = TextEditingController();
   final _disKapaliCtrl = TextEditingController();
@@ -34,6 +36,15 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   final _donerCtrl = TextEditingController();
   final _sahanliksizCtrl = TextEditingController();
 
+  // Basement Independent Stair Controllers
+  final _bodNormalCtrl = TextEditingController();
+  final _bodIcKapaliCtrl = TextEditingController();
+  final _bodDisKapaliCtrl = TextEditingController();
+  final _bodDisAcikCtrl = TextEditingController();
+  final _bodDonerCtrl = TextEditingController();
+  final _bodSahanliksizCtrl = TextEditingController();
+
+  // Errors for Main
   String? _normalErr;
   String? _icKapaliErr;
   String? _disKapaliErr;
@@ -41,16 +52,76 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   String? _donerErr;
   String? _sahanliksizErr;
 
+  // Errors for Basement
+  String? _bodNormalErr;
+  String? _bodIcKapaliErr;
+  String? _bodDisKapaliErr;
+  String? _bodDisAcikErr;
+  String? _bodDonerErr;
+  String? _bodSahanliksizErr;
+
   @override
   void initState() {
     super.initState();
     _loadBuildingInfo();
+
+    // Listeners for Main
     _normalCtrl.addListener(_validateLimits);
     _icKapaliCtrl.addListener(_validateLimits);
     _disKapaliCtrl.addListener(_validateLimits);
     _disAcikCtrl.addListener(_validateLimits);
     _donerCtrl.addListener(_validateLimits);
     _sahanliksizCtrl.addListener(_validateLimits);
+
+    // Listeners for Basement
+    _bodNormalCtrl.addListener(_validateLimits);
+    _bodIcKapaliCtrl.addListener(_validateLimits);
+    _bodDisKapaliCtrl.addListener(_validateLimits);
+    _bodDisAcikCtrl.addListener(_validateLimits);
+    _bodDonerCtrl.addListener(_validateLimits);
+    _bodSahanliksizCtrl.addListener(_validateLimits);
+
+    // Load existing data
+    final saved = BinaStore.instance.bolum20;
+    if (saved != null) {
+      _model = saved;
+      // Main
+      if (saved.normalMerdivenSayisi > 0)
+        _normalCtrl.text = saved.normalMerdivenSayisi.toString();
+      if (saved.binaIciYanginMerdiveniSayisi > 0)
+        _icKapaliCtrl.text = saved.binaIciYanginMerdiveniSayisi.toString();
+      if (saved.binaDisiKapaliYanginMerdiveniSayisi > 0)
+        _disKapaliCtrl.text = saved.binaDisiKapaliYanginMerdiveniSayisi
+            .toString();
+      if (saved.binaDisiAcikYanginMerdiveniSayisi > 0)
+        _disAcikCtrl.text = saved.binaDisiAcikYanginMerdiveniSayisi.toString();
+      if (saved.donerMerdivenSayisi > 0)
+        _donerCtrl.text = saved.donerMerdivenSayisi.toString();
+      if (saved.sahanliksizMerdivenSayisi > 0)
+        _sahanliksizCtrl.text = saved.sahanliksizMerdivenSayisi.toString();
+
+      // Basement
+      _isBodrumIndependent = saved.isBodrumIndependent;
+      if (_isBodrumIndependent) {
+        if (saved.bodrumNormalMerdivenSayisi > 0)
+          _bodNormalCtrl.text = saved.bodrumNormalMerdivenSayisi.toString();
+        if (saved.bodrumBinaIciYanginMerdiveniSayisi > 0)
+          _bodIcKapaliCtrl.text = saved.bodrumBinaIciYanginMerdiveniSayisi
+              .toString();
+        if (saved.bodrumBinaDisiKapaliYanginMerdiveniSayisi > 0)
+          _bodDisKapaliCtrl.text = saved
+              .bodrumBinaDisiKapaliYanginMerdiveniSayisi
+              .toString();
+        if (saved.bodrumBinaDisiAcikYanginMerdiveniSayisi > 0)
+          _bodDisAcikCtrl.text = saved.bodrumBinaDisiAcikYanginMerdiveniSayisi
+              .toString();
+        if (saved.bodrumDonerMerdivenSayisi > 0)
+          _bodDonerCtrl.text = saved.bodrumDonerMerdivenSayisi.toString();
+        if (saved.bodrumSahanliksizMerdivenSayisi > 0)
+          _bodSahanliksizCtrl.text = saved.bodrumSahanliksizMerdivenSayisi
+              .toString();
+      }
+    }
   }
 
   void _loadBuildingInfo() {
@@ -67,6 +138,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
   void _validateLimits() {
     setState(() {
+      // Main Errors
       _normalErr = _checkLimit(_normalCtrl.text);
       _icKapaliErr = _checkLimit(_icKapaliCtrl.text);
       _disKapaliErr = _checkLimit(_disKapaliCtrl.text);
@@ -74,10 +146,28 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       _donerErr = _checkLimit(_donerCtrl.text);
       _sahanliksizErr = _checkLimit(_sahanliksizCtrl.text);
 
+      // Basement Errors
+      if (_isBodrumIndependent) {
+        _bodNormalErr = _checkLimit(_bodNormalCtrl.text);
+        _bodIcKapaliErr = _checkLimit(_bodIcKapaliCtrl.text);
+        _bodDisKapaliErr = _checkLimit(_bodDisKapaliCtrl.text);
+        _bodDisAcikErr = _checkLimit(_bodDisAcikCtrl.text);
+        _bodDonerErr = _checkLimit(_bodDonerCtrl.text);
+        _bodSahanliksizErr = _checkLimit(_bodSahanliksizCtrl.text);
+      }
+
+      // Show Basinclandirma Logic (Combined check)
       int ic = int.tryParse(_icKapaliCtrl.text) ?? 0;
       int dis = int.tryParse(_disKapaliCtrl.text) ?? 0;
-      _showBasinclandirma = (ic >= 1 || dis >= 1);
-      if (!_showBasinclandirma) _model = _model.copyWith(basinclandirma: null);
+      int bIc = int.tryParse(_bodIcKapaliCtrl.text) ?? 0; // Check basement too?
+      int bDis = int.tryParse(_bodDisKapaliCtrl.text) ?? 0;
+
+      // Logic: Show pressurization if ANY protected stair exists
+      _showBasinclandirma = (ic >= 1 || dis >= 1 || bIc >= 1 || bDis >= 1);
+
+      if (!_showBasinclandirma) {
+        _model = _model.copyWith(basinclandirma: null);
+      }
     });
   }
 
@@ -92,12 +182,25 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   }
 
   bool get _isLimitValid {
-    return _normalErr == null &&
+    bool mainValid =
+        _normalErr == null &&
         _icKapaliErr == null &&
         _disKapaliErr == null &&
         _disAcikErr == null &&
         _donerErr == null &&
         _sahanliksizErr == null;
+
+    if (!_isBodrumIndependent) return mainValid;
+
+    bool bodrumValid =
+        _bodNormalErr == null &&
+        _bodIcKapaliErr == null &&
+        _bodDisKapaliErr == null &&
+        _bodDisAcikErr == null &&
+        _bodDonerErr == null &&
+        _bodSahanliksizErr == null;
+
+    return mainValid && bodrumValid;
   }
 
   @override
@@ -108,18 +211,104 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _disAcikCtrl.dispose();
     _donerCtrl.dispose();
     _sahanliksizCtrl.dispose();
+
+    _bodNormalCtrl.dispose();
+    _bodIcKapaliCtrl.dispose();
+    _bodDisKapaliCtrl.dispose();
+    _bodDisAcikCtrl.dispose();
+    _bodDonerCtrl.dispose();
+    _bodSahanliksizCtrl.dispose();
+
     super.dispose();
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
+    if (type == 'bodrum') {
+      if (choice.label == Bolum20Content.bodrumOptionB.label) {
+        // "Hayır, bodruma inen merdiven farklı bir yerde" selected
+        _showConfirmationDialog(choice);
+        return;
+      } else {
+        // "Evet" selected (Reset independent)
+        setState(() {
+          _isBodrumIndependent = false;
+          _model = _model.copyWith(
+            bodrumMerdivenDevami: choice,
+            isBodrumIndependent: false,
+          );
+          // Clear basement inputs? Optional, but safer to keep clean
+          _bodNormalCtrl.clear();
+          _bodIcKapaliCtrl.clear();
+          _bodDisKapaliCtrl.clear();
+          _bodDisAcikCtrl.clear();
+          _bodDonerCtrl.clear();
+          _bodSahanliksizCtrl.clear();
+        });
+        return;
+      }
+    }
+
     setState(() {
       if (type == 'tekKatCikis') _model = _model.copyWith(tekKatCikis: choice);
       if (type == 'tekKatRampa') _model = _model.copyWith(tekKatRampa: choice);
       if (type == 'basinclandirma')
         _model = _model.copyWith(basinclandirma: choice);
-      if (type == 'bodrum')
-        _model = _model.copyWith(bodrumMerdivenDevami: choice);
     });
+  }
+
+  Future<void> _showConfirmationDialog(ChoiceResult choice) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Row(
+          children: [
+            Icon(Icons.report_problem, color: Colors.orange),
+            SizedBox(width: 10),
+            Text("Bilgi Teyidi", style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: const Text(
+          "İşaretlediğiniz seçenek doğrultusunda, bodrum kat merdivenlerinin üst kat merdivenlerinden tamamen bağımsız olduklarını belirttiniz.\n\nBilgiyi teyit ediniz lütfen.",
+          style: TextStyle(height: 1.5),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false), // Hayır
+            child: const Text(
+              "Hayır, teyit etmiyorum",
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryBlue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onPressed: () => Navigator.pop(context, true), // Evet
+            child: const Text("Evet, teyit ediyorum"),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      setState(() {
+        _isBodrumIndependent = true;
+        _model = _model.copyWith(
+          bodrumMerdivenDevami: choice,
+          isBodrumIndependent: true,
+        );
+      });
+    } else {
+      // User cancelled, maybe reset selection?
+      // Or select 'Evet' (Continuous)? Let's just do nothing (keep previous or null)
+      // Actually standard UX: don't select the "No" option if dialog rejected.
+    }
   }
 
   bool _validateAndSave() {
@@ -127,6 +316,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       if (_model.tekKatCikis == null || _model.tekKatRampa == null)
         return false;
     } else {
+      // Validate Main Stairs
       int normal = int.tryParse(_normalCtrl.text) ?? 0;
       int icKapali = int.tryParse(_icKapaliCtrl.text) ?? 0;
       int disKapali = int.tryParse(_disKapaliCtrl.text) ?? 0;
@@ -136,6 +326,30 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
       if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz == 0)
         return false;
+
+      // Validate Basement Stairs if Independent
+      int bNormal = 0, bIc = 0, bDisK = 0, bDisA = 0, bDoner = 0, bSahan = 0;
+      if (_isBodrumIndependent) {
+        bNormal = int.tryParse(_bodNormalCtrl.text) ?? 0;
+        bIc = int.tryParse(_bodIcKapaliCtrl.text) ?? 0;
+        bDisK = int.tryParse(_bodDisKapaliCtrl.text) ?? 0;
+        bDisA = int.tryParse(_bodDisAcikCtrl.text) ?? 0;
+        bDoner = int.tryParse(_bodDonerCtrl.text) ?? 0;
+        bSahan = int.tryParse(_bodSahanliksizCtrl.text) ?? 0;
+
+        if (bNormal + bIc + bDisK + bDisA + bDoner + bSahan == 0) {
+          // Must enter at least 1 basement stair if confirmed independent
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Bodrum kat için en az bir merdiven tipi girmelisiniz.",
+              ),
+            ),
+          );
+          return false;
+        }
+      }
+
       if (_showBasinclandirma && _model.basinclandirma == null) return false;
 
       _model = _model.copyWith(
@@ -145,6 +359,15 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         binaDisiAcikYanginMerdiveniSayisi: disAcik,
         donerMerdivenSayisi: doner,
         sahanliksizMerdivenSayisi: sahanliksiz,
+
+        // Save Basement Data
+        isBodrumIndependent: _isBodrumIndependent,
+        bodrumNormalMerdivenSayisi: bNormal,
+        bodrumBinaIciYanginMerdiveniSayisi: bIc,
+        bodrumBinaDisiKapaliYanginMerdiveniSayisi: bDisK,
+        bodrumBinaDisiAcikYanginMerdiveniSayisi: bDisA,
+        bodrumDonerMerdivenSayisi: bDoner,
+        bodrumSahanliksizMerdivenSayisi: bSahan,
       );
     }
 
@@ -181,13 +404,17 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "Lütfen gerekli alanları doğru şekilde doldurunuz.",
+          // If snackbar wasn't shown in validation
+          if (_isLimitValid) {
+            // Only show generic if limits are OK but something else missed
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  "Lütfen gerekli alanları doğru şekilde doldurunuz.",
+                ),
               ),
-            ),
-          );
+            );
+          }
         }
       },
       child: Column(
@@ -266,6 +493,87 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             ),
           ],
 
+          if (_hasBodrum)
+            _buildSoru(
+              "Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?",
+              'bodrum',
+              [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB],
+              _model.bodrumMerdivenDevami,
+            ),
+
+          // Independent Basement Stairs Section
+          if (_isBodrumIndependent) ...[
+            const Padding(
+              padding: EdgeInsets.only(left: 4, bottom: 16, top: 20),
+              child: Text(
+                "Bodrum Katlar İçin Özel Merdiven Bilgileri",
+                style: AppStyles.headerTitle, // Or questionTitle
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.orange.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.orange.shade200),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.orange),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      "Bağımsız olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
+                      style: TextStyle(color: Colors.black87, fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            QuestionCard(
+              child: Column(
+                children: [
+                  _buildStairInputGroup(
+                    label: "Bodrum: ${Bolum20Content.cokKatOption1.uiTitle}",
+                    ctrl: _bodNormalCtrl,
+                    error: _bodNormalErr,
+                  ),
+                  const Divider(height: 32),
+                  _buildStairInputGroup(
+                    label: "Bodrum: ${Bolum20Content.cokKatOption2.uiTitle}",
+                    ctrl: _bodIcKapaliCtrl,
+                    error: _bodIcKapaliErr,
+                  ),
+                  const Divider(height: 32),
+                  _buildStairInputGroup(
+                    label: "Bodrum: ${Bolum20Content.cokKatOption3.uiTitle}",
+                    ctrl: _bodDisKapaliCtrl,
+                    error: _bodDisKapaliErr,
+                  ),
+                  const Divider(height: 32),
+                  _buildStairInputGroup(
+                    label: "Bodrum: ${Bolum20Content.cokKatOption4.uiTitle}",
+                    ctrl: _bodDisAcikCtrl,
+                    error: _bodDisAcikErr,
+                  ),
+                  const Divider(height: 32),
+                  _buildStairInputGroup(
+                    label: "Bodrum: ${Bolum20Content.cokKatOption5.uiTitle}",
+                    ctrl: _bodDonerCtrl,
+                    error: _bodDonerErr,
+                  ),
+                  const Divider(height: 32),
+                  _buildStairInputGroup(
+                    label: "Bodrum: ${Bolum20Content.cokKatOption6.uiTitle}",
+                    ctrl: _bodSahanliksizCtrl,
+                    error: _bodSahanliksizErr,
+                  ),
+                ],
+              ),
+            ),
+          ],
+
           if (_showBasinclandirma)
             _buildSoruWithDef(
               "Merdivenlerde basınçlandırma sistemi var mı?",
@@ -278,14 +586,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                 Bolum20Content.basYghOptionC,
               ],
               _model.basinclandirma,
-            ),
-
-          if (_hasBodrum)
-            _buildSoru(
-              "Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?",
-              'bodrum',
-              [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB],
-              _model.bodrumMerdivenDevami,
             ),
         ],
       ),
@@ -348,7 +648,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
   Widget _buildSoru(
     String title,
-    String key,
+    String keyParam,
     List<ChoiceResult> options,
     ChoiceResult? selected,
   ) {
@@ -365,7 +665,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             (opt) => SelectableCard(
               choice: opt,
               isSelected: selected?.label == opt.label,
-              onTap: () => _handleSelection(key, opt),
+              onTap: () => _handleSelection(keyParam, opt),
             ),
           ),
         ],
@@ -377,7 +677,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     String title,
     String def,
     String term,
-    String key,
+    String keyParam,
     List<ChoiceResult> options,
     ChoiceResult? selected,
   ) {
@@ -404,7 +704,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             (opt) => SelectableCard(
               choice: opt,
               isSelected: selected?.label == opt.label,
-              onTap: () => _handleSelection(key, opt),
+              onTap: () => _handleSelection(keyParam, opt),
             ),
           ),
         ],

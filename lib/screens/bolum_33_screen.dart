@@ -26,6 +26,10 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum33 != null) {
+      _model = BinaStore.instance.bolum33!;
+      _isConfirmed = true; // Confirmation load
+    }
     _hesapla();
   }
 
@@ -161,8 +165,9 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
                 ),
               ),
               DefinitionButton(
-                  term: "Kullanıcı Yükü",
-                  definition: AppDefinitions.kullaniciYuku),
+                term: "Kullanıcı Yükü",
+                definition: AppDefinitions.kullaniciYuku,
+              ),
             ],
           ),
           const SizedBox(height: 12),

@@ -24,6 +24,9 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum18 != null) {
+      _model = BinaStore.instance.bolum18!;
+    }
     _checkBinaYuksekligi();
   }
 
@@ -40,9 +43,13 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
     }
   }
 
+  final GlobalKey _boruKey = GlobalKey();
+
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'duvar') _model = _model.copyWith(duvarKaplama: choice);
+      if (type == 'duvar') {
+        _model = _model.copyWith(duvarKaplama: choice);
+      }
       if (type == 'boru') _model = _model.copyWith(boruTipi: choice);
     });
   }
@@ -109,6 +116,7 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
                       ),
                     ),
                     const SizedBox(height: 10),
+                    SizedBox(key: _boruKey, height: 1),
                     _buildSoru(
                       "Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?",
                       'boru',

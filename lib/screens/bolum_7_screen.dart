@@ -22,6 +22,11 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   @override
   void initState() {
     super.initState();
+    final existing = BinaStore.instance.bolum7;
+    if (existing != null) {
+      _model = existing;
+      _isConfirmed = true;
+    }
     _syncWithPreviousSteps();
   }
 

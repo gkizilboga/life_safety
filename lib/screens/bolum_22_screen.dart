@@ -25,6 +25,9 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum22 != null) {
+      _model = BinaStore.instance.bolum22!;
+    }
 
     // AKILLI ATLAMA MANTIĞI
     final b7 = BinaStore.instance.bolum7;

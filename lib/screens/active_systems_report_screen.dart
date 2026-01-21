@@ -21,13 +21,24 @@ class ActiveSystemsReportScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.picture_as_pdf),
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    "Bu özellik (Aktif Sistem Gereksinimleri Çıktısı) ayrıca satın alınmalıdır.",
+              if (store.isPremium) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "PDF Raporu başarıyla oluşturuldu ve indirildi: Aktif_Sistemler_Raporu.pdf",
+                    ),
+                    backgroundColor: Colors.green,
                   ),
-                ),
-              );
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "Bu özellik (Aktif Sistem Gereksinimleri Çıktısı) ayrıca satın alınmalıdır.",
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ],

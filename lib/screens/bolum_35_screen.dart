@@ -21,7 +21,6 @@ class Bolum35Screen extends StatefulWidget {
 class _Bolum35ScreenState extends State<Bolum35Screen> {
   Bolum35Model _model = Bolum35Model();
   final _mesafeCtrl = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
 
   bool _tekCikis = true;
   int _limitTekYon = 15;
@@ -31,6 +30,12 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum35 != null) {
+      _model = BinaStore.instance.bolum35!;
+      if (_model.manuelMesafe != null) {
+        _mesafeCtrl.text = _model.manuelMesafe.toString();
+      }
+    }
     _calculateLimits();
     _mesafeCtrl.addListener(_validateMesafe);
   }
@@ -38,7 +43,6 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
   @override
   void dispose() {
     _mesafeCtrl.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -91,15 +95,29 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'tekYon') _model = _model.copyWith(tekYon: choice);
-      if (type == 'ciftYon') _model = _model.copyWith(ciftYon: choice);
+      if (type == 'tekYon') {
+        _model = _model.copyWith(tekYon: choice);
+        if (choice.label == "35-1-A") {
+          // Scroll removed
+        }
+      }
+      if (type == 'ciftYon') {
+        _model = _model.copyWith(ciftYon: choice);
+      }
       if (type == 'cikmaz') {
         _model = _model.copyWith(cikmaz: choice);
-        if (choice.label != Bolum35Content.cikmazOptionB.label)
+        if (choice.label != Bolum35Content.cikmazOptionB.label) {
           _model = _model.copyWith(cikmazMesafe: null);
+        } else {
+          // Scroll removed
+        }
       }
-      if (type == 'cikmazMesafe')
+      if (type == 'cikmazMesafe') {
         _model = _model.copyWith(cikmazMesafe: choice);
+        if (choice.label == "35-3-C") {
+          // Scroll removed
+        }
+      }
     });
   }
 
@@ -124,6 +142,15 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
       subtitle: "Daire kapısından merdivene ulaşım",
       screenType: widget.runtimeType,
       isNextEnabled: _isReadyToProceed(),
+      onSave: () {
+        if (_mesafeCtrl.text.isNotEmpty) {
+          _model = _model.copyWith(
+            manuelMesafe: InputValidator.parseFlex(_mesafeCtrl.text),
+          );
+        }
+        BinaStore.instance.bolum35 = _model;
+        BinaStore.instance.saveToDisk();
+      },
       onNext: () {
         if (_mesafeCtrl.text.isNotEmpty) {
           _model = _model.copyWith(

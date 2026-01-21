@@ -24,6 +24,9 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum21 != null) {
+      _model = BinaStore.instance.bolum21!;
+    }
     _hYapi = BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? 0.0;
     _checkMandatory();
   }
@@ -79,14 +82,10 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       child: Column(
         children: [
           // YGH görseli - sorulardan bağımsız, her zaman görünür
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              'assets/images/sections/ygh_1.webp',
-              fit: BoxFit.cover,
-              height: 150,
-              width: double.infinity,
-            ),
+          // YGH görseli - Buton olarak
+          const TechnicalDrawingButton(
+            assetPath: 'assets/images/sections/ygh_1.webp',
+            title: "Örnek YGH Yerleşimi ve Detayını İncele",
           ),
           const SizedBox(height: 16),
           _buildInfoCard(),
@@ -193,7 +192,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
 
   Widget _buildSoru(
     dynamic title,
-    String key,
+    String keyParam,
     List<ChoiceResult> options,
     ChoiceResult? selected,
   ) {
@@ -211,13 +210,13 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               choice: opt,
               isSelected: selected?.label == opt.label,
               onTap: () => setState(() {
-                if (key == 'varlik')
-                  _model = _model.copyWith(
-                    varlik: options[options.indexOf(opt)],
-                  );
-                if (key == 'malzeme') _model = _model.copyWith(malzeme: opt);
-                if (key == 'kapi') _model = _model.copyWith(kapi: opt);
-                if (key == 'esya') _model = _model.copyWith(esya: opt);
+                if (keyParam == 'varlik') {
+                  _model = _model.copyWith(varlik: opt);
+                }
+                if (keyParam == 'malzeme')
+                  _model = _model.copyWith(malzeme: opt);
+                if (keyParam == 'kapi') _model = _model.copyWith(kapi: opt);
+                if (keyParam == 'esya') _model = _model.copyWith(esya: opt);
                 _checkMandatory();
               }),
             ),

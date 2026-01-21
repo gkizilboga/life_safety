@@ -22,9 +22,16 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   bool _needsFireDoor = false;
   int _maxUserLoad = 0;
 
+  final GlobalKey _yonKey = GlobalKey();
+  final GlobalKey _kilitKey = GlobalKey();
+  final GlobalKey _dayanimKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum27 != null) {
+      _model = BinaStore.instance.bolum27!;
+    }
     _loadLogicData();
   }
 
@@ -54,7 +61,10 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'boyut') _model = _model.copyWith(boyut: choice);
+      if (type == 'boyut') {
+        _model = _model.copyWith(boyut: choice);
+        // Manual scroll preferred for standard questions
+      }
       if (type == 'yon') {
         _model = _model.copyWith(yon: choice);
         if (_maxUserLoad > 50 &&
@@ -74,6 +84,9 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
             "⚠️ DİKKAT: Kullanıcı yükü 100 kişiyi aştığı için tüm kapılarda hem kaçış yönünde açılma hem de PANİK BAR zorunludur!",
           );
         }
+        // Only scroll if a NEW Dynamic section (Fire Door) appears?
+        // Logic says _needsFireDoor is calculated at init, so dayanim question is always there or not there.
+        // So no dynamic appearing here. No auto-scroll.
       }
       if (type == 'dayanim') _model = _model.copyWith(dayanim: choice);
     });
@@ -129,6 +142,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
             Bolum27Content.boyutOptionC,
           ], _model.boyut),
 
+          SizedBox(key: _yonKey, height: 1),
           _buildSoruHeader(
             "Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)",
           ),
@@ -144,6 +158,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
             Bolum27Content.yonOptionE,
           ], _model.yon),
 
+          SizedBox(key: _kilitKey, height: 1),
           _buildSoruHeader(
             "Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)",
           ),
@@ -167,6 +182,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
             _buildInfoNote(
               "Binada korunumlu yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır.",
             ),
+            SizedBox(key: _dayanimKey, height: 1),
             _buildSoruHeader(
               "Kapalı yangın merdiveni kapısının malzemesi nedir?",
             ),
@@ -186,10 +202,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   Widget _buildSoruHeader(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8, top: 12),
-      child: Text(
-        title,
-        style: AppStyles.questionTitle,
-      ),
+      child: Text(title, style: AppStyles.questionTitle),
     );
   }
 

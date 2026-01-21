@@ -18,35 +18,24 @@ class Bolum11Screen extends StatefulWidget {
 
 class _Bolum11ScreenState extends State<Bolum11Screen> {
   Bolum11Model _model = Bolum11Model();
-  final GlobalKey _engelKey = GlobalKey();
-  final GlobalKey _zayifNoktaKey = GlobalKey();
 
-  void _scrollToKey(GlobalKey key) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (key.currentContext != null) {
-        Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-          alignment: 0.1,
-        );
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    if (BinaStore.instance.bolum11 != null) {
+      _model = BinaStore.instance.bolum11!;
+    }
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'mesafe') {
         _model = _model.copyWith(mesafe: choice);
-        if (choice.label == Bolum11Content.mesafeOptionB.label)
-          _scrollToKey(_engelKey);
-        else
+        if (choice.label != Bolum11Content.mesafeOptionB.label)
           _model = _model.copyWith(engel: null, zayifNokta: null);
       } else if (type == 'engel') {
         _model = _model.copyWith(engel: choice);
-        if (choice.label == Bolum11Content.engelOptionB.label)
-          _scrollToKey(_zayifNoktaKey);
-        else
+        if (choice.label != Bolum11Content.engelOptionB.label)
           _model = _model.copyWith(zayifNokta: null);
       } else if (type == 'zayifNokta') {
         _model = _model.copyWith(zayifNokta: choice);
@@ -97,7 +86,6 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
           if (_model.mesafe?.label == Bolum11Content.mesafeOptionB.label) ...[
             _buildInfoNote(
               "Mesafe 45m'yi aştığı için ek güvenlik soruları açılmıştır.",
-              key: _engelKey,
             ),
             _buildSoru(
               "İtfaiye aracının binaya yanaşmasını engelleyen bir bahçe duvarı veya kilitli kapılar var mı?",
@@ -115,7 +103,6 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
           if (_model.engel?.label == Bolum11Content.engelOptionB.label) ...[
             _buildInfoNote(
               "Engel bulunduğu için zayıf geçiş noktası tespiti gereklidir.",
-              key: _zayifNoktaKey,
             ),
             _buildSoru(
               "Bu duvarda itfaiyenin kolayca yıkıp geçebileceği zayıf bir bölüm var mı?",
@@ -143,10 +130,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: AppStyles.questionTitle,
-          ),
+          Text(title, style: AppStyles.questionTitle),
           if (assetPath != null)
             TechnicalDrawingButton(assetPath: assetPath, title: "Teknik Detay"),
           const SizedBox(height: 12),
@@ -162,9 +146,8 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
     );
   }
 
-  Widget _buildInfoNote(String text, {GlobalKey? key}) {
+  Widget _buildInfoNote(String text) {
     return Container(
-      key: key,
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

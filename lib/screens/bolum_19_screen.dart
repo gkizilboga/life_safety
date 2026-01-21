@@ -5,6 +5,7 @@ import 'bolum_20_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
+import '../../utils/app_assets.dart';
 import '../../models/choice_result.dart';
 
 class Bolum19Screen extends StatefulWidget {
@@ -16,21 +17,13 @@ class Bolum19Screen extends StatefulWidget {
 
 class _Bolum19ScreenState extends State<Bolum19Screen> {
   Bolum19Model _model = Bolum19Model();
-  final GlobalKey _etiketKey = GlobalKey();
-  final GlobalKey _levhaKey = GlobalKey();
-  final GlobalKey _yanilticiKey = GlobalKey();
 
-  void _scrollToKey(GlobalKey key) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (key.currentContext != null) {
-        Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-          alignment: 0.1,
-        );
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    if (BinaStore.instance.bolum19 != null) {
+      _model = BinaStore.instance.bolum19!;
+    }
   }
 
   void _handleEngelSelection(ChoiceResult choice) {
@@ -48,7 +41,6 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
           current.add(choice);
       }
       _model = _model.copyWith(engeller: current);
-      _scrollToKey(_levhaKey);
     });
   }
 
@@ -56,13 +48,10 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     setState(() {
       if (type == 'levha') {
         _model = _model.copyWith(levha: choice);
-        _scrollToKey(_yanilticiKey);
       }
       if (type == 'yaniltici') {
         _model = _model.copyWith(yanilticiKapi: choice);
-        if (choice.label == Bolum19Content.yanilticiOptionB.label)
-          _scrollToKey(_etiketKey);
-        else
+        if (choice.label != Bolum19Content.yanilticiOptionB.label)
           _model = _model.copyWith(yanilticiEtiket: null);
       }
       if (type == 'etiket') _model = _model.copyWith(yanilticiEtiket: choice);
@@ -101,10 +90,6 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
             "Not: Yönetmelik gereği tek çıkışlı veya tek merdivenli binalarda acil durum yönlendirme levhası zorunluluğu aranmayabilir. Analizin sonunda bu durum otomatik değerlendirilecektir.",
           ),
           QuestionCard(
-            key:
-                GlobalKey(), // Dummy key not needed, handled by scroll logic? No, obstacles is first.
-            // Wait, we don't scroll TO obstacles (it's top). We scroll FROM it.
-            // But let's keep QuestionCard intact.
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -139,21 +124,22 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               Bolum19Content.levhaOptionC,
             ],
             _model.levha,
-            keyParam: _levhaKey,
+            imagePath: AppAssets.section19AcilYonlendirme,
+            imageTitle: "Acil Durum Yönlendirme Levhaları",
           ),
           _buildSoru(
             "Yanıltıcı kapılar var mı? (Çıkış ulaşırken kafanızı karıştırabilecek türden kapılar)",
             'yaniltici',
             [Bolum19Content.yanilticiOptionA, Bolum19Content.yanilticiOptionB],
             _model.yanilticiKapi,
-            keyParam: _yanilticiKey,
+            imagePath: AppAssets.section19YanilticiKapi,
+            imageTitle: "Yanıltıcı Kapı Örneği",
           ),
 
           if (_model.yanilticiKapi?.label ==
               Bolum19Content.yanilticiOptionB.label) ...[
             _buildInfoNote(
               "Yanıltıcı kapılar için etiketleme sorgulanmaktadır.",
-              key: _etiketKey,
             ),
             _buildSoru(
               "Bu kapıların üzerinde yazı var mı?",
@@ -204,13 +190,10 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     String key,
     List<ChoiceResult> options,
     ChoiceResult? selected, {
-    Key? keyParam,
+    String? imagePath,
+    String? imageTitle,
   }) {
-    // Note: Parameter name conflicting with 'key' argument string. Renaming to keyParam.
-    // Wait, 'key' string argument is used for selection, 'key' widget argument is for Widget Key.
-    // Let's use 'scrollKey' to be safe.
     return QuestionCard(
-      key: keyParam,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -223,6 +206,11 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
             ),
           ),
           const SizedBox(height: 12),
+          if (imagePath != null)
+            TechnicalDrawingButton(
+              assetPath: imagePath,
+              title: imageTitle ?? "İlgili Görsel",
+            ),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,
@@ -235,9 +223,8 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     );
   }
 
-  Widget _buildInfoNote(String text, {GlobalKey? key}) {
+  Widget _buildInfoNote(String text) {
     return Container(
-      key: key,
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

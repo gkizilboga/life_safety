@@ -18,11 +18,13 @@ class Bolum34Screen extends StatefulWidget {
 class _Bolum34ScreenState extends State<Bolum34Screen> {
   Bolum34Model _model = Bolum34Model();
   bool _isEligible = false;
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum34 != null) {
+      _model = BinaStore.instance.bolum34!;
+    }
     _checkEligibilityAndRedirect();
   }
 
@@ -57,23 +59,10 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     }
   }
 
-  void _scrollToBottom() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
-  }
-
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'zemin') {
         _model = _model.copyWith(zemin: choice);
-        _scrollToBottom(); // Zemin seçilince bodrum sorusuna kaydır
       }
       if (type == 'bodrum') {
         _model = _model.copyWith(bodrum: choice);
@@ -118,7 +107,6 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
@@ -222,10 +210,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: AppStyles.questionTitle,
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(

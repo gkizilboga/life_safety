@@ -17,28 +17,18 @@ class Bolum17Screen extends StatefulWidget {
 class _Bolum17ScreenState extends State<Bolum17Screen> {
   Bolum17Model _model = Bolum17Model();
   bool _askBitisik = false;
-  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum17 != null) {
+      _model = BinaStore.instance.bolum17!;
+    }
     final b8 = BinaStore.instance.bolum8;
     if (b8?.secim?.label.contains("Bitişik") == true ||
         b8?.secim?.label == "8-1-B") {
       _askBitisik = true;
     }
-  }
-
-  void _scrollToBottom() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
@@ -51,8 +41,6 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
         _model = _model.copyWith(isiklik: choice);
         if (choice.label != Bolum17Content.isiklikOptionB.label) {
           _model = _model.copyWith(isiklikMalzemesi: null);
-        } else {
-          _scrollToBottom();
         }
       }
     });
@@ -98,7 +86,6 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              controller: _scrollController,
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
@@ -183,7 +170,9 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                                   color: _model.isiklikMalzemesi == "cam"
                                       ? const Color(0xFF1A237E)
                                       : Colors.grey.shade300,
-                                  width: _model.isiklikMalzemesi == "cam" ? 2 : 1,
+                                  width: _model.isiklikMalzemesi == "cam"
+                                      ? 2
+                                      : 1,
                                 ),
                               ),
                               child: Row(
@@ -226,7 +215,9 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                                   color: _model.isiklikMalzemesi == "plastik"
                                       ? const Color(0xFF1A237E)
                                       : Colors.grey.shade300,
-                                  width: _model.isiklikMalzemesi == "plastik" ? 2 : 1,
+                                  width: _model.isiklikMalzemesi == "plastik"
+                                      ? 2
+                                      : 1,
                                 ),
                               ),
                               child: Row(
@@ -329,11 +320,14 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(
-            fontWeight: FontWeight.w900,
-            fontSize: 16,
-            color: Color(0xFF4A148C),
-          )),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 16,
+              color: Color(0xFF4A148C),
+            ),
+          ),
           const SizedBox(height: 10),
           ...options.map(
             (opt) => SelectableCard(

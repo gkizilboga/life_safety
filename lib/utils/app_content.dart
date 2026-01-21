@@ -873,7 +873,8 @@ class Bolum15Content {
     label: "15-1-C",
     uiTitle: "Kaplama malzemesini bilmiyorum.",
     uiSubtitle: "",
-    reportText: "❓ BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor.Yönetmelik gereği yüksek binalarda döşeme kaplamalarının en az zor alevlenici olması gerekmektedir; aksi durumda yanıcı kaplamalar risk teşkil eder.",
+    reportText:
+        "❓ BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor.Yönetmelik gereği yüksek binalarda döşeme kaplamalarının en az zor alevlenici olması gerekmektedir; aksi durumda yanıcı kaplamalar risk teşkil eder.",
   );
 
   static final kaplamaOptionD = ChoiceResult(
@@ -1089,24 +1090,31 @@ class Bolum16Content {
 
   static final bitisikOptionA = ChoiceResult(
     label: "16-3-A (Bitişik)",
-    uiTitle: "Hayır, aynı yükseklikteyiz veya daha alçaktayız.",
-    uiSubtitle:
-        "Yan bina ile çatı seviyemiz aynı veya bizim binamız daha alçakta.",
+    uiTitle: "Aynı yükseklikteyiz.",
+    uiSubtitle: "Yan bina ile çatı seviyemiz aynı.",
     reportText:
         "✅ OLUMLU: Binalar aynı hizada olduğu için yan binadan cepheye yangın sıçrama riski düşüktür.",
   );
 
   static final bitisikOptionB = ChoiceResult(
     label: "16-3-B (Bitişik)",
-    uiTitle: "Evet, bizim bina daha yüksek.",
-    uiSubtitle: "",
+    uiTitle: "Biz daha alçaktayız.",
+    uiSubtitle: "Bizim binamız yan binadan daha alçak.",
     reportText:
-        "⚠️ UYARI: Yan binanın çatısının bittiği hizaya denk gelen dış cephe kaplamanız 'Hiç Yanmaz' (A1 sınıfı) malzeme olmalıdır.",
+        "✅ OLUMLU: Binanız yan binadan daha alçak olduğu için, yan binadan cephenize yangın sıçrama riski düşüktür.",
   );
 
   static final bitisikOptionC = ChoiceResult(
     label: "16-3-C (Bitişik)",
-    uiTitle: "Yükseklik durumunu bilmiyorum.",
+    uiTitle: "Biz daha yüksekteyiz.",
+    uiSubtitle: "Bizim binamız yan binadan daha yüksek.",
+    reportText:
+        "⚠️ UYARI: Yan binanın çatısının bittiği hizaya denk gelen dış cephe kaplamanız 'Hiç Yanmaz' (A1 sınıfı) malzeme olmalıdır.",
+  );
+
+  static final bitisikOptionD = ChoiceResult(
+    label: "16-3-D (Bitişik)",
+    uiTitle: "Bu detayı bilmiyorum.",
     uiSubtitle: "Yan bina ile olan yükseklik ilişkimizi tam olarak bilmiyorum.",
     reportText:
         "❓ BİLİNMİYOR: Bitişik bina ile yükseklik durumu bilinmiyor. Eğer yan binadan yüksekseniz, o bölgedeki cephe malzemesinin yangına tepki sınıfı kritik öneme sahiptir.",
@@ -1176,7 +1184,8 @@ class Bolum17Content {
 
   static final iskeletOptionB = ChoiceResult(
     label: "17-2-B (İskelet)",
-    uiTitle: "Taşıyıcılar ve altındaki ısı yalıtım malzemesi yanıcı ürünlerdir.",
+    uiTitle:
+        "Taşıyıcılar ve altındaki ısı yalıtım malzemesi yanıcı ürünlerdir.",
     uiSubtitle: "Ahşap, XPS, EPS vb. malzemeler.",
     reportText:
         "(Yüksek Bina İse) ☢️ KRİTİK RİSK: Yüksek binalarda ahşap çatı kullanılması yasaktır.<br>(Alçak Bina İse) ⚠️ UYARI: Ahşap çatılarda yanıcı köpük vb. kullanımı risklidir.",
@@ -1909,8 +1918,9 @@ class Bolum24Content {
   static final tipOptionB = ChoiceResult(
     label: "24-1-B (Tip)",
     uiTitle:
-        "Bina dışına çıkabilmem için cephede, üstü açık bir geçitten veya yoldan geçmem gerekiyor. ış cephedeki üstü açık bir yoldan geçmek gerekiyor.",
-    uiSubtitle: "Bina içerisindeki kapalı kat koridorundan dışarı çıkış yapamıyorum.",
+        "Bina dışına çıkabilmem için cephede, üstü açık bir geçitten veya yoldan geçmem gerekiyor. Dış cephedeki üstü açık bir yoldan geçmek gerekiyor.",
+    uiSubtitle:
+        "Bina içerisindeki kapalı kat koridorundan dışarı çıkış yapamıyorum.",
     reportText:
         "⚠️ UYARI: Binadan çıkışta dış kaçış geçidi yer almaktadır. Yönetmeliğe göre bu geçidin ve dış cephedeki tehlikelerin değerlendirilmesi gereklidir.",
   );
@@ -2205,7 +2215,7 @@ class Bolum27Content {
     uiSubtitle:
         "Kaçış yolu üzerinde farklı yönlere açılan, farklı tip kapılar mevcut.",
     reportText:
-        "⚠️ UYARI: Kaçış yolu üzerinde farklı tip ve yöne açılan kapılar tespit edilmiştir. Tahliye güzergahındaki tüm kapıların kaçış yönüne açılması ve sürgülü/döner kapı içermemesi esastır. Karma yapı panik anında izdihama yol açabilir.",
+        "⚠️ UYARI: Kaçış yolu üzerinde farklı tip ve yöne açılan kapılar tespit edilmiştir. Tahliye güzergahındaki tüm kapıların kaçış yönüne açılması ve sürgülü/döner kapı içermemesi esastır. Karma yapı panik anında izdihama yol açabilir. Kullanıcı yükü 50 kişiyi geçen mahallerde ve katlarda kapılar mutlaka kaçış yönüne (dışarıya) doğru açılmalıdır.",
   );
 
   static final yonOptionE = ChoiceResult(
@@ -2254,15 +2264,15 @@ class Bolum27Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "Kilit mekanizması belirsiz.",
     reportText:
-        "❓ BİLİNMİYOR: Kilit mekanizması kontrol edilmelidir. Kilitli kapılar can kaybına neden olabilir.",
+        "❓ BİLİNMİYOR: Kilit mekanizması kontrol edilmelidir. Kilitli kapılar can kaybına neden olabilir. Kaçış güzergahında karma kilit sistemleri mevcuttur. Kullanıcı yükü 100 kişiyi aşan binalarda tüm kapıların panik bar ile donatılması şarttır.",
   );
 
   // 4. DAYANIM
   static final dayanimOptionA = ChoiceResult(
     label: "27-4-A",
-    uiTitle: "Çelik, yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanıyor.",
-    uiSubtitle:
-        "",
+    uiTitle:
+        "Çelik, yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanıyor.",
+    uiSubtitle: "",
     reportText:
         "✅ OLUMLU: Yangın kapısı standartlara (EI60/EI90) ve sızdırmazlık şartlarına uygundur.",
   );

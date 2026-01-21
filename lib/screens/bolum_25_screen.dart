@@ -25,6 +25,9 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum25 != null) {
+      _model = BinaStore.instance.bolum25!;
+    }
     _checkLogicAndRedirect();
   }
 

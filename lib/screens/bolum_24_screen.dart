@@ -19,38 +19,23 @@ class Bolum24Screen extends StatefulWidget {
 class _Bolum24ScreenState extends State<Bolum24Screen> {
   Bolum24Model _model = Bolum24Model();
 
-  // Nokta atışı kaydırma için anahtarlar (Keys)
-  final GlobalKey _q2Key = GlobalKey();
-  final GlobalKey _q3Key = GlobalKey();
-
-  // Belirli bir widget'a kaydırma fonksiyonu
-  void _scrollToKey(GlobalKey key) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (key.currentContext != null) {
-        Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-          alignment: 0.1, // Ekranın biraz üst kısmında durmasını sağlar
-        );
-      }
-    });
+  @override
+  void initState() {
+    super.initState();
+    if (BinaStore.instance.bolum24 != null) {
+      _model = BinaStore.instance.bolum24!;
+    }
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'tip') {
         _model = _model.copyWith(tip: choice);
-        if (choice.label == Bolum24Content.tipOptionB.label) {
-          // Soru 1 cevaplanınca Soru 2'ye (veya bilgi notuna) kaydır
-          _scrollToKey(_q2Key);
-        } else {
+        if (choice.label != Bolum24Content.tipOptionB.label) {
           _model = _model.copyWith(pencere: null, kapi: null);
         }
       } else if (type == 'pencere') {
         _model = _model.copyWith(pencere: choice);
-        // Soru 2 cevaplanınca Soru 3'e kaydır
-        _scrollToKey(_q3Key);
       } else if (type == 'kapi') {
         _model = _model.copyWith(kapi: choice);
       }
@@ -100,7 +85,6 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
           if (_model.tip?.label == Bolum24Content.tipOptionB.label) ...[
             // SORU 2'NİN ADRESİ (Key buraya bağlandı)
             Padding(
-              key: _q2Key,
               padding: const EdgeInsets.only(top: 8),
               child: _buildInfoNote(
                 "Açık kaçış yolu tespit edildiği için ek güvenlik soruları açılmıştır.",
@@ -117,9 +101,6 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
               ],
               _model.pencere,
             ),
-
-            // SORU 3'ÜN ADRESİ (Key buraya bağlandı)
-            SizedBox(key: _q3Key, height: 1),
 
             _buildSoru(
               "Açık kaçış yoluna açılan daire kapınızın özelliği nedir?",

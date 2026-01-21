@@ -22,10 +22,6 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   Bolum10Model _model = Bolum10Model();
   bool _isSummaryAccepted = false;
 
-  final GlobalKey _bodrumKey = GlobalKey();
-  final GlobalKey _normalKey = GlobalKey();
-  final GlobalKey _summaryKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
@@ -33,25 +29,25 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     int bCount = int.tryParse(b3?.bodrumKatSayisi?.toString() ?? "0") ?? 0;
     int nCount = int.tryParse(b3?.normalKatSayisi?.toString() ?? "0") ?? 0;
 
-    _model = Bolum10Model(
-      bodrumlar: List.filled(bCount, null),
-      normaller: List.filled(nCount, null),
-      bodrumlarAyni: true,
-      normallerAyni: true,
-    );
-  }
-
-  void _scrollToKey(GlobalKey key) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (key.currentContext != null) {
-        Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-          alignment: 0.1,
-        );
+    final existing = BinaStore.instance.bolum10;
+    if (existing != null) {
+      _model = existing;
+      // Ensure local lists match Section 3 counts if they changed, otherwise use existing
+      if (_model.bodrumlar.length != bCount) {
+        _model = _model.copyWith(bodrumlar: List.filled(bCount, null));
       }
-    });
+      if (_model.normaller.length != nCount) {
+        _model = _model.copyWith(normaller: List.filled(nCount, null));
+      }
+      _isSummaryAccepted = true;
+    } else {
+      _model = Bolum10Model(
+        bodrumlar: List.filled(bCount, null),
+        normaller: List.filled(nCount, null),
+        bodrumlarAyni: true,
+        normallerAyni: true,
+      );
+    }
   }
 
   void _handleSelection(String type, ChoiceResult choice, {int? index}) {
@@ -59,16 +55,11 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       _isSummaryAccepted = false;
       if (type == 'zemin') {
         _model = _model.copyWith(zemin: choice);
-        if (_model.bodrumlar.isNotEmpty)
-          _scrollToKey(_bodrumKey);
-        else if (_model.normaller.isNotEmpty)
-          _scrollToKey(_normalKey);
       } else if (type == 'bodrum') {
         List<ChoiceResult?> newList = List.from(_model.bodrumlar);
         if (_model.bodrumlarAyni) {
           newList = List.filled(newList.length, choice);
           _model = _model.copyWith(bodrumlar: newList);
-          if (_model.normaller.isNotEmpty) _scrollToKey(_normalKey);
         } else {
           if (index != null) newList[index] = choice;
           _model = _model.copyWith(bodrumlar: newList);
@@ -78,7 +69,6 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
         if (_model.normallerAyni) {
           newList = List.filled(newList.length, choice);
           _model = _model.copyWith(normaller: newList);
-          if (_checkIfComplete()) _scrollToKey(_summaryKey);
         } else {
           if (index != null) newList[index] = choice;
           _model = _model.copyWith(normaller: newList);
@@ -133,7 +123,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           _buildChoiceGrid('zemin', null, _model.zemin),
 
           if (_model.bodrumlar.isNotEmpty) ...[
-            SizedBox(key: _bodrumKey, height: 30),
+            const SizedBox(height: 30),
             _buildSectionTitle("Bodrum Katların Baskın Kullanım Amacı"),
             _buildToggleRow(
               "Tüm bodrumlar aynı fonksiyona sahip",
@@ -171,7 +161,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           ],
 
           if (_model.normaller.isNotEmpty) ...[
-            SizedBox(key: _normalKey, height: 30),
+            const SizedBox(height: 30),
             _buildSectionTitle("Normal Katların Baskın Kullanım Amacı"),
             _buildToggleRow(
               "Tüm normal katlar aynı fonksiyona sahip",
@@ -210,7 +200,6 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
 
           if (_checkIfComplete())
             Padding(
-              key: _summaryKey,
               padding: const EdgeInsets.only(top: 30),
               child: _buildSummaryCard(),
             ),

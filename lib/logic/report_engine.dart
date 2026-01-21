@@ -133,10 +133,9 @@ class ReportEngine {
       'criticalCount': criticalRisks,
       'warningCount': warnings,
       'unknownCount': unknowns,
-      'completion': (filledSections / totalActiveSections * 100).toInt().clamp(
-        0,
-        100,
-      ),
+      'completion': (s.bolum36 != null)
+          ? 100
+          : (filledSections / totalActiveSections * 100).toInt().clamp(0, 100),
       'criticals': criticalTitles.take(3).toList(),
     };
   }
@@ -316,9 +315,65 @@ class ReportEngine {
         return "✅ OLUMLU: Binada tek çıkış tespit edildiği için yönlendirme levhası zorunluluğu bulunmamaktadır.";
     }
 
-    // Bölüm 36: Özet raporda gizleme (Premium yönlendirme)
+    // Bölüm 27: Kapı yönü ve kilit mekanizması için S33 kullanıcı yükü kontrolü
+    if (id == 27) {
+      final b27 = s.bolum27;
+      final b33 = s.bolum33;
+
+      if (b27 != null && b33 != null) {
+        List<String> reportParts = [];
+
+        // Get all user loads
+        final yukZemin = b33.yukZemin ?? 0;
+        final yukNormal = b33.yukNormal ?? 0;
+        final yukBodrum = b33.yukBodrum ?? 0;
+        final maxYuk = [
+          yukZemin,
+          yukNormal,
+          yukBodrum,
+        ].reduce((a, b) => a > b ? a : b);
+
+        // Add base report text from selected options
+        if (b27.yon != null) {
+          reportParts.add(b27.yon!.reportText);
+        }
+        if (b27.kilit != null) {
+          reportParts.add(b27.kilit!.reportText);
+        }
+        if (b27.dayanim != null) {
+          reportParts.add(b27.dayanim!.reportText);
+        }
+
+        // Door direction check (27-2-B or 27-2-D) + user load > 50
+        final yonLabel = b27.yon?.label ?? "";
+        if ((yonLabel.contains("27-2-B") || yonLabel.contains("27-2-D")) &&
+            maxYuk > 50) {
+          reportParts.add(
+            "⚠️ UYARI: Kullanıcı yükü 50 kişiyi geçen mahallerde ve katlarda kapılar mutlaka kaçış yönüne (dışarıya) doğru açılmalıdır. Mevcut kullanıcı yükü: $maxYuk kişi.",
+          );
+        }
+
+        // Lock mechanism check (27-3-B or 27-3-D) + user load > 100
+        final kilitLabel = b27.kilit?.label ?? "";
+        if ((kilitLabel.contains("27-3-B") || kilitLabel.contains("27-3-D")) &&
+            maxYuk > 100) {
+          reportParts.add(
+            "⚠️ UYARI: Kullanıcı yükü 100 kişiyi aşan binalarda tüm kapıların panik bar ile donatılması şarttır. Normal kapı kolu kabul edilemez. Mevcut kullanıcı yükü: $maxYuk kişi.",
+          );
+        }
+
+        if (reportParts.isNotEmpty) {
+          return reportParts.join("\n\n");
+        }
+      }
+    }
+
+    // Bölüm 36: Merdiven Değerlendirmesi
     if (id == 36) {
-      return "Genel değerlendirme ve merdiven yeterlilik analizi Detaylı Ön Raporumuzda sunulmaktadır.";
+      if (s.bolum36?.merdivenDegerlendirme != null &&
+          s.bolum36!.merdivenDegerlendirme!.isNotEmpty) {
+        return s.bolum36!.merdivenDegerlendirme!;
+      }
     }
 
     // Varsayılan: AppContent içindeki metni olduğu gibi döndür.
@@ -362,7 +417,6 @@ class ReportEngine {
   static List<String> evaluateYghRequirement({BinaStore? store}) {
     final s = _getStore(store);
     List<String> reasons = [];
-    final hBina = _getHBina(s);
     final hYapi = _getHYapi(s);
 
     // 1. Yapı Yüksekliği >= 51.50m
@@ -375,7 +429,9 @@ class ReportEngine {
       final b20 = s.bolum20;
       if (b20 != null && b20.basinclandirma?.label.contains("-B") == true) {
         // 20-BAS-B: Hayır
-        reasons.add("🚨 Yapı Yüksekliği 30.50m üzeri ve en az bir merdivende Basınçlandırma yok ise YGH zorunludur.");
+        reasons.add(
+          "🚨 Yapı Yüksekliği 30.50m üzeri ve en az bir merdivende Basınçlandırma yok ise YGH zorunludur.",
+        );
       }
     }
 
@@ -398,7 +454,7 @@ class ReportEngine {
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "🚨 Normal katlara hizmet veren asansör, bBodrum katlara da hizmet verdiğinden (23-1-C)",
+        "🚨 Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı sağlanmadığından (23-1-C)",
       );
     }
 

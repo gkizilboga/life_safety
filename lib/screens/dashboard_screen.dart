@@ -2,6 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:life_safety/screens/settings_screen.dart';
 import 'bolum_1_screen.dart';
+import 'bolum_2_screen.dart';
+import 'bolum_3_screen.dart';
+import 'bolum_4_screen.dart';
+import 'bolum_5_screen.dart';
+import 'bolum_6_screen.dart';
+import 'bolum_7_screen.dart';
+import 'bolum_8_screen.dart';
+import 'bolum_9_screen.dart';
+import 'bolum_10_screen.dart';
+import 'bolum_11_screen.dart';
+import 'bolum_12_screen.dart';
+import 'bolum_13_screen.dart';
+import 'bolum_14_screen.dart';
+import 'bolum_15_screen.dart';
+import 'bolum_16_screen.dart';
+import 'bolum_17_screen.dart';
+import 'bolum_18_screen.dart';
+import 'bolum_19_screen.dart';
+import 'bolum_20_screen.dart';
+import 'bolum_21_screen.dart';
+import 'bolum_22_screen.dart';
+import 'bolum_23_screen.dart';
+import 'bolum_24_screen.dart';
+import 'bolum_25_screen.dart';
+import 'bolum_26_screen.dart';
+import 'bolum_27_screen.dart';
+import 'bolum_28_screen.dart';
+import 'bolum_29_screen.dart';
+import 'bolum_30_screen.dart';
+import 'bolum_31_screen.dart';
+import 'bolum_32_screen.dart';
+import 'bolum_33_screen.dart';
+import 'bolum_34_screen.dart';
+import 'bolum_35_screen.dart';
+import 'bolum_36_screen.dart';
+
 import 'archive_screen.dart';
 import 'building_setup_screen.dart';
 import 'legislation_library_screen.dart';
@@ -215,12 +251,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Bolum1Screen(),
-                    ),
-                  ),
+                  onPressed: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => _getResumeScreen(),
+                      ),
+                    );
+                    if (mounted) setState(() {});
+                  },
                   child: const Text(
                     "ANALİZE DÖN",
                     style: TextStyle(
@@ -241,7 +280,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     final completion = metrics['completion'];
                     final progress = (completion is num)
                         ? completion.toInt()
@@ -258,7 +297,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       );
                       return;
                     }
-                    _showReportSelection(context);
+                    await PdfService.generateRiskAnalysisPdf();
                   },
                   child: const Text(
                     "ÖN RAPORU GÖR",
@@ -451,10 +490,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             "Geçmiş Kayıtlar",
             Icons.inventory_2_outlined,
             AppColors.primaryBlue,
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ArchiveScreen()),
-            ),
+            () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ArchiveScreen()),
+              );
+              if (mounted) setState(() {});
+            },
           ),
         ),
       ],
@@ -607,11 +649,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ReportModule.modul5;
   }
 
-  void _startNewAnalysis(BuildContext context) {
-    Navigator.push(
+  void _startNewAnalysis(BuildContext context) async {
+    await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const BuildingSetupScreen()),
     );
+    if (mounted) setState(() {});
   }
 
   Widget _buildSupportCard(BuildContext context) {
@@ -764,65 +807,83 @@ class _DashboardScreenState extends State<DashboardScreen> {
         .join('&');
   }
 
-  void _showReportSelection(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Rapor Seçimi",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1A237E),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ListTile(
-              leading: const Icon(
-                Icons.picture_as_pdf,
-                color: Color(0xFF1A237E),
-              ),
-              title: const Text(
-                "Yangın Risk Analiz Raporu",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: const Text(
-                "36 Bölümlük detaylı risk ve güvenlik analizi",
-              ),
-              onTap: () async {
-                Navigator.pop(ctx);
-                await PdfService.generateRiskAnalysisPdf();
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(
-                Icons.settings_system_daydream,
-                color: Color(0xFFE53935),
-              ),
-              title: const Text(
-                "Aktif Sistem Gereksinimleri",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: const Text("Zorunlu algılama ve söndürme sistemleri"),
-              onTap: () async {
-                Navigator.pop(ctx);
-                await PdfService.generateActiveSystemsPdf();
-              },
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
-      ),
-    );
+  Widget _getResumeScreen() {
+    final int lastIndex = BinaStore.instance.lastActiveSection;
+    switch (lastIndex) {
+      case 1:
+        return const Bolum1Screen();
+      case 2:
+        return const Bolum2Screen();
+      case 3:
+        return const Bolum3Screen();
+      case 4:
+        return const Bolum4Screen();
+      case 5:
+        return const Bolum5Screen();
+      case 6:
+        return const Bolum6Screen();
+      case 7:
+        return const Bolum7Screen();
+      case 8:
+        return const Bolum8Screen();
+      case 9:
+        return const Bolum9Screen();
+      case 10:
+        return const Bolum10Screen();
+      case 11:
+        return const Bolum11Screen();
+      case 12:
+        return const Bolum12Screen();
+      case 13:
+        return const Bolum13Screen();
+      case 14:
+        return const Bolum14Screen();
+      case 15:
+        return const Bolum15Screen();
+      case 16:
+        return const Bolum16Screen();
+      case 17:
+        return const Bolum17Screen();
+      case 18:
+        return const Bolum18Screen();
+      case 19:
+        return const Bolum19Screen();
+      case 20:
+        return const Bolum20Screen();
+      case 21:
+        return const Bolum21Screen();
+      case 22:
+        return const Bolum22Screen();
+      case 23:
+        return const Bolum23Screen();
+      case 24:
+        return const Bolum24Screen();
+      case 25:
+        return const Bolum25Screen();
+      case 26:
+        return const Bolum26Screen();
+      case 27:
+        return const Bolum27Screen();
+      case 28:
+        return const Bolum28Screen();
+      case 29:
+        return const Bolum29Screen();
+      case 30:
+        return const Bolum30Screen();
+      case 31:
+        return const Bolum31Screen();
+      case 32:
+        return const Bolum32Screen();
+      case 33:
+        return const Bolum33Screen();
+      case 34:
+        return const Bolum34Screen();
+      case 35:
+        return const Bolum35Screen();
+      case 36:
+        return const Bolum36Screen();
+      default:
+        return const Bolum1Screen();
+    }
   }
 }

@@ -22,6 +22,9 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
   @override
   void initState() {
     super.initState();
+    if (BinaStore.instance.bolum32 != null) {
+      _model = BinaStore.instance.bolum32!;
+    }
     _checkJeneratorAndRedirect();
   }
 
@@ -216,10 +219,7 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: AppStyles.questionTitle,
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(

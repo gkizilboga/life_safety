@@ -22,8 +22,6 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
   bool _askBitisik = false;
   double _hBina = 0.0;
 
-  final GlobalKey _bariyerYanKey = GlobalKey();
-
   // En uzun cephe kontrolcüsü
   final TextEditingController _enUzunCepheController = TextEditingController();
   final _formKey = GlobalKey<FormState>(); // Form key for validation
@@ -48,52 +46,26 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
     }
   }
 
-  void _scrollToKey(GlobalKey key) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if (key.currentContext != null) {
-        Scrollable.ensureVisible(
-          key.currentContext!,
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOut,
-          alignment: 0.1,
-        );
-      }
-    });
-  }
-
-  void _handleSelection(String type, ChoiceResult choice) {
+  void _handleSection16Selection(ChoiceResult choice) {
     setState(() {
-      if (type == 'mantolama') {
-        _model = _model.copyWith(mantolama: choice);
-        if (choice.label == Bolum16Content.mantolamaOptionA.label) {
-          if (_hBina <= 28.50) {
-            _scrollToKey(_bariyerYanKey);
-          } else {
-            _model = _model.copyWith(
-              bariyerYan: null,
-              bariyerUst: null,
-              bariyerZemin: null,
-            );
-          }
-        } else {
+      _model = _model.copyWith(mantolama: choice);
+      if (choice.label == Bolum16Content.mantolamaOptionA.label) {
+        if (_hBina > 28.50) {
           _model = _model.copyWith(
             bariyerYan: null,
             bariyerUst: null,
             bariyerZemin: null,
           );
         }
-        if (choice.label != Bolum16Content.giydirmeOptionC.label) {
-          _model = _model.copyWith(giydirmeBoslukYalitim: null);
-        }
+      } else {
+        _model = _model.copyWith(
+          bariyerYan: null,
+          bariyerUst: null,
+          bariyerZemin: null,
+        );
       }
-      if (type == 'sagir') {
-        _model = _model.copyWith(sagirYuzey: choice);
-        if (choice.label != Bolum16Content.sagirYuzeyOptionB.label) {
-          _model = _model.copyWith(sagirYuzeySprinkler: null);
-        }
-      }
-      if (type == 'bitisik') {
-        _model = _model.copyWith(bitisikNizam: choice);
+      if (choice.label != Bolum16Content.giydirmeOptionC.label) {
+        _model = _model.copyWith(giydirmeBoslukYalitim: null);
       }
     });
   }
@@ -154,53 +126,94 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSoru(
-            "Binanızdaki dış cephe kaplama veya ısı yalıtım sistemi nedir?",
-            'mantolama',
-            [
-              Bolum16Content.mantolamaOptionA,
-              Bolum16Content.mantolamaOptionB,
-              Bolum16Content.giydirmeOptionC,
-              Bolum16Content.mantolamaOptionD,
-              Bolum16Content.mantolamaOptionE,
-            ],
-            _model.mantolama,
-          ),
-          // Mantolama görseleri - kompakt
-          if (_model.mantolama?.label == Bolum16Content.mantolamaOptionA.label)
-            Row(
+          // Custom built Question Card for strict layout control
+          QuestionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: TechnicalDrawingButton(
-                    assetPath: 'assets/images/sections/eps_mantolama.webp',
-                    title: "EPS Mantolama",
+                Text(
+                  "Binanızdaki dış cephe kaplama veya ısı yalıtım sistemi nedir?",
+                  style: AppStyles.questionTitle,
+                ),
+                const SizedBox(height: 12),
+
+                // Option A: Klasik Mantolama
+                SelectableCard(
+                  choice: Bolum16Content.mantolamaOptionA,
+                  isSelected:
+                      _model.mantolama?.label ==
+                      Bolum16Content.mantolamaOptionA.label,
+                  onTap: () => _handleSection16Selection(
+                    Bolum16Content.mantolamaOptionA,
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TechnicalDrawingButton(
-                    assetPath: 'assets/images/sections/xps_mantolama.webp',
-                    title: "XPS Mantolama",
+                // Buttons always visible under the option
+                TechnicalDrawingButton(
+                  assetPath: 'assets/images/sections/eps_mantolama.webp',
+                  title: "EPS Mantolama",
+                ),
+                TechnicalDrawingButton(
+                  assetPath: 'assets/images/sections/xps_mantolama.webp',
+                  title: "XPS Mantolama",
+                ),
+
+                // Option B: A1, A2 (Taşyünü)
+                SelectableCard(
+                  choice: Bolum16Content.mantolamaOptionB,
+                  isSelected:
+                      _model.mantolama?.label ==
+                      Bolum16Content.mantolamaOptionB.label,
+                  onTap: () => _handleSection16Selection(
+                    Bolum16Content.mantolamaOptionB,
+                  ),
+                ),
+                TechnicalDrawingButton(
+                  assetPath: 'assets/images/sections/tasyunu_mantolama.webp',
+                  title: "Taşyünü Mantolama",
+                ),
+
+                // Option C: Giydirme Cephe
+                SelectableCard(
+                  choice: Bolum16Content.giydirmeOptionC,
+                  isSelected:
+                      _model.mantolama?.label ==
+                      Bolum16Content.giydirmeOptionC.label,
+                  onTap: () =>
+                      _handleSection16Selection(Bolum16Content.giydirmeOptionC),
+                ),
+                TechnicalDrawingButton(
+                  assetPath: 'assets/images/sections/giydirme_cephe.webp',
+                  title: "Giydirme Cephe Örneği",
+                ),
+
+                // Other Options
+                SelectableCard(
+                  choice: Bolum16Content.mantolamaOptionD,
+                  isSelected:
+                      _model.mantolama?.label ==
+                      Bolum16Content.mantolamaOptionD.label,
+                  onTap: () => _handleSection16Selection(
+                    Bolum16Content.mantolamaOptionD,
+                  ),
+                ),
+                SelectableCard(
+                  choice: Bolum16Content.mantolamaOptionE,
+                  isSelected:
+                      _model.mantolama?.label ==
+                      Bolum16Content.mantolamaOptionE.label,
+                  onTap: () => _handleSection16Selection(
+                    Bolum16Content.mantolamaOptionE,
                   ),
                 ),
               ],
             ),
-          if (_model.mantolama?.label == Bolum16Content.giydirmeOptionC.label)
-            TechnicalDrawingButton(
-              assetPath: 'assets/images/sections/giydirme_cephe.webp',
-              title: "Giydirme Cephe Örneği",
-            ),
-          if (_model.mantolama?.label == Bolum16Content.mantolamaOptionB.label)
-            TechnicalDrawingButton(
-              assetPath: 'assets/images/sections/tasyunu_mantolama.webp',
-              title: "Taşyünü Mantolama",
-            ),
+          ),
 
           if (_model.mantolama?.label ==
                   Bolum16Content.mantolamaOptionA.label &&
               _hBina <= 28.50) ...[
             _buildSubQuestion(
-              _bariyerYanKey,
+              null,
               "Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?",
               _model.bariyerYan,
               (v) => setState(() => _model = _model.copyWith(bariyerYan: v)),
@@ -251,12 +264,13 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
 
           if (_askBitisik)
             _buildSoru(
-              "Binanız bitişik nizamda ve yan binadan daha yüksek mi?",
+              "Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?",
               'bitisik',
               [
                 Bolum16Content.bitisikOptionA,
                 Bolum16Content.bitisikOptionB,
                 Bolum16Content.bitisikOptionC,
+                Bolum16Content.bitisikOptionD,
               ],
               _model.bitisikNizam,
             ),
@@ -325,7 +339,19 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             (opt) => SelectableCard(
               choice: opt,
               isSelected: s?.label == opt.label,
-              onTap: () => _handleSelection(k, opt),
+              onTap: () {
+                setState(() {
+                  if (k == 'sagir') {
+                    _model = _model.copyWith(sagirYuzey: opt);
+                    if (opt.label != Bolum16Content.sagirYuzeyOptionB.label) {
+                      _model = _model.copyWith(sagirYuzeySprinkler: null);
+                    }
+                  }
+                  if (k == 'bitisik') {
+                    _model = _model.copyWith(bitisikNizam: opt);
+                  }
+                });
+              },
             ),
           ),
         ],

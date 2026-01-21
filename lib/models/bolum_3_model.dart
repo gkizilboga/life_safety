@@ -1,5 +1,5 @@
 class Bolum3Model {
-  final int? normalKatSayisi; 
+  final int? normalKatSayisi;
   final int? bodrumKatSayisi;
   final double? zeminYuksekligi;
   final double? normalYuksekligi;
@@ -50,6 +50,32 @@ class Bolum3Model {
       isYuksekBina: map['isYuksekBina'] ?? false,
       yukseklikBilinmiyor: map['yukseklikBilinmiyor'] ?? false,
       isConfirmed: map['isConfirmed'] ?? false,
+    );
+  }
+
+  Bolum3Model copyWith({
+    int? normalKatSayisi,
+    int? bodrumKatSayisi,
+    double? zeminYuksekligi,
+    double? normalYuksekligi,
+    double? bodrumYuksekligi,
+    double? hBina,
+    double? hYapi,
+    bool? isYuksekBina,
+    bool? yukseklikBilinmiyor,
+    bool? isConfirmed,
+  }) {
+    return Bolum3Model(
+      normalKatSayisi: normalKatSayisi ?? this.normalKatSayisi,
+      bodrumKatSayisi: bodrumKatSayisi ?? this.bodrumKatSayisi,
+      zeminYuksekligi: zeminYuksekligi ?? this.zeminYuksekligi,
+      normalYuksekligi: normalYuksekligi ?? this.normalYuksekligi,
+      bodrumYuksekligi: bodrumYuksekligi ?? this.bodrumYuksekligi,
+      hBina: hBina ?? this.hBina,
+      hYapi: hYapi ?? this.hYapi,
+      isYuksekBina: isYuksekBina ?? this.isYuksekBina,
+      yukseklikBilinmiyor: yukseklikBilinmiyor ?? this.yukseklikBilinmiyor,
+      isConfirmed: isConfirmed ?? this.isConfirmed,
     );
   }
 }

@@ -9,6 +9,7 @@ class ModernHeader extends StatelessWidget {
   final String subtitle;
   final Type screenType;
   final VoidCallback? onBack;
+  final VoidCallback? onSave;
 
   const ModernHeader({
     super.key,
@@ -16,6 +17,7 @@ class ModernHeader extends StatelessWidget {
     required this.subtitle,
     required this.screenType,
     this.onBack,
+    this.onSave,
   });
 
   @override
@@ -68,10 +70,61 @@ class ModernHeader extends StatelessWidget {
                   letterSpacing: 1.2,
                 ),
               ),
-              const SizedBox(width: 28),
+              const SizedBox(width: 10),
+              // Only show KAYDET button on Bolum screens (test sections 1-36)
+              if (screenType.toString().contains('Bolum'))
+                GestureDetector(
+                  onTap: () {
+                    if (onSave != null) {
+                      onSave!();
+                    } else {
+                      BinaStore.instance.saveToDisk();
+                    }
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Analiz kaydedildi ve ana menüye dönüldü.",
+                        ),
+                        duration: Duration(seconds: 2),
+                        backgroundColor: AppColors.successGreen,
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF9800), // Orange for visibility
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white24),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.save_outlined,
+                          color: Colors.white,
+                          size: 14,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          "KAYDET",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(title, style: AppStyles.headerTitle),
           const SizedBox(height: 12),
           Column(
@@ -168,143 +221,13 @@ class SectionImage extends StatelessWidget {
   }
 }
 
-class TechnicalDrawingButton extends StatelessWidget {
-  final String assetPath;
-  final String title;
-
-  const TechnicalDrawingButton({
-    super.key,
-    required this.assetPath,
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: InkWell(
-        onTap: () => _showImagePopup(context),
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.teal.shade50, Colors.cyan.shade50],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.teal.shade400,
-              width: 1.5,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.image_search_rounded,
-                color: Colors.teal.shade700,
-                size: 22,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                "İLGİLİ GÖRSELİ İNCELE",
-                style: TextStyle(
-                  color: Colors.teal.shade800,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 12,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showImagePopup(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 45,
-              height: 5,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            const SizedBox(height: 25),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: AppColors.primaryBlue,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: InteractiveViewer(
-                  minScale: 1.0,
-                  maxScale: 5.0,
-                  child: Image.asset(assetPath, fit: BoxFit.contain),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            const Text(
-              "Görseli iki parmağınızla büyütebilirsiniz.",
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-            const SizedBox(height: 20),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 50, // Standard button height
-                  child: ElevatedButton(
-                    style: AppStyles.mainButton, // Use standard button style
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("ANLADIM"),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class AnalysisPageLayout extends StatelessWidget {
   final String title;
   final String subtitle;
   final Type screenType;
   final Widget child;
   final VoidCallback? onNext;
+  final VoidCallback? onSave;
   final bool isNextEnabled;
 
   const AnalysisPageLayout({
@@ -314,6 +237,7 @@ class AnalysisPageLayout extends StatelessWidget {
     required this.screenType,
     required this.child,
     this.onNext,
+    this.onSave,
     this.isNextEnabled = true,
   });
 
@@ -327,6 +251,18 @@ class AnalysisPageLayout extends StatelessWidget {
             title: title,
             subtitle: subtitle,
             screenType: screenType,
+            onSave: onSave,
+          ),
+          Builder(
+            builder: (context) {
+              // Auto-track current section
+              final step = AppProgress.currentStep(screenType);
+              if (step > 0) {
+                BinaStore.instance.lastActiveSection = step;
+                BinaStore.instance.saveToDisk(); // Auto-save on entry
+              }
+              return const SizedBox.shrink();
+            },
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -411,7 +347,9 @@ class DefinitionButton extends StatelessWidget {
         top: false,
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-          margin: const EdgeInsets.only(bottom: 16), // Extra bottom margin for nav bar
+          margin: const EdgeInsets.only(
+            bottom: 16,
+          ), // Extra bottom margin for nav bar
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
@@ -466,12 +404,192 @@ class DefinitionButton extends StatelessWidget {
                     ),
                   ),
                   onPressed: () => Navigator.pop(context),
-                  child: const Text("KAPAT", style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    "KAPAT",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class TechnicalDrawingButton extends StatelessWidget {
+  final String assetPath;
+  final String title;
+
+  const TechnicalDrawingButton({
+    super.key,
+    required this.assetPath,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (ctx) => _buildModal(ctx),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF43A047), // Green color
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.image_search, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            const Text(
+              "- İlgili görseli incele -", // Fixed text as requested
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModal(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.60, // Reduced from 0.85
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        children: [
+          // Drag handle
+          Container(
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          // Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+          const Divider(),
+          // Image
+          Expanded(
+            child: InteractiveViewer(
+              minScale: 0.5,
+              maxScale: 4.0,
+              child: Center(
+                child: Image.asset(
+                  assetPath,
+                  fit: BoxFit.contain,
+                  errorBuilder: (c, o, s) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.broken_image,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(height: 8),
+                      Text("Görsel yüklenemedi: \$assetPath"),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Footer
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, -5),
+                ),
+              ],
+            ),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                children: [
+                  Text(
+                    "Yakınlaştırmak için görseli iki parmağınızla büyütebilirsiniz.",
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryBlue,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        "ANLADIM",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
