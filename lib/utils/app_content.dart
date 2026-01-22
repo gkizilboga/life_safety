@@ -88,41 +88,47 @@ class Bolum4Content {
     label: "Bina (Bodrum Hariç) < 21.50m",
     uiTitle: "YÜKSEK OLMAYAN BİNA",
     uiSubtitle: "",
-    reportText: "",
+    reportText:
+        "ℹ️ BİLGİ: Bina toplam yüksekliği 21.50 metrenin altında kaldığı için yönetmelik kapsamında YÜKSEK OLMAYAN BİNA sınıfındadır.",
   );
 
   static final yukseklikSinifiYuksek = ChoiceResult(
     label: "Bina (Bodrum Hariç) ≥ 21.50m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
-    reportText: "",
+    reportText:
+        "ℹ️ BİLGİ: Bina toplam yüksekliği 21.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
   );
 
   static final yukseklikSinifiCokYuksek = ChoiceResult(
     label: "Bina (Bodrum Hariç) ≥ 30.50m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
-    reportText: "",
+    reportText:
+        "ℹ️ BİLGİ: Bina toplam yüksekliği 30.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
   );
 
   static final yukseklikSinifiMaksimum = ChoiceResult(
     label: "Bina (Bodrum Hariç) ≥ 51.50m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
-    reportText: "",
+    reportText:
+        "ℹ️ BİLGİ: Bina toplam yüksekliği 51.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
   );
 
   static final yapiYuksekligiUyari = ChoiceResult(
     label: "Yapı (Bodrum Dahil) > 30.50m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
-    reportText: "",
+    reportText:
+        "ℹ️ BİLGİ: Yapı bina yüksekliği (bodrumlar dahil) 30.50 metreyi geçtiği için yüksek bina kriterlerine göre değerlendirilir.",
   );
   static final yapiYuksekligiMaksimum = ChoiceResult(
     label: "Yapı (Bodrum Dahil) ≥ 51.50m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
-    reportText: "",
+    reportText:
+        "ℹ️ BİLGİ: Yapı bina yüksekliği (bodrumlar dahil) 51.50 metreyi geçtiği için yüksek bina kriterlerine göre değerlendirilir.",
   );
 }
 
@@ -131,28 +137,28 @@ class Bolum5Content {
     label: "5-1 (Oturum)",
     uiTitle: "Zemin Kat (Taban) Alanı",
     uiSubtitle: "Binanın zemin katının brüt alanı.",
-    reportText: "Zemin Kat Alanı: ",
+    reportText: "ℹ️ BİLGİ: Zemin Kat (Taban) Alanı: ",
   );
 
   static final normalKatAlani = ChoiceResult(
     label: "5-2 (Normal)",
     uiTitle: "Normal Kat Alanı",
     uiSubtitle: "Zemin üstü standart bir katın brüt alanı.",
-    reportText: "Normal Kat Alanı: ",
+    reportText: "ℹ️ BİLGİ: Normal Kat Alanı: ",
   );
 
   static final bodrumKatAlani = ChoiceResult(
     label: "5-3 (Bodrum)",
     uiTitle: "Bodrum Kat Alanı",
     uiSubtitle: "Zemin altı standart bir katın brüt alanı.",
-    reportText: "Bodrum Kat Alanı: ",
+    reportText: "ℹ️ BİLGİ: Bodrum Kat Alanı: ",
   );
 
   static final toplamInsaat = ChoiceResult(
     label: "5-4 (Toplam)",
     uiTitle: "Toplam İnşaat Alanı",
     uiSubtitle: "Tüm katların (Zemin+Normal+Bodrum) toplam brüt alanı.",
-    reportText: "Toplam İnşaat Alanı: ",
+    reportText: "ℹ️ BİLGİ: Toplam İnşaat Alanı: ",
   );
 
   static final otomatikHesap = ChoiceResult(
@@ -160,7 +166,7 @@ class Bolum5Content {
     uiTitle: "OTOMATİK HESAPLA",
     uiSubtitle: "Kat sayıları ve alan verileriyle toplamı hesaplar.",
     reportText:
-        "Toplam inşaat alanı sistem tarafından otomatik hesaplanmıştır.",
+        "ℹ️ BİLGİ: Toplam inşaat alanı sistem tarafından otomatik hesaplanmıştır.",
   );
 }
 
@@ -178,7 +184,7 @@ class Bolum6Content {
     uiTitle: "Binada konut haricinde ticari alanlar bulunmaktadır.",
     uiSubtitle: "Dükkan, mağaza, kafe, ofis, her türlü işyeri vb.",
     reportText:
-        "ℹ️ BİLGİ: Binada konut harici ticari kullanım (ofis, işyerleri vb.) mevcuttur. Karma kullanımlı binalarda, ticari alanların konutlardan yangın duvarlarıyla ayrılması önerilmektedir.",
+        "ℹ️ BİLGİ: Binada konut harici ticari kullanım (işyerleri vb.) mevcuttur. Karma kullanımlı binalarda, ticari alanların konutlardan yangın duvarı ile ayrılması önerilmektedir.",
   );
 
   static final depoVar = ChoiceResult(
@@ -186,7 +192,7 @@ class Bolum6Content {
     uiTitle: "Binada depolama alanları bulunmaktadır.",
     uiSubtitle: "Konut sakinlere ait eşya deposu vb.",
     reportText:
-        "ℹ️ BİLGİ: Binada konutlara ait ortak depo alanı bulunmaktadır. Depolanan malzemeler yanıcılık seviyelerine göre risk oluşturabilir.",
+        "ℹ️ BİLGİ: Binada konutlara ait ortak depo alanı bulunmaktadır. Depolanan malzemeler yangın yükleri sebebiyle risk oluşturur.",
   );
 
   static final sadeceKonut = ChoiceResult(
@@ -194,7 +200,7 @@ class Bolum6Content {
     uiTitle: "Binada konut dışında başka amaçlı herhangi bir alan yok.",
     uiSubtitle: "Sadece meskenler var.",
     reportText:
-        "ℹ️ BİLGİ: Bina sadece konut amaçlı kullanılmaktadır. Ekstra yangın yükü yaratabilecek bir kullanım bulunmamaktadır.",
+        "ℹ️ BİLGİ: Bina sadece konut amaçlı kullanılmaktadır. Ekstra yangın yükü oluşturabilecek bir fonksiyon bulunmamaktadır. Konut risklerine göre alınacak yangın güvenlik önlemleri yeterli olacaktır.",
   );
 
   static final otoparkKapali = ChoiceResult(
@@ -202,7 +208,7 @@ class Bolum6Content {
     uiTitle: "Otoparkın tavanı, tabanı ve tüm yan duvarları kapalı.",
     uiSubtitle: "Otopark, toprak altında veya duvarları örülü biçimdedir.",
     reportText:
-        "ℹ️ BİLGİ (KAPALI OTOPARK): Otoparkın doğal havalandırma imkanı olmadığı için \"Kapalı Otopark\" statüsündedir. Yönetmeliğe göre Kapalı Otopark yangın güvenlik ihtiyaçları farklıdır. Kapalı alan bilgisine göre duman tahliyesi vb. ihtiyaçlar doğar.",
+        "ℹ️ BİLGİ (KAPALI OTOPARK): Otoparkın doğal havalandırma imkanı olmadığı için \"Kapalı Otopark\" statüsündedir. Yönetmeliğe göre kapalı otoparklarda alınması gereken, algılama, söndürme, duman tahliye vb. gibi önlemler değerlendirilmeli, elektrik araç şarj istasyonları vs. bulunması halinde mevcut duruma göre, Yönetmelik'te henüz işlenmeyen ancak Yangın Güvenlik Uzmanı tarafından belirlenebilecek ekstra önlemler alınması önerilir. ",
   );
 
   static final otoparkAcik = ChoiceResult(
@@ -210,7 +216,7 @@ class Bolum6Content {
     uiTitle: "Otoparkın karşılıklı iki cephesi tamamen açık.",
     uiSubtitle: "Doğal havalandırma mevcut.",
     reportText:
-        "ℹ️ BİLGİ: (AÇIK OTOPARK): Otoparkın karşılıklı cepheleri açık olduğu için doğal havalandırma yeterli kabul edilebilir. İçeride duman birikme ihtimali düşüktür.",
+        "ℹ️ BİLGİ: (AÇIK OTOPARK): Otoparkın karşılıklı cepheleri açık olduğu için doğal havalandırma yeterli kabul edilebilir. İçeride duman birikme ihtimali daha düşüktür.",
   );
 
   static final otoparkYariAcik = ChoiceResult(
@@ -219,19 +225,19 @@ class Bolum6Content {
         "Otoparkın sadece tek bir cephesinde açıklık var. Diğer cepheleri duvarla örülü.",
     uiSubtitle: "Otopark cephesinde pencereler veya açıklıklar var.",
     reportText:
-        "ℹ️ BİLGİ: Otoparkta sadece tek cephede açıklık olması duman tahliyesi ve havalandırma için yeterli değildir. \"Kapalı Otopark\" kuralları geçerlidir.",
+        "ℹ️ BİLGİ: (YARI AÇIK OTOPARK): Otoparkta sadece tek cephede açıklık olması duman tahliyesi ve havalandırma için yeterli değildir. \"Kapalı Otopark\" kuralları geçerlidir.",
   );
 }
 
 class Bolum7Content {
   static const String otoparkBilgiNotu =
-      "İşaretlemeye çalışmayınız, binada kapalı otopark olup olmadığı bilgisi önceki bölümden alınıp sisteme işlenmiştir.";
+      "İşaretlemeye çalışmayınız, binada kapalı otopark olup olmadığı bilgisi önceki bölümden alınıp sisteme işlenmiştir. ";
 
   static final otopark = ChoiceResult(
     label: "7-1 (Otopark)",
     uiTitle: "Kapalı Otopark",
-    uiSubtitle: "(Sistem tarafından otomatik işaretlenir)",
-    reportText: "(Bölüm 6'dan gelen bilgiye göre rapora eklenir)",
+    uiSubtitle: "(Sistem tarafından otomatik işaretlendi)",
+    reportText: "Bölüm 6'dan gelen bilgiye göre rapora eklenmiştir.",
   );
 
   static final kazan = ChoiceResult(
@@ -239,22 +245,21 @@ class Bolum7Content {
     uiTitle: "Kazan Dairesi / Isı Merkezi",
     uiSubtitle: "Mahal içerisinde ısıtma kazanı (boiler) bulunur.",
     reportText:
-        "ℹ️ BİLGİ: Binada Kazan Dairesi mevcuttur. Yakıt ve basınç nedeniyle binanın en yüksek riskli alanıdır. 120 dk yangın dayanımlı duvarlarla ayrılmalıdır.",
+        "ℹ️ BİLGİ: Binada kazan dairesi mevcuttur. Basınçlı ekipmanlar ve yakıt sebebiyle binadaki yüksek riskli alanlarından biridir. Kazan dairesi 120 dk yangın dayanımlı duvarlarla ayrılmalıdır.",
   );
 
   static final asansor = ChoiceResult(
     label: "7-3 (Asansör)",
     uiTitle: "Normal Asansör",
-    uiSubtitle: "İnsan taşıma amaçlı asansör.",
+    uiSubtitle: "İnsan taşıma amaçlı (itfaiye için değil).",
     reportText:
-        "ℹ️ BİLGİ: Binada asansör mevcuttur. Asansör kuyuları alevin ve dumanın üst katlara yayılmasında baca görevi görebilir.",
+        "ℹ️ BİLGİ: Binada asansör mevcuttur. Asansör kuyuları alevin ve dumanın üst katlara yayılmasında baca görevi gördüğünden özel önlemler alınır.",
   );
 
   static final cati = ChoiceResult(
     label: "7-5 (Çatı)",
     uiTitle: "Çatı Arası",
-    uiSubtitle:
-        "Çatı ile binanın en üst katı arasında kalan boşluk veya mahal.",
+    uiSubtitle: "Çatı ile binanın en üst katı arasında kalan mahal.",
     reportText:
         "ℹ️ BİLGİ: Binada çatı arası ya da çatı katı mevcuttur. Bu alanlarda elektrik tesisatı veya ekipman kaynaklı yangın riski yüksektir. Yanıcı madde depo alanı olarak kullanılmamalıdır.",
   );
@@ -264,7 +269,7 @@ class Bolum7Content {
     uiTitle: "Jeneratör Odası",
     uiSubtitle: "Bina için yedek güç kaynağının olduğu mahal.",
     reportText:
-        "ℹ️ BİLGİ: Binada Jeneratör Odası mevcuttur. Jeneratörün çalışması için yakıt depolama ve çıkabilecek egzoz gazları nedeniyle yüksek yangın ve zehirlenme riski taşır.",
+        "ℹ️ BİLGİ: Binada jeneratör odası mevcuttur. Jeneratörün çalışması için yakıt depolama ve çıkan egzoz gazları nedeniyle yangın ve zehirlenme riski yüksektir. Bu mahal için hususi önlemler alınmalıdır.",
   );
 
   static final elektrik = ChoiceResult(
@@ -273,7 +278,7 @@ class Bolum7Content {
     uiSubtitle:
         "Bina için gerekli olan elektrikli ekipmanların veya cihazların bulunduğu mahal.",
     reportText:
-        "ℹ️ BİLGİ: Binada elektrik odası mevcuttur. İstatistiklere göre bina yangınlarının büyük çoğunluğu elektrik panolarından çıkmaktadır.",
+        "ℹ️ BİLGİ: Binada elektrik odası mevcuttur. İstatistiklere göre bina yangınlarının büyük çoğunluğu elektrik panolarından çıkmaktadır. Bu mahal için hususi önlemler alınmalıdır.",
   );
 
   static final trafo = ChoiceResult(
@@ -281,7 +286,7 @@ class Bolum7Content {
     uiTitle: "Trafo Odası",
     uiSubtitle: "Yüksek gerilim trafosu.",
     reportText:
-        "ℹ️ BİLGİ: Binada Trafo bulunmaktadır. Yağlı tip trafonun yangın riski yüksektir. Binadan bağımsız olarak ek önlemler alınması şarttır.",
+        "ℹ️ BİLGİ: Binada trafo bulunmaktadır. Yağlı tip trafonun yangın riski yüksektir. Binadan bağımsız olarak ek önlemler alınması şarttır.",
   );
 
   static final depo = ChoiceResult(
@@ -322,7 +327,7 @@ class Bolum8Content {
     label: "8-1-A",
     uiTitle: "Ayrık Nizam",
     uiSubtitle:
-        "Binanın dört cephesi de açıktır, yan binalara yapışık veya bitişik değildir.",
+        "Binanın dört cephesi de açıktır, herhangi bir binaya yapışık veya bitişik değildir.",
     reportText:
         "ℹ️ BİLGİ: Bina AYRIK NİZAM olarak beyan edilmiştir. Bu durum, komşu binalardan yangın sirayeti riskini azaltır, cephe ve çatı yangın tedbirlerinde esneklik sağlar.",
   );
@@ -330,8 +335,7 @@ class Bolum8Content {
   static final bitisikNizam = ChoiceResult(
     label: "8-1-B",
     uiTitle: "Bitişik Nizam",
-    uiSubtitle:
-        "Binanın bir veya iki cephesi yan binaya yapışık veya bitişiktir.",
+    uiSubtitle: "Binanın en az bir cephesi yan binaya yapışık veya bitişiktir.",
     reportText:
         "ℹ️ BİLGİ: Bina BİTİŞİK NİZAM olarak beyan edilmiştir. Bitişik nizam yapılarda, komşu bina ile ortak kullanılan duvarların yangın dayanım özelliği ve çatı birleşim detayları kritik öneme sahiptir.",
   );
@@ -343,15 +347,15 @@ class Bolum9Content {
     uiTitle: "Evet, tüm binada otomatik söndürme sistemi var.",
     uiSubtitle: "Daireler, koridorlar, dükkanlar, otopark dahil.",
     reportText:
-        "ℹ️ BİLGİ: Binada tam kapsamlı otomatik yağmurlama (sprinkler) sistemi mevcuttur. Bu sistem, yangın anında kaçış mesafesi limitlerini artırır ve yangın güvenliğini daha üst seviyeye taşır.",
+        "ℹ️ BİLGİ: Binanın tüm katlarında ve tüm alanlarında otomatik yağmurlama (sprinkler) sistemi mevcuttur. Bu sistem, yangın anında kaçış mesafesi toleransını artırır ve yangın güvenliğini daha üst seviyeye taşır.",
   );
 
   static final yok = ChoiceResult(
     label: "9-1-B",
     uiTitle: "Hayır, hiçbir yerde yok.",
-    uiSubtitle: "Binada otomatik söndürme sistemi bulunmuyor.",
+    uiSubtitle: "",
     reportText:
-        "ℹ️ BİLGİ: Binada otomatik yağmurlama (sprinkler) sistemi bulunmamaktadır. Bu durumda kaçış mesafesi limitleri minimum değerler üzerinden değerlendirilmektedir. Sprinkler sistemi olmaması kaçış mesafeleri ve can güvenliği açısından büyük dezavantaj yaratır. Yangın Yönetmeliği-Madde 96 'ya göre belli özelliklerdeki konutlarda, otoparklarda, ticari amaçlı kısımlarda otomatik söndürme sistemi mecburiyeti doğabilmektedir.",
+        "ℹ️ BİLGİ: Binanın hiçbir yerinde otomatik yağmurlama (sprinkler) sistemi bulunmamaktadır. Bu durumda kaçış mesafesi limitleri minimum değerler üzerinden değerlendirilmektedir. Sprinkler sistemi olmaması kaçış mesafeleri ve can güvenliği açısından büyük dezavantaj yaratır. Yangın Yönetmeliği-Madde 96 'ya göre belli özelliklerdeki konutlarda, otoparklarda, ticari amaçlı kısımlarda otomatik söndürme sistemi mecburiyeti doğabilmektedir.",
   );
 
   static final kismen = ChoiceResult(
@@ -359,7 +363,7 @@ class Bolum9Content {
     uiTitle: "Kısmen var.",
     uiSubtitle: "Sadece bazı katlarda veya bazı mahallerde var.",
     reportText:
-        "ℹ️ BİLGİ: Sprinkler sistemi binanın tamamını kapsamıyor. Yönetmelik gereği, kaçış güvenliği hesaplarında sistemin \"YOK\" olduğu varsayılacaktır. Sprinkler sisteminin tüm mahallerde veya katlarda olmaması kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır.",
+        "ℹ️ BİLGİ: Sprinkler sistemi binada kısmi olarak bulunuyor. Yönetmelik gereği, kaçış güvenliği hesaplarında sistemin \"YOK\" olduğu varsayılacaktır. Sprinkler sisteminin tüm mahallerde veya katlarda olmaması kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır.",
   );
 }
 
@@ -443,7 +447,7 @@ class Bolum11Content {
     uiTitle: "Evet, duvar, kapı, çit gibi engel mevcut.",
     uiSubtitle: "İtfaiye aracı binaya kolayca erişemiyor.",
     reportText:
-        "☢️ RİSK: İtfaiye erişimini zorlaştıran fiziksel engeller (duvar, kapı vs.) tespit edilmiştir.",
+        "☢️ KIRMIZI RİSK: İtfaiye erişimini zorlaştıran fiziksel engeller (duvar, kapı vs.) tespit edilmiştir.",
   );
 
   static final engelOptionC = ChoiceResult(
@@ -468,7 +472,7 @@ class Bolum11Content {
     uiTitle: "Hayır, yok.",
     uiSubtitle: "Herhangi bir zayıflatılmış geçiş noktası yok.",
     reportText:
-        "☢️ RİSK: İtfaiye erişimini engelleyen duvarlarda, acil durum geçişi için zayıflatılmış ve işaretlenmiş özel bir bölüm bulunmak zorundadır. Aksi takdirde itfaiye binaya ulaşamaz.",
+        "☢️ KIRMIZI RİSK: İtfaiye erişimini engelleyen duvarlarda, acil durum geçişi için zayıflatılmış ve işaretlenmiş özel bir bölüm bulunmak zorundadır. Aksi takdirde itfaiye binaya ulaşamaz.",
   );
 }
 
@@ -479,7 +483,7 @@ class Bolum12Content {
     uiSubtitle:
         "Çelik kolon ve kirişlerin üzeri yangın geciktirici boya, püskürtme sıva, alçıpanel vb. ile kaplanmıştır.",
     reportText:
-        "Çelik taşıyıcı sistem üzerinde pasif yangın yalıtım uygulaması mevcuttur. Bu uygulama, yangın anında çeliğin kritik sıcaklık olan 540°C'ye ulaşmasını geciktirerek binanın çökme riskini minimize eder.",
+        "✅ OLUMLU: Çelik taşıyıcı sistem üzerinde pasif yangın yalıtım uygulaması mevcuttur. Bu uygulama, yangın anında çeliğin kritik sıcaklık olan 540°C'ye ulaşmasını geciktirerek binanın çökme riskini minimize eder.",
   );
 
   static final celikOptionB = ChoiceResult(
@@ -585,7 +589,7 @@ class Bolum13Content {
         "Yangına dayanıksız sac, demir, plastik, aluminyum, ahşap vb. kapı bulunmakta.",
     uiSubtitle: "",
     reportText:
-        "☢️ RİSK: Otopark kapısı yangına dayanıksızdır. Yönetmelik gereği bu kapı en az 90 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanan bir kapı olmalıdır. Mevcut kapı, yangın anında ısı ve dumanı saniyeler içinde yaşam alanlarına geçirebilir.",
+        "☢️ KIRMIZI RİSK: Otopark kapısı yangına dayanıksızdır. Yönetmelik gereği bu kapı en az 90 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanan bir kapı olmalıdır. Mevcut kapı, yangın anında ısı ve dumanı saniyeler içinde yaşam alanlarına geçirebilir.",
   );
 
   static final otoparkOptionC = ChoiceResult(
@@ -620,7 +624,7 @@ class Bolum13Content {
     uiSubtitle:
         "Kapı malzemesi yangına dayanıksızdır veya açılış yönü bina içine doğrudur.",
     reportText:
-        "☢️ RİSK: Kazan dairesi kapısı yangına dayanıklı olmalı ve kaçış yönüne (dışarıya) açılması önerilir. İçeri açılan kapılar, patlama veya panik anında basınç nedeniyle açılamaz hale gelerek içeridekileri hapsedebilir.",
+        "☢️ KIRMIZI RİSK: Kazan dairesi kapısı yangına dayanıklı olmalı ve kaçış yönüne (dışarıya) açılması önerilir. İçeri açılan kapılar, patlama veya panik anında basınç nedeniyle açılamaz hale gelerek içeridekileri hapsedebilir.",
   );
 
   static final kazanOptionC = ChoiceResult(
@@ -677,7 +681,7 @@ class Bolum13Content {
         "Jeneratör, bina içerisinde açıkta muhafaza ediliyor veya basit bir bölme (dayanımsız duvar ve kapı) ile ayrılmış.",
     uiSubtitle: " ",
     reportText:
-        "☢️ RİSK: Jeneratör yakıtı risklidir, bu mahal yangın dayanımlı duvar ve yangın kapısı ile binanında geri kalanından ayrılmalıdır.",
+        "☢️ KIRMIZI RİSK: Jeneratör yakıtı risklidir, bu mahal yangın dayanımlı duvar ve yangın kapısı ile binanında geri kalanından ayrılmalıdır.",
   );
 
   static final jeneratorOptionC = ChoiceResult(
@@ -777,7 +781,7 @@ class Bolum13Content {
     uiSubtitle:
         "Standart kapı kullanılmıştır veya havalandırma menfezi bulunmamaktadır.",
     reportText:
-        "☢️ RİSK: Çöp odaları metan gazı birikme riski taşır. Kapı yangına dayanıklı olmalı ve oda mutlaka havalandırılmalıdır. Mevcut durum patlama veya zehirlenme riski oluşturabilir.",
+        "☢️ KIRMIZI RİSK: Çöp odaları metan gazı birikme riski taşır. Kapı yangına dayanıklı olmalı ve oda mutlaka havalandırılmalıdır. Mevcut durum patlama veya zehirlenme riski oluşturabilir.",
   );
 
   static final copOptionC = ChoiceResult(
@@ -801,7 +805,7 @@ class Bolum13Content {
     uiTitle: "İnce bölme duvar.",
     uiSubtitle: "Yan bina ile aradaki duvar ince ve zayıf bir yapıdadır.",
     reportText:
-        "☢️ RİSK: Ortak duvarlar en az 90 dk yangına dayanıklı olmalıdır.",
+        "☢️ KIRMIZI RİSK: Ortak duvarlar en az 90 dk yangına dayanıklı olmalıdır.",
   );
 
   static final ortakDuvarOptionC = ChoiceResult(
@@ -827,7 +831,7 @@ class Bolum13Content {
     uiSubtitle:
         "Dükkan/Ofis kapısı bina sakinlerinin kullandığı koridora açılmaktadır.",
     reportText:
-        "(Alt soruya göre belirlenir) Hayır ise: ☢️ RİSK: Farklı kullanımlar yangın kompartımanı ile ayrılmalıdır.",
+        "(Alt soruya göre belirlenir) Hayır ise: ☢️ KIRMIZI RİSK: Farklı kullanımlar yangın kompartımanı ile ayrılmalıdır.",
   );
 
   static final ticariOptionC = ChoiceResult(
@@ -898,7 +902,7 @@ class Bolum15Content {
     uiTitle: "Evet, ısı yalıtımı (strafor/köpük vb.) var.",
     uiSubtitle: "Yanıcı malzemeler tespit edildi.",
     reportText:
-        "⚠️ RİSK: Yanıcı yalıtım malzemesi kullanımı tespit edilmiştir.",
+        "⚠️ KIRMIZI RİSK: Yanıcı yalıtım malzemesi kullanımı tespit edilmiştir.",
   );
 
   static final yalitimOptionC = ChoiceResult(
@@ -2147,7 +2151,7 @@ class Bolum26Content {
     uiTitle: "Hayır, çok dik (%10'dan fazla) veya zemin kaygan.",
     uiSubtitle: "Rampayı sadece araçlar kullanabilir.",
     reportText:
-        "☢️ KIRMIZI RİSK: : Otopark rampası çok dik (%10'dan fazla) olduğu için kaçış yolu sayılamaz.",
+        "☢️ KIRMIZI RİSK: Otopark rampası çok dik (%10'dan fazla) olduğu için kaçış yolu sayılamaz.",
   );
 
   static final otoparkOptionC = ChoiceResult(
@@ -3146,7 +3150,7 @@ class Bolum35Content {
     uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
     uiSubtitle: "Mesafe uzun.",
     reportText:
-        "☢️ KRİTİK RİSK: Tek yön kaçış mesafesi sınırın üzerinde! Yangın anında merdivene ulaşmak uzun sürebilir.",
+        "☢️ KRİTİK RİSK: Tek yön kaçış mesafesi sınırın üzerindedir. Yangın anında merdivene ulaşmak uzun sürebilir.",
   );
   static final tekYonOptionD = ChoiceResult(
     label: "35-1-D",

@@ -18,6 +18,11 @@ class ReportSummaryScreen extends StatelessWidget {
     final moduleScores = ReportEngine.calculateModuleScores();
     final bool isPremium = BinaStore.instance.isPremium;
 
+    // Her özet rapor sayfasına girildiğinde test %100 tamamlanmış sayılır.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BinaStore.instance.markAsCompleted();
+    });
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFF5F7FA),

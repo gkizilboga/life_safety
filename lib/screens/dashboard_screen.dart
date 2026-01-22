@@ -42,6 +42,7 @@ import 'archive_screen.dart';
 import 'building_setup_screen.dart';
 import 'legislation_library_screen.dart';
 import 'legal_text_screen.dart';
+import 'report_summary_screen.dart';
 import '../../data/bina_store.dart';
 import '../services/pdf_service.dart';
 import 'paywall_screen.dart';
@@ -59,12 +60,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final metrics = ReportEngine.calculateRiskMetrics();
-    final bool hasOngoing =
-        BinaStore.instance.currentBinaId != null &&
-        BinaStore.instance.bolum1 != null;
-    final String buildingName =
-        BinaStore.instance.currentBinaName ?? "İsimsiz Analiz";
     final currentModule = _getCurrentModule(metrics['completion']);
+
+    final archive = BinaStore.instance.archive;
+    final ongoingActions = archive
+        .where((b) => !(b['isCompleted'] ?? false))
+        .toList();
+    final completedActions = archive
+        .where((b) => (b['isCompleted'] ?? false))
+        .toList();
 
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
@@ -75,14 +79,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               children: [
-                if (hasOngoing)
-                  _buildOngoingCard(
-                    context,
-                    buildingName,
-                    metrics,
-                    currentModule,
-                  ),
-                const SizedBox(height: 20),
+                if (ongoingActions.isNotEmpty) ...[
+                  _buildSectionLabel("DEVAM EDEN ANALİZLER"),
+                  ...ongoingActions.reversed
+                      .take(3)
+                      .map(
+                        (b) =>
+                            _buildAnalysisCard(context, b, isCompleted: false),
+                      ),
+                  const SizedBox(height: 20),
+                ],
+                if (completedActions.isNotEmpty) ...[
+                  _buildSectionLabel("TAMAMLANAN ANALİZLER"),
+                  ...completedActions.reversed
+                      .take(3)
+                      .map(
+                        (b) =>
+                            _buildAnalysisCard(context, b, isCompleted: true),
+                      ),
+                  const SizedBox(height: 20),
+                ],
                 _buildSectionLabel("HIZLI ERİŞİM"),
                 _buildMainActions(context),
                 const SizedBox(height: 25),
@@ -185,22 +201,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildOngoingCard(
+  Widget _buildAnalysisCard(
     BuildContext context,
-    String name,
-    Map<String, dynamic> metrics,
-    ReportModule module,
-  ) {
+    Map<String, dynamic> building, {
+    required bool isCompleted,
+  }) {
+    final String name = building['name'] ?? "İsimsiz Analiz";
+    final String dateStr = building['date'].toString().split('T')[0];
+
+    // We need to calculate completion for THIS building
+    // However, metrics are global current.
+    // For a list, we might just show basic info or pre-calculated completion if we added it to data.
+    // We DO have lastActiveSection.
+    final int lastSection = building['lastActiveSection'] ?? 1;
+    final double completion = (lastSection / 36.0 * 100).clamp(0, 100);
+
     return Container(
+      margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -210,223 +236,140 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStatusChip(),
-              IconButton(
-                onPressed: () => _showResetConfirmation(context),
-                icon: Icon(
-                  Icons.delete_sweep_outlined,
-                  color: Colors.red.shade300,
-                  size: 22,
-                ),
-                tooltip: "Analizi Sıfırla",
-                constraints: const BoxConstraints(),
-                padding: EdgeInsets.zero,
+              _buildStatusChip(isCompleted),
+              Text(
+                dateStr,
+                style: const TextStyle(color: Colors.grey, fontSize: 11),
               ),
             ],
           ),
-          const SizedBox(height: 15),
-          Text(name, style: AppStyles.questionTitle),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           Text(
-            module.rankDescription,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+            name,
             style: const TextStyle(
-              color: AppColors.textLight,
-              fontSize: 12,
-              height: 1.4,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF2C3E50),
             ),
           ),
-          const SizedBox(height: 20),
-          _buildProgressBar(metrics['completion']),
-          const SizedBox(height: 25),
+          const SizedBox(height: 15),
+          if (!isCompleted) ...[
+            _buildProgressBar(completion.toInt()),
+            const SizedBox(height: 15),
+          ],
           Row(
             children: [
               Expanded(
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    side: const BorderSide(color: AppColors.primaryBlue),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isCompleted
+                        ? AppColors.primaryBlue
+                        : Colors.white,
+                    foregroundColor: isCompleted
+                        ? Colors.white
+                        : AppColors.primaryBlue,
+                    elevation: 0,
+                    side: isCompleted
+                        ? null
+                        : const BorderSide(color: AppColors.primaryBlue),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => _getResumeScreen(),
-                      ),
-                    );
-                    if (mounted) setState(() {});
+                  onPressed: () {
+                    BinaStore.instance.loadBuildingFromArchive(building['id']);
+                    if (isCompleted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ReportSummaryScreen(),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => _getResumeScreen(),
+                        ),
+                      );
+                    }
                   },
-                  child: const Text(
-                    "ANALİZE DÖN",
-                    style: TextStyle(
-                      color: AppColors.primaryBlue,
+                  child: Text(
+                    isCompleted ? "RAPORU GÖR" : "DEVAM ET",
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.warningOrange,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () async {
-                    final completion = metrics['completion'];
-                    final progress = (completion is num)
-                        ? completion.toInt()
-                        : 0;
-
-                    if (progress < 100) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            "Raporları görüntülemek için analizi %100 tamamlamanız gerekmektedir.",
-                          ),
-                          backgroundColor: Colors.orange,
-                        ),
-                      );
-                      return;
-                    }
-                    await PdfService.generateRiskAnalysisPdf();
-                  },
-                  child: const Text(
-                    "ÖN RAPORU GÖR",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              if (!isCompleted) ...[
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () =>
+                      _showDeleteConfirmation(context, building['id'], name),
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.redAccent,
+                    size: 20,
                   ),
                 ),
-              ),
+              ],
             ],
-          ),
-          const SizedBox(height: 12),
-          // ACTIVE SYSTEMS MODULE BUTTON
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple.shade700,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                if (!BinaStore.instance.isTestCompleted()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text(
-                        "Aktif sistem analizi için binanızın tüm verilerine ihtiyaç vardır. Lütfen önce 36 bölümlük testi tamamlayınız.",
-                      ),
-                      backgroundColor: Colors.red.shade700,
-                      duration: const Duration(seconds: 4),
-                      action: SnackBarAction(
-                        label: "TAMAM",
-                        textColor: Colors.white,
-                        onPressed: () {},
-                      ),
-                    ),
-                  );
-                  return;
-                }
-
-                if (BinaStore.instance.isPremium) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const ActiveSystemsReportScreenWrapper(),
-                    ),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PaywallScreen(),
-                    ),
-                  );
-                }
-              },
-              icon: const Icon(Icons.star, color: Colors.amber),
-              label: const Text(
-                "AKTİF SİSTEM GEREKSİNİMLERİ",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  color: Colors.white,
-                ),
-              ),
-            ),
           ),
         ],
       ),
     );
   }
 
-  void _showResetConfirmation(BuildContext context) {
+  Widget _buildStatusChip(bool isCompleted) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: isCompleted
+            ? Colors.green.withOpacity(0.1)
+            : Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        isCompleted ? "TAMAMLANDI" : "DEVAM EDİYOR",
+        style: TextStyle(
+          color: isCompleted ? Colors.green.shade700 : Colors.orange.shade700,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String id, String name) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          "Analizi Sıfırla",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        content: const Text(
-          "Mevcut analize ait tüm veriler temizlenecektir. Bu işlem geri alınamaz. Emin misiniz?",
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text("Analizi Sil"),
+        content: Text("'$name' analizini silmek istediğinize emin misiniz?"),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("VAZGEÇ", style: TextStyle(color: Colors.grey)),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade800,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () {
-              setState(() {
-                BinaStore.instance.clearCurrentAnalysis();
-              });
+              BinaStore.instance.deleteFromArchive(id);
               Navigator.pop(context);
+              setState(() {});
             },
-            child: const Text("EVET, SIFIRLA"),
+            child: const Text("SİL"),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStatusChip() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.primaryBlue.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Text(
-        "AKTİF ANALİZ",
-        style: TextStyle(
-          color: AppColors.primaryBlue,
-          fontSize: 10,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 0.5,
-        ),
-      ),
-    );
-  }
+  // Unused methods removed
 
   Widget _buildProgressBar(int percent) {
     return Column(

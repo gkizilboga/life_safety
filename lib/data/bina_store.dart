@@ -83,6 +83,7 @@ class BinaStore {
   set isProUser(bool value) => _prefs?.setBool('isProUser', value);
 
   int _lastActiveSection = 1;
+  bool _isCompleted = false;
   int get lastActiveSection => _lastActiveSection;
   set lastActiveSection(int value) {
     _lastActiveSection = value;
@@ -208,18 +209,8 @@ class BinaStore {
   Bolum36Model? get bolum36 => _bolum36;
   set bolum36(Bolum36Model? v) => _bolum36 = v;
 
-  /// Checks if all 36 sections (or at least the critical ones) are completed.
-  bool isTestCompleted() {
-    // The final section (36) is the definitive marker of completion
-    if (_bolum36 == null) return false;
-
-    // Verify critical sections are also present
-    if (_bolum3 == null) return false;
-    if (_bolum5 == null) return false;
-    if (_bolum33 == null) return false;
-
-    return true;
-  }
+  /// Kullanıcının özet rapor sayfasına ulaşıp ulaşmadığını kontrol eder.
+  bool isTestCompleted() => _isCompleted;
 
   Future<void> loadFromDisk() async {
     _prefs = await SharedPreferences.getInstance();
@@ -254,6 +245,7 @@ class BinaStore {
       'district': currentBinaDistrict ?? "",
       'date': DateTime.now().toIso8601String(),
       'lastActiveSection': _lastActiveSection,
+      'isCompleted': _isCompleted,
       'isPremium': isPremium,
       // User said "Update BinaStore to track purchase status".
       // Usually purchase is per user/lifetime or per building.
@@ -325,11 +317,17 @@ class BinaStore {
       _prefs?.setString('active_bina_id', currentBinaId!);
   }
 
+  void markAsCompleted() {
+    _isCompleted = true;
+    saveToDisk();
+  }
+
   void _loadBuildingFromMap(Map<String, dynamic> data) {
     currentBinaId = data['id'];
     currentBinaName = data['name'];
     currentBinaCity = data['city'];
     currentBinaDistrict = data['district'];
+    _isCompleted = data['isCompleted'] ?? false;
     _lastActiveSection = data['lastActiveSection'] ?? 1;
     final s = data['sections'];
     if (s['bolum1'] != null) _bolum1 = Bolum1Model.fromMap(s['bolum1']);
@@ -430,6 +428,7 @@ class BinaStore {
     _bolum34 = null;
     _bolum35 = null;
     _bolum36 = null;
+    _isCompleted = false;
   }
 
   void loadBuildingFromArchive(String id) {
@@ -462,7 +461,7 @@ class BinaStore {
               "hBina: ${_bolum3?.hBina?.toStringAsFixed(2)}m | hYapi: ${_bolum3?.hYapi?.toStringAsFixed(2)}m",
           uiSubtitle: "",
           reportText:
-              "Bina Yüksekliği (hBina): ${_bolum3?.hBina?.toStringAsFixed(2)} m, Yapı Yüksekliği (hYapi): ${_bolum3?.hYapi?.toStringAsFixed(2)} m.",
+              "ℹ️ BİLGİ: Bina Yüksekliği (hBina): ${_bolum3?.hBina?.toStringAsFixed(2)} m, Yapı Yüksekliği (hYapi): ${_bolum3?.hYapi?.toStringAsFixed(2)} m.",
         );
       case 4:
         return _bolum4?.binaYukseklikSinifi;
@@ -472,15 +471,15 @@ class BinaStore {
         String report = "";
         if (m.tabanAlani != null)
           report +=
-              "${Bolum5Content.oturumAlani.reportText}${m.tabanAlani} m²\n";
+              "ℹ️ BİLGİ: ${Bolum5Content.oturumAlani.reportText}${m.tabanAlani} m²\n";
         if (m.normalKatAlani != null)
           report +=
-              "${Bolum5Content.normalKatAlani.reportText}${m.normalKatAlani} m²\n";
+              "ℹ️ BİLGİ: ${Bolum5Content.normalKatAlani.reportText}${m.normalKatAlani} m²\n";
         if (m.bodrumKatAlani != null && m.bodrumKatAlani! > 0)
           report +=
-              "${Bolum5Content.bodrumKatAlani.reportText}${m.bodrumKatAlani} m²\n";
+              "ℹ️ BİLGİ: ${Bolum5Content.bodrumKatAlani.reportText}${m.bodrumKatAlani} m²\n";
         report +=
-            "${Bolum5Content.toplamInsaat.reportText}${m.toplamInsaatAlani} m²";
+            "ℹ️ BİLGİ: ${Bolum5Content.toplamInsaat.reportText}${m.toplamInsaatAlani} m²";
 
         return ChoiceResult(
           label: "5",

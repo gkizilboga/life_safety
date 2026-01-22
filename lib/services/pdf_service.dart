@@ -174,7 +174,7 @@ class PdfService {
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Text(
-                          "YANGIN GÜVENLİĞİ",
+                          "BİNALARIN YANGINDAN KORUNMASI HAKKINDA YÖNETMELİĞİ'NE GÖRE",
                           style: pw.TextStyle(
                             color: PdfColors.blue100,
                             fontSize: 14,
@@ -252,7 +252,7 @@ class PdfService {
                                       pw.CrossAxisAlignment.start,
                                   children: [
                                     pw.Text(
-                                      "RİSK SEVİYESİ",
+                                      "RİSK DURUMU",
                                       style: const pw.TextStyle(
                                         color: PdfColors.white,
                                         fontSize: 10,
@@ -297,16 +297,16 @@ class PdfService {
                     child: pw.Row(
                       children: [
                         _buildCoverInfoItem(
-                          "PROJE / BİNA ADI",
+                          "BİNA ADI",
                           store.currentBinaName ?? "-",
                         ),
                         pw.SizedBox(width: 20),
                         _buildCoverInfoItem(
-                          "LOKASYON",
+                          "KONUM",
                           "${store.currentBinaDistrict} / ${store.currentBinaCity}",
                         ),
                         pw.SizedBox(width: 20),
-                        _buildCoverInfoItem("KULLANICI", "Kullanıcı Beyanı"),
+                        _buildCoverInfoItem("", ""),
                       ],
                     ),
                   ),
@@ -372,7 +372,7 @@ class PdfService {
       _buildCoverPage(
         pageTheme: pageTheme,
         logoImage: logoImage,
-        mainTitle: "YANGIN RİSK ANALİZ RAPORU",
+        mainTitle: "YANGIN RİSK ANALİZi ÖN RAPORU",
         subTitle: "",
         store: store,
         metrics: metrics,
@@ -390,7 +390,7 @@ class PdfService {
         header: (context) => pw.Container(
           alignment: pw.Alignment.centerRight,
           child: pw.Text(
-            "Yangın Risk Analizi",
+            "",
             style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
           ),
         ),
@@ -424,7 +424,7 @@ class PdfService {
         ),
         build: (context) => [
           pw.Text(
-            "YANGIN RİSK ANALİZİ",
+            "MODÜL BAZINDA GÜVENLİK SKORLARI",
             style: pw.TextStyle(
               fontSize: 12,
               fontWeight: pw.FontWeight.bold,
@@ -462,7 +462,7 @@ class PdfService {
           ),
           pw.SizedBox(height: 20),
           pw.Text(
-            "ANALİZ DURUMU",
+            "DEĞERLENDİRME NOTLARI",
             style: pw.TextStyle(
               fontSize: 14,
               fontWeight: pw.FontWeight.bold,
@@ -499,14 +499,14 @@ class PdfService {
                     ),
                   ),
                   pw.Text(
-                    "SORU: ${AppContent.getQuestionText(id)}",
+                    "Soru: ${AppContent.getQuestionText(id)}",
                     style: const pw.TextStyle(
                       fontSize: 8,
                       color: PdfColors.grey800,
                     ),
                   ),
                   pw.Text(
-                    "YANIT: ${res.uiTitle}",
+                    "Yanıt: ${res.uiTitle}",
                     style: pw.TextStyle(
                       fontSize: 9,
                       fontWeight: pw.FontWeight.bold,
@@ -531,7 +531,7 @@ class PdfService {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                "İYİLEŞTİRME ÖNERİLERİ",
+                "ÖNERİLER",
                 style: pw.TextStyle(
                   fontSize: 16,
                   fontWeight: pw.FontWeight.bold,
@@ -560,7 +560,7 @@ class PdfService {
                         ),
                       ),
                       pw.Text(
-                        "ÖNERİ: ${item['advice']}",
+                        "Öneri: ${item['advice']}",
                         style: const pw.TextStyle(fontSize: 9),
                       ),
                     ],
@@ -596,7 +596,7 @@ class PdfService {
         pageTheme: pageTheme,
         logoImage: logoImage,
         mainTitle: "AKTİF SİSTEM GEREKSİNİMLERİ",
-        subTitle: "${activeSystems.length} Madde Tespit Edildi",
+        subTitle: "${activeSystems.length} Tespit",
         store: store,
         metrics: {'score': 0}, // Skor gösterilmeyecek
         showScore: false,

@@ -123,7 +123,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           _buildChoiceGrid('zemin', null, _model.zemin),
 
           if (_model.bodrumlar.isNotEmpty) ...[
-            const SizedBox(height: 30),
+            const SizedBox(height: 12),
             _buildSectionTitle("Bodrum Katların Baskın Kullanım Amacı"),
             _buildToggleRow(
               "Tüm bodrumlar aynı fonksiyona sahip",
@@ -161,7 +161,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           ],
 
           if (_model.normaller.isNotEmpty) ...[
-            const SizedBox(height: 30),
+            const SizedBox(height: 12),
             _buildSectionTitle("Normal Katların Baskın Kullanım Amacı"),
             _buildToggleRow(
               "Tüm normal katlar aynı fonksiyona sahip",
@@ -200,7 +200,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
 
           if (_checkIfComplete())
             Padding(
-              padding: const EdgeInsets.only(top: 30),
+              padding: const EdgeInsets.only(top: 15),
               child: _buildSummaryCard(),
             ),
         ],
@@ -221,13 +221,10 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     return Column(
       children: choices
           .map(
-            (c) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: SelectableCard(
-                choice: c,
-                isSelected: selected?.label == c.label,
-                onTap: () => _handleSelection(type, c, index: index),
-              ),
+            (c) => SelectableCard(
+              choice: c,
+              isSelected: selected?.label == c.label,
+              onTap: () => _handleSelection(type, c, index: index),
             ),
           )
           .toList(),
