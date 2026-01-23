@@ -27,6 +27,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   bool _askCop = false;
   bool _askDuvar = false;
   bool _askTicari = false;
+  bool _askSiginak = false;
 
   @override
   void initState() {
@@ -54,7 +55,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _askDepo ||
         _askCop ||
         _askDuvar ||
-        _askTicari;
+        _askTicari ||
+        _askSiginak;
   }
 
   void _loadVisibilityLogic() {
@@ -83,6 +85,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       _askDuvar = b7?.hasDuvar ?? false;
       // Hem Bölüm 6 hem de Bölüm 10'daki ticari alan seçimlerine bakıyoruz
       _askTicari = (b6?.hasTicari ?? false) || hasTicariInB10;
+      _askSiginak = b7?.hasSiginak ?? false;
     });
   }
 
@@ -140,7 +143,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  if (_askOtopark)
+                  if (_askOtopark) ...[
                     _buildSoru(
                       "Otoparktan bina içine açılan kapının özelliği nedir?",
                       'otopark',
@@ -152,8 +155,20 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                       ],
                       _model.otoparkKapi,
                     ),
+                    // ALT SORU: Otopark Alanı
+                    _buildSoru(
+                      "Otopark alanları toplamda kaç metrekaredir?",
+                      'otoparkAlan',
+                      [
+                        Bolum13Content.otoparkAlanOptionA,
+                        Bolum13Content.otoparkAlanOptionB,
+                        Bolum13Content.otoparkAlanOptionC,
+                      ],
+                      _model.otoparkAlan,
+                    ),
+                  ],
 
-                  if (_askKazan)
+                  if (_askKazan) ...[
                     _buildSoruWithDef(
                       "Kazan dairesinin duvarları ve kapısı nasıldır?",
                       "Yangın Kompartımanı",
@@ -167,6 +182,18 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                       ],
                       _model.kazanKapi,
                     ),
+                    // ALT SORU: Kazan Dairesi Alanı
+                    _buildSoru(
+                      "Binadaki kazan dairesi kaç metrekaredir?",
+                      'kazanAlan',
+                      [
+                        Bolum13Content.kazanAlanOptionA,
+                        Bolum13Content.kazanAlanOptionB,
+                        Bolum13Content.kazanAlanOptionC,
+                      ],
+                      _model.kazanAlan,
+                    ),
+                  ],
 
                   if (_askAsansor)
                     _buildSoru("Asansör kapısı nasıldır?", 'asansor', [
@@ -223,6 +250,19 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.copOptionC,
                       ],
                       _model.copKapi,
+                    ),
+
+                  // YENİ SORU: Sığınak Alanı
+                  if (_askSiginak)
+                    _buildSoru(
+                      "Binadaki sığınak alanı kaç metrekaredir?",
+                      'siginakAlan',
+                      [
+                        Bolum13Content.siginakAlanOptionA,
+                        Bolum13Content.siginakAlanOptionB,
+                        Bolum13Content.siginakAlanOptionC,
+                      ],
+                      _model.siginakAlan,
                     ),
 
                   if (_askDuvar)

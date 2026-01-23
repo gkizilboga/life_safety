@@ -620,7 +620,10 @@ class BinaStore {
         return m?.kazanKapi ??
             m?.otoparkKapi ??
             m?.asansorKapi ??
-            m?.ticariKapi;
+            m?.ticariKapi ??
+            m?.otoparkAlan ??
+            m?.kazanAlan ??
+            m?.siginakAlan;
       case 14:
         return _bolum14?.secim;
       case 15:

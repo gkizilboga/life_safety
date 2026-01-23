@@ -634,19 +634,40 @@ class PdfService {
           pw.SizedBox(height: 20),
 
           ...activeSystems.map((req) {
-            final badgeColor = req.isMandatory
-                ? PdfColors.red900
-                : (req.isWarning ? PdfColors.orange900 : PdfColors.grey500);
-            final badgeText = req.isMandatory
-                ? "ZORUNLU"
-                : (req.isWarning ? "UYARI" : "ZORUNLU DEĞİL");
+            PdfColor badgeColor = PdfColors.grey500;
+            PdfColor textColor = PdfColors.grey900;
+            String badgeText = "ZORUNLU DEĞİL";
+
+            if (req.reason.contains("KRİTİK RİSK")) {
+              badgeColor = PdfColors.red900;
+              textColor = PdfColors.red900;
+              badgeText = "ZORUNLU";
+            } else if (req.reason.contains("UYARI")) {
+              badgeColor = PdfColors.orange900;
+              textColor = PdfColors.orange900;
+              badgeText = "UYARI";
+            } else if (req.reason.contains("OLUMLU") ||
+                req.reason.contains("BİLGİ")) {
+              badgeColor = PdfColors.green700;
+              textColor = PdfColors.green900;
+              badgeText = "OLUMLU";
+            }
+
+            // Remove prefixes from reason for cleaner display
+            String cleanReason = req.reason
+                .replaceAll("KRİTİK RİSK:", "")
+                .replaceAll("UYARI:", "")
+                .replaceAll("OLUMLU:", "")
+                .replaceAll("BİLGİ:", "")
+                .replaceAll("BİLİNMİYOR:", "")
+                .trim();
 
             return pw.Container(
               margin: const pw.EdgeInsets.only(bottom: 10),
               padding: const pw.EdgeInsets.all(8),
               decoration: pw.BoxDecoration(
                 border: pw.Border(
-                  left: pw.BorderSide(color: badgeColor, width: 3),
+                  left: pw.BorderSide(color: badgeColor, width: 4),
                 ),
                 color: PdfColors.grey50,
               ),
@@ -663,27 +684,42 @@ class PdfService {
                           fontWeight: pw.FontWeight.bold,
                         ),
                       ),
-                      pw.Text(
-                        badgeText,
-                        style: pw.TextStyle(
-                          fontSize: 8,
+                      pw.Container(
+                        padding: const pw.EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: pw.BoxDecoration(
                           color: badgeColor,
-                          fontWeight: pw.FontWeight.bold,
+                          borderRadius: pw.BorderRadius.circular(4),
+                        ),
+                        child: pw.Text(
+                          badgeText,
+                          style: pw.TextStyle(
+                            fontSize: 8,
+                            color: PdfColors.white,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  pw.SizedBox(height: 4),
-                  pw.Text(req.reason, style: const pw.TextStyle(fontSize: 9)),
-                  if (req.isWarning && req.note.isNotEmpty)
+                  pw.SizedBox(height: 6),
+                  pw.Text(
+                    cleanReason,
+                    style: pw.TextStyle(fontSize: 9, color: textColor),
+                  ),
+                  if (req.note.isNotEmpty) ...[
+                    pw.SizedBox(height: 4),
                     pw.Text(
                       "NOT: ${req.note}",
                       style: pw.TextStyle(
                         fontSize: 8,
-                        color: PdfColors.orange800,
+                        color: PdfColors.grey700,
                         fontStyle: pw.FontStyle.italic,
                       ),
                     ),
+                  ],
                 ],
               ),
             );
