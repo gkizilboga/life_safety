@@ -132,11 +132,6 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
 
   @override
   Widget build(BuildContext context) {
-    bool showManualInput =
-        (_model.tekYon?.label == "35-1-A" ||
-        _model.ciftYon?.label == "35-2-A" ||
-        _model.cikmazMesafe?.label == "35-3-C");
-
     return AnalysisPageLayout(
       title: "Kaçış Mesafeleri",
       subtitle: "Daire kapısından merdivene ulaşım",
@@ -183,6 +178,28 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               _getDynamicChoice(Bolum35Content.tekYonOptionC, _limitTekYon),
               Bolum35Content.tekYonOptionD,
             ], _model.tekYon),
+            if (_model.tekYon?.label == "35-1-A") ...[
+              const SizedBox(height: 12),
+              _buildInfoNote(
+                "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
+              ),
+              QuestionCard(
+                child: TextFormField(
+                  controller: _mesafeCtrl,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  inputFormatters: [InputValidator.flexDecimal],
+                  decoration: InputDecoration(
+                    labelText: "Net Mesafeyi Giriniz (m)",
+                    suffixText: "metre",
+                    errorText: _mesafeErr,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.straighten),
+                  ),
+                ),
+              ),
+            ],
           ] else ...[
             _buildSoruHeaderWithDef(
               "Daire kapınızdan çıktığınızda, size EN YAKIN yangın merdivenine olan mesafe kaç metredir?",
@@ -199,6 +216,28 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               _getDynamicChoice(Bolum35Content.ciftYonOptionC, _limitCiftYon),
               Bolum35Content.ciftYonOptionD,
             ], _model.ciftYon),
+            if (_model.ciftYon?.label == "35-2-A") ...[
+              const SizedBox(height: 12),
+              _buildInfoNote(
+                "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
+              ),
+              QuestionCard(
+                child: TextFormField(
+                  controller: _mesafeCtrl,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  inputFormatters: [InputValidator.flexDecimal],
+                  decoration: InputDecoration(
+                    labelText: "Net Mesafeyi Giriniz (m)",
+                    suffixText: "metre",
+                    errorText: _mesafeErr,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.straighten),
+                  ),
+                ),
+              ),
+            ],
             const SizedBox(height: 12),
             _buildSoruHeaderWithDef(
               "Daireniz koridorun sonunda, 'Çıkmaz' bir noktada mı?",
@@ -225,29 +264,29 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
                 ),
                 Bolum35Content.cikmazMesafeOptionD,
               ], _model.cikmazMesafe),
+              if (_model.cikmazMesafe?.label == "35-3-C") ...[
+                const SizedBox(height: 12),
+                _buildInfoNote(
+                  "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
+                ),
+                QuestionCard(
+                  child: TextFormField(
+                    controller: _mesafeCtrl,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [InputValidator.flexDecimal],
+                    decoration: InputDecoration(
+                      labelText: "Net Mesafeyi Giriniz (m)",
+                      suffixText: "metre",
+                      errorText: _mesafeErr,
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.straighten),
+                    ),
+                  ),
+                ),
+              ],
             ],
-          ],
-          if (showManualInput) ...[
-            const SizedBox(height: 12),
-            _buildInfoNote(
-              "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
-            ),
-            QuestionCard(
-              child: TextFormField(
-                controller: _mesafeCtrl,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                inputFormatters: [InputValidator.flexDecimal],
-                decoration: InputDecoration(
-                  labelText: "Net Mesafeyi Giriniz (m)",
-                  suffixText: "metre",
-                  errorText: _mesafeErr,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.straighten),
-                ),
-              ),
-            ),
           ],
         ],
       ),

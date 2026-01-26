@@ -65,7 +65,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
     final b7 = BinaStore.instance.bolum7;
 
     setState(() {
-      _askOtopark = (b6?.hasOtopark ?? false) || (b7?.hasOtopark ?? false);
+      _askOtopark = b6?.hasOtopark ?? false;
       _askKazan = b7?.hasKazan ?? false;
       _askCati = b7?.hasCati ?? false;
       _askAsansor =
@@ -73,7 +73,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
       _askJenerator = b7?.hasJenerator ?? false;
       _askPano = b7?.hasElektrik ?? false;
       _askTrafo = b7?.hasTrafo ?? false;
-      _askDepo = (b6?.hasDepo ?? false) || (b7?.hasDepo ?? false);
+      _askDepo = b6?.hasDepo ?? false;
       _askCop = b7?.hasCop ?? false;
       _askSiginak = b7?.hasSiginak ?? false;
     });

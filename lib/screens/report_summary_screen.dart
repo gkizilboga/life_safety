@@ -8,21 +8,35 @@ import 'dashboard_screen.dart';
 import 'paywall_screen.dart';
 import '../utils/app_content.dart';
 
-class ReportSummaryScreen extends StatelessWidget {
+class ReportSummaryScreen extends StatefulWidget {
   const ReportSummaryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final metrics = ReportEngine.calculateRiskMetrics();
-    final yghReasons = ReportEngine.evaluateYghRequirement();
-    final moduleScores = ReportEngine.calculateModuleScores();
-    final bool isPremium = BinaStore.instance.isPremium;
+  State<ReportSummaryScreen> createState() => _ReportSummaryScreenState();
+}
 
-    // Her özet rapor sayfasına girildiğinde test %100 tamamlanmış sayılır.
+class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
+  late Map<String, dynamic> _metrics;
+  late List<String> _yghReasons;
+  late Map<ReportModule, double> _moduleScores;
+  late bool _isPremium;
+
+  @override
+  void initState() {
+    super.initState();
+    // Perform heavy calculations once
+    _metrics = ReportEngine.calculateRiskMetrics();
+    _yghReasons = ReportEngine.evaluateYghRequirement();
+    _moduleScores = ReportEngine.calculateModuleScores();
+    _isPremium = BinaStore.instance.isPremium;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BinaStore.instance.markAsCompleted();
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFF5F7FA),
@@ -39,12 +53,12 @@ class ReportSummaryScreen extends StatelessWidget {
                 ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    _buildRiskPanel(metrics),
+                    _buildRiskPanel(_metrics),
                     const SizedBox(height: 20),
-                    _buildVisualAnalysis(moduleScores),
-                    if (yghReasons.isNotEmpty) ...[
+                    _buildVisualAnalysis(_moduleScores),
+                    if (_yghReasons.isNotEmpty) ...[
                       const SizedBox(height: 20),
-                      _buildYghEvaluationPanel(yghReasons),
+                      _buildYghEvaluationPanel(_yghReasons),
                     ],
                     const SizedBox(height: 25),
                     const Padding(
@@ -66,11 +80,11 @@ class ReportSummaryScreen extends StatelessWidget {
                     const SizedBox(height: 120),
                   ],
                 ),
-                if (!isPremium) _buildBlurredOverlay(context),
+                if (!_isPremium) _buildBlurredOverlay(context),
               ],
             ),
           ),
-          _buildBottomAction(context, isPremium),
+          _buildBottomAction(context, _isPremium),
         ],
       ),
     );
@@ -579,43 +593,6 @@ class ReportSummaryScreen extends StatelessWidget {
     );
   }
 
-  void _showExitConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("Çıkış"),
-        content: const Text(
-          "Dashboard ekranına dönmek istediğinize emin misiniz?\n\nVerileriniz kaydedilmiş olarak kalacaktır.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text("Hayır"),
-          ),
-          TextButton(
-            onPressed: () {
-              BinaStore.instance.saveToDisk();
-              Navigator.of(ctx).pop();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => const DashboardScreen(),
-                ),
-                (route) => false,
-              );
-            },
-            child: const Text(
-              "Evet, Dön",
-              style: TextStyle(
-                color: Color(0xFF1A237E),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildBottomAction(BuildContext context, bool isPremium) {
     return SafeArea(
       top: false,
@@ -639,6 +616,9 @@ class ReportSummaryScreen extends StatelessWidget {
               height: 54,
               child: ElevatedButton(
                 onPressed: () {
+                  // Her durumda önce kaydet
+                  BinaStore.instance.saveToDisk();
+
                   if (isPremium) {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
@@ -671,18 +651,6 @@ class ReportSummaryScreen extends StatelessWidget {
                     color: Colors.white,
                     fontSize: 12,
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: () => _showExitConfirmationDialog(context),
-              child: const Text(
-                "Kaydet ve Dashboard'a Dön",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),

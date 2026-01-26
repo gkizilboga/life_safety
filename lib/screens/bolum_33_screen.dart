@@ -92,21 +92,36 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     int yukBodrum = (alanBodrum / kBodrum).ceil();
     int gBodrum = _hesaplaGerekliCikis(yukBodrum);
 
-    // MEVCUT ÇIKIŞ SAYILARI
-    // Üst katlar için toplam merdiven sayısı
+    // 4. MEVCUT ÇIKIŞ SAYILARI
+    // Üst katlar için toplam merdiven sayısı (Sahanlıksız hariç)
+    // Sahanlıksız merdivenler kaçış yolu kabul edilmez
     int mevcutUst =
         (b20?.normalMerdivenSayisi ?? 0) +
         (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
         (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
         (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0) +
-        (b20?.donerMerdivenSayisi ??
-            0); // Döner merdiven de sayıya dahildir (uygunluğu ayrı konu)
+        (b20?.donerMerdivenSayisi ?? 0);
 
-    // Bodrum için: Eğer merdiven bodruma iniyorsa (20-Bodrum-A) mevcutUst kadar, inmiyorsa 0 (veya sadece bodruma özel merdiven varsa o)
-    // Şimdilik basit mantık: Bodruma iniyorsa üstteki kadar çıkış var kabul ediyoruz.
-    int mevcutBodrum = (b20?.bodrumMerdivenDevami?.label == "20-Bodrum-A")
-        ? mevcutUst
-        : 0;
+    // Bodrum için Çıkış Sayısı
+    int mevcutBodrum = 0;
+    bool isBodrumIndependent = b20?.isBodrumIndependent ?? false;
+
+    if (isBodrumIndependent) {
+      // Bağımsız ise kendi sayısını topla (Sahanlıksız hariç)
+      mevcutBodrum =
+          (b20?.bodrumNormalMerdivenSayisi ?? 0) +
+          (b20?.bodrumBinaIciYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumBinaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumBinaDisiAcikYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumDonerMerdivenSayisi ?? 0);
+    } else {
+      // Bağımsız değilse, merdiven bodruma iniyor mu?
+      if (b20?.bodrumMerdivenDevami?.label == "20-Bodrum-A") {
+        mevcutBodrum = mevcutUst;
+      } else {
+        mevcutBodrum = 0;
+      }
+    }
 
     // 450/600m² UYARISI (Sadece Normal Kat İçin Örnek)
     if (gNormal == 1) {

@@ -41,6 +41,7 @@ class AppProgress {
     Bolum1Screen,
     Bolum2Screen,
     Bolum3Screen,
+    Bolum4Screen,
     Bolum5Screen,
     Bolum6Screen,
     Bolum7Screen,

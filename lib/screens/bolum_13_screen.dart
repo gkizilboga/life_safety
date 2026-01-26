@@ -74,13 +74,13 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     }
 
     setState(() {
-      _askOtopark = (b6?.hasOtopark ?? false) || (b7?.hasOtopark ?? false);
+      _askOtopark = b6?.hasOtopark ?? false;
       _askKazan = b7?.hasKazan ?? false;
       _askAsansor = b7?.hasAsansor ?? false;
       _askJenerator = b7?.hasJenerator ?? false;
       _askElektrik = b7?.hasElektrik ?? false;
       _askTrafo = b7?.hasTrafo ?? false;
-      _askDepo = (b6?.hasDepo ?? false) || (b7?.hasDepo ?? false);
+      _askDepo = b6?.hasDepo ?? false;
       _askCop = b7?.hasCop ?? false;
       _askDuvar = b7?.hasDuvar ?? false;
       // Hem Bölüm 6 hem de Bölüm 10'daki ticari alan seçimlerine bakıyoruz
@@ -111,6 +111,12 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _model = _model.copyWith(ortakDuvar: choice);
       else if (type == 'ticari')
         _model = _model.copyWith(ticariKapi: choice);
+      else if (type == 'otoparkAlan')
+        _model = _model.copyWith(otoparkAlan: choice);
+      else if (type == 'kazanAlan')
+        _model = _model.copyWith(kazanAlan: choice);
+      else if (type == 'siginakAlan')
+        _model = _model.copyWith(siginakAlan: choice);
     });
   }
 
@@ -163,6 +169,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                         Bolum13Content.otoparkAlanOptionA,
                         Bolum13Content.otoparkAlanOptionB,
                         Bolum13Content.otoparkAlanOptionC,
+                        Bolum13Content.otoparkAlanOptionD,
+                        Bolum13Content.otoparkAlanOptionE,
                       ],
                       _model.otoparkAlan,
                     ),

@@ -7,13 +7,13 @@ enum ReportModule {
     "Bina Hakkında Genel Bilgiler",
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     "Aquarius",
-    "Çeşme, sarnıç ve su kemerlerinin yerlerini avucunun içi gibi bilen kişiler.",
+    "Çeşme, sarnıç ve su kemerlerinin yerlerini avucunun içi gibi bilen kişi.",
   ),
   modul1(
     "Modül 1",
     [11, 12, 13, 14, 15],
     "Nocturnus",
-    "Gece Bekçisi ordusu. Geceleri sokaklarda devriye gezerler.",
+    "Gece Bekçisi ordusundan, geceleri sokaklarda devriye gezer.",
   ),
   modul2(
     "Modül 2",
@@ -25,7 +25,7 @@ enum ReportModule {
     "Modül 3",
     [21, 22, 23, 24, 25],
     "Centurio",
-    "İtfaiye bölüğünün komutanı. Taktik lider.",
+    "İtfaiye bölüğünün komutanı, taktik lider.",
   ),
   modul4(
     "Modül 4",

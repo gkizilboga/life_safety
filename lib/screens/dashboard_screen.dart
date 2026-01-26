@@ -296,7 +296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
                   },
                   child: Text(
-                    isCompleted ? "RAPORU GÖR" : "DEVAM ET",
+                    isCompleted ? "ÖN RAPORU GÖR" : "DEVAM ET",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
@@ -318,6 +318,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ],
           ),
+          if (isCompleted) ...[
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  PdfService.generateActiveSystemsPdf();
+                },
+                icon: const Icon(
+                  Icons.settings_system_daydream_outlined,
+                  size: 18,
+                ),
+                label: const Text("AKTİF SİSTEM GEREKSİNİMLERİ"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.primaryBlue,
+                  elevation: 0,
+                  side: const BorderSide(color: AppColors.primaryBlue),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  textStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

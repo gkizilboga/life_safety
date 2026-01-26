@@ -399,14 +399,104 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     // --- Çıkış Sayısı Kontrolü ---
     int gerekli = b33?.gerekliNormal ?? 0;
     int mevcut = b33?.mevcutUst ?? 0;
-    if (mevcut >= gerekli)
+    if (mevcut >= gerekli) {
       notes.add(
-        "✅ ÇIKIŞ SAYISI YETERLİ: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla veya eşit olduğundan, çıkış sayısı bakımından yeterli gözükmektedir. Ancak bu durum tek başına yeterli olmayıp, binadaki merdiven tiplerinin ve adedinin kriterleri de uygun olması gereklidir.",
+        "✅ [BİNA/ÜST KATLAR] ÇIKIŞ SAYISI YETERLİ: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla veya eşit olduğundan, çıkış sayısı bakımından yeterli gözükmektedir.",
       );
-    else
+    } else {
       notes.add(
-        "🚨 ÇIKIŞ SAYISI YETERSİZ: Yönetmelik gereği $gerekli çıkış gerekirken, binada sadece $mevcut çıkış bulunmaktadır. Çıkış sayısı bakımından yetersiz gözükmektedir. Bu durumla birlikte binadaki merdiven tiplerinin ve adetlerinin de Yönetmelik kriterlerini karşılaması beklenir.",
+        "🚨 [BİNA/ÜST KATLAR] ÇIKIŞ SAYISI YETERLİ DEĞİL: Yönetmelik gereği $gerekli çıkış gerekirken, binada sadece $mevcut çıkış bulunmaktadır.",
       );
+    }
+
+    // --- BODRUM KAT ÇIKIŞ ve GENİŞLİK KONTROLÜ (Eğer Bağımsız ise) ---
+    bool isBodrumIndependent = b20?.isBodrumIndependent ?? false;
+    // Eğer bağımsız değilse (merdiven iniyorsa) zaten üst kat kontrolü yapıldı, genişlik aynı kabul ediliyor.
+    // Ancak bağımsız ise, ayrı yük ve ayrı sayı kontrolü gerekir.
+    if (isBodrumIndependent) {
+      int gBodrum = b33?.gerekliBodrum ?? 0;
+      int mBodrum = b33?.mevcutBodrum ?? 0;
+      int yBodrum = b33?.yukBodrum ?? 0;
+
+      if (mBodrum >= gBodrum) {
+        notes.add(
+          "✅ [BODRUM KAT] ÇIKIŞ SAYISI YETERLİ: Bodrum kat için mevcut çıkış sayısı ($mBodrum), gereken çıkış sayısından ($gBodrum) fazla veya eşit.",
+        );
+      } else {
+        notes.add(
+          "🚨 [BODRUM KAT] ÇIKIŞ SAYISI YETERLİ DEĞİL: Bodrum kat için $gBodrum çıkış gerekirken, sadece $mBodrum müstakil çıkış bulunmaktadır.",
+        );
+      }
+
+      // Bodrum Genişlik Kontrolü (Aynı Genişlik Varsayımıyla)
+      if (!_genislikBilinmiyor && !_kapiGenislikBilinmiyor) {
+        int minMerdivenB = 0;
+        int minKoridorB = 0;
+        int minKapiB = 80;
+
+        // Bodrum yüküne göre minimumlar
+        if (yBodrum >= 2001) {
+          minMerdivenB = 200;
+          minKoridorB = 200;
+        } else if (yBodrum >= 501) {
+          minMerdivenB = 150;
+          minKoridorB = 150;
+        } else if (hBina >= 21.50 || hYapi >= 30.50) {
+          // Yüksek Bina ise
+          minMerdivenB = 120;
+          minKoridorB = 120;
+        } else {
+          minMerdivenB =
+              120; // Normalde min 120 (Yönetmelik değişmediyse kural 1) - Kural 1: y<501 => 120
+          // Kullanıcıya göre "merdiven genişliği minimum 120 cm"
+          minKoridorB = 110; // Kural 1: y<501 => 110?
+        }
+
+        void checkWidthsBodrum(String prefix, int s, int c, int d) {
+          List<String> violations = [];
+          if (s < minMerdivenB)
+            violations.add(
+              "Merdiven genişliği yetersiz (Mevcut: ${s}cm, Gerekli: ${minMerdivenB}cm)",
+            );
+          if (c < minKoridorB)
+            violations.add(
+              "Koridor genişliği yetersiz (Mevcut: ${c}cm, Gerekli: ${minKoridorB}cm)",
+            );
+          if (d < minKapiB)
+            violations.add(
+              "Kapı genişliği yetersiz (Mevcut: ${d}cm, Gerekli: ${minKapiB}cm)",
+            );
+
+          if (violations.isNotEmpty) {
+            notes.add(
+              "🚨 [BODRUM KAT] $prefix İÇİN GENİŞLİK İHLALLERİ:\n- ${violations.join("\n- ")}",
+            );
+          } else {
+            notes.add(
+              "✅ [BODRUM KAT] $prefix genişlikleri Bodrum Kat Kullanıcı Yükü ($yBodrum Kişi) kriterlerine uygundur.",
+            );
+          }
+        }
+
+        if (_hasKorunumlu) {
+          int s = int.tryParse(_genislikKorunumluCtrl.text) ?? 0;
+          int c = _areWidthsSame
+              ? s
+              : (int.tryParse(_koridorGenislikKorunumluCtrl.text) ?? 0);
+          int d = int.tryParse(_kapiGenislikKorunumluCtrl.text) ?? 0;
+          checkWidthsBodrum("KORUNUMLU MERDİVEN", s, c, d);
+        }
+        if (_hasKorunumsuz) {
+          int s = int.tryParse(_genislikKorunumsuzCtrl.text) ?? 0;
+          int c = _areWidthsSame
+              ? s
+              : (int.tryParse(_koridorGenislikKorunumsuzCtrl.text) ?? 0);
+          int d = int.tryParse(_kapiGenislikKorunumsuzCtrl.text) ?? 0;
+          checkWidthsBodrum("KORUNUMSUZ MERDİVEN", s, c, d);
+        }
+      }
+    }
+
     return notes.join("\n\n");
   }
 
@@ -559,7 +649,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                   decoration: BoxDecoration(
                     color: Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.blue.shade100),
                   ),
                   child: SwitchListTile(
                     value: _areWidthsSame,
@@ -575,12 +664,41 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                     onChanged: (val) {
                       setState(() {
                         _areWidthsSame = val;
-                        // If turning ON same widths, clear separate corridor inputs to avoid confusion?
-                        // Or keep them. Let's just update UI.
                       });
                     },
                   ),
                 ),
+                if (BinaStore.instance.bolum20?.isBodrumIndependent == true)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.link, color: Colors.grey),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            "Bodrum kat merdivenleri, koridorları ve kapıları üst katlarla AYNI genişliktedir.",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Switch(
+                          value: true,
+                          onChanged: null, // Disabled/ReadOnly
+                          activeColor: Colors.blueGrey,
+                        ),
+                      ],
+                    ),
+                  ),
 
                 if (_hasKorunumlu) ...[
                   _buildInput(

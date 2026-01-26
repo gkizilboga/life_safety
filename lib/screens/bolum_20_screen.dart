@@ -225,8 +225,14 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   void _handleSelection(String type, ChoiceResult choice) {
     if (type == 'bodrum') {
       if (choice.label == Bolum20Content.bodrumOptionB.label) {
-        // "Hayır, bodruma inen merdiven farklı bir yerde" selected
-        _showConfirmationDialog(choice);
+        // "Hayır, bodruma inen merdiven farklı bir yerde" selected - DIRECTLY ENABLE without dialog
+        setState(() {
+          _isBodrumIndependent = true;
+          _model = _model.copyWith(
+            bodrumMerdivenDevami: choice,
+            isBodrumIndependent: true,
+          );
+        });
         return;
       } else {
         // "Evet" selected (Reset independent)
@@ -236,7 +242,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             bodrumMerdivenDevami: choice,
             isBodrumIndependent: false,
           );
-          // Clear basement inputs? Optional, but safer to keep clean
+          // Clear basement inputs
           _bodNormalCtrl.clear();
           _bodIcKapaliCtrl.clear();
           _bodDisKapaliCtrl.clear();
@@ -254,61 +260,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       if (type == 'basinclandirma')
         _model = _model.copyWith(basinclandirma: choice);
     });
-  }
-
-  Future<void> _showConfirmationDialog(ChoiceResult choice) async {
-    final result = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(
-          children: [
-            Icon(Icons.report_problem, color: Colors.orange),
-            SizedBox(width: 10),
-            Text("Bilgi Teyidi", style: TextStyle(fontWeight: FontWeight.bold)),
-          ],
-        ),
-        content: const Text(
-          "İşaretlediğiniz seçenek doğrultusunda, bodrum kat merdivenlerinin üst kat merdivenlerinden tamamen bağımsız olduklarını belirttiniz.\n\nBilgiyi teyit ediniz lütfen.",
-          style: TextStyle(height: 1.5),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false), // Hayır
-            child: const Text(
-              "Hayır, teyit etmiyorum",
-              style: TextStyle(color: Colors.grey),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryBlue,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onPressed: () => Navigator.pop(context, true), // Evet
-            child: const Text("Evet, teyit ediyorum"),
-          ),
-        ],
-      ),
-    );
-
-    if (result == true) {
-      setState(() {
-        _isBodrumIndependent = true;
-        _model = _model.copyWith(
-          bodrumMerdivenDevami: choice,
-          isBodrumIndependent: true,
-        );
-      });
-    } else {
-      // User cancelled, maybe reset selection?
-      // Or select 'Evet' (Continuous)? Let's just do nothing (keep previous or null)
-      // Actually standard UX: don't select the "No" option if dialog rejected.
-    }
   }
 
   bool _validateAndSave() {
@@ -507,7 +458,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               padding: EdgeInsets.only(left: 4, bottom: 16, top: 20),
               child: Text(
                 "Bodrum Katlar İçin Özel Merdiven Bilgileri",
-                style: AppStyles.headerTitle, // Or questionTitle
+                style: AppStyles
+                    .questionTitle, // Fixed style: headerTitle was white on white
               ),
             ),
             Container(
@@ -515,7 +467,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.orange.shade50,
-                borderRadius: BorderRadius.circular(12),
+                // borderRadius: BorderRadius.circular(12), // Removed for stability
                 border: Border.all(color: Colors.orange.shade200),
               ),
               child: const Row(

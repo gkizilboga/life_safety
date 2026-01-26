@@ -358,7 +358,7 @@ class PdfService {
     final ttf = pw.Font.ttf(fontData);
     final boldData = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
     final ttfBold = pw.Font.ttf(boldData);
-    final logoData = await rootBundle.load("assets/images/ui/logo.jpg");
+    final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 
     final store = BinaStore.instance;
@@ -583,7 +583,7 @@ class PdfService {
     final ttf = pw.Font.ttf(fontData);
     final boldData = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
     final ttfBold = pw.Font.ttf(boldData);
-    final logoData = await rootBundle.load("assets/images/ui/logo.jpg");
+    final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 
     final store = BinaStore.instance;

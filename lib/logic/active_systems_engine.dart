@@ -176,14 +176,31 @@ class ActiveSystemsEngine {
     }
 
     // 7. Yangın Dolabı Sistemi
-    // Kural: hYapi >= 21.50m ise ZORUNLU.
+    bool dolapZorunlu = false;
+    List<String> dolapReasons = [];
+
     if (hYapi >= 21.50) {
+      dolapZorunlu = true;
+      dolapReasons.add("Yapı Yüksekliği ≥ 21.50m");
+    }
+
+    final otoparkAlanLabel = store.bolum13?.otoparkAlan?.label;
+    // Otopark > 600 m2 (B, C, D)
+    if (otoparkAlanLabel != null &&
+        (otoparkAlanLabel.contains("13-1-ALT-B") ||
+            otoparkAlanLabel.contains("13-1-ALT-C") ||
+            otoparkAlanLabel.contains("13-1-ALT-D"))) {
+      dolapZorunlu = true;
+      dolapReasons.add("Kapalı Otopark Alanı > 600 m²");
+    }
+
+    if (dolapZorunlu) {
       requirements.add(
         ActiveSystemRequirement(
           name: "Yangın Dolabı Sistemi",
           isMandatory: true,
           reason:
-              "KRİTİK RİSK: Yapı Yüksekliği ≥ 21.50m olduğu için zorunludur.",
+              "KRİTİK RİSK: ${dolapReasons.join(', ')} olduğu için zorunludur.",
         ),
       );
     } else {
@@ -192,20 +209,38 @@ class ActiveSystemsEngine {
           name: "Yangın Dolabı Sistemi",
           isMandatory: false,
           reason:
-              "OLUMLU: Yapı Yüksekliği < 21.50m olduğu için zorunlu değildir.",
+              "OLUMLU: Yapı Yüksekliği < 21.50m ve özel riskli alanlar (Otopark > 600m²) bulunmadığı için zorunlu değildir.",
         ),
       );
     }
 
     // 8. İtfaiye Su Alma Ağzı
-    if (hBina >= 21.50 || (hYapi >= 30.50 && tabanAlani > 1000)) {
+    bool suAlmaZorunlu = false;
+    List<String> suAlmaReasons = [];
+
+    if (hBina >= 21.50) {
+      suAlmaZorunlu = true;
+      suAlmaReasons.add("Bina Yüksekliği ≥ 21.50m");
+    } else if (hYapi >= 30.50 && tabanAlani > 1000) {
+      suAlmaZorunlu = true;
+      suAlmaReasons.add("Yapı Yüksekliği ≥ 30.50m ve Taban Alanı > 1000 m²");
+    }
+
+    // Otopark > 1000 m2 (C, D)
+    if (otoparkAlanLabel != null &&
+        (otoparkAlanLabel.contains("13-1-ALT-C") ||
+            otoparkAlanLabel.contains("13-1-ALT-D"))) {
+      suAlmaZorunlu = true;
+      suAlmaReasons.add("Kapalı Otopark Alanı > 1000 m²");
+    }
+
+    if (suAlmaZorunlu) {
       requirements.add(
         ActiveSystemRequirement(
           name: "İtfaiye Su Alma Ağzı",
           isMandatory: true,
-          reason: hBina >= 21.50
-              ? "KRİTİK RİSK: Bina Yüksekliği ≥ 21.50m olduğu için zorunludur."
-              : "KRİTİK RİSK: Yapı Yüksekliği ≥ 30.50m ve Taban Alanı > 1000 m² olduğu için zorunludur.",
+          reason:
+              "KRİTİK RİSK: ${suAlmaReasons.join(', ')} olduğu için zorunludur.",
         ),
       );
     } else {
@@ -251,80 +286,70 @@ class ActiveSystemsEngine {
     );
 
     // 10. Sprinkler Sistemi
-    // Kural: 3 alternatiften biri varsa ZORUNLU.
     bool sprinklerZorunlu = false;
     List<String> sprinklerReasons = [];
-    bool sprinklerBilmiyorum = false; // "Bilmiyorum" durumu
+    bool sprinklerBilmiyorum = false;
+    String? otoparkSpecificReason;
+    String? otoparkSpecificNote;
 
     if (hYapi >= 51.50) {
       sprinklerZorunlu = true;
       sprinklerReasons.add("Yapı Yüksekliği ≥ 51.50m");
     }
 
-    if (store.bolum6?.hasOtopark == true &&
-        (store.bolum6?.kapaliOtoparkAlani ?? 0) > 600) {
-      sprinklerZorunlu = true;
-      sprinklerReasons.add("Kapalı Otopark Alanı > 600 m²");
+    // Otopark Alanı Mantığı
+    if (otoparkAlanLabel != null) {
+      if (otoparkAlanLabel.contains("13-1-ALT-B") ||
+          otoparkAlanLabel.contains("13-1-ALT-C") ||
+          otoparkAlanLabel.contains("13-1-ALT-D")) {
+        sprinklerZorunlu = true;
+        sprinklerReasons.add("Kapalı Otopark Alanı > 600 m²");
+      } else if (otoparkAlanLabel.contains("13-1-ALT-A")) {
+        // < 600 m2
+        otoparkSpecificReason =
+            "Otopark alanı içerisinde kaçış mesafelerinin Yönetmelik limitlerinin altında olması halinde sprinkler zorunluluğu yoktur.";
+      } else if (otoparkAlanLabel.contains("13-1-ALT-E")) {
+        // Bilmiyorum
+        sprinklerBilmiyorum = true;
+        otoparkSpecificReason =
+            "UYARI: Eğer binanızdaki otopark alanları toplamı 600 m²'nin üzerindeyse otopark alanlarında sprinkler sistemi zorunludur.";
+        otoparkSpecificNote = "";
+      }
     }
 
-    final b35 = store.bolum35;
-    bool mesafeLimitUstu = false;
-
-    // "Bilmiyorum" Kontrolü (Bölüm 35)
-    // Label kodları: 35-1-D (Bilmiyorum)
-    bool b35Bilmiyorum = false;
-    final tY = b35?.tekYon?.label ?? "";
-    final cY = b35?.ciftYon?.label ?? "";
-    final cM = b35?.cikmazMesafe?.label ?? "";
-
-    if (tY.contains("35-1-D") ||
-        cY.contains("35-2-D") ||
-        cM.contains("35-3-F") || // Varsayılan "Bilmiyorum" kodu
-        tY.toLowerCase().contains("bilmiyorum") ||
-        cY.toLowerCase().contains("bilmiyorum") ||
-        cM.toLowerCase().contains("bilmiyorum")) {
-      b35Bilmiyorum = true;
-    }
-
-    if (!b35Bilmiyorum) {
-      // 35-1-C: Tek Yön Uzun
-      if (tY.contains("35-1-C")) mesafeLimitUstu = true;
-      // 35-2-C: En Yakın Çıkış (Çift Yön) Uzun
-      if (cY.contains("35-2-C")) mesafeLimitUstu = true;
-      // 35-3-E: Çıkmaz Koridor Uzun
-      if (cM.contains("35-3-E")) mesafeLimitUstu = true;
-    }
-
-    if (mesafeLimitUstu) {
-      sprinklerZorunlu = true;
-      sprinklerReasons.add(
-        "En az bir adet kaçış mesafesinin Yönetmelik limitinin üzerinde olduğu beyan edilmiştir.",
+    // Nihai Durum Kararı (Sprinkler)
+    if (sprinklerZorunlu) {
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "Otomatik Yağmurlama (Sprinkler) Sistemi",
+          isMandatory: true,
+          reason:
+              "KRİTİK RİSK: Zorunluluk Sebebi: ${sprinklerReasons.join(', ')}.",
+          note: otoparkSpecificNote ?? "",
+        ),
       );
-    } else if (b35Bilmiyorum && !sprinklerZorunlu) {
-      // Eğer diğer sebeplerden ötürü zaten zorunlu değilse VE mesafe durumu bilinmiyorsa:
-      sprinklerBilmiyorum = true;
-    }
-
-    if (sprinklerBilmiyorum) {
+    } else if (sprinklerBilmiyorum) {
+      // Otopark alanı bilinmiyorsa: UYARI
       requirements.add(
         ActiveSystemRequirement(
           name: "Otomatik Yağmurlama (Sprinkler) Sistemi",
           isMandatory: false,
-          isWarning: true, // Warning
+          isWarning: true,
           reason:
-              "BİLİNMİYOR: Kaçış mesafeleri ile ilgili bilgiler 'Bilmiyorum' olarak işaretlendiği için değerlendirme yapılamamıştır.",
-          note:
-              "Bu konuda bir Yangın Güvenlik Uzmanı tarafından yerinde ölçüm ve değerlendirme yapılması elzemdir.",
+              otoparkSpecificReason ??
+              "BİLİNMİYOR: Otopark alanı bilgisi girilmediği için sprinkler zorunluluğu netleşmemiştir.",
+          note: otoparkSpecificNote ?? "",
         ),
       );
     } else {
+      // Zorunlu değil ve otopark alanı < 600m2 veya otopark yok
       requirements.add(
         ActiveSystemRequirement(
           name: "Otomatik Yağmurlama (Sprinkler) Sistemi",
-          isMandatory: sprinklerZorunlu,
-          reason: sprinklerZorunlu
-              ? "KRİTİK RİSK: Zorunluluk Sebebi: ${sprinklerReasons.join(', ')}."
-              : "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
+          isMandatory: false,
+          reason:
+              otoparkSpecificReason ??
+              "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
         ),
       );
     }
@@ -366,14 +391,14 @@ class ActiveSystemsEngine {
     // OTOPARK KONTROLÜ (Bölüm 13)
     final otoparkAlan = store.bolum13?.otoparkAlan?.label;
     if (otoparkAlan != null) {
-      if (otoparkAlan.contains("13-1-ALT-B")) {
-        // > 2000 m2
+      if (otoparkAlan.contains("13-1-ALT-D")) {
+        // > 2000 m2 (Was B, now D)
         dumanZorunlu = true;
         dumanReasons.add(
           "Otopark alanlarının toplamda 2000 m²'nin üzerinde olduğu beyan edildiğinden bu alanda 10 hava değişimi sağlayan duman tahliye sistemi kurulması zorunludur",
         );
-      } else if (otoparkAlan.contains("13-1-ALT-C")) {
-        // Bilmiyorum
+      } else if (otoparkAlan.contains("13-1-ALT-E")) {
+        // Bilmiyorum (Was C, now E)
         dumanWarning = true;
         dumanNotes.add(
           "Otopark alanları ile ilgili bir alan bilgisi beyan edilmemiştir. Otopark alanlarının 2000 m²'yi aşması halinde 10 hava değişimi sağlayan duman tahliye sistemi kurulması zorunludur.",

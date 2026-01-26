@@ -41,6 +41,10 @@ class AppAssets {
       'assets/images/sections/spandrel.webp';
   static const String section16Sicrama =
       'assets/images/sections/yan_binadan_sicrama.webp';
+  static const String section19AcilYonlendirme =
+      'assets/images/acil_yonlendirme.webp';
+  static const String section19YanilticiKapi =
+      'assets/images/yaniltici_kapi.webp';
   static const String section20Normal =
       'assets/images/sections/normal_merdiven.webp';
   static const String section20IcKapali =
@@ -74,9 +78,4 @@ class AppAssets {
       'assets/images/sections/daireden_olcum.webp';
   static const String section35KacisGosterim =
       'assets/images/sections/kacis_mesafe_gosterim.webp';
-
-  static const String section19AcilYonlendirme =
-      'assets/images/acil_yonlendirme.webp';
-  static const String section19YanilticiKapi =
-      'assets/images/yaniltici_kapi.webp';
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import '../../data/bina_store.dart';
 import '../../models/bolum_6_model.dart';
 import 'bolum_7_screen.dart';
@@ -19,27 +19,15 @@ class Bolum6Screen extends StatefulWidget {
 
 class _Bolum6ScreenState extends State<Bolum6Screen> {
   Bolum6Model _model = Bolum6Model();
-  final TextEditingController _kapaliOtoparkController =
-      TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    final existing = BinaStore.instance.bolum6;
-    if (existing != null) {
-      _model = existing;
-      if (existing.kapaliOtoparkAlani != null) {
-        _kapaliOtoparkController.text = existing.kapaliOtoparkAlani!
-            .toStringAsFixed(2)
-            .replaceAll('.', ',');
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _kapaliOtoparkController.dispose();
-    super.dispose();
+    // Manual Progress Tracking (since we don't use AnalysisPageLayout here)
+    // Bolum 6 is Step 6 (after Bolum 4 fix: 1,2,3,4,5,6)
+    // Indexes: B1->1, B2->2, B3->3, B4->4, B5->5, B6->6
+    BinaStore.instance.lastActiveSection = 6;
+    BinaStore.instance.saveToDisk();
   }
 
   void _toggleUsage(String type) {
@@ -76,7 +64,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         otoparkTipi: newOtopark ? _model.otoparkTipi : null,
         clearKapaliOtoparkAlani: !newOtopark,
       );
-      if (!newOtopark) _kapaliOtoparkController.clear();
     });
   }
 
@@ -86,14 +73,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         otoparkTipi: choice,
         clearKapaliOtoparkAlani: true,
       );
-      _kapaliOtoparkController.clear();
-    });
-  }
-
-  void _updateKapaliOtoparkAlani(String value) {
-    final parsed = double.tryParse(value.replaceAll(',', '.'));
-    setState(() {
-      _model = _model.copyWith(kapaliOtoparkAlani: parsed);
     });
   }
 
@@ -101,15 +80,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
   bool _isFormValid() {
     // 1. Kural: Eğer otopark var dendiyse, tipi de seçilmiş olmalı
     if (_model.hasOtopark && _model.otoparkTipi == null) return false;
-
-    // 2. Kural: Kapalı otopark alanı gerekiyorsa, geçerli bir değer girilmiş olmalı
-    if (_model.needsKapaliOtoparkAlani) {
-      if (_model.kapaliOtoparkAlani == null ||
-          _model.kapaliOtoparkAlani! < 5 ||
-          _model.kapaliOtoparkAlani! > 20000) {
-        return false;
-      }
-    }
 
     // 3. Kural: En az bir ana seçenek işaretlenmiş olmalı
     if (!_model.hasOtopark &&
@@ -230,82 +200,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                       onTap: () =>
                           _handleOtoparkTipi(Bolum6Content.otoparkYariAcik),
                     ),
-
-                    // KAPALI OTOPARK ALANI SORUSU (Sadece A veya C şıkkı seçiliyse)
-                    if (_model.needsKapaliOtoparkAlani) ...[
-                      const SizedBox(height: 16),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 4, bottom: 8),
-                        child: Text(
-                          "Toplam kapalı otopark alanı kaç m²?",
-                          style: AppStyles.questionTitle,
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFE0E0E0)),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _kapaliOtoparkController,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d*[,.]?\d{0,2}'),
-                                  ),
-                                ],
-                                onChanged: _updateKapaliOtoparkAlani,
-                                decoration: const InputDecoration(
-                                  hintText: "Min: 5, Max: 20000",
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 14,
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFF5F5F5),
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(11),
-                                  bottomRight: Radius.circular(11),
-                                ),
-                              ),
-                              child: const Text(
-                                "m²",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1A237E),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (_model.kapaliOtoparkAlani != null &&
-                          (_model.kapaliOtoparkAlani! < 5 ||
-                              _model.kapaliOtoparkAlani! > 20000))
-                        const Padding(
-                          padding: EdgeInsets.only(top: 8, left: 4),
-                          child: Text(
-                            "Değer 5 ile 20000 arasında olmalıdır.",
-                            style: TextStyle(color: Colors.red, fontSize: 12),
-                          ),
-                        ),
-                    ],
                   ],
                 ],
               ),

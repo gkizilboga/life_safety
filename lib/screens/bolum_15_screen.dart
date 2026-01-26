@@ -151,6 +151,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             _buildSoru("Asma tavan malzemesi nedir?", 'tavanMalzeme', [
               Bolum15Content.tavanMalzemeOptionA,
               Bolum15Content.tavanMalzemeOptionB,
+              Bolum15Content.tavanMalzemeOptionKarma,
               Bolum15Content.tavanMalzemeOptionC,
             ], _model.tavanMalzeme),
           ],

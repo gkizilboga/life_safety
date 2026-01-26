@@ -8,6 +8,7 @@ import 'package:life_safety/models/bolum_23_model.dart';
 import 'package:life_safety/models/bolum_35_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 import 'package:life_safety/models/bolum_6_model.dart';
+import 'package:life_safety/models/bolum_13_model.dart';
 import 'package:life_safety/utils/app_content.dart';
 
 void main() {
@@ -39,22 +40,44 @@ void main() {
       expect(item.isMandatory, true);
     });
 
-    test('Sprinkler: Otopark > 600 -> Zorunlu', () {
+    test('Sprinkler: Otopark < 600 -> Zorunlu Değil (13-1-ALT-A)', () {
       store.bolum3 = Bolum3Model(hYapi: 10.0);
-      store.bolum6 = Bolum6Model(
-        hasOtopark: true,
-        hasTicari: false,
-        hasDepo: false,
-        isSadeceKonut: false,
-        otoparkTipi: null,
-        kapaliOtoparkAlani: 601,
+      store.bolum13 = Bolum13Model(
+        otoparkAlan: ChoiceResult(
+          label: "13-1-ALT-A",
+          uiTitle: "600 m²'nin altında",
+          uiSubtitle: "",
+          reportText: "",
+        ),
       );
       final reqs = ActiveSystemsEngine.calculateRequirements(store);
       final item = reqs.firstWhere((e) => e.name.contains("Sprinkler"));
-      expect(item.isMandatory, true);
+      expect(item.isMandatory, false);
+      expect(
+        item.reason.contains("limitle"),
+        true,
+      ); // Check for the specific reasoning text
     });
 
-    test('Sprinkler: Kaçış Mesafesi (35-1-C) -> Zorunlu', () {
+    test('Sprinkler: Otopark Bilmiyorum -> Uyarı (13-1-ALT-E)', () {
+      store.bolum3 = Bolum3Model(hYapi: 10.0);
+      store.bolum13 = Bolum13Model(
+        otoparkAlan: ChoiceResult(
+          label: "13-1-ALT-E",
+          uiTitle: "Bilmiyorum",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      final reqs = ActiveSystemsEngine.calculateRequirements(store);
+      final item = reqs.firstWhere((e) => e.name.contains("Sprinkler"));
+      expect(item.isMandatory, false);
+      expect(item.isWarning, true);
+      expect(item.reason.contains("600 m²'nin üzerindeyse"), true);
+      expect(item.note, "");
+    });
+
+    test('Sprinkler: Kaçış Mesafesi (35-1-C) -> Zorunlu DEĞİL artık', () {
       store.bolum3 = Bolum3Model(hYapi: 10.0);
       store.bolum6 = Bolum6Model(
         hasOtopark: false,
@@ -75,7 +98,7 @@ void main() {
 
       final reqs = ActiveSystemsEngine.calculateRequirements(store);
       final item = reqs.firstWhere((e) => e.name.contains("Sprinkler"));
-      expect(item.isMandatory, true);
+      expect(item.isMandatory, false); // Artık zorunlu değil
     });
 
     test('İtfaiye Su Alma: hBina >= 21.50 -> Zorunlu', () {
@@ -160,27 +183,31 @@ void main() {
       },
     );
 
-    test('Sprinkler: Bilmiyorum Durumu (Section 35) -> Uyarı verilmeli', () {
-      store.bolum3 = Bolum3Model(hYapi: 10.0);
-      store.bolum6 = Bolum6Model(hasOtopark: false);
+    test(
+      'Sprinkler: Bilmiyorum Durumu (Section 35) -> Uyarı VERİLMEMELİ (Sprinkler için)',
+      () {
+        store.bolum3 = Bolum3Model(hYapi: 10.0);
+        store.bolum6 = Bolum6Model(hasOtopark: false);
 
-      // Setup "Bilmiyorum" in Section 35
-      store.bolum35 = Bolum35Model(
-        tekYon: ChoiceResult(
-          label: "35-1-D (Bilmiyorum)", // Mock label with key text
-          uiTitle: "Bilmiyorum",
-          uiSubtitle: "",
-          reportText: "Bilmiyorum",
-        ),
-      );
+        // Setup "Bilmiyorum" in Section 35
+        store.bolum35 = Bolum35Model(
+          tekYon: ChoiceResult(
+            label: "35-1-D (Bilmiyorum)",
+            uiTitle: "Bilmiyorum",
+            uiSubtitle: "",
+            reportText: "Bilmiyorum",
+          ),
+        );
 
-      final reqs = ActiveSystemsEngine.calculateRequirements(store);
-      final item = reqs.firstWhere((e) => e.name.contains("Sprinkler"));
+        final reqs = ActiveSystemsEngine.calculateRequirements(store);
+        final item = reqs.firstWhere((e) => e.name.contains("Sprinkler"));
 
-      expect(item.isMandatory, false); // Not mandatory automatically
-      expect(item.isWarning, true); // But warned
-      expect(item.reason.contains("Bilmiyorum"), true);
-      expect(item.note.contains("Yangın Güvenlik Uzmanı"), true);
-    });
+        expect(item.isMandatory, false);
+        expect(
+          item.isWarning,
+          false,
+        ); // Artık Section 35 bilinmiyorsa Sprinkler uyarısı verilmez
+      },
+    );
   });
 }

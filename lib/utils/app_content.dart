@@ -847,19 +847,31 @@ class Bolum13Content {
   // --- ALT SORULAR ---
   // OTOPARK ALANI
   static final otoparkAlanOptionA = ChoiceResult(
-    label: "13-1-ALT-A",
-    uiTitle: "2000 m² veya altında",
+    label: "13-1-ALT-A (<600)",
+    uiTitle: "600 m²'nin altında",
     uiSubtitle: " ",
-    reportText: "", // ActiveSystemsEngine içinde özel metin üretilir
+    reportText: "",
   );
   static final otoparkAlanOptionB = ChoiceResult(
-    label: "13-1-ALT-B",
-    uiTitle: "2000 m²'nin üzerinde",
+    label: "13-1-ALT-B (600-1000)",
+    uiTitle: "600 - 1000 m² arasında",
     uiSubtitle: " ",
     reportText: "",
   );
   static final otoparkAlanOptionC = ChoiceResult(
-    label: "13-1-ALT-C",
+    label: "13-1-ALT-C (1001-2000)",
+    uiTitle: "1001 - 2000 m² arasında",
+    uiSubtitle: " ",
+    reportText: "",
+  );
+  static final otoparkAlanOptionD = ChoiceResult(
+    label: "13-1-ALT-D (>2000)",
+    uiTitle: "2000 m²'nin üzerinde",
+    uiSubtitle: " ",
+    reportText: "",
+  );
+  static final otoparkAlanOptionE = ChoiceResult(
+    label: "13-1-ALT-E (Bilmiyorum)",
     uiTitle: "Bilmiyorum",
     uiSubtitle: " ",
     reportText: "",
@@ -1051,7 +1063,13 @@ class Bolum15Content {
     reportText:
         "❓ BİLİNMİYOR: Asma tavan malzemesinin yanıcılığı bilinmiyor. Asma tavan malzemelerinin yangına tepki test raporları kontrol edildikten sonra Yönetmelik şartlarını karşılayıp karşılamadığına karar verilir.",
   );
-
+  static final tavanMalzemeOptionKarma = ChoiceResult(
+    label: "15-3-Alt-D", // D for Mixed (inserted before Unknown C in UI list)
+    uiTitle: "Karma kullanım (yanıcı ve yanmaz malzeme)",
+    uiSubtitle: "Kısmen yanıcı kısmen yanmaz",
+    reportText:
+        "⚠️ UYARI: Asma tavan malzemesi olarak mahal bazlı karma (yanıcı ve yanmaz tipte) ürünler kullanıldığı belirtilmiştir. Özellikle kaçış yolları ve toplanma alanlarında asma tavanların tamamen yanmaz (A1 sınıfı) olması tercih edilir. Mahal bazlı asma tavan malzemelerinin mimari proje üzerinde veya sahada incelenmeleri önerilir.",
+  );
   static final tesisatOptionA = ChoiceResult(
     label: "15-4-A",
     uiTitle: "Beton, harç veya yangına dayanıklı mastik vb. ile kapatılmış.",

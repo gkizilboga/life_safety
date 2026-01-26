@@ -387,7 +387,7 @@ class _SearchableListSelectorState extends State<SearchableListSelector> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
               controller: _searchCtrl,
-              autofocus: true,
+              autofocus: false,
               decoration: InputDecoration(
                 hintText: "Ara...",
                 prefixIcon: const Icon(Icons.search),
