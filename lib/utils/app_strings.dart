@@ -1,5 +1,5 @@
 class AppStrings {
-  static const String appName = "Bina Yangın Risk Analizi";
+  static const String appName = "Yangın Risk Analizi";
   static const String stepLabel = "Adım";
   static const String completeLabel = "Tamamlandı";
   static const String nextButton = "DEVAM ET";
@@ -16,29 +16,30 @@ class AppStrings {
 2. CİHAZ VE YEDEKLEME SORUMLULUĞU: Verileriniz sadece kendi cihazınızın hafızasında tutulur. İşletim sisteminizin (Android/iOS) otomatik yedekleme hizmetleri (Cloud Backups) haricinde, verileriniz hiçbir üçüncü tarafla paylaşılmaz. Cihaz güvenliği ve veri yedekliliği tamamen kullanıcının sorumluluğundadır.
 3. HAKLAR VE İMHA: Uygulama silindiğinde, oluşturulan tüm yerel veritabanı geri döndürülemez şekilde silinir. Geliştirici, erişimi olmayan bir veriyi silemeyeceği veya anonimleştiremeyeceği için, KVKK m.11 kapsamındaki talepleriniz "veri tutulmadığı" gerekçesiyle işleme alınamayabilir.""";
   
-  static const String legalDisclaimerTitle = "YASAL SORUMLULUK REDDİ (KESİN HÜKÜMLER)";
-  static const String legalDisclaimerContent = """İŞBU METİN, KULLANICI İLE YAŞAM GÜVENLİĞİ ASİSTANI (UYGULAMA) ARASINDAKİ NİHAİ YASAL ÇERÇEVEDİR. KÖTÜ NİYETLİ KULLANIMLARA KARŞI TÜRK CEZA KANUNU HÜKÜMLERİ SAKLIDIR.
+  static const String legalDisclaimerTitle = "YASAL BİLDİRİM VE SORUMLULUK SINIRLANDIRMASI";
+  static const String legalDisclaimerContent = """İŞBU METİN, KULLANICI İLE YANGIN RİSK ANALİZİ UYGULAMASI ARASINDAKİ NİHAİ YASAL ÇERÇEVEDİR. KÖTÜ NİYETLİ KULLANIMLARA KARŞI TÜRK CEZA KANUNU HÜKÜMLERİ SAKLIDIR.
 
-1. RESMİ BELGE NİTELİĞİ VE KULLANIM YASAĞI:
-Bu uygulama tarafından üretilen her türlü rapor, analiz, tablo veya çıktı; "Ön Bilgilendirme Amaçlı Taslak" niteliğindedir. İşbu belgeler; Belediyeler, İtfaiye Daire Başkanlıkları, Çevre ve Şehircilik İl Müdürlükleri, Tapu Müdürlükleri veya Yapı Denetim Kuruluşları nezdinde YAPI RUHSATI, YAPI KULLANMA İZİN BELGESİ (İSKAN) veya İTFAİYE UYGUNLUK RAPORU süreçlerinde "RESMİ BELGE" olarak KULLANILAMAZ. Bu yönde yapılacak herhangi bir teşebbüs, kullanıcının şahsi sorumluluğundadır.
+1. Belgenin Hukuki Niteliği ve Kısıtlamalar:
+Resmi Belge Niteliği: İşbu rapor, münhasıran "Ön Bilgilendirme Amaçlı Taslak" niteliğindedir.
+Geçersizlik: Bu belge; Yapı Ruhsatı, Yapı Kullanma İzin Belgesi (İskan) veya İtfaiye Uygunluk Raporu süreçlerinde hiçbir resmi makam nezdinde "Resmi Belge" veya "Mühendislik Raporu" olarak kullanılamaz.
+Kullanım Yasağı: Belgenin resmi mercilere bu amaçla sunulması durumunda doğacak tüm hukuki ve cezai sorumluluk kullanıcıya aittir.
 
-2. MEVZUAT KAPSAMI VE YETKİ SINIRI:
-Uygulama algoritmaları temel olarak "Binaların Yangından Korunması Hakkında Yönetmelik (2015)" referans alınarak hazırlanmıştır. ANCAK, bir binanın tam yangın güvenliği; aşağıda sayılı mevzuatların da eksiksiz uygulanmasına bağlıdır ve uygulama bu kapsamı GARANTİ ETMEZ:
-   - 3194 Sayılı İmar Kanunu ve Planlı Alanlar İmar Yönetmeliği,
-   - Elektrik İç Tesisleri Yönetmeliği ve Topraklama Yönetmeliği,
-   - Asansör Yönetmeliği (2014/33/AB) ve ilgili Bakım/İşletme Yönetmelikleri,
-   - Binalarda Isı Yalıtımı Yönetmeliği (TS 825),
-   - Binalarda Enerji Performansı Yönetmeliği,
-   - TS EN 62305 (Yıldırımdan Korunma) ve ilgili diğer TSE Standartları.
+2. Algoritma Kapsamı ve Teknik Sınırlar:
+Mevzuat Dayanağı: Uygulama algoritmaları yalnızca "Binaların Yangından Korunması Hakkında Yönetmelik" kriterlerini baz alır.
+Kapsam Dışı Alanlar: Binanın tam güvenliği için gerekli olan İmar Kanunu, Türkiye Deprem Yönetmeliği, TS 500, Topraklama Yönetmeliği, Elektrik İç Tesisleri Yönetmeliği, Asansör Yönetmeliği, TS EN 62305 gibi diğer mevzuatların uygulanması bu raporun kapsamı dışındadır ve uygulama bu konuda bir garanti vermez.
+Veri Doğruluğu: Uygulama, kullanıcının beyan ettiği verileri doğru kabul ederek analiz üretir. Kullanıcının beyan ettiği, Yönetmeliğe göre uygun gibi gözüken mevcut saha imalatlarının fiziksel olarak hasarlı veya yetersiz olması uygulamanın teknik kapasitesi dışındadır.
 
-3. KÖTÜ NİYETLİ KULLANIM VE CEZAİ SORUMLULUK (TCK UYARISI):
-Uygulama çıktısını tahrif ederek, üzerine ıslak imza/kaşe taklit ederek veya bunu resmi bir belge gibi kamu kurumlarına sunmaya çalışan kullanıcılar; 5237 sayılı Türk Ceza Kanunu'nun 204. Maddesi (Resmi Belgede Sahtecilik) ve 207. Maddesi (Özel Belgede Sahtecilik) uyarınca SUÇ İŞLEMİŞ sayılacaktır. Geliştirici ekip, bu tür kötü niyetli kullanımlardan doğacak hukuki süreçlerde, uygulamanın "Salt Bilgilendirme" amacı taşıdığını ve kullanıcıyı bu konuda açıkça uyardığını delil olarak sunacaktır.
+3. Türk Ceza Kanunu (TCK) UYARISI:
+Sahtecilik Suçu: Bu rapor çıktısının tahrif edilmesi, üzerine yetkisiz imza/kaşe eklenmesi veya resmi bir belgeymiş gibi kamu kurumlarına sunulması; TCK Madde 204 (Resmi Belgede Sahtecilik) ve Madde 207 (Özel Belgede Sahtecilik) uyarınca suç teşkil eder.
+Hukuki Delil: Geliştirici, kötü niyetli kullanımlarda uygulamanın sadece "bilgilendirme" amacı taşıdığına dair bu uyarı metnini mahkemelerde delil olarak sunma hakkını saklı tutar.
 
-4. SAHA GERÇEKLİĞİ VE İŞVEREN YÜKÜMLÜLÜĞÜ (6331 s.K.):
-Yazılım, kullanıcının beyan ettiği veriyi doğru kabul eder. Sahada paslanmış bir boru, kilitli bir yangın kapısı veya projesine aykırı bir duvarı yazılımın tespit etmesi teknik olarak imkansızdır. 6331 sayılı İş Sağlığı ve Güvenliği Kanunu md. 4 ve md. 10 uyarınca; İşveren/Yönetici'nin "Risk Değerlendirmesi Yapma/Yaptırma" yükümlülüğü, bu uygulama ile DEVREDİLMİŞ SAYILMAZ.
+4. İş Sağlığı ve Güvenliği (İSG) ve Profesyonel Sorumluluk
+Yasal Yükümlülük: 6331 sayılı İSG Kanunu uyarınca İşveren/Yönetici’nin "Risk Değerlendirmesi Yapma" yükümlülüğü bu uygulama ile devredilmiş sayılmaz.
+Hizmet Niteliği: Bu uygulama bir "Mühendislik/Müşavirlik Hizmeti" değil, bir "Veri İşleme Aracıdır". Oluşabilecek maddi/manevi zararlarda geliştiricinin kusursuz sorumluluğu bulunmadığı kullanıcı tarafından kabul ve taahhüt edilmiştir.
 
-5. FERAGAT VE KABUL:
-Kullanıcı, bu uygulamayı indirdiği ve kullandığı andan itibaren; uygulamanın bir "Mühendislik/Müşavirlik Hizmeti" olmadığını, sadece "Veri İşleme Aracı" olduğunu ve oluşabilecek her türlü maddi/manevi zararda geliştiricinin kusursuz sorumluluğu bulunmadığını gayrikabili rücu kabul, beyan ve taahhüt eder.""";
+5. KVKK ve Veri Güvenliği (Yerel Mimari):
+Veri Depolama: Uygulama "Çevrimdışı/Yerel" mimaride çalıştığından, girilen bina verileri geliştirici sunucularına aktarılmaz ve depolanmaz.
+Cihaz Sorumluluğu: Verilerin güvenliği ve yedeklenmesi tamamen kullanıcının sorumluluğundadır. Uygulama silindiğinde tüm veriler geri döndürülemez şekilde imha edilir.
 
   static const String legislationTitle = "Binaların Yangından Korunması Hakkında Yönetmeliği (BYKHY)";
   static const String legislationSubtitle = " Yönetmelik hükümleri.";

@@ -364,6 +364,49 @@ class PdfService {
     );
   }
 
+  static pw.Widget _buildFooter(pw.Context context) {
+    return pw.Container(
+      alignment: pw.Alignment.center,
+      child: pw.Column(
+        children: [
+          pw.Divider(color: PdfColors.grey400, thickness: 0.5),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            children: [
+              pw.Text(
+                "Version v1.0",
+                style: const pw.TextStyle(
+                  fontSize: 6,
+                  color: PdfColors.grey600,
+                ),
+              ),
+              pw.Text(
+                "Sayfa ${context.pageNumber} / ${context.pagesCount}",
+                style: const pw.TextStyle(
+                  fontSize: 6,
+                  color: PdfColors.grey600,
+                ),
+              ),
+            ],
+          ),
+          pw.SizedBox(height: 2),
+          pw.Container(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Text(
+              "BU EVRAK, UYGULAMA İLE ÜRETİLMİŞ OLUP RESMİ BELGE NİTELİĞİ TAŞIMAZ. Islak imza ve kaşe yerine geçmez. "
+              "Yasal uyarıların tamamı ve TCK sorumluluk beyanı raporun ayrılmaz parçasıdır.",
+              style: const pw.TextStyle(
+                fontSize: 5,
+                color: PdfColors.black,
+              ),
+              textAlign: pw.TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // --- 1. RİSK ANALİZ RAPORU ---
   static Future<void> generateRiskAnalysisPdf() async {
     final pdf = pw.Document();
@@ -407,34 +450,7 @@ class PdfService {
             style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
           ),
         ),
-        footer: (context) => pw.Container(
-          alignment: pw.Alignment.center,
-          child: pw.Column(
-            children: [
-              pw.Divider(color: PdfColors.grey400),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text(
-                    "Version v1.0",
-                    style: const pw.TextStyle(
-                      fontSize: 7,
-                      color: PdfColors.grey600,
-                    ),
-                  ),
-                  pw.Text(
-                    "Sayfa ${context.pageNumber} / ${context.pagesCount} - RESMİ EVRAK DEĞİLDİR",
-                    style: pw.TextStyle(
-                      fontSize: 7,
-                      color: PdfColors.red900,
-                      fontWeight: pw.FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        footer: _buildFooter,
         build: (context) => [
           pw.Text(
             "MODÜL BAZINDA GÜVENLİK SKORLARI",
@@ -644,6 +660,7 @@ class PdfService {
             style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
           ),
         ),
+        footer: _buildFooter,
         build: (context) => [
           pw.Text(
             "AKTİF SİSTEM GEREKSİNİMLERİ",
