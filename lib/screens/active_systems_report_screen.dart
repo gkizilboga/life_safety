@@ -49,29 +49,18 @@ class ActiveSystemsReportScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final req = requirements[index];
 
-          // Determine Style based on Mandatory/Warning/Optional
+          // Neutral styling - no color coding
           Color cardBgColor = Colors.white;
           Color borderColor = Colors.grey.shade300;
-          Color badgeColor = Colors.grey.shade400;
-          String badgeText = "ZORUNLU DEĞİL";
-
-          if (req.isMandatory) {
-            cardBgColor = Colors.red.shade50;
-            borderColor = Colors.red.shade900;
-            badgeColor = Colors.red.shade900;
-            badgeText = "ZORUNLU";
-          } else if (req.isWarning) {
-            cardBgColor = Colors.orange.shade50;
-            borderColor = Colors.orange.shade900;
-            badgeColor = Colors.orange.shade900;
-            badgeText = "UYARI"; // Or "DİKKAT" / "UZMAN GÖRÜŞÜ"
-          }
+          String badgeText = req.isMandatory
+              ? "ZORUNLU"
+              : (req.isWarning ? "UYARI" : "İSTEĞE BAĞLI");
 
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             color: cardBgColor,
             shape: RoundedRectangleBorder(
-              side: BorderSide(color: borderColor, width: 2),
+              side: BorderSide(color: borderColor, width: 1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Padding(
@@ -110,13 +99,13 @@ class ActiveSystemsReportScreen extends StatelessWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: badgeColor,
+                          color: Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
                           badgeText,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: Colors.grey.shade700,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),

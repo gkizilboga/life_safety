@@ -461,12 +461,15 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
 
   Widget _buildSectionTile(BuildContext context, int id) {
     final summary = ReportEngine.getSectionSummary(id);
-    final result = BinaStore.instance.getResultForSection(id);
-    final statusColor = ReportEngine.getStatusColor(result, sectionId: id);
     final fullReport = ReportEngine.getSectionFullReport(id);
     return ListTile(
-      onTap: () =>
-          _showDetailSheet(context, id, summary, fullReport, statusColor),
+      onTap: () => _showDetailSheet(
+        context,
+        id,
+        summary,
+        fullReport,
+        Colors.grey.shade700,
+      ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       title: Text(
         "Bölüm $id",
@@ -487,7 +490,10 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       trailing: Container(
         width: 10,
         height: 10,
-        decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade400, // Neutral color - no status indication
+          shape: BoxShape.circle,
+        ),
       ),
     );
   }

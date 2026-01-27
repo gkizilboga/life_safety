@@ -10,47 +10,14 @@ import '../utils/app_content.dart';
 import '../logic/active_systems_engine.dart';
 
 class PdfService {
+  // Badge system removed - plain text only
   static pw.Widget _buildStatusBadge(String text) {
-    PdfColor badgeColor = PdfColors.grey500;
-    String label = text.toUpperCase();
-
-    if (label.contains("KRİTİK RİSK")) {
-      badgeColor = const PdfColor.fromInt(0xFFE53935);
-      label = "KRİTİK RİSK";
-    } else if (label.contains("UYARI")) {
-      badgeColor = const PdfColor.fromInt(0xFFFFC107);
-      label = "UYARI";
-    } else if (label.contains("BİLMİYORUM")) {
-      badgeColor = const PdfColor.fromInt(0xFF9E9E9E);
-      label = "BİLMİYORUM";
-    } else if (label.contains("BİLGİ")) {
-      badgeColor = const PdfColor.fromInt(0xFF1E88E5);
-      label = "BİLGİ";
-    } else if (label.contains("OLUMLU")) {
-      badgeColor = const PdfColor.fromInt(0xFF43A047);
-      label = "OLUMLU";
-    }
-
-    return pw.Container(
-      padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: pw.BoxDecoration(
-        color: badgeColor,
-        borderRadius: pw.BorderRadius.circular(2),
-      ),
-      child: pw.Text(
-        label,
-        style: pw.TextStyle(
-          color: PdfColors.white,
-          fontSize: 8,
-          fontWeight: pw.FontWeight.bold,
-        ),
-      ),
-    );
+    return pw.SizedBox.shrink(); // Return empty widget
   }
 
   static String _cleanEmojis(String? t) {
     if (t == null) return "";
-    return t
+    String cleaned = t
         .replaceAll(
           RegExp(
             r'[\u{1f300}-\u{1f5ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{1f900}-\u{1f9ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}\u{fe00}-\u{fe0f}]',
@@ -59,16 +26,22 @@ class PdfService {
           '',
         )
         .trim();
+
+    // Remove category prefixes
+    cleaned = cleaned
+        .replaceAll(RegExp(r'^KRİTİK RİSK:\s*', multiLine: true), '')
+        .replaceAll(RegExp(r'^UYARI:\s*', multiLine: true), '')
+        .replaceAll(RegExp(r'^BİLİNMİYOR:\s*', multiLine: true), '')
+        .replaceAll(RegExp(r'^BİLGİ:\s*', multiLine: true), '')
+        .replaceAll(RegExp(r'^OLUMLU:\s*', multiLine: true), '')
+        .trim();
+
+    return cleaned;
   }
 
+  // All text now rendered in black (no color coding)
   static PdfColor _getRiskColor(String text) {
-    final upper = text.toUpperCase();
-    if (upper.contains("KRİTİK RİSK"))
-      return const PdfColor.fromInt(0xFFE53935);
-    if (upper.contains("UYARI")) return const PdfColor.fromInt(0xFFFFC107);
-    if (upper.contains("BİLMİYORUM")) return const PdfColor.fromInt(0xFF9E9E9E);
-    if (upper.contains("BİLGİ")) return const PdfColor.fromInt(0xFF1E88E5);
-    return const PdfColor.fromInt(0xFF43A047);
+    return PdfColors.black;
   }
 
   static PdfColor _getScoreColorForPdf(int score) {
