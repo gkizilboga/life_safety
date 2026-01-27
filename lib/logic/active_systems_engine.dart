@@ -307,12 +307,12 @@ class ActiveSystemsEngine {
       } else if (otoparkAlanLabel.contains("13-1-ALT-A")) {
         // < 600 m2
         otoparkSpecificReason =
-            "Otopark alanı içerisinde kaçış mesafelerinin Yönetmelik limitlerinin altında olması halinde sprinkler zorunluluğu yoktur.";
+            "OLUMLU: Otopark alanı içerisinde kaçış mesafelerinin Yönetmelik limitlerinin altında olması halinde sprinkler zorunluluğu yoktur.";
       } else if (otoparkAlanLabel.contains("13-1-ALT-E")) {
         // Bilmiyorum
         sprinklerBilmiyorum = true;
         otoparkSpecificReason =
-            "UYARI: Eğer binanızdaki otopark alanları toplamı 600 m²'nin üzerindeyse otopark alanlarında sprinkler sistemi zorunludur.";
+            "BİLMİYORUM: Eğer binanızdaki otopark alanları toplamı 600 m²'nin üzerindeyse otopark alanlarında sprinkler sistemi zorunludur.";
         otoparkSpecificNote = "";
       }
     }
@@ -337,7 +337,7 @@ class ActiveSystemsEngine {
           isWarning: true,
           reason:
               otoparkSpecificReason ??
-              "BİLİNMİYOR: Otopark alanı bilgisi girilmediği için sprinkler zorunluluğu netleşmemiştir.",
+              "BİLMİYORUM: Otopark alanı bilgisi girilmediği için sprinkler zorunluluğu netleşmemiştir.",
           note: otoparkSpecificNote ?? "",
         ),
       );
@@ -369,14 +369,12 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Yangın Hidrant Sistemi(Bina Çevresinde)",
           isMandatory: false,
-          reason:
-              "OLUMLU: Taban Alanı < 5000 m² olduğu için zorunludur değildir.",
+          reason: "OLUMLU: Taban Alanı < 5000 m² olduğu için zorunlu değildir.",
         ),
       );
     }
 
     // 12. Duman Kontrol Sistemi
-    // Kural: hYapi >= 51.50m ise ZORUNLU.
     bool dumanZorunlu = false;
     List<String> dumanReasons = [];
     bool dumanWarning = false;
@@ -392,13 +390,13 @@ class ActiveSystemsEngine {
     final otoparkAlan = store.bolum13?.otoparkAlan?.label;
     if (otoparkAlan != null) {
       if (otoparkAlan.contains("13-1-ALT-D")) {
-        // > 2000 m2 (Was B, now D)
+        // > 2000 m2
         dumanZorunlu = true;
         dumanReasons.add(
           "Otopark alanlarının toplamda 2000 m²'nin üzerinde olduğu beyan edildiğinden bu alanda 10 hava değişimi sağlayan duman tahliye sistemi kurulması zorunludur",
         );
       } else if (otoparkAlan.contains("13-1-ALT-E")) {
-        // Bilmiyorum (Was C, now E)
+        // Bilmiyorum
         dumanWarning = true;
         dumanNotes.add(
           "Otopark alanları ile ilgili bir alan bilgisi beyan edilmemiştir. Otopark alanlarının 2000 m²'yi aşması halinde 10 hava değişimi sağlayan duman tahliye sistemi kurulması zorunludur.",
@@ -452,7 +450,6 @@ class ActiveSystemsEngine {
         ),
       );
     } else {
-      // Zorunlu DEĞİLSE ama UYARI varsa (Bilmiyorum durumları)
       if (dumanWarning) {
         requirements.add(
           ActiveSystemRequirement(
@@ -465,8 +462,6 @@ class ActiveSystemsEngine {
           ),
         );
       } else {
-        // Ne zorunlu ne de uyarı --> OLUMLU
-        // Özel mesajlar: < 2000 m2 seçildiyse "Zorunlu değildir" mesajı verelim.
         List<String> positiveNotes = [];
         if (otoparkAlan != null && otoparkAlan.contains("13-1-ALT-A")) {
           positiveNotes.add(
@@ -480,7 +475,7 @@ class ActiveSystemsEngine {
         }
         if (siginakAlan != null && siginakAlan.contains("13-12-A")) {
           positiveNotes.add(
-            "Sığınağın 2000 m² veya altında olduğu beyan edildiğinden bu alanda duman tahliye sistemi kurulması zorunludur değildir.",
+            "Sığınağın 2000 m² veya altında olduğu beyan edildiğinden bu alanda duman tahliye sistemi kurulması zorunlu değildir.",
           );
         }
 
@@ -496,7 +491,7 @@ class ActiveSystemsEngine {
       }
     }
 
-    // 12.1 Atrium (Duman Kontrol Bağlantılı)
+    // 12.1 Atrium
     requirements.add(
       ActiveSystemRequirement(
         name: "Atrium Duman Kontrolü",
@@ -511,34 +506,26 @@ class ActiveSystemsEngine {
     );
 
     // 13. Basınçlandırma Sistemi
-    // Karmaşık kurallar.
     List<String> basincLocations = [];
 
-    // a. hYapi >= 30.50m ve < 51.50m ve (21-1-B: Merdiven doğ. hav. yok) -> Merdivenlerin en az birinde YALNIZCA.
     if (hYapi >= 30.50 && hYapi < 51.50) {
       if (store.bolum21?.varlik?.label == "21-1-B") {
         basincLocations.add("Merdivenlerin en az birinde");
       }
     }
 
-    // b. hYapi >= 51.50m -> Merdivenlerin en az ikisinde.
     if (hYapi >= 51.50) {
       basincLocations.add("Merdivenlerin en az ikisinde");
     }
 
-    // c. Tüm yapılar, 23-5-B (kuyu kapalı) -> Normal asansör kuyusu.
     if (store.bolum23?.havalandirma?.label == "23-5-B") {
       basincLocations.add("Normal (İnsan) asansör kuyusunda");
     }
 
-    // d. İtfaiye Asansörü Varsa Basınçlandırma Zorunlu.
-    // 22-6-A: Evet, var / 22-6-B: Hayır, yok.
-    // Logic Fix: Sadece VARSA (A) basınçlandırma gerekir.
     if (store.bolum22?.varlik?.label.contains("22-6-A") == true) {
       basincLocations.add("İtfaiye asansöründe");
     }
 
-    // e. Bodrum kat sayısı > 4 -> Bodrum kaçış merdivenlerinde.
     if ((store.bolum3?.bodrumKatSayisi ?? 0) > 4) {
       basincLocations.add("Bodrum kata hizmet veren kaçış merdivenlerinde");
     }
@@ -564,14 +551,13 @@ class ActiveSystemsEngine {
       );
     }
 
-    // 14. Sismik Askılama (UPDATED)
-    // Kural: Sprinkler Zorunlu ise UYARI olarak göster.
+    // 14. Sismik Askılama
     if (sprinklerZorunlu) {
       requirements.add(
         ActiveSystemRequirement(
           name: "Sismik Askılama (Depreme Karşı Tesisat Koruyucu) Sistemler",
           isMandatory: false,
-          isWarning: true, // Set Warning TRUE
+          isWarning: true,
           reason:
               "UYARI: Otomatik Yağmurlama (Sprinkler) sistemi zorunlu olduğu için, binanızın deprem bölgesine göre sismik önlemler alınması gerekebilir. Kesin sismik önlemler için binanızın bulunduğu bölgeye göre yorum yapılmalıdır.",
           note:
@@ -630,7 +616,7 @@ class ActiveSystemsEngine {
         isMandatory: false,
         isWarning: true,
         reason:
-            "⚠️ UYARI: Duman tahliye sistemine ait kanalların yangın kompartımanı veya yangın zonundan geçmesi halinde geçiş noktalarında duman damperi kullanılmalıdır.",
+            "UYARI: Duman tahliye sistemine ait kanalların yangın kompartımanı veya yangın zonundan geçmesi halinde geçiş noktalarında duman damperi kullanılmalıdır.",
       ),
     );
 

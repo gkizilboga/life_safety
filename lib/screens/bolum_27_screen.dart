@@ -71,7 +71,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
             (choice.label == Bolum27Content.yonOptionB.label ||
                 choice.label == Bolum27Content.yonOptionD.label)) {
           _showWarning(
-            "⚠️ DİKKAT: Kullanıcı yükü 50 kişiyi aştığı için tüm kapıların kaçış yönüne açılması zorunludur!",
+            " DİKKAT: Kullanıcı yükü 50 kişiyi aştığı için tüm kapıların kaçış yönüne açılması zorunludur!",
           );
         }
       }
@@ -81,7 +81,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
             (choice.label == Bolum27Content.kilitOptionB.label ||
                 choice.label == Bolum27Content.kilitOptionD.label)) {
           _showWarning(
-            "⚠️ DİKKAT: Kullanıcı yükü 100 kişiyi aştığı için tüm kapılarda hem kaçış yönünde açılma hem de PANİK BAR zorunludur!",
+            " DİKKAT: Kullanıcı yükü 100 kişiyi aştığı için tüm kapılarda hem kaçış yönünde açılma hem de PANİK BAR zorunludur!",
           );
         }
         // Only scroll if a NEW Dynamic section (Fire Door) appears?

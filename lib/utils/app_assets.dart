@@ -42,9 +42,9 @@ class AppAssets {
   static const String section16Sicrama =
       'assets/images/sections/yan_binadan_sicrama.webp';
   static const String section19AcilYonlendirme =
-      'assets/images/acil_yonlendirme.webp';
+      'assets/images/sections/acil_yonlendirme.webp';
   static const String section19YanilticiKapi =
-      'assets/images/yaniltici_kapi.webp';
+      'assets/images/sections/yaniltici_kapi.webp';
   static const String section20Normal =
       'assets/images/sections/normal_merdiven.webp';
   static const String section20IcKapali =

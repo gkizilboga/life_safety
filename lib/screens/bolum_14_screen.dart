@@ -77,117 +77,106 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Tesisat Şaftları",
+      subtitle: "Bina yüksekliğine göre şaft gereksinimleri",
+      screenType: widget.runtimeType,
+      isNextEnabled: true,
+      onNext: _onNextPressed,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernHeader(
-            title: "Tesisat Şaftları",
-            subtitle: "Bina yüksekliğine göre şaft gereksinimleri",
-            screenType: widget.runtimeType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 4, bottom: 12),
-                    child: Text(
-                      "SonuÇ",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF263238),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFFE0E0E0)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            _buildResultBox(
-                              "Şaft Duvarı",
-                              "${_model.gerekenDuvarDk}",
-                              "dakika",
-                            ),
-                            Container(
-                              width: 1,
-                              height: 40,
-                              color: const Color(0xFFECEFF1),
-                            ),
-                            _buildResultBox(
-                              "Şaft Kapağı / Kapısı ",
-                              "${_model.gerekenKapakDk}",
-                              "dakika",
-                            ),
-                          ],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: Divider(height: 1, color: Color(0xFFECEFF1)),
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Icon(
-                              Icons.gavel_rounded,
-                              color: Color(0xFF1A237E),
-                              size: 20,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                _model.raporMesaji ?? "",
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  height: 1.5,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFF455A64),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 4, bottom: 12),
-                    child: Text(
-                      "Şaft ve Kapak Detayı",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF263238),
-                      ),
-                    ),
-                  ),
-                  SectionImage(assetPath: AppAssets.section14SaftDuvarKapi),
-                  const SizedBox(height: 12),
-                  _buildWarningNote(),
-                ],
+          const Padding(
+            padding: EdgeInsets.only(left: 4, bottom: 12),
+            child: Text(
+              "Sonuç",
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF263238),
               ),
             ),
           ),
-          _buildBottomAction(),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: const Color(0xFFE0E0E0)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    _buildResultBox(
+                      "Şaft Duvarı",
+                      "${_model.gerekenDuvarDk}",
+                      "dakika",
+                    ),
+                    Container(
+                      width: 1,
+                      height: 40,
+                      color: const Color(0xFFECEFF1),
+                    ),
+                    _buildResultBox(
+                      "Şaft Kapağı / Kapısı ",
+                      "${_model.gerekenKapakDk}",
+                      "dakika",
+                    ),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(height: 1, color: Color(0xFFECEFF1)),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(
+                      Icons.gavel_rounded,
+                      color: Color(0xFF1A237E),
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        _model.raporMesaji ?? "",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          height: 1.5,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF455A64),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          const Padding(
+            padding: EdgeInsets.only(left: 4, bottom: 12),
+            child: Text(
+              "Şaft ve Kapak Detayı",
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF263238),
+              ),
+            ),
+          ),
+          SectionImage(assetPath: AppAssets.section14SaftDuvarKapi),
+          const SizedBox(height: 12),
+          _buildWarningNote(),
         ],
       ),
     );
@@ -250,40 +239,6 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomAction() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: ElevatedButton(
-          onPressed: _onNextPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1A237E),
-            foregroundColor: Colors.white,
-            minimumSize: const Size(double.infinity, 54),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: Text(
-            "DEVAM ET",
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
-        ),
       ),
     );
   }

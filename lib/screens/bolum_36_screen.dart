@@ -368,11 +368,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
         if (violations.isNotEmpty) {
           notes.add(
-            "🚨 $prefix İÇİN GENİŞLİK İHLALLERİ:\n- ${violations.join("\n- ")}",
+            " $prefix İÇİN GENİŞLİK İHLALLERİ:\n- ${violations.join("\n- ")}",
           );
         } else {
           notes.add(
-            "✅ $prefix genişlikleri Bodrum Kat Kullanıcı Yükü ($yukBodrum Kişi) ve Bina Yüksekliği kriterlerine uygundur.",
+            " $prefix genişlikleri Bodrum Kat Kullanıcı Yükü ($yukBodrum Kişi) ve Bina Yüksekliği kriterlerine uygundur.",
           );
         }
       }
@@ -401,11 +401,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     int mevcut = b33?.mevcutUst ?? 0;
     if (mevcut >= gerekli) {
       notes.add(
-        "✅ [BİNA/ÜST KATLAR] ÇIKIŞ SAYISI YETERLİ: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla veya eşit olduğundan, çıkış sayısı bakımından yeterli gözükmektedir.",
+        " [BİNA/ÜST KATLAR] ÇIKIŞ SAYISI YETERLİ: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla veya eşit olduğundan, çıkış sayısı bakımından yeterli gözükmektedir.",
       );
     } else {
       notes.add(
-        "🚨 [BİNA/ÜST KATLAR] ÇIKIŞ SAYISI YETERLİ DEĞİL: Yönetmelik gereği $gerekli çıkış gerekirken, binada sadece $mevcut çıkış bulunmaktadır.",
+        " [BİNA/ÜST KATLAR] ÇIKIŞ SAYISI YETERLİ DEĞİL: Yönetmelik gereği $gerekli çıkış gerekirken, binada sadece $mevcut çıkış bulunmaktadır.",
       );
     }
 
@@ -420,11 +420,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
       if (mBodrum >= gBodrum) {
         notes.add(
-          "✅ [BODRUM KAT] ÇIKIŞ SAYISI YETERLİ: Bodrum kat için mevcut çıkış sayısı ($mBodrum), gereken çıkış sayısından ($gBodrum) fazla veya eşit.",
+          " [BODRUM KAT] ÇIKIŞ SAYISI YETERLİ: Bodrum kat için mevcut çıkış sayısı ($mBodrum), gereken çıkış sayısından ($gBodrum) fazla veya eşit.",
         );
       } else {
         notes.add(
-          "🚨 [BODRUM KAT] ÇIKIŞ SAYISI YETERLİ DEĞİL: Bodrum kat için $gBodrum çıkış gerekirken, sadece $mBodrum müstakil çıkış bulunmaktadır.",
+          " [BODRUM KAT] ÇIKIŞ SAYISI YETERLİ DEĞİL: Bodrum kat için $gBodrum çıkış gerekirken, sadece $mBodrum müstakil çıkış bulunmaktadır.",
         );
       }
 
@@ -469,11 +469,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
           if (violations.isNotEmpty) {
             notes.add(
-              "🚨 [BODRUM KAT] $prefix İÇİN GENİŞLİK İHLALLERİ:\n- ${violations.join("\n- ")}",
+              " [BODRUM KAT] $prefix İÇİN GENİŞLİK İHLALLERİ:\n- ${violations.join("\n- ")}",
             );
           } else {
             notes.add(
-              "✅ [BODRUM KAT] $prefix genişlikleri Bodrum Kat Kullanıcı Yükü ($yBodrum Kişi) kriterlerine uygundur.",
+              " [BODRUM KAT] $prefix genişlikleri Bodrum Kat Kullanıcı Yükü ($yBodrum Kişi) kriterlerine uygundur.",
             );
           }
         }

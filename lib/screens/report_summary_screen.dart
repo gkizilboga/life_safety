@@ -43,7 +43,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Yangın Risk Analizi Ön Raporu",
+            title: "ÖZET",
             subtitle: "(Kullanıcı Beyanına Dayalı)",
             screenType: ReportSummaryScreen,
           ),

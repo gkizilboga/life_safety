@@ -76,208 +76,160 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Çatı",
+      subtitle: "Çatı katmanları ve ışıklık",
+      screenType: widget.runtimeType,
+      isNextEnabled: true,
+      onNext: _onNextPressed,
+      child: Column(
         children: [
-          ModernHeader(
-            title: "Çatı",
-            subtitle: "Çatı katmanları ve ışıklık",
-            screenType: widget.runtimeType,
+          _buildSoru(
+            "Çatınızın en üst katmanında hangi malzeme kullanılıyor?",
+            'kaplama',
+            [
+              Bolum17Content.kaplamaOptionA,
+              Bolum17Content.kaplamaOptionB,
+              Bolum17Content.kaplamaOptionC,
+              Bolum17Content.kaplamaOptionD,
+              Bolum17Content.kaplamaOptionE,
+              Bolum17Content.kaplamaOptionF,
+            ],
+            _model.kaplama,
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
+
+          _buildSoru(
+            "Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?",
+            'iskelet',
+            [
+              Bolum17Content.iskeletOptionA,
+              Bolum17Content.iskeletOptionB,
+              Bolum17Content.iskeletOptionC,
+            ],
+            _model.iskelet,
+          ),
+
+          if (_askBitisik)
+            _buildSoru(
+              "Çatılar arasında yangını kesecek bir duvar var mı?",
+              'duvar',
+              [
+                Bolum17Content.bitisikOptionA,
+                Bolum17Content.bitisikOptionB,
+                Bolum17Content.bitisikOptionC,
+              ],
+              _model.bitisikDuvar,
+            ),
+
+          _buildSoru(
+            "Çatınızda camlı ışıklık veya aydınlatma kubbesi var mı?",
+            'isiklik',
+            [
+              Bolum17Content.isiklikOptionA,
+              Bolum17Content.isiklikOptionB,
+              Bolum17Content.isiklikOptionC,
+            ],
+            _model.isiklik,
+          ),
+
+          if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label) ...[
+            _buildInfoNote("Işıklık bulunduğu için malzeme türü seçilmelidir."),
+            QuestionCard(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSoru(
-                    "Çatınızın en üst katmanında hangi malzeme kullanılıyor?",
-                    'kaplama',
-                    [
-                      Bolum17Content.kaplamaOptionA,
-                      Bolum17Content.kaplamaOptionB,
-                      Bolum17Content.kaplamaOptionC,
-                      Bolum17Content.kaplamaOptionD,
-                      Bolum17Content.kaplamaOptionE,
-                      Bolum17Content.kaplamaOptionF,
-                    ],
-                    _model.kaplama,
+                  const Text(
+                    "Işıklık malzemesi nedir?",
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-
-                  _buildSoru(
-                    "Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?",
-                    'iskelet',
-                    [
-                      Bolum17Content.iskeletOptionA,
-                      Bolum17Content.iskeletOptionB,
-                      Bolum17Content.iskeletOptionC,
-                    ],
-                    _model.iskelet,
-                  ),
-
-                  if (_askBitisik)
-                    _buildSoru(
-                      "Çatılar arasında yangını kesecek bir duvar var mı?",
-                      'duvar',
-                      [
-                        Bolum17Content.bitisikOptionA,
-                        Bolum17Content.bitisikOptionB,
-                        Bolum17Content.bitisikOptionC,
-                      ],
-                      _model.bitisikDuvar,
+                  const SizedBox(height: 16),
+                  // Temperli Cam seçeneği
+                  InkWell(
+                    onTap: () => setState(
+                      () => _model = _model.copyWith(isiklikMalzemesi: "cam"),
                     ),
-
-                  _buildSoru(
-                    "Çatınızda camlı ışıklık veya aydınlatma kubbesi var mı?",
-                    'isiklik',
-                    [
-                      Bolum17Content.isiklikOptionA,
-                      Bolum17Content.isiklikOptionB,
-                      Bolum17Content.isiklikOptionC,
-                    ],
-                    _model.isiklik,
-                  ),
-
-                  if (_model.isiklik?.label ==
-                      Bolum17Content.isiklikOptionB.label) ...[
-                    _buildInfoNote(
-                      "Işıklık bulunduğu için malzeme türü seçilmelidir.",
-                    ),
-                    QuestionCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      margin: const EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
+                        color: _model.isiklikMalzemesi == "cam"
+                            ? const Color(0xFF1A237E).withOpacity(0.1)
+                            : Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: _model.isiklikMalzemesi == "cam"
+                              ? const Color(0xFF1A237E)
+                              : Colors.grey.shade300,
+                          width: _model.isiklikMalzemesi == "cam" ? 2 : 1,
+                        ),
+                      ),
+                      child: Row(
                         children: [
-                          const Text(
-                            "Işıklık malzemesi nedir?",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 16),
-                          // Temperli Cam seçeneği
-                          InkWell(
-                            onTap: () => setState(
-                              () => _model = _model.copyWith(
-                                isiklikMalzemesi: "cam",
-                              ),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              margin: const EdgeInsets.only(bottom: 8),
-                              decoration: BoxDecoration(
-                                color: _model.isiklikMalzemesi == "cam"
-                                    ? const Color(0xFF1A237E).withOpacity(0.1)
-                                    : Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: _model.isiklikMalzemesi == "cam"
-                                      ? const Color(0xFF1A237E)
-                                      : Colors.grey.shade300,
-                                  width: _model.isiklikMalzemesi == "cam"
-                                      ? 2
-                                      : 1,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Radio<String>(
-                                    value: "cam",
-                                    groupValue: _model.isiklikMalzemesi,
-                                    activeColor: const Color(0xFF1A237E),
-                                    onChanged: (v) => setState(
-                                      () => _model = _model.copyWith(
-                                        isiklikMalzemesi: v,
-                                      ),
-                                    ),
-                                  ),
-                                  const Expanded(
-                                    child: Text(
-                                      "Temperli ve yangına dayanıklı cam ışıklık",
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          Radio<String>(
+                            value: "cam",
+                            groupValue: _model.isiklikMalzemesi,
+                            activeColor: const Color(0xFF1A237E),
+                            onChanged: (v) => setState(
+                              () =>
+                                  _model = _model.copyWith(isiklikMalzemesi: v),
                             ),
                           ),
-                          // Plastik seçeneği
-                          InkWell(
-                            onTap: () => setState(
-                              () => _model = _model.copyWith(
-                                isiklikMalzemesi: "plastik",
-                              ),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: _model.isiklikMalzemesi == "plastik"
-                                    ? const Color(0xFF1A237E).withOpacity(0.1)
-                                    : Colors.grey.shade50,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: _model.isiklikMalzemesi == "plastik"
-                                      ? const Color(0xFF1A237E)
-                                      : Colors.grey.shade300,
-                                  width: _model.isiklikMalzemesi == "plastik"
-                                      ? 2
-                                      : 1,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Radio<String>(
-                                    value: "plastik",
-                                    groupValue: _model.isiklikMalzemesi,
-                                    activeColor: const Color(0xFF1A237E),
-                                    onChanged: (v) => setState(
-                                      () => _model = _model.copyWith(
-                                        isiklikMalzemesi: v,
-                                      ),
-                                    ),
-                                  ),
-                                  const Expanded(
-                                    child: Text(
-                                      "Plastik, Pleksi veya Polikarbon ışıklık",
-                                      style: TextStyle(fontSize: 14),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          const Expanded(
+                            child: Text(
+                              "Temperli ve yangına dayanıklı cam ışıklık",
+                              style: TextStyle(fontSize: 14),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ],
+                  ),
+                  // Plastik seçeneği
+                  InkWell(
+                    onTap: () => setState(
+                      () =>
+                          _model = _model.copyWith(isiklikMalzemesi: "plastik"),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: _model.isiklikMalzemesi == "plastik"
+                            ? const Color(0xFF1A237E).withOpacity(0.1)
+                            : Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: _model.isiklikMalzemesi == "plastik"
+                              ? const Color(0xFF1A237E)
+                              : Colors.grey.shade300,
+                          width: _model.isiklikMalzemesi == "plastik" ? 2 : 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Radio<String>(
+                            value: "plastik",
+                            groupValue: _model.isiklikMalzemesi,
+                            activeColor: const Color(0xFF1A237E),
+                            onChanged: (v) => setState(
+                              () =>
+                                  _model = _model.copyWith(isiklikMalzemesi: v),
+                            ),
+                          ),
+                          const Expanded(
+                            child: Text(
+                              "Plastik, Pleksi veya Polikarbon ışıklık",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-          _buildBottomNav(),
+          ],
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -5),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _onNextPressed,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
       ),
     );
   }

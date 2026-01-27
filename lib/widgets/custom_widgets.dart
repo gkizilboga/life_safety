@@ -221,7 +221,7 @@ class SectionImage extends StatelessWidget {
   }
 }
 
-class AnalysisPageLayout extends StatelessWidget {
+class AnalysisPageLayout extends StatefulWidget {
   final String title;
   final String subtitle;
   final Type screenType;
@@ -242,41 +242,47 @@ class AnalysisPageLayout extends StatelessWidget {
   });
 
   @override
+  State<AnalysisPageLayout> createState() => _AnalysisPageLayoutState();
+}
+
+class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
+  @override
+  void initState() {
+    super.initState();
+    // Auto-track current section
+    // Moved to initState to prevent overwriting when background screens rebuild
+    final step = AppProgress.currentStep(widget.screenType);
+    if (step > 0) {
+      // Use addPostFrameCallback to ensure build is safely started/done
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          BinaStore.instance.lastActiveSection = step;
+          BinaStore.instance.saveToDisk(); // Auto-save on entry
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundGrey,
       body: Column(
         children: [
           ModernHeader(
-            title: title,
-            subtitle: subtitle,
-            screenType: screenType,
-            onSave: onSave,
-          ),
-          Builder(
-            builder: (context) {
-              // Auto-track current section
-              final step = AppProgress.currentStep(screenType);
-              if (step > 0) {
-                BinaStore.instance.lastActiveSection = step;
-                BinaStore.instance.saveToDisk(); // Auto-save on entry
-              }
-              return const SizedBox.shrink();
-            },
+            title: widget.title,
+            subtitle: widget.subtitle,
+            screenType: widget.screenType,
+            onSave: widget.onSave,
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
-              child: child,
+              child: widget.child,
             ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              10,
-              20,
-              40,
-            ), // Reduced bottom padding (was 55)
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
             decoration: const BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -290,10 +296,10 @@ class AnalysisPageLayout extends StatelessWidget {
             child: SafeArea(
               top: false,
               child: ElevatedButton(
-                onPressed: isNextEnabled
+                onPressed: widget.isNextEnabled
                     ? () {
                         BinaStore.instance.saveToDisk();
-                        if (onNext != null) onNext!();
+                        if (widget.onNext != null) widget.onNext!();
                       }
                     : null,
                 style: AppStyles.mainButton, // Use standard button style

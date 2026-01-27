@@ -87,10 +87,7 @@ class BinaStore {
   int get lastActiveSection => _lastActiveSection;
   set lastActiveSection(int value) {
     _lastActiveSection = value;
-    _prefs?.setInt(
-      'lastActiveSection',
-      value,
-    ); // Keep global latest as fallback
+    _prefs?.setInt('lastActiveSection', value);
   }
 
   void useCredit() {
@@ -209,7 +206,6 @@ class BinaStore {
   Bolum36Model? get bolum36 => _bolum36;
   set bolum36(Bolum36Model? v) => _bolum36 = v;
 
-  /// Kullanıcının özet rapor sayfasına ulaşıp ulaşmadığını kontrol eder.
   bool isTestCompleted() => _isCompleted;
 
   Future<void> loadFromDisk() async {
@@ -227,7 +223,6 @@ class BinaStore {
           if (activeData.isNotEmpty) _loadBuildingFromMap(activeData);
         }
       } catch (e) {
-        // Recover from corrupted disk data
         archive = [];
         reset();
         _prefs?.remove('bina_archive');
@@ -247,27 +242,6 @@ class BinaStore {
       'lastActiveSection': _lastActiveSection,
       'isCompleted': _isCompleted,
       'isPremium': isPremium,
-      // User said "Update BinaStore to track purchase status".
-      // Usually purchase is per user/lifetime or per building.
-      // Given the flow, let's assuming per building might refer to "is this analysis premium unlocked?".
-      // BUT, checking line 66: "bool get isPremium => _prefs?.getBool('isPremium') ?? false;"
-      // It seems it is ALREADY using SharedPreferences GLOBALLY for the user.
-      // So 'saveToDisk' (which saves the building archive) doesn't strictly need it if it's a global user setting.
-      // Wait, if it's a global setting "isPremium", line 67 already saves it to prefs: `set isPremium(bool value) => _prefs?.setBool('isPremium', value);`
-      // So separate persistence in `saveToDisk` (which saves the building JSON) is redundant/confusing if it's a global "Pro User" thing.
-      // HOWEVER, if the "Premium Module" is a per-analysis unlock (like "Unlock ONE Report"), then it should be in the building data.
-      // The current implementation at line 66 suggests GLOBAL premium.
-      // `_prefs?.setBool('isPremium', value)` saves it immediately to disk.
-      // So Persistence for GLOBAL status is ALREADY THERE via the setter.
-
-      // Let's re-read the plan: "Update `toJson`: Add `isPremium` field."
-      // If I want to tie it to the specific building analysis, I should add it here.
-      // Let's add it to the building data too, just in case we switch to per-building unlock later,
-      // OR to remember that THIS building was analyzed with premium features.
-      // But for now, the getter/setter at 66/67 handles GLOBAL persistence.
-      // I will trust the getter/setter for now as it uses SharedPreferences directly.
-
-      // Let's implement the `isTestCompleted()` method requested in the plan instead in this step.
       'sections': {
         'bolum1': _bolum1?.toMap(),
         'bolum2': _bolum2?.toMap(),
@@ -461,7 +435,7 @@ class BinaStore {
               "hBina: ${_bolum3?.hBina?.toStringAsFixed(2)}m | hYapi: ${_bolum3?.hYapi?.toStringAsFixed(2)}m",
           uiSubtitle: "",
           reportText:
-              "ℹ️ BİLGİ: Bina Yüksekliği (hBina): ${_bolum3?.hBina?.toStringAsFixed(2)} m, Yapı Yüksekliği (hYapi): ${_bolum3?.hYapi?.toStringAsFixed(2)} m.",
+              " BİLGİ: Bina Yüksekliği (hBina): ${_bolum3?.hBina?.toStringAsFixed(2)} m, Yapı Yüksekliği (hYapi): ${_bolum3?.hYapi?.toStringAsFixed(2)} m.",
         );
       case 4:
         return _bolum4?.binaYukseklikSinifi;
@@ -471,15 +445,15 @@ class BinaStore {
         String report = "";
         if (m.tabanAlani != null)
           report +=
-              "ℹ️ BİLGİ: ${Bolum5Content.oturumAlani.reportText}${m.tabanAlani} m²\n";
+              " BİLGİ: ${Bolum5Content.oturumAlani.reportText}${m.tabanAlani} m²\n";
         if (m.normalKatAlani != null)
           report +=
-              "ℹ️ BİLGİ: ${Bolum5Content.normalKatAlani.reportText}${m.normalKatAlani} m²\n";
+              " BİLGİ: ${Bolum5Content.normalKatAlani.reportText}${m.normalKatAlani} m²\n";
         if (m.bodrumKatAlani != null && m.bodrumKatAlani! > 0)
           report +=
-              "ℹ️ BİLGİ: ${Bolum5Content.bodrumKatAlani.reportText}${m.bodrumKatAlani} m²\n";
+              " BİLGİ: ${Bolum5Content.bodrumKatAlani.reportText}${m.bodrumKatAlani} m²\n";
         report +=
-            "ℹ️ BİLGİ: ${Bolum5Content.toplamInsaat.reportText}${m.toplamInsaatAlani} m²";
+            " BİLGİ: ${Bolum5Content.toplamInsaat.reportText}${m.toplamInsaatAlani} m²";
 
         return ChoiceResult(
           label: "5",
@@ -496,7 +470,6 @@ class BinaStore {
         final m7 = _bolum7!;
         final b6 = _bolum6;
 
-        // Otopark Tipini Belirle
         String otoparkText = "Otopark bulunmamaktadır.";
         if (b6?.hasOtopark == true) {
           if (b6?.otoparkTipi?.label.contains("Kapalı") == true) {
@@ -508,7 +481,6 @@ class BinaStore {
           }
         }
 
-        // Mevcut diğer riskleri topla
         List<String> riskler = [];
         if (m7.hasKazan) riskler.add("Kazan Dairesi");
         if (m7.hasAsansor) riskler.add("Asansör");
@@ -521,7 +493,7 @@ class BinaStore {
         if (m7.hasSiginak) riskler.add("Sığınak");
         if (m7.hasDuvar) riskler.add("Ortak Duvar");
 
-        String fullReport = "ℹ️ BİLGİ: $otoparkText";
+        String fullReport = " BİLGİ: $otoparkText";
         if (riskler.isNotEmpty) {
           fullReport +=
               " Ayrıca binada tespit edilen diğer teknik hacimler: ${riskler.join(', ')}.";
@@ -531,7 +503,7 @@ class BinaStore {
                 " Otopark haricinde binada başka bir özel teknik hacim veya riskli alan tespit edilmemiştir.";
           } else {
             fullReport =
-                "✅ OLUMLU: Binada otopark dahil herhangi bir özel teknik hacim veya riskli alan (kazan, jeneratör vb.) tespit edilmemiştir.";
+                "OLUMLU: Binada otopark dahil herhangi bir özel teknik hacim veya riskli alan (kazan, jeneratör vb.) tespit edilmemiştir.";
           }
         }
 
@@ -547,129 +519,103 @@ class BinaStore {
         return _bolum9?.secim;
       case 10:
         if (_bolum10 == null) return null;
-        final m10 = _bolum10!;
-        final b3 = _bolum3;
-
         String fullReport = "";
-
-        // Zemin Kat
+        final m10 = _bolum10!;
         if (m10.zemin != null) {
           fullReport += "Zemin Kat Kullanımı: ${m10.zemin!.uiTitle}\n";
         }
-
-        // Bodrum Katlar
-        int bodrumCount =
-            int.tryParse(b3?.bodrumKatSayisi?.toString() ?? "0") ?? 0;
-        if (bodrumCount > 0) {
-          fullReport += "Bodrum Katlar: ";
-          if (m10.bodrumlarAyni) {
-            if (m10.bodrumlar.isNotEmpty && m10.bodrumlar[0] != null) {
-              fullReport +=
-                  "Tüm bodrum katlar ${m10.bodrumlar[0]!.uiTitle} olarak kullanılmaktadır.\n";
-            } else {
-              fullReport += "Bodrum kat kullanım bilgisi eksik.\n";
-            }
-          } else {
-            List<String> bUsages = [];
-            for (int i = 0; i < m10.bodrumlar.length; i++) {
-              if (m10.bodrumlar[i] != null) {
-                bUsages.add("${i + 1}.Bodrum: ${m10.bodrumlar[i]!.uiTitle}");
-              }
-            }
-            fullReport += "${bUsages.join(', ')}.\n";
+        if (m10.bodrumlar.isNotEmpty) {
+          final bUsages = m10.bodrumlar
+              .where((c) => c != null)
+              .map((c) => c!.uiTitle)
+              .toList();
+          if (bUsages.isNotEmpty) {
+            fullReport += "Bodrum Katlar: ${bUsages.join(', ')}.\n";
           }
         }
-
-        // Normal Katlar
-        int normalCount =
-            int.tryParse(b3?.normalKatSayisi?.toString() ?? "0") ?? 0;
-        if (normalCount > 0) {
-          fullReport += "Normal Katlar: ";
-          if (m10.normallerAyni) {
-            if (m10.normaller.isNotEmpty && m10.normaller[0] != null) {
-              fullReport +=
-                  "Tüm normal katlar ${m10.normaller[0]!.uiTitle} olarak kullanılmaktadır.\n";
+        if (m10.normaller.isNotEmpty) {
+          final nUsages = m10.normaller
+              .where((c) => c != null)
+              .map((c) => c!.uiTitle)
+              .toList();
+          if (nUsages.isNotEmpty) {
+            if (nUsages.every((u) => u == nUsages[0])) {
+              fullReport += "Normal Katlar: ${nUsages[0]}.\n";
             } else {
-              fullReport += "Normal kat kullanım bilgisi eksik.\n";
-            }
-          } else {
-            List<String> nUsages = [];
-            for (int i = 0; i < m10.normaller.length; i++) {
-              if (m10.normaller[i] != null) {
-                nUsages.add(
-                  "${i + 1}.Normal Kat: ${m10.normaller[i]!.uiTitle}",
-                );
+              List<String> nList = [];
+              for (int i = 0; i < m10.normaller.length; i++) {
+                if (m10.normaller[i] != null) {
+                  nList.add(
+                    "${i + 1}.Normal Kat: ${m10.normaller[i]!.uiTitle}",
+                  );
+                }
               }
+              fullReport += "${nList.join(', ')}.\n";
             }
-            fullReport += "${nUsages.join(', ')}.\n";
           }
         }
-
         return ChoiceResult(
           label: "10",
           uiTitle: "Kat Kullanım Amaçları",
           uiSubtitle: "",
-          reportText: "ℹ️ BİLGİ:\n${fullReport.trim()}",
+          reportText: " BİLGİ:\n${fullReport.trim()}",
         );
       case 11:
         return _bolum11?.mesafe;
       case 12:
         return _bolum12?.secim;
       case 13:
-        final m = _bolum13;
-        return m?.kazanKapi ??
-            m?.otoparkKapi ??
-            m?.asansorKapi ??
-            m?.ticariKapi ??
-            m?.otoparkAlan ??
-            m?.kazanAlan ??
-            m?.siginakAlan;
+        if (_bolum13 == null) return null;
+        return ChoiceResult(
+          label: "13",
+          uiTitle: "Aktif Havalandırma Sistemleri",
+          uiSubtitle: "",
+          reportText: "Duman tahliye sistemleri analizi.",
+        );
       case 14:
         return _bolum14?.secim;
       case 15:
-        return _bolum15?.kaplama;
-      case 16:
-        return _bolum16?.mantolama;
-      case 17:
-        final m17 = _bolum17;
-        if (m17 == null) return null;
-
-        // Temel kaplama yanıtı
-        String reportText = m17.kaplama?.reportText ?? "";
-        String statusPrefix = "ℹ️ BİLGİ: ";
-
-        // Işıklık malzemesi ekleme
-        if (m17.isiklik != null && m17.isiklik!.label.contains("17-4-A")) {
-          // Işıklık var
-          if (m17.isiklikMalzemesi == "cam") {
-            reportText +=
-                "\n✅ OLUMLU: Işıklık kapağı temperli cam malzemeden yapılmıştır. Yangın güvenliği açısından uygundur.";
-            statusPrefix = "✅ OLUMLU: ";
-          } else if (m17.isiklikMalzemesi == "plastik") {
-            reportText +=
-                "\n⚠️ UYARI: Işıklık kapağı plastik malzemeden yapılmıştır. Yangın durumunda eriyen plastik, yangın yayılımını hızlandırabilir.";
-            statusPrefix = "⚠️ UYARI: ";
-          }
-        }
-
+        if (_bolum15 == null) return null;
         return ChoiceResult(
-          label: m17.kaplama?.label ?? "17",
-          uiTitle: m17.kaplama?.uiTitle ?? "Çatı Bilgileri",
-          uiSubtitle: m17.isiklikMalzemesi != null
-              ? "Işıklık: ${m17.isiklikMalzemesi == 'cam' ? 'Temperli Cam' : 'Plastik'}"
-              : "",
-          reportText: reportText.isEmpty
-              ? "$statusPrefixÇatı bilgileri girilmiştir."
-              : reportText,
+          label: "15",
+          uiTitle: "İç Kaplama Özellikleri",
+          uiSubtitle: "",
+          reportText: "Döşeme, yalıtım ve tavan analizleri.",
+        );
+      case 16:
+        if (_bolum16 == null) return null;
+        return ChoiceResult(
+          label: "16",
+          uiTitle: "Dış Cephe Özellikleri",
+          uiSubtitle: "",
+          reportText: "Mantolama ve cephe güvenliği analizi.",
+        );
+      case 17:
+        if (_bolum17 == null) return null;
+        return ChoiceResult(
+          label: "17",
+          uiTitle: "Çatı Güvenliği",
+          uiSubtitle: "",
+          reportText: "Çatı kaplama ve iskelet analizi.",
         );
       case 18:
-        return _bolum18?.boruTipi ?? _bolum18?.duvarKaplama;
+        if (_bolum18 == null) return null;
+        return ChoiceResult(
+          label: "18",
+          uiTitle: "Koridor Kaplamaları",
+          uiSubtitle: "",
+          reportText: "Kaçış yolu koridor analizi.",
+        );
       case 19:
-        return _bolum19?.levha;
+        if (_bolum19 == null) return null;
+        return ChoiceResult(
+          label: "19",
+          uiTitle: "Kaçış Yolu Engelleri",
+          uiSubtitle: "",
+          reportText: "Kaçış yolu ve yönlendirme analizi.",
+        );
       case 20:
-        final m = _bolum20;
-        if (m == null) return null;
-        if (m.tekKatCikis != null) return m.tekKatCikis;
+        if (_bolum20 == null) return null;
         return ChoiceResult(
           label: "20",
           uiTitle: "Merdiven Analizi",
@@ -677,7 +623,13 @@ class BinaStore {
           reportText: "Binada merdiven sayıları ve tipleri belirlenmiştir.",
         );
       case 21:
-        return _bolum21?.varlik;
+        if (_bolum21 == null) return null;
+        return ChoiceResult(
+          label: "21",
+          uiTitle: "Yangın Güvenlik Holleri",
+          uiSubtitle: "",
+          reportText: "YGH zorunluluk ve varlık analizi.",
+        );
       case 22:
         return _bolum22?.varlik;
       case 23:
@@ -687,20 +639,55 @@ class BinaStore {
       case 25:
         return _bolum25?.genislik;
       case 26:
-        return _bolum26?.varlik;
+        if (_bolum26 == null) return null;
+        return ChoiceResult(
+          label: "26",
+          uiTitle: "Rampalar",
+          uiSubtitle: "",
+          reportText: "Kaçış rampaları analizi.",
+        );
       case 27:
-        return _bolum27?.boyut;
+        if (_bolum27 == null) return null;
+        return ChoiceResult(
+          label: "27",
+          uiTitle: "Kapı Özellikleri",
+          uiSubtitle: "",
+          reportText: "Kapı özellikleri analizi yapılmıştır.",
+        );
       case 28:
         return _bolum28?.mesafe;
       case 29:
-        final m = _bolum29;
-        return m?.kazan ?? m?.otopark ?? m?.asansor ?? m?.pano;
+        if (_bolum29 == null) return null;
+        return ChoiceResult(
+          label: "29",
+          uiTitle: "Genel Yanlış Uygulamalar",
+          uiSubtitle: "",
+          reportText: "Depolama ve yerleşim hataları analizi.",
+        );
       case 30:
-        return _bolum30?.konum;
+        if (_bolum30 == null) return null;
+        return ChoiceResult(
+          label: "30",
+          uiTitle: "Kazan Dairesi",
+          uiSubtitle: "",
+          reportText: "Kazan dairesi güvenlik analizi.",
+        );
       case 31:
-        return _bolum31?.yapi;
+        if (_bolum31 == null) return null;
+        return ChoiceResult(
+          label: "31",
+          uiTitle: "Trafo Odası Analizi",
+          uiSubtitle: "",
+          reportText: "Trafo odası güvenlik analizi.",
+        );
       case 32:
-        return _bolum32?.yapi;
+        if (_bolum32 == null) return null;
+        return ChoiceResult(
+          label: "32",
+          uiTitle: "Jeneratör Odası",
+          uiSubtitle: "",
+          reportText: "Jeneratör odası güvenlik analizi.",
+        );
       case 33:
         if (_bolum33 == null) return null;
         return ChoiceResult(
@@ -710,9 +697,21 @@ class BinaStore {
           reportText: _bolum33!.combinedReportText,
         );
       case 34:
-        return _bolum34?.zemin;
+        if (_bolum34 == null) return null;
+        return ChoiceResult(
+          label: "34",
+          uiTitle: "Kat Karakteristikleri",
+          uiSubtitle: "",
+          reportText: "Zemin ve bodrum kat çıkış karakteristikleri.",
+        );
       case 35:
-        return _bolum35?.tekYon ?? _bolum35?.ciftYon;
+        if (_bolum35 == null) return null;
+        return ChoiceResult(
+          label: "35",
+          uiTitle: "Çıkış Koridoru Genişlikleri",
+          uiSubtitle: "",
+          reportText: "Kat bazlı genişlik analizleri.",
+        );
       case 36:
         final m = _bolum36;
         if (m == null) return null;

@@ -197,6 +197,8 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
+                isDismissible: true,
+                enableDrag: true,
                 builder: (context) => SearchableListSelector(
                   title: hint,
                   items: items,
@@ -204,40 +206,52 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
                 ),
               );
             },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: onChanged == null
-                ? Colors.grey.shade200
-                : const Color(0xFFE0E0E0),
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 20,
-              color: onChanged == null ? Colors.grey : const Color(0xFF1A237E),
+      child: AbsorbPointer(
+        absorbing: true, // Prevents any text input attempts
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: onChanged == null ? Colors.grey.shade100 : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: onChanged == null
+                  ? Colors.grey.shade200
+                  : const Color(0xFFE0E0E0),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                value ?? hint,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: value == null ? Colors.grey : Colors.black87,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: onChanged == null
+                    ? Colors.grey
+                    : const Color(0xFF1A237E),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  value ?? hint,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: value == null
+                        ? Colors.grey.shade600
+                        : Colors.black87,
+                    fontWeight: value == null
+                        ? FontWeight.normal
+                        : FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            Icon(
-              Icons.search,
-              size: 18,
-              color: const Color(0xFF1A237E).withValues(alpha: 0.5),
-            ),
-          ],
+              Icon(
+                Icons.arrow_drop_down,
+                size: 24,
+                color: onChanged == null
+                    ? Colors.grey
+                    : const Color(0xFF1A237E).withValues(alpha: 0.7),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -388,8 +402,15 @@ class _SearchableListSelectorState extends State<SearchableListSelector> {
             child: TextField(
               controller: _searchCtrl,
               autofocus: false,
+              readOnly: false, // For filtering only
               decoration: InputDecoration(
-                hintText: "Ara...",
+                hintText: "Listeden ara...",
+                helperText: "Yalnızca mevcut listeden seçim yapabilirsiniz",
+                helperStyle: TextStyle(
+                  fontSize: 11,
+                  color: Colors.grey.shade600,
+                  fontStyle: FontStyle.italic,
+                ),
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: Colors.grey.shade100,

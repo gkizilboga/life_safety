@@ -17,7 +17,6 @@ class Bolum23Screen extends StatefulWidget {
 
 class _Bolum23ScreenState extends State<Bolum23Screen> {
   Bolum23Model _model = Bolum23Model();
-  final ScrollController _scrollController = ScrollController();
   bool _hasBodrum = false;
 
   @override
@@ -88,109 +87,67 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Normal (İnsan Taşıma) Asansör",
+      subtitle: "",
+      screenType: widget.runtimeType,
+      isNextEnabled: true,
+      onNext: _onNextPressed,
+      child: Column(
         children: [
-          ModernHeader(
-            title: "Normal (İnsan Taşıma) Asansör",
-            subtitle: "",
-            screenType: widget.runtimeType,
+          // BODRUM SORUSU: Sadece bodrumKatSayisi >= 1 ise göster
+          if (_hasBodrum)
+            _buildSoru("Asansörünüz bodrum katlara da iniyor mu?", 'bodrum', [
+              Bolum23Content.bodrumOptionA,
+              Bolum23Content.bodrumOptionB,
+              Bolum23Content.bodrumOptionC,
+              Bolum23Content.bodrumOptionD,
+            ], _model.bodrum),
+
+          _buildSoru(
+            "Yangın anında asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?",
+            'yanginModu',
+            [
+              Bolum23Content.yanginModuOptionA,
+              Bolum23Content.yanginModuOptionB,
+              Bolum23Content.yanginModuOptionC,
+            ],
+            _model.yanginModu,
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  // BODRUM SORUSU: Sadece bodrumKatSayisi >= 1 ise göster
-                  if (_hasBodrum)
-                    _buildSoru(
-                      "Asansörünüz bodrum katlara da iniyor mu?",
-                      'bodrum',
-                      [
-                        Bolum23Content.bodrumOptionA,
-                        Bolum23Content.bodrumOptionB,
-                        Bolum23Content.bodrumOptionC,
-                        Bolum23Content.bodrumOptionD,
-                      ],
-                      _model.bodrum,
-                    ),
 
-                  _buildSoru(
-                    "Yangın anında asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?",
-                    'yanginModu',
-                    [
-                      Bolum23Content.yanginModuOptionA,
-                      Bolum23Content.yanginModuOptionB,
-                      Bolum23Content.yanginModuOptionC,
-                    ],
-                    _model.yanginModu,
-                  ),
-
-                  _buildSoru(
-                    "Asansör kapıları normal katlarda nereye açılıyor?",
-                    'konum',
-                    [
-                      Bolum23Content.konumOptionA,
-                      Bolum23Content.konumOptionB,
-                      Bolum23Content.konumOptionC,
-                    ],
-                    _model.konum,
-                  ),
-
-                  _buildSoru(
-                    "Asansör kapılarında 'YANGIN ANINDA KULLANMAYINIZ' uyarısı var mı?",
-                    'levha',
-                    [
-                      Bolum23Content.levhaOptionA,
-                      Bolum23Content.levhaOptionB,
-                      Bolum23Content.levhaOptionC,
-                    ],
-                    _model.levha,
-                  ),
-
-                  _buildSoru(
-                    "Asansör kuyusunun tepesinde havalandırma penceresi var mı?",
-                    'havalandirma',
-                    [
-                      Bolum23Content.havalandirmaOptionA,
-                      Bolum23Content.havalandirmaOptionB,
-                      Bolum23Content.havalandirmaOptionC,
-                    ],
-                    _model.havalandirma,
-                  ),
-                ],
-              ),
-            ),
+          _buildSoru(
+            "Asansör kapıları normal katlarda nereye açılıyor?",
+            'konum',
+            [
+              Bolum23Content.konumOptionA,
+              Bolum23Content.konumOptionB,
+              Bolum23Content.konumOptionC,
+            ],
+            _model.konum,
           ),
-          _buildBottomNav(),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -5),
+          _buildSoru(
+            "Asansör kapılarında 'YANGIN ANINDA KULLANMAYINIZ' uyarısı var mı?",
+            'levha',
+            [
+              Bolum23Content.levhaOptionA,
+              Bolum23Content.levhaOptionB,
+              Bolum23Content.levhaOptionC,
+            ],
+            _model.levha,
+          ),
+
+          _buildSoru(
+            "Asansör kuyusunun tepesinde havalandırma penceresi var mı?",
+            'havalandirma',
+            [
+              Bolum23Content.havalandirmaOptionA,
+              Bolum23Content.havalandirmaOptionB,
+              Bolum23Content.havalandirmaOptionC,
+            ],
+            _model.havalandirma,
           ),
         ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _onNextPressed,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
       ),
     );
   }

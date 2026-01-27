@@ -175,7 +175,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     return InputValidator.validateNumber(
       text,
       min: 0,
-      max: 20,
+      max: 6,
       unit: "adet",
       isRequired: false,
     );
@@ -388,7 +388,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             const Padding(
               padding: EdgeInsets.only(left: 4, bottom: 16),
               child: Text(
-                "Binanızda aşağıdaki merdiven türlerinden kaçar tane var? (Maks: 6'şar)",
+                "Binanızda aşağıdaki merdiven türlerinden kaçar tane var?",
                 style: AppStyles.questionTitle,
               ),
             ),

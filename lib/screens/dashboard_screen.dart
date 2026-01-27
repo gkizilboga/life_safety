@@ -277,15 +277,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     BinaStore.instance.loadBuildingFromArchive(building['id']);
                     if (isCompleted) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ReportSummaryScreen(),
-                        ),
-                      );
+                      // Fix: Direkt PDF Raporunu oluştur ve göster
+                      try {
+                        await PdfService.generateRiskAnalysisPdf();
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("PDF oluşturulurken hata: $e"),
+                            ),
+                          );
+                        }
+                      }
                     } else {
                       Navigator.push(
                         context,
@@ -323,8 +329,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () {
-                  PdfService.generateActiveSystemsPdf();
+                onPressed: () async {
+                  try {
+                    await PdfService.generateActiveSystemsPdf();
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text("PDF Hatası: $e")));
+                    }
+                  }
                 },
                 icon: const Icon(
                   Icons.settings_system_daydream_outlined,

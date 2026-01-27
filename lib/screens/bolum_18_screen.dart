@@ -75,87 +75,55 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "İç Duvarlar",
+      subtitle: "",
+      screenType: widget.runtimeType,
+      isNextEnabled: true,
+      onNext: _onNextPressed,
+      child: Column(
         children: [
-          ModernHeader(
-            title: "Bölüm-18: İç Duvarlar",
-            subtitle: "...",
-            screenType: widget.runtimeType,
+          // 1. Duvar Kaplaması
+          _buildSoru(
+            "Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük (içten yalıtım) gibi bir kaplama var mı?",
+            'duvar',
+            [
+              Bolum18Content.duvarOptionA,
+              Bolum18Content.duvarOptionB,
+              Bolum18Content.duvarOptionC,
+              Bolum18Content.duvarOptionD,
+            ],
+            _model.duvarKaplama,
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  // 1. Duvar Kaplaması
-                  _buildSoru(
-                    "Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük (içten yalıtım) gibi bir kaplama var mı?",
-                    'duvar',
-                    [
-                      Bolum18Content.duvarOptionA,
-                      Bolum18Content.duvarOptionB,
-                      Bolum18Content.duvarOptionC,
-                      Bolum18Content.duvarOptionD,
-                    ],
-                    _model.duvarKaplama,
-                  ),
 
-                  // 2. Tesisat Borusu (Sadece Yüksek Binalarda)
-                  if (_askBoru) ...[
-                    const Divider(height: 30),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade50,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Text(
-                        "⚠️ Binanız 'Yüksek Bina' statüsünde olduğu için aşağıdaki soru açılmıştır.",
-                        style: TextStyle(color: Colors.red, fontSize: 12),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(key: _boruKey, height: 1),
-                    _buildSoru(
-                      "Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?",
-                      'boru',
-                      [
-                        Bolum18Content.boruOptionA,
-                        Bolum18Content.boruOptionB,
-                        Bolum18Content.boruOptionC,
-                        Bolum18Content.boruOptionD,
-                      ],
-                      _model.boruTipi,
-                    ),
-                  ],
-                ],
+          // 2. Tesisat Borusu (Sadece Yüksek Binalarda)
+          if (_askBoru) ...[
+            const Divider(height: 30),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.red.shade50,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Text(
+                " Binanız 'Yüksek Bina' statüsünde olduğu için aşağıdaki soru açılmıştır.",
+                style: TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
+            const SizedBox(height: 10),
+            SizedBox(key: _boruKey, height: 1),
+            _buildSoru(
+              "Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?",
+              'boru',
+              [
+                Bolum18Content.boruOptionA,
+                Bolum18Content.boruOptionB,
+                Bolum18Content.boruOptionC,
+                Bolum18Content.boruOptionD,
               ],
+              _model.boruTipi,
             ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
-            ),
-          ),
+          ],
         ],
       ),
     );

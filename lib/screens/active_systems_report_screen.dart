@@ -140,7 +140,7 @@ class ActiveSystemsReportScreen extends StatelessWidget {
                       ),
                       width: double.infinity,
                       child: Text(
-                        "📝 UZMAN NOTU: ${req.note}",
+                        " UZMAN NOTU: ${req.note}",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.orange.shade900,
@@ -160,11 +160,17 @@ class ActiveSystemsReportScreen extends StatelessWidget {
   /// Cleans reason text by removing emoji prefixes and labels
   static String _cleanReasonText(String text) {
     return text
-        .replaceAll('🚨 KRİTİK RİSK: ', '')
-        .replaceAll('✅ OLUMLU: ', '')
-        .replaceAll('⚠️ UYARI: ', '')
-        .replaceAll('❓ BİLİNMİYOR: ', '')
-        .replaceAll('ℹ️ BİLGİ: ', '')
+        .replaceAll(' KRİTİK RİSK: ', '')
+        .replaceAll('OLUMLU: ', '')
+        .replaceAll('UYARI: ', '')
+        .replaceAll(' BİLMİYORUM: ', '')
+        .replaceAll(' BİLMİYORUM: ', '')
+        .replaceAll(' BİLGİ: ', '')
+        .replaceAll('KRİTİK RİSK: ', '')
+        .replaceAll('OLUMLU: ', '')
+        .replaceAll('UYARI: ', '')
+        .replaceAll('BİLMİYORUM: ', '')
+        .replaceAll('BİLGİ: ', '')
         .trim();
   }
 }

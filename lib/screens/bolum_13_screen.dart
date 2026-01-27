@@ -136,193 +136,156 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Teknik Hacimler",
+      subtitle: "Özel riskli alanların duvar ve kapı özellikleri",
+      screenType: widget.runtimeType,
+      isNextEnabled: true,
+      onNext: _onNextPressed,
+      child: Column(
         children: [
-          ModernHeader(
-            title: "Teknik Hacimler",
-            subtitle: "Özel riskli alanların duvar ve kapı özellikleri",
-            screenType: widget.runtimeType,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  if (_askOtopark) ...[
-                    _buildSoru(
-                      "Otoparktan bina içine açılan kapının özelliği nedir?",
-                      'otopark',
-                      [
-                        Bolum13Content.otoparkOptionA,
-                        Bolum13Content.otoparkOptionB,
-                        Bolum13Content.otoparkOptionC,
-                        Bolum13Content.otoparkOptionD,
-                      ],
-                      _model.otoparkKapi,
-                    ),
-                    // ALT SORU: Otopark Alanı
-                    _buildSoru(
-                      "Otopark alanları toplamda kaç metrekaredir?",
-                      'otoparkAlan',
-                      [
-                        Bolum13Content.otoparkAlanOptionA,
-                        Bolum13Content.otoparkAlanOptionB,
-                        Bolum13Content.otoparkAlanOptionC,
-                        Bolum13Content.otoparkAlanOptionD,
-                        Bolum13Content.otoparkAlanOptionE,
-                      ],
-                      _model.otoparkAlan,
-                    ),
-                  ],
-
-                  if (_askKazan) ...[
-                    _buildSoruWithDef(
-                      "Kazan dairesinin duvarları ve kapısı nasıldır?",
-                      "Yangın Kompartımanı",
-                      AppDefinitions.yanginKompartimani,
-                      'kazan',
-                      [
-                        Bolum13Content.kazanOptionA,
-                        Bolum13Content.kazanOptionB,
-                        Bolum13Content.kazanOptionC,
-                        Bolum13Content.kazanOptionD,
-                      ],
-                      _model.kazanKapi,
-                    ),
-                    // ALT SORU: Kazan Dairesi Alanı
-                    _buildSoru(
-                      "Binadaki kazan dairesi kaç metrekaredir?",
-                      'kazanAlan',
-                      [
-                        Bolum13Content.kazanAlanOptionA,
-                        Bolum13Content.kazanAlanOptionB,
-                        Bolum13Content.kazanAlanOptionC,
-                      ],
-                      _model.kazanAlan,
-                    ),
-                  ],
-
-                  if (_askAsansor)
-                    _buildSoru("Asansör kapısı nasıldır?", 'asansor', [
-                      Bolum13Content.asansorOptionA,
-                      Bolum13Content.asansorOptionB,
-                      Bolum13Content.asansorOptionC,
-                    ], _model.asansorKapi),
-
-                  if (_askJenerator)
-                    _buildSoru(
-                      "Jeneratör odasının duvar ve kapısı nasıldır?",
-                      'jenerator',
-                      [
-                        Bolum13Content.jeneratorOptionA,
-                        Bolum13Content.jeneratorOptionB,
-                        Bolum13Content.jeneratorOptionC,
-                      ],
-                      _model.jeneratorKapi,
-                    ),
-
-                  if (_askElektrik)
-                    _buildSoru(
-                      "Elektrik odalarının duvarları ve kapıları nasıldır?",
-                      'elektrik',
-                      [
-                        Bolum13Content.elekOdasiOptionA,
-                        Bolum13Content.elekOdasiOptionB,
-                        Bolum13Content.elekOdasiOptionC,
-                      ],
-                      _model.elektrikKapi,
-                    ),
-
-                  if (_askTrafo)
-                    _buildSoru("Trafo odasının kapısı nasıldır?", 'trafo', [
-                      Bolum13Content.trafoOptionA,
-                      Bolum13Content.trafoOptionB,
-                      Bolum13Content.trafoOptionC,
-                    ], _model.trafoKapi),
-
-                  if (_askDepo)
-                    _buildSoru("Eşya depolarının kapıları nasıldır?", 'depo', [
-                      Bolum13Content.depoOptionA,
-                      Bolum13Content.depoOptionB,
-                      Bolum13Content.depoOptionC,
-                    ], _model.depoKapi),
-
-                  if (_askCop)
-                    _buildSoru(
-                      "Çöp toplama odalarının kapıları nasıldır?",
-                      'cop',
-                      [
-                        Bolum13Content.copOptionA,
-                        Bolum13Content.copOptionB,
-                        Bolum13Content.copOptionC,
-                      ],
-                      _model.copKapi,
-                    ),
-
-                  // YENİ SORU: Sığınak Alanı
-                  if (_askSiginak)
-                    _buildSoru(
-                      "Binadaki sığınak alanı kaç metrekaredir?",
-                      'siginakAlan',
-                      [
-                        Bolum13Content.siginakAlanOptionA,
-                        Bolum13Content.siginakAlanOptionB,
-                        Bolum13Content.siginakAlanOptionC,
-                      ],
-                      _model.siginakAlan,
-                    ),
-
-                  if (_askDuvar)
-                    _buildSoru(
-                      "Yan bina ile ortak kullandığınız duvarın özelliği nedir?",
-                      'duvar',
-                      [
-                        Bolum13Content.ortakDuvarOptionA,
-                        Bolum13Content.ortakDuvarOptionB,
-                        Bolum13Content.ortakDuvarOptionC,
-                      ],
-                      _model.ortakDuvar,
-                    ),
-
-                  if (_askTicari)
-                    _buildSoru(
-                      "Ticari alanlardan konut merdivenine geçiş nasıldır?",
-                      'ticari',
-                      [
-                        Bolum13Content.ticariOptionA,
-                        Bolum13Content.ticariOptionB,
-                        Bolum13Content.ticariOptionC,
-                      ],
-                      _model.ticariKapi,
-                    ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                  offset: Offset(0, -5),
-                ),
+          if (_askOtopark) ...[
+            _buildSoru(
+              "Otoparktan bina içine açılan kapının özelliği nedir?",
+              'otopark',
+              [
+                Bolum13Content.otoparkOptionA,
+                Bolum13Content.otoparkOptionB,
+                Bolum13Content.otoparkOptionC,
+                Bolum13Content.otoparkOptionD,
               ],
+              _model.otoparkKapi,
             ),
-            child: SafeArea(
-              top: false,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onNextPressed,
-                  child: const Text("DEVAM ET"),
-                ),
-              ),
+            // ALT SORU: Otopark Alanı
+            _buildSoru(
+              "Otopark alanları toplamda kaç metrekaredir?",
+              'otoparkAlan',
+              [
+                Bolum13Content.otoparkAlanOptionA,
+                Bolum13Content.otoparkAlanOptionB,
+                Bolum13Content.otoparkAlanOptionC,
+                Bolum13Content.otoparkAlanOptionD,
+                Bolum13Content.otoparkAlanOptionE,
+              ],
+              _model.otoparkAlan,
             ),
-          ),
+          ],
+
+          if (_askKazan) ...[
+            _buildSoruWithDef(
+              "Kazan dairesinin duvarları ve kapısı nasıldır?",
+              "Yangın Kompartımanı",
+              AppDefinitions.yanginKompartimani,
+              'kazan',
+              [
+                Bolum13Content.kazanOptionA,
+                Bolum13Content.kazanOptionB,
+                Bolum13Content.kazanOptionC,
+                Bolum13Content.kazanOptionD,
+              ],
+              _model.kazanKapi,
+            ),
+            // ALT SORU: Kazan Dairesi Alanı
+            _buildSoru(
+              "Binadaki kazan dairesi kaç metrekaredir?",
+              'kazanAlan',
+              [
+                Bolum13Content.kazanAlanOptionA,
+                Bolum13Content.kazanAlanOptionB,
+                Bolum13Content.kazanAlanOptionC,
+              ],
+              _model.kazanAlan,
+            ),
+          ],
+
+          if (_askAsansor)
+            _buildSoru("Asansör kapısı nasıldır?", 'asansor', [
+              Bolum13Content.asansorOptionA,
+              Bolum13Content.asansorOptionB,
+              Bolum13Content.asansorOptionC,
+            ], _model.asansorKapi),
+
+          if (_askJenerator)
+            _buildSoru(
+              "Jeneratör odasının duvar ve kapısı nasıldır?",
+              'jenerator',
+              [
+                Bolum13Content.jeneratorOptionA,
+                Bolum13Content.jeneratorOptionB,
+                Bolum13Content.jeneratorOptionC,
+              ],
+              _model.jeneratorKapi,
+            ),
+
+          if (_askElektrik)
+            _buildSoru(
+              "Elektrik odalarının duvarları ve kapıları nasıldır?",
+              'elektrik',
+              [
+                Bolum13Content.elekOdasiOptionA,
+                Bolum13Content.elekOdasiOptionB,
+                Bolum13Content.elekOdasiOptionC,
+              ],
+              _model.elektrikKapi,
+            ),
+
+          if (_askTrafo)
+            _buildSoru("Trafo odasının kapısı nasıldır?", 'trafo', [
+              Bolum13Content.trafoOptionA,
+              Bolum13Content.trafoOptionB,
+              Bolum13Content.trafoOptionC,
+            ], _model.trafoKapi),
+
+          if (_askDepo)
+            _buildSoru("Eşya depolarının kapıları nasıldır?", 'depo', [
+              Bolum13Content.depoOptionA,
+              Bolum13Content.depoOptionB,
+              Bolum13Content.depoOptionC,
+            ], _model.depoKapi),
+
+          if (_askCop)
+            _buildSoru("Çöp toplama odalarının kapıları nasıldır?", 'cop', [
+              Bolum13Content.copOptionA,
+              Bolum13Content.copOptionB,
+              Bolum13Content.copOptionC,
+            ], _model.copKapi),
+
+          // YENİ SORU: Sığınak Alanı
+          if (_askSiginak)
+            _buildSoru(
+              "Binadaki sığınak alanı kaç metrekaredir?",
+              'siginakAlan',
+              [
+                Bolum13Content.siginakAlanOptionA,
+                Bolum13Content.siginakAlanOptionB,
+                Bolum13Content.siginakAlanOptionC,
+              ],
+              _model.siginakAlan,
+            ),
+
+          if (_askDuvar)
+            _buildSoru(
+              "Yan bina ile ortak kullandığınız duvarın özelliği nedir?",
+              'duvar',
+              [
+                Bolum13Content.ortakDuvarOptionA,
+                Bolum13Content.ortakDuvarOptionB,
+                Bolum13Content.ortakDuvarOptionC,
+              ],
+              _model.ortakDuvar,
+            ),
+
+          if (_askTicari)
+            _buildSoru(
+              "Ticari alanlardan konut merdivenine geçiş nasıldır?",
+              'ticari',
+              [
+                Bolum13Content.ticariOptionA,
+                Bolum13Content.ticariOptionB,
+                Bolum13Content.ticariOptionC,
+              ],
+              _model.ticariKapi,
+            ),
         ],
       ),
     );

@@ -111,7 +111,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
 
           if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) ...[
             _buildSoru(
-              "Hol içindeki kaplama malzemeleri yanmaz özellikte mi?",
+              "YGH (Hol) içindeki kaplama malzemeleri yanmaz özellikte mi?",
               'malzeme',
               [
                 Bolum21Content.malzemeOptionA,
@@ -121,7 +121,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               _model.malzeme,
             ),
             _buildSoru(
-              "Hol kapıları duman sızdırmaz ve yangına dayanıklı mı?",
+              "YGH (Hol) kapıları duman sızdırmaz ve yangına dayanıklı mı?",
               'kapi',
               [
                 Bolum21Content.kapiOptionA,
@@ -131,7 +131,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               _model.kapi,
             ),
             _buildSoru(
-              "Hol içinde eşya (bisiklet, dolap vb.) var mı?",
+              "YGH (Hol) içinde eşya (bisiklet, dolap vb.) var mı?",
               'esya',
               [
                 Bolum21Content.esyaOptionA,

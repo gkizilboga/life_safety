@@ -111,95 +111,52 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Daire İçi Mesafeler",
+      subtitle: "Daire içi kaçış uzaklığı ve plan analizi",
+      screenType: widget.runtimeType,
+      isNextEnabled: true,
+      onNext: _onNextPressed,
+      child: Column(
         children: [
-          ModernHeader(
-            title: "Bölüm-28: Daire İçi Mesafeler",
-            subtitle: "Daire içi kaçış uzaklığı ve plan analizi",
-            screenType: widget.runtimeType,
+          _buildSoru(
+            "Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?",
+            'mesafe',
+            [
+              Bolum28Content.mesafeOptionA,
+              Bolum28Content.mesafeOptionB,
+              Bolum28Content.mesafeOptionC,
+            ],
+            _model.mesafe,
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  _buildSoru(
-                    "Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?",
-                    'mesafe',
-                    [
-                      Bolum28Content.mesafeOptionA,
-                      Bolum28Content.mesafeOptionB,
-                      Bolum28Content.mesafeOptionC,
-                    ],
-                    _model.mesafe,
-                  ),
 
-                  _buildSoru("Daireniz Dubleks (İki katlı) mi?", 'dubleks', [
-                    Bolum28Content.dubleksOptionA,
-                    Bolum28Content.dubleksOptionB,
-                  ], _model.dubleks),
+          _buildSoru("Daireniz Dubleks (İki katlı) mi?", 'dubleks', [
+            Bolum28Content.dubleksOptionA,
+            Bolum28Content.dubleksOptionB,
+          ], _model.dubleks),
 
-                  if (_model.dubleks?.label ==
-                      Bolum28Content.dubleksOptionB.label) ...[
-                    _buildInfoNote(
-                      "Dubleks daire seçildiği için üst kat alan bilgisi gereklidir.",
-                    ),
-                    _buildSoru(
-                      "Üst katınızın alanı 70 m²'den büyük mü?",
-                      'alan',
-                      [Bolum28Content.alanOption1, Bolum28Content.alanOption2],
-                      _model.alan,
-                    ),
-                  ],
-
-                  if (_model.alan?.label ==
-                      Bolum28Content.alanOption2.label) ...[
-                    _buildInfoNote(
-                      "70 m² üzeri dublekslerde ikinci çıkış kapısı sorgulanmaktadır.",
-                    ),
-                    _buildSoru(
-                      "Üst kattan apartman koridoruna açılan ikinci bir çelik kapı (çıkış) var mı?",
-                      'cikis',
-                      [
-                        Bolum28Content.cikisOptionA,
-                        Bolum28Content.cikisOptionB,
-                      ],
-                      _model.cikis,
-                    ),
-                  ],
-                ],
-              ),
+          if (_model.dubleks?.label == Bolum28Content.dubleksOptionB.label) ...[
+            _buildInfoNote(
+              "Dubleks daire seçildiği için üst kat alan bilgisi gereklidir.",
             ),
-          ),
-          _buildBottomNav(),
-        ],
-      ),
-    );
-  }
+            _buildSoru("Üst katınızın alanı 70 m²'den büyük mü?", 'alan', [
+              Bolum28Content.alanOption1,
+              Bolum28Content.alanOption2,
+            ], _model.alan),
+          ],
 
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -5),
-          ),
+          if (_model.alan?.label == Bolum28Content.alanOption2.label) ...[
+            _buildInfoNote(
+              "70 m² üzeri dublekslerde ikinci çıkış kapısı sorgulanmaktadır.",
+            ),
+            _buildSoru(
+              "Üst kattan apartman koridoruna açılan ikinci bir çelik kapı (çıkış) var mı?",
+              'cikis',
+              [Bolum28Content.cikisOptionA, Bolum28Content.cikisOptionB],
+              _model.cikis,
+            ),
+          ],
         ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _onNextPressed,
-            child: const Text("DEVAM ET"),
-          ),
-        ),
       ),
     );
   }

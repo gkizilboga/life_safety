@@ -72,7 +72,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             ],
           ),
           content: const Text(
-            '⚠️ DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen güncel yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Uzman görüşüne başvurmanız tavsiye edilir.',
+            ' DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen güncel yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Uzman görüşüne başvurmanız tavsiye edilir.',
             style: TextStyle(fontSize: 14, height: 1.4),
           ),
           actions: [

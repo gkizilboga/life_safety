@@ -71,8 +71,8 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     double kZemin = _getKatsayi(b10?.zemin);
     int yukZemin = (alanZemin / kZemin).ceil();
     int gZeminLoad = _hesaplaGerekliCikis(yukZemin);
-    // Zemin katta yükseklik kriteri aranmaz, sadece kişi sayısı
-    int gZemin = gZeminLoad;
+    // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
+    int gZemin = (hYapi >= 21.50) ? math.max(gZeminLoad, 2) : gZeminLoad;
 
     // 2. NORMAL KAT HESABI
     double alanNormal = b5?.normalKatAlani ?? 0.0;
@@ -81,8 +81,8 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     );
     int yukNormal = (alanNormal / kNormal).ceil();
     int gNormalLoad = _hesaplaGerekliCikis(yukNormal);
-    // Yüksek binalarda (21.50m üstü) en az 2 çıkış şarttır
-    int gNormal = (hYapi > 21.50) ? math.max(gNormalLoad, 2) : gNormalLoad;
+    // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
+    int gNormal = (hYapi >= 21.50) ? math.max(gNormalLoad, 2) : gNormalLoad;
 
     // 3. BODRUM KAT HESABI
     double alanBodrum = b5?.bodrumKatAlani ?? 0.0;
@@ -90,7 +90,9 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
       b10?.bodrumlar.isNotEmpty == true ? b10!.bodrumlar.first : null,
     );
     int yukBodrum = (alanBodrum / kBodrum).ceil();
-    int gBodrum = _hesaplaGerekliCikis(yukBodrum);
+    int gBodrumLoad = _hesaplaGerekliCikis(yukBodrum);
+    // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
+    int gBodrum = (hYapi >= 21.50) ? math.max(gBodrumLoad, 2) : gBodrumLoad;
 
     // 4. MEVCUT ÇIKIŞ SAYILARI
     // Üst katlar için toplam merdiven sayısı (Sahanlıksız hariç)

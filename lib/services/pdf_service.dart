@@ -10,23 +10,63 @@ import '../utils/app_content.dart';
 import '../logic/active_systems_engine.dart';
 
 class PdfService {
-  static String _cleanEmojis(String t) {
-    return t.replaceAll(RegExp(r'[🚨☢️⚠️✅❓ℹ️]'), '').trim();
+  static pw.Widget _buildStatusBadge(String text) {
+    PdfColor badgeColor = PdfColors.grey500;
+    String label = text.toUpperCase();
+
+    if (label.contains("KRİTİK RİSK")) {
+      badgeColor = const PdfColor.fromInt(0xFFE53935);
+      label = "KRİTİK RİSK";
+    } else if (label.contains("UYARI")) {
+      badgeColor = const PdfColor.fromInt(0xFFFFC107);
+      label = "UYARI";
+    } else if (label.contains("BİLMİYORUM")) {
+      badgeColor = const PdfColor.fromInt(0xFF9E9E9E);
+      label = "BİLMİYORUM";
+    } else if (label.contains("BİLGİ")) {
+      badgeColor = const PdfColor.fromInt(0xFF1E88E5);
+      label = "BİLGİ";
+    } else if (label.contains("OLUMLU")) {
+      badgeColor = const PdfColor.fromInt(0xFF43A047);
+      label = "OLUMLU";
+    }
+
+    return pw.Container(
+      padding: const pw.EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: pw.BoxDecoration(
+        color: badgeColor,
+        borderRadius: pw.BorderRadius.circular(2),
+      ),
+      child: pw.Text(
+        label,
+        style: pw.TextStyle(
+          color: PdfColors.white,
+          fontSize: 8,
+          fontWeight: pw.FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  static String _cleanEmojis(String? t) {
+    if (t == null) return "";
+    return t
+        .replaceAll(
+          RegExp(
+            r'[\u{1f300}-\u{1f5ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{1f900}-\u{1f9ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}\u{fe00}-\u{fe0f}]',
+            unicode: true,
+          ),
+          '',
+        )
+        .trim();
   }
 
   static PdfColor _getRiskColor(String text) {
     final upper = text.toUpperCase();
-    if (upper.contains("KRİTİK RİSK") ||
-        upper.contains("RİSK") ||
-        upper.contains("TEHLİKE") ||
-        upper.contains("ACİL"))
+    if (upper.contains("KRİTİK RİSK"))
       return const PdfColor.fromInt(0xFFE53935);
-    if (upper.contains("UYARI") || upper.contains("DİKKAT"))
-      return const PdfColor.fromInt(0xFFFFC107);
-    if (upper.contains("BİLMİYORUM") ||
-        upper.contains("BELİRSİZ") ||
-        upper.contains("BİLİNMİYOR"))
-      return const PdfColor.fromInt(0xFF9E9E9E);
+    if (upper.contains("UYARI")) return const PdfColor.fromInt(0xFFFFC107);
+    if (upper.contains("BİLMİYORUM")) return const PdfColor.fromInt(0xFF9E9E9E);
     if (upper.contains("BİLGİ")) return const PdfColor.fromInt(0xFF1E88E5);
     return const PdfColor.fromInt(0xFF43A047);
   }
@@ -298,12 +338,12 @@ class PdfService {
                       children: [
                         _buildCoverInfoItem(
                           "BİNA ADI",
-                          store.currentBinaName ?? "-",
+                          _cleanEmojis(store.currentBinaName),
                         ),
                         pw.SizedBox(width: 20),
                         _buildCoverInfoItem(
                           "KONUM",
-                          "${store.currentBinaDistrict} / ${store.currentBinaCity}",
+                          "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
                         ),
                         pw.SizedBox(width: 20),
                         _buildCoverInfoItem("", ""),
@@ -490,30 +530,44 @@ class PdfService {
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text(
-                    "BÖLÜM $id",
-                    style: pw.TextStyle(
-                      fontSize: 8,
-                      fontWeight: pw.FontWeight.bold,
-                      color: PdfColors.grey700,
-                    ),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text(
+                            "BÖLÜM $id",
+                            style: pw.TextStyle(
+                              fontSize: 8,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.grey700,
+                            ),
+                          ),
+                          _buildStatusBadge(fullReport),
+                        ],
+                      ),
+                      pw.Text(
+                        "Soru: ${AppContent.getQuestionText(id)}",
+                        style: const pw.TextStyle(
+                          fontSize: 8,
+                          color: PdfColors.grey800,
+                        ),
+                      ),
+                      pw.Text(
+                        "Yanıt: ${res.uiTitle}",
+                        style: pw.TextStyle(
+                          fontSize: 9,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Text(
+                        _cleanEmojis(cleanReport),
+                        style: const pw.TextStyle(fontSize: 9),
+                      ),
+                    ],
                   ),
-                  pw.Text(
-                    "Soru: ${AppContent.getQuestionText(id)}",
-                    style: const pw.TextStyle(
-                      fontSize: 8,
-                      color: PdfColors.grey800,
-                    ),
-                  ),
-                  pw.Text(
-                    "Yanıt: ${res.uiTitle}",
-                    style: pw.TextStyle(
-                      fontSize: 9,
-                      fontWeight: pw.FontWeight.bold,
-                    ),
-                  ),
-                  pw.SizedBox(height: 4),
-                  pw.Text(cleanReport, style: const pw.TextStyle(fontSize: 9)),
                 ],
               ),
             );
@@ -553,14 +607,14 @@ class PdfService {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(
-                        "Bölüm ${item['id']}: ${item['title']}",
+                        "Bölüm ${item['id']}: ${_cleanEmojis(item['title'])}",
                         style: pw.TextStyle(
                           fontSize: 10,
                           fontWeight: pw.FontWeight.bold,
                         ),
                       ),
                       pw.Text(
-                        "Öneri: ${item['advice']}",
+                        "Öneri: ${_cleanEmojis(item['advice'])}",
                         style: const pw.TextStyle(fontSize: 9),
                       ),
                     ],
@@ -634,40 +688,23 @@ class PdfService {
           pw.SizedBox(height: 20),
 
           ...activeSystems.map((req) {
-            PdfColor badgeColor = PdfColors.grey500;
-            PdfColor textColor = PdfColors.grey900;
-            String badgeText = "ZORUNLU DEĞİL";
-
-            if (req.reason.contains("KRİTİK RİSK")) {
-              badgeColor = PdfColors.red900;
-              textColor = PdfColors.red900;
-              badgeText = "ZORUNLU";
-            } else if (req.reason.contains("UYARI")) {
-              badgeColor = PdfColors.orange900;
-              textColor = PdfColors.orange900;
-              badgeText = "UYARI";
-            } else if (req.reason.contains("OLUMLU") ||
-                req.reason.contains("BİLGİ")) {
-              badgeColor = PdfColors.green700;
-              textColor = PdfColors.green900;
-              badgeText = "OLUMLU";
-            }
-
-            // Remove prefixes from reason for cleaner display
-            String cleanReason = req.reason
+            // Clean redundant prefixes for display
+            String cleanReason = _cleanEmojis(req.reason)
                 .replaceAll("KRİTİK RİSK:", "")
                 .replaceAll("UYARI:", "")
                 .replaceAll("OLUMLU:", "")
                 .replaceAll("BİLGİ:", "")
-                .replaceAll("BİLİNMİYOR:", "")
+                .replaceAll("BİLMİYORUM:", "")
                 .trim();
+
+            final statusColor = _getRiskColor(req.reason);
 
             return pw.Container(
               margin: const pw.EdgeInsets.only(bottom: 10),
               padding: const pw.EdgeInsets.all(8),
               decoration: pw.BoxDecoration(
                 border: pw.Border(
-                  left: pw.BorderSide(color: badgeColor, width: 4),
+                  left: pw.BorderSide(color: statusColor, width: 4),
                 ),
                 color: PdfColors.grey50,
               ),
@@ -678,41 +715,24 @@ class PdfService {
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
                       pw.Text(
-                        req.name,
+                        _cleanEmojis(req.name),
                         style: pw.TextStyle(
                           fontSize: 10,
                           fontWeight: pw.FontWeight.bold,
                         ),
                       ),
-                      pw.Container(
-                        padding: const pw.EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: pw.BoxDecoration(
-                          color: badgeColor,
-                          borderRadius: pw.BorderRadius.circular(4),
-                        ),
-                        child: pw.Text(
-                          badgeText,
-                          style: pw.TextStyle(
-                            fontSize: 8,
-                            color: PdfColors.white,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      _buildStatusBadge(req.reason),
                     ],
                   ),
                   pw.SizedBox(height: 6),
                   pw.Text(
                     cleanReason,
-                    style: pw.TextStyle(fontSize: 9, color: textColor),
+                    style: pw.TextStyle(fontSize: 9, color: statusColor),
                   ),
                   if (req.note.isNotEmpty) ...[
                     pw.SizedBox(height: 4),
                     pw.Text(
-                      "NOT: ${req.note}",
+                      "NOT: ${_cleanEmojis(req.note)}",
                       style: pw.TextStyle(
                         fontSize: 8,
                         color: PdfColors.grey700,

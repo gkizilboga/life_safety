@@ -153,141 +153,119 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     if (!_hasKazan)
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
-      body: Column(
+    return AnalysisPageLayout(
+      title: "Kazan Dairesi (Isı Merkezi)",
+      subtitle: "",
+      screenType: widget.runtimeType,
+      isNextEnabled: _isFormValid,
+      onNext: _onNextPressed,
+      child: Column(
         children: [
-          ModernHeader(
-            title: "Kazan Dairesi (Isı Merkezi)",
-            subtitle: "",
-            screenType: widget.runtimeType,
+          _buildSoru(
+            "Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?",
+            'konum',
+            [
+              Bolum30Content.konumOptionA,
+              Bolum30Content.konumOptionB,
+              Bolum30Content.konumOptionC,
+              Bolum30Content.konumOptionD,
+            ],
+            _model.konum,
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  _buildSoru(
-                    "Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?",
-                    'konum',
-                    [
-                      Bolum30Content.konumOptionA,
-                      Bolum30Content.konumOptionB,
-                      Bolum30Content.konumOptionC,
-                      Bolum30Content.konumOptionD,
-                    ],
-                    _model.konum,
-                  ),
 
-                  QuestionCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Kazan kapasitesini (kW) giriniz:",
-                          style: AppStyles.questionTitle,
-                        ),
-                        const SizedBox(height: 10),
-                        TextFormField(
-                          controller: _kapasiteCtrl,
-                          enabled: !_model.kapasiteBilinmiyor,
-                          keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true,
-                          ),
-                          inputFormatters: [InputValidator.flexDecimal],
-                          decoration: InputDecoration(
-                            hintText: "Örn: 400",
-                            suffixText: "kW",
-                            border: const OutlineInputBorder(),
-                            errorText: _kapasiteErr,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SelectableCard(
-                          choice: Bolum30Content.kapasiteBilinmiyorOption,
-                          isSelected: _model.kapasiteBilinmiyor,
-                          onTap: () {
-                            setState(() {
-                              _model = _model.copyWith(
-                                kapasiteBilinmiyor: !_model.kapasiteBilinmiyor,
-                              );
-                              if (_model.kapasiteBilinmiyor) {
-                                _kapasiteCtrl.clear();
-                                _kapasiteErr = null;
-                              }
-                            });
-                          },
-                        ),
-                      ],
-                    ),
+          QuestionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Kazan kapasitesini (kW) giriniz:",
+                  style: AppStyles.questionTitle,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _kapasiteCtrl,
+                  enabled: !_model.kapasiteBilinmiyor,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
                   ),
-
-                  _buildSoru(
-                    "Kazan dairesinin kaç adet çıkış kapısı var?",
-                    'kapi',
-                    [
-                      Bolum30Content.kapiOptionA,
-                      Bolum30Content.kapiOptionB,
-                      Bolum30Content.kapiOptionC,
-                    ],
-                    _model.kapi,
+                  inputFormatters: [InputValidator.flexDecimal],
+                  decoration: InputDecoration(
+                    hintText: "Örn: 400",
+                    suffixText: "kW",
+                    border: const OutlineInputBorder(),
+                    errorText: _kapasiteErr,
                   ),
-
-                  _buildSoru(
-                    "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?",
-                    'hava',
-                    [
-                      Bolum30Content.havaOptionA,
-                      Bolum30Content.havaOptionB,
-                      Bolum30Content.havaOptionC,
-                    ],
-                    _model.hava,
-                  ),
-
-                  _buildSoru(
-                    "Kazanınız sıvı yakıtlı (Mazot/Fuel-oil) mı?",
-                    'yakit',
-                    [
-                      Bolum30Content.yakitOptionA,
-                      Bolum30Content.yakitOptionB,
-                      Bolum30Content.yakitOptionC,
-                    ],
-                    _model.yakit,
-                  ),
-
-                  if (_model.yakit?.label ==
-                      Bolum30Content.yakitOptionB.label) ...[
-                    _buildInfoNote(
-                      "Sıvı yakıtlı kazanlar için drenaj ve sızıntı kontrolü gereklidir.",
-                    ),
-                    _buildSoru(
-                      "Zeminde dökülen yakıtı toplayacak kanallar ve bir pis su çukuru var mı?",
-                      'drenaj',
-                      [
-                        Bolum30Content.drenajOptionA,
-                        Bolum30Content.drenajOptionB,
-                        Bolum30Content.drenajOptionC,
-                      ],
-                      _model.drenaj,
-                    ),
-                  ],
-
-                  _buildSoru(
-                    "Kazan dairesinde yangın söndürme tüpü ve yangın dolabı var mı?",
-                    'tup',
-                    [
-                      Bolum30Content.tupOptionA,
-                      Bolum30Content.tupOptionB,
-                      Bolum30Content.tupOptionC,
-                      Bolum30Content.tupOptionD,
-                    ],
-                    _model.tup,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 10),
+                SelectableCard(
+                  choice: Bolum30Content.kapasiteBilinmiyorOption,
+                  isSelected: _model.kapasiteBilinmiyor,
+                  onTap: () {
+                    setState(() {
+                      _model = _model.copyWith(
+                        kapasiteBilinmiyor: !_model.kapasiteBilinmiyor,
+                      );
+                      if (_model.kapasiteBilinmiyor) {
+                        _kapasiteCtrl.clear();
+                        _kapasiteErr = null;
+                      }
+                    });
+                  },
+                ),
+              ],
             ),
           ),
-          _buildBottomNav(),
+
+          _buildSoru("Kazan dairesinin kaç adet çıkış kapısı var?", 'kapi', [
+            Bolum30Content.kapiOptionA,
+            Bolum30Content.kapiOptionB,
+            Bolum30Content.kapiOptionC,
+          ], _model.kapi),
+
+          _buildSoru(
+            "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?",
+            'hava',
+            [
+              Bolum30Content.havaOptionA,
+              Bolum30Content.havaOptionB,
+              Bolum30Content.havaOptionC,
+            ],
+            _model.hava,
+          ),
+
+          _buildSoru("Kazanınız sıvı yakıtlı (Mazot/Fuel-oil) mı?", 'yakit', [
+            Bolum30Content.yakitOptionA,
+            Bolum30Content.yakitOptionB,
+            Bolum30Content.yakitOptionC,
+          ], _model.yakit),
+
+          if (_model.yakit?.label == Bolum30Content.yakitOptionB.label) ...[
+            _buildInfoNote(
+              "Sıvı yakıtlı kazanlar için drenaj and sızıntı kontrolü gereklidir.",
+            ),
+            _buildSoru(
+              "Zeminde dökülen yakıtı toplayacak kanallar ve bir pis su çukuru var mı?",
+              'drenaj',
+              [
+                Bolum30Content.drenajOptionA,
+                Bolum30Content.drenajOptionB,
+                Bolum30Content.drenajOptionC,
+              ],
+              _model.drenaj,
+            ),
+          ],
+
+          _buildSoru(
+            "Kazan dairesinde yangın söndürme tüpü ve yangın dolabı var mı?",
+            'tup',
+            [
+              Bolum30Content.tupOptionA,
+              Bolum30Content.tupOptionB,
+              Bolum30Content.tupOptionC,
+              Bolum30Content.tupOptionD,
+            ],
+            _model.tup,
+          ),
         ],
       ),
     );
@@ -317,46 +295,6 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomNav() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -5),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _isFormValid ? _onNextPressed : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1A237E),
-              disabledBackgroundColor: Colors.grey.shade300,
-              minimumSize: const Size(double.infinity, 54),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: const Text(
-              "DEVAM ET",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
