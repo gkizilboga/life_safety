@@ -20,6 +20,15 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   late List<String> _yghReasons;
   late Map<ReportModule, double> _moduleScores;
   late bool _isPremium;
+  
+  Color _getUiRiskColor(String text) {
+    if (text.contains('KRİTİK RİSK')) return const Color(0xFFEF5350); // Red
+    if (text.contains('UYARI')) return const Color(0xFFFFD600);      // Yellow (A700)
+    if (text.contains('OLUMLU')) return const Color(0xFF66BB6A);     // Green
+    if (text.contains('BİLGİ')) return const Color(0xFF42A5F5);      // Blue
+    if (text.contains('BİLİNMİYOR')) return Colors.grey;
+    return Colors.grey;
+  }
 
   @override
   void initState() {
@@ -461,14 +470,14 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
 
   Widget _buildSectionTile(BuildContext context, int id) {
     final summary = ReportEngine.getSectionSummary(id);
-    final fullReport = ReportEngine.getSectionFullReport(id);
+    final riskColor = _getUiRiskColor(fullReport);
     return ListTile(
       onTap: () => _showDetailSheet(
         context,
         id,
         summary,
         fullReport,
-        Colors.grey.shade700,
+        riskColor,
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       title: Text(
@@ -488,11 +497,18 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
         ),
       ),
       trailing: Container(
-        width: 10,
-        height: 10,
+        width: 12,
+        height: 12,
         decoration: BoxDecoration(
-          color: Colors.grey.shade400, // Neutral color - no status indication
+          color: riskColor,
           shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: riskColor.withOpacity(0.3),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
       ),
     );
@@ -540,39 +556,43 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: color.withValues(alpha: 0.1)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "SORU: ${AppContent.getQuestionText(id)}",
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black54,
-                      ),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(15),
+                      border: Border.all(color: color.withValues(alpha: 0.1)),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      report,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF2C3E50),
-                        height: 1.5,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "SORU: ${AppContent.getQuestionText(id)}",
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          report,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF2C3E50),
+                            height: 1.5,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

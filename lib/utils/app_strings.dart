@@ -36,11 +36,10 @@ Hukuki Delil: Geliştirici, kötü niyetli kullanımlarda uygulamanın sadece "b
 4. İş Sağlığı ve Güvenliği (İSG) ve Profesyonel Sorumluluk
 Yasal Yükümlülük: 6331 sayılı İSG Kanunu uyarınca İşveren/Yönetici’nin "Risk Değerlendirmesi Yapma" yükümlülüğü bu uygulama ile devredilmiş sayılmaz.
 Hizmet Niteliği: Bu uygulama bir "Mühendislik/Müşavirlik Hizmeti" değil, bir "Veri İşleme Aracıdır". Oluşabilecek maddi/manevi zararlarda geliştiricinin kusursuz sorumluluğu bulunmadığı kullanıcı tarafından kabul ve taahhüt edilmiştir.
-
 5. KVKK ve Veri Güvenliği (Yerel Mimari):
 Veri Depolama: Uygulama "Çevrimdışı/Yerel" mimaride çalıştığından, girilen bina verileri geliştirici sunucularına aktarılmaz ve depolanmaz.
-Cihaz Sorumluluğu: Verilerin güvenliği ve yedeklenmesi tamamen kullanıcının sorumluluğundadır. Uygulama silindiğinde tüm veriler geri döndürülemez şekilde imha edilir.
+Cihaz Sorumluluğu: Verilerin güvenliği ve yedeklenmesi tamamen kullanıcının sorumluluğundadır. Uygulama silindiğinde tüm veriler geri döndürülemez şekilde imha edilir.""";
 
-  static const String legislationTitle = "Binaların Yangından Korunması Hakkında Yönetmeliği (BYKHY)";
-  static const String legislationSubtitle = " Yönetmelik hükümleri.";
+  static const String legislationTitle = "Mevzuat ve Kılavuzlar";
+  static const String legislationSubtitle = "Resmi dokümanlar ve teknik rehberler";
 }

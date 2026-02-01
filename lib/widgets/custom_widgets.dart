@@ -27,9 +27,10 @@ class ModernHeader extends StatelessWidget {
     double progress = currentStep / totalSteps;
     final bool canPop = Navigator.canPop(context);
 
+    final double topPadding = MediaQuery.of(context).padding.top;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 30, 20, 15),
+      padding: EdgeInsets.fromLTRB(20, topPadding + 10, 20, 15),
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.only(
@@ -83,42 +84,31 @@ class ModernHeader extends StatelessWidget {
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text(
-                          "Analiz kaydedildi ve ana menüye dönüldü.",
-                        ),
+                        content: Text("Analiz kaydedildi ve ana menüye dönüldü."),
                         duration: Duration(seconds: 2),
                         backgroundColor: AppColors.successGreen,
                       ),
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
+                    width: 32,
+                    height: 32,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFF9800), // Orange for visibility
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white24),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.save_outlined,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          "KAYDET",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      color: const Color(0xFF059669), // Emerald Green (Premium)
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
                         ),
                       ],
+                      border: Border.all(color: Colors.white24, width: 1.5),
+                    ),
+                    child: const Icon(
+                      Icons.save_rounded,
+                      color: Colors.white,
+                      size: 18,
                     ),
                   ),
                 ),

@@ -80,14 +80,7 @@ void main() {
             reason: 'Found old term KIRMIZI RİSK in: $text',
           );
         }
-        if (text.toUpperCase().contains('BİLİN') ||
-            text.toUpperCase().contains('BİLMİ')) {
-          expect(
-            text.contains('BİLİNMİYOR:'),
-            isFalse,
-            reason: 'Found old term BİLİNMİYOR in: $text',
-          );
-        }
+        // BİLİNMİYOR: artık geçerli bir kategori olarak kabul ediliyor
       }
     });
 

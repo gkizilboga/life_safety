@@ -41,7 +41,12 @@ class PdfService {
 
   // All text now rendered in black (no color coding)
   static PdfColor _getRiskColor(String text) {
-    return PdfColors.black;
+    if (text.contains('KRİTİK RİSK')) return PdfColors.red700;
+    if (text.contains('UYARI')) return PdfColors.yellow700;
+    if (text.contains('OLUMLU')) return PdfColors.green700;
+    if (text.contains('BİLGİ')) return PdfColors.blue700;
+    if (text.contains('BİLİNMİYOR')) return PdfColors.grey500;
+    return PdfColors.grey500;
   }
 
   static PdfColor _getScoreColorForPdf(int score) {
@@ -87,9 +92,9 @@ class PdfService {
             child: pw.Transform.rotate(
               angle: 0.5,
               child: pw.Text(
-                "RESMİ EVRAK DEĞİLDİR",
+                "RESMİ BELGE DEĞİLDİR",
                 style: pw.TextStyle(
-                  fontSize: 40,
+                  fontSize: 30,
                   fontWeight: pw.FontWeight.bold,
                 ),
               ),
@@ -109,68 +114,111 @@ class PdfService {
     required Map<String, dynamic> metrics,
     bool showScore = true,
   }) {
+    // Renk Paleti
+    const navyBlue = PdfColor.fromInt(0xFF1a365d);
+    const darkNavy = PdfColor.fromInt(0xFF0d2137);
+    const softGray = PdfColor.fromInt(0xFF6b7280);
+    const lightGray = PdfColor.fromInt(0xFFf3f4f6);
+    const accentTeal = PdfColor.fromInt(0xFF0d9488);
+
     return pw.Page(
       pageTheme: pageTheme,
       build: (context) {
         return pw.Container(
-          decoration: pw.BoxDecoration(
-            gradient: pw.LinearGradient(
-              colors: [PdfColors.blue900, PdfColors.blue800],
-              begin: pw.Alignment.topCenter,
-              end: pw.Alignment.bottomCenter,
-            ),
-          ),
-          child: pw.Stack(
+          color: PdfColors.white,
+          child: pw.Column(
             children: [
-              pw.Positioned(
-                bottom: -100,
-                right: -100,
-                child: pw.Opacity(
-                  opacity: 0.1,
-                  child: pw.Transform.rotate(
-                    angle: -0.5,
-                    child: pw.Icon(
-                      const pw.IconData(0xe32a),
-                      size: 600,
-                      color: PdfColors.white,
+              // Üst Boşluk
+              pw.SizedBox(height: 60),
+
+              // Logo - Ortada
+              pw.Center(
+                child: pw.Container(
+                  height: 80,
+                  width: 200,
+                  child: pw.Image(logoImage, fit: pw.BoxFit.contain),
+                ),
+              ),
+
+              pw.SizedBox(height: 40),
+
+              // Yönetmelik Başlığı
+              pw.Center(
+                child: pw.Text(
+                  "BİNALARIN YANGINDAN KORUNMASI\nHAKKINDA YÖNETMELİĞİ'NE GÖRE",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(
+                    color: softGray,
+                    fontSize: 11,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ),
+
+              pw.SizedBox(height: 30),
+
+              // Ana Başlık
+              pw.Center(
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 40),
+                  child: pw.Text(
+                    mainTitle,
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(
+                      color: navyBlue,
+                      fontSize: 24,
+                      fontWeight: pw.FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-              pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.stretch,
-                children: [
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(30),
+
+              // Skor Badge (sadece showScore true ise)
+              if (showScore) ...[
+                pw.SizedBox(height: 50),
+                pw.Center(
+                  child: pw.Container(
+                    padding: const pw.EdgeInsets.symmetric(
+                      vertical: 15,
+                      horizontal: 25,
+                    ),
+                    decoration: pw.BoxDecoration(
+                      color: lightGray,
+                      borderRadius: pw.BorderRadius.circular(12),
+                      border: pw.Border.all(color: accentTeal, width: 2),
+                    ),
                     child: pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      mainAxisSize: pw.MainAxisSize.min,
                       children: [
-                        pw.Container(
-                          height: 60,
-                          width: 150,
-                          decoration: pw.BoxDecoration(
-                            color: PdfColors.white,
-                            borderRadius: pw.BorderRadius.circular(8),
+                        // Skor Yüzdesi
+                        pw.Text(
+                          "%${metrics['score']}",
+                          style: pw.TextStyle(
+                            color: _getScoreColorForPdf(metrics['score'] as int),
+                            fontSize: 22,
+                            fontWeight: pw.FontWeight.bold,
                           ),
-                          padding: const pw.EdgeInsets.all(8),
-                          child: pw.Image(logoImage, fit: pw.BoxFit.contain),
                         ),
+                        pw.SizedBox(width: 15),
                         pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.end,
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
                             pw.Text(
-                              "RAPOR TARİHİ",
+                              "YANGIN GÜVENLİK PUANI",
                               style: pw.TextStyle(
-                                color: PdfColors.blue100,
+                                color: softGray,
                                 fontSize: 8,
-                                letterSpacing: 1,
                               ),
                             ),
-                            pw.SizedBox(height: 4),
+                            pw.SizedBox(height: 2),
                             pw.Text(
-                              "${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year}",
+                              (metrics['score'] as int) > 80
+                                  ? "DÜŞÜK RİSK"
+                                  : (metrics['score'] as int) > 50
+                                      ? "ORTA RİSK"
+                                      : "YÜKSEK RİSK",
                               style: pw.TextStyle(
-                                color: PdfColors.white,
+                                color: _getScoreColorForPdf(metrics['score'] as int),
                                 fontSize: 12,
                                 fontWeight: pw.FontWeight.bold,
                               ),
@@ -180,150 +228,63 @@ class PdfService {
                       ],
                     ),
                   ),
-                  pw.Spacer(),
-                  pw.Padding(
-                    padding: const pw.EdgeInsets.symmetric(horizontal: 30),
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          "BİNALARIN YANGINDAN KORUNMASI HAKKINDA YÖNETMELİĞİ'NE GÖRE",
-                          style: pw.TextStyle(
-                            color: PdfColors.blue100,
-                            fontSize: 14,
-                            letterSpacing: 5,
-                          ),
-                        ),
-                        pw.SizedBox(height: 10),
-                        pw.Text(
-                          mainTitle,
-                          style: pw.TextStyle(
-                            color: PdfColors.white,
-                            fontSize: 34,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                        if (showScore) ...[
-                          pw.SizedBox(height: 40),
-                          pw.Container(
-                            padding: const pw.EdgeInsets.symmetric(
-                              vertical: 20,
-                              horizontal: 30,
-                            ),
-                            decoration: pw.BoxDecoration(
-                              color: const PdfColor.fromInt(0x1Affffff),
-                              borderRadius: pw.BorderRadius.circular(16),
-                              border: pw.Border.all(
-                                color: PdfColors.white,
-                                width: 2,
-                              ),
-                            ),
-                            child: pw.Row(
-                              mainAxisSize: pw.MainAxisSize.min,
-                              children: [
-                                pw.Text(
-                                  "${metrics['score']}",
-                                  style: pw.TextStyle(
-                                    color: _getScoreColorForPdf(
-                                      metrics['score'] as int,
-                                    ),
-                                    fontSize: 48,
-                                    fontWeight: pw.FontWeight.bold,
-                                  ),
-                                ),
-                                pw.SizedBox(width: 15),
-                                pw.Column(
-                                  crossAxisAlignment:
-                                      pw.CrossAxisAlignment.start,
-                                  children: [
-                                    pw.Text(
-                                      "GÜVENLİK",
-                                      style: const pw.TextStyle(
-                                        color: PdfColors.white,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                    pw.Text(
-                                      "PUANI",
-                                      style: const pw.TextStyle(
-                                        color: PdfColors.white,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                pw.Container(
-                                  margin: const pw.EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  width: 1,
-                                  height: 40,
-                                  color: const PdfColor.fromInt(0x80ffffff),
-                                ),
-                                pw.Column(
-                                  crossAxisAlignment:
-                                      pw.CrossAxisAlignment.start,
-                                  children: [
-                                    pw.Text(
-                                      "RİSK DURUMU",
-                                      style: const pw.TextStyle(
-                                        color: PdfColors.white,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                    pw.Text(
-                                      (metrics['score'] as int) > 80
-                                          ? "DÜŞÜK RİSK"
-                                          : (metrics['score'] as int) > 50
-                                          ? "ORTA RİSK"
-                                          : "YÜKSEK RİSK",
-                                      style: pw.TextStyle(
-                                        color: _getScoreColorForPdf(
-                                          metrics['score'] as int,
-                                        ),
-                                        fontSize: 16,
-                                        fontWeight: pw.FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ] else ...[
-                          pw.SizedBox(height: 20),
-                          pw.Text(
-                            subTitle,
-                            style: pw.TextStyle(
-                              color: PdfColors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ],
+                ),
+              ] else ...[
+                pw.SizedBox(height: 30),
+                if (subTitle.isNotEmpty)
+                  pw.Center(
+                    child: pw.Text(
+                      subTitle,
+                      style: pw.TextStyle(
+                        color: softGray,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
-                  pw.Spacer(),
-                  pw.Container(
-                    padding: const pw.EdgeInsets.all(30),
-                    color: const PdfColor.fromInt(0x33000000),
-                    child: pw.Row(
+              ],
+
+              pw.Spacer(),
+
+              // Alt Bilgi Şeridi - Koyu Lacivert
+              pw.Container(
+                width: double.infinity,
+                padding: const pw.EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+                color: darkNavy,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    // Bina Adı
+                    pw.Text(
+                      _cleanEmojis(store.currentBinaName) ?? "Bina Adı Belirtilmemiş",
+                      style: pw.TextStyle(
+                        color: PdfColors.white,
+                        fontSize: 12,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                    pw.SizedBox(height: 8),
+                    // Konum ve Tarih
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildCoverInfoItem(
-                          "BİNA ADI",
-                          _cleanEmojis(store.currentBinaName),
-                        ),
-                        pw.SizedBox(width: 20),
-                        _buildCoverInfoItem(
-                          "KONUM",
+                        pw.Text(
                           "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
+                          style: const pw.TextStyle(
+                            color: PdfColors.white,
+                            fontSize: 12,
+                          ),
                         ),
-                        pw.SizedBox(width: 20),
-                        _buildCoverInfoItem("", ""),
+                        pw.Text(
+                          "Rapor Tarihi: ${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year}",
+                          style: const pw.TextStyle(
+                            color: PdfColors.white,
+                            fontSize: 12,
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -393,7 +354,7 @@ class PdfService {
           pw.Container(
             alignment: pw.Alignment.centerRight,
             child: pw.Text(
-              "BU EVRAK, UYGULAMA İLE ÜRETİLMİŞ OLUP RESMİ BELGE NİTELİĞİ TAŞIMAZ. Islak imza ve kaşe yerine geçmez. "
+              "BU BELGE, UYGULAMA İLE ÜRETİLMİŞ OLUP RESMİ BELGE NİTELİĞİ TAŞIMAZ. Islak imza ve kaşe yerine geçmez. "
               "Yasal uyarıların tamamı ve TCK sorumluluk beyanı raporun ayrılmaz parçasıdır.",
               style: const pw.TextStyle(
                 fontSize: 5,
@@ -410,10 +371,9 @@ class PdfService {
   // --- 1. RİSK ANALİZ RAPORU ---
   static Future<void> generateRiskAnalysisPdf() async {
     final pdf = pw.Document();
-    final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
-    final ttf = pw.Font.ttf(fontData);
-    final boldData = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
-    final ttfBold = pw.Font.ttf(boldData);
+    // Noto Sans ile Türkçe karakterler tam desteklenir
+    final ttf = await PdfGoogleFonts.notoSansRegular();
+    final ttfBold = await PdfGoogleFonts.notoSansBold();
     final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 
@@ -428,7 +388,7 @@ class PdfService {
       _buildCoverPage(
         pageTheme: pageTheme,
         logoImage: logoImage,
-        mainTitle: "YANGIN RİSK ANALİZi ÖN RAPORU",
+        mainTitle: "YANGIN RİSK ANALİZi",
         subTitle: "",
         store: store,
         metrics: metrics,
@@ -453,7 +413,7 @@ class PdfService {
         footer: _buildFooter,
         build: (context) => [
           pw.Text(
-            "MODÜL BAZINDA GÜVENLİK SKORLARI",
+            "MODÜL BAZINDA PUANLAMA",
             style: pw.TextStyle(
               fontSize: 12,
               fontWeight: pw.FontWeight.bold,
@@ -622,10 +582,9 @@ class PdfService {
   // --- 2. AKTİF SİSTEM GEREKSİNİMLERİ RAPORU ---
   static Future<void> generateActiveSystemsPdf() async {
     final pdf = pw.Document();
-    final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
-    final ttf = pw.Font.ttf(fontData);
-    final boldData = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
-    final ttfBold = pw.Font.ttf(boldData);
+    // Noto Sans ile Türkçe karakterler tam desteklenir
+    final ttf = await PdfGoogleFonts.notoSansRegular();
+    final ttfBold = await PdfGoogleFonts.notoSansBold();
     final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 

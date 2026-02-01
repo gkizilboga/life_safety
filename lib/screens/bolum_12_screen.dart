@@ -230,14 +230,6 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
                 onTap: () =>
                     _handleSelection('beton', Bolum12Content.betonOptionC),
               ),
-              SelectableCard(
-                choice: Bolum12Content.betonOptionD,
-                isSelected:
-                    _model.betonPaspayi?.label ==
-                    Bolum12Content.betonOptionD.label,
-                onTap: () =>
-                    _handleSelection('beton', Bolum12Content.betonOptionD),
-              ),
             ],
           ),
         ),

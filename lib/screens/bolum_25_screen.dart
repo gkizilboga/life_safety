@@ -106,6 +106,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildGuidanceBanner(),
           if (_isCommercial) _buildCommercialWarning(),
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 12),
@@ -133,6 +134,35 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
               Bolum25Content.basKurtarmaOptionB,
             ],
             _model.basKurtarma,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGuidanceBanner() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.info_outline_rounded, color: Colors.blue.shade800, size: 28),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              "Binanızda dairesel merdiven olduğunu belirttiğiniz için bu bölüm açılmıştır. Eğer binanızda dairesel merdiven yok ise lütfen Bölüm-20'ye dönerek merdiven sayılarını güncelleyin.",
+              style: TextStyle(
+                color: Colors.blue.shade900,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                height: 1.4,
+              ),
+            ),
           ),
         ],
       ),

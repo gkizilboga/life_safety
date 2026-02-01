@@ -115,6 +115,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildTicariGuidance(),
           _buildSectionTitle("Zemin Katın Baskın Kullanım Amacı"),
           TechnicalDrawingButton(
             assetPath: 'assets/images/sections/farkli_katlar_1.webp',
@@ -208,6 +209,45 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     );
   }
 
+  Widget _buildTicariGuidance() {
+    final bool hasTicari = BinaStore.instance.bolum6?.hasTicari ?? false;
+    if (hasTicari) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.orange.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.shade100.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.storefront_outlined, color: Colors.orange.shade800, size: 28),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              "Binanızda ticari alanlar (dükkan, işyeri, vb.) mevcutsa, lütfen Bölüm-6'ya dönerek 'Ticari Alan' seçeneğini işaretlemeniz gereklidir.",
+              style: TextStyle(
+                color: Colors.orange.shade900,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildChoiceGrid(String type, int? index, ChoiceResult? selected) {
     final bool hasTicari = BinaStore.instance.bolum6?.hasTicari ?? false;
     final choices = [
@@ -216,7 +256,11 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       Bolum10Content.ortaYogunTicari,
       Bolum10Content.yuksekYogunTicari,
       Bolum10Content.teknikDepo,
-    ].where((c) => hasTicari ? true : !c.label.contains("Ticari")).toList();
+    ].where((c) {
+      if (hasTicari) return true;
+      // Ticari olmayan durumda 10-B, 10-C ve 10-D şıklarını gizle
+      return !['10-B', '10-C', '10-D'].contains(c.label);
+    }).toList();
 
     return Column(
       children: choices

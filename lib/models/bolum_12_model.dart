@@ -62,7 +62,7 @@ class Bolum12Model {
 
     return Bolum12Model(
       celikKoruma: find(map['celikKoruma_label'], [Bolum12Content.celikOptionA, Bolum12Content.celikOptionB, Bolum12Content.celikOptionC]),
-      betonPaspayi: find(map['betonPaspayi_label'], [Bolum12Content.betonOptionA, Bolum12Content.betonOptionB, Bolum12Content.betonOptionC, Bolum12Content.betonOptionD]),
+      betonPaspayi: find(map['betonPaspayi_label'], [Bolum12Content.betonOptionA, Bolum12Content.betonOptionB, Bolum12Content.betonOptionC]),
       kolonPaspayi: (map['kolonPaspayi'] as num?)?.toDouble(),
       kirisPaspayi: (map['kirisPaspayi'] as num?)?.toDouble(),
       dosemePaspayi: (map['dosemePaspayi'] as num?)?.toDouble(),

@@ -25,27 +25,18 @@ class _Bolum4ScreenState extends State<Bolum4Screen> {
     double hBina = b3?.hBina ?? 0.0;
     double hYapi = b3?.hYapi ?? 0.0;
 
-    // Bina Yüksekliği (hBina) Sınıflandırması
+    // Yükseklik Sınıflandırması (hYapi öncelikli)
     var secilenSinif = Bolum4Content.yukseklikSinifiDusuk;
-    if (hBina >= 51.50) {
+    if (hYapi >= 51.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiMaksimum;
-    } else if (hBina >= 30.50) {
+    } else if (hYapi >= 30.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiCokYuksek;
     } else if (hBina >= 21.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiYuksek;
     }
 
-    // Yapı Yüksekliği (hYapi) Uyarısı
-    ChoiceResult? yapiUyari;
-    if (hYapi >= 51.50) {
-      yapiUyari = Bolum4Content.yapiYuksekligiMaksimum;
-    } else if (hYapi >= 30.50) {
-      yapiUyari = Bolum4Content.yapiYuksekligiUyari;
-    }
-
     Bolum4Model model = Bolum4Model(
       binaYukseklikSinifi: secilenSinif,
-      yapiYuksekligiUyarisi: yapiUyari,
       hesaplananBinaYuksekligi: hBina,
       hesaplananYapiYuksekligi: hYapi,
     );

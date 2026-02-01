@@ -429,37 +429,51 @@ class BinaStore {
         return _bolum2?.secim;
       case 3:
         if (_bolum3 == null) return null;
+        final m3 = _bolum3!;
+        String report;
+        if (m3.yukseklikBilinmiyor) {
+          report = Bolum3Content.bilinmiyor.reportText;
+        } else {
+          String katBilgisi =
+              "Zemin: ${m3.zeminYuksekligi}m, Normal: ${m3.normalYuksekligi}m";
+          if ((m3.bodrumKatSayisi ?? 0) > 0) {
+            katBilgisi += ", Bodrum: ${m3.bodrumYuksekligi}m";
+          }
+          report =
+              "BİLGİ: Bina yükseklik analizi beyan edilen değerler üzerinden yapılmıştır. ($katBilgisi)";
+        }
+
+        // Add calculated totals as a clear summary
+        report +=
+            "\n\nBina Yüksekliği (hBina): ${m3.hBina?.toStringAsFixed(2)} m\n"
+            "Yapı Yüksekliği (hYapi): ${m3.hYapi?.toStringAsFixed(2)} m";
+
         return ChoiceResult(
           label: "3",
-          uiTitle:
-              "hBina: ${_bolum3?.hBina?.toStringAsFixed(2)}m | hYapi: ${_bolum3?.hYapi?.toStringAsFixed(2)}m",
-          uiSubtitle: "",
-          reportText:
-              " BİLGİ: Bina Yüksekliği (hBina): ${_bolum3?.hBina?.toStringAsFixed(2)} m, Yapı Yüksekliği (hYapi): ${_bolum3?.hYapi?.toStringAsFixed(2)} m.",
+          uiTitle: "Bina ve Yapı Yüksekliği",
+          uiSubtitle:
+              "hBina: ${m3.hBina?.toStringAsFixed(2)}m | hYapi: ${m3.hYapi?.toStringAsFixed(2)}m",
+          reportText: report,
         );
       case 4:
         return _bolum4?.binaYukseklikSinifi;
       case 5:
         if (_bolum5 == null) return null;
         final m = _bolum5!;
-        String report = "";
+        List<String> parts = [];
         if (m.tabanAlani != null)
-          report +=
-              " BİLGİ: ${Bolum5Content.oturumAlani.reportText}${m.tabanAlani} m²\n";
+          parts.add("Zemin Kat (Taban) Alanı: ${m.tabanAlani} m²");
         if (m.normalKatAlani != null)
-          report +=
-              " BİLGİ: ${Bolum5Content.normalKatAlani.reportText}${m.normalKatAlani} m²\n";
+          parts.add("Normal Kat Alanı: ${m.normalKatAlani} m²");
         if (m.bodrumKatAlani != null && m.bodrumKatAlani! > 0)
-          report +=
-              " BİLGİ: ${Bolum5Content.bodrumKatAlani.reportText}${m.bodrumKatAlani} m²\n";
-        report +=
-            " BİLGİ: ${Bolum5Content.toplamInsaat.reportText}${m.toplamInsaatAlani} m²";
+          parts.add("Bodrum Kat Alanı: ${m.bodrumKatAlani} m²");
+        parts.add("Toplam İnşaat Alanı: ${m.toplamInsaatAlani} m²");
 
         return ChoiceResult(
           label: "5",
           uiTitle: "${m.toplamInsaatAlani} m²",
           uiSubtitle: "",
-          reportText: report.trim(),
+          reportText: "BİLGİ: ${parts.join('\n')}",
         );
       case 6:
         return _bolum6?.isSadeceKonut == true
@@ -519,46 +533,61 @@ class BinaStore {
         return _bolum9?.secim;
       case 10:
         if (_bolum10 == null) return null;
-        String fullReport = "";
+        List<String> reportParts = [];
         final m10 = _bolum10!;
+        
+        // Zemin Kat
         if (m10.zemin != null) {
-          fullReport += "Zemin Kat Kullanımı: ${m10.zemin!.uiTitle}\n";
+          reportParts.add("Zemin Kat Kullanımı: ${m10.zemin!.uiTitle}");
         }
-        if (m10.bodrumlar.isNotEmpty) {
-          final bUsages = m10.bodrumlar
-              .where((c) => c != null)
-              .map((c) => c!.uiTitle)
-              .toList();
-          if (bUsages.isNotEmpty) {
-            fullReport += "Bodrum Katlar: ${bUsages.join(', ')}.\n";
-          }
-        }
+        
+        // Normal Katlar
         if (m10.normaller.isNotEmpty) {
           final nUsages = m10.normaller
               .where((c) => c != null)
               .map((c) => c!.uiTitle)
               .toList();
           if (nUsages.isNotEmpty) {
-            if (nUsages.every((u) => u == nUsages[0])) {
-              fullReport += "Normal Katlar: ${nUsages[0]}.\n";
+            if (nUsages.toSet().length == 1) {
+              // Tüm normal katlar aynı kullanım amacına sahip
+              reportParts.add("Normal Katlar (${nUsages.length} adet): ${nUsages[0]}");
             } else {
-              List<String> nList = [];
+              // Farklı kullanım amaçları var, her birini tek tek yaz
               for (int i = 0; i < m10.normaller.length; i++) {
                 if (m10.normaller[i] != null) {
-                  nList.add(
-                    "${i + 1}.Normal Kat: ${m10.normaller[i]!.uiTitle}",
-                  );
+                  reportParts.add("${i + 1}. Normal Kat: ${m10.normaller[i]!.uiTitle}");
                 }
               }
-              fullReport += "${nList.join(', ')}.\n";
             }
           }
         }
+        
+        // Bodrum Katlar
+        if (m10.bodrumlar.isNotEmpty) {
+          final bUsages = m10.bodrumlar
+              .where((c) => c != null)
+              .map((c) => c!.uiTitle)
+              .toList();
+          if (bUsages.isNotEmpty) {
+            if (bUsages.toSet().length == 1) {
+              // Tüm bodrum katlar aynı kullanım amacına sahip
+              reportParts.add("Bodrum Katlar (${bUsages.length} adet): ${bUsages[0]}");
+            } else {
+              // Farklı kullanım amaçları var, her birini tek tek yaz
+              for (int i = 0; i < m10.bodrumlar.length; i++) {
+                if (m10.bodrumlar[i] != null) {
+                  reportParts.add("${i + 1}. Bodrum Kat: ${m10.bodrumlar[i]!.uiTitle}");
+                }
+              }
+            }
+          }
+        }
+        
         return ChoiceResult(
           label: "10",
           uiTitle: "Kat Kullanım Amaçları",
           uiSubtitle: "",
-          reportText: " BİLGİ:\n${fullReport.trim()}",
+          reportText: "BİLGİ: ${reportParts.join('\n')}",
         );
       case 11:
         return _bolum11?.mesafe;
@@ -566,11 +595,40 @@ class BinaStore {
         return _bolum12?.secim;
       case 13:
         if (_bolum13 == null) return null;
+        final m13 = _bolum13!;
+        List<String> parts = [];
+        
+        // Kapı Dayanımları
+        if (m13.otoparkKapi != null) parts.add("Otopark Kapısı: ${m13.otoparkKapi!.reportText}");
+        if (m13.kazanKapi != null) parts.add("Kazan Dairesi Kapısı: ${m13.kazanKapi!.reportText}");
+        if (m13.asansorKapi != null) parts.add("Asansör Makine Dairesi Kapısı: ${m13.asansorKapi!.reportText}");
+        if (m13.jeneratorKapi != null) parts.add("Jeneratör Odası Kapısı: ${m13.jeneratorKapi!.reportText}");
+        if (m13.elektrikKapi != null) parts.add("Elektrik/Pano Odası Kapısı: ${m13.elektrikKapi!.reportText}");
+        if (m13.trafoKapi != null) parts.add("Trafo Merkezi Kapısı: ${m13.trafoKapi!.reportText}");
+        if (m13.depoKapi != null) parts.add("Depo Alanı Kapısı: ${m13.depoKapi!.reportText}");
+        if (m13.copKapi != null) parts.add("Çöp Odası Kapısı: ${m13.copKapi!.reportText}");
+        if (m13.ortakDuvar != null) parts.add("Ortak Duvar Yangın Dayanımı: ${m13.ortakDuvar!.reportText}");
+        if (m13.ticariKapi != null) parts.add("Ticari Alan Kapısı: ${m13.ticariKapi!.reportText}");
+        
+        // Duman Tahliye Sistemleri
+        if (m13.otoparkAlan != null) parts.add("Otopark Duman Tahliyesi: ${m13.otoparkAlan!.reportText}");
+        if (m13.kazanAlan != null) parts.add("Kazan Dairesi Duman Tahliyesi: ${m13.kazanAlan!.reportText}");
+        if (m13.siginakAlan != null) parts.add("Sığınak Duman Tahliyesi: ${m13.siginakAlan!.reportText}");
+        
+        if (parts.isEmpty) {
+          return ChoiceResult(
+            label: "13",
+            uiTitle: "Yangın Kompartımanları",
+            uiSubtitle: "",
+            reportText: "BİLGİ: Binada özel teknik hacim bulunmadığından bu bölüm değerlendirme kapsamı dışındadır.",
+          );
+        }
+        
         return ChoiceResult(
           label: "13",
-          uiTitle: "Aktif Havalandırma Sistemleri",
+          uiTitle: "Yangın Kompartımanları ve Kapı Dayanımları",
           uiSubtitle: "",
-          reportText: "Duman tahliye sistemleri analizi.",
+          reportText: parts.join('\n\n'),
         );
       case 14:
         return _bolum14?.secim;

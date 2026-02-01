@@ -198,14 +198,29 @@ class ReportEngine {
       }
     }
 
-    // Bölüm 13: Aktif Sistemler (Kazan, Otopark, Sığınak vb. duman tahliyesi)
+    // Bölüm 13: Yangın Kompartımanları, Kapı Dayanımları ve Duman Tahliye Sistemleri
     if (id == 13) {
       final b13 = s.bolum13;
       if (b13 != null) {
         List<String> parts = [];
-        if (b13.otoparkAlan != null) parts.add(b13.otoparkAlan!.reportText);
-        if (b13.kazanAlan != null) parts.add(b13.kazanAlan!.reportText);
-        if (b13.siginakAlan != null) parts.add(b13.siginakAlan!.reportText);
+        
+        // Kapı Dayanımları
+        if (b13.otoparkKapi != null) parts.add("Otopark Kapısı: ${b13.otoparkKapi!.reportText}");
+        if (b13.kazanKapi != null) parts.add("Kazan Dairesi Kapısı: ${b13.kazanKapi!.reportText}");
+        if (b13.asansorKapi != null) parts.add("Asansör Makine Dairesi Kapısı: ${b13.asansorKapi!.reportText}");
+        if (b13.jeneratorKapi != null) parts.add("Jeneratör Odası Kapısı: ${b13.jeneratorKapi!.reportText}");
+        if (b13.elektrikKapi != null) parts.add("Elektrik/Pano Odası Kapısı: ${b13.elektrikKapi!.reportText}");
+        if (b13.trafoKapi != null) parts.add("Trafo Merkezi Kapısı: ${b13.trafoKapi!.reportText}");
+        if (b13.depoKapi != null) parts.add("Depo Alanı Kapısı: ${b13.depoKapi!.reportText}");
+        if (b13.copKapi != null) parts.add("Çöp Odası Kapısı: ${b13.copKapi!.reportText}");
+        if (b13.ortakDuvar != null) parts.add("Ortak Duvar Yangın Dayanımı: ${b13.ortakDuvar!.reportText}");
+        if (b13.ticariKapi != null) parts.add("Ticari Alan Kapısı: ${b13.ticariKapi!.reportText}");
+        
+        // Duman Tahliye Sistemleri
+        if (b13.otoparkAlan != null) parts.add("Otopark Duman Tahliyesi: ${b13.otoparkAlan!.reportText}");
+        if (b13.kazanAlan != null) parts.add("Kazan Dairesi Duman Tahliyesi: ${b13.kazanAlan!.reportText}");
+        if (b13.siginakAlan != null) parts.add("Sığınak Duman Tahliyesi: ${b13.siginakAlan!.reportText}");
+        
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }

@@ -168,24 +168,16 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     double hYapi = vals['hYapi'] ?? 0.0;
 
     var secilenSinif = Bolum4Content.yukseklikSinifiDusuk;
-    if (hBina >= 51.50) {
+    if (hYapi >= 51.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiMaksimum;
-    } else if (hBina >= 30.50) {
+    } else if (hYapi >= 30.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiCokYuksek;
     } else if (hBina >= 21.50) {
       secilenSinif = Bolum4Content.yukseklikSinifiYuksek;
     }
 
-    ChoiceResult? yapiUyari;
-    if (hYapi >= 51.50) {
-      yapiUyari = Bolum4Content.yapiYuksekligiMaksimum;
-    } else if (hYapi >= 30.50) {
-      yapiUyari = Bolum4Content.yapiYuksekligiUyari;
-    }
-
     BinaStore.instance.bolum4 = Bolum4Model(
       binaYukseklikSinifi: secilenSinif,
-      yapiYuksekligiUyarisi: yapiUyari,
       hesaplananBinaYuksekligi: hBina,
       hesaplananYapiYuksekligi: hYapi,
     );

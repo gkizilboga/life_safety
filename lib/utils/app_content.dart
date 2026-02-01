@@ -85,51 +85,37 @@ class Bolum3Content {
 
 class Bolum4Content {
   static final yukseklikSinifiDusuk = ChoiceResult(
-    label: "Bina (Bodrum Hariç) < 21.50m",
+    label: "Bina < 21.5m ve Yapı < 30.5m",
     uiTitle: "YÜKSEK OLMAYAN BİNA",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Bina toplam yüksekliği 21.50 metrenin altında kaldığı için yönetmelik kapsamında YÜKSEK OLMAYAN BİNA sınıfındadır.",
+        "BİLGİ: Bina yüksekliği 21.50m ve yapı yüksekliği 30.50m sınırlarının altında kaldığı için yönetmelik kapsamında YÜKSEK OLMAYAN BİNA sınıfındadır.",
   );
 
   static final yukseklikSinifiYuksek = ChoiceResult(
-    label: "Bina (Bodrum Hariç) ≥ 21.50m",
+    label: "Bina ≥ 21.50m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Bina toplam yüksekliği 21.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
+        "BİLGİ: Bina yüksekliği 21.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
   );
 
   static final yukseklikSinifiCokYuksek = ChoiceResult(
-    label: "Bina (Bodrum Hariç) ≥ 30.50m",
+    label: "Yapı ≥ 30.50m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Bina toplam yüksekliği 30.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
+        "BİLGİ: Yapı yüksekliği 30.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
   );
 
   static final yukseklikSinifiMaksimum = ChoiceResult(
-    label: "Bina (Bodrum Hariç) ≥ 51.50m",
+    label: "Yapı ≥ 51.50m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Bina toplam yüksekliği 51.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
+        "BİLGİ: Yapı yüksekliği 51.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
   );
 
-  static final yapiYuksekligiUyari = ChoiceResult(
-    label: "Yapı (Bodrum Dahil) > 30.50m",
-    uiTitle: "YÜKSEK BİNA",
-    uiSubtitle: "",
-    reportText:
-        "BİLGİ: Yapı bina yüksekliği (bodrumlar dahil) 30.50 metreyi geçtiği için yüksek bina kriterlerine göre değerlendirilir.",
-  );
-  static final yapiYuksekligiMaksimum = ChoiceResult(
-    label: "Yapı (Bodrum Dahil) ≥ 51.50m",
-    uiTitle: "YÜKSEK BİNA",
-    uiSubtitle: "",
-    reportText:
-        "BİLGİ: Yapı bina yüksekliği (bodrumlar dahil) 51.50 metreyi geçtiği için yüksek bina kriterlerine göre değerlendirilir.",
-  );
 }
 
 class Bolum5Content {
@@ -250,8 +236,8 @@ class Bolum7Content {
 
   static final asansor = ChoiceResult(
     label: "7-3 (Asansör)",
-    uiTitle: "Normal Asansör",
-    uiSubtitle: "İnsan taşıma amaçlı (itfaiye için değil).",
+    uiTitle: "Asansör",
+    uiSubtitle: "Bina sakini veya itfaiye personeli taşıyabilen asansör",
     reportText:
         "BİLGİ: Binada asansör mevcuttur. Asansör kuyuları alevin ve dumanın üst katlara yayılmasında baca görevi gördüğünden özel önlemler alınır.",
   );
@@ -529,13 +515,6 @@ class Bolum12Content {
         "UYARI: Bina yapım tarihi 2000 yılı öncesi olduğu için paspayı ölçülerinin (demir üzerindeki beton tabakası) güncel TS 500 standartlarını karşılamama ihtimali yüksektir. Yangın anında taşıyıcı sistemin korunması için detaylı inceleme yapılmalıdır.",
   );
 
-  static final betonOptionD = ChoiceResult(
-    label: "12-D (Beton)",
-    uiTitle: "Paspayı durumunu bilmiyorum.",
-    uiSubtitle: "Beton içindeki demir koruma tabakası hakkında bilgim yok.",
-    reportText:
-        "BİLİNMİYOR: Paspayı kalınlığı bilinmediği için yapısal yangın dayanım tahmini yapılamamıştır. Uzman incelemesi tavsiye edilir.",
-  );
 
   static final ahsapOptionA = ChoiceResult(
     label: "12-A (Ahşap)",
@@ -2272,14 +2251,14 @@ class Bolum27Content {
   // 2. YÖN
   static final yonOptionA = ChoiceResult(
     label: "27-2-A",
-    uiTitle: "Dışarıya doğru (kaçış yönünde) açılıyor.",
+    uiTitle: "Hepsi dışarıya doğru (kaçış yönünde) açılıyor.",
     uiSubtitle: "Kapıyı itince açılıyor.",
     reportText: "OLUMLU: Kapı açılış yönü (kaçış yönü) doğrudur.",
   );
 
   static final yonOptionB = ChoiceResult(
     label: "27-2-B",
-    uiTitle: "İçeriye doğru açılıyor.",
+    uiTitle: "Hepsi içeriye doğru açılıyor.",
     uiSubtitle: "Kapıyı açmak için kendinize çekmeniz gerekiyor.",
     reportText:
         "UYARI: Kullanıcı yükü 50 kişiyi geçen mahallerde ve katlarda kapılar mutlaka kaçış yönüne (dışarıya) doğru açılmalıdır.",
@@ -2287,10 +2266,10 @@ class Bolum27Content {
 
   static final yonOptionC = ChoiceResult(
     label: "27-2-C",
-    uiTitle: "Döner kapı, turnike veya sürgülü.",
-    uiSubtitle: "Otomatik veya döner mekanizma.",
+    uiTitle: "Turnike, döner veya sürgülü kapı mevcut.",
+    uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Kaçış yolunda döner kapı veya sürgülü kapı kullanılamaz. Bu tip kapıların yanında mutlaka kapı kollu veya panik barlı normal kapı bulunmalıdır. Turnikeler varsa ve yangın anında serbest kalmıyorsa büyük risk oluşturur.",
+        "KRİTİK RİSK: Kaçış yolunda döner kapı veya sürgülü kapı kullanılamaz. Bu tip kapıların yanında mutlaka kollu veya panik barlı normal kapı bulunmalıdır. Turnikeler varsa ve yangın anında serbest kalmıyorsa kaçış yolu olarak kullanılamaz.",
   );
 
   static final yonOptionD = ChoiceResult(

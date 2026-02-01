@@ -18,7 +18,8 @@ class Bolum8Screen extends StatefulWidget {
 
 class _Bolum8ScreenState extends State<Bolum8Screen> {
   Bolum8Model _model = Bolum8Model();
-  bool _isLockedToBitisik = false;
+  bool _isLocked = false;
+  String _lockReason = "";
 
   @override
   void initState() {
@@ -30,15 +31,19 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
       _model = existing;
     }
 
-    // 2. Check if "Ortak Duvar" was selected in Section 7
+    // 2. Check Section 7 for dynamic locking
     final b7 = BinaStore.instance.bolum7;
-    if (b7 != null && b7.hasDuvar) {
-      _isLockedToBitisik = true;
-      _model = _model.copyWith(secim: Bolum8Content.bitisikNizam);
+    if (b7 != null) {
+      _isLocked = true;
+      if (b7.hasDuvar) {
+        _lockReason = "Bölüm-7'de 'Ortak Duvar' işaretlediğiniz için bu bölüm otomatik olarak 'Bitişik Nizam' olarak seçilmiştir.";
+        _model = _model.copyWith(secim: Bolum8Content.bitisikNizam);
+      } else {
+        _lockReason = "Bölüm-7'de 'Ortak Duvar' işaretlemediğiniz için bu bölüm otomatik olarak 'Ayrık Nizam' olarak seçilmiştir.";
+        _model = _model.copyWith(secim: Bolum8Content.ayrikNizam);
+      }
     } else {
-      _isLockedToBitisik = false;
-      // If was locked before but Section 7 changed, we keep the bitisik choice but unlock it
-      // unless user wants to change it.
+      _isLocked = false;
     }
   }
 
@@ -68,7 +73,7 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Warning banner if locked due to Ortak Duvar selection
-          if (_isLockedToBitisik)
+          if (_isLocked)
             Container(
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(12),
@@ -80,18 +85,29 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
               child: Row(
                 children: [
                   const Icon(
-                    Icons.warning_amber,
+                    Icons.lock_person_rounded, // Improved lock icon
                     color: Color(0xFFE65100),
                     size: 24,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text(
-                      "Bir önceki bölümde 'Ortak Duvar' işaretlediğiniz için bu bölüm 'Bitişik Nizam' olarak kilitlenmiştir. Değiştirmek isterseniz lütfen Bölüm-7'ye dönün.",
-                      style: TextStyle(
-                        color: Colors.orange.shade900,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: Colors.orange.shade900,
+                          fontSize: 12,
+                          fontFamily: 'Roboto', // Match app font
+                        ),
+                        children: [
+                          TextSpan(
+                            text: "$_lockReason\n\n",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const TextSpan(
+                            text: "Değişiklik yapmak istiyorsanız lütfen Bölüm-7'ye giderek 'Ortak Duvar' seçeneğini güncelleyin.",
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -115,10 +131,10 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                   choice: Bolum8Content.ayrikNizam,
                   isSelected:
                       _model.secim?.label == Bolum8Content.ayrikNizam.label,
-                  onTap: _isLockedToBitisik
+                  onTap: _isLocked
                       ? null
                       : () => _handleSelection(Bolum8Content.ayrikNizam),
-                  isDisabled: _isLockedToBitisik,
+                  isDisabled: _isLocked && _model.secim?.label != Bolum8Content.ayrikNizam.label,
                 ),
                 TechnicalDrawingButton(
                   assetPath: AppAssets.section8Ayrik,
@@ -133,9 +149,10 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                   choice: Bolum8Content.bitisikNizam,
                   isSelected:
                       _model.secim?.label == Bolum8Content.bitisikNizam.label,
-                  onTap: _isLockedToBitisik
+                  onTap: _isLocked
                       ? null
                       : () => _handleSelection(Bolum8Content.bitisikNizam),
+                  isDisabled: _isLocked && _model.secim?.label != Bolum8Content.bitisikNizam.label,
                 ),
                 TechnicalDrawingButton(
                   assetPath: AppAssets.section8Bitisik,
