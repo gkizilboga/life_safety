@@ -305,7 +305,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                       border: OutlineInputBorder(),
                       hintText: "Örn: 45",
                       suffixText: "m",
-                      helperText: "Min: 5m, Max: 200m",
+                      helperText: "En fazla 200m",
                     ),
                     validator: (value) => InputValidator.validateNumber(
                       value,

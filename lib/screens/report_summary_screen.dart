@@ -20,12 +20,12 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   late List<String> _yghReasons;
   late Map<ReportModule, double> _moduleScores;
   late bool _isPremium;
-  
+
   Color _getUiRiskColor(String text) {
     if (text.contains('KRİTİK RİSK')) return const Color(0xFFEF5350); // Red
-    if (text.contains('UYARI')) return const Color(0xFFFFD600);      // Yellow (A700)
-    if (text.contains('OLUMLU')) return const Color(0xFF66BB6A);     // Green
-    if (text.contains('BİLGİ')) return const Color(0xFF42A5F5);      // Blue
+    if (text.contains('UYARI')) return const Color(0xFFFFD600); // Yellow (A700)
+    if (text.contains('OLUMLU')) return const Color(0xFF66BB6A); // Green
+    if (text.contains('BİLGİ')) return const Color(0xFF42A5F5); // Blue
     if (text.contains('BİLİNMİYOR')) return Colors.grey;
     return Colors.grey;
   }
@@ -470,15 +470,11 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
 
   Widget _buildSectionTile(BuildContext context, int id) {
     final summary = ReportEngine.getSectionSummary(id);
+    final fullReport = ReportEngine.getSectionFullReport(id);
     final riskColor = _getUiRiskColor(fullReport);
     return ListTile(
-      onTap: () => _showDetailSheet(
-        context,
-        id,
-        summary,
-        fullReport,
-        riskColor,
-      ),
+      onTap: () =>
+          _showDetailSheet(context, id, summary, fullReport, riskColor),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       title: Text(
         "Bölüm $id",

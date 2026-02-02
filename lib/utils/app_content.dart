@@ -115,7 +115,6 @@ class Bolum4Content {
     reportText:
         "BİLGİ: Yapı yüksekliği 51.50 metre ve üzerinde olduğu için yönetmelik kapsamında YÜKSEK BİNA sınıfındadır.",
   );
-
 }
 
 class Bolum5Content {
@@ -514,7 +513,6 @@ class Bolum12Content {
     reportText:
         "UYARI: Bina yapım tarihi 2000 yılı öncesi olduğu için paspayı ölçülerinin (demir üzerindeki beton tabakası) güncel TS 500 standartlarını karşılamama ihtimali yüksektir. Yangın anında taşıyıcı sistemin korunması için detaylı inceleme yapılmalıdır.",
   );
-
 
   static final ahsapOptionA = ChoiceResult(
     label: "12-A (Ahşap)",
@@ -1129,7 +1127,7 @@ class Bolum16Content {
   static final sagirYuzeyOptionA = ChoiceResult(
     label: "16-2-A (Sağır Yüzey)",
     uiTitle:
-        "Cephede en az 100 cm yüksekliğinde yangın dayanımlı yüzey (veya sistem) var.",
+        "EVET, cephede en az 100 cm yüksekliğinde yangın dayanımlı yüzey (veya sistem) var.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Katlar arasındaki yangın dayanıklı yüzey (veya sistem) yüksekliği 100 cm şartını sağlamaktadır. Bu mesafe, alevin bir kattan diğerine sıçramasını zorlaştırır. Yönetmelik şartlarını sağlayıp sağlamadığına yanmaz yüzeyin yerinde kontrol edilmesi ile karar verilir.",
@@ -1138,7 +1136,7 @@ class Bolum16Content {
   static final sagirYuzeyOptionB = ChoiceResult(
     label: "16-2-B (Sağır Yüzey)",
     uiTitle:
-        "Cephede en az 100 cm yüksekliğinde yangın dayanımlı yüzey (veya sistem) yok.",
+        "HAYIR, cephede en az 100 cm yüksekliğinde yangın dayanımlı yüzey (veya sistem) yok.",
     uiSubtitle:
         "Pencereler birbirine çok yakın, aradaki duvar mesafesi 1 metreden az.",
     reportText:
@@ -1147,10 +1145,10 @@ class Bolum16Content {
 
   static final sagirYuzeyOptionC = ChoiceResult(
     label: "16-2-C (Sağır Yüzey)",
-    uiTitle: "Bu detay hakkında hiç fikrim yok.",
+    uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Katlar arasındaki yangına dayanıklı yüzey yüksekliği bilinmiyor. 100 cm'den az ise yangın dikeyde hızla yayılabilir.",
+        "BİLİNMİYOR: Katlar arasındaki yangına dayanıklı yüzey yüksekliği bilinmiyor. 100 cm'den az ise yangın dikeyde hızla yayılabilir.",
   );
 
   static final bitisikOptionA = ChoiceResult(
@@ -1190,7 +1188,7 @@ class Bolum17Content {
   static final kaplamaOptionA = ChoiceResult(
     label: "17-1-A (Kaplama)",
     uiTitle: "Kiremit, metal kenet, beton, taş türünde yanmaz malzeme.",
-    uiSubtitle: "Çatı yüzeyi yanmaz malzemeyle kaplanmıştır.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Çatı kaplamasında hiç yanmaz (A1 sınıfı) malzeme kullanılmıştır. Bu durum, dışarıdan gelebilecek kıvılcımlara karşı koruma sağlar.",
   );
@@ -1198,8 +1196,7 @@ class Bolum17Content {
   static final kaplamaOptionB = ChoiceResult(
     label: "17-1-B (Kaplama)",
     uiTitle: "Shingle, Onduline, Membran, vb.",
-    uiSubtitle:
-        "Çatı yüzeyinde petrol türevi (bitümlü) örtüler kullanılmıştır.",
+    uiSubtitle: "Çatı yüzeyinde petrol türevi (bitümlü) örtü.",
     reportText:
         "UYARI: Çatıda kullanılan bitümlü örtüler (Shingle, Membran, vb.) yanıcı özellik gösterebilir. Bu malzemelerin 'BROOF'özellikli (dış yangına karşı dayanıklı) olması gerekmektedir. Ürünün test raporu incelenmelidr.",
   );
@@ -1233,7 +1230,7 @@ class Bolum17Content {
   static final kaplamaOptionF = ChoiceResult(
     label: "17-1-F (Kaplama)",
     uiTitle: "Çatı hakkında bilgim yok.",
-    uiSubtitle: "Çatının en üstünde ne olduğunu göremiyorum.",
+    uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Çatı kaplama malzemesi bilinmiyor. Yanıcı bir malzeme (shingle, plastik vb.) kullanıldıysa tüm bina risk altındadır. Uzman Görüşü alınması tavsiye edilir.",
   );
@@ -1253,7 +1250,7 @@ class Bolum17Content {
         "Taşıyıcılar ve altındaki ısı yalıtım malzemesi yanıcı ürünlerdir.",
     uiSubtitle: "Ahşap, XPS, EPS, Strafor vb. malzemeler.",
     reportText:
-        "(Yüksek Bina İse) KRİTİK RİSK: Yüksek binalarda ahşap çatı kullanılması yasaktır.<br>(Alçak Bina İse) UYARI: Ahşap çatılarda yanıcı köpük vb. kullanımı risklidir.",
+        "(Yüksek Bina İse) KRİTİK RİSK: Yüksek binalarda ahşap çatı kullanılması yasaktır.(Alçak Bina İse) UYARI: Ahşap çatılarda yanıcı köpük vb. kullanımı risklidir.",
   );
 
   static final iskeletOptionC = ChoiceResult(
@@ -1417,14 +1414,14 @@ class Bolum19Content {
   static final levhaOptionA = ChoiceResult(
     label: "19-2-A",
     uiTitle:
-        "Evet, tüm çıkışlarda ledli, ışıklı acil yönlendirme işaretleri var.",
+        "EVET, tüm çıkışlarda ledli, ışıklı acil yönlendirme işaretleri var.",
     uiSubtitle: "Yeterince yönlendirme var.",
     reportText: "OLUMLU: Acil durum yönlendirme işaretleri mevcuttur.",
   );
 
   static final levhaOptionB = ChoiceResult(
     label: "19-2-B",
-    uiTitle: "Hayır, hiçbir yerde yönlendirme levhası yok.",
+    uiTitle: "HAYIR, hiçbir yerde yönlendirme levhası yok.",
     uiSubtitle: "Karanlıkta veya dumanlı ortamda çıkış bulunması güçtür.",
     reportText:
         "KRİTİK RİSK: Binada acil durum yönlendirme işaretleri bulunmamaktadır.",
@@ -1441,7 +1438,7 @@ class Bolum19Content {
 
   static final yanilticiOptionA = ChoiceResult(
     label: "19-3-A",
-    uiTitle: "Hayır, yanıltıcı kapı yok, çıkış kapısını kolayca bulabilirim.",
+    uiTitle: "HAYIR, yanıltıcı kapı yok, çıkış kapısını kolayca bulabilirim.",
     uiSubtitle: "Tüm kapılar amacına uygun.",
     reportText:
         "OLUMLU: Kaçış yollarında kullanıcıyı yanıltacak kapı bulunmamaktadır.",
@@ -1450,7 +1447,7 @@ class Bolum19Content {
   static final yanilticiOptionB = ChoiceResult(
     label: "19-3-B",
     uiTitle:
-        "Evet, yanıltıcı kapı var, çıkış kapısını bulmakta güçlük çekebilirim.",
+        "EVET, yanıltıcı kapı var, çıkış kapısını bulmakta güçlük çekebilirim.",
     uiSubtitle: "Depo/Elektrik odası kapıları merdiven kapısına benziyor.",
     reportText:
         "UYARI: Kaçış yollarında yangın merdiveni ile karıştırılabilecek yanıltıcı kapılar mevcuttur.",
@@ -1458,7 +1455,7 @@ class Bolum19Content {
 
   static final etiketOptionA = ChoiceResult(
     label: "19-3-ALT-A",
-    uiTitle: "Evet, 'ÇIKIŞ DEĞİLDİR'veya mahalin adı yazıyor.",
+    uiTitle: "EVET, 'ÇIKIŞ DEĞİLDİR'veya mahalin adı yazıyor.",
     uiSubtitle: "İşaretleme yapılmış.",
     reportText:
         "OLUMLU: Yanıltıcı kapılar üzerinde gerekli uyarı levhaları mevcuttur.",
@@ -1466,7 +1463,7 @@ class Bolum19Content {
 
   static final etiketOptionB = ChoiceResult(
     label: "19-3-ALT-B",
-    uiTitle: "Hayır, herhangi bir yazı veya levha yok.",
+    uiTitle: "HAYIR, herhangi bir yazı veya levha yok.",
     uiSubtitle: "",
     reportText:
         "UYARI: Yanıltıcı kapılar üzerinde uyarı levhası bulunmamaktadır.",
@@ -1475,7 +1472,7 @@ class Bolum19Content {
   static final etiketOptionC = ChoiceResult(
     label: "19-3-ALT-C",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "Konu hakkında bilgim yok.",
+    uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Yanıltıcı kapıların işaretleme durumu tespit edilememiştir.",
   );
@@ -3142,8 +3139,7 @@ class Bolum34Content {
   static final zeminOptionA = ChoiceResult(
     label: "34-1-A (Zemin)",
     uiTitle: "Evet, var.",
-    uiSubtitle:
-        "Müşteriler bina girişini kullanmıyor, direkt dükkan kapısından çıkabiliyor.",
+    uiSubtitle: "Müşteriler direkt dükkan kapısından çıkabiliyor.",
     reportText:
         "OLUMLU: Zemin kattaki ticari alanların kendi bağımsız çıkışları olduğu için, bina ana girişine ve merdivenlerine ek yük getirmezler.",
   );
@@ -3151,7 +3147,7 @@ class Bolum34Content {
   static final zeminOptionB = ChoiceResult(
     label: "34-1-B (Zemin)",
     uiTitle: "Hayır, yok.",
-    uiSubtitle: "Dükkan giriş çıkışları bina koridorunun içinden sağlanıyor.",
+    uiSubtitle: "Müşterilerin çıkışları bina koridorunun içinden sağlanıyor.",
     reportText:
         "UYARI: Ticari alanların bina koridoruna açılması, kaçış yolundaki yoğunluğu artırır. Bina ana giriş kapısının genişliği bu ekstra yükü kaldıracak kapasitede olmalıdır.",
   );
@@ -3159,7 +3155,7 @@ class Bolum34Content {
   static final zeminOptionC = ChoiceResult(
     label: "34-1-C (Zemin)",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "Dükkan giriş çıkışlarının nasıl olduğunu bilmiyorum.",
+    uiSubtitle: "Dükkan giriş-çıkışlarının nasıl olduğunu bilmiyorum.",
     reportText:
         "BİLİNMİYOR: Ticari alanların bina koridoruna açılması, kaçış yolundaki yoğunluğu artırır. Uzman görüşü alınması tavsiye edilir.",
   );
@@ -3186,6 +3182,31 @@ class Bolum34Content {
     uiSubtitle: "Bodrum çıkışlarını bilmiyorum.",
     reportText:
         "BİLİNMİYOR: Ticari alanların bina koridoruna açılması, kaçış yolundaki yoğunluğu artırır. Uzman görüşü alınması tavsiye edilir.",
+  );
+
+  // --- NORMAL KAT TİCARİ ALAN ÇIKIŞLARI ---
+  static final normalOptionA = ChoiceResult(
+    label: "34-3-A (Normal)",
+    uiTitle: "Evet, var.",
+    uiSubtitle: "Bina ortak merdivenini kullanmak zorunda değiller.",
+    reportText:
+        "OLUMLU: Normal katlardaki ticari kullanımın kendine ait bağımsız kaçış yolu olması büyük avantajdır. Bina merdivenleri sadece konut sakinlerine kalır.",
+  );
+
+  static final normalOptionB = ChoiceResult(
+    label: "34-3-B (Normal)",
+    uiTitle: "Hayır, yok.",
+    uiSubtitle: "Bina ortak merdivenini kullanıyorlar.",
+    reportText:
+        "UYARI: Normal katlardaki ticari alanın (Örn: Ofis, kurs merkezi, spor salonu vb.) kalabalığı, bina sakinleriyle aynı merdiveni kullanacaktır. Bu durum kaçış anında merdivende tıkanıklığa yol açabilir.",
+  );
+
+  static final normalOptionC = ChoiceResult(
+    label: "34-3-C (Normal)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "Normal kat çıkışlarını bilmiyorum.",
+    reportText:
+        "BİLİNMİYOR: Normal katlardaki ticari alanların çıkış durumu bilinmiyor. Uzman görüşü alınması tavsiye edilir.",
   );
 }
 

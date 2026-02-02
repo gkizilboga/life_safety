@@ -191,6 +191,22 @@ class ReportEngine {
     // Özel Mesaj Override'ları (Sadece gerektiğinde, yoksa AppContent'i kullanır)
     // Ancak bu override metinlerinin de AppContent standardına uyması (Emoji + Kelime + Mesaj) gerekir.
 
+    // Bölüm 3: Kat Adetleri
+    if (id == 3) {
+      final b3 = s.bolum3;
+      if (b3 != null) {
+        List<String> parts = [];
+        parts.add("Zemin Kat: 1 adet");
+        if ((b3.normalKatSayisi ?? 0) > 0) {
+          parts.add("Normal Kat: ${b3.normalKatSayisi} adet");
+        }
+        if ((b3.bodrumKatSayisi ?? 0) > 0) {
+          parts.add("Bodrum Kat: ${b3.bodrumKatSayisi} adet");
+        }
+        if (parts.isNotEmpty) return parts.join("\n\n");
+      }
+    }
+
     // Bölüm 12 override
     if (id == 12 && res.label.contains("12-B (Çelik)")) {
       if ((s.bolum5?.toplamInsaatAlani ?? 0.0) < 5000) {
@@ -203,24 +219,45 @@ class ReportEngine {
       final b13 = s.bolum13;
       if (b13 != null) {
         List<String> parts = [];
-        
+
         // Kapı Dayanımları
-        if (b13.otoparkKapi != null) parts.add("Otopark Kapısı: ${b13.otoparkKapi!.reportText}");
-        if (b13.kazanKapi != null) parts.add("Kazan Dairesi Kapısı: ${b13.kazanKapi!.reportText}");
-        if (b13.asansorKapi != null) parts.add("Asansör Makine Dairesi Kapısı: ${b13.asansorKapi!.reportText}");
-        if (b13.jeneratorKapi != null) parts.add("Jeneratör Odası Kapısı: ${b13.jeneratorKapi!.reportText}");
-        if (b13.elektrikKapi != null) parts.add("Elektrik/Pano Odası Kapısı: ${b13.elektrikKapi!.reportText}");
-        if (b13.trafoKapi != null) parts.add("Trafo Merkezi Kapısı: ${b13.trafoKapi!.reportText}");
-        if (b13.depoKapi != null) parts.add("Depo Alanı Kapısı: ${b13.depoKapi!.reportText}");
-        if (b13.copKapi != null) parts.add("Çöp Odası Kapısı: ${b13.copKapi!.reportText}");
-        if (b13.ortakDuvar != null) parts.add("Ortak Duvar Yangın Dayanımı: ${b13.ortakDuvar!.reportText}");
-        if (b13.ticariKapi != null) parts.add("Ticari Alan Kapısı: ${b13.ticariKapi!.reportText}");
-        
+        if (b13.otoparkKapi != null)
+          parts.add("Otopark Kapısı: ${b13.otoparkKapi!.reportText}");
+        if (b13.kazanKapi != null)
+          parts.add("Kazan Dairesi Kapısı: ${b13.kazanKapi!.reportText}");
+        if (b13.asansorKapi != null)
+          parts.add(
+            "Asansör Makine Dairesi Kapısı: ${b13.asansorKapi!.reportText}",
+          );
+        if (b13.jeneratorKapi != null)
+          parts.add("Jeneratör Odası Kapısı: ${b13.jeneratorKapi!.reportText}");
+        if (b13.elektrikKapi != null)
+          parts.add(
+            "Elektrik/Pano Odası Kapısı: ${b13.elektrikKapi!.reportText}",
+          );
+        if (b13.trafoKapi != null)
+          parts.add("Trafo Merkezi Kapısı: ${b13.trafoKapi!.reportText}");
+        if (b13.depoKapi != null)
+          parts.add("Depo Alanı Kapısı: ${b13.depoKapi!.reportText}");
+        if (b13.copKapi != null)
+          parts.add("Çöp Odası Kapısı: ${b13.copKapi!.reportText}");
+        if (b13.ortakDuvar != null)
+          parts.add(
+            "Ortak Duvar Yangın Dayanımı: ${b13.ortakDuvar!.reportText}",
+          );
+        if (b13.ticariKapi != null)
+          parts.add("Ticari Alan Kapısı: ${b13.ticariKapi!.reportText}");
+
         // Duman Tahliye Sistemleri
-        if (b13.otoparkAlan != null) parts.add("Otopark Duman Tahliyesi: ${b13.otoparkAlan!.reportText}");
-        if (b13.kazanAlan != null) parts.add("Kazan Dairesi Duman Tahliyesi: ${b13.kazanAlan!.reportText}");
-        if (b13.siginakAlan != null) parts.add("Sığınak Duman Tahliyesi: ${b13.siginakAlan!.reportText}");
-        
+        if (b13.otoparkAlan != null)
+          parts.add("Otopark Duman Tahliyesi: ${b13.otoparkAlan!.reportText}");
+        if (b13.kazanAlan != null)
+          parts.add(
+            "Kazan Dairesi Duman Tahliyesi: ${b13.kazanAlan!.reportText}",
+          );
+        if (b13.siginakAlan != null)
+          parts.add("Sığınak Duman Tahliyesi: ${b13.siginakAlan!.reportText}");
+
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }
@@ -323,19 +360,92 @@ class ReportEngine {
       }
     }
 
-    // Bölüm 20: Sahanlıksız Merdiven Riski
+    // Bölüm 20: Merdiven Adetleri ve Tipleri
     if (id == 20) {
-      if (s.bolum20 != null && s.bolum20!.sahanliksizMerdivenSayisi > 0) {
-        return "KRİTİK RİSK: Binada kaçış yolu olarak kabul edilemeyecek 'Sahanlıksız' merdiven(ler) tespit edilmiştir. Bu durum tahliye güvenliğini tehlikeye sokar.";
+      final b20 = s.bolum20;
+      if (b20 != null) {
+        List<String> parts = [];
+
+        // Sadece değer girilen merdiven tiplerini göster
+        if (b20.normalMerdivenSayisi > 0) {
+          parts.add("BİLGİ: Normal Merdiven: ${b20.normalMerdivenSayisi} adet");
+        }
+        if (b20.binaIciYanginMerdiveniSayisi > 0) {
+          parts.add(
+            "BİLGİ: Bina İçi Yangın Merdiveni: ${b20.binaIciYanginMerdiveniSayisi} adet",
+          );
+        }
+        if (b20.binaDisiKapaliYanginMerdiveniSayisi > 0) {
+          parts.add(
+            "BİLGİ: Bina Dışı Kapalı Yangın Merdiveni: ${b20.binaDisiKapaliYanginMerdiveniSayisi} adet",
+          );
+        }
+        if (b20.binaDisiAcikYanginMerdiveniSayisi > 0) {
+          parts.add(
+            "BİLGİ: Bina Dışı Açık Yangın Merdiveni: ${b20.binaDisiAcikYanginMerdiveniSayisi} adet",
+          );
+        }
+        if (b20.donerMerdivenSayisi > 0) {
+          parts.add("UYARI: Döner Merdiven: ${b20.donerMerdivenSayisi} adet");
+        }
+        if (b20.sahanliksizMerdivenSayisi > 0) {
+          parts.add(
+            "KRİTİK RİSK: Sahanlıksız Merdiven: ${b20.sahanliksizMerdivenSayisi} adet - Binada kaçış yolu olarak kabul edilemeyecek merdiven tespit edilmiştir.",
+          );
+        }
+
+        // Bodrum merdivenleri (bağımsız ise)
+        if (b20.isBodrumIndependent) {
+          if (b20.bodrumNormalMerdivenSayisi > 0) {
+            parts.add(
+              "BİLGİ: Bodrum Normal Merdiven: ${b20.bodrumNormalMerdivenSayisi} adet",
+            );
+          }
+          if (b20.bodrumBinaIciYanginMerdiveniSayisi > 0) {
+            parts.add(
+              "BİLGİ: Bodrum Bina İçi Yangın Merdiveni: ${b20.bodrumBinaIciYanginMerdiveniSayisi} adet",
+            );
+          }
+          if (b20.bodrumBinaDisiKapaliYanginMerdiveniSayisi > 0) {
+            parts.add(
+              "BİLGİ: Bodrum Bina Dışı Kapalı Yangın Merdiveni: ${b20.bodrumBinaDisiKapaliYanginMerdiveniSayisi} adet",
+            );
+          }
+          if (b20.bodrumBinaDisiAcikYanginMerdiveniSayisi > 0) {
+            parts.add(
+              "BİLGİ: Bodrum Bina Dışı Açık Yangın Merdiveni: ${b20.bodrumBinaDisiAcikYanginMerdiveniSayisi} adet",
+            );
+          }
+          if (b20.bodrumDonerMerdivenSayisi > 0) {
+            parts.add(
+              "UYARI: Bodrum Döner Merdiven: ${b20.bodrumDonerMerdivenSayisi} adet",
+            );
+          }
+          if (b20.bodrumSahanliksizMerdivenSayisi > 0) {
+            parts.add(
+              "KRİTİK RİSK: Bodrum Sahanlıksız Merdiven: ${b20.bodrumSahanliksizMerdivenSayisi} adet",
+            );
+          }
+        }
+
+        if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }
 
     // Bölüm 21: YGH Zorunluluğu
     if (id == 21) {
+      final b21 = s.bolum21;
       final yghReasons = evaluateYghRequirement(store: s);
-      final bool hasYgh = s.bolum21?.varlik?.label.contains("21-1-A") ?? false;
+      final bool hasYgh = b21?.varlik?.label.contains("21-1-A") ?? false;
+      final bool noYgh = b21?.varlik?.label.contains("21-1-B") ?? false;
+
       if (yghReasons.isNotEmpty && !hasYgh) {
         return "KRİTİK RİSK: Binada aşağıdaki sebeplerden dolayı Yangın Güvenlik Holü (YGH) zorunluluğu bulunmaktadır:\n\n${yghReasons.join('\n')}\n\nBinada mevcut YGH bulunmadığı beyan edilmiştir.";
+      }
+
+      // YGH yok seçildiyse ve zorunluluk yoksa BİLGİ olarak göster
+      if (noYgh && yghReasons.isEmpty) {
+        return "BİLGİ: Binada Yangın Güvenlik Holü (YGH) bulunmamaktadır. Mevcut yapı koşullarında YGH zorunluluğu tespit edilmemiştir.";
       }
     }
 
@@ -480,6 +590,7 @@ class ReportEngine {
         List<String> parts = [];
         if (b34.zemin != null) parts.add(b34.zemin!.reportText);
         if (b34.bodrum != null) parts.add(b34.bodrum!.reportText);
+        if (b34.normal != null) parts.add(b34.normal!.reportText);
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }

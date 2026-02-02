@@ -55,31 +55,6 @@ class PdfService {
     return PdfColors.red300;
   }
 
-  static pw.Widget _buildCoverInfoItem(String label, String value) {
-    return pw.Expanded(
-      child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Text(
-            label,
-            style: const pw.TextStyle(color: PdfColors.white, fontSize: 8),
-          ),
-          pw.SizedBox(height: 4),
-          pw.Text(
-            value.toUpperCase(),
-            style: pw.TextStyle(
-              color: PdfColors.white,
-              fontSize: 10,
-              fontWeight: pw.FontWeight.bold,
-            ),
-            maxLines: 2,
-            overflow: pw.TextOverflow.clip,
-          ),
-        ],
-      ),
-    );
-  }
-
   static pw.PageTheme _buildPageTheme(pw.Font ttf, pw.Font ttfBold) {
     return pw.PageTheme(
       pageFormat: PdfPageFormat.a4,
@@ -194,7 +169,9 @@ class PdfService {
                         pw.Text(
                           "%${metrics['score']}",
                           style: pw.TextStyle(
-                            color: _getScoreColorForPdf(metrics['score'] as int),
+                            color: _getScoreColorForPdf(
+                              metrics['score'] as int,
+                            ),
                             fontSize: 22,
                             fontWeight: pw.FontWeight.bold,
                           ),
@@ -205,20 +182,19 @@ class PdfService {
                           children: [
                             pw.Text(
                               "YANGIN GÜVENLİK PUANI",
-                              style: pw.TextStyle(
-                                color: softGray,
-                                fontSize: 8,
-                              ),
+                              style: pw.TextStyle(color: softGray, fontSize: 8),
                             ),
                             pw.SizedBox(height: 2),
                             pw.Text(
                               (metrics['score'] as int) > 80
                                   ? "DÜŞÜK RİSK"
                                   : (metrics['score'] as int) > 50
-                                      ? "ORTA RİSK"
-                                      : "YÜKSEK RİSK",
+                                  ? "ORTA RİSK"
+                                  : "YÜKSEK RİSK",
                               style: pw.TextStyle(
-                                color: _getScoreColorForPdf(metrics['score'] as int),
+                                color: _getScoreColorForPdf(
+                                  metrics['score'] as int,
+                                ),
                                 fontSize: 12,
                                 fontWeight: pw.FontWeight.bold,
                               ),
@@ -235,10 +211,7 @@ class PdfService {
                   pw.Center(
                     child: pw.Text(
                       subTitle,
-                      style: pw.TextStyle(
-                        color: softGray,
-                        fontSize: 12,
-                      ),
+                      style: pw.TextStyle(color: softGray, fontSize: 12),
                     ),
                   ),
               ],
@@ -248,14 +221,19 @@ class PdfService {
               // Alt Bilgi Şeridi - Koyu Lacivert
               pw.Container(
                 width: double.infinity,
-                padding: const pw.EdgeInsets.symmetric(vertical: 25, horizontal: 30),
+                padding: const pw.EdgeInsets.symmetric(
+                  vertical: 25,
+                  horizontal: 30,
+                ),
                 color: darkNavy,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     // Bina Adı
                     pw.Text(
-                      _cleanEmojis(store.currentBinaName) ?? "Bina Adı Belirtilmemiş",
+                      _cleanEmojis(store.currentBinaName).isEmpty
+                          ? "Bina Adı Belirtilmemiş"
+                          : _cleanEmojis(store.currentBinaName),
                       style: pw.TextStyle(
                         color: PdfColors.white,
                         fontSize: 12,
@@ -356,10 +334,7 @@ class PdfService {
             child: pw.Text(
               "BU BELGE, UYGULAMA İLE ÜRETİLMİŞ OLUP RESMİ BELGE NİTELİĞİ TAŞIMAZ. Islak imza ve kaşe yerine geçmez. "
               "Yasal uyarıların tamamı ve TCK sorumluluk beyanı raporun ayrılmaz parçasıdır.",
-              style: const pw.TextStyle(
-                fontSize: 5,
-                color: PdfColors.black,
-              ),
+              style: const pw.TextStyle(fontSize: 5, color: PdfColors.black),
               textAlign: pw.TextAlign.right,
             ),
           ),
@@ -371,9 +346,11 @@ class PdfService {
   // --- 1. RİSK ANALİZ RAPORU ---
   static Future<void> generateRiskAnalysisPdf() async {
     final pdf = pw.Document();
-    // Noto Sans ile Türkçe karakterler tam desteklenir
-    final ttf = await PdfGoogleFonts.notoSansRegular();
-    final ttfBold = await PdfGoogleFonts.notoSansBold();
+    // Bundle edilmiş Roboto fontları - offline çalışır, Türkçe karakterleri destekler
+    final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
+    final fontDataBold = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
+    final ttf = pw.Font.ttf(fontData);
+    final ttfBold = pw.Font.ttf(fontDataBold);
     final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 
@@ -582,9 +559,11 @@ class PdfService {
   // --- 2. AKTİF SİSTEM GEREKSİNİMLERİ RAPORU ---
   static Future<void> generateActiveSystemsPdf() async {
     final pdf = pw.Document();
-    // Noto Sans ile Türkçe karakterler tam desteklenir
-    final ttf = await PdfGoogleFonts.notoSansRegular();
-    final ttfBold = await PdfGoogleFonts.notoSansBold();
+    // Bundle edilmiş Roboto fontları - offline çalışır, Türkçe karakterleri destekler
+    final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
+    final fontDataBold = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
+    final ttf = pw.Font.ttf(fontData);
+    final ttfBold = pw.Font.ttf(fontDataBold);
     final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 

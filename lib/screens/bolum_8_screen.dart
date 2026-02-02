@@ -36,10 +36,12 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
     if (b7 != null) {
       _isLocked = true;
       if (b7.hasDuvar) {
-        _lockReason = "Bölüm-7'de 'Ortak Duvar' işaretlediğiniz için bu bölüm otomatik olarak 'Bitişik Nizam' olarak seçilmiştir.";
+        _lockReason =
+            "Bölüm-7'de 'Ortak Duvar' işaretlediğiniz için bu bölüm otomatik olarak 'Bitişik Nizam' olarak seçilmiştir.";
         _model = _model.copyWith(secim: Bolum8Content.bitisikNizam);
       } else {
-        _lockReason = "Bölüm-7'de 'Ortak Duvar' işaretlemediğiniz için bu bölüm otomatik olarak 'Ayrık Nizam' olarak seçilmiştir.";
+        _lockReason =
+            "Bölüm-7'de 'Ortak Duvar' işaretlemediğiniz için bu bölüm otomatik olarak 'Ayrık Nizam' olarak seçilmiştir.";
         _model = _model.copyWith(secim: Bolum8Content.ayrikNizam);
       }
     } else {
@@ -48,7 +50,7 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
   }
 
   void _handleSelection(ChoiceResult choice) {
-    if (_isLockedToBitisik) return; // Prevent changing if locked
+    if (_isLocked) return; // Prevent changing if locked
     setState(() {
       _model = _model.copyWith(secim: choice);
     });
@@ -104,7 +106,8 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const TextSpan(
-                            text: "Değişiklik yapmak istiyorsanız lütfen Bölüm-7'ye giderek 'Ortak Duvar' seçeneğini güncelleyin.",
+                            text:
+                                "Değişiklik yapmak istiyorsanız lütfen Bölüm-7'ye giderek 'Ortak Duvar' seçeneğini güncelleyin.",
                             style: TextStyle(fontStyle: FontStyle.italic),
                           ),
                         ],
@@ -134,7 +137,9 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                   onTap: _isLocked
                       ? null
                       : () => _handleSelection(Bolum8Content.ayrikNizam),
-                  isDisabled: _isLocked && _model.secim?.label != Bolum8Content.ayrikNizam.label,
+                  isDisabled:
+                      _isLocked &&
+                      _model.secim?.label != Bolum8Content.ayrikNizam.label,
                 ),
                 TechnicalDrawingButton(
                   assetPath: AppAssets.section8Ayrik,
@@ -152,7 +157,9 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                   onTap: _isLocked
                       ? null
                       : () => _handleSelection(Bolum8Content.bitisikNizam),
-                  isDisabled: _isLocked && _model.secim?.label != Bolum8Content.bitisikNizam.label,
+                  isDisabled:
+                      _isLocked &&
+                      _model.secim?.label != Bolum8Content.bitisikNizam.label,
                 ),
                 TechnicalDrawingButton(
                   assetPath: AppAssets.section8Bitisik,

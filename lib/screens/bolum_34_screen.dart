@@ -19,32 +19,61 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
   Bolum34Model _model = Bolum34Model();
   bool _isEligible = false;
 
+  // Dinamik bayraklar - hangi kat tiplerinde ticari alan var?
+  bool _hasTicariZemin = false;
+  bool _hasTicariBodrum = false;
+  bool _hasTicariNormal = false;
+  bool _hasBodrumKat = false; // Bina'da bodrum kat var mı?
+
   @override
   void initState() {
     super.initState();
     if (BinaStore.instance.bolum34 != null) {
       _model = BinaStore.instance.bolum34!;
     }
-    _checkEligibilityAndRedirect();
+    _checkEligibilityAndDetermineQuestions();
   }
 
-  void _checkEligibilityAndRedirect() {
+  void _checkEligibilityAndDetermineQuestions() {
+    final b3 = BinaStore.instance.bolum3;
     final b6 = BinaStore.instance.bolum6;
     final b10 = BinaStore.instance.bolum10;
+
+    // Bölüm 3'ten bodrum kat sayısını al
+    _hasBodrumKat = (b3?.bodrumKatSayisi ?? 0) > 0;
 
     // Bölüm 6'da işaretlenmiş mi?
     bool hasTicariInB6 = b6?.hasTicari ?? false;
 
-    // Bölüm 10'da herhangi bir katta ticari seçilmiş mi?
-    bool hasTicariInB10 = false;
+    // Bölüm 10'dan kat bazında ticari kullanım kontrolü
     if (b10 != null) {
-      hasTicariInB10 =
-          (b10.zemin?.label.contains("Ticari") ?? false) ||
-          (b10.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false)) ||
-          (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
+      // Zemin katta ticari var mı?
+      _hasTicariZemin = b10.zemin?.label.contains("Ticari") ?? false;
+
+      // Bodrum katlarda ticari var mı? (sadece bodrum kat varsa kontrol et)
+      if (_hasBodrumKat) {
+        _hasTicariBodrum = b10.bodrumlar.any(
+          (e) => e?.label.contains("Ticari") ?? false,
+        );
+      }
+
+      // Normal katlarda ticari var mı?
+      _hasTicariNormal = b10.normaller.any(
+        (e) => e?.label.contains("Ticari") ?? false,
+      );
     }
 
-    if (hasTicariInB6 || hasTicariInB10) {
+    // En az bir kat tipinde ticari alan varsa veya Bölüm 6'da ticari işaretlenmişse eligible
+    bool hasAnyTicari = _hasTicariZemin || _hasTicariBodrum || _hasTicariNormal;
+
+    // Bölüm 6'da ticari var ama Bölüm 10'da hiçbir katta ticari seçilmemişse,
+    // varsayılan olarak zemin kat sorusunu göster
+    if (hasTicariInB6 && !hasAnyTicari) {
+      _hasTicariZemin = true;
+      hasAnyTicari = true;
+    }
+
+    if (hasTicariInB6 || hasAnyTicari) {
       setState(() {
         _isEligible = true;
       });
@@ -67,15 +96,31 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       if (type == 'bodrum') {
         _model = _model.copyWith(bodrum: choice);
       }
+      if (type == 'normal') {
+        _model = _model.copyWith(normal: choice);
+      }
     });
   }
 
+  bool _canProceed() {
+    // Sadece gösterilen sorular için validasyon
+    if (_hasTicariZemin && _model.zemin == null) return false;
+    if (_hasTicariBodrum && _model.bodrum == null) return false;
+    if (_hasTicariNormal && _model.normal == null) return false;
+    return true;
+  }
+
   void _onNextPressed() {
-    if (_isEligible) {
-      if (_model.zemin == null)
+    if (!_canProceed()) {
+      if (_hasTicariZemin && _model.zemin == null) {
         return _showError("Lütfen zemin kat ticari çıkış durumunu seçiniz.");
-      if (_model.bodrum == null)
+      }
+      if (_hasTicariBodrum && _model.bodrum == null) {
         return _showError("Lütfen bodrum kat ticari çıkış durumunu seçiniz.");
+      }
+      if (_hasTicariNormal && _model.normal == null) {
+        return _showError("Lütfen normal kat ticari çıkış durumunu seçiniz.");
+      }
     }
 
     BinaStore.instance.bolum34 = _model;
@@ -110,21 +155,25 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  _buildSoru(
-                    "Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?",
-                    'zemin',
-                    [
-                      Bolum34Content.zeminOptionA,
-                      Bolum34Content.zeminOptionB,
-                      Bolum34Content.zeminOptionC,
-                    ],
-                    _model.zemin,
-                  ),
-
-                  if (_model.zemin != null) ...[
-                    _buildInfoNote(
-                      "Zemin kat tespiti yapıldı. Lütfen bodrum kat ticari alan çıkışlarını da kontrol ediniz.",
+                  // --- ZEMİN KAT SORUSU ---
+                  if (_hasTicariZemin)
+                    _buildSoru(
+                      "Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?",
+                      'zemin',
+                      [
+                        Bolum34Content.zeminOptionA,
+                        Bolum34Content.zeminOptionB,
+                        Bolum34Content.zeminOptionC,
+                      ],
+                      _model.zemin,
                     ),
+
+                  // --- BODRUM KAT SORUSU ---
+                  if (_hasTicariBodrum) ...[
+                    if (_hasTicariZemin && _model.zemin != null)
+                      _buildInfoNote(
+                        "Zemin kat tespiti yapıldı. Lütfen bodrum kat ticari alan çıkışlarını da kontrol ediniz.",
+                      ),
                     _buildSoru(
                       "Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?",
                       'bodrum',
@@ -134,6 +183,25 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
                         Bolum34Content.bodrumOptionC,
                       ],
                       _model.bodrum,
+                    ),
+                  ],
+
+                  // --- NORMAL KAT SORUSU ---
+                  if (_hasTicariNormal) ...[
+                    if ((_hasTicariZemin && _model.zemin != null) ||
+                        (_hasTicariBodrum && _model.bodrum != null))
+                      _buildInfoNote(
+                        "Lütfen normal katlardaki ticari alan çıkışlarını da kontrol ediniz.",
+                      ),
+                    _buildSoru(
+                      "Normal katlardaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?",
+                      'normal',
+                      [
+                        Bolum34Content.normalOptionA,
+                        Bolum34Content.normalOptionB,
+                        Bolum34Content.normalOptionC,
+                      ],
+                      _model.normal,
                     ),
                   ],
                 ],
