@@ -112,15 +112,6 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
           ? null
           : InputValidator.parseFlex(_kapasiteCtrl.text)?.toInt();
       _model = _model.copyWith(kapasite: kap);
-
-      if (!_model.kapasiteBilinmiyor &&
-          kap != null &&
-          kap > 350 &&
-          _model.kapi?.label == Bolum30Content.kapiOptionA.label) {
-        return _showError(
-          "350 kW üzerindeki kazan dairelerinde en az 2 adet çıkış kapısı zorunludur.",
-        );
-      }
     }
 
     BinaStore.instance.bolum30 = _model;
@@ -139,12 +130,6 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
           },
         ),
       ),
-    );
-  }
-
-  void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg), backgroundColor: Colors.red.shade800),
     );
   }
 

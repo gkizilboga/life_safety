@@ -55,28 +55,21 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
   }
 
   void _onNextPressed() {
-    // Bodrum sorusu sadece bodrum varsa zorunlu
-    if (_hasBodrum && _model.bodrum == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen tüm soruları yanıtlayınız.")),
-      );
-      return;
-    }
-    if (_model.yanginModu == null ||
-        _model.konum == null ||
-        _model.levha == null ||
-        _model.havalandirma == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen tüm soruları yanıtlayınız.")),
-      );
-      return;
-    }
-
     BinaStore.instance.bolum23 = _model;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum24Screen()),
     );
+  }
+
+  bool _isFormComplete() {
+    // Bodrum sorusu sadece bodrum varsa zorunlu
+    if (_hasBodrum && _model.bodrum == null) return false;
+    if (_model.yanginModu == null) return false;
+    if (_model.konum == null) return false;
+    if (_model.levha == null) return false;
+    if (_model.havalandirma == null) return false;
+    return true;
   }
 
   @override
@@ -91,7 +84,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
       title: "Normal (İnsan Taşıma) Asansör",
       subtitle: "",
       screenType: widget.runtimeType,
-      isNextEnabled: true,
+      isNextEnabled: _isFormComplete(),
       onNext: _onNextPressed,
       child: Column(
         children: [

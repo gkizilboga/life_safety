@@ -158,7 +158,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             ),
             // ALT SORU: Otopark Alanı
             _buildSoru(
-              "Otopark alanları toplamda kaç metrekaredir?",
+              "Otopark alanları toplamda kaç metrekare?",
               'otoparkAlan',
               [
                 Bolum13Content.otoparkAlanOptionA,
@@ -173,7 +173,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askKazan) ...[
             _buildSoruWithDef(
-              "Kazan dairesinin duvarları ve kapısı nasıldır?",
+              "Kazan dairesinin duvarları ve kapısı nasıl?",
               "Yangın Kompartımanı",
               AppDefinitions.yanginKompartimani,
               'kazan',
@@ -187,7 +187,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             ),
             // ALT SORU: Kazan Dairesi Alanı
             _buildSoru(
-              "Binadaki kazan dairesi kaç metrekaredir?",
+              "Binadaki kazan dairesi kaç metrekare?",
               'kazanAlan',
               [
                 Bolum13Content.kazanAlanOptionA,
@@ -207,7 +207,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askJenerator)
             _buildSoru(
-              "Jeneratör odasının duvar ve kapısı nasıldır?",
+              "Jeneratör odasının duvar ve kapısı nasıl?",
               'jenerator',
               [
                 Bolum13Content.jeneratorOptionA,
@@ -219,7 +219,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askElektrik)
             _buildSoru(
-              "Elektrik odalarının duvarları ve kapıları nasıldır?",
+              "Elektrik odasının duvarı ve kapısı nasıl?",
               'elektrik',
               [
                 Bolum13Content.elekOdasiOptionA,
@@ -230,21 +230,21 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             ),
 
           if (_askTrafo)
-            _buildSoru("Trafo odasının kapısı nasıldır?", 'trafo', [
+            _buildSoru("Trafo odasının kapısı nasıl?", 'trafo', [
               Bolum13Content.trafoOptionA,
               Bolum13Content.trafoOptionB,
               Bolum13Content.trafoOptionC,
             ], _model.trafoKapi),
 
           if (_askDepo)
-            _buildSoru("Eşya depolarının kapıları nasıldır?", 'depo', [
+            _buildSoru("Eşya deposunun kapısı nasıl?", 'depo', [
               Bolum13Content.depoOptionA,
               Bolum13Content.depoOptionB,
               Bolum13Content.depoOptionC,
             ], _model.depoKapi),
 
           if (_askCop)
-            _buildSoru("Çöp toplama odalarının kapıları nasıldır?", 'cop', [
+            _buildSoru("Çöp toplama odasının kapısı nasıl?", 'cop', [
               Bolum13Content.copOptionA,
               Bolum13Content.copOptionB,
               Bolum13Content.copOptionC,
@@ -252,16 +252,11 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           // YENİ SORU: Sığınak Alanı
           if (_askSiginak)
-            _buildSoru(
-              "Binadaki sığınak alanı kaç metrekaredir?",
-              'siginakAlan',
-              [
-                Bolum13Content.siginakAlanOptionA,
-                Bolum13Content.siginakAlanOptionB,
-                Bolum13Content.siginakAlanOptionC,
-              ],
-              _model.siginakAlan,
-            ),
+            _buildSoru("Sığınak alanı kaç metrekare?", 'siginakAlan', [
+              Bolum13Content.siginakAlanOptionA,
+              Bolum13Content.siginakAlanOptionB,
+              Bolum13Content.siginakAlanOptionC,
+            ], _model.siginakAlan),
 
           if (_askDuvar)
             _buildSoru(
@@ -277,7 +272,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askTicari)
             _buildSoru(
-              "Ticari alanlardan konut merdivenine geçiş nasıldır?",
+              "Ticari alanlardan konut merdivenine geçiş nasıl?",
               'ticari',
               [
                 Bolum13Content.ticariOptionA,

@@ -188,26 +188,11 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
           ),
 
           // ONAY KUTUSU
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blue.shade200),
-            ),
-            child: CheckboxListTile(
-              value: _isConfirmed,
-              onChanged: (val) {
-                setState(() {
-                  _isConfirmed = val ?? false;
-                });
-              },
-              title: const Text(
+          ConfirmationCheckbox(
+            value: _isConfirmed,
+            onChanged: (val) => setState(() => _isConfirmed = val ?? false),
+            text:
                 "Belirttiğim özel riskli hacimlerin binada mevcut olduğunu teyit ediyorum.",
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-              ),
-              activeColor: const Color(0xFF1A237E),
-              controlAffinity: ListTileControlAffinity.leading,
-            ),
           ),
         ],
       ),

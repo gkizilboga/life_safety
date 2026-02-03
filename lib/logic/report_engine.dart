@@ -167,7 +167,8 @@ class ReportEngine {
     }
 
     // 4. BİLGİ (Mavi)
-    if (sectionId != null && (sectionId <= 10 || sectionId == 20)) {
+    if (sectionId != null &&
+        (sectionId <= 10 || sectionId == 14 || sectionId == 20)) {
       return const Color(0xFF1E88E5);
     }
     if (text.contains("BİLGİ")) {
@@ -203,7 +204,7 @@ class ReportEngine {
         if ((b3.bodrumKatSayisi ?? 0) > 0) {
           parts.add("Bodrum Kat: ${b3.bodrumKatSayisi} adet");
         }
-        if (parts.isNotEmpty) return parts.join("\n\n");
+        if (parts.isNotEmpty) return "BİLGİ: ${parts.join(', ')}";
       }
     }
 
@@ -211,6 +212,16 @@ class ReportEngine {
     if (id == 12 && res.label.contains("12-B (Çelik)")) {
       if ((s.bolum5?.toplamInsaatAlani ?? 0.0) < 5000) {
         return "OLUMLU: Çelik taşıyıcı elemanlar üzerinde pasif yangın yalıtımı bulunmamaktadır. (NOT: Bina toplam inşaat alanı 5000 m² altında olduğu için bu durum yönetmeliğe uygundur.)";
+      }
+    }
+
+    // Bölüm 14: Tesisat Şaftları (Sadece bilgi - soru/yanıt formatı yok)
+    if (id == 14) {
+      final b14 = s.bolum14;
+      if (b14 != null &&
+          b14.raporMesaji != null &&
+          b14.raporMesaji!.isNotEmpty) {
+        return "BİLGİ: Şaft Duvarı: ${b14.gerekenDuvarDk} dk, Şaft Kapağı: ${b14.gerekenKapakDk} dk yangın dayanımı gereklidir. ${b14.raporMesaji}";
       }
     }
 
@@ -470,42 +481,47 @@ class ReportEngine {
       if (b27 != null && b33 != null) {
         List<String> reportParts = [];
 
-        // Get all user loads
-        final yukZemin = b33.yukZemin ?? 0;
-        final yukNormal = b33.yukNormal ?? 0;
-        final yukBodrum = b33.yukBodrum ?? 0;
-        final maxYuk = [
-          yukZemin,
-          yukNormal,
-          yukBodrum,
-        ].reduce((a, b) => a > b ? a : b);
+        // 1. Kullanıcı Yüklerini Detaylandır
+        List<String> loadDetails = [];
+        if ((b33.yukZemin ?? 0) > 0)
+          loadDetails.add("- Zemin Kat: ${b33.yukZemin} kişi");
+        if ((b33.yukNormal ?? 0) > 0)
+          loadDetails.add("- Normal Kat: ${b33.yukNormal} kişi");
+        if ((b33.yukBodrum ?? 0) > 0)
+          loadDetails.add("- Bodrum Kat: ${b33.yukBodrum} kişi");
 
-        // Add base report text from selected options
-        if (b27.yon != null) {
-          reportParts.add(b27.yon!.reportText);
-        }
-        if (b27.kilit != null) {
-          reportParts.add(b27.kilit!.reportText);
-        }
-        if (b27.dayanim != null) {
-          reportParts.add(b27.dayanim!.reportText);
-        }
-
-        // Door direction check (27-2-B or 27-2-D) + user load > 50
-        final yonLabel = b27.yon?.label ?? "";
-        if ((yonLabel.contains("27-2-B") || yonLabel.contains("27-2-D")) &&
-            maxYuk > 50) {
+        if (loadDetails.isNotEmpty) {
           reportParts.add(
-            "UYARI: Kullanıcı yükü 50 kişiyi geçen mahallerde ve katlarda kapılar mutlaka kaçış yönüne (dışarıya) doğru açılmalıdır. Mevcut kullanıcı yükü: $maxYuk kişi.",
+            "BİLGİ: Hesaplanan Kullanıcı Yükleri:\n${loadDetails.join('\n')}",
           );
         }
 
-        // Lock mechanism check (27-3-B or 27-3-D) + user load > 100
+        // 2. Seçilen Özellikleri Ekle
+        if (b27.yon != null) reportParts.add(b27.yon!.reportText);
+        if (b27.kilit != null) reportParts.add(b27.kilit!.reportText);
+        if (b27.dayanim != null) reportParts.add(b27.dayanim!.reportText);
+
+        // 3. Genel Kural Hatırlatması ve Dinamik Uyarılar
+        final maxLoad = [
+          b33.yukZemin ?? 0,
+          b33.yukNormal ?? 0,
+          b33.yukBodrum ?? 0,
+        ].reduce((a, b) => a > b ? a : b);
+
+        final yonLabel = b27.yon?.label ?? "";
         final kilitLabel = b27.kilit?.label ?? "";
-        if ((kilitLabel.contains("27-3-B") || kilitLabel.contains("27-3-D")) &&
-            maxYuk > 100) {
+
+        // Riskli durum tespiti
+        bool yonRiski =
+            (yonLabel.contains("27-2-B") || yonLabel.contains("27-2-D")) &&
+            maxLoad > 50;
+        bool kilitRiski =
+            (kilitLabel.contains("27-3-B") || kilitLabel.contains("27-3-D")) &&
+            maxLoad > 100;
+
+        if (yonRiski || kilitRiski) {
           reportParts.add(
-            "UYARI: Kullanıcı yükü 100 kişiyi aşan binalarda tüm kapıların panik bar ile donatılması şarttır. Normal kapı kolu kabul edilemez. Mevcut kullanıcı yükü: $maxYuk kişi.",
+            "UYARI: Yönetmelik gereği; kullanıcı yükü 50 kişiyi aşan mekanlarda kapıların kaçış yönüne (dışarıya) doğru açılması zorunludur. Kullanıcı yükü 100 kişiyi aşan mekanlarda ise kapıların hem panik bar ile donatılması hem de kaçış yönüne açılması şarttır. Binanızdaki en yüksek kullanıcı yükü $maxLoad kişidir. Bu doğrultuda kapı özelliklerinin (yön ve kilit) ilgili katlardaki kişi sayılarına göre mevzuata uygun hale getirilmesi gerekmektedir.",
           );
         }
 
@@ -540,7 +556,43 @@ class ReportEngine {
       if (b30 != null) {
         List<String> parts = [];
         if (b30.konum != null) parts.add(b30.konum!.reportText);
-        if (b30.kapi != null) parts.add(b30.kapi!.reportText);
+
+        // Kapı sayısı değerlendirmesi - kapasite değerine göre dinamik
+        if (b30.kapi != null) {
+          final kapasite = b30.kapasite;
+          final kapiLabel = b30.kapi!.label;
+
+          if (kapiLabel.contains("30-3-A")) {
+            // 1 adet kapı seçildi
+            if (kapasite != null && kapasite > 350) {
+              // Kapasite > 350kW ve tek kapı = KRİTİK RİSK
+              parts.add(
+                "KRİTİK RİSK: Kazan dairesi ısıl kapasitesi $kapasite kW (> 350 kW) olmasına rağmen yalnızca 1 adet çıkış kapısı bulunmaktadır. Yönetmelik gereği en az 2 adet çıkış kapısı zorunludur.",
+              );
+            } else if (kapasite != null && kapasite <= 350) {
+              // Kapasite <= 350kW ve tek kapı = OLUMLU
+              parts.add(
+                "OLUMLU: Kazan dairesi ısıl kapasitesi $kapasite kW (≤ 350 kW) olup tek çıkış kapısı yeterlidir.",
+              );
+            } else {
+              // Kapasite bilinmiyor
+              parts.add(
+                "BİLİNMİYOR: Kazan dairesinde 1 adet çıkış kapısı mevcuttur. Kapasite bilinmediğinden yeterlilik değerlendirmesi yapılamamıştır. 350 kW üzeri kapasitelerde veya 100 m² üzeri mahal alanlarında en az 2 çıkış kapısı şarttır.",
+              );
+            }
+          } else if (kapiLabel.contains("30-3-B")) {
+            // 2+ kapı = her zaman olumlu
+            parts.add(
+              "OLUMLU: Kazan dairesinde birden fazla çıkış kapısı mevcuttur.",
+            );
+          } else if (kapiLabel.contains("30-3-C")) {
+            // Bilmiyorum
+            parts.add(
+              "BİLİNMİYOR: Kazan dairesi çıkış kapısı sayısı bilinmiyor. 350 kW üzeri kapasiteli kazanlarda en az 2 adet çıkış kapısı zorunludur.",
+            );
+          }
+        }
+
         if (b30.yakit != null) parts.add(b30.yakit!.reportText);
         if (b30.hava != null) parts.add(b30.hava!.reportText);
         if (b30.drenaj != null) parts.add(b30.drenaj!.reportText);

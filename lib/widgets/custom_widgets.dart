@@ -84,7 +84,9 @@ class ModernHeader extends StatelessWidget {
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Analiz kaydedildi ve ana menüye dönüldü."),
+                        content: Text(
+                          "Analiz kaydedildi ve ana menüye dönüldü.",
+                        ),
                         duration: Duration(seconds: 2),
                         backgroundColor: AppColors.successGreen,
                       ),
@@ -586,6 +588,126 @@ class TechnicalDrawingButton extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Standart onay kutusu widget'ı - tüm ekranlarda tutarlı görünüm sağlar
+/// Açık yeşil arka plan ile dikkat çekici tasarım
+class ConfirmationCheckbox extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool?> onChanged;
+  final String text;
+
+  const ConfirmationCheckbox({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      decoration: BoxDecoration(
+        // Açık yeşil arka plan - dikkat çekici
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFFE8F5E9), // Light green start
+            const Color(0xFFC8E6C9), // Light green end
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: value ? const Color(0xFF43A047) : const Color(0xFF81C784),
+          width: 2,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF43A047).withOpacity(0.15),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => onChanged(!value),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            child: Row(
+              children: [
+                // Özel checkbox tasarımı
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: value ? const Color(0xFF43A047) : Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: value
+                          ? const Color(0xFF43A047)
+                          : const Color(0xFF81C784),
+                      width: 2,
+                    ),
+                    boxShadow: value
+                        ? [
+                            BoxShadow(
+                              color: const Color(0xFF43A047).withOpacity(0.3),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: value
+                      ? const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        )
+                      : null,
+                ),
+                const SizedBox(width: 14),
+                // Metin
+                Expanded(
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: value
+                          ? const Color(0xFF2E7D32)
+                          : const Color(0xFF388E3C),
+                      height: 1.4,
+                    ),
+                  ),
+                ),
+                // Sağ tarafta dikkat çekici ikon
+                if (!value)
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF9800).withOpacity(0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.touch_app_rounded,
+                      color: const Color(0xFFE65100),
+                      size: 18,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

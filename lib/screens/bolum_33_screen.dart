@@ -239,16 +239,10 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
               ),
             ),
 
-          CheckboxListTile(
+          ConfirmationCheckbox(
             value: _isConfirmed,
-            onChanged: (v) => setState(() => _isConfirmed = v!),
-            title: const Text(
-              "Hesaplanan değerleri okudum, onaylıyorum.",
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-            ),
-            controlAffinity: ListTileControlAffinity.leading,
-            contentPadding: EdgeInsets.zero,
-            activeColor: const Color(0xFF1A237E),
+            onChanged: (v) => setState(() => _isConfirmed = v ?? false),
+            text: "Hesaplanan değerleri okudum, onaylıyorum.",
           ),
         ],
       ),

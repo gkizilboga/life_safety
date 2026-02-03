@@ -230,7 +230,11 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       ),
       child: Row(
         children: [
-          Icon(Icons.storefront_outlined, color: Colors.orange.shade800, size: 28),
+          Icon(
+            Icons.storefront_outlined,
+            color: Colors.orange.shade800,
+            size: 28,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -250,17 +254,18 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
 
   Widget _buildChoiceGrid(String type, int? index, ChoiceResult? selected) {
     final bool hasTicari = BinaStore.instance.bolum6?.hasTicari ?? false;
-    final choices = [
-      Bolum10Content.konut,
-      Bolum10Content.azYogunTicari,
-      Bolum10Content.ortaYogunTicari,
-      Bolum10Content.yuksekYogunTicari,
-      Bolum10Content.teknikDepo,
-    ].where((c) {
-      if (hasTicari) return true;
-      // Ticari olmayan durumda 10-B, 10-C ve 10-D şıklarını gizle
-      return !['10-B', '10-C', '10-D'].contains(c.label);
-    }).toList();
+    final choices =
+        [
+          Bolum10Content.konut,
+          Bolum10Content.azYogunTicari,
+          Bolum10Content.ortaYogunTicari,
+          Bolum10Content.yuksekYogunTicari,
+          Bolum10Content.teknikDepo,
+        ].where((c) {
+          if (hasTicari) return true;
+          // Ticari olmayan durumda 10-B, 10-C ve 10-D şıklarını gizle
+          return !['10-B', '10-C', '10-D'].contains(c.label);
+        }).toList();
 
     return Column(
       children: choices
@@ -335,17 +340,12 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
               ),
             ],
           ),
-          CheckboxListTile(
-            title: const Text(
-              "Katların kullanım amaçlarını doğru işaretlediğimi onaylıyorum.",
-              style: TextStyle(fontSize: 13),
-            ),
+          ConfirmationCheckbox(
             value: _isSummaryAccepted,
             onChanged: (val) =>
                 setState(() => _isSummaryAccepted = val ?? false),
-            controlAffinity: ListTileControlAffinity.leading,
-            contentPadding: EdgeInsets.zero,
-            activeColor: Colors.green,
+            text:
+                "Katların kullanım amaçlarını doğru işaretlediğimi onaylıyorum.",
           ),
         ],
       ),

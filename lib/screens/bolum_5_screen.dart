@@ -270,41 +270,16 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
                 if (_isCalculated) _buildSummaryCard(),
 
                 const SizedBox(height: 20),
-                _buildConfirmationBox(),
+                ConfirmationCheckbox(
+                  value: _isConfirmed,
+                  onChanged: (val) =>
+                      setState(() => _isConfirmed = val ?? false),
+                  text: "Yukarıdaki bilgilerin doğruluğunu teyit ediyorum.",
+                ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildConfirmationBox() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: _isConfirmed
-              ? const Color(0xFF1A237E)
-              : const Color(0xFFE0E0E0),
-        ),
-      ),
-      child: CheckboxListTile(
-        value: _isConfirmed,
-        onChanged: (val) => setState(() => _isConfirmed = val ?? false),
-        activeColor: const Color(0xFF1A237E),
-        title: const Text(
-          "Yukarıdaki bilgilerin doğruluğunu teyit ediyorum.",
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        controlAffinity: ListTileControlAffinity.leading,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-        dense: true,
       ),
     );
   }
