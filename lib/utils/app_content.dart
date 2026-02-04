@@ -3,7 +3,7 @@
 class Bolum1Content {
   static final ruhsatSonrasi = ChoiceResult(
     label: "1-A",
-    uiTitle: "19.12.2007 ve sonrasında alındı.",
+    uiTitle: "19.12.2007 ve sonrası.",
     uiSubtitle: "Bina, YENİ BİNA statüsünde kabul edilecektir.",
     reportText:
         "BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 ve sonrası olduğu için, analiz \"Binaların Yangından Korunması Hakkında Yönetmelik\"(BYKHY) kapsamındaki \"YENİ BİNA\"hükümlerine göre yapılmıştır.",
@@ -11,7 +11,7 @@ class Bolum1Content {
 
   static final ruhsatOncesi = ChoiceResult(
     label: "1-B",
-    uiTitle: "19.12.2007 öncesinde alındı.",
+    uiTitle: "19.12.2007 öncesi.",
     uiSubtitle:
         "Tarih itibarıyla MEVCUT BİNA statüsünde ancak yine de YENİ BİNA hükümlerine göre değerlendirilsin.",
     reportText:
@@ -158,7 +158,7 @@ class Bolum5Content {
 class Bolum6Content {
   static final otoparkVar = ChoiceResult(
     label: "6-1-A (Otopark)",
-    uiTitle: "Binada (kapalı veya yarı-açık) otopark bulunmaktadır.",
+    uiTitle: "Binada (kapalı) otopark bulunmaktadır.",
     uiSubtitle: "Zemin (ve/veya bodrum) katta otopark alanı mevcut.",
     reportText:
         "BİLGİ: Binada kapalı veya yarı-açık otopark alanı bulunmaktadır. Otoparkların yangın yükü yüksek olduğundan ek önlemler almak gereklidir.",
@@ -198,7 +198,7 @@ class Bolum6Content {
 
   static final otoparkAcik = ChoiceResult(
     label: "6-2-B (Otopark Tipi)",
-    uiTitle: "Otoparkın karşılıklı iki cephesi tamamen açık.",
+    uiTitle: "Otoparkın karşılıklı İKİ CEPHESİ tamamen açık.",
     uiSubtitle: "Doğal havalandırma mevcut.",
     reportText:
         "BİLGİ: (AÇIK OTOPARK): Otoparkın karşılıklı cepheleri açık olduğu için doğal havalandırma yeterli kabul edilebilir. İçeride duman birikme ihtimali daha düşüktür.",
@@ -207,8 +207,8 @@ class Bolum6Content {
   static final otoparkYariAcik = ChoiceResult(
     label: "6-2-C (Otopark Tipi)",
     uiTitle:
-        "Otoparkın sadece tek bir cephesinde açıklık var. Diğer cepheleri duvarla örülü.",
-    uiSubtitle: "Otopark cephesinde pencereler veya açıklıklar var.",
+        "Otoparkın sadece TEK CEPHESİNDE açıklık var. Diğer cepheleri duvarla örülü.",
+    uiSubtitle: "",
     reportText:
         "BİLGİ: (YARI AÇIK OTOPARK): Otoparkta sadece tek cephede açıklık olması duman tahliyesi ve havalandırma için yeterli değildir. \"Kapalı Otopark\"kuralları geçerlidir.",
   );
@@ -760,7 +760,7 @@ class Bolum13Content {
   static final copOptionC = ChoiceResult(
     label: "13-9-C (Çöp O.)",
     uiTitle: "Çöp odası özelliklerini bilmiyorum.",
-    uiSubtitle: "Odanın kapı ve havalandırma durumu hakkında bilgim yok.",
+    uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Çöp odalarının duvarları ve kapıları yangın dayanım özellikli olmalıdır. Oda kapısının test raporu Uzman tarafından incelenerek uygunluğuna karar verilir.",
   );
@@ -768,7 +768,7 @@ class Bolum13Content {
   static final ortakDuvarOptionA = ChoiceResult(
     label: "13-10-A (Ortak Duvar)",
     uiTitle: "Kalın tuğla veya beton duvar (En az 20-25cm).",
-    uiSubtitle: "Yan bina ile aradaki duvar kalın ve masif bir yapıdadır.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Yan bina ile ortak kullanılan duvar kalın tuğla veya betondur (En az 20-25cm).",
   );
@@ -784,7 +784,7 @@ class Bolum13Content {
   static final ortakDuvarOptionC = ChoiceResult(
     label: "13-10-C (Ortak Duvar)",
     uiTitle: "Ortak duvarın cinsini bilmiyorum.",
-    uiSubtitle: "Yan bina ile aradaki duvarın yapısı hakkında bilgim yok.",
+    uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Bitişik nizam bina ile aradaki duvarın kalınlığı bilinmiyor. Duvarın 90 dk dayanım gösterecek özellikte olması şarttır. Uzman Görüşü alınması tavsiye edilir.",
   );
@@ -1081,7 +1081,7 @@ class Bolum16Content {
     uiSubtitle:
         "Dış cephede sıva altında köpük esaslı ısı yalıtım levhaları kullanılmıştır.",
     reportText:
-        "UYARI: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. 28.50m üzerindeki binalarda bu uygulama yasaktır. Daha alçak binalarda ise pencerelerin etrafında ve zemin seviyesinde taşyünü yangın bariyerleri bulunması zorunludur.",
+        "UYARI: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliği (bodrum katlar hariç) 28.50m 'nin üzerindeki binalarda bu uygulama yasaktır. Daha alçak binalarda ise pencerelerin etrafında ve zemin seviyesinde taşyünü yangın bariyerleri bulunması zorunludur.",
   );
 
   static final mantolamaOptionB = ChoiceResult(
@@ -1121,8 +1121,8 @@ class Bolum16Content {
   static final sagirYuzeyOptionA = ChoiceResult(
     label: "16-2-A (Sağır Yüzey)",
     uiTitle:
-        "EVET, cephede en az 100 cm yüksekliğinde yangın dayanımlı yüzey (veya sistem) var.",
-    uiSubtitle: "",
+        "EVET, cephede katlar arasında en az 100 cm yüksekliğinde yangın dayanımlı yüzey VAR.",
+    uiSubtitle: "Dikeyde 100 cm",
     reportText:
         "OLUMLU: Katlar arasındaki yangın dayanıklı yüzey (veya sistem) yüksekliği 100 cm şartını sağlamaktadır. Bu mesafe, alevin bir kattan diğerine sıçramasını zorlaştırır. Yönetmelik şartlarını sağlayıp sağlamadığına yanmaz yüzeyin yerinde kontrol edilmesi ile karar verilir.",
   );
@@ -1130,9 +1130,9 @@ class Bolum16Content {
   static final sagirYuzeyOptionB = ChoiceResult(
     label: "16-2-B (Sağır Yüzey)",
     uiTitle:
-        "HAYIR, cephede en az 100 cm yüksekliğinde yangın dayanımlı yüzey (veya sistem) yok.",
+        "HAYIR, cephede katlar arasında en az 100 cm yüksekliğinde yangın dayanımlı yüzey YOK.",
     uiSubtitle:
-        "Pencereler birbirine çok yakın, aradaki duvar mesafesi 1 metreden az.",
+        "Pencereler dikeyde birbirine çok yakın, aradaki duvar mesafesi 1 metreden az.",
     reportText:
         "KRİTİK RİSK: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den azdır. Yangın bir kattan diğerine kolayca sıçrayabilir.",
   );
@@ -2202,7 +2202,7 @@ class Bolum26Content {
     uiTitle: "Hayır, çok dik (%10'dan fazla) veya zemin kaygan.",
     uiSubtitle: "Rampayı sadece araçlar kullanabilir.",
     reportText:
-        "KRİTİK RİSK: Otopark rampası çok dik (%10'dan fazla) olduğu için kaçış yolu sayılamaz.",
+        "BİLGİ: Otopark rampası %10'dan fazla eğime sahiptir. Eğer otopark içerisinden bina içerisine (merdiven veya asansör holüne) tahliye imkanı varsa ve bu çıkışlar otoparktaki kişi sayısı için yeterli genişlikte ise, rampanın dik olması kaçış güvenliği açısından kritik risk oluşturmaz.",
   );
 
   static final otoparkOptionC = ChoiceResult(
@@ -3081,7 +3081,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "Çıkış sayısı yeterli.",
     reportText:
-        "OLUMLU: Mevcut çıkış sayısı, kişi yoğunluğuna göre yeterli görünmektedir. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari projeden veya yerinde ayrıca kontrol edilmelidir.",
+        "Mevcut çıkış sayısı, kişi yoğunluğuna göre yeterli görünmektedir. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari projeden veya yerinde ayrıca kontrol edilmelidir.",
   );
 
   static final normalKatYetersiz = ChoiceResult(
@@ -3099,7 +3099,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "Çıkış sayısı yeterli.",
     reportText:
-        "OLUMLU: Zemin kattaki mevcut çıkış sayısı yeterli görünmektedir. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari projeden veya yerinde ayrıca kontrol edilmelidir.",
+        "Zemin kattaki mevcut çıkış sayısı yeterli görünmektedir. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari projeden veya yerinde ayrıca kontrol edilmelidir.",
   );
 
   static final zeminKatYetersiz = ChoiceResult(
@@ -3115,7 +3115,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "Çıkış sayısı uygun.",
     reportText:
-        "OLUMLU: Bodrum katlardaki mevcut çıkış sayısı yeterli görünmektedir. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari projeden veya yerinde ayrıca kontrol edilmelidir.",
+        "Bodrum katlardaki mevcut çıkış sayısı yeterli görünmektedir. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari projeden veya yerinde ayrıca kontrol edilmelidir.",
   );
 
   static final bodrumKatYetersiz = ChoiceResult(
@@ -3496,7 +3496,7 @@ class AppContent {
       case 27:
         return "Kaçış yolu kapılarının genişliği, yönü ve kilit tipi nedir?";
       case 28:
-        return "En uzak noktadan çıkışa olan kaçış mesafesi ne kadardır?";
+        return "Elektrik tesisatı ve kabloların yangın güvenliği durumu nedir?";
       case 29:
         return "Teknik hacimlerin genel temizlik durumu nedir?";
       case 30:
@@ -3543,4 +3543,82 @@ class AppDefinitions {
 
   static const String pasifYanginYalitimiCelik =
       "Çelik elemanların yangın anında taşıma kapasitelerini korumaları için kullanılan yangın geciktirici boya veya levha kaplama gibi önlemlerdir.";
+  static String getSectionTitle(int id) {
+    switch (id) {
+      case 1:
+        return "Yapı Ruhsat / Bina İnşa Tarihi";
+      case 2:
+        return "Bina Kullanım Sınıfı ve Taşıyıcı Sistemi";
+      case 3:
+        return "Bina Yüksekliği ve Kat Sayısı";
+      case 4:
+        return "Bina Tehlike Sınıfı";
+      case 5:
+        return "Bina Taban Alanı ve İnşaat Alanı";
+      case 6:
+        return "Otopark Durumu";
+      case 7:
+        return "Özel Riskli Alanlar";
+      case 8:
+        return "Kazan Dairesi Durumu";
+      case 9:
+        return "Sığınak Durumu";
+      case 10:
+        return "Katların Baskın Kullanım Amaçları";
+      case 11:
+        return "Binadaki Tehlikeli Maddeler";
+      case 12:
+        return "Çatı Tipi ve Özellikleri";
+      case 13:
+        return "Yangın Kompartımanları ve Zonları";
+      case 14:
+        return "Cephe ve Yalıtım Malzemesi";
+      case 15:
+        return "İç Duvar ve Tavan Kaplamaları";
+      case 16:
+        return "Bina Cephe ve Yerleşim Özellikleri";
+      case 17:
+        return "Yangın Güvenlik Mesafeleri";
+      case 18:
+        return "Kaçış Yolları Genel Tanımı";
+      case 19:
+        return "Kullanıcı Yükü ve Kişi Sayısı";
+      case 20:
+        return "Yangın Merdiveni ve Çıkış Sayıları";
+      case 21:
+        return "Merdiven Yuvaları ve Yangın Güvenlik Holleri";
+      case 22:
+        return "Acil Durum (İtfaiye) Asansörü";
+      case 23:
+        return "Normal Asansörler ve Duman Kontrolü";
+      case 24:
+        return "Kaçış Yolu Kapıları";
+      case 25:
+        return "Kaçış Yolu Işıklandırması";
+      case 26:
+        return "Acil Durum Aydınlatması ve Yönlendirme";
+      case 27:
+        return "Algılama ve Uyarı Sistemleri";
+      case 28:
+        return "Kablo ve Tesisat Güvenliği";
+      case 29:
+        return "Söndürme Sistemleri (Sprinkler)";
+      case 30:
+        return "Sabit Boru ve Hortum Sistemleri";
+      case 31:
+        return "Yangın Söndürücü (Taşınabilir) Tüpler";
+      case 32:
+        return "Jeneratör ve Güç Kaynakları";
+      case 33:
+        return "Kaçış Yolu Kapasite Hesabı";
+      case 34:
+        return "Üst Kat ve Bodrum Kat Kaçış Yolları";
+      case 35:
+        return "Koridor Genişlikleri ve Çıkmaz Koridorlar";
+      case 36:
+        return "Merdiven Tipi ve Özellikleri";
+      default:
+        return "Bölüm $id";
+    }
+  }
 }

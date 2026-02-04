@@ -141,16 +141,17 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     setState(() {
       _model = _model.copyWith(
         alanZemin: alanZemin,
-        alanNormal: alanNormal,
-        alanBodrumMax: alanBodrum,
+        alanNormal: _hasNormal ? alanNormal : null,
+        alanBodrumMax: _hasBodrum ? alanBodrum : null,
         yukZemin: yukZemin,
-        yukNormal: yukNormal,
-        yukBodrum: yukBodrum,
+        yukNormal: _hasNormal ? yukNormal : null,
+        yukBodrum: _hasBodrum ? yukBodrum : null,
         gerekliZemin: gZemin,
-        gerekliNormal: gNormal,
-        gerekliBodrum: gBodrum,
-        mevcutUst: mevcutUst,
-        mevcutBodrum: mevcutBodrum,
+        gerekliNormal: _hasNormal ? gNormal : null,
+        gerekliBodrum: _hasBodrum ? gBodrum : null,
+        mevcutUst:
+            mevcutUst, // Bu değer Zemin için de kullanıldığı için null yapmıyoruz, ama normal kat yoksa zaten sadece zemin için anlamlıdır.
+        mevcutBodrum: _hasBodrum ? mevcutBodrum : null,
       );
     });
   }
@@ -174,13 +175,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Kullanıcı Yükü Nedir?",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryBlue,
-                ),
-              ),
+              Text("Kullanıcı Yükü Nedir?", style: AppStyles.questionTitle),
               DefinitionButton(
                 term: "Kullanıcı Yükü",
                 definition: AppDefinitions.kullaniciYuku,

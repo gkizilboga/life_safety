@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum29Screen extends StatefulWidget {
   const Bolum29Screen({super.key});
@@ -265,14 +266,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF263238),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(

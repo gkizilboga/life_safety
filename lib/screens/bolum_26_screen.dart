@@ -154,11 +154,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
               padding: EdgeInsets.only(left: 4, bottom: 12),
               child: Text(
                 "Otopark Araç Rampası",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF263238),
-                ),
+                style: AppStyles.questionTitle,
               ),
             ),
             _buildSoru(
@@ -187,14 +183,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF263238),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(

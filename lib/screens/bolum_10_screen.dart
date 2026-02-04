@@ -330,16 +330,6 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.green, size: 20),
-              SizedBox(width: 10),
-              Text(
-                "Kat Bilgileri Tamamlandı",
-                style: AppStyles.questionTitle.copyWith(color: Colors.green),
-              ),
-            ],
-          ),
           ConfirmationCheckbox(
             value: _isSummaryAccepted,
             onChanged: (val) =>

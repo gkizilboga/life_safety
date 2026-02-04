@@ -336,10 +336,52 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       subtitle: "Merdiven tipleri ve adetleri",
       screenType: widget.runtimeType,
       isNextEnabled: _isLimitValid,
-      onNext: () {
+      onNext: () async {
         if (_validateAndSave()) {
-          Navigator.push(
-            context,
+          // Capture navigator before async gap
+          final navigator = Navigator.of(context);
+
+          // Check for independent basement stairs warning
+          if (_isBodrumIndependent) {
+            bool confirmed =
+                await showDialog<bool>(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (dialogContext) => AlertDialog(
+                    title: const Row(
+                      children: [
+                        Icon(Icons.warning_amber_rounded, color: Colors.orange),
+                        SizedBox(width: 10),
+                        Expanded(child: Text("Dikkat: Merdiven Konumu")),
+                      ],
+                    ),
+                    content: const Text(
+                      "Bodrum kat merdivenlerinin, normal kat merdivenlerinden FARKLI bir konumda (bağımsız) olduğunu belirttiniz.\n\nBu durum, kaçış yollarının sürekliliği açısından kritik bir bilgidir.\n\nOnaylıyor musunuz?",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(dialogContext, false),
+                        child: const Text("Geri Dön"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(dialogContext, true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1A237E),
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text("Anladım, Devam Et"),
+                      ),
+                    ],
+                  ),
+                ) ??
+                false;
+
+            if (!confirmed) return;
+          }
+
+          if (!mounted) return;
+          navigator.push(
             MaterialPageRoute(
               builder: (context) => ModuleTransitionScreen(
                 module: ReportModule.modul2,

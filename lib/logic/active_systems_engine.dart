@@ -29,6 +29,8 @@ class ActiveSystemsEngine {
         isMandatory: true,
         reason:
             "Her binada, yangın anında sistemlerin nasıl çalışacağını, tahliyenin nasıl yapılacağını ve ekiplerin nasıl müdahale edeceğini anlatan bir Yangın Senaryosu oluşturulmalıdır.",
+        note:
+            "NOT: Aktif sistem gereksinimlerinin belirtildiği bu çalışmadaki hiçbir sistem veya ekipman binanızda zorunlu değil ise ve binada asansör de yok ise yangın SENARYOSU ve yangın MATRİSİ oluşturulması zorunlu olmayabilir.",
       ),
     );
 

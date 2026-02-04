@@ -212,6 +212,31 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
           if (_model.mantolama?.label ==
                   Bolum16Content.mantolamaOptionA.label &&
               _hBina <= 28.50) ...[
+            Container(
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.blue.shade200),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.info, color: Colors.blue),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      "Seçtiğiniz \"Klasik Mantolama (EPS/XPS)\" yanıcı özellikte olduğu için, yönetmelik gereği aşağıdaki yangın bariyeri önlemlerinin alınıp alınmadığı kontrol edilmelidir.",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             _buildSubQuestion(
               null,
               "Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?",
@@ -242,7 +267,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ),
 
           _buildSoru(
-            "Katlar arasındaki sağır (yanmaz) yüzey yüksekliği ne kadar?",
+            "Katlar arasında sağır (yanmaz) yüzey var mı?",
             'sagir',
             [
               Bolum16Content.sagirYuzeyOptionA,

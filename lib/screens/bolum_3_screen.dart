@@ -298,6 +298,35 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
               ),
             ],
           ),
+          const SizedBox(height: 12),
+          // Toplam Kat Sayısı Gösterimi
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A237E).withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.layers_outlined,
+                  size: 16,
+                  color: Color(0xFF1A237E),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "Toplam Kat Sayısı: ${(vals['n'] + vals['b'] + 1)} Kat",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1A237E),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const Divider(height: 24),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),

@@ -93,11 +93,13 @@ class ModernHeader extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: 32,
-                    height: 32,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF059669), // Emerald Green (Premium)
-                      shape: BoxShape.circle,
+                      color: const Color(0xFF059669), // Emerald Green
+                      borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2),
@@ -107,10 +109,25 @@ class ModernHeader extends StatelessWidget {
                       ],
                       border: Border.all(color: Colors.white24, width: 1.5),
                     ),
-                    child: const Icon(
-                      Icons.save_rounded,
-                      color: Colors.white,
-                      size: 18,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(
+                          Icons.save_as_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          "KAYDET",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -681,29 +698,15 @@ class ConfirmationCheckbox extends StatelessWidget {
                   child: Text(
                     text,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12, // Reduced from 14
                       fontWeight: FontWeight.w600,
                       color: value
                           ? const Color(0xFF2E7D32)
                           : const Color(0xFF388E3C),
-                      height: 1.4,
+                      height: 1.3,
                     ),
                   ),
                 ),
-                // Sağ tarafta dikkat çekici ikon
-                if (!value)
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFF9800).withOpacity(0.15),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.touch_app_rounded,
-                      color: const Color(0xFFE65100),
-                      size: 18,
-                    ),
-                  ),
               ],
             ),
           ),

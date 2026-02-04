@@ -396,37 +396,12 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       }
     }
 
-    // --- Çıkış Sayısı Kontrolü ---
-    int gerekli = b33?.gerekliNormal ?? 0;
-    int mevcut = b33?.mevcutUst ?? 0;
-    if (mevcut >= gerekli) {
-      notes.add(
-        " [BİNA/ÜST KATLAR] ÇIKIŞ SAYISI YETERLİ: Mevcut çıkış sayısı ($mevcut), gereken çıkış sayısından ($gerekli) fazla veya eşit olduğundan, çıkış sayısı bakımından yeterli gözükmektedir.",
-      );
-    } else {
-      notes.add(
-        " [BİNA/ÜST KATLAR] ÇIKIŞ SAYISI YETERLİ DEĞİL: Yönetmelik gereği $gerekli çıkış gerekirken, binada sadece $mevcut çıkış bulunmaktadır.",
-      );
-    }
-
-    // --- BODRUM KAT ÇIKIŞ ve GENİŞLİK KONTROLÜ (Eğer Bağımsız ise) ---
+    // --- BODRUM KAT GENİŞLİK KONTROLÜ (Eğer Bağımsız ise) ---
     bool isBodrumIndependent = b20?.isBodrumIndependent ?? false;
     // Eğer bağımsız değilse (merdiven iniyorsa) zaten üst kat kontrolü yapıldı, genişlik aynı kabul ediliyor.
     // Ancak bağımsız ise, ayrı yük ve ayrı sayı kontrolü gerekir.
     if (isBodrumIndependent) {
-      int gBodrum = b33?.gerekliBodrum ?? 0;
-      int mBodrum = b33?.mevcutBodrum ?? 0;
       int yBodrum = b33?.yukBodrum ?? 0;
-
-      if (mBodrum >= gBodrum) {
-        notes.add(
-          " [BODRUM KAT] ÇIKIŞ SAYISI YETERLİ: Bodrum kat için mevcut çıkış sayısı ($mBodrum), gereken çıkış sayısından ($gBodrum) fazla veya eşit.",
-        );
-      } else {
-        notes.add(
-          " [BODRUM KAT] ÇIKIŞ SAYISI YETERLİ DEĞİL: Bodrum kat için $gBodrum çıkış gerekirken, sadece $mBodrum müstakil çıkış bulunmaktadır.",
-        );
-      }
 
       // Bodrum Genişlik Kontrolü (Aynı Genişlik Varsayımıyla)
       if (!_genislikBilinmiyor && !_kapiGenislikBilinmiyor) {

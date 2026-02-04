@@ -39,6 +39,11 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     final b6 = BinaStore.instance.bolum6;
     final b10 = BinaStore.instance.bolum10;
 
+    // Reset flags
+    _hasTicariZemin = false;
+    _hasTicariBodrum = false;
+    _hasTicariNormal = false;
+
     // Bölüm 3'ten bodrum kat sayısını al
     _hasBodrumKat = (b3?.bodrumKatSayisi ?? 0) > 0;
 
@@ -105,7 +110,8 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
   bool _canProceed() {
     // Sadece gösterilen sorular için validasyon
     if (_hasTicariZemin && _model.zemin == null) return false;
-    if (_hasTicariBodrum && _model.bodrum == null) return false;
+    if (_hasBodrumKat && _hasTicariBodrum && _model.bodrum == null)
+      return false;
     if (_hasTicariNormal && _model.normal == null) return false;
     return true;
   }
@@ -115,7 +121,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       if (_hasTicariZemin && _model.zemin == null) {
         return _showError("Lütfen zemin kat ticari çıkış durumunu seçiniz.");
       }
-      if (_hasTicariBodrum && _model.bodrum == null) {
+      if (_hasBodrumKat && _hasTicariBodrum && _model.bodrum == null) {
         return _showError("Lütfen bodrum kat ticari çıkış durumunu seçiniz.");
       }
       if (_hasTicariNormal && _model.normal == null) {
@@ -169,7 +175,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
                     ),
 
                   // --- BODRUM KAT SORUSU ---
-                  if (_hasTicariBodrum) ...[
+                  if (_hasBodrumKat && _hasTicariBodrum) ...[
                     if (_hasTicariZemin && _model.zemin != null)
                       _buildInfoNote(
                         "Zemin kat tespiti yapıldı. Lütfen bodrum kat ticari alan çıkışlarını da kontrol ediniz.",

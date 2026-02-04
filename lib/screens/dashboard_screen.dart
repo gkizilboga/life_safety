@@ -65,6 +65,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final archive = BinaStore.instance.archive;
     final ongoingActions = archive
         .where((b) => !(b['isCompleted'] ?? false))
+        .where(
+          (b) => (b['name'] != "İsimsiz Bina"),
+        ) // Filter out default unnamed
         .toList();
     final completedActions = archive
         .where((b) => (b['isCompleted'] ?? false))
@@ -504,7 +507,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: title == "Yeni Analiz" ? Colors.green.shade50 : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.grey.shade100),
         ),

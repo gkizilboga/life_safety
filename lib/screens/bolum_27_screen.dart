@@ -20,7 +20,6 @@ class Bolum27Screen extends StatefulWidget {
 class _Bolum27ScreenState extends State<Bolum27Screen> {
   Bolum27Model _model = Bolum27Model();
   bool _needsFireDoor = false;
-  int _maxUserLoad = 0;
 
   final GlobalKey _yonKey = GlobalKey();
   final GlobalKey _kilitKey = GlobalKey();
@@ -44,18 +43,8 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
     }
     bool needsFireDoor = closedStairsCount > 0;
 
-    final b33 = BinaStore.instance.bolum33;
-    int maxLoad = 0;
-    if (b33 != null) {
-      maxLoad = math.max(
-        b33.yukZemin ?? 0,
-        math.max(b33.yukNormal ?? 0, b33.yukBodrum ?? 0),
-      );
-    }
-
     setState(() {
       _needsFireDoor = needsFireDoor;
-      _maxUserLoad = maxLoad;
     });
   }
 
@@ -67,39 +56,16 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
       }
       if (type == 'yon') {
         _model = _model.copyWith(yon: choice);
-        if (_maxUserLoad > 50 &&
-            (choice.label == Bolum27Content.yonOptionB.label ||
-                choice.label == Bolum27Content.yonOptionD.label)) {
-          _showWarning(
-            " DİKKAT: Kullanıcı yükü 50 kişiyi aştığı için tüm kapıların kaçış yönüne açılması zorunludur!",
-          );
-        }
       }
       if (type == 'kilit') {
         _model = _model.copyWith(kilit: choice);
-        if (_maxUserLoad > 100 &&
-            (choice.label == Bolum27Content.kilitOptionB.label ||
-                choice.label == Bolum27Content.kilitOptionD.label)) {
-          _showWarning(
-            " DİKKAT: Kullanıcı yükü 100 kişiyi aştığı için tüm kapılarda hem kaçış yönünde açılma hem de PANİK BAR zorunludur!",
-          );
-        }
+
         // Only scroll if a NEW Dynamic section (Fire Door) appears?
         // Logic says _needsFireDoor is calculated at init, so dayanim question is always there or not there.
         // So no dynamic appearing here. No auto-scroll.
       }
       if (type == 'dayanim') _model = _model.copyWith(dayanim: choice);
     });
-  }
-
-  void _showWarning(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: Colors.orange[900],
-        duration: const Duration(seconds: 4),
-      ),
-    );
   }
 
   bool _isReady() {

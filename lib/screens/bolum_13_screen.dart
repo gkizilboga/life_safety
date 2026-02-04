@@ -158,7 +158,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             ),
             // ALT SORU: Otopark Alanı
             _buildSoru(
-              "Otopark alanları toplamda kaç metrekare?",
+              "Otopark alanları tüm katlarda toplam kaç metrekare?",
               'otoparkAlan',
               [
                 Bolum13Content.otoparkAlanOptionA,

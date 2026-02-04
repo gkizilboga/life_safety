@@ -94,7 +94,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               children: [
                 Expanded(
                   child: Text(
-                    "Merdivenlerin önünde Yangın Güvenlik Holü var mı?",
+                    "Merdiven önünde Yangın Güvenlik Holü var mı?",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),

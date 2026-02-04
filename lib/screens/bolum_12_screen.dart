@@ -169,11 +169,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
           padding: EdgeInsets.only(left: 4, bottom: 12),
           child: Text(
             "Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF263238),
-            ),
+            style: AppStyles.questionTitle,
           ),
         ),
         TechnicalDrawingButton(
@@ -271,7 +267,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
             Expanded(
               child: Text(
                 "Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: AppStyles.questionTitle,
               ),
             ),
             DefinitionButton(
@@ -321,7 +317,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       children: [
         const Text(
           "Ahşap taşıyıcılarınızın kalınlığı (kesiti) nedir?",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: AppStyles.questionTitle,
         ),
         const SizedBox(height: 12),
         QuestionCard(
@@ -356,7 +352,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       children: [
         const Text(
           "Binanızın taşıyıcı duvarlarının kalınlığı en az 19 cm midir?",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: AppStyles.questionTitle,
         ),
         const SizedBox(height: 12),
         QuestionCard(

@@ -23,6 +23,109 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
     if (BinaStore.instance.bolum1 != null) {
       _model = BinaStore.instance.bolum1!;
     }
+
+    // Show startup info regarding "Save & Exit"
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.save_as_rounded, color: Colors.green, size: 28),
+              SizedBox(width: 10),
+              Text("Bilgilendirme"),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Teste istediğiniz zaman ara verebilirsiniz.",
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.4,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "- ",
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        "Ekranın sağ üst köşesindeki \"KAYDET\" butonuna basarak ilerlemenizi kaydedip çıkabilir, daha sonra kaldığınız yerden devam edebilirsiniz.",
+                        style: TextStyle(
+                          fontSize: 14,
+                          height: 1.4,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "- ",
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    Expanded(
+                      child: RichText(
+                        text: const TextSpan(
+                          style: TextStyle(
+                            fontSize: 14,
+                            height: 1.4,
+                            color: Colors.black87,
+                          ),
+                          children: [
+                            TextSpan(text: "(DİKKAT: Bu test yalnızca "),
+                            TextSpan(
+                              text: "KONUT",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                              text: " ruhsatlı yapılar için geçerlidir.)",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                "Tamam, Anladım",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   void _handleSelection(ChoiceResult choice) {
@@ -121,9 +224,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Binanızın yapı ruhsatı hangi tarihte alındı veya yapım tarihi nedir?",
-                ),
+                const Text("Binanızın yapı ruhsat tarihi nedir?"),
                 const SizedBox(height: 20),
                 SelectableCard(
                   choice: Bolum1Content.ruhsatSonrasi,
