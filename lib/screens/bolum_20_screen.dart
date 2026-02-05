@@ -26,6 +26,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   bool _isTekKatli = false;
   bool _hasBodrum = false;
   bool _showBasinclandirma = false;
+  bool _hasDairesel = false;
   bool _isBodrumIndependent = false; // Confirmed state
 
   // Upper/Main Stair Controllers
@@ -165,6 +166,18 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       // Logic: Show pressurization if ANY protected stair exists
       _showBasinclandirma = (ic >= 1 || dis >= 1 || bIc >= 1 || bDis >= 1);
 
+      // Logic: Show Dairesel Height question if spiral stairs exist
+      int doner = int.tryParse(_donerCtrl.text) ?? 0;
+      int bDoner = int.tryParse(_bodDonerCtrl.text) ?? 0;
+
+      bool daireselExists = doner > 0;
+      if (_isBodrumIndependent && bDoner > 0) daireselExists = true;
+
+      _hasDairesel = daireselExists;
+      if (!_hasDairesel) {
+        _model = _model.copyWith(daireselMerdivenYuksekligi: null);
+      }
+
       if (!_showBasinclandirma) {
         _model = _model.copyWith(basinclandirma: null);
       }
@@ -259,6 +272,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       if (type == 'tekKatRampa') _model = _model.copyWith(tekKatRampa: choice);
       if (type == 'basinclandirma')
         _model = _model.copyWith(basinclandirma: choice);
+      if (type == 'daireselH')
+        _model = _model.copyWith(daireselMerdivenYuksekligi: choice);
     });
   }
 
@@ -299,6 +314,16 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           );
           return false;
         }
+      }
+
+      if (_model.isDaireselYukseklikRequired &&
+          _model.daireselMerdivenYuksekligi == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Lütfen dairesel merdiven yüksekliğini seçiniz."),
+          ),
+        );
+        return false;
       }
 
       if (_showBasinclandirma && _model.basinclandirma == null) return false;
@@ -567,6 +592,18 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               ),
             ),
           ],
+
+          if (_hasDairesel)
+            _buildSoru(
+              "Binadaki dairesel merdivenlerin yüksekliği (genel olarak) nedir?",
+              'daireselH',
+              [
+                Bolum20Content.daireselYukseklikOptionA,
+                Bolum20Content.daireselYukseklikOptionB,
+                Bolum20Content.daireselYukseklikOptionC,
+              ],
+              _model.daireselMerdivenYuksekligi,
+            ),
 
           if (_showBasinclandirma)
             _buildSoruWithDef(

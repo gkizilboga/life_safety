@@ -24,14 +24,17 @@ class PdfService {
             pw.Text(
               label,
               style: pw.TextStyle(
-                fontSize: 6,
+                fontSize: 9, // Increased from 6
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.black,
               ),
             ),
             pw.Text(
               desc,
-              style: const pw.TextStyle(fontSize: 5, color: PdfColors.grey700),
+              style: const pw.TextStyle(
+                fontSize: 9,
+                color: PdfColors.grey700,
+              ), // Increased from 5
             ),
           ],
         ),
@@ -174,22 +177,8 @@ class PdfService {
 
               pw.SizedBox(height: 15),
 
-              // KONUT Uyarısı
-              pw.Center(
-                child: pw.Padding(
-                  padding: const pw.EdgeInsets.symmetric(horizontal: 40),
-                  child: pw.Text(
-                    "(Bu analiz ve rapor yalnızca KONUT ruhsatlı yapılar için geçerlidir)",
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(
-                      color: PdfColors.red700,
-                      fontSize: 10,
-                      fontWeight: pw.FontWeight.bold,
-                      fontStyle: pw.FontStyle.italic,
-                    ),
-                  ),
-                ),
-              ),
+              // KONUT Uyarısı kaldırıldı
+              pw.SizedBox(height: 20),
 
               // Skor Badge (sadece showScore true ise)
               if (showScore) ...[
@@ -208,18 +197,7 @@ class PdfService {
                     child: pw.Row(
                       mainAxisSize: pw.MainAxisSize.min,
                       children: [
-                        // Skor Yüzdesi
-                        pw.Text(
-                          "${metrics['score']} / 100",
-                          style: pw.TextStyle(
-                            color: _getScoreColorForPdf(
-                              metrics['score'] as int,
-                            ),
-                            fontSize: 22,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                        pw.SizedBox(width: 15),
+                        // Sol Kolon: Başlık ve Puan
                         pw.Column(
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
@@ -229,20 +207,32 @@ class PdfService {
                             ),
                             pw.SizedBox(height: 2),
                             pw.Text(
-                              (metrics['score'] as int) > 80
-                                  ? "DÜŞÜK RİSK"
-                                  : (metrics['score'] as int) > 50
-                                  ? "ORTA RİSK"
-                                  : "YÜKSEK RİSK",
+                              "${metrics['score']} / 100",
                               style: pw.TextStyle(
                                 color: _getScoreColorForPdf(
                                   metrics['score'] as int,
                                 ),
-                                fontSize: 12,
+                                fontSize: 22,
                                 fontWeight: pw.FontWeight.bold,
                               ),
                             ),
                           ],
+                        ),
+                        pw.SizedBox(width: 25), // Kolonlar arası boşluk
+                        // Sağ Kolon: Risk Durumu
+                        pw.Text(
+                          (metrics['score'] as int) > 80
+                              ? "DÜŞÜK RİSK"
+                              : (metrics['score'] as int) > 50
+                              ? "ORTA RİSK"
+                              : "YÜKSEK RİSK",
+                          style: pw.TextStyle(
+                            color: _getScoreColorForPdf(
+                              metrics['score'] as int,
+                            ),
+                            fontSize: 14, // Biraz daha belirgin
+                            fontWeight: pw.FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -481,6 +471,16 @@ class PdfService {
             style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 5),
+          // KONUT Uyarısı Buraya Taşındı
+          pw.Text(
+            "(Bu analiz ve rapor yalnızca KONUT ruhsatlı yapılar için geçerlidir)",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.red700, // Changed to RED
+            ),
+          ),
+          pw.SizedBox(height: 10),
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.start,
             children: [
@@ -573,7 +573,7 @@ class PdfService {
                             // Soru
                             if (label.isNotEmpty) ...[
                               pw.Text(
-                                "Soru",
+                                "Soru:",
                                 style: const pw.TextStyle(
                                   fontSize: 9,
                                   color: PdfColors.black,
@@ -592,7 +592,7 @@ class PdfService {
                             // Yanıt
                             if (value.isNotEmpty && value != 'Seçilmedi') ...[
                               pw.Text(
-                                "Yanıt",
+                                "Yanıt:",
                                 style: const pw.TextStyle(
                                   fontSize: 9,
                                   color: PdfColors.black,
@@ -611,7 +611,7 @@ class PdfService {
                             // Değerlendirme (Hem başlık hem metin KALIN)
                             if (report.isNotEmpty) ...[
                               pw.Text(
-                                "Değerlendirme",
+                                "Değerlendirme:",
                                 style: pw.TextStyle(
                                   fontSize: 9,
                                   fontWeight: pw.FontWeight.bold,
@@ -757,6 +757,16 @@ class PdfService {
           pw.Text(
             "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği 'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
             style: const pw.TextStyle(fontSize: 10, color: PdfColors.black),
+          ),
+          pw.SizedBox(height: 10),
+          // KONUT Uyarısı Eklendi
+          pw.Text(
+            "(Bu analiz ve rapor yalnızca KONUT ruhsatlı yapılar için geçerlidir)",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.red700,
+            ),
           ),
           pw.SizedBox(height: 20),
 

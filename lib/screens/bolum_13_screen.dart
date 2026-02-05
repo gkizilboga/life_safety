@@ -230,21 +230,21 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             ),
 
           if (_askTrafo)
-            _buildSoru("Trafo odasının kapısı nasıl?", 'trafo', [
+            _buildSoru("Trafo odasının duvar ve kapısı nasıl?", 'trafo', [
               Bolum13Content.trafoOptionA,
               Bolum13Content.trafoOptionB,
               Bolum13Content.trafoOptionC,
             ], _model.trafoKapi),
 
           if (_askDepo)
-            _buildSoru("Eşya deposunun kapısı nasıl?", 'depo', [
+            _buildSoru("Eşya deposunun duvar ve kapısı nasıl?", 'depo', [
               Bolum13Content.depoOptionA,
               Bolum13Content.depoOptionB,
               Bolum13Content.depoOptionC,
             ], _model.depoKapi),
 
           if (_askCop)
-            _buildSoru("Çöp toplama odasının kapısı nasıl?", 'cop', [
+            _buildSoru("Çöp toplama odasının duvar ve kapısı nasıl?", 'cop', [
               Bolum13Content.copOptionA,
               Bolum13Content.copOptionB,
               Bolum13Content.copOptionC,

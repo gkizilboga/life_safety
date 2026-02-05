@@ -343,7 +343,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "%${m['score']}",
+                    "${m['score']} / 100",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 42,

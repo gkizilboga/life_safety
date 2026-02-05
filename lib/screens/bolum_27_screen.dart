@@ -149,9 +149,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
               "Binada korunumlu yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır.",
             ),
             SizedBox(key: _dayanimKey, height: 1),
-            _buildSoruHeader(
-              "Kapalı yangın merdiveni kapısının malzemesi nedir?",
-            ),
+            _buildSoruHeader("Kapalı yangın merdiveni kapısı nasıl?"),
             _buildSoruCard('dayanim', [
               Bolum27Content.dayanimOptionA,
               Bolum27Content.dayanimOptionB,

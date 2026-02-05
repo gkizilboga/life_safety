@@ -20,8 +20,21 @@ class Bolum20Model {
   final int bodrumDonerMerdivenSayisi;
   final int bodrumSahanliksizMerdivenSayisi;
 
-  final ChoiceResult? basinclandirma;
   final ChoiceResult? bodrumMerdivenDevami;
+  final ChoiceResult? basinclandirma;
+  final ChoiceResult? daireselMerdivenYuksekligi;
+
+  // --- Computed Properties (Single Source of Truth) ---
+
+  /// Binada dairesel (spiral) merdiven var mı?
+  /// Ana katlarda veya bağımsız bodrumda dairesel merdiven kontrolü.
+  bool get hasDaireselMerdiven =>
+      donerMerdivenSayisi > 0 ||
+      (isBodrumIndependent && bodrumDonerMerdivenSayisi > 0);
+
+  /// Dairesel merdiven yüksekliği seçimi gerekli mi?
+  /// Dairesel merdiven varsa yükseklik bilgisi zorunludur.
+  bool get isDaireselYukseklikRequired => hasDaireselMerdiven;
 
   Bolum20Model({
     this.tekKatCikis,
@@ -32,17 +45,16 @@ class Bolum20Model {
     this.binaDisiAcikYanginMerdiveniSayisi = 0,
     this.donerMerdivenSayisi = 0,
     this.sahanliksizMerdivenSayisi = 0,
-
     this.isBodrumIndependent = false,
+    this.bodrumMerdivenDevami,
     this.bodrumNormalMerdivenSayisi = 0,
     this.bodrumBinaIciYanginMerdiveniSayisi = 0,
     this.bodrumBinaDisiKapaliYanginMerdiveniSayisi = 0,
     this.bodrumBinaDisiAcikYanginMerdiveniSayisi = 0,
     this.bodrumDonerMerdivenSayisi = 0,
     this.bodrumSahanliksizMerdivenSayisi = 0,
-
     this.basinclandirma,
-    this.bodrumMerdivenDevami,
+    this.daireselMerdivenYuksekligi,
   });
 
   Bolum20Model copyWith({
@@ -55,6 +67,7 @@ class Bolum20Model {
     int? donerMerdivenSayisi,
     int? sahanliksizMerdivenSayisi,
     bool? isBodrumIndependent,
+    ChoiceResult? bodrumMerdivenDevami,
     int? bodrumNormalMerdivenSayisi,
     int? bodrumBinaIciYanginMerdiveniSayisi,
     int? bodrumBinaDisiKapaliYanginMerdiveniSayisi,
@@ -62,7 +75,7 @@ class Bolum20Model {
     int? bodrumDonerMerdivenSayisi,
     int? bodrumSahanliksizMerdivenSayisi,
     ChoiceResult? basinclandirma,
-    ChoiceResult? bodrumMerdivenDevami,
+    ChoiceResult? daireselMerdivenYuksekligi,
   }) {
     return Bolum20Model(
       tekKatCikis: tekKatCikis ?? this.tekKatCikis,
@@ -79,8 +92,8 @@ class Bolum20Model {
       donerMerdivenSayisi: donerMerdivenSayisi ?? this.donerMerdivenSayisi,
       sahanliksizMerdivenSayisi:
           sahanliksizMerdivenSayisi ?? this.sahanliksizMerdivenSayisi,
-
       isBodrumIndependent: isBodrumIndependent ?? this.isBodrumIndependent,
+      bodrumMerdivenDevami: bodrumMerdivenDevami ?? this.bodrumMerdivenDevami,
       bodrumNormalMerdivenSayisi:
           bodrumNormalMerdivenSayisi ?? this.bodrumNormalMerdivenSayisi,
       bodrumBinaIciYanginMerdiveniSayisi:
@@ -97,9 +110,9 @@ class Bolum20Model {
       bodrumSahanliksizMerdivenSayisi:
           bodrumSahanliksizMerdivenSayisi ??
           this.bodrumSahanliksizMerdivenSayisi,
-
       basinclandirma: basinclandirma ?? this.basinclandirma,
-      bodrumMerdivenDevami: bodrumMerdivenDevami ?? this.bodrumMerdivenDevami,
+      daireselMerdivenYuksekligi:
+          daireselMerdivenYuksekligi ?? this.daireselMerdivenYuksekligi,
     );
   }
 
@@ -114,8 +127,8 @@ class Bolum20Model {
       'binaDisiAcikYanginMerdiveniSayisi': binaDisiAcikYanginMerdiveniSayisi,
       'donerMerdivenSayisi': donerMerdivenSayisi,
       'sahanliksizMerdivenSayisi': sahanliksizMerdivenSayisi,
-
       'isBodrumIndependent': isBodrumIndependent,
+      'bodrumMerdivenDevami_label': bodrumMerdivenDevami?.label,
       'bodrumNormalMerdivenSayisi': bodrumNormalMerdivenSayisi,
       'bodrumBinaIciYanginMerdiveniSayisi': bodrumBinaIciYanginMerdiveniSayisi,
       'bodrumBinaDisiKapaliYanginMerdiveniSayisi':
@@ -124,33 +137,31 @@ class Bolum20Model {
           bodrumBinaDisiAcikYanginMerdiveniSayisi,
       'bodrumDonerMerdivenSayisi': bodrumDonerMerdivenSayisi,
       'bodrumSahanliksizMerdivenSayisi': bodrumSahanliksizMerdivenSayisi,
-
       'basinclandirma_label': basinclandirma?.label,
-      'bodrumMerdivenDevami_label': bodrumMerdivenDevami?.label,
+      'daireselMerdivenYuksekligi_label': daireselMerdivenYuksekligi?.label,
     };
   }
 
   factory Bolum20Model.fromMap(Map<String, dynamic> map) {
-    ChoiceResult? find(String? label) {
-      if (label == null) return null;
-      return [
-        Bolum20Content.tekKatOptionA,
-        Bolum20Content.rampaOptionB,
-        Bolum20Content.rampaOptionC,
-        Bolum20Content.basYghOptionA,
-        Bolum20Content.basYghOptionB,
-        Bolum20Content.basYghOptionC,
-        Bolum20Content.bodrumOptionA,
-        Bolum20Content.bodrumOptionB,
-      ].firstWhere(
-        (e) => e.label == label,
-        orElse: () => Bolum20Content.basYghOptionB,
-      );
+    ChoiceResult? find(String? l, List<ChoiceResult> opts) {
+      if (l == null) return null;
+      try {
+        return opts.firstWhere((e) => e.label == l);
+      } catch (_) {
+        return null;
+      }
     }
 
+    // Better strategy: Use the lists we know.
+
     return Bolum20Model(
-      tekKatCikis: find(map['tekKatCikis_label']),
-      tekKatRampa: find(map['tekKatRampa_label']),
+      tekKatCikis: find(map['tekKatCikis_label'], [
+        Bolum20Content.tekKatOptionA,
+      ]),
+      tekKatRampa: find(map['tekKatRampa_label'], [
+        Bolum20Content.rampaOptionB,
+        Bolum20Content.rampaOptionC,
+      ]),
       normalMerdivenSayisi: map['normalMerdivenSayisi'] ?? 0,
       binaIciYanginMerdiveniSayisi: map['binaIciYanginMerdiveniSayisi'] ?? 0,
       binaDisiKapaliYanginMerdiveniSayisi:
@@ -159,8 +170,11 @@ class Bolum20Model {
           map['binaDisiAcikYanginMerdiveniSayisi'] ?? 0,
       donerMerdivenSayisi: map['donerMerdivenSayisi'] ?? 0,
       sahanliksizMerdivenSayisi: map['sahanliksizMerdivenSayisi'] ?? 0,
-
       isBodrumIndependent: map['isBodrumIndependent'] ?? false,
+      bodrumMerdivenDevami: find(map['bodrumMerdivenDevami_label'], [
+        Bolum20Content.bodrumOptionA,
+        Bolum20Content.bodrumOptionB,
+      ]),
       bodrumNormalMerdivenSayisi: map['bodrumNormalMerdivenSayisi'] ?? 0,
       bodrumBinaIciYanginMerdiveniSayisi:
           map['bodrumBinaIciYanginMerdiveniSayisi'] ?? 0,
@@ -171,9 +185,17 @@ class Bolum20Model {
       bodrumDonerMerdivenSayisi: map['bodrumDonerMerdivenSayisi'] ?? 0,
       bodrumSahanliksizMerdivenSayisi:
           map['bodrumSahanliksizMerdivenSayisi'] ?? 0,
-
-      basinclandirma: find(map['basinclandirma_label']),
-      bodrumMerdivenDevami: find(map['bodrumMerdivenDevami_label']),
+      basinclandirma: find(map['basinclandirma_label'], [
+        Bolum20Content.basYghOptionA,
+        Bolum20Content.basYghOptionB,
+        Bolum20Content.basYghOptionC,
+      ]),
+      daireselMerdivenYuksekligi:
+          find(map['daireselMerdivenYuksekligi_label'], [
+            Bolum20Content.daireselYukseklikOptionA,
+            Bolum20Content.daireselYukseklikOptionB,
+            Bolum20Content.daireselYukseklikOptionC,
+          ]),
     );
   }
 }

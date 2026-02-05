@@ -96,11 +96,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             padding: EdgeInsets.only(left: 4, bottom: 12),
             child: Text(
               "Binanızda aşağıdaki alanlardan hangileri mevcut?",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF263238),
-              ),
+              style: AppStyles.questionTitle,
             ),
           ),
 

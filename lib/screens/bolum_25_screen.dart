@@ -132,6 +132,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
             [
               Bolum25Content.basKurtarmaOptionA,
               Bolum25Content.basKurtarmaOptionB,
+              Bolum25Content.basKurtarmaOptionC,
             ],
             _model.basKurtarma,
           ),
@@ -151,7 +152,11 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       ),
       child: Row(
         children: [
-          Icon(Icons.info_outline_rounded, color: Colors.blue.shade800, size: 28),
+          Icon(
+            Icons.info_outline_rounded,
+            color: Colors.blue.shade800,
+            size: 28,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(

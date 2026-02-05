@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/bina_store.dart';
 import '../models/choice_result.dart';
+import '../utils/app_content.dart';
 
 enum ReportModule {
   binaBilgileri(
@@ -862,8 +863,12 @@ class ReportEngine {
 
     // Handle other sections generically if NOT handled above
     if (!handled) {
+      // Kullanıcı isteği: "Genel Değerlendirme" yerine gerçek soru metnini kullan
+      // Eğer bölümün spesifik bir sorusu yoksa, "Genel Değerlendirme" kullan
+      String questionLabel = _getQuestionText(id) ?? 'Genel Değerlendirme';
+
       details.add({
-        'label': 'Genel Değerlendirme',
+        'label': questionLabel,
         'value': res.uiTitle,
         'report': getSectionFullReport(
           id,
@@ -873,6 +878,40 @@ class ReportEngine {
     }
 
     return details;
+  }
+
+  /// Bölüm ID'sine göre soru metnini döndürür.
+  /// Eğer bölümün spesifik bir sorusu yoksa null döner ve "Genel Değerlendirme" kullanılır.
+  static String? _getQuestionText(int sectionId) {
+    const Map<int, String> sectionQuestions = {
+      3: 'Binanızın toplam katı ve yüksekliği nedir?',
+      4: 'Yapı yapımı hangi yılda tamamlandı?',
+      5: 'Kat taban alanı bilgileri',
+      6: 'Kapalı otopark var mı?',
+      8: 'Bitişik binalarla olan durum',
+      9: 'Binanızın dış cephe kaplaması nedir?',
+      10: 'Çatı ve arası özelliği',
+      11: 'Isı yalıtımı tipi',
+      12: 'İç taşıyıcı sistem malzemesi nedir?',
+      14: 'Bina kullanım sınıfı',
+      16: 'Binanın yan binaya olan mesafesi',
+      17: 'Çatı kaplama malzemesi',
+      18: 'Isı yalıtımı yanma tepkisi sınıfı',
+      22: 'Yatay katlararasında yangın bölmesi var mı?',
+      23: 'Düşey yangın bölmesi var mı?',
+      24: 'Binada sprinkler sistemi var mı?',
+      25: 'Yangın Algılama ve İhbar Sistemi var mı?',
+      26: 'Yangın dolapları ve hidrantlar mevcut mu?',
+      27: 'Yangın söndürücüleri mevcut mu?',
+      28: 'Duman tahliye sistemi mevcut mu?',
+      29: 'Acil aydınlatma sistemi mevcut mu?',
+      33: 'Her katta toplam kaç kişi bulunur?',
+      35: 'Kaçış yolu tipi',
+      // Not: Bölüm 13, 15, 20, 31, 32, 34, 36 gibi çok sorulu bölümler
+      // zaten 'handled = true' ile özel işleniyor, buraya gelmez.
+    };
+
+    return sectionQuestions[sectionId];
   }
 
   static Color getStatusColor(
@@ -1360,13 +1399,97 @@ class ReportEngine {
 
     // Bölüm 33: Yetersiz Çıkış
     if (id == 33) {
-      if (s.bolum33 != null) {
-        String report = s.bolum33!.combinedReportText;
-        if (report.contains("OLUMLU") || report.contains("YETERLİ")) {
-          report +=
+      final b33 = s.bolum33;
+      final b34 = s.bolum34; // Section 34 data needed for override logic
+
+      if (b33 != null) {
+        // We will reconstruct the report instead of using combinedReportText
+        // to account for Section 34 overrides.
+        List<String> reportParts = [];
+
+        // Helper function to evaluate a floor type
+        void evaluateFloor({
+          required String title,
+          required int? yuk,
+          required int? gerekli,
+          required int? mevcut,
+          required ChoiceResult? secim34, // Selection from Section 34
+          required String
+          independentExitLabel, // Label to look for (e.g. "34-1-A")
+        }) {
+          if (yuk == null || gerekli == null || mevcut == null) return;
+
+          bool hasIndependentExit =
+              secim34?.label.contains(independentExitLabel) ?? false;
+
+          bool isSufficient = (mevcut >= gerekli);
+
+          if (hasIndependentExit) {
+            // override: POSITIVE because of independent commercial exit
+            reportParts.add(
+              "OLUMLU ($title): Kattaki kullanıcı yükü $yuk kişi olarak hesaplanmıştır. Normal şartlarda $gerekli adet çıkış gerekmektedir (Mevcut: $mevcut). ANCAK, ticari alanların doğrudan dışarıya açılan bağımsız çıkışları olduğundan (Bölüm 34 beyanı), ticari kullanım kaynaklı yük konut merdiveni hesabına dahil edilmemiştir. Mevcut konut merdivenleri yeterli kabul edilmiştir.",
+            );
+          } else {
+            // Standard check
+            if (isSufficient) {
+              reportParts.add(
+                "OLUMLU ($title): Hesaplanan kullanıcı yükü ($yuk kişi) için mevcut çıkış sayısı ($mevcut adet) yeterlidir. (Gereken: $gerekli)",
+              );
+            } else {
+              reportParts.add(
+                "OLUMSUZ ($title): Hesaplanan kullanıcı yükü ($yuk kişi) için $gerekli adet çıkış gerekmektedir ancak binada $mevcut adet uygun çıkış tespit edilmiştir. Kapasite yetersizdir.",
+              );
+            }
+          }
+        }
+
+        // 1. ZEMİN KAT DEĞERLENDİRMESİ
+        evaluateFloor(
+          title: "Zemin Kat",
+          yuk: b33.yukZemin,
+          gerekli: b33.gerekliZemin,
+          mevcut: b33.mevcutUst,
+          secim34: b34?.zemin,
+          independentExitLabel: "34-1-A",
+        );
+
+        // 2. NORMAL KAT DEĞERLENDİRMESİ
+        if (b33.yukNormal != null) {
+          evaluateFloor(
+            title: "Normal Katlar",
+            yuk: b33.yukNormal,
+            gerekli: b33.gerekliNormal,
+            mevcut: b33.mevcutUst,
+            secim34: b34?.normal,
+            independentExitLabel: "34-3-A",
+          );
+        }
+
+        // 3. BODRUM KAT DEĞERLENDİRMESİ
+        if (b33.yukBodrum != null) {
+          evaluateFloor(
+            title: "Bodrum Katlar",
+            yuk: b33.yukBodrum,
+            gerekli: b33.gerekliBodrum,
+            mevcut: b33.mevcutBodrum,
+            secim34: b34?.bodrum,
+            independentExitLabel: "34-2-A",
+          );
+        }
+
+        if (reportParts.isEmpty) {
+          return "Hesaplama verisi bulunamadı.";
+        }
+
+        String finalReport = reportParts.join("\n\n");
+        // Maintain the original specific warning if it exists in the model or needs re-eval
+        // Since we are reconstructing, we rely on the evaluation above.
+        // We can append the standard disclaimer about Section 36
+        if (finalReport.contains("OLUMLU")) {
+          finalReport +=
               "\n\n(NOT: Bu bölümdeki 'OLUMLU' ibaresi, yalnızca kişi yüküne göre hesaplanan sayısal çıkış yeterliliğini ifade eder. Merdivenlerin korunumlu olup olmadığı veya niteliklerinin yönetmeliğe uygunluğu Bölüm 36'da ayrıca değerlendirilmiştir.)";
         }
-        return report;
+        return finalReport;
       }
     }
 
@@ -1450,6 +1573,75 @@ class ReportEngine {
           if (deviations.isNotEmpty) {
             baseReport +=
                 "\n\n--- TİP UYGUNSUZLUKLARI ---\n${deviations.join("\n\n")}";
+          }
+        }
+
+        // --- Dairesel Merdiven Kontrolü (YENİ) ---
+        if (b20?.hasDaireselMerdiven == true) {
+          final daireselH = b20?.daireselMerdivenYuksekligi?.label;
+          final b33 = s.bolum33;
+          final b34 = s.bolum34;
+
+          // 1. Dairesel Merdiven Yüksekliği Kontrolü
+          bool heightOk =
+              daireselH != null &&
+              daireselH.contains(
+                Bolum20Content.daireselYukseklikLabelA,
+              ); // <=9.50m
+
+          // 2. Kullanıcı Yükü Kontrolü (Hangi katlarda kullanılıyorsa oradaki yüke bakılmalı)
+          // Basitleştirme: Binadaki en yüksek kişi yükünü baz alalım (Riskli taraf)
+          // ANCAK: Ticari alan bağımsızsa (S34), o yükü düşmeliyiz.
+
+          int maxOccupancy = 0;
+          if (b33 != null) {
+            // Zemin
+            bool zeminBagimsiz = b34?.zemin?.label.contains("34-1-A") ?? false;
+            if (!zeminBagimsiz) maxOccupancy = b33.yukZemin ?? 0;
+
+            // Normal
+            bool normalBagimsiz =
+                b34?.normal?.label.contains("34-3-A") ?? false;
+            if (!normalBagimsiz) {
+              int val = b33.yukNormal ?? 0;
+              if (val > maxOccupancy) maxOccupancy = val;
+            }
+
+            // Bodrum
+            bool bodrumBagimsiz =
+                b34?.bodrum?.label.contains("34-2-A") ?? false;
+            if (!bodrumBagimsiz) {
+              int val = b33.yukBodrum ?? 0;
+              if (val > maxOccupancy) maxOccupancy = val;
+            }
+          }
+
+          bool occupancyOk = maxOccupancy <= 25;
+
+          if (daireselH == null ||
+              daireselH.contains(Bolum20Content.daireselYukseklikLabelC)) {
+            baseReport +=
+                "\n\nUYARI: Binada dairesel merdiven bulunmaktadır ancak yüksekliği belirtilmemiştir (BİLİNMİYOR). Dairesel merdivenler sadece 9.50m yüksekliğe kadar ve kullanıcı yükü 25 kişiyi aşmayan katlarda kaçış yolu olarak kabul edilebilir.";
+          }
+          // Geçersiz Durum: Yükseklik > 9.50m VEYA Yük > 25
+          else if (!heightOk || !occupancyOk) {
+            List<String> reasons = [];
+            if (!heightOk)
+              reasons.add(
+                "- Merdiven yüksekliği 9.50 metrenin üzerindedir (20-Dairesel-B).",
+              );
+            if (!occupancyOk)
+              reasons.add(
+                "- İlgili katlardaki kullanıcı yükü 25 kişiyi aşmaktadır (Max: $maxOccupancy kişi).",
+              );
+
+            baseReport +=
+                "\n\nKRİTİK RİSK: Binada bulunan dairesel merdivenler kaçış yolu olarak KABUL EDİLEMEZ. Şartlar sağlanmıyor:\n${reasons.join("\n")}\nDairesel merdivenler sadece 9.50m altındaki yüksekliklerde ve kullanıcı yükü 25 kişiyi geçmeyen durumlarda kullanılabilir. (Yön. Madde 43)";
+          }
+          // Geçerli Durum
+          else {
+            baseReport +=
+                "\n\nOLUMLU: Dairesel merdivenler, yükseklik sınırını (≤ 9.50m) ve kullanıcı yükü sınırını (≤ 25 kişi) sağladığı için kaçış yolu olarak kabul edilmiştir.";
           }
         }
 

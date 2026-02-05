@@ -86,8 +86,11 @@ class BinaStore {
   bool _isCompleted = false;
   int get lastActiveSection => _lastActiveSection;
   set lastActiveSection(int value) {
-    _lastActiveSection = value;
-    _prefs?.setInt('lastActiveSection', value);
+    if (_lastActiveSection != value) {
+      _lastActiveSection = value;
+      _prefs?.setInt('lastActiveSection', value);
+      _isDirty = true;
+    }
   }
 
   void useCredit() {
@@ -134,77 +137,220 @@ class BinaStore {
 
   // Public Erişimciler
   Bolum1Model? get bolum1 => _bolum1;
-  set bolum1(Bolum1Model? v) => _bolum1 = v;
+  set bolum1(Bolum1Model? v) {
+    _bolum1 = v;
+    _isDirty = true;
+  }
+
   Bolum2Model? get bolum2 => _bolum2;
-  set bolum2(Bolum2Model? v) => _bolum2 = v;
+  set bolum2(Bolum2Model? v) {
+    _bolum2 = v;
+    _isDirty = true;
+  }
+
   Bolum3Model? get bolum3 => _bolum3;
-  set bolum3(Bolum3Model? v) => _bolum3 = v;
+  set bolum3(Bolum3Model? v) {
+    _bolum3 = v;
+    _isDirty = true;
+  }
+
   Bolum4Model? get bolum4 => _bolum4;
-  set bolum4(Bolum4Model? v) => _bolum4 = v;
+  set bolum4(Bolum4Model? v) {
+    _bolum4 = v;
+    _isDirty = true;
+  }
+
   Bolum5Model? get bolum5 => _bolum5;
-  set bolum5(Bolum5Model? v) => _bolum5 = v;
+  set bolum5(Bolum5Model? v) {
+    _bolum5 = v;
+    _isDirty = true;
+  }
+
   Bolum6Model? get bolum6 => _bolum6;
-  set bolum6(Bolum6Model? v) => _bolum6 = v;
+  set bolum6(Bolum6Model? v) {
+    _bolum6 = v;
+    _isDirty = true;
+  }
+
   Bolum7Model? get bolum7 => _bolum7;
-  set bolum7(Bolum7Model? v) => _bolum7 = v;
+  set bolum7(Bolum7Model? v) {
+    _bolum7 = v;
+    _isDirty = true;
+  }
+
   Bolum8Model? get bolum8 => _bolum8;
-  set bolum8(Bolum8Model? v) => _bolum8 = v;
+  set bolum8(Bolum8Model? v) {
+    _bolum8 = v;
+    _isDirty = true;
+  }
+
   Bolum9Model? get bolum9 => _bolum9;
-  set bolum9(Bolum9Model? v) => _bolum9 = v;
+  set bolum9(Bolum9Model? v) {
+    _bolum9 = v;
+    _isDirty = true;
+  }
+
   Bolum10Model? get bolum10 => _bolum10;
-  set bolum10(Bolum10Model? v) => _bolum10 = v;
+  set bolum10(Bolum10Model? v) {
+    _bolum10 = v;
+    _isDirty = true;
+  }
+
   Bolum11Model? get bolum11 => _bolum11;
-  set bolum11(Bolum11Model? v) => _bolum11 = v;
+  set bolum11(Bolum11Model? v) {
+    _bolum11 = v;
+    _isDirty = true;
+  }
+
   Bolum12Model? get bolum12 => _bolum12;
-  set bolum12(Bolum12Model? v) => _bolum12 = v;
+  set bolum12(Bolum12Model? v) {
+    _bolum12 = v;
+    _isDirty = true;
+  }
+
   Bolum13Model? get bolum13 => _bolum13;
-  set bolum13(Bolum13Model? v) => _bolum13 = v;
+  set bolum13(Bolum13Model? v) {
+    _bolum13 = v;
+    _isDirty = true;
+  }
+
   Bolum14Model? get bolum14 => _bolum14;
-  set bolum14(Bolum14Model? v) => _bolum14 = v;
+  set bolum14(Bolum14Model? v) {
+    _bolum14 = v;
+    _isDirty = true;
+  }
+
   Bolum15Model? get bolum15 => _bolum15;
-  set bolum15(Bolum15Model? v) => _bolum15 = v;
+  set bolum15(Bolum15Model? v) {
+    _bolum15 = v;
+    _isDirty = true;
+  }
+
   Bolum16Model? get bolum16 => _bolum16;
-  set bolum16(Bolum16Model? v) => _bolum16 = v;
+  set bolum16(Bolum16Model? v) {
+    _bolum16 = v;
+    _isDirty = true;
+  }
+
   Bolum17Model? get bolum17 => _bolum17;
-  set bolum17(Bolum17Model? v) => _bolum17 = v;
+  set bolum17(Bolum17Model? v) {
+    _bolum17 = v;
+    _isDirty = true;
+  }
+
   Bolum18Model? get bolum18 => _bolum18;
-  set bolum18(Bolum18Model? v) => _bolum18 = v;
+  set bolum18(Bolum18Model? v) {
+    _bolum18 = v;
+    _isDirty = true;
+  }
+
   Bolum19Model? get bolum19 => _bolum19;
-  set bolum19(Bolum19Model? v) => _bolum19 = v;
+  set bolum19(Bolum19Model? v) {
+    _bolum19 = v;
+    _isDirty = true;
+  }
+
   Bolum20Model? get bolum20 => _bolum20;
-  set bolum20(Bolum20Model? v) => _bolum20 = v;
+  set bolum20(Bolum20Model? v) {
+    _bolum20 = v;
+    _isDirty = true;
+  }
+
   Bolum21Model? get bolum21 => _bolum21;
-  set bolum21(Bolum21Model? v) => _bolum21 = v;
+  set bolum21(Bolum21Model? v) {
+    _bolum21 = v;
+    _isDirty = true;
+  }
+
   Bolum22Model? get bolum22 => _bolum22;
-  set bolum22(Bolum22Model? v) => _bolum22 = v;
+  set bolum22(Bolum22Model? v) {
+    _bolum22 = v;
+    _isDirty = true;
+  }
+
   Bolum23Model? get bolum23 => _bolum23;
-  set bolum23(Bolum23Model? v) => _bolum23 = v;
+  set bolum23(Bolum23Model? v) {
+    _bolum23 = v;
+    _isDirty = true;
+  }
+
   Bolum24Model? get bolum24 => _bolum24;
-  set bolum24(Bolum24Model? v) => _bolum24 = v;
+  set bolum24(Bolum24Model? v) {
+    _bolum24 = v;
+    _isDirty = true;
+  }
+
   Bolum25Model? get bolum25 => _bolum25;
-  set bolum25(Bolum25Model? v) => _bolum25 = v;
+  set bolum25(Bolum25Model? v) {
+    _bolum25 = v;
+    _isDirty = true;
+  }
+
   Bolum26Model? get bolum26 => _bolum26;
-  set bolum26(Bolum26Model? v) => _bolum26 = v;
+  set bolum26(Bolum26Model? v) {
+    _bolum26 = v;
+    _isDirty = true;
+  }
+
   Bolum27Model? get bolum27 => _bolum27;
-  set bolum27(Bolum27Model? v) => _bolum27 = v;
+  set bolum27(Bolum27Model? v) {
+    _bolum27 = v;
+    _isDirty = true;
+  }
+
   Bolum28Model? get bolum28 => _bolum28;
-  set bolum28(Bolum28Model? v) => _bolum28 = v;
+  set bolum28(Bolum28Model? v) {
+    _bolum28 = v;
+    _isDirty = true;
+  }
+
   Bolum29Model? get bolum29 => _bolum29;
-  set bolum29(Bolum29Model? v) => _bolum29 = v;
+  set bolum29(Bolum29Model? v) {
+    _bolum29 = v;
+    _isDirty = true;
+  }
+
   Bolum30Model? get bolum30 => _bolum30;
-  set bolum30(Bolum30Model? v) => _bolum30 = v;
+  set bolum30(Bolum30Model? v) {
+    _bolum30 = v;
+    _isDirty = true;
+  }
+
   Bolum31Model? get bolum31 => _bolum31;
-  set bolum31(Bolum31Model? v) => _bolum31 = v;
+  set bolum31(Bolum31Model? v) {
+    _bolum31 = v;
+    _isDirty = true;
+  }
+
   Bolum32Model? get bolum32 => _bolum32;
-  set bolum32(Bolum32Model? v) => _bolum32 = v;
+  set bolum32(Bolum32Model? v) {
+    _bolum32 = v;
+    _isDirty = true;
+  }
+
   Bolum33Model? get bolum33 => _bolum33;
-  set bolum33(Bolum33Model? v) => _bolum33 = v;
+  set bolum33(Bolum33Model? v) {
+    _bolum33 = v;
+    _isDirty = true;
+  }
+
   Bolum34Model? get bolum34 => _bolum34;
-  set bolum34(Bolum34Model? v) => _bolum34 = v;
+  set bolum34(Bolum34Model? v) {
+    _bolum34 = v;
+    _isDirty = true;
+  }
+
   Bolum35Model? get bolum35 => _bolum35;
-  set bolum35(Bolum35Model? v) => _bolum35 = v;
+  set bolum35(Bolum35Model? v) {
+    _bolum35 = v;
+    _isDirty = true;
+  }
+
   Bolum36Model? get bolum36 => _bolum36;
-  set bolum36(Bolum36Model? v) => _bolum36 = v;
+  set bolum36(Bolum36Model? v) {
+    _bolum36 = v;
+    _isDirty = true;
+  }
 
   bool isTestCompleted() => _isCompleted;
 
@@ -231,7 +377,11 @@ class BinaStore {
     }
   }
 
+  bool _isDirty = false;
+
   void saveToDisk() {
+    if (!_isDirty && currentBinaId != null) return;
+
     currentBinaId ??= DateTime.now().millisecondsSinceEpoch.toString();
     final currentData = {
       'id': currentBinaId,
@@ -289,10 +439,14 @@ class BinaStore {
     _prefs?.setString('bina_archive', json.encode(archive));
     if (currentBinaId != null)
       _prefs?.setString('active_bina_id', currentBinaId!);
+
+    _isDirty = false;
   }
 
   void markAsCompleted() {
     _isCompleted = true;
+    _isDirty =
+        true; // Critical: mark dirty so saveToDisk() actually writes to disk
     saveToDisk();
   }
 
@@ -535,12 +689,12 @@ class BinaStore {
         if (_bolum10 == null) return null;
         List<String> reportParts = [];
         final m10 = _bolum10!;
-        
+
         // Zemin Kat
         if (m10.zemin != null) {
           reportParts.add("Zemin Kat Kullanımı: ${m10.zemin!.uiTitle}");
         }
-        
+
         // Normal Katlar
         if (m10.normaller.isNotEmpty) {
           final nUsages = m10.normaller
@@ -550,18 +704,22 @@ class BinaStore {
           if (nUsages.isNotEmpty) {
             if (nUsages.toSet().length == 1) {
               // Tüm normal katlar aynı kullanım amacına sahip
-              reportParts.add("Normal Katlar (${nUsages.length} adet): ${nUsages[0]}");
+              reportParts.add(
+                "Normal Katlar (${nUsages.length} adet): ${nUsages[0]}",
+              );
             } else {
               // Farklı kullanım amaçları var, her birini tek tek yaz
               for (int i = 0; i < m10.normaller.length; i++) {
                 if (m10.normaller[i] != null) {
-                  reportParts.add("${i + 1}. Normal Kat: ${m10.normaller[i]!.uiTitle}");
+                  reportParts.add(
+                    "${i + 1}. Normal Kat: ${m10.normaller[i]!.uiTitle}",
+                  );
                 }
               }
             }
           }
         }
-        
+
         // Bodrum Katlar
         if (m10.bodrumlar.isNotEmpty) {
           final bUsages = m10.bodrumlar
@@ -571,18 +729,22 @@ class BinaStore {
           if (bUsages.isNotEmpty) {
             if (bUsages.toSet().length == 1) {
               // Tüm bodrum katlar aynı kullanım amacına sahip
-              reportParts.add("Bodrum Katlar (${bUsages.length} adet): ${bUsages[0]}");
+              reportParts.add(
+                "Bodrum Katlar (${bUsages.length} adet): ${bUsages[0]}",
+              );
             } else {
               // Farklı kullanım amaçları var, her birini tek tek yaz
               for (int i = 0; i < m10.bodrumlar.length; i++) {
                 if (m10.bodrumlar[i] != null) {
-                  reportParts.add("${i + 1}. Bodrum Kat: ${m10.bodrumlar[i]!.uiTitle}");
+                  reportParts.add(
+                    "${i + 1}. Bodrum Kat: ${m10.bodrumlar[i]!.uiTitle}",
+                  );
                 }
               }
             }
           }
         }
-        
+
         return ChoiceResult(
           label: "10",
           uiTitle: "Kat Kullanım Amaçları",
@@ -597,33 +759,55 @@ class BinaStore {
         if (_bolum13 == null) return null;
         final m13 = _bolum13!;
         List<String> parts = [];
-        
+
         // Kapı Dayanımları
-        if (m13.otoparkKapi != null) parts.add("Otopark Kapısı: ${m13.otoparkKapi!.reportText}");
-        if (m13.kazanKapi != null) parts.add("Kazan Dairesi Kapısı: ${m13.kazanKapi!.reportText}");
-        if (m13.asansorKapi != null) parts.add("Asansör Makine Dairesi Kapısı: ${m13.asansorKapi!.reportText}");
-        if (m13.jeneratorKapi != null) parts.add("Jeneratör Odası Kapısı: ${m13.jeneratorKapi!.reportText}");
-        if (m13.elektrikKapi != null) parts.add("Elektrik/Pano Odası Kapısı: ${m13.elektrikKapi!.reportText}");
-        if (m13.trafoKapi != null) parts.add("Trafo Merkezi Kapısı: ${m13.trafoKapi!.reportText}");
-        if (m13.depoKapi != null) parts.add("Depo Alanı Kapısı: ${m13.depoKapi!.reportText}");
-        if (m13.copKapi != null) parts.add("Çöp Odası Kapısı: ${m13.copKapi!.reportText}");
-        if (m13.ortakDuvar != null) parts.add("Ortak Duvar Yangın Dayanımı: ${m13.ortakDuvar!.reportText}");
-        if (m13.ticariKapi != null) parts.add("Ticari Alan Kapısı: ${m13.ticariKapi!.reportText}");
-        
+        if (m13.otoparkKapi != null)
+          parts.add("Otopark Kapısı: ${m13.otoparkKapi!.reportText}");
+        if (m13.kazanKapi != null)
+          parts.add("Kazan Dairesi Kapısı: ${m13.kazanKapi!.reportText}");
+        if (m13.asansorKapi != null)
+          parts.add(
+            "Asansör Makine Dairesi Kapısı: ${m13.asansorKapi!.reportText}",
+          );
+        if (m13.jeneratorKapi != null)
+          parts.add("Jeneratör Odası Kapısı: ${m13.jeneratorKapi!.reportText}");
+        if (m13.elektrikKapi != null)
+          parts.add(
+            "Elektrik/Pano Odası Kapısı: ${m13.elektrikKapi!.reportText}",
+          );
+        if (m13.trafoKapi != null)
+          parts.add("Trafo Merkezi Kapısı: ${m13.trafoKapi!.reportText}");
+        if (m13.depoKapi != null)
+          parts.add("Depo Alanı Kapısı: ${m13.depoKapi!.reportText}");
+        if (m13.copKapi != null)
+          parts.add("Çöp Odası Kapısı: ${m13.copKapi!.reportText}");
+        if (m13.ortakDuvar != null)
+          parts.add(
+            "Ortak Duvar Yangın Dayanımı: ${m13.ortakDuvar!.reportText}",
+          );
+        if (m13.ticariKapi != null)
+          parts.add("Ticari Alan Kapısı: ${m13.ticariKapi!.reportText}");
+
         // Duman Tahliye Sistemleri
-        if (m13.otoparkAlan != null) parts.add("Otopark Duman Tahliyesi: ${m13.otoparkAlan!.reportText}");
-        if (m13.kazanAlan != null) parts.add("Kazan Dairesi Duman Tahliyesi: ${m13.kazanAlan!.reportText}");
-        if (m13.siginakAlan != null) parts.add("Sığınak Duman Tahliyesi: ${m13.siginakAlan!.reportText}");
-        
+        if (m13.otoparkAlan != null)
+          parts.add("Otopark Duman Tahliyesi: ${m13.otoparkAlan!.reportText}");
+        if (m13.kazanAlan != null)
+          parts.add(
+            "Kazan Dairesi Duman Tahliyesi: ${m13.kazanAlan!.reportText}",
+          );
+        if (m13.siginakAlan != null)
+          parts.add("Sığınak Duman Tahliyesi: ${m13.siginakAlan!.reportText}");
+
         if (parts.isEmpty) {
           return ChoiceResult(
             label: "13",
             uiTitle: "Yangın Kompartımanları",
             uiSubtitle: "",
-            reportText: "BİLGİ: Binada özel teknik hacim bulunmadığından bu bölüm değerlendirme kapsamı dışındadır.",
+            reportText:
+                "BİLGİ: Binada özel teknik hacim bulunmadığından bu bölüm değerlendirme kapsamı dışındadır.",
           );
         }
-        
+
         return ChoiceResult(
           label: "13",
           uiTitle: "Yangın Kompartımanları ve Kapı Dayanımları",

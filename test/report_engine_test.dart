@@ -7,6 +7,8 @@ import 'package:life_safety/models/bolum_10_model.dart';
 import 'package:life_safety/models/bolum_22_model.dart';
 import 'package:life_safety/models/bolum_23_model.dart';
 import 'package:life_safety/models/bolum_20_model.dart';
+import 'package:life_safety/models/bolum_33_model.dart';
+import 'package:life_safety/models/bolum_34_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 
 void main() {
@@ -117,5 +119,133 @@ void main() {
         );
       },
     );
+  });
+
+  group('Dairesel Merdiven Değerlendirmesi Testleri', () {
+    test(
+      'Senaryo 1: Dairesel merdiven yüksekliği <= 9.50m VE kullanıcı yükü <= 25 - GEÇERLİ',
+      () {
+        store.bolum3 = Bolum3Model(hYapi: 20.0, bodrumKatSayisi: 0);
+        store.bolum20 = Bolum20Model(
+          donerMerdivenSayisi: 1,
+          daireselMerdivenYuksekligi: ChoiceResult(
+            label: "20-Dairesel-A",
+            uiTitle: "9.50 metre veya altında",
+            uiSubtitle: "",
+            reportText: "",
+          ),
+        );
+        store.bolum33 = Bolum33Model(yukZemin: 20, yukNormal: 15, yukBodrum: 0);
+
+        final report = ReportEngine.getSectionFullReport(36, store: store);
+        expect(report.contains("OLUMLU"), true);
+        expect(report.contains("kaçış yolu olarak kabul edilmiştir"), true);
+      },
+    );
+
+    test('Senaryo 2: Dairesel merdiven yüksekliği > 9.50m - GEÇERSİZ', () {
+      store.bolum20 = Bolum20Model(
+        donerMerdivenSayisi: 1,
+        daireselMerdivenYuksekligi: ChoiceResult(
+          label: "20-Dairesel-B",
+          uiTitle: "9.50 metrenin üzerinde",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      store.bolum33 = Bolum33Model(yukZemin: 20, yukNormal: 15, yukBodrum: 0);
+
+      final report = ReportEngine.getSectionFullReport(36, store: store);
+      expect(report.contains("KRİTİK RİSK"), true);
+      expect(report.contains("KABUL EDİLEMEZ"), true);
+      expect(report.contains("9.50 metrenin üzerindedir"), true);
+    });
+
+    test('Senaryo 3: Kullanıcı yükü > 25 kişi - GEÇERSİZ', () {
+      store.bolum20 = Bolum20Model(
+        donerMerdivenSayisi: 1,
+        daireselMerdivenYuksekligi: ChoiceResult(
+          label: "20-Dairesel-A",
+          uiTitle: "9.50 metre veya altında",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      store.bolum33 = Bolum33Model(yukZemin: 30, yukNormal: 28, yukBodrum: 0);
+
+      final report = ReportEngine.getSectionFullReport(36, store: store);
+      expect(report.contains("KRİTİK RİSK"), true);
+      expect(report.contains("KABUL EDİLEMEZ"), true);
+      expect(report.contains("25 kişiyi aşmaktadır"), true);
+    });
+
+    test('Senaryo 4: Yükseklik bilinmiyor - UYARI', () {
+      store.bolum20 = Bolum20Model(
+        donerMerdivenSayisi: 1,
+        daireselMerdivenYuksekligi: ChoiceResult(
+          label: "20-Dairesel-C",
+          uiTitle: "Bilmiyorum",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      store.bolum33 = Bolum33Model(yukZemin: 20, yukNormal: 15, yukBodrum: 0);
+
+      final report = ReportEngine.getSectionFullReport(36, store: store);
+      expect(report.contains("UYARI"), true);
+      expect(report.contains("BİLİNMİYOR"), true);
+    });
+
+    test('Senaryo 5: Bölüm 34 bağımsız çıkış - Ticari alan yükü sayılmaz', () {
+      store.bolum20 = Bolum20Model(
+        donerMerdivenSayisi: 1,
+        daireselMerdivenYuksekligi: ChoiceResult(
+          label: "20-Dairesel-A",
+          uiTitle: "9.50 metre veya altında",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      store.bolum33 = Bolum33Model(
+        yukZemin: 50, // Ticari alan, yüksek yük
+        yukNormal: 20, // Konut, düşük yük
+        yukBodrum: 0,
+      );
+      store.bolum34 = Bolum34Model(
+        zemin: ChoiceResult(
+          label: "34-1-A",
+          uiTitle: "Evet, bağımsız çıkışı var",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+
+      final report = ReportEngine.getSectionFullReport(36, store: store);
+      // Ticari zemin bağımsız, sadece normal kat (20 kişi) sayılır
+      expect(report.contains("OLUMLU"), true);
+      expect(report.contains("kaçış yolu olarak kabul edilmiştir"), true);
+    });
+
+    test('Senaryo 6: HER İKİ ŞART DA sağlanmıyor - Çoklu sebep', () {
+      store.bolum20 = Bolum20Model(
+        donerMerdivenSayisi: 1,
+        daireselMerdivenYuksekligi: ChoiceResult(
+          label: "20-Dairesel-B",
+          uiTitle: "9.50 metrenin üzerinde",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      store.bolum33 = Bolum33Model(
+        yukZemin: 30, // Yük de fazla
+        yukNormal: 28,
+        yukBodrum: 0,
+      );
+
+      final report = ReportEngine.getSectionFullReport(36, store: store);
+      expect(report.contains("KRİTİK RİSK"), true);
+      expect(report.contains("9.50 metrenin üzerindedir"), true);
+      expect(report.contains("25 kişiyi aşmaktadır"), true);
+    });
   });
 }

@@ -78,6 +78,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
           _bodrumCountErr = null;
         }
       } else {
+        // Empty is allowed, treated as 0
         _bodrumCountErr = null;
       }
     });
@@ -133,8 +134,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
 
   bool _isReady() {
     if (!_isConfirmed) return false;
-    if (_normalCountCtrl.text.isEmpty || _bodrumCountCtrl.text.isEmpty)
-      return false;
+    if (_normalCountCtrl.text.isEmpty) return false;
     // Kat sayısı limit kontrolü
     if (_normalCountErr != null || _bodrumCountErr != null) return false;
     if (!_isUnknown) {

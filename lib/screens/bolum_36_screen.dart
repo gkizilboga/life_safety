@@ -548,6 +548,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       merdivenDegerlendirme: finalReport,
     );
     BinaStore.instance.bolum36 = _model;
+    BinaStore.instance.markAsCompleted();
     BinaStore.instance.saveToDisk();
     Navigator.push(
       context,
