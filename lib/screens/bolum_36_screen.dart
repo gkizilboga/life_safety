@@ -91,12 +91,18 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     int doner = b20?.donerMerdivenSayisi ?? 0;
     int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
     int sahanliksiz = b20?.sahanliksizMerdivenSayisi ?? 0;
+    int dengelenmis = (b20?.dengelenmisMerdivenSayisi ?? 0) +
+        (b20?.isBodrumIndependent == true
+            ? (b20?.bodrumDengelenmisMerdivenSayisi ?? 0)
+            : 0);
 
     _cntDisCelik = disAcik;
-    _totalValidCikisSayisi = icKapali + disKapali + normal + doner + disAcik;
+    _totalValidCikisSayisi =
+        icKapali + disKapali + normal + doner + disAcik + dengelenmis;
 
     _hasKorunumlu = (icKapali + disKapali) > 0;
-    _hasKorunumsuz = (normal + doner + disAcik + sahanliksiz) > 0;
+    _hasKorunumsuz =
+        (normal + doner + disAcik + sahanliksiz + dengelenmis) > 0;
 
     _genislikKorunumluCtrl.addListener(_validate);
     _genislikKorunumsuzCtrl.addListener(_validate);
@@ -264,6 +270,10 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     int sahanliksiz = b20?.sahanliksizMerdivenSayisi ?? 0;
     int doner = b20?.donerMerdivenSayisi ?? 0;
     int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
+    int dengelenmis = (b20?.dengelenmisMerdivenSayisi ?? 0) +
+        (b20?.isBodrumIndependent == true
+            ? (b20?.bodrumDengelenmisMerdivenSayisi ?? 0)
+            : 0);
     bool basinclandirmaVar = b20?.basinclandirma?.label == "20-BAS-A";
 
     List<String> notes = [];
@@ -281,6 +291,24 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       notes.add(
         "Bina yüksekliği 21.50m üzerinde olduğu için 'Bina Dışı Açık Çelik Merdiven' kullanılamaz.",
       );
+
+    if (dengelenmis > 0) {
+      int maxYuk = [
+        b33?.yukZemin ?? 0,
+        b33?.yukNormal ?? 0,
+        b33?.yukBodrum ?? 0,
+      ].reduce((a, b) => a > b ? a : b);
+
+      if (hBina > 15.50 || maxYuk > 100) {
+        notes.add(
+          "Binada 'Dengelenmiş Merdiven' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur.",
+        );
+      } else {
+        notes.add(
+          "Binada 'Dengelenmiş Merdiven' mevcuttur. Bina yüksekliği (≤15.50m) ve kullanıcı yükü (≤100 kişi) sınırları içerisinde kaldığı için bu merdiven tipi kaçış yolu olarak kabul edilebilir.",
+        );
+      }
+    }
 
     if (hYapi < 21.50)
       notes.add(

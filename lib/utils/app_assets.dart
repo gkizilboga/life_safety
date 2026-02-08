@@ -57,7 +57,10 @@ class AppAssets {
       'assets/images/sections/dis_acik_merdiven_2.webp';
   static const String section20Dairesel =
       'assets/images/sections/dairesel_merdiven.webp';
-  static const String section21Ygh = 'assets/images/sections/ygh_1.webp';
+  static const String section20Dengelenmis =
+      'assets/images/sections/dengelenmis_merdiven.webp';
+  static const String section21Ygh = 
+      'assets/images/sections/ygh_1.webp';
   static const String section22ItfaiyeHol =
       'assets/images/sections/itfaiye_asansor_hol.webp';
   static const String section22ItfaiyeKabin =

@@ -36,6 +36,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   final _disAcikCtrl = TextEditingController();
   final _donerCtrl = TextEditingController();
   final _sahanliksizCtrl = TextEditingController();
+  final _dengelenmisCtrl = TextEditingController(); // NEW
 
   // Basement Independent Stair Controllers
   final _bodNormalCtrl = TextEditingController();
@@ -44,6 +45,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   final _bodDisAcikCtrl = TextEditingController();
   final _bodDonerCtrl = TextEditingController();
   final _bodSahanliksizCtrl = TextEditingController();
+  final _bodDengelenmisCtrl = TextEditingController(); // NEW
 
   // Errors for Main
   String? _normalErr;
@@ -52,6 +54,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   String? _disAcikErr;
   String? _donerErr;
   String? _sahanliksizErr;
+  String? _dengelenmisErr; // NEW
 
   // Errors for Basement
   String? _bodNormalErr;
@@ -60,6 +63,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   String? _bodDisAcikErr;
   String? _bodDonerErr;
   String? _bodSahanliksizErr;
+  String? _bodDengelenmisErr; // NEW
 
   @override
   void initState() {
@@ -73,6 +77,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _disAcikCtrl.addListener(_validateLimits);
     _donerCtrl.addListener(_validateLimits);
     _sahanliksizCtrl.addListener(_validateLimits);
+    _dengelenmisCtrl.addListener(_validateLimits); // NEW
+    _dengelenmisCtrl.addListener(_validateLimits); // NEW
 
     // Listeners for Basement
     _bodNormalCtrl.addListener(_validateLimits);
@@ -81,6 +87,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _bodDisAcikCtrl.addListener(_validateLimits);
     _bodDonerCtrl.addListener(_validateLimits);
     _bodSahanliksizCtrl.addListener(_validateLimits);
+    _bodDengelenmisCtrl.addListener(_validateLimits); // NEW
 
     // Load existing data
     final saved = BinaStore.instance.bolum20;
@@ -100,6 +107,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         _donerCtrl.text = saved.donerMerdivenSayisi.toString();
       if (saved.sahanliksizMerdivenSayisi > 0)
         _sahanliksizCtrl.text = saved.sahanliksizMerdivenSayisi.toString();
+      if (saved.dengelenmisMerdivenSayisi > 0) // NEW
+        _dengelenmisCtrl.text = saved.dengelenmisMerdivenSayisi.toString();
 
       // Basement
       _isBodrumIndependent = saved.isBodrumIndependent;
@@ -121,6 +130,9 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         if (saved.bodrumSahanliksizMerdivenSayisi > 0)
           _bodSahanliksizCtrl.text = saved.bodrumSahanliksizMerdivenSayisi
               .toString();
+        if (saved.bodrumDengelenmisMerdivenSayisi > 0) // NEW
+          _bodDengelenmisCtrl.text =
+              saved.bodrumDengelenmisMerdivenSayisi.toString();
       }
     }
   }
@@ -146,6 +158,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       _disAcikErr = _checkLimit(_disAcikCtrl.text);
       _donerErr = _checkLimit(_donerCtrl.text);
       _sahanliksizErr = _checkLimit(_sahanliksizCtrl.text);
+      _dengelenmisErr = _checkLimit(_dengelenmisCtrl.text); // NEW
 
       // Basement Errors
       if (_isBodrumIndependent) {
@@ -155,6 +168,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         _bodDisAcikErr = _checkLimit(_bodDisAcikCtrl.text);
         _bodDonerErr = _checkLimit(_bodDonerCtrl.text);
         _bodSahanliksizErr = _checkLimit(_bodSahanliksizCtrl.text);
+        _bodDengelenmisErr = _checkLimit(_bodDengelenmisCtrl.text); // NEW
       }
 
       // Show Basinclandirma Logic (Combined check)
@@ -201,7 +215,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         _disKapaliErr == null &&
         _disAcikErr == null &&
         _donerErr == null &&
-        _sahanliksizErr == null;
+        _sahanliksizErr == null &&
+        _dengelenmisErr == null; // NEW
 
     if (!_isBodrumIndependent) return mainValid;
 
@@ -211,7 +226,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         _bodDisKapaliErr == null &&
         _bodDisAcikErr == null &&
         _bodDonerErr == null &&
-        _bodSahanliksizErr == null;
+        _bodSahanliksizErr == null &&
+        _bodDengelenmisErr == null; // NEW
 
     return mainValid && bodrumValid;
   }
@@ -224,6 +240,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _disAcikCtrl.dispose();
     _donerCtrl.dispose();
     _sahanliksizCtrl.dispose();
+    _dengelenmisCtrl.dispose(); // NEW
 
     _bodNormalCtrl.dispose();
     _bodIcKapaliCtrl.dispose();
@@ -231,6 +248,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _bodDisAcikCtrl.dispose();
     _bodDonerCtrl.dispose();
     _bodSahanliksizCtrl.dispose();
+    _bodDengelenmisCtrl.dispose(); // NEW
 
     super.dispose();
   }
@@ -289,8 +307,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       int disAcik = int.tryParse(_disAcikCtrl.text) ?? 0;
       int doner = int.tryParse(_donerCtrl.text) ?? 0;
       int sahanliksiz = int.tryParse(_sahanliksizCtrl.text) ?? 0;
+      int dengelenmis = int.tryParse(_dengelenmisCtrl.text) ?? 0; // NEW
 
-      if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz == 0)
+      if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz +
+              dengelenmis ==
+          0)
         return false;
 
       // Validate Basement Stairs if Independent
@@ -302,8 +323,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         bDisA = int.tryParse(_bodDisAcikCtrl.text) ?? 0;
         bDoner = int.tryParse(_bodDonerCtrl.text) ?? 0;
         bSahan = int.tryParse(_bodSahanliksizCtrl.text) ?? 0;
+        int bDengelenmis = int.tryParse(_bodDengelenmisCtrl.text) ?? 0; // NEW
 
-        if (bNormal + bIc + bDisK + bDisA + bDoner + bSahan == 0) {
+        if (bNormal + bIc + bDisK + bDisA + bDoner + bSahan + bDengelenmis ==
+            0) {
           // Must enter at least 1 basement stair if confirmed independent
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -335,6 +358,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         binaDisiAcikYanginMerdiveniSayisi: disAcik,
         donerMerdivenSayisi: doner,
         sahanliksizMerdivenSayisi: sahanliksiz,
+        dengelenmisMerdivenSayisi: dengelenmis, // NEW
 
         // Save Basement Data
         isBodrumIndependent: _isBodrumIndependent,
@@ -344,6 +368,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         bodrumBinaDisiAcikYanginMerdiveniSayisi: bDisA,
         bodrumDonerMerdivenSayisi: bDoner,
         bodrumSahanliksizMerdivenSayisi: bSahan,
+        bodrumDengelenmisMerdivenSayisi:
+            int.tryParse(_bodDengelenmisCtrl.text) ?? 0, // NEW
       );
     }
 
@@ -506,10 +532,62 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     ctrl: _sahanliksizCtrl,
                     error: _sahanliksizErr,
                   ),
+                  const Divider(height: 32),
+                  _buildStairInputGroup(
+                    label: Bolum20Content.cokKatOption7.uiTitle,
+                    ctrl: _dengelenmisCtrl,
+                    error: _dengelenmisErr,
+                    assetPath: AppAssets.section20Dengelenmis,
+                  ),
                 ],
               ),
             ),
           ],
+
+          // Stair Classification Summary
+          const SizedBox(height: 24),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF3F4F6),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: const Color(0xFFE0E0E0),
+                width: 1,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Merdiven Sınıflandırması',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1A237E),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _buildClassificationRow(
+                  'Korunumlu Merdiven',
+                  (int.tryParse(_icKapaliCtrl.text) ?? 0) +
+                      (int.tryParse(_disKapaliCtrl.text) ?? 0),
+                  Colors.green.shade700,
+                ),
+                const SizedBox(height: 8),
+                _buildClassificationRow(
+                  'Korunumsuz Merdiven',
+                  (int.tryParse(_normalCtrl.text) ?? 0) +
+                      (int.tryParse(_disAcikCtrl.text) ?? 0) +
+                      (int.tryParse(_donerCtrl.text) ?? 0) +
+                      (int.tryParse(_sahanliksizCtrl.text) ?? 0) +
+                      (int.tryParse(_dengelenmisCtrl.text) ?? 0),
+                  Colors.orange.shade700,
+                ),
+              ],
+            ),
+          ),
 
           if (_hasBodrum)
             _buildSoru(
@@ -588,6 +666,12 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     ctrl: _bodSahanliksizCtrl,
                     error: _bodSahanliksizErr,
                   ),
+                  const Divider(height: 32),
+                  _buildStairInputGroup(
+                    label: "Bodrum: ${Bolum20Content.cokKatOption7.uiTitle}",
+                    ctrl: _bodDengelenmisCtrl,
+                    error: _bodDengelenmisErr, // FIXED
+                  ),
                 ],
               ),
             ),
@@ -595,7 +679,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
           if (_hasDairesel)
             _buildSoru(
-              "Binadaki dairesel merdivenlerin yüksekliği (genel olarak) nedir?",
+              "Binadaki dairesel merdivenin yüksekliği nedir?",
               'daireselH',
               [
                 Bolum20Content.daireselYukseklikOptionA,
@@ -740,6 +824,38 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildClassificationRow(String label, int count, Color color) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '$label:',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: color,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: color, width: 1.5),
+          ),
+          child: Text(
+            count.toString(),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

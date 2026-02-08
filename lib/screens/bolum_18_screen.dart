@@ -54,23 +54,18 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
     });
   }
 
+  bool get _isComplete {
+    if (_model.duvarKaplama == null) return false;
+    if (_askBoru && _model.boruTipi == null) return false;
+    return true;
+  }
+
   void _onNextPressed() {
-    if (_model.duvarKaplama == null)
-      return _showError("Lütfen duvar kaplama sorusunu yanıtlayınız.");
-
-    // Yüksek binaysa boru sorusu zorunlu
-    if (_askBoru && _model.boruTipi == null)
-      return _showError("Lütfen tesisat borusu sorusunu yanıtlayınız.");
-
     BinaStore.instance.bolum18 = _model;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum19Screen()),
     );
-  }
-
-  void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -79,7 +74,7 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
       title: "İç Duvarlar",
       subtitle: "",
       screenType: widget.runtimeType,
-      isNextEnabled: true,
+      isNextEnabled: _isComplete,
       onNext: _onNextPressed,
       child: Column(
         children: [

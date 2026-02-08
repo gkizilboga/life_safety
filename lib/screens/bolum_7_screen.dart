@@ -81,7 +81,39 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
       subtitle: "Binadaki özel riskli alanlar",
       screenType: widget.runtimeType,
       isNextEnabled: _isConfirmed,
-      onNext: () {
+      onNext: () async {
+        // Check if building has >3 floors and no elevator selected
+        final b3 = BinaStore.instance.bolum3;
+        final totalFloors = (b3?.zemin ?? 0) + (b3?.normal ?? 0);
+        
+        if (totalFloors > 3 && !_model.hasAsansor) {
+          // Show confirmation dialog
+          final confirm = await showDialog<bool>(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text('Asansör Teyidi'),
+              content: const Text(
+                'Binanızda 3\'ten fazla kat var ancak asansör seçeneğini işaretlemediniz.\n\n'
+                'Binada gerçekten asansör yok mu?',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx, false),
+                  child: const Text('İptal'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx, true),
+                  child: const Text('Evet, Asansör Yok'),
+                ),
+              ],
+            ),
+          );
+
+          if (confirm != true) {
+            return; // User cancelled or wants to review
+          }
+        }
+
         BinaStore.instance.bolum7 = _model;
         // saveToDisk is handled by AnalysisPageLayout
         Navigator.push(

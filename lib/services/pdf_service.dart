@@ -529,118 +529,114 @@ class PdfService {
             );
             final riskColor = _getRiskColor(fullReportForColor);
 
-            return pw.Wrap(
-              children: [
-                pw.Container(
-                  margin: const pw.EdgeInsets.only(bottom: 10),
-                  decoration: pw.BoxDecoration(
-                    border: pw.Border(
-                      left: pw.BorderSide(color: riskColor, width: 4),
-                    ),
-                    color: PdfColors.grey50,
-                  ),
-                  padding: const pw.EdgeInsets.all(8),
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+            return pw.Container(
+              margin: const pw.EdgeInsets.only(bottom: 10),
+              decoration: pw.BoxDecoration(
+                border: pw.Border(
+                  left: pw.BorderSide(color: riskColor, width: 4),
+                ),
+                color: PdfColors.grey50,
+              ),
+              padding: const pw.EdgeInsets.all(8),
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  // Section Header
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      // Section Header
-                      pw.Row(
-                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                        children: [
+                      pw.Text(
+                        "BÖLÜM $id: ${AppDefinitions.getSectionTitle(id)}",
+                        style: pw.TextStyle(
+                          fontSize: 9,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Divider(thickness: 0.5, color: PdfColors.grey400),
+
+                  // Detailed Items Loop
+                  ...details.map((item) {
+                    final label = item['label'] ?? '';
+                    final value = item['value'] ?? '';
+                    final report = _cleanEmojis(item['report'] ?? '');
+
+                    return pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.SizedBox(height: 8),
+
+                        // Soru
+                        if (label.isNotEmpty) ...[
                           pw.Text(
-                            "BÖLÜM $id: ${AppDefinitions.getSectionTitle(id)}",
+                            "Soru:",
+                            style: const pw.TextStyle(
+                              fontSize: 9,
+                              color: PdfColors.black,
+                            ),
+                          ),
+                          pw.Text(
+                            label,
+                            style: const pw.TextStyle(
+                              fontSize: 9,
+                              color: PdfColors.black,
+                            ),
+                          ),
+                          pw.SizedBox(height: 4),
+                        ],
+
+                        // Yanıt
+                        if (value.isNotEmpty && value != 'Seçilmedi') ...[
+                          pw.Text(
+                            "Yanıt:",
+                            style: const pw.TextStyle(
+                              fontSize: 9,
+                              color: PdfColors.black,
+                            ),
+                          ),
+                          pw.Text(
+                            value,
+                            style: const pw.TextStyle(
+                              fontSize: 9,
+                              color: PdfColors.black,
+                            ),
+                          ),
+                          pw.SizedBox(height: 4),
+                        ],
+
+                        // Değerlendirme (Hem başlık hem metin KALIN)
+                        if (report.isNotEmpty) ...[
+                          pw.Text(
+                            "Değerlendirme:",
                             style: pw.TextStyle(
                               fontSize: 9,
                               fontWeight: pw.FontWeight.bold,
                               color: PdfColors.black,
                             ),
                           ),
-                        ],
-                      ),
-                      pw.Divider(thickness: 0.5, color: PdfColors.grey400),
-
-                      // Detailed Items Loop
-                      ...details.map((item) {
-                        final label = item['label'] ?? '';
-                        final value = item['value'] ?? '';
-                        final report = _cleanEmojis(item['report'] ?? '');
-
-                        return pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.SizedBox(height: 8),
-
-                            // Soru
-                            if (label.isNotEmpty) ...[
-                              pw.Text(
-                                "Soru:",
-                                style: const pw.TextStyle(
-                                  fontSize: 9,
-                                  color: PdfColors.black,
-                                ),
-                              ),
-                              pw.Text(
-                                label,
-                                style: const pw.TextStyle(
-                                  fontSize: 9,
-                                  color: PdfColors.black,
-                                ),
-                              ),
-                              pw.SizedBox(height: 4),
-                            ],
-
-                            // Yanıt
-                            if (value.isNotEmpty && value != 'Seçilmedi') ...[
-                              pw.Text(
-                                "Yanıt:",
-                                style: const pw.TextStyle(
-                                  fontSize: 9,
-                                  color: PdfColors.black,
-                                ),
-                              ),
-                              pw.Text(
-                                value,
-                                style: const pw.TextStyle(
-                                  fontSize: 9,
-                                  color: PdfColors.black,
-                                ),
-                              ),
-                              pw.SizedBox(height: 4),
-                            ],
-
-                            // Değerlendirme (Hem başlık hem metin KALIN)
-                            if (report.isNotEmpty) ...[
-                              pw.Text(
-                                "Değerlendirme:",
-                                style: pw.TextStyle(
-                                  fontSize: 9,
-                                  fontWeight: pw.FontWeight.bold,
-                                  color: PdfColors.black,
-                                ),
-                              ),
-                              pw.Text(
-                                report,
-                                style: pw.TextStyle(
-                                  fontSize: 9,
-                                  fontWeight: pw
-                                      .FontWeight
-                                      .bold, // Kullanıcı isteği: Metin de bold
-                                  color: PdfColors.black,
-                                ),
-                              ),
-                            ],
-                            pw.SizedBox(height: 8),
-                            pw.Divider(
-                              thickness: 0.2,
-                              color: PdfColors.grey300,
+                          pw.Text(
+                            report,
+                            style: pw.TextStyle(
+                              fontSize: 9,
+                              fontWeight: pw
+                                  .FontWeight
+                                  .bold, // Kullanıcı isteği: Metin de bold
+                              color: PdfColors.black,
                             ),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
-                ),
-              ],
+                          ),
+                        ],
+                        pw.SizedBox(height: 8),
+                        pw.Divider(
+                          thickness: 0.2,
+                          color: PdfColors.grey300,
+                        ),
+                      ],
+                    );
+                  }),
+                ],
+              ),
             );
           }),
         ],
@@ -650,50 +646,55 @@ class PdfService {
     // 4. İyileştirme Önerileri (Risk Raporunda Kalacak)
     if (actionPlan.isNotEmpty) {
       pdf.addPage(
-        pw.Page(
+        pw.MultiPage(
           pageTheme: pageTheme,
-          build: (context) => pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                "ÖNERİLER",
-                style: pw.TextStyle(
-                  fontSize: 16,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.orange900,
-                ),
-              ),
-              pw.SizedBox(height: 20),
-              ...actionPlan.map(
-                (item) => pw.Container(
-                  margin: const pw.EdgeInsets.only(bottom: 10),
-                  padding: const pw.EdgeInsets.all(8),
-                  decoration: const pw.BoxDecoration(
-                    color: PdfColors.orange50,
-                    border: pw.Border(
-                      left: pw.BorderSide(color: PdfColors.orange900, width: 2),
-                    ),
-                  ),
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text(
-                        "Bölüm ${item['id']}: ${_cleanEmojis(item['title'])}",
-                        style: pw.TextStyle(
-                          fontSize: 10,
-                          fontWeight: pw.FontWeight.bold,
-                        ),
-                      ),
-                      pw.Text(
-                        "Öneri: ${_cleanEmojis(item['advice'])}",
-                        style: const pw.TextStyle(fontSize: 9),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+          header: (context) => pw.Container(
+            alignment: pw.Alignment.centerRight,
+            child: pw.Text(
+              "Öneriler",
+              style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
+            ),
           ),
+          footer: _buildFooter,
+          build: (context) => [
+            pw.Text(
+              "ÖNERİLER",
+              style: pw.TextStyle(
+                fontSize: 16,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.orange900,
+              ),
+            ),
+            pw.SizedBox(height: 20),
+            ...actionPlan.map(
+              (item) => pw.Container(
+                margin: const pw.EdgeInsets.only(bottom: 10),
+                padding: const pw.EdgeInsets.all(8),
+                decoration: const pw.BoxDecoration(
+                  color: PdfColors.orange50,
+                  border: pw.Border(
+                    left: pw.BorderSide(color: PdfColors.orange900, width: 2),
+                  ),
+                ),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      "Bölüm ${item['id']}: ${_cleanEmojis(item['title'])}",
+                      style: pw.TextStyle(
+                        fontSize: 10,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                    pw.Text(
+                      "Öneri: ${_cleanEmojis(item['advice'])}",
+                      style: const pw.TextStyle(fontSize: 9),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
@@ -783,73 +784,69 @@ class PdfService {
             final statusColor = _getRiskColor(req.reason);
             final isMandatory = statusColor == PdfColors.red700;
 
-            return pw.Wrap(
-              children: [
-                pw.Container(
-                  margin: const pw.EdgeInsets.only(bottom: 10),
-                  padding: const pw.EdgeInsets.all(8),
-                  decoration: isMandatory
-                      ? pw.BoxDecoration(
-                          color: PdfColor.fromInt(0xFFFFEBEE), // Soft Red
-                          border: pw.Border.all(
-                            color: PdfColors.red700,
-                            width: 1.5,
-                          ),
-                          borderRadius: pw.BorderRadius.circular(4),
-                        )
-                      : const pw.BoxDecoration(
-                          color: PdfColors.white,
-                          border: pw.Border(
-                            left: pw.BorderSide(
-                              color: PdfColors.grey400,
-                              width: 4,
-                            ),
-                          ),
+            return pw.Container(
+              margin: const pw.EdgeInsets.only(bottom: 10),
+              padding: const pw.EdgeInsets.all(8),
+              decoration: isMandatory
+                  ? pw.BoxDecoration(
+                      color: PdfColor.fromInt(0xFFFFEBEE), // Soft Red
+                      border: pw.Border.all(
+                        color: PdfColors.red700,
+                        width: 1.5,
+                      ),
+                      borderRadius: pw.BorderRadius.circular(4),
+                    )
+                  : const pw.BoxDecoration(
+                      color: PdfColors.white,
+                      border: pw.Border(
+                        left: pw.BorderSide(
+                          color: PdfColors.grey400,
+                          width: 4,
                         ),
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      ),
+                    ),
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
-                      pw.Row(
-                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                        children: [
-                          pw.Expanded(
-                            child: pw.Text(
-                              _cleanEmojis(req.name),
-                              style: pw.TextStyle(
-                                fontSize: 10,
-                                fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.black,
-                              ),
-                            ),
-                          ),
-                          // Badge removed, maybe just text status if needed?
-                          // For now, keeping as is (empty) or minimal
-                          pw.SizedBox.shrink(),
-                        ],
-                      ),
-                      pw.SizedBox(height: 6),
-                      pw.Text(
-                        cleanReason,
-                        style: const pw.TextStyle(
-                          fontSize: 9,
-                          color: PdfColors.black,
-                        ),
-                      ),
-                      if (req.note.isNotEmpty) ...[
-                        pw.SizedBox(height: 4),
-                        pw.Text(
-                          "NOT: ${_cleanEmojis(req.note)}",
+                      pw.Expanded(
+                        child: pw.Text(
+                          _cleanEmojis(req.name),
                           style: pw.TextStyle(
-                            fontSize: 8,
+                            fontSize: 10,
+                            fontWeight: pw.FontWeight.bold,
                             color: PdfColors.black,
-                            // fontStyle: pw.FontStyle.italic removed to fix character issues
                           ),
                         ),
-                      ],
+                      ),
+                      // Badge removed, maybe just text status if needed?
+                      // For now, keeping as is (empty) or minimal
+                      pw.SizedBox.shrink(),
                     ],
                   ),
-                ),
-              ],
+                  pw.SizedBox(height: 6),
+                  pw.Text(
+                    cleanReason,
+                    style: const pw.TextStyle(
+                      fontSize: 9,
+                      color: PdfColors.black,
+                    ),
+                  ),
+                  if (req.note.isNotEmpty) ...[
+                    pw.SizedBox(height: 4),
+                    pw.Text(
+                      "NOT: ${_cleanEmojis(req.note)}",
+                      style: pw.TextStyle(
+                        fontSize: 8,
+                        color: PdfColors.black,
+                        // fontStyle: pw.FontStyle.italic removed to fix character issues
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             );
           }),
         ],

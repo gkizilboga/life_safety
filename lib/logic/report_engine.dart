@@ -108,6 +108,31 @@ class ReportEngine {
       }
     }
 
+    // Dengelenmiş Merdiven Kontrolü (H > 15.50 veya Yük > 100 yasak)
+    int dengelenmis = (s.bolum20?.dengelenmisMerdivenSayisi ?? 0) +
+        (s.bolum20?.isBodrumIndependent == true
+            ? (s.bolum20?.bodrumDengelenmisMerdivenSayisi ?? 0)
+            : 0);
+
+    if (dengelenmis > 0) {
+      double hBina = s.bolum3?.hBina ?? 0;
+      int maxYuk = 0;
+      if (s.bolum33 != null) {
+        maxYuk = [
+          s.bolum33?.yukZemin ?? 0,
+          s.bolum33?.yukNormal ?? 0,
+          s.bolum33?.yukBodrum ?? 0
+        ].reduce((curr, next) => curr > next ? curr : next);
+      }
+
+      if (hBina > 15.50 || maxYuk > 100) {
+        if (!criticalTitles.contains("Bölüm 20")) {
+          criticalRisks++;
+          criticalTitles.add("Bölüm 20");
+        }
+      }
+    }
+
     final yghReasons = evaluateYghRequirement(store: s);
     final bool hasYgh = s.bolum21?.varlik?.label.contains("21-1-A") ?? false;
     if (yghReasons.isNotEmpty && !hasYgh) {
@@ -467,6 +492,31 @@ class ReportEngine {
             'report':
                 'KRİTİK RİSK: Sahanlıksız merdivenler kaçış yolu olarak kabul edilmez.',
           });
+        if (b20.dengelenmisMerdivenSayisi > 0) {
+          // Validation Logic
+          double hBina = s.bolum3?.hBina ?? 0;
+          int maxYuk = 0;
+          if (s.bolum33 != null) {
+            maxYuk = [
+              s.bolum33?.yukZemin ?? 0,
+              s.bolum33?.yukNormal ?? 0,
+              s.bolum33?.yukBodrum ?? 0
+            ].reduce((curr, next) => curr > next ? curr : next);
+          }
+
+          String report =
+              'OLUMLU: Binada \'Dengelenmiş Merdiven\' mevcuttur. Bina yüksekliği (≤15.50m) ve kullanıcı yükü (≤100 kişi) sınırları içerisinde kaldığı için bu merdiven tipi kaçış yolu olarak kabul edilebilir.';
+          if (hBina > 15.50 || maxYuk > 100) {
+            report =
+                'KRİTİK RİSK: Binada \'Dengelenmiş Merdiven\' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m\'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur. (Mevcut: $hBina m, Max Yük: $maxYuk kişi)';
+          }
+
+          details.add({
+            'label': 'Dengelenmiş Merdiven Sayısı (Adet)',
+            'value': '${b20.dengelenmisMerdivenSayisi} adet',
+            'report': report,
+          });
+        }
 
         // Bodrum merdivenleri
         if (b20.isBodrumIndependent) {
@@ -515,6 +565,31 @@ class ReportEngine {
               'report':
                   'KRİTİK RİSK: Bodrumda sahanlıksız merdiven tespit edildi.',
             });
+          if (b20.bodrumDengelenmisMerdivenSayisi > 0) {
+            // Validation Logic for Basement (Consistent with building-wide rule)
+            double hBina = s.bolum3?.hBina ?? 0;
+            int maxYuk = 0;
+            if (s.bolum33 != null) {
+              maxYuk = [
+                s.bolum33?.yukZemin ?? 0,
+                s.bolum33?.yukNormal ?? 0,
+                s.bolum33?.yukBodrum ?? 0
+              ].reduce((curr, next) => curr > next ? curr : next);
+            }
+
+            String report =
+                'OLUMLU: Bodrumda \'Dengelenmiş Merdiven\' mevcuttur. Bina yüksekliği (≤15.50m) ve kullanıcı yükü (≤100 kişi) sınırları içerisinde kaldığı için bu merdiven tipi kaçış yolu olarak kabul edilebilir.';
+            if (hBina > 15.50 || maxYuk > 100) {
+              report =
+                  'KRİTİK RİSK: Bodrumda \'Dengelenmiş Merdiven\' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m\'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur. (Mevcut H: $hBina m, Max Yük: $maxYuk kişi)';
+            }
+
+            details.add({
+              'label': 'Bodrum Kat Dengelenmiş Merdiven Sayısı (Adet)',
+              'value': '${b20.bodrumDengelenmisMerdivenSayisi} adet',
+              'report': report,
+            });
+          }
         }
         handled = true;
       }
@@ -1173,6 +1248,27 @@ class ReportEngine {
             "KRİTİK RİSK: Sahanlıksız Merdiven: ${b20.sahanliksizMerdivenSayisi} adet - Binada kaçış yolu olarak kabul edilemeyecek merdiven tespit edilmiştir.",
           );
         }
+        if (b20.dengelenmisMerdivenSayisi > 0) {
+          double hBina = s.bolum3?.hBina ?? 0;
+          int maxYuk = 0;
+          if (s.bolum33 != null) {
+            maxYuk = [
+              s.bolum33?.yukZemin ?? 0,
+              s.bolum33?.yukNormal ?? 0,
+              s.bolum33?.yukBodrum ?? 0
+            ].reduce((curr, next) => curr > next ? curr : next);
+          }
+
+          if (hBina > 15.50 || maxYuk > 100) {
+            parts.add(
+              "KRİTİK RİSK: Binada 'Dengelenmiş Merdiven' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur. (Mevcut: $hBina m, Max Yük: $maxYuk kişi)",
+            );
+          } else {
+            parts.add(
+              "OLUMLU: Binada 'Dengelenmiş Merdiven' mevcuttur. Bina yüksekliği (≤15.50m) ve kullanıcı yükü (≤100 kişi) sınırları içerisinde kaldığı için bu merdiven tipi kaçış yolu olarak kabul edilebilir.",
+            );
+          }
+        }
 
         // Bodrum merdivenleri (bağımsız ise)
         if (b20.isBodrumIndependent) {
@@ -1205,6 +1301,27 @@ class ReportEngine {
             parts.add(
               "KRİTİK RİSK: Bodrum Sahanlıksız Merdiven: ${b20.bodrumSahanliksizMerdivenSayisi} adet",
             );
+          }
+          if (b20.bodrumDengelenmisMerdivenSayisi > 0) {
+            double hBina = s.bolum3?.hBina ?? 0;
+            int maxYuk = 0;
+            if (s.bolum33 != null) {
+              maxYuk = [
+                s.bolum33?.yukZemin ?? 0,
+                s.bolum33?.yukNormal ?? 0,
+                s.bolum33?.yukBodrum ?? 0
+              ].reduce((curr, next) => curr > next ? curr : next);
+            }
+
+            if (hBina > 15.50 || maxYuk > 100) {
+              parts.add(
+                "KRİTİK RİSK: Bodrumda 'Dengelenmiş Merdiven' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur.",
+              );
+            } else {
+              parts.add(
+                "OLUMLU: Bodrumda 'Dengelenmiş Merdiven' mevcuttur. Bina yüksekliği ve kullanıcı yükü sınırları sağlandığı için kabul edilebilir.",
+              );
+            }
           }
         }
 

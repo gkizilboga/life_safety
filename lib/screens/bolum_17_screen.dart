@@ -46,32 +46,24 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
     });
   }
 
-  void _onNextPressed() {
-    if (_model.kaplama == null)
-      return _showError("Lütfen çatı kaplama malzemesini seçiniz.");
-    if (_model.iskelet == null)
-      return _showError(
-        "Lütfen çatı iskeleti ve yalıtımı sorusunu yanıtlayınız.",
-      );
-    if (_askBitisik && _model.bitisikDuvar == null)
-      return _showError("Lütfen çatı arası duvar sorusunu yanıtlayınız.");
-    if (_model.isiklik == null)
-      return _showError("Lütfen çatı ışıklık durumunu belirtiniz.");
-
+  bool get _isComplete {
+    if (_model.kaplama == null) return false;
+    if (_model.iskelet == null) return false;
+    if (_askBitisik && _model.bitisikDuvar == null) return false;
+    if (_model.isiklik == null) return false;
     if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label &&
         _model.isiklikMalzemesi == null) {
-      return _showError("Lütfen ışıklık malzemesini seçiniz.");
+      return false;
     }
+    return true;
+  }
 
+  void _onNextPressed() {
     BinaStore.instance.bolum17 = _model;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum18Screen()),
     );
-  }
-
-  void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 
   @override
@@ -80,7 +72,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       title: "Çatı",
       subtitle: "Çatı katmanları ve ışıklık",
       screenType: widget.runtimeType,
-      isNextEnabled: true,
+      isNextEnabled: _isComplete,
       onNext: _onNextPressed,
       child: Column(
         children: [
