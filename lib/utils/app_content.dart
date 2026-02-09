@@ -1522,8 +1522,7 @@ class Bolum20Content {
   static final cokKatOption6 = ChoiceResult(
     label: "20-6 (Çok Kat)",
     uiTitle: "Sahanlıksız Merdiven.",
-    uiSubtitle:
-        "Basamak adedi 17'yi aşan, sahanlığı olmayan merdiven.",
+    uiSubtitle: "Basamak adedi 17'yi aşan, sahanlığı olmayan merdiven.",
     reportText: "(Sayısal veri olarak saklanır)",
   );
 
@@ -3598,63 +3597,63 @@ class AppDefinitions {
       case 7:
         return "Özel Riskli Alanlar";
       case 8:
-        return "Kazan Dairesi Durumu";
+        return "Bina Yerleşimi";
       case 9:
-        return "Sığınak Durumu";
+        return "Sprinkler Sistemi Varlığı";
       case 10:
-        return "Katların Baskın Kullanım Amaçları";
+        return "Katların Kullanım Amacı";
       case 11:
-        return "Binadaki Tehlikeli Maddeler";
+        return "İtfaiyenin Bina Yaklaşım Mesafesi";
       case 12:
-        return "Çatı Tipi ve Özellikleri";
+        return "Yapısal Yangın Dayanımı";
       case 13:
-        return "Yangın Kompartımanları ve Zonları";
+        return "Teknik Hacimler";
       case 14:
-        return "Cephe ve Yalıtım Malzemesi";
+        return "Tesisat Şaftları";
       case 15:
-        return "İç Duvar ve Tavan Kaplamaları";
+        return "İç Mekanlar";
       case 16:
-        return "Bina Cephe ve Yerleşim Özellikleri";
+        return "Dış Cephe Özellikleri";
       case 17:
-        return "Yangın Güvenlik Mesafeleri";
+        return "Çatı";
       case 18:
-        return "Kaçış Yolları Genel Tanımı";
+        return "İç Duvarlar";
       case 19:
-        return "Kullanıcı Yükü ve Kişi Sayısı";
+        return "Kaçış Yolu Engelleri ve Yönlendirme";
       case 20:
-        return "Yangın Merdiveni ve Çıkış Sayıları";
+        return "Kaçış Merdivenleri";
       case 21:
-        return "Merdiven Yuvaları ve Yangın Güvenlik Holleri";
+        return "Yangın Güvenlik Holü (YGH)";
       case 22:
-        return "Acil Durum (İtfaiye) Asansörü";
+        return "İtfaiye (Acil Durum) Asansörü";
       case 23:
-        return "Normal Asansörler ve Duman Kontrolü";
+        return "Normal Asansör";
       case 24:
-        return "Kaçış Yolu Kapıları";
+        return "Dış Kaçış Geçitleri";
       case 25:
-        return "Kaçış Yolu Işıklandırması";
+        return "Dairesel Merdiven";
       case 26:
-        return "Acil Durum Aydınlatması ve Yönlendirme";
+        return "Kaçış Rampaları";
       case 27:
-        return "Algılama ve Uyarı Sistemleri";
+        return "Kaçış Yolu Kapıları";
       case 28:
-        return "Kablo ve Tesisat Güvenliği";
+        return "Daire İçi Mesafe";
       case 29:
-        return "Söndürme Sistemleri (Sprinkler)";
+        return "Temizlik ve Düzen";
       case 30:
-        return "Sabit Boru ve Hortum Sistemleri";
+        return "Kazan Dairesi";
       case 31:
-        return "Yangın Söndürücü (Taşınabilir) Tüpler";
+        return "Trafo Odası";
       case 32:
-        return "Jeneratör ve Güç Kaynakları";
+        return "Jeneratör Odası";
       case 33:
-        return "Kaçış Yolu Kapasite Hesabı";
+        return "Çıkış Sayısı ve Kullanıcı Yükü";
       case 34:
-        return "Üst Kat ve Bodrum Kat Kaçış Yolları";
+        return "Ticari Alanlar";
       case 35:
-        return "Koridor Genişlikleri ve Çıkmaz Koridorlar";
+        return "Kaçış Mesafeleri";
       case 36:
-        return "Merdiven Tipi ve Özellikleri";
+        return "Merdiven Tip ve Özellikleri";
       default:
         return "Bölüm $id";
     }

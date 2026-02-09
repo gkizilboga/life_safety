@@ -750,9 +750,25 @@ class BinaStore {
           uiTitle: "Kat Kullanım Amaçları",
           uiSubtitle: "",
           reportText: "BİLGİ: ${reportParts.join('\n')}",
+          adviceText: _joinAdvice([
+            m10.zemin,
+            ...m10.normaller,
+            ...m10.bodrumlar,
+          ]),
         );
       case 11:
-        return _bolum11?.mesafe;
+        if (_bolum11 == null) return null;
+        return ChoiceResult(
+          label: "11",
+          uiTitle: "İtfaiye Yaklaşım Mesafesi",
+          uiSubtitle: "",
+          reportText: _bolum11!.mesafe?.reportText ?? "",
+          adviceText: _joinAdvice([
+            _bolum11!.mesafe,
+            _bolum11!.engel,
+            _bolum11!.zayifNokta,
+          ]),
+        );
       case 12:
         return _bolum12?.secim;
       case 13:
@@ -813,6 +829,21 @@ class BinaStore {
           uiTitle: "Yangın Kompartımanları ve Kapı Dayanımları",
           uiSubtitle: "",
           reportText: parts.join('\n\n'),
+          adviceText: _joinAdvice([
+            m13.otoparkKapi,
+            m13.kazanKapi,
+            m13.asansorKapi,
+            m13.jeneratorKapi,
+            m13.elektrikKapi,
+            m13.trafoKapi,
+            m13.depoKapi,
+            m13.copKapi,
+            m13.ortakDuvar,
+            m13.ticariKapi,
+            m13.otoparkAlan,
+            m13.kazanAlan,
+            m13.siginakAlan,
+          ]),
         );
       case 14:
         return _bolum14?.secim;
@@ -823,6 +854,14 @@ class BinaStore {
           uiTitle: "İç Kaplama Özellikleri",
           uiSubtitle: "",
           reportText: "Döşeme, yalıtım ve tavan analizleri.",
+          adviceText: _joinAdvice([
+            _bolum15!.kaplama,
+            _bolum15!.yalitim,
+            _bolum15!.yalitimSap,
+            _bolum15!.tavan,
+            _bolum15!.tavanMalzeme,
+            _bolum15!.tesisat,
+          ]),
         );
       case 16:
         if (_bolum16 == null) return null;
@@ -831,6 +870,11 @@ class BinaStore {
           uiTitle: "Dış Cephe Özellikleri",
           uiSubtitle: "",
           reportText: "Mantolama ve cephe güvenliği analizi.",
+          adviceText: _joinAdvice([
+            _bolum16!.mantolama,
+            _bolum16!.sagirYuzey,
+            _bolum16!.bitisikNizam,
+          ]),
         );
       case 17:
         if (_bolum17 == null) return null;
@@ -839,6 +883,12 @@ class BinaStore {
           uiTitle: "Çatı Güvenliği",
           uiSubtitle: "",
           reportText: "Çatı kaplama ve iskelet analizi.",
+          adviceText: _joinAdvice([
+            _bolum17!.kaplama,
+            _bolum17!.iskelet,
+            _bolum17!.bitisikDuvar,
+            _bolum17!.isiklik,
+          ]),
         );
       case 18:
         if (_bolum18 == null) return null;
@@ -847,6 +897,7 @@ class BinaStore {
           uiTitle: "Koridor Kaplamaları",
           uiSubtitle: "",
           reportText: "Kaçış yolu koridor analizi.",
+          adviceText: _joinAdvice([_bolum18!.duvarKaplama, _bolum18!.boruTipi]),
         );
       case 19:
         if (_bolum19 == null) return null;
@@ -855,6 +906,12 @@ class BinaStore {
           uiTitle: "Kaçış Yolu Engelleri",
           uiSubtitle: "",
           reportText: "Kaçış yolu ve yönlendirme analizi.",
+          adviceText: _joinAdvice([
+            ..._bolum19!.engeller,
+            _bolum19!.levha,
+            _bolum19!.yanilticiKapi,
+            _bolum19!.yanilticiEtiket,
+          ]),
         );
       case 20:
         if (_bolum20 == null) return null;
@@ -863,6 +920,13 @@ class BinaStore {
           uiTitle: "Merdiven Analizi",
           uiSubtitle: "",
           reportText: "Binada merdiven sayıları ve tipleri belirlenmiştir.",
+          adviceText: _joinAdvice([
+            _bolum20!.tekKatCikis,
+            _bolum20!.tekKatRampa,
+            _bolum20!.bodrumMerdivenDevami,
+            _bolum20!.basinclandirma,
+            _bolum20!.daireselMerdivenYuksekligi,
+          ]),
         );
       case 21:
         if (_bolum21 == null) return null;
@@ -871,15 +935,70 @@ class BinaStore {
           uiTitle: "Yangın Güvenlik Holleri",
           uiSubtitle: "",
           reportText: "YGH zorunluluk ve varlık analizi.",
+          adviceText: _joinAdvice([
+            _bolum21!.varlik,
+            _bolum21!.malzeme,
+            _bolum21!.kapi,
+            _bolum21!.esya,
+          ]),
         );
       case 22:
-        return _bolum22?.varlik;
+        if (_bolum22 == null) return null;
+        return ChoiceResult(
+          label: "22",
+          uiTitle: "İtfaiye Asansörü Analizi",
+          uiSubtitle: "",
+          reportText: _bolum22!.varlik?.reportText ?? "",
+          adviceText: _joinAdvice([
+            _bolum22!.varlik,
+            _bolum22!.konum,
+            _bolum22!.boyut,
+            _bolum22!.kabin,
+            _bolum22!.enerji,
+            _bolum22!.basinc,
+          ]),
+        );
       case 23:
-        return _bolum23?.yanginModu;
+        if (_bolum23 == null) return null;
+        return ChoiceResult(
+          label: "23",
+          uiTitle: "Normal Asansör Analizi",
+          uiSubtitle: "",
+          reportText: _bolum23!.yanginModu?.reportText ?? "",
+          adviceText: _joinAdvice([
+            _bolum23!.bodrum,
+            _bolum23!.yanginModu,
+            _bolum23!.konum,
+            _bolum23!.levha,
+            _bolum23!.havalandirma,
+          ]),
+        );
       case 24:
-        return _bolum24?.tip;
+        if (_bolum24 == null) return null;
+        return ChoiceResult(
+          label: "24",
+          uiTitle: "Dış Kaçış Geçitleri",
+          uiSubtitle: "",
+          reportText: _bolum24!.tip?.reportText ?? "",
+          adviceText: _joinAdvice([
+            _bolum24!.tip,
+            _bolum24!.pencere,
+            _bolum24!.kapi,
+          ]),
+        );
       case 25:
-        return _bolum25?.genislik;
+        if (_bolum25 == null) return null;
+        return ChoiceResult(
+          label: "25",
+          uiTitle: "Dairesel Merdiven Analizi",
+          uiSubtitle: "",
+          reportText: _bolum25!.genislik?.reportText ?? "",
+          adviceText: _joinAdvice([
+            _bolum25!.genislik,
+            _bolum25!.basamak,
+            _bolum25!.basKurtarma,
+          ]),
+        );
       case 26:
         if (_bolum26 == null) return null;
         return ChoiceResult(
@@ -887,6 +1006,12 @@ class BinaStore {
           uiTitle: "Rampalar",
           uiSubtitle: "",
           reportText: "Kaçış rampaları analizi.",
+          adviceText: _joinAdvice([
+            _bolum26!.varlik,
+            _bolum26!.egim,
+            _bolum26!.sahanlik,
+            _bolum26!.otopark,
+          ]),
         );
       case 27:
         if (_bolum27 == null) return null;
@@ -895,9 +1020,28 @@ class BinaStore {
           uiTitle: "Kapı Özellikleri",
           uiSubtitle: "",
           reportText: "Kapı özellikleri analizi yapılmıştır.",
+          adviceText: _joinAdvice([
+            _bolum27!.boyut,
+            _bolum27!.yon,
+            _bolum27!.kilit,
+            _bolum27!.dayanim,
+          ]),
         );
       case 28:
-        return _bolum28?.mesafe;
+        if (_bolum28 == null) return null;
+        return ChoiceResult(
+          label: "28",
+          uiTitle: "Daire İçi Mesafeler",
+          uiSubtitle: "",
+          reportText: _bolum28!.mesafe?.reportText ?? "",
+          adviceText: _joinAdvice([
+            _bolum28!.mesafe,
+            _bolum28!.dubleks,
+            _bolum28!.alan,
+            _bolum28!.cikis,
+            _bolum28!.muafiyet,
+          ]),
+        );
       case 29:
         if (_bolum29 == null) return null;
         return ChoiceResult(
@@ -905,6 +1049,18 @@ class BinaStore {
           uiTitle: "Genel Yanlış Uygulamalar",
           uiSubtitle: "",
           reportText: "Depolama ve yerleşim hataları analizi.",
+          adviceText: _joinAdvice([
+            _bolum29!.otopark,
+            _bolum29!.kazan,
+            _bolum29!.cati,
+            _bolum29!.asansor,
+            _bolum29!.jenerator,
+            _bolum29!.pano,
+            _bolum29!.trafo,
+            _bolum29!.depo,
+            _bolum29!.cop,
+            _bolum29!.siginak,
+          ]),
         );
       case 30:
         if (_bolum30 == null) return null;
@@ -913,6 +1069,14 @@ class BinaStore {
           uiTitle: "Kazan Dairesi",
           uiSubtitle: "",
           reportText: "Kazan dairesi güvenlik analizi.",
+          adviceText: _joinAdvice([
+            _bolum30!.konum,
+            _bolum30!.kapi,
+            _bolum30!.yakit,
+            _bolum30!.hava,
+            _bolum30!.drenaj,
+            _bolum30!.tup,
+          ]),
         );
       case 31:
         if (_bolum31 == null) return null;
@@ -921,6 +1085,13 @@ class BinaStore {
           uiTitle: "Trafo Odası Analizi",
           uiSubtitle: "",
           reportText: "Trafo odası güvenlik analizi.",
+          adviceText: _joinAdvice([
+            _bolum31!.yapi,
+            _bolum31!.tip,
+            _bolum31!.cukur,
+            _bolum31!.sondurme,
+            _bolum31!.cevre,
+          ]),
         );
       case 32:
         if (_bolum32 == null) return null;
@@ -929,6 +1100,12 @@ class BinaStore {
           uiTitle: "Jeneratör Odası",
           uiSubtitle: "",
           reportText: "Jeneratör odası güvenlik analizi.",
+          adviceText: _joinAdvice([
+            _bolum32!.yapi,
+            _bolum32!.yakit,
+            _bolum32!.cevre,
+            _bolum32!.egzoz,
+          ]),
         );
       case 33:
         if (_bolum33 == null) return null;
@@ -937,6 +1114,11 @@ class BinaStore {
           uiTitle: "Kullanıcı Yükü ve Çıkışlar",
           uiSubtitle: "",
           reportText: _bolum33!.combinedReportText,
+          adviceText: _joinAdvice([
+            _bolum33!.normalKatSonuc,
+            _bolum33!.zeminKatSonuc,
+            _bolum33!.bodrumKatSonuc,
+          ]),
         );
       case 34:
         if (_bolum34 == null) return null;
@@ -945,6 +1127,11 @@ class BinaStore {
           uiTitle: "Kat Karakteristikleri",
           uiSubtitle: "",
           reportText: "Zemin ve bodrum kat çıkış karakteristikleri.",
+          adviceText: _joinAdvice([
+            _bolum34!.zemin,
+            _bolum34!.bodrum,
+            _bolum34!.normal,
+          ]),
         );
       case 35:
         if (_bolum35 == null) return null;
@@ -953,6 +1140,12 @@ class BinaStore {
           uiTitle: "Çıkış Koridoru Genişlikleri",
           uiSubtitle: "",
           reportText: "Kat bazlı genişlik analizleri.",
+          adviceText: _joinAdvice([
+            _bolum35!.tekYon,
+            _bolum35!.ciftYon,
+            _bolum35!.cikmaz,
+            _bolum35!.cikmazMesafe,
+          ]),
         );
       case 36:
         final m = _bolum36;
@@ -962,9 +1155,29 @@ class BinaStore {
           uiTitle: "Genel Değerlendirme",
           uiSubtitle: "",
           reportText: m.merdivenDegerlendirme ?? "Değerlendirme yapılamadı.",
+          adviceText: _joinAdvice([
+            m.cikisKati,
+            m.disMerd,
+            m.konum,
+            m.kapiTipi,
+            m.gorunurluk,
+          ]),
         );
       default:
         return null;
     }
   }
+}
+
+String _joinAdvice(List<ChoiceResult?> results) {
+  return results
+      .where(
+        (r) =>
+            r != null &&
+            r.adviceText != null &&
+            r.adviceText!.trim().isNotEmpty,
+      )
+      .map((r) => r!.adviceText!.trim())
+      .toSet() // Duplicate onerileri onle
+      .join('\n\n');
 }

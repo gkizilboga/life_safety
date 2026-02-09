@@ -84,8 +84,9 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
       onNext: () async {
         // Check if building has >3 floors and no elevator selected
         final b3 = BinaStore.instance.bolum3;
-        final totalFloors = (b3?.zemin ?? 0) + (b3?.normal ?? 0);
-        
+        final totalFloors =
+            (b3?.normalKatSayisi ?? 0) + (b3?.bodrumKatSayisi ?? 0) + 1;
+
         if (totalFloors > 3 && !_model.hasAsansor) {
           // Show confirmation dialog
           final confirm = await showDialog<bool>(
@@ -116,6 +117,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
 
         BinaStore.instance.bolum7 = _model;
         // saveToDisk is handled by AnalysisPageLayout
+        if (!context.mounted) return;
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Bolum8Screen()),

@@ -23,11 +23,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String? _selectedProfession;
 
   final List<String> _professions = [
-    "Bina Sakini / Vatandaş",
-    "Apartman Yöneticisi / Görevlisi",
-    "Proje Mimarı / Mühendisi",
-    "İtfaiye / Kamu Personeli",
-    "Yangın Güvenlik Uzmanı"
+    'Apartman Sakini',
+    'Apartman Yöneticisi / Görevlisi',
+    'Proje Mimarı / Mühendisi',
+    'Yangın Güvenlik Uzmanı',
+    'İSG Uzmanı',
+    'İtfaiye / Kamu Personeli',
   ];
 
   @override
@@ -40,15 +41,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _onRegisterPressed() {
     if (_formKey.currentState!.validate()) {
       if (!_kvkkAccepted || !_disclaimerAccepted) {
-        _showError("Devam etmek için yasal bilgilendirmeleri ve kullanım şartlarını onaylamanız gerekmektedir.");
+        _showError(
+          "Devam etmek için yasal bilgilendirmeleri ve kullanım şartlarını onaylamanız gerekmektedir.",
+        );
         return;
       }
-      
+
       BinaStore.instance.userName = _nameController.text;
-      BinaStore.instance.userProfession = _selectedProfession ?? "Bina Sakini / Vatandaş";
+      BinaStore.instance.userProfession =
+          _selectedProfession ?? "Bina Sakini / Vatandaş";
       BinaStore.instance.isRegistered = true;
       BinaStore.instance.saveToDisk();
-      
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const DashboardScreen()),
@@ -58,10 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _showError(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: const Color(0xFFB71C1C),
-      ),
+      SnackBar(content: Text(msg), backgroundColor: const Color(0xFFB71C1C)),
     );
   }
 
@@ -85,15 +86,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildTextField(
-                      label: "Ad Soyad", 
-                      icon: Icons.person_outline, 
+                      label: "Ad Soyad",
+                      icon: Icons.person_outline,
                       controller: _nameController,
                       limit: 40,
                     ),
                     const SizedBox(height: 16),
                     _buildTextField(
-                      label: "E-Posta", 
-                      icon: Icons.email_outlined, 
+                      label: "E-Posta",
+                      icon: Icons.email_outlined,
                       controller: _emailController,
                       limit: 50,
                       isEmail: true,
@@ -103,29 +104,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 30),
                     const Text(
                       "YASAL ONAYLAR",
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2),
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                        letterSpacing: 1.2,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     _buildConsentTile(
                       title: AppStrings.kvkkTitle,
-                      content: "Verilerimin sadece bu cihazda saklanacağını, sunucuya aktarılmayacağını kabul ediyorum.",
+                      content:
+                          "Verilerimin sadece bu cihazda saklanacağını, sunucuya aktarılmayacağını kabul ediyorum.",
                       value: _kvkkAccepted,
                       onChanged: (val) => setState(() => _kvkkAccepted = val!),
                     ),
                     const SizedBox(height: 12),
                     _buildConsentTile(
                       title: "Kullanım Şartları ve Sorumluluk Reddi",
-                      content: "Üretilen belgenin resmi bir rapor olmadığını, saha ziyareti ve Yangın Güvenlik Uzmanı'nın onayı olmadan hukuki geçerliliği bulunmadığını kabul ediyorum.",
+                      content:
+                          "Üretilen belgenin resmi bir rapor olmadığını, saha ziyareti ve Yangın Güvenlik Uzmanı'nın onayı olmadan hukuki geçerliliği bulunmadığını kabul ediyorum.",
                       value: _disclaimerAccepted,
-                      onChanged: (val) => setState(() => _disclaimerAccepted = val!),
+                      onChanged: (val) =>
+                          setState(() => _disclaimerAccepted = val!),
                     ),
                     const SizedBox(height: 16),
                     Center(
                       child: TextButton(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LegalTextScreen())),
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LegalTextScreen(),
+                          ),
+                        ),
                         child: const Text(
                           "Yasal Metinlerin Tamamını Oku",
-                          style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF1A237E), fontSize: 13),
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Color(0xFF1A237E),
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ),
@@ -141,8 +159,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildTextField({
-    required String label, 
-    required IconData icon, 
+    required String label,
+    required IconData icon,
     required TextEditingController controller,
     required int limit,
     bool isEmail = false,
@@ -167,7 +185,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (value == null || value.isEmpty) return "Bu alan boş bırakılamaz";
         if (isEmail) {
           final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-          if (!emailRegex.hasMatch(value)) return "Geçerli bir e-posta adresi giriniz";
+          if (!emailRegex.hasMatch(value))
+            return "Geçerli bir e-posta adresi giriniz";
         }
         return null;
       },
@@ -194,7 +213,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       items: _professions.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value, style: const TextStyle(fontSize: 14), overflow: TextOverflow.ellipsis),
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 14),
+            overflow: TextOverflow.ellipsis,
+          ),
         );
       }).toList(),
       onChanged: (newValue) {
@@ -203,8 +226,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
       },
       validator: (value) => value == null ? "Lütfen bir unvan seçiniz" : null,
-      icon: const Icon(Icons.arrow_drop_down_circle_outlined, color: Color(0xFF1A237E)),
-      dropdownColor: Colors.white,
+      icon: const Icon(
+        Icons.arrow_drop_down_circle_outlined,
+        color: Color(0xFF1A237E),
+      ),
+      dropdownColor: const Color(0xFFE8EAF6),
       borderRadius: BorderRadius.circular(12),
     );
   }
@@ -219,13 +245,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       decoration: BoxDecoration(
         color: value ? const Color(0xFFE8EAF6) : const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: value ? const Color(0xFF1A237E) : Colors.grey.shade200),
+        border: Border.all(
+          color: value ? const Color(0xFF1A237E) : Colors.grey.shade200,
+        ),
       ),
       child: CheckboxListTile(
         value: value,
         onChanged: onChanged,
         activeColor: const Color(0xFF1A237E),
-        title: Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+        ),
         subtitle: Text(
           content,
           style: const TextStyle(fontSize: 11, height: 1.3),
@@ -240,7 +271,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 60),
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 10,
+            offset: Offset(0, -4),
+          ),
+        ],
       ),
       child: SafeArea(
         top: false,
@@ -253,9 +290,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               backgroundColor: const Color(0xFF1A237E),
               foregroundColor: Colors.white,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
-            child: const Text("KAYDI TAMAMLA VE BAŞLA", style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+            child: const Text(
+              "KAYDI TAMAMLA VE BAŞLA",
+              style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5),
+            ),
           ),
         ),
       ),

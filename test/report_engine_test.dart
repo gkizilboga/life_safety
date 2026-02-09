@@ -9,6 +9,11 @@ import 'package:life_safety/models/bolum_23_model.dart';
 import 'package:life_safety/models/bolum_20_model.dart';
 import 'package:life_safety/models/bolum_33_model.dart';
 import 'package:life_safety/models/bolum_34_model.dart';
+import 'package:life_safety/models/bolum_1_model.dart';
+import 'package:life_safety/models/bolum_2_model.dart';
+import 'package:life_safety/models/bolum_7_model.dart';
+import 'package:life_safety/models/bolum_21_model.dart';
+import 'package:life_safety/models/bolum_36_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 
 void main() {
@@ -24,11 +29,12 @@ void main() {
 
   group('YGH Zorunluluk Kriterleri Testleri', () {
     test(
-      'Kriter 1: Yapı yüksekliği 51.50m ve üzeri ise YGH zorunlu olmalı',
+      'Kriter 1: Yapı yüksekliği 51.50m ve üzeri ise YGH zorunlu olmalı (30.5m mesajı gizlenmeli)',
       () {
         store.bolum3 = Bolum3Model(hYapi: 52.0, bodrumKatSayisi: 0);
         final reasons = ReportEngine.evaluateYghRequirement(store: store);
         expect(reasons.any((r) => r.contains("51.50 metre")), true);
+        expect(reasons.any((r) => r.contains("30.50m üzeri")), false);
       },
     );
 
@@ -126,6 +132,7 @@ void main() {
       'Senaryo 1: Dairesel merdiven yüksekliği <= 9.50m VE kullanıcı yükü <= 25 - GEÇERLİ',
       () {
         store.bolum3 = Bolum3Model(hYapi: 20.0, bodrumKatSayisi: 0);
+        store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
         store.bolum20 = Bolum20Model(
           donerMerdivenSayisi: 1,
           daireselMerdivenYuksekligi: ChoiceResult(
@@ -139,11 +146,12 @@ void main() {
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
         expect(report.contains("OLUMLU"), true);
-        expect(report.contains("kaçış yolu olarak kabul edilmiştir"), true);
+        expect(report.contains("Dairesel merdivenler"), true);
       },
     );
 
     test('Senaryo 2: Dairesel merdiven yüksekliği > 9.50m - GEÇERSİZ', () {
+      store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
       store.bolum20 = Bolum20Model(
         donerMerdivenSayisi: 1,
         daireselMerdivenYuksekligi: ChoiceResult(
@@ -162,6 +170,7 @@ void main() {
     });
 
     test('Senaryo 3: Kullanıcı yükü > 25 kişi - GEÇERSİZ', () {
+      store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
       store.bolum20 = Bolum20Model(
         donerMerdivenSayisi: 1,
         daireselMerdivenYuksekligi: ChoiceResult(
@@ -180,6 +189,7 @@ void main() {
     });
 
     test('Senaryo 4: Yükseklik bilinmiyor - UYARI', () {
+      store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
       store.bolum20 = Bolum20Model(
         donerMerdivenSayisi: 1,
         daireselMerdivenYuksekligi: ChoiceResult(
@@ -197,6 +207,7 @@ void main() {
     });
 
     test('Senaryo 5: Bölüm 34 bağımsız çıkış - Ticari alan yükü sayılmaz', () {
+      store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
       store.bolum20 = Bolum20Model(
         donerMerdivenSayisi: 1,
         daireselMerdivenYuksekligi: ChoiceResult(
@@ -223,10 +234,11 @@ void main() {
       final report = ReportEngine.getSectionFullReport(36, store: store);
       // Ticari zemin bağımsız, sadece normal kat (20 kişi) sayılır
       expect(report.contains("OLUMLU"), true);
-      expect(report.contains("kaçış yolu olarak kabul edilmiştir"), true);
+      expect(report.contains("Dairesel merdivenler"), true);
     });
 
     test('Senaryo 6: HER İKİ ŞART DA sağlanmıyor - Çoklu sebep', () {
+      store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
       store.bolum20 = Bolum20Model(
         donerMerdivenSayisi: 1,
         daireselMerdivenYuksekligi: ChoiceResult(
@@ -246,6 +258,102 @@ void main() {
       expect(report.contains("KRİTİK RİSK"), true);
       expect(report.contains("9.50 metrenin üzerindedir"), true);
       expect(report.contains("25 kişiyi aşmaktadır"), true);
+    });
+  });
+
+  group('Rapor Etiketi Değerlendirme Testleri', () {
+    test('Bölüm 1 ve 2 Etiketleri Doğru Gelmeli', () {
+      store.bolum1 = Bolum1Model(
+        secim: ChoiceResult(
+          label: "1-1-A",
+          uiTitle: "2007 sonrası",
+          uiSubtitle: "",
+          reportText: "Metin",
+        ),
+      );
+      store.bolum2 = Bolum2Model(
+        secim: ChoiceResult(
+          label: "2-1-A",
+          uiTitle: "Betonarme",
+          uiSubtitle: "",
+          reportText: "Metin",
+        ),
+      );
+
+      final det1 = ReportEngine.getSectionDetailedReport(1, store: store);
+      final det2 = ReportEngine.getSectionDetailedReport(2, store: store);
+
+      expect(det1.first['label'], contains('yapı ruhsat tarihi'));
+      expect(det2.first['label'], contains('taşıyıcı sistemi'));
+    });
+
+    test('Bölüm 7 Teknik Hacimler Detaylı Listelenmeli', () {
+      store.bolum7 = Bolum7Model(hasKazan: true, hasAsansor: false);
+      final details = ReportEngine.getSectionDetailedReport(7, store: store);
+
+      expect(
+        details.any(
+          (d) => d['label'] == 'Kazan Dairesi' && d['value'] == 'Mevcut',
+        ),
+        true,
+      );
+      expect(
+        details.any(
+          (d) => d['label'] == 'Asansör Makine Dairesi' && d['value'] == 'Yok',
+        ),
+        true,
+      );
+    });
+
+    test('Bölüm 21 YGH Alt Soruları Listelenmeli', () {
+      store.bolum21 = Bolum21Model(
+        varlik: ChoiceResult(
+          label: "21-1-A",
+          uiTitle: "Evet",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+        malzeme: ChoiceResult(
+          label: "21-2-A",
+          uiTitle: "Yanmaz",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      final details = ReportEngine.getSectionDetailedReport(21, store: store);
+
+      expect(
+        details.any((d) => d['label'].contains('Yangın Güvenlik Holü var mı?')),
+        true,
+      );
+      expect(
+        details.any((d) => d['label'].contains('kaplama malzemeleri')),
+        true,
+      );
+    });
+
+    test('Bölüm 36 Merdiven Analizi Etiketi Doğru Gelmeli', () {
+      store.bolum36 = Bolum36Model(
+        merdivenDegerlendirme: "Test Analizi",
+        cikisKati: ChoiceResult(
+          label: "36-1-A",
+          uiTitle: "Zemin",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      final details = ReportEngine.getSectionDetailedReport(36, store: store);
+
+      expect(
+        details.any((d) => d['label'].contains('dış havaya çıktığınız kat')),
+        true,
+      );
+      expect(
+        details.any(
+          (d) => d['label'] == 'Merdiven Tipleri ve Kaçış Genişlikleri',
+        ),
+        true,
+      );
     });
   });
 }

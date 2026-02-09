@@ -199,7 +199,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
                 backgroundColor: Colors.transparent,
                 isDismissible: true,
                 enableDrag: true,
-                builder: (context) => SearchableListSelector(
+                builder: (context) => ListSelector(
                   title: hint,
                   items: items,
                   onSelected: onChanged,
@@ -311,12 +311,12 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   }
 }
 
-class SearchableListSelector extends StatefulWidget {
+class ListSelector extends StatelessWidget {
   final String title;
   final List<String> items;
   final Function(String) onSelected;
 
-  const SearchableListSelector({
+  const ListSelector({
     super.key,
     required this.title,
     required this.items,
@@ -324,45 +324,11 @@ class SearchableListSelector extends StatefulWidget {
   });
 
   @override
-  State<SearchableListSelector> createState() => _SearchableListSelectorState();
-}
-
-class _SearchableListSelectorState extends State<SearchableListSelector> {
-  final _searchCtrl = TextEditingController();
-  List<String> _filteredItems = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _filteredItems = widget.items;
-    _searchCtrl.addListener(_filter);
-  }
-
-  void _filter() {
-    final query = _searchCtrl.text;
-    setState(() {
-      if (query.isEmpty) {
-        _filteredItems = widget.items;
-      } else {
-        _filteredItems = widget.items
-            .where((item) => TurkishUtils.contains(item, query))
-            .toList();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.75,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFF8F9FA),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -377,60 +343,66 @@ class _SearchableListSelectorState extends State<SearchableListSelector> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(24),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
-                    widget.title,
+                    title,
                     style: const TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w900,
                       color: Color(0xFF1A237E),
+                      letterSpacing: -0.5,
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      size: 20,
+                      color: Colors.black54,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              controller: _searchCtrl,
-              autofocus: false,
-              readOnly: false, // For filtering only
-              decoration: InputDecoration(
-                hintText: "Listeden ara...",
-                helperText: "Yalnızca mevcut listeden seçim yapabilirsiniz",
-                helperStyle: TextStyle(
-                  fontSize: 11,
-                  color: Colors.grey.shade600,
-                  fontStyle: FontStyle.italic,
-                ),
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.grey.shade100,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
           Expanded(
-            child: ListView.builder(
-              itemCount: _filteredItems.length,
+            child: ListView.separated(
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 40),
+              itemCount: items.length,
+              separatorBuilder: (context, index) =>
+                  Divider(height: 1, color: Colors.grey.shade200),
               itemBuilder: (context, index) {
-                final item = _filteredItems[index];
+                final item = items[index];
                 return ListTile(
-                  title: Text(item),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  title: Text(
+                    item,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF263238),
+                    ),
+                  ),
+                  trailing: const Icon(
+                    Icons.chevron_right,
+                    size: 18,
+                    color: Colors.grey,
+                  ),
                   onTap: () {
-                    widget.onSelected(item);
+                    onSelected(item);
                     Navigator.pop(context);
                   },
                 );

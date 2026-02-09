@@ -30,7 +30,7 @@ class ActiveSystemsEngine {
         reason:
             "Her binada, yangın anında sistemlerin nasıl çalışacağını, tahliyenin nasıl yapılacağını ve ekiplerin nasıl müdahale edeceğini anlatan bir Yangın Senaryosu oluşturulmalıdır.",
         note:
-            "NOT: Aktif sistem gereksinimlerinin belirtildiği bu çalışmadaki hiçbir sistem veya ekipman binanızda zorunlu değil ise ve binada asansör de yok ise yangın SENARYOSU ve yangın MATRİSİ oluşturulması zorunlu olmayabilir.",
+            "Aktif sistem gereksinimlerinin belirtildiği bu çalışmadaki hiçbir sistem veya ekipman binanızda zorunlu değil ise ve binada asansör de yok ise yangın SENARYOSU ve yangın MATRİSİ oluşturulması zorunlu olmayabilir.",
       ),
     );
 
@@ -363,7 +363,8 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Yangın Hidrant Sistemi(Bina Çevresinde)",
           isMandatory: true,
-          reason: "KRİTİK RİSK: Taban Alanı > 5000 m² olduğu için zorunludur.",
+          reason:
+              "KRİTİK RİSK: Taban Alanı > 5000 m² olduğu için zorunludur. Binanızın oturumu zemin kat seviyesinde değil de başka bir seviyede veya katta ise o katın taban alanı baz alınmalıdır.",
         ),
       );
     } else {
@@ -371,7 +372,8 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Yangın Hidrant Sistemi(Bina Çevresinde)",
           isMandatory: false,
-          reason: "OLUMLU: Taban Alanı < 5000 m² olduğu için zorunlu değildir.",
+          reason:
+              "OLUMLU: Taban Alanı < 5000 m² olduğu için zorunlu değildir. Bina taban alanı hesabında beyan ettiğiniz zemin katınızın alanı ele alınmıştır. Eğer farklı bir kat oturum alanı olarak kabul ediliyorsa ve bu alan 5000 m2 'yi aşıyorsa hidrant sistemi zorunlu olacaktır.",
         ),
       );
     }
