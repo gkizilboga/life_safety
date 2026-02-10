@@ -79,7 +79,7 @@ class ModernHeader extends StatelessWidget {
                     if (onSave != null) {
                       onSave!();
                     } else {
-                      BinaStore.instance.saveToDisk();
+                      BinaStore.instance.saveToDisk(immediate: true);
                     }
                     Navigator.of(context).popUntil((route) => route.isFirst);
                     ScaffoldMessenger.of(context).showSnackBar(

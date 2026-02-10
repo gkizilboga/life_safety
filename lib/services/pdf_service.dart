@@ -15,8 +15,14 @@ class PdfService {
   static pw.Widget _buildLegendItem(PdfColor color, String label, String desc) {
     return pw.Row(
       mainAxisSize: pw.MainAxisSize.min,
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Container(width: 8, height: 8, color: color),
+        pw.Padding(
+          padding: const pw.EdgeInsets.only(
+            top: 2,
+          ), // Align dash with first line
+          child: pw.Container(width: 8, height: 8, color: color),
+        ),
         pw.SizedBox(width: 4),
         pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -24,18 +30,19 @@ class PdfService {
             pw.Text(
               label,
               style: pw.TextStyle(
-                fontSize: 9, // Increased from 6
+                fontSize: 9,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.black,
               ),
             ),
-            pw.Text(
-              desc,
-              style: const pw.TextStyle(
-                fontSize: 9,
-                color: PdfColors.grey700,
-              ), // Increased from 5
-            ),
+            if (desc.isNotEmpty)
+              pw.Text(
+                desc,
+                style: const pw.TextStyle(
+                  fontSize: 7,
+                  color: PdfColors.grey700,
+                ),
+              ),
           ],
         ),
       ],
@@ -86,24 +93,6 @@ class PdfService {
     return pw.PageTheme(
       pageFormat: PdfPageFormat.a4,
       theme: pw.ThemeData.withFont(base: ttf, bold: ttfBold),
-      buildBackground: (context) => pw.FullPage(
-        ignoreMargins: true,
-        child: pw.Opacity(
-          opacity: 0.05,
-          child: pw.Center(
-            child: pw.Transform.rotate(
-              angle: 0.5,
-              child: pw.Text(
-                "RESMİ BELGE DEĞİLDİR",
-                style: pw.TextStyle(
-                  fontSize: 40,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -368,8 +357,8 @@ class PdfService {
           pw.Container(
             alignment: pw.Alignment.centerRight,
             child: pw.Text(
-              "BU BELGE, UYGULAMA İLE ÜRETİLMİŞ OLUP RESMİ BELGE NİTELİĞİ TAŞIMAZ. Islak imza ve kaşe yerine geçmez. "
-              "Yasal uyarıların tamamı ve TCK sorumluluk beyanı bu dokümanın ayrılmaz parçasıdır.",
+              "BU BELGE, UYGULAMA İLE ÜRETİLMİŞ OLUP RESMİ BELGE NİTELİĞİ TAŞIMAZ. ISLAK İMZA VEYA KAŞE YERİNE GEÇMEZ. "
+              "YASAL UYARILARIN TÜMÜ VE TCK SORUMLULUK BEYANI BU DOKÜMANIN AYRILMAZ PARÇASIDIR.",
               style: const pw.TextStyle(fontSize: 5, color: PdfColors.black),
               textAlign: pw.TextAlign.right,
             ),
@@ -377,6 +366,87 @@ class PdfService {
         ],
       ),
     );
+  }
+
+  // --- Helper for Rich Text Highlighting ---
+  static pw.Widget _buildRichText(String text, pw.Font font, pw.Font fontBold) {
+    if (text.isEmpty) return pw.Text("");
+
+    final highLightPatterns = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
+
+    // Bu kelimelerden herhangi biri var mı?
+    bool hasHighlight = highLightPatterns.any((pat) => text.contains(pat));
+
+    if (!hasHighlight) {
+      // Normal text
+      return pw.Text(
+        text,
+        style: pw.TextStyle(fontSize: 9, font: font, color: PdfColors.black),
+      );
+    }
+
+    // Kelimeleri parçala ve renklendir
+    List<pw.InlineSpan> spans = [];
+    String remaining = text;
+
+    while (remaining.isNotEmpty) {
+      int bestIndex = -1;
+      String bestMatch = "";
+
+      for (var pat in highLightPatterns) {
+        int idx = remaining.indexOf(pat);
+        if (idx != -1) {
+          if (bestIndex == -1 || idx < bestIndex) {
+            bestIndex = idx;
+            bestMatch = pat;
+          }
+        }
+      }
+
+      if (bestIndex != -1) {
+        // Eşleşme öncesi kısım
+        if (bestIndex > 0) {
+          spans.add(
+            pw.TextSpan(
+              text: remaining.substring(0, bestIndex),
+              style: pw.TextStyle(
+                fontSize: 9,
+                font: font,
+                color: PdfColors.black,
+              ),
+            ),
+          );
+        }
+        // Eşleşen kısım (KIRMIZI ve BOLD)
+        spans.add(
+          pw.TextSpan(
+            text: bestMatch,
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: fontBold,
+              color: PdfColors.red700,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+        );
+        remaining = remaining.substring(bestIndex + bestMatch.length);
+      } else {
+        // Eşleşme kalmadı
+        spans.add(
+          pw.TextSpan(
+            text: remaining,
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: font,
+              color: PdfColors.black,
+            ),
+          ),
+        );
+        remaining = "";
+      }
+    }
+
+    return pw.RichText(text: pw.TextSpan(children: spans));
   }
 
   // --- 1. RİSK ANALİZ RAPORU ---
@@ -392,8 +462,8 @@ class PdfService {
 
     final store = BinaStore.instance;
     final metrics = ReportEngine.calculateRiskMetrics();
-    final actionPlan = ReportEngine.getActionPlan();
     final moduleScores = ReportEngine.calculateModuleScores();
+
     final pageTheme = _buildPageTheme(ttf, ttfBold);
 
     // 1. Kapak
@@ -486,23 +556,24 @@ class PdfService {
           pw.SizedBox(height: 10),
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.start,
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               _buildLegendItem(
                 PdfColors.red700,
                 "KRİTİK RİSK",
                 "(-10 Puan) Acil önlem alınmalı",
               ),
-              pw.SizedBox(width: 10),
+              pw.SizedBox(width: 20),
               _buildLegendItem(
                 PdfColors.yellow700,
                 "UYARI",
                 "(-2 Puan) Önlem gerekebilir",
               ),
-              pw.SizedBox(width: 10),
+              pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
-              pw.SizedBox(width: 10),
+              pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
-              pw.SizedBox(width: 10),
+              pw.SizedBox(width: 20),
               _buildLegendItem(
                 PdfColors.grey500,
                 "BİLİNMİYOR",
@@ -510,6 +581,7 @@ class PdfService {
               ),
             ],
           ),
+
           pw.SizedBox(height: 15),
           ...List.generate(36, (index) {
             int id = index + 1;
@@ -529,7 +601,7 @@ class PdfService {
             final riskColor = _getRiskColor(fullReportForColor);
 
             return pw.Container(
-              margin: const pw.EdgeInsets.only(bottom: 5), // Reduced from 10
+              margin: const pw.EdgeInsets.only(bottom: 2), // Reduced from 5
               decoration: pw.BoxDecoration(
                 border: pw.Border(
                   left: pw.BorderSide(color: riskColor, width: 4),
@@ -545,45 +617,48 @@ class PdfService {
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
                       pw.Text(
-                        "BÖLÜM $id: ${AppDefinitions.getSectionTitle(id)}",
+                        "BÖLÜM $id: ${AppDefinitions.getSectionTitle(id).toUpperCase()}",
                         style: pw.TextStyle(
-                          fontSize: 9,
+                          fontSize: 10,
                           fontWeight: pw.FontWeight.bold,
-                          color: PdfColors.black,
+                          color: PdfColors.indigo900,
                         ),
                       ),
                     ],
                   ),
-                  pw.Divider(thickness: 0.5, color: PdfColors.grey400),
+                  pw.Divider(thickness: 0.8, color: PdfColors.indigo100),
 
                   // Detailed Items Loop
                   ...details.map((item) {
                     final label = item['label'] ?? '';
                     final value = item['value'] ?? '';
                     final report = _cleanEmojis(item['report'] ?? '');
+                    final isLast = item == details.last;
 
                     return pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.SizedBox(height: 8),
-
+                        pw.SizedBox(height: 4), // Reduced from 8
                         // Soru
                         if (label.isNotEmpty) ...[
                           pw.Text(
                             "Soru:",
-                            style: const pw.TextStyle(
+                            style: pw.TextStyle(
                               fontSize: 9,
-                              color: PdfColors.black,
+                              fontWeight: pw.FontWeight.bold, // BOLD
+                              fontStyle: pw.FontStyle.italic, // ITALIC
+                              color: PdfColors.blue900, // NAVY BLUE
                             ),
                           ),
                           pw.Text(
                             label,
-                            style: const pw.TextStyle(
+                            style: pw.TextStyle(
                               fontSize: 9,
+                              font: ttf,
                               color: PdfColors.black,
                             ),
                           ),
-                          pw.SizedBox(height: 4),
+                          pw.SizedBox(height: 2), // Reduced from 4
                         ],
 
                         // Yanıt
@@ -592,18 +667,20 @@ class PdfService {
                             "Kullanıcının Yanıtı:",
                             style: pw.TextStyle(
                               fontSize: 9,
-                              fontWeight: pw.FontWeight.bold,
-                              color: PdfColors.black,
+                              fontWeight: pw.FontWeight.bold, // BOLD
+                              fontStyle: pw.FontStyle.italic, // ITALIC
+                              color: PdfColors.blue900, // NAVY BLUE
                             ),
                           ),
                           pw.Text(
                             value,
-                            style: const pw.TextStyle(
+                            style: pw.TextStyle(
                               fontSize: 9,
+                              font: ttf,
                               color: PdfColors.black,
                             ),
                           ),
-                          pw.SizedBox(height: 4),
+                          pw.SizedBox(height: 2), // Reduced from 4
                         ],
 
                         // Değerlendirme (Hem başlık hem metin KALIN)
@@ -612,44 +689,42 @@ class PdfService {
                             "Değerlendirme:",
                             style: pw.TextStyle(
                               fontSize: 9,
-                              fontWeight: pw.FontWeight.bold,
-                              color: PdfColors.black,
+                              fontWeight: pw.FontWeight.bold, // BOLD
+                              fontStyle: pw.FontStyle.italic, // ITALIC
+                              color: PdfColors.blue900, // NAVY BLUE
                             ),
                           ),
-                          pw.Text(
-                            report,
-                            style: pw.TextStyle(
-                              fontSize: 9,
-                              fontWeight: pw
-                                  .FontWeight
-                                  .bold, // Kullanıcı isteği: Metin de bold
-                              color: PdfColors.black,
-                            ),
-                          ),
+                          // Highlight "YÜKSEK BİNA" etc
+                          _buildRichText(report, ttf, ttfBold),
                         ],
 
                         // Öneri (Advice)
                         if (item['advice'] != null &&
                             item['advice']!.isNotEmpty) ...[
-                          pw.SizedBox(height: 4),
+                          pw.SizedBox(height: 2), // Reduced from 4
                           pw.Text(
                             "Öneri:",
                             style: pw.TextStyle(
                               fontSize: 9,
-                              fontWeight: pw.FontWeight.bold,
-                              color: PdfColors.black,
+                              fontWeight: pw.FontWeight.bold, // BOLD
+                              fontStyle: pw.FontStyle.italic, // ITALIC
+                              color: PdfColors.blue900, // NAVY BLUE
                             ),
                           ),
                           pw.Text(
                             _cleanEmojis(item['advice']!),
-                            style: const pw.TextStyle(
+                            style: pw.TextStyle(
                               fontSize: 9,
+                              font: ttf,
                               color: PdfColors.black,
+                              fontStyle: pw.FontStyle.italic,
                             ),
                           ),
                         ],
-                        pw.SizedBox(height: 8),
-                        pw.Divider(thickness: 0.2, color: PdfColors.grey300),
+                        if (!isLast) ...[
+                          pw.SizedBox(height: 4), // Reduced from 8
+                          pw.Divider(thickness: 0.1, color: PdfColors.grey300),
+                        ],
                       ],
                     );
                   }),
@@ -660,62 +735,6 @@ class PdfService {
         ],
       ),
     );
-
-    // 4. İyileştirme Önerileri (Risk Raporunda Kalacak)
-    if (actionPlan.isNotEmpty) {
-      pdf.addPage(
-        pw.MultiPage(
-          pageTheme: pageTheme,
-          header: (context) => pw.Container(
-            alignment: pw.Alignment.centerRight,
-            child: pw.Text(
-              "Öneriler",
-              style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
-            ),
-          ),
-          footer: _buildFooter,
-          build: (context) => [
-            pw.Text(
-              "ÖNERİLER",
-              style: pw.TextStyle(
-                fontSize: 16,
-                fontWeight: pw.FontWeight.bold,
-                color: PdfColors.orange900,
-              ),
-            ),
-            pw.SizedBox(height: 20),
-            ...actionPlan.map(
-              (item) => pw.Container(
-                margin: const pw.EdgeInsets.only(bottom: 10),
-                padding: const pw.EdgeInsets.all(8),
-                decoration: const pw.BoxDecoration(
-                  color: PdfColors.orange50,
-                  border: pw.Border(
-                    left: pw.BorderSide(color: PdfColors.orange900, width: 2),
-                  ),
-                ),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      "Bölüm ${item['id']}: ${_cleanEmojis(item['title'])}",
-                      style: pw.TextStyle(
-                        fontSize: 10,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    pw.Text(
-                      "Öneri: ${_cleanEmojis(item['advice'])}",
-                      style: const pw.TextStyle(fontSize: 9),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
 
     // Yasal (En Sona Taşındı)
     pdf.addPage(_buildLegalPage(pageTheme));

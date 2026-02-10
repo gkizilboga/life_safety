@@ -145,7 +145,7 @@ class ReportEngine {
 
     // Yeni Skorlama Formülü (Kullanıcı onaylı):
     double score =
-        100.0 - (criticalRisks * 10.0) - (warnings * 2.0) - (unknowns * 1.0);
+        100.0 - (criticalRisks * 5.0) - (warnings * 3.0) - (unknowns * 2.0);
 
     return {
       'score': score.toInt().clamp(0, 100),
@@ -1640,6 +1640,66 @@ class ReportEngine {
       }
     }
 
+    // Bölüm 16: Dış Cephe
+    if (id == 16) {
+      final b16 = s.bolum16;
+      if (b16 != null) {
+        if (b16.mantolama != null)
+          details.add({
+            'label':
+                'Binanızdaki dış cephe kaplama veya ısı yalıtım sistemi nedir?',
+            'value': b16.mantolama!.uiTitle,
+            'report': b16.mantolama!.reportText,
+            'advice': b16.mantolama!.adviceText,
+          });
+
+        if (b16.giydirmeBoslukYalitim == true) {
+          details.add({
+            'label':
+                'Giydirme cephe ile bina döşemeleri arasındaki boşluklarda yangın yalıtımı yapılmış mı?',
+            'value': 'Evet / Yapılmış',
+            'report':
+                'OLUMLU: Giydirme cephe ile döşeme arasındaki boşlukların yalıtılmış olması, \'baca etkisi\' ile yangının üst katlara sıçramasını engeller.',
+          });
+        } else if (b16.giydirmeBoslukYalitim == false) {
+          details.add({
+            'label':
+                'Giydirme cephe ile bina döşemeleri arasındaki boşluklarda yangın yalıtımı yapılmış mı?',
+            'value': 'Hayır / Bilinmiyor',
+            'report':
+                'KRİTİK RİSK: Giydirme cephe sistemlerinde kat döşemesi ile cephe arasındaki boşlukların yalıtılmaması, yangının cephe üzerinden hızla üst katlara yayılmasına (baca etkisi) neden olur.',
+          });
+        }
+
+        if (b16.sagirYuzey != null)
+          details.add({
+            'label': 'Dış cephede sağır (penceresiz) yüzeyler var mı?',
+            'value': b16.sagirYuzey!.uiTitle,
+            'report': b16.sagirYuzey!.reportText,
+            'advice': b16.sagirYuzey!.adviceText,
+          });
+
+        if (b16.sagirYuzeySprinkler == true) {
+          details.add({
+            'label': 'Sağır yüzeylerde cephe sprinkler sistemi var mı?',
+            'value': 'Evet / Mevcut',
+            'report':
+                'OLUMLU: Cephe üzerindeki sağır yüzeylerin sprinkler ile korunması yangın güvenliği açısından önemli bir artıdır.',
+          });
+        }
+
+        if (b16.bitisikNizam != null)
+          details.add({
+            'label':
+                'Binanız bitişik nizam mı? (Yanında hemen başka bina var mı?)',
+            'value': b16.bitisikNizam!.uiTitle,
+            'report': b16.bitisikNizam!.reportText,
+            'advice': b16.bitisikNizam!.adviceText,
+          });
+        handled = true;
+      }
+    }
+
     // Handle other sections generically if NOT handled above
     if (!handled) {
       // Kullanıcı isteği: "Genel Değerlendirme" yerine gerçek soru metnini kullan
@@ -2352,8 +2412,14 @@ class ReportEngine {
         if (b35.ciftYon != null) parts.add(b35.ciftYon!.reportText);
         if (b35.cikmaz != null) parts.add(b35.cikmaz!.reportText);
         if (b35.cikmazMesafe != null) parts.add(b35.cikmazMesafe!.reportText);
+        if (b35.manuelMesafe != null) {
+          parts.add(
+            "BİLGİ: Manuel girilen kaçış mesafesi: ${b35.manuelMesafe} m",
+          );
+        }
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
+      return res.reportText;
     }
 
     // Bölüm 36: Merdiven Değerlendirmesi
@@ -2392,7 +2458,7 @@ class ReportEngine {
 
             if (actualProtected < requiredProtected) {
               deviations.add(
-                "KRİTİK RİSK: Bina yüksekliği $hYapi m (> 30.50m) olduğu için en az $requiredProtected adet KORUNUMLU (yangın merdiveni) gereklidir. Ancak binada ${actualProtected == 0 ? 'hiç korunumlu merdiven bulunmamaktadır' : 'sadece $actualProtected adet korunumlu merdiven bulunmaktadır'}. Mevcut normal merdivenler bu zorunluluğu karşılamamaktadır.",
+                "KRİTİK RİSK: Bina yüksekliği $hYapi m (> 30.50m) olduğu için en az $requiredProtected adet KORUNUMLU (yangın merdiveni) gereklidir. Ancak binada ${actualProtected == 0 ? 'hiç korunumlu merdiven bulunmamaktadır' : 'sadece $actualProtected adet korunumlu merdiven bulunmaktadır'}. Mevcut merdivenler bu zorunluluğu karşılamamaktadır.",
               );
             }
           }
@@ -2403,14 +2469,14 @@ class ReportEngine {
               baseReport.toLowerCase().contains("yangın merdiveni gerekli")) {
             if (actualProtected == 0) {
               deviations.add(
-                "KRİTİK RİSK: Raporlama sonucunda binada KORUNUMLU MERDİVEN (Yangın Merdiveni) bulunması gerektiği tespit edilmiştir. Ancak Bölüm 20'de girilen verilere göre binada korunumlu yangın merdiveni bulunmamaktadır (Sadece normal merdiven veya uygunsuz merdiven mevcuttur).",
+                "KRİTİK RİSK: Raporlama sonucunda binada KORUNUMLU MERDİVEN (Kapalı Yangın Merdiveni) bulunması gerektiği tespit edilmiştir. Ancak Bölüm 20'de girilen verilere göre binada Korunumlu Yangın Merdiveni bulunmamaktadır.",
               );
             }
           }
 
           if (deviations.isNotEmpty) {
             baseReport +=
-                "\n\n--- TİP UYGUNSUZLUKLARI ---\n${deviations.join("\n\n")}";
+                "\n\n--- UYGUNSUZLUKLAR ---\n${deviations.join("\n\n")}";
           }
         }
 
@@ -2555,7 +2621,7 @@ class ReportEngine {
     if (b10 != null &&
         b10.bodrumlar.any((c) => c?.label.contains("10-C") == true)) {
       reasons.add(
-        "KRİTİK RİSK: Bodrum katlarda, konuttan farklı fonksiyon mevcut olduğundan(10-C)",
+        "KRİTİK RİSK: Bodrum katlarda, konuttan farklı fonksiyon mevcut olduğundan merdivenlerin önünde YGH zorunludur.",
       );
     }
 
@@ -2563,7 +2629,7 @@ class ReportEngine {
     final b22 = s.bolum22;
     if (b22 != null && b22.varlik?.label.contains("22-1-B") == true) {
       reasons.add(
-        "KRİTİK RİSK: İtfaiye Asansörü zorunluluğu mevcut olduğundan (22-1-B)",
+        "KRİTİK RİSK: Binada İtfaiye Asansörü bulunması zorunludur. İtfaiye asansörü normal (insan taşıma) asansöründen farklı özelliklere sahip olmalıdır.",
       );
     }
 

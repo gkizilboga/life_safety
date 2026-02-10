@@ -51,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       BinaStore.instance.userProfession =
           _selectedProfession ?? "Bina Sakini / Vatandaş";
       BinaStore.instance.isRegistered = true;
-      BinaStore.instance.saveToDisk();
+      BinaStore.instance.saveToDisk(immediate: true);
 
       Navigator.pushReplacement(
         context,

@@ -138,7 +138,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
     return AnalysisPageLayout(
       title: "Teknik Hacimler",
-      subtitle: "Özel riskli alanların duvar ve kapı özellikleri",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: true,
       onNext: _onNextPressed,
@@ -278,6 +278,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                 Bolum13Content.ticariOptionA,
                 Bolum13Content.ticariOptionB,
                 Bolum13Content.ticariOptionC,
+                Bolum13Content.ticariOptionD,
               ],
               _model.ticariKapi,
             ),

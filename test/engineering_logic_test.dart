@@ -40,8 +40,8 @@ void main() {
 
         // Kritik risk var mı?
         expect(metrics['criticalCount'] >= 1, true);
-        // Yeni skorlama: 100 - (1 * 10) = 90
-        expect(metrics['score'] <= 90, true);
+        // Yeni skorlama: 100 - (1 * 5) = 95
+        expect(metrics['score'] <= 95, true);
       },
     );
 
@@ -57,7 +57,7 @@ void main() {
         final metrics = ReportEngine.calculateRiskMetrics(store: store);
 
         expect(metrics['criticalCount'] >= 1, true);
-        expect(metrics['score'] <= 90, true);
+        expect(metrics['score'] <= 95, true);
       },
     );
 
@@ -75,8 +75,8 @@ void main() {
       },
     );
 
-    test('Skorlama: Sahanlıksız Merdiven varsa puan %60 altına düşmeli', () {
-      // Not: Puan düşüşü artık lineer (kritik başı -10).
+    test('Skorlama: Sahanlıksız Merdiven varsa puan %90 altına düşmeli', () {
+      // Not: Puan düşüşü artık lineer (kritik başı -5).
       // Test ismini veya beklentiyi güncelliyoruz.
       store.bolum20 = Bolum20Model(sahanliksizMerdivenSayisi: 1);
 
@@ -84,8 +84,8 @@ void main() {
 
       // Sahanlıksız merdiven kritik risktir
       expect(metrics['criticalCount'] >= 1, true);
-      // Yeni skorlama: 90
-      expect(metrics['score'] <= 90, true);
+      // Yeni skorlama: 95
+      expect(metrics['score'] <= 95, true);
     });
   });
 }

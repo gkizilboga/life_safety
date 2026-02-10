@@ -469,45 +469,59 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   }
 
   Widget _buildSectionTile(BuildContext context, int id) {
-    final summary = ReportEngine.getSectionSummary(id);
-    final fullReport = ReportEngine.getSectionFullReport(id);
-    final riskColor = _getUiRiskColor(fullReport);
-    return ListTile(
-      onTap: () =>
-          _showDetailSheet(context, id, summary, fullReport, riskColor),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      title: Text(
-        "Bölüm $id",
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 11,
-          color: Colors.grey,
+    try {
+      final summary = ReportEngine.getSectionSummary(id);
+      final fullReport = ReportEngine.getSectionFullReport(id);
+      final riskColor = _getUiRiskColor(fullReport);
+      return ListTile(
+        onTap: () =>
+            _showDetailSheet(context, id, summary, fullReport, riskColor),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        title: Text(
+          "Bölüm $id",
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 11,
+            color: Colors.grey,
+          ),
         ),
-      ),
-      subtitle: Text(
-        summary,
-        style: const TextStyle(
-          fontSize: 14,
-          color: Color(0xFF2C3E50),
-          fontWeight: FontWeight.w500,
+        subtitle: Text(
+          summary,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color(0xFF2C3E50),
+            fontWeight: FontWeight.w500,
+          ),
         ),
-      ),
-      trailing: Container(
-        width: 12,
-        height: 12,
-        decoration: BoxDecoration(
-          color: riskColor,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: riskColor.withOpacity(0.3),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+        trailing: Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: riskColor,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: riskColor.withOpacity(0.3),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      return ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        title: Text(
+          "Bölüm $id",
+          style: const TextStyle(fontSize: 11, color: Colors.grey),
+        ),
+        subtitle: const Text(
+          "Veri yüklenemedi",
+          style: TextStyle(fontSize: 14, color: Colors.red),
+        ),
+      );
+    }
   }
 
   void _showDetailSheet(

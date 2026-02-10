@@ -159,7 +159,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Kullanıcı Yükü Hesabı ve Çıkış Adedi Analizi",
+      title: "Kullanıcı Yükü ve Çıkış Adedi",
       subtitle: "Merdiven uygunluk kontrolü HARİÇ",
       screenType: widget.runtimeType,
       isNextEnabled: _isConfirmed,

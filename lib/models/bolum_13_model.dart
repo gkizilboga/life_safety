@@ -144,6 +144,7 @@ class Bolum13Model {
         Bolum13Content.ticariOptionA,
         Bolum13Content.ticariOptionB,
         Bolum13Content.ticariOptionC,
+        Bolum13Content.ticariOptionD,
       ]),
       otoparkAlan: find(map['otoparkAlan_label'], [
         Bolum13Content.otoparkAlanOptionA,

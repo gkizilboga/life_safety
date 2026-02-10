@@ -1,4 +1,5 @@
 // ignore_for_file: unnecessary_getters_setters
+import 'dart:async';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/bolum_1_model.dart';
@@ -377,11 +378,27 @@ class BinaStore {
     }
   }
 
+  Timer? _saveTimer;
   bool _isDirty = false;
 
-  void saveToDisk() {
+  /// Veriyi diske kaydeder.
+  /// [immediate] true ise beklemeden kaydeder (Örn: Manuel Kaydet butonu).
+  /// [immediate] false ise (varsayılan) sürekli çağrılan yerlerde (navigasyon vb.) performans için bekletir (Debounce).
+  Future<void> saveToDisk({bool immediate = false}) async {
     if (!_isDirty && currentBinaId != null) return;
 
+    if (immediate) {
+      _saveTimer?.cancel();
+      await _performSave();
+    } else {
+      if (_saveTimer?.isActive ?? false) _saveTimer!.cancel();
+      _saveTimer = Timer(const Duration(milliseconds: 1000), () async {
+        await _performSave();
+      });
+    }
+  }
+
+  Future<void> _performSave() async {
     currentBinaId ??= DateTime.now().millisecondsSinceEpoch.toString();
     final currentData = {
       'id': currentBinaId,
@@ -436,18 +453,23 @@ class BinaStore {
       archive[index] = currentData;
     else
       archive.add(currentData);
-    _prefs?.setString('bina_archive', json.encode(archive));
+
+    // JSON encode işlemi asenkron yapılamasa da, en azından Future içinde
+    // main thread'i bloklamaması için basit bir await microtask eklenebilir
+    // veya bu fonksiyon zaten timer callback içinde çalıştığı için UI render döngüsünü
+    // doğrudan kilitler. Ancak 1 saniyede bir olacağı için hissedilmez.
+    await _prefs?.setString('bina_archive', json.encode(archive));
+
     if (currentBinaId != null)
-      _prefs?.setString('active_bina_id', currentBinaId!);
+      await _prefs?.setString('active_bina_id', currentBinaId!);
 
     _isDirty = false;
   }
 
   void markAsCompleted() {
     _isCompleted = true;
-    _isDirty =
-        true; // Critical: mark dirty so saveToDisk() actually writes to disk
-    saveToDisk();
+    _isDirty = true;
+    saveToDisk(immediate: true);
   }
 
   void _loadBuildingFromMap(Map<String, dynamic> data) {
@@ -506,7 +528,7 @@ class BinaStore {
     currentBinaName = name;
     currentBinaCity = city;
     currentBinaDistrict = district;
-    saveToDisk();
+    saveToDisk(immediate: true);
   }
 
   void clearCurrentAnalysis() {

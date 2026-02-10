@@ -120,8 +120,8 @@ void main() {
 
       expect(
         metrics['score'],
-        lessThan(60),
-      ); // 6+ kritik risk ile 40-50 bekliyoruz
+        lessThan(80),
+      ); // 5 kritik risk ile ~75 bekliyoruz
       expect(requiredExits, greaterThan(60));
 
       print('\n[AKTİF SİSTEM ANALİZİ]');

@@ -585,7 +585,7 @@ class ActiveSystemsEngine {
       ActiveSystemRequirement(
         name: "Taşınabilir (Portatif) Söndürücüler (YSC)",
         isMandatory: true,
-        reason: "BİLGİ: Her yapıda zorunludur.",
+        reason: "KRİTİK RİSK: Her yapıda zorunludur.",
         note:
             "Toplam İnşaat Alanı ($toplamInsaat m²) hesabına göre binada en az ${neededExtinguishers.toInt()} adet 6kg Kuru Kimyevi Tozlu (KKT) Yangın Söndürme Cihazı bulunmalıdır.",
       ),
@@ -623,6 +623,71 @@ class ActiveSystemsEngine {
             "UYARI: Duman tahliye sistemine ait kanalların yangın kompartımanı veya yangın zonundan geçmesi halinde geçiş noktalarında duman damperi kullanılmalıdır.",
       ),
     );
+
+    // --- REORDERING AND CONDITIONAL LOGIC ---
+
+    // Check if any requirement (EXCLUDING YSC and initial Senaryo/Matris) is MANDATORY (RED)
+    // Actually, user said: "if any AT LEAST 1 requirement is ZORUNLU ... (e.g. sprinkler, algilama, basinc) ... i.e. RED"
+    bool anyOtherMandatory = requirements.any(
+      (r) =>
+          r.reason.contains("KRİTİK RİSK:") &&
+          r.name != "Taşınabilir (Portatif) Söndürücüler (YSC)" &&
+          r.name != "Yangın Senaryosu" &&
+          r.name != "Yangın Matrisi (Cause and Effect)",
+    );
+
+    // 1. Yangın Senaryosu ve Matris (Update them based on conditional logic)
+    // We remove the ones we added at the start and re-add them with correct styling
+    requirements.removeWhere(
+      (r) =>
+          r.name == "Yangın Senaryosu" ||
+          r.name == "Yangın Matrisi (Cause and Effect)",
+    );
+
+    final scenarioReason = anyOtherMandatory
+        ? "KRİTİK RİSK: Binada zorunlu aktif sistemler bulunduğu için bir Yangın Senaryosu oluşturulması zorunludur."
+        : "BİLGİ: Her binada, yangın anında sistemlerin nasıl çalışacağını, tahliyenin nasıl yapılacağını ve ekiplerin nasıl müdahale edeceğini anlatan bir Yangın Senaryosu oluşturulmalıdır.";
+
+    final matrixReason = anyOtherMandatory
+        ? "KRİTİK RİSK: Sistemlerin birbiriyle entegrasyonu için Yangın Matrisi (Cause and Effect) hazırlanmalıdır."
+        : "BİLGİ: Sistemlerin birbiriyle entegrasyonu (Örn: Alarm çalınca asansörün inmesi, fanların devreye girmesi vb.) için bir matris hazırlanması önerilir.";
+
+    // Insert at top
+    requirements.insert(
+      0,
+      ActiveSystemRequirement(
+        name: "Yangın Senaryosu",
+        isMandatory: anyOtherMandatory,
+        reason: scenarioReason,
+        note:
+            "Aktif sistem gereksinimlerinin belirtildiği bu çalışmadaki hiçbir sistem veya ekipman binanızda zorunlu değil ise ve binada asansör de yok ise yangın SENARYOSU ve yangın MATRİSİ oluşturulması zorunlu olmayabilir.",
+      ),
+    );
+
+    requirements.insert(
+      1,
+      ActiveSystemRequirement(
+        name: "Yangın Matrisi (Cause and Effect)",
+        isMandatory: anyOtherMandatory,
+        reason: matrixReason,
+      ),
+    );
+
+    // Final sort/push to end: Atrium Duman Kontrolü, Gaz Algılama Sistemi, Sismik Askılama
+    List<ActiveSystemRequirement> specialLast = [];
+    requirements.removeWhere((r) {
+      if (r.name == "Atrium Duman Kontrolü" ||
+          r.name == "Gaz Algılama Sistemi" ||
+          r.name ==
+              "Sismik Askılama (Depreme Karşı Tesisat Koruyucu) Sistemler" ||
+          r.name == "Sismik Askılama Sistemleri") {
+        specialLast.add(r);
+        return true;
+      }
+      return false;
+    });
+
+    requirements.addAll(specialLast);
 
     return requirements;
   }
