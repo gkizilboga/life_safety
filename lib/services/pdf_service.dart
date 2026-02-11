@@ -294,37 +294,26 @@ class PdfService {
   }
 
   static pw.Page _buildLegalPage(pw.PageTheme pageTheme) {
-    return pw.Page(
+    return pw.MultiPage(
       pageTheme: pageTheme,
-      build: (context) => pw.Padding(
-        padding: const pw.EdgeInsets.all(30),
-        child: pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text(
-              "YASAL DAYANAKLAR VE SORUMLULUK REDDİ",
-              style: pw.TextStyle(
-                fontSize: 16,
-                fontWeight: pw.FontWeight.bold,
-                color: PdfColors.blue900,
-              ),
-            ),
-            pw.SizedBox(height: 20),
-            pw.Text(
-              AppStrings.legalDisclaimerContent,
-              style: const pw.TextStyle(fontSize: 9),
-            ),
-            pw.SizedBox(height: 20),
-            pw.Text(
-              AppStrings.kvkkContent,
-              style: const pw.TextStyle(fontSize: 9),
-            ),
-            pw.Spacer(),
-            // Footer added to legal page
-            _buildFooter(context),
-          ],
+      footer: _buildFooter,
+      build: (context) => [
+        pw.Text(
+          "YASAL DAYANAKLAR VE SORUMLULUK REDDİ",
+          style: pw.TextStyle(
+            fontSize: 16,
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.blue900,
+          ),
         ),
-      ),
+        pw.SizedBox(height: 20),
+        pw.Text(
+          AppStrings.legalDisclaimerContent,
+          style: const pw.TextStyle(fontSize: 9),
+        ),
+        pw.SizedBox(height: 20),
+        pw.Text(AppStrings.kvkkContent, style: const pw.TextStyle(fontSize: 9)),
+      ],
     );
   }
 
@@ -540,18 +529,17 @@ class PdfService {
           ),
           pw.SizedBox(height: 5),
           pw.Text(
-            "Bu doküman içerisinde yer alan renk kodları ve anlamları aşağıda açıklanmıştır:",
-            style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
+            "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup KONUT ve KONUTLA ilgili kullanım alanlarının (otopark, teknik hacimler vb.) yangın güvenlik ihtiyaçlarına odaklanmaktadır. Bina içerisinde ticari işletmeler (işyeri) varsa, bu çalışmadaki değerlendirmeler ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir. İşyerlerinde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
+            style: pw.TextStyle(
+              fontSize: 8,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.blueGrey700,
+            ),
           ),
           pw.SizedBox(height: 5),
-          // KONUT Uyarısı Buraya Taşındı
           pw.Text(
-            "(Bu değerlendirme çalışması yalnızca KONUT ruhsatlı yapılar için geçerlidir)",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.red700, // Changed to RED
-            ),
+            "Bu doküman içerisinde yer alan renk kodları ve anlamları aşağıda açıklanmıştır:",
+            style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
           ),
           pw.SizedBox(height: 10),
           pw.Row(
@@ -791,20 +779,19 @@ class PdfService {
               color: PdfColors.purple900,
             ),
           ),
-          pw.SizedBox(height: 10),
+          pw.SizedBox(height: 5),
+          pw.Text(
+            "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup KONUT ve KONUTLA ilgili kullanım alanlarının (otopark, teknik hacimler vb.) yangın güvenlik ihtiyaçlarına odaklanmaktadır. Bina içerisinde ticari işletmeler (işyeri) varsa, bu çalışmadaki değerlendirmeler ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir. İşyerlerinde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
+            style: pw.TextStyle(
+              fontSize: 8,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.blueGrey700,
+            ),
+          ),
+          pw.SizedBox(height: 5),
           pw.Text(
             "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği 'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
             style: const pw.TextStyle(fontSize: 10, color: PdfColors.black),
-          ),
-          pw.SizedBox(height: 10),
-          // KONUT Uyarısı Eklendi
-          pw.Text(
-            "(Bu değerlendirme çalışması yalnızca KONUT ruhsatlı yapılar için geçerlidir)",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.red700,
-            ),
           ),
           pw.SizedBox(height: 20),
 
