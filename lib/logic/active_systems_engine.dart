@@ -511,9 +511,10 @@ class ActiveSystemsEngine {
 
     // 13. Basınçlandırma Sistemi
     List<String> basincLocations = [];
+    bool basincBilmiyor = false;
 
     if (hYapi >= 30.50 && hYapi < 51.50) {
-      if (store.bolum21?.varlik?.label == "21-1-B") {
+      if (store.bolum21?.varlik?.label.contains("21-1-B") == true) {
         basincLocations.add("Merdivenlerin en az birinde");
       }
     }
@@ -522,8 +523,10 @@ class ActiveSystemsEngine {
       basincLocations.add("Merdivenlerin en az ikisinde");
     }
 
-    if (store.bolum23?.havalandirma?.label == "23-5-B") {
+    if (store.bolum23?.havalandirma?.label.contains("23-5-B") == true) {
       basincLocations.add("Normal (İnsan) asansör kuyusunda");
+    } else if (store.bolum23?.havalandirma?.label.contains("23-5-C") == true) {
+      basincBilmiyor = true;
     }
 
     if (store.bolum22?.varlik?.label.contains("22-6-A") == true) {
@@ -535,13 +538,30 @@ class ActiveSystemsEngine {
     }
 
     if (basincLocations.isNotEmpty) {
+      String noteText = basincLocations.join(", ");
+      if (basincBilmiyor) {
+        noteText +=
+            ". Ayrıca asansör kuyusunda mimari proje üzerinde veya Yangın Güvenlik Mühendisi tarafından yerinde inceleme yapılması gereklidir.";
+      }
+
       requirements.add(
         ActiveSystemRequirement(
           name: "Basınçlandırma Sistemi",
           isMandatory: true,
           reason:
               "KRİTİK RİSK: Aşağıdaki alanlarda basınçlandırma yapılması ZORUNLUDUR:",
-          note: "${basincLocations.join(", ")}.",
+          note: "$noteText.",
+        ),
+      );
+    } else if (basincBilmiyor) {
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "Basınçlandırma Sistemi",
+          isMandatory: false,
+          isWarning: true,
+          reason: "UYARI: Asansör kuyusunda havalandırma durumu belirsizdir.",
+          note:
+              "Asansör kuyusunda mimari proje üzerinde veya Yangın Güvenlik Mühendisi tarafından yerinde inceleme yapılması gereklidir. İnceleme sonucuna göre eğer kuyu tepesinde duman tahliye penceresi/bacası yoksa basınçlandırma sistemi zorunlu hale gelebilir.",
         ),
       );
     } else {
