@@ -34,7 +34,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   final GlobalKey _konumKey = GlobalKey();
   final GlobalKey _genislikKey = GlobalKey();
   final GlobalKey _kapiKey = GlobalKey();
-  final GlobalKey _gorunurlukKey = GlobalKey();
 
   bool _genislikBilinmiyor = false;
   bool _kapiGenislikBilinmiyor = false;
