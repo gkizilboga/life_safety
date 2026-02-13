@@ -91,7 +91,8 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     int doner = b20?.donerMerdivenSayisi ?? 0;
     int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
     int sahanliksiz = b20?.sahanliksizMerdivenSayisi ?? 0;
-    int dengelenmis = (b20?.dengelenmisMerdivenSayisi ?? 0) +
+    int dengelenmis =
+        (b20?.dengelenmisMerdivenSayisi ?? 0) +
         (b20?.isBodrumIndependent == true
             ? (b20?.bodrumDengelenmisMerdivenSayisi ?? 0)
             : 0);
@@ -101,8 +102,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         icKapali + disKapali + normal + doner + disAcik + dengelenmis;
 
     _hasKorunumlu = (icKapali + disKapali) > 0;
-    _hasKorunumsuz =
-        (normal + doner + disAcik + sahanliksiz + dengelenmis) > 0;
+    _hasKorunumsuz = (normal + doner + disAcik + sahanliksiz + dengelenmis) > 0;
 
     _genislikKorunumluCtrl.addListener(_validate);
     _genislikKorunumsuzCtrl.addListener(_validate);
@@ -270,7 +270,8 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     int sahanliksiz = b20?.sahanliksizMerdivenSayisi ?? 0;
     int doner = b20?.donerMerdivenSayisi ?? 0;
     int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
-    int dengelenmis = (b20?.dengelenmisMerdivenSayisi ?? 0) +
+    int dengelenmis =
+        (b20?.dengelenmisMerdivenSayisi ?? 0) +
         (b20?.isBodrumIndependent == true
             ? (b20?.bodrumDengelenmisMerdivenSayisi ?? 0)
             : 0);
@@ -540,6 +541,356 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     return true;
   }
 
+  Widget _buildYghEvaluationPanel() {
+    final yghReasons = ReportEngine.evaluateYghRequirement();
+    if (yghReasons.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.orange.shade900,
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  "YANGIN GÜVENLİK HOLÜ (YGH) ANALİZİ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange.shade900,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            "Yönetmelik gereği binanızda YGH zorunluluğu tespit edilmiştir:",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...yghReasons.map(
+            (r) => Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "• ",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Expanded(
+                    child: Text(
+                      r,
+                      style: const TextStyle(fontSize: 12, height: 1.3),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            "Korunumlu merdivenlere geçişte YGH (veya duruma göre basınçlandırma) uygulanması şarttır.",
+            style: TextStyle(
+              fontSize: 11,
+              fontStyle: FontStyle.italic,
+              color: Colors.black54,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStairAnalysisList() {
+    // This widget visualizes the analysis that _evaluateStairsAndExits generates text for.
+    // Ideally we should unify the logic, but for UI display we replicate the checks.
+
+    final validation = _generateStairAnalysis();
+    if (validation.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.blue.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.assignment_turned_in,
+                color: Colors.blue.shade900,
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  "MERDİVEN UYGUNLUK ANALİZİ",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade900,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...validation.map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    item['status'] == 'OK' ? Icons.check_circle : Icons.cancel,
+                    color: item['status'] == 'OK' ? Colors.green : Colors.red,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item['title']!,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          item['desc']!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade800,
+                            height: 1.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<Map<String, String>> _generateStairAnalysis() {
+    final store = BinaStore.instance;
+    final b20 = store.bolum20;
+    final b4 = store.bolum4;
+    final b33 = store.bolum33;
+
+    double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
+    double hYapi = b4?.hesaplananYapiYuksekligi ?? 0.0;
+    int yukBodrum = b33?.yukBodrum ?? 0;
+
+    List<Map<String, String>> results = [];
+
+    // 1. Sahanlıksız
+    int sahanliksiz = b20?.sahanliksizMerdivenSayisi ?? 0;
+    if (sahanliksiz > 0) {
+      results.add({
+        'status': 'FAIL',
+        'title': 'Sahanlıksız Merdiven ($sahanliksiz adet)',
+        'desc': 'UYGUN DEĞİL: Hiçbir binada kaçış yolu olarak kabul edilemez.',
+      });
+    }
+
+    // 2. Dairesel
+    int doner = b20?.donerMerdivenSayisi ?? 0;
+    if (doner > 0) {
+      if (hBina > 9.50) {
+        results.add({
+          'status': 'FAIL',
+          'title': 'Dairesel Merdiven ($doner adet)',
+          'desc':
+              'UYGUN DEĞİL: Bina yüksekliği 9.50m üzerinde olduğu için kullanılamaz.',
+        });
+      } else {
+        results.add({
+          'status': 'OK',
+          'title': 'Dairesel Merdiven ($doner adet)',
+          'desc':
+              'UYGUN: Yükseklik 9.50m altında olduğu için kabul edilebilir.',
+        });
+      }
+    }
+
+    // 3. Bina Dışı Açık
+    int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
+    if (disAcik > 0) {
+      if (hBina > 21.50) {
+        results.add({
+          'status': 'FAIL',
+          'title': 'Bina Dışı Açık Merdiven ($disAcik adet)',
+          'desc':
+              'UYGUN DEĞİL: Bina yüksekliği 21.50m üzerinde olduğu için kullanılamaz.',
+        });
+      } else {
+        results.add({
+          'status': 'OK',
+          'title': 'Bina Dışı Açık Merdiven ($disAcik adet)',
+          'desc': 'UYGUN: Yükseklik 21.50m sınırını aşmıyor.',
+        });
+      }
+    }
+
+    // 4. Dengelenmiş
+    int dengelenmis =
+        (b20?.dengelenmisMerdivenSayisi ?? 0) +
+        (b20?.isBodrumIndependent == true
+            ? (b20?.bodrumDengelenmisMerdivenSayisi ?? 0)
+            : 0);
+    if (dengelenmis > 0) {
+      int maxYuk = [
+        b33?.yukZemin ?? 0,
+        b33?.yukNormal ?? 0,
+        b33?.yukBodrum ?? 0,
+      ].reduce((a, b) => a > b ? a : b);
+      if (hBina > 15.50 || maxYuk > 100) {
+        results.add({
+          'status': 'FAIL',
+          'title': 'Dengelenmiş Merdiven ($dengelenmis adet)',
+          'desc':
+              'UYGUN DEĞİL: Yükseklik > 15.50m veya Kullanıcı Yükü > 100 kişi.',
+        });
+      } else {
+        results.add({
+          'status': 'OK',
+          'title': 'Dengelenmiş Merdiven ($dengelenmis adet)',
+          'desc': 'UYGUN: Yükseklik ve kullanıcı yükü sınırları dahilinde.',
+        });
+      }
+    }
+
+    // 5. Korunumlu Merdivenler
+    int icKapali = b20?.binaIciYanginMerdiveniSayisi ?? 0;
+    int disKapali = b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0;
+    int totalKorunumlu = icKapali + disKapali;
+
+    if (totalKorunumlu > 0) {
+      // Genişlik kontrolü
+      double width = double.tryParse(_genislikKorunumluCtrl.text) ?? 0;
+      // Basit kontrol (Detaylısı _evaluateStairsAndExits içinde)
+      bool widthOk = true;
+      if (!_genislikBilinmiyor) {
+        if (yukBodrum >= 2001 && width < 200)
+          widthOk = false;
+        else if (yukBodrum >= 501 && width < 150)
+          widthOk = false;
+        else if ((hBina >= 21.50 || hYapi >= 30.50) && width < 120)
+          widthOk = false;
+        else if (width < 120)
+          widthOk = false; // Min
+      }
+
+      if (!widthOk) {
+        results.add({
+          'status': 'FAIL',
+          'title': 'Korunumlu Merdiven ($totalKorunumlu adet)',
+          'desc':
+              'GENİŞLİK YETERSİZ: Girilen genişlik ($width cm) yönetmelik minimumunu karşılamıyor.',
+        });
+      } else {
+        // YGH Kontrolü
+        final yghReasons = ReportEngine.evaluateYghRequirement();
+        bool hasYgh =
+            BinaStore.instance.bolum21?.varlik?.label.contains("21-1-A") ??
+            false;
+        // Correction: bolum20.basinclandirma is stored.
+        bool b20Press =
+            b20?.basinclandirma?.label == "20-BAS-A"; // 20-BAS-A is Yes
+
+        if (yghReasons.isNotEmpty && !hasYgh && !b20Press) {
+          // Simple logic: if YGH required and NO YGH and NO Press, then Warn
+          results.add({
+            'status': 'FAIL',
+            'title': 'Korunumlu Merdiven ($totalKorunumlu adet)',
+            'desc':
+                'UYGUN DEĞİL: YGH veya Basınçlandırma sistemi eksik. (YGH Gerekçelerine bakınız)',
+          });
+        } else {
+          results.add({
+            'status': 'OK',
+            'title': 'Korunumlu Merdiven ($totalKorunumlu adet)',
+            'desc': 'UYGUN: Genişlik ve koruma önlemleri yeterli görünüyor.',
+          });
+        }
+      }
+    }
+
+    // 6. Normal Merdivenler (Korunumsuz)
+    int normal = b20?.normalMerdivenSayisi ?? 0;
+    if (normal > 0) {
+      // Genişlik kontrolü
+      double width = double.tryParse(_genislikKorunumsuzCtrl.text) ?? 0;
+      bool widthOk = true;
+      if (!_genislikBilinmiyor) {
+        if (yukBodrum >= 2001 && width < 200)
+          widthOk = false;
+        else if (yukBodrum >= 501 && width < 150)
+          widthOk = false;
+        else if ((hBina >= 21.50 || hYapi >= 30.50) && width < 120)
+          widthOk = false;
+        else if (width < 120)
+          widthOk = false;
+      }
+
+      // Yükseklik Limiti (Normal merdiven her yere gider mi?)
+      // Yönetmelikte: h>21.50 veya 30.50 ise en az 1 korunumlu şartı var.
+      // Ama normal merdiven YASAK değildir, sadece EK OLARAK korunumlu gerekir.
+      // Ancak h>30.50 ise normal merdiven kaçış yolu sayılmaz? Kaçış uzaklığına bağlı.
+      // Burada sadece genişliğe bakalım.
+
+      if (!widthOk) {
+        results.add({
+          'status': 'FAIL',
+          'title': 'Normal Merdiven ($normal adet)',
+          'desc':
+              'GENİŞLİK YETERSİZ: Girilen genişlik ($width cm) yönetmelik minimumunu karşılamıyor.',
+        });
+      } else {
+        results.add({
+          'status': 'OK',
+          'title': 'Normal Merdiven ($normal adet)',
+          'desc':
+              'UYGUN: Genişlik yeterli. (Not: Yüksekliğe bağlı korunumlu merdiven şartı ayrıca değerlendirilir)',
+        });
+      }
+    }
+
+    return results;
+  }
+
   void _onFinishPressed() {
     int? genK = _genislikBilinmiyor
         ? null
@@ -799,13 +1150,19 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               ],
             ),
           ),
-          SizedBox(key: _gorunurlukKey, height: 1),
-          _buildSoruHeader("Kaçış yolları açıkça görülebiliyor mu?"),
+
+          _buildSoruHeader("Kaçış Yolu Görünürlüğü"),
           _buildSoruCard('gorunurluk', [
             Bolum36Content.gorunurlukOptionA,
             Bolum36Content.gorunurlukOptionB,
             Bolum36Content.gorunurlukOptionC,
           ], _model.gorunurluk),
+
+          // New Analysis Panels
+          _buildYghEvaluationPanel(),
+          _buildStairAnalysisList(),
+
+          const SizedBox(height: 50),
         ],
       ),
     );

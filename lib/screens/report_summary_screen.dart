@@ -24,9 +24,9 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   Color _getUiRiskColor(String text) {
     if (text.contains('KRİTİK RİSK')) return const Color(0xFFEF5350); // Red
     if (text.contains('UYARI')) return const Color(0xFFFFD600); // Yellow (A700)
+    if (text.contains('BİLİNMİYOR')) return Colors.grey;
     if (text.contains('OLUMLU')) return const Color(0xFF66BB6A); // Green
     if (text.contains('BİLGİ')) return const Color(0xFF42A5F5); // Blue
-    if (text.contains('BİLİNMİYOR')) return Colors.grey;
     return Colors.grey;
   }
 

@@ -1337,7 +1337,7 @@ class Bolum18Content {
     uiSubtitle:
         "Duvarlarda lambiri, plastik panel veya strafor süslemeler var.",
     reportText:
-        "UYARI: (Yüksek Bina İse) Yüksek binalarda duvar kaplamaları ‘en az zor alevlenici’ sınıfta olmalıdır. Ahşap, plastik veya köpük gibi malzemeler yangını koridor boyunca hızla yayar.<br>(Alçak Bina İse) Duvarlarda kullanılan köpük veya plastik malzemeler 'En Az Normal Alevlenici'sınıfta olmalıdır. Kolay tutuşan malzemeler yangın yükünü artırır.",
+        "UYARI: (Yüksek Bina İse) Duvar kaplamaları ‘en az zor alevlenici’ sınıfta olmalıdır. Ahşap, plastik veya köpük gibi malzemeler yangını koridor boyunca hızla yayar.(Yüksek Olmayan Bina İse) Duvarlarda kullanılan köpük veya plastik malzemeler 'En Az Normal Alevlenici'sınıfta olmalıdır. Kolay tutuşan malzemeler yangın yükünü artırır.",
   );
 
   static final duvarOptionC = ChoiceResult(
@@ -2409,7 +2409,7 @@ class Bolum27Content {
         "Çelik, yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanıyor.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Yangın kapısı kullanılması olumludur. Kapının yangın dayanım test raporu incelendikten sonra tam olarak uygunluğuna karar verilir.",
+        "OLUMLU: Yangın kapısı kullanılması olumlu bir durumdur. Kapının yangın dayanım test raporu incelendikten sonra tam olarak uygunluğuna karar verilir.",
   );
 
   static final dayanimOptionB = ChoiceResult(
@@ -2426,7 +2426,7 @@ class Bolum27Content {
     uiTitle: "Ahşap, PVC veya cam kapı (dayanıksız).",
     uiSubtitle: "Yangın kapısı değildir.",
     reportText:
-        "KRİTİK RİSK: Yangın merdiveni kapıları yanıcı malzemeden (Ahşap/PVC) yapılamaz. En az 60 dk yangına dayanıklı olmalıdır.",
+        "KRİTİK RİSK: Yangın merdiveni kapıları yanıcı malzemeden (Ahşap/PVC) yapılamaz. Bu Uygulama'nın Bölüm-14'ünde yer alan şaft kapağı yangın dayanım süresiyle aynı dayanım süresi alınabilir. Yangın kapısı en az 60 dk yangına dayanıklı olmalıdır.",
   );
 
   static final dayanimOptionD = ChoiceResult(
@@ -3002,23 +3002,23 @@ class Bolum31Content {
 
   static final sondurmeOptionA = ChoiceResult(
     label: "31-3-A",
-    uiTitle: "Evet, her ikisi de (Dedektör + Söndürme) var.",
-    uiSubtitle: "Sistem tam korumalı.",
+    uiTitle: "Evet, dedektör ve söndürme sistemi var.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Trafo odasında otomatik yangın algılama ve söndürme sistemi mevcuttur.",
   );
 
   static final sondurmeOptionB = ChoiceResult(
     label: "31-3-B",
-    uiTitle: "Sadece otomatik söndürme var.",
-    uiSubtitle: "Dedektör görünmüyor.",
+    uiTitle: "Hayır, hiçbir sistem yok.",
+    uiSubtitle: "",
     reportText:
-        "UYARI: Trafo odasında otomatik söndürme sistemi mevcuttur ancak algılama (dedektör) sistemi eksiktir. Erken uyarı için duman/ısı dedektörleri de bulunmalıdır.",
+        "UYARI: Trafo odaları kapalı ve kilitli alanlardır. Yangın başladığında dışarıdan fark edilmesi zordur. Otomatik algılama ve söndürme sistemi hayati önem taşır.",
   );
 
   static final sondurmeOptionC = ChoiceResult(
     label: "31-3-C",
-    uiTitle: "Sadece yangın dedektörü var.",
+    uiTitle: "Sadece dedektör var.",
     uiSubtitle: "Otomatik söndürme yok.",
     reportText:
         "UYARI: Trafo odasında yangın algılama sistemi mevcuttur ancak otomatik söndürme sistemi yoktur. Trafo yangınlarına müdahale için gazlı otomatik söndürme sistemleri önerilir.",
@@ -3027,7 +3027,7 @@ class Bolum31Content {
   static final sondurmeOptionD = ChoiceResult(
     label: "31-3-D",
     uiTitle: "Hayır, hiçbir sistem yok.",
-    uiSubtitle: "Korunmasız alan.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Trafo odaları yüksek yangın riski taşıyan kapalı alanlardır. Otomatik algılama ve söndürme sistemlerinin bulunmaması yangının geç fark edilmesine ve büyümesine yol açar.",
   );
@@ -3042,8 +3042,8 @@ class Bolum31Content {
 
   static final cevreOptionA = ChoiceResult(
     label: "31-4-A",
-    uiTitle: "Hayır, çevresi ve üstü kuru.",
-    uiSubtitle: "Su tesisatı riski yok.",
+    uiTitle: "Hayır, çevresi ve üstünde su tesisatı yok.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Trafo odası çevresinde su tesisatı riski bulunmamaktadır.",
   );
@@ -3051,15 +3051,15 @@ class Bolum31Content {
   static final cevreOptionB = ChoiceResult(
     label: "31-4-B",
     uiTitle: "Evet, içinden su boruları geçiyor.",
-    uiSubtitle: "Odanın içinden boru geçiyor.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Yüksek gerilim hattının olduğu yerden su borusu geçirilemez! Boru patlarsa su ve elektrik teması büyük bir patlamaya neden olur.",
   );
 
   static final cevreOptionC = ChoiceResult(
     label: "31-4-C",
-    uiTitle: "Evet, üstünde banyo/tuvalet var.",
-    uiSubtitle: "Üst kat ıslak hacim.",
+    uiTitle: "Evet, üstünde banyo, tuvalet vb. ıslak hacim var.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Trafo odalarının üstü ıslak hacim olamaz. Üst kattan olası bir su sızıntısı trafoya damlarsa ölümcül kazalara ve yangına yol açabilir.",
   );
@@ -3067,9 +3067,9 @@ class Bolum31Content {
   static final cevreOptionD = ChoiceResult(
     label: "31-4-D",
     uiTitle: "Bilmiyorum.",
-    uiSubtitle: "Çevresel riskler gözlemlenemedi.",
+    uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Trafo odası çevresindeki su tesisatı veya ıslak hacim riskleri gözlemlenememiştir.",
+        "BİLİNMİYOR: Trafo odası çevresindeki su tesisatı veya ıslak hacim riskleri hakkın tespit edilememiştir.",
   );
 }
 
