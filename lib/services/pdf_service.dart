@@ -670,7 +670,7 @@ class PdfService {
                         // Yanıt
                         if (value.isNotEmpty && value != 'Seçilmedi') ...[
                           pw.Text(
-                            "Kullanıcının Yanıtı:",
+                            "Kullanıcı Yanıtı:",
                             style: pw.TextStyle(
                               fontSize: 9,
                               fontWeight: pw.FontWeight.bold,
