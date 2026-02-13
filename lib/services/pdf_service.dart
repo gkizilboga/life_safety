@@ -9,6 +9,20 @@ import '../utils/app_strings.dart';
 import '../utils/app_content.dart';
 import '../logic/active_systems_engine.dart';
 
+// Helper function for Turkish locale-aware uppercase conversion
+// Dart's standard toUpperCase() doesn't handle Turkish characters correctly (İ→I, ı→i)
+String _toUpperCaseTR(String text) {
+  return text
+      .replaceAll('i', 'İ')
+      .replaceAll('ı', 'I')
+      .replaceAll('ö', 'Ö')
+      .replaceAll('ü', 'Ü')
+      .replaceAll('ç', 'Ç')
+      .replaceAll('ş', 'Ş')
+      .replaceAll('ğ', 'Ğ')
+      .toUpperCase();
+}
+
 class PdfService {
   // Badge system removed - plain text only
 
@@ -527,19 +541,24 @@ class PdfService {
               color: PdfColors.blue900,
             ),
           ),
-          pw.SizedBox(height: 5),
+          pw.SizedBox(height: 8),
           pw.Text(
             "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup KONUT ve KONUTLA ilgili kullanım alanlarının (otopark, teknik hacimler vb.) yangın güvenlik ihtiyaçlarına odaklanmaktadır. Bina içerisinde ticari işletmeler (işyeri) varsa, bu çalışmadaki değerlendirmeler ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir. İşyerlerinde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
             style: pw.TextStyle(
-              fontSize: 8,
+              fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               color: PdfColors.blueGrey700,
+              lineSpacing: 2,
             ),
           ),
-          pw.SizedBox(height: 5),
+          pw.SizedBox(height: 8),
           pw.Text(
             "Bu doküman içerisinde yer alan renk kodları ve anlamları aşağıda açıklanmıştır:",
-            style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
+            style: const pw.TextStyle(
+              fontSize: 9,
+              color: PdfColors.grey700,
+              lineSpacing: 1.5,
+            ),
           ),
           pw.SizedBox(height: 10),
           pw.Row(
@@ -605,7 +624,7 @@ class PdfService {
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: [
                       pw.Text(
-                        "BÖLÜM $id: ${AppDefinitions.getSectionTitle(id).toUpperCase()}",
+                        "BÖLÜM $id: ${_toUpperCaseTR(AppDefinitions.getSectionTitle(id))}",
                         style: pw.TextStyle(
                           fontSize: 10,
                           fontWeight: pw.FontWeight.bold,
@@ -633,9 +652,8 @@ class PdfService {
                             "Soru:",
                             style: pw.TextStyle(
                               fontSize: 9,
-                              fontWeight: pw.FontWeight.bold, // BOLD
-                              fontStyle: pw.FontStyle.italic, // ITALIC
-                              color: PdfColors.blue900, // NAVY BLUE
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.blue900,
                             ),
                           ),
                           pw.Text(
@@ -655,9 +673,8 @@ class PdfService {
                             "Kullanıcının Yanıtı:",
                             style: pw.TextStyle(
                               fontSize: 9,
-                              fontWeight: pw.FontWeight.bold, // BOLD
-                              fontStyle: pw.FontStyle.italic, // ITALIC
-                              color: PdfColors.blue900, // NAVY BLUE
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.blue900,
                             ),
                           ),
                           pw.Text(
@@ -677,9 +694,8 @@ class PdfService {
                             "Değerlendirme:",
                             style: pw.TextStyle(
                               fontSize: 9,
-                              fontWeight: pw.FontWeight.bold, // BOLD
-                              fontStyle: pw.FontStyle.italic, // ITALIC
-                              color: PdfColors.blue900, // NAVY BLUE
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.blue900,
                             ),
                           ),
                           // Highlight "YÜKSEK BİNA" etc
@@ -694,9 +710,8 @@ class PdfService {
                             "Öneri:",
                             style: pw.TextStyle(
                               fontSize: 9,
-                              fontWeight: pw.FontWeight.bold, // BOLD
-                              fontStyle: pw.FontStyle.italic, // ITALIC
-                              color: PdfColors.blue900, // NAVY BLUE
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.blue900,
                             ),
                           ),
                           pw.Text(
@@ -779,19 +794,24 @@ class PdfService {
               color: PdfColors.purple900,
             ),
           ),
-          pw.SizedBox(height: 5),
+          pw.SizedBox(height: 8),
           pw.Text(
             "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup KONUT ve KONUTLA ilgili kullanım alanlarının (otopark, teknik hacimler vb.) yangın güvenlik ihtiyaçlarına odaklanmaktadır. Bina içerisinde ticari işletmeler (işyeri) varsa, bu çalışmadaki değerlendirmeler ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir. İşyerlerinde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
             style: pw.TextStyle(
-              fontSize: 8,
+              fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               color: PdfColors.blueGrey700,
+              lineSpacing: 2,
             ),
           ),
-          pw.SizedBox(height: 5),
+          pw.SizedBox(height: 8),
           pw.Text(
             "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği 'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
-            style: const pw.TextStyle(fontSize: 10, color: PdfColors.black),
+            style: const pw.TextStyle(
+              fontSize: 10,
+              color: PdfColors.black,
+              lineSpacing: 1.5,
+            ),
           ),
           pw.SizedBox(height: 20),
 
