@@ -90,10 +90,14 @@ class SelectableCard extends StatelessWidget {
                         color: isDisabled
                             ? Colors.grey.shade500
                             : (isSelected
-                                  ? const Color(0xFF1A237E).withOpacity(0.7)
+                                  ? const Color(0xFF1A237E).withOpacity(
+                                      0.8,
+                                    ) // Increased opacity for better visibility
                                   : Colors.grey.shade700),
                         height: 1.4,
-                        fontWeight: FontWeight.w600,
+                        fontWeight:
+                            FontWeight.w500, // Standardized to w500 (Medium)
+                        fontStyle: FontStyle.normal, // Ensure normal style
                       ),
                     ),
                   ],

@@ -59,8 +59,7 @@ class AppAssets {
       'assets/images/sections/dairesel_merdiven.webp';
   static const String section20Dengelenmis =
       'assets/images/sections/dengelenmis_merdiven.webp';
-  static const String section21Ygh = 
-      'assets/images/sections/ygh_1.webp';
+  static const String section21Ygh = 'assets/images/sections/ygh_1.webp';
   static const String section22ItfaiyeHol =
       'assets/images/sections/itfaiye_asansor_hol.webp';
   static const String section22ItfaiyeKabin =
@@ -69,6 +68,10 @@ class AppAssets {
       'assets/images/sections/basinclandirma.webp';
   static const String section24DisGecit =
       'assets/images/sections/dis_kacis_gecidi.webp';
+  static const String section24DisGecit2 =
+      'assets/images/sections/dis_kacis_gecidi_2.webp';
+  static const String section24KapaliKoridor =
+      'assets/images/sections/kapali_koridor.webp';
   static const String section26Rampa =
       'assets/images/sections/cikis_rampa.webp';
   static const String section27YanginKapisi =

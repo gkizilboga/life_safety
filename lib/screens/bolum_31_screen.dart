@@ -146,6 +146,8 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
                         Bolum31Content.sondurmeOptionA,
                         Bolum31Content.sondurmeOptionB,
                         Bolum31Content.sondurmeOptionC,
+                        Bolum31Content.sondurmeOptionD,
+                        Bolum31Content.sondurmeOptionE,
                       ],
                       _model.sondurme,
                     ),

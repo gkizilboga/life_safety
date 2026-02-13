@@ -3002,26 +3002,42 @@ class Bolum31Content {
 
   static final sondurmeOptionA = ChoiceResult(
     label: "31-3-A",
-    uiTitle: "Evet, dedektör ve söndürme var.",
-    uiSubtitle: "Otomatik çalışan sistemler mevcut.",
+    uiTitle: "Evet, her ikisi de (Dedektör + Söndürme) var.",
+    uiSubtitle: "Sistem tam korumalı.",
     reportText:
         "OLUMLU: Trafo odasında otomatik yangın algılama ve söndürme sistemi mevcuttur.",
   );
 
   static final sondurmeOptionB = ChoiceResult(
     label: "31-3-B",
-    uiTitle: "Hayır, hiçbir sistem yok.",
-    uiSubtitle: "Sadece manuel müdahale mümkün.",
+    uiTitle: "Sadece otomatik söndürme var.",
+    uiSubtitle: "Dedektör görünmüyor.",
     reportText:
-        "UYARI: Trafo odaları kapalı ve kilitli alanlardır. Yangın başladığında dışarıdan fark edilmesi zordur. Otomatik algılama ve söndürme sistemi hayati önem taşır.",
+        "UYARI: Trafo odasında otomatik söndürme sistemi mevcuttur ancak algılama (dedektör) sistemi eksiktir. Erken uyarı için duman/ısı dedektörleri de bulunmalıdır.",
   );
 
   static final sondurmeOptionC = ChoiceResult(
     label: "31-3-C",
+    uiTitle: "Sadece yangın dedektörü var.",
+    uiSubtitle: "Otomatik söndürme yok.",
+    reportText:
+        "UYARI: Trafo odasında yangın algılama sistemi mevcuttur ancak otomatik söndürme sistemi yoktur. Trafo yangınlarına müdahale için gazlı otomatik söndürme sistemleri önerilir.",
+  );
+
+  static final sondurmeOptionD = ChoiceResult(
+    label: "31-3-D",
+    uiTitle: "Hayır, hiçbir sistem yok.",
+    uiSubtitle: "Korunmasız alan.",
+    reportText:
+        "KRİTİK RİSK: Trafo odaları yüksek yangın riski taşıyan kapalı alanlardır. Otomatik algılama ve söndürme sistemlerinin bulunmaması yangının geç fark edilmesine ve büyümesine yol açar.",
+  );
+
+  static final sondurmeOptionE = ChoiceResult(
+    label: "31-3-E",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Trafo odasındaki otomatik söndürme/algılama sistemlerinin varlığı veya çalışabilirliği belirsizdir. Bu sistemlerin gereksinimi Yangın Güvenlik Uzmanı tarafından belirlenmelidir.",
+        "BİLİNMİYOR: Trafo odasındaki yangın güvenlik sistemlerinin (algılama/söndürme) varlığı tespit edilememiştir.",
   );
 
   static final cevreOptionA = ChoiceResult(

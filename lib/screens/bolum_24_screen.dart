@@ -68,17 +68,59 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // --- SORU 1 ---
-          _buildSoru(
-            "Dairenizden itibaren bina dışına çıkış nasıl?",
-            'tip',
-            [
-              Bolum24Content.tipOptionA,
-              Bolum24Content.tipOptionB,
-              Bolum24Content.tipOptionC,
-            ],
-            _model.tip,
-            assetPath: AppAssets.section24DisGecit,
-            assetTitle: "Dış Kaçış Geçidi Örneği",
+          // --- SORU 1 ---
+          QuestionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Dairenizden itibaren bina dışına çıkış nasıl?",
+                  style: AppStyles.questionTitle,
+                ),
+                const SizedBox(height: 12),
+
+                // Option A: Kapalı Koridor
+                SelectableCard(
+                  choice: Bolum24Content.tipOptionA,
+                  isSelected:
+                      _model.tip?.label == Bolum24Content.tipOptionA.label,
+                  onTap: () =>
+                      _handleSelection('tip', Bolum24Content.tipOptionA),
+                ),
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section24KapaliKoridor,
+                  title: "Kapalı Koridor Örneği",
+                ),
+                const SizedBox(height: 8),
+
+                // Option B: Dış Kaçış Geçidi
+                SelectableCard(
+                  choice: Bolum24Content.tipOptionB,
+                  isSelected:
+                      _model.tip?.label == Bolum24Content.tipOptionB.label,
+                  onTap: () =>
+                      _handleSelection('tip', Bolum24Content.tipOptionB),
+                ),
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section24DisGecit,
+                  title: "Dış Kaçış Geçidi Örneği 1",
+                ),
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section24DisGecit2,
+                  title: "Dış Kaçış Geçidi Örneği 2",
+                ),
+                const SizedBox(height: 8),
+
+                // Option C: Direkt Çıkış
+                SelectableCard(
+                  choice: Bolum24Content.tipOptionC,
+                  isSelected:
+                      _model.tip?.label == Bolum24Content.tipOptionC.label,
+                  onTap: () =>
+                      _handleSelection('tip', Bolum24Content.tipOptionC),
+                ),
+              ],
+            ),
           ),
 
           // Alt Sorular (Sadece Seçenek B ise görünür)

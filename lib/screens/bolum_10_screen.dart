@@ -84,6 +84,23 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     return true;
   }
 
+  bool _hasKonutSelection() {
+    // Check Zemin
+    if (_model.zemin?.label == Bolum10Content.konut.label) return true;
+
+    // Check Bodrumlar
+    if (_model.bodrumlar.any((e) => e?.label == Bolum10Content.konut.label)) {
+      return true;
+    }
+
+    // Check Normaller
+    if (_model.normaller.any((e) => e?.label == Bolum10Content.konut.label)) {
+      return true;
+    }
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
@@ -92,6 +109,25 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       screenType: widget.runtimeType,
       isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
       onNext: () {
+        if (!_hasKonutSelection()) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text("Eksik Seçim"),
+              content: const Text(
+                "Bu uygulama Konut binalarının yangın güvenliği analizi için tasarlanmıştır. Lütfen binanızdaki katlardan en az bir tanesi için 'Konut' (Daire) seçeneğini işaretleyiniz.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text("Tamam"),
+                ),
+              ],
+            ),
+          );
+          return;
+        }
+
         BinaStore.instance.bolum10 = _model;
         BinaStore.instance.saveToDisk();
 
