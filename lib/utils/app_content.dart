@@ -3550,6 +3550,55 @@ class Bolum36Content {
     uiSubtitle: "Durumu bilmiyorum.",
     reportText: "BİLİNMİYOR: Çıkışların erişilebilirliği tespit edilememiştir.",
   );
+
+  // Madde 41 - Dış Havaya Tahliye
+  static final madde41OranHata = ChoiceResult(
+    label: "36-MADDE41-ORAN-HATA",
+    uiTitle: "Kaçış merdivenlerinin en az yarısı doğrudan dışarı açılmıyor.",
+    uiSubtitle: "Madde 41/1 ihlali.",
+    reportText:
+        "KRİTİK RİSK: Madde 41/1 gereği, binadaki kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut durumda bu oran sağlanamamaktadır.",
+  );
+
+  static final madde41MesafeHata = ChoiceResult(
+    label: "36-MADDE41-MESAFE-HATA",
+    uiTitle: "Bina içi tahliye mesafesi sınır değerleri aşıyor.",
+    uiSubtitle: "Madde 41/2 ihlali.",
+    reportText:
+        "KRİTİK RİSK: Madde 41/2 gereği, doğrudan dışarı açılmayan merdivenlerin lobi/koridor içindeki tahliye mesafesi sınır değerleri aşılmamalıdır. Mevcut durumda tahliye mesafesi yönetmelik sınırları dışındadır.",
+  );
+
+  static final madde41Uygundur = ChoiceResult(
+    label: "36-MADDE41-TAM",
+    uiTitle: "Kaçış merdivenlerinin dış havaya tahliyesi mesafesi yeterlidir.",
+    uiSubtitle: "Madde 41 kriterleri sağlanıyor.",
+    reportText:
+        "OLUMLU: Kaçış merdivenlerinin doğrudan dışarı açılma durumu ve bina içi tahliye mesafeleri Yönetmeliğin 41. maddesi kriterlerine uygundur.",
+  );
+
+  // Madde 41 - Distance Threshold Choices
+  static final madde41MesafeAltinda = ChoiceResult(
+    label: "41-MESAFE-A",
+    uiTitle: "Evet, limitin altında",
+    uiSubtitle: "Mesafe yeterli",
+    reportText: "OLUMLU: Bina içi tahliye mesafesi limit değerlerin altındadır.",
+  );
+
+  static final madde41MesafeUstunde = ChoiceResult(
+    label: "41-MESAFE-B",
+    uiTitle: "Hayır, limitin üstünde",
+    uiSubtitle: "Mesafe yetersiz",
+    reportText:
+        "KRİTİK RİSK: Madde 41/2 gereği, bina içi tahliye mesafesi limit değerleri aşmaktadır.",
+  );
+
+  static final madde41MesafeBilmiyorum = ChoiceResult(
+    label: "41-MESAFE-C",
+    uiTitle: "Bilmiyorum",
+    uiSubtitle: "Mesafe ölçülmedi",
+    reportText:
+        "BİLİNMİYOR: Bina içi tahliye mesafesi ölçülmemiş veya bilinmemektedir.",
+  );
 }
 
 class AppContent {

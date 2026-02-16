@@ -45,7 +45,27 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   final _bodDisAcikCtrl = TextEditingController();
   final _bodDonerCtrl = TextEditingController();
   final _bodSahanliksizCtrl = TextEditingController();
-  final _bodDengelenmisCtrl = TextEditingController(); // NEW
+  final _bodDengelenmisCtrl = TextEditingController();
+
+  // Direct Exit Controllers (Madde 41 - Simplified)
+  final _toplamDirectCtrl = TextEditingController(); 
+  /* Removed individual direct controllers
+  final _normalDirectCtrl = TextEditingController();
+  final _icKapaliDirectCtrl = TextEditingController();
+  ...
+  */
+
+  // Distance Status (Madde 41) - Changed from numeric to choice
+  ChoiceResult? _lobiMesafeDurumu;
+
+  // Basement Direct Exit Controllers (Madde 41 - Simplified)
+  final _bodToplamDirectCtrl = TextEditingController();
+  /* Removed individual basement direct controllers
+  final _bodNormalDirectCtrl = TextEditingController();
+  ...
+  
+  // Basement Distance Status (Madde 41) - Changed from numeric to choice
+  ChoiceResult? _bodLobiMesafeDurumu;
 
   // Errors for Main
   String? _normalErr;
@@ -77,8 +97,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _disAcikCtrl.addListener(_validateLimits);
     _donerCtrl.addListener(_validateLimits);
     _sahanliksizCtrl.addListener(_validateLimits);
-    _dengelenmisCtrl.addListener(_validateLimits); // NEW
-    _dengelenmisCtrl.addListener(_validateLimits); // NEW
+    _sahanliksizCtrl.addListener(_validateLimits);
+    _dengelenmisCtrl.addListener(_validateLimits);
+
+
 
     // Listeners for Basement
     _bodNormalCtrl.addListener(_validateLimits);
@@ -107,8 +129,15 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         _donerCtrl.text = saved.donerMerdivenSayisi.toString();
       if (saved.sahanliksizMerdivenSayisi > 0)
         _sahanliksizCtrl.text = saved.sahanliksizMerdivenSayisi.toString();
-      if (saved.dengelenmisMerdivenSayisi > 0) // NEW
+      if (saved.dengelenmisMerdivenSayisi > 0) 
         _dengelenmisCtrl.text = saved.dengelenmisMerdivenSayisi.toString();
+
+      // Load Direct Exits
+      if (saved.toplamDisariAcilanMerdivenSayisi > 0)
+        _toplamDirectCtrl.text = saved.toplamDisariAcilanMerdivenSayisi.toString();
+      
+      // Load Distance Status
+      _lobiMesafeDurumu = saved.lobiTahliyeMesafeDurumu;
 
       // Basement
       _isBodrumIndependent = saved.isBodrumIndependent;
@@ -133,6 +162,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         if (saved.bodrumDengelenmisMerdivenSayisi > 0) // NEW
           _bodDengelenmisCtrl.text =
               saved.bodrumDengelenmisMerdivenSayisi.toString();
+
+        if (saved.bodrumToplamDisariAcilanMerdivenSayisi > 0)
+          _bodToplamDirectCtrl.text = saved.bodrumToplamDisariAcilanMerdivenSayisi.toString();
+          
+        _bodLobiMesafeDurumu = saved.bodrumLobiTahliyeMesafeDurumu;
       }
     }
   }
@@ -196,7 +230,36 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         _model = _model.copyWith(basinclandirma: null);
       }
     });
+  bool _shouldShowLobbyDistanceQuestion() {
+    int total = (int.tryParse(_normalCtrl.text) ?? 0) +
+        (int.tryParse(_icKapaliCtrl.text) ?? 0) +
+        (int.tryParse(_disKapaliCtrl.text) ?? 0) +
+        (int.tryParse(_donerCtrl.text) ?? 0) +
+        (int.tryParse(_dengelenmisCtrl.text) ?? 0) +
+        (int.tryParse(_disAcikCtrl.text) ?? 0) +
+        (int.tryParse(_sahanliksizCtrl.text) ?? 0);
+    
+    int direct = int.tryParse(_toplamDirectCtrl.text) ?? 0;
+        
+    return total > 0 && direct < total;
   }
+
+  bool _shouldShowBasementLobbyDistanceQuestion() {
+    if (!_isBodrumIndependent) return false;
+    
+    int total = (int.tryParse(_bodNormalCtrl.text) ?? 0) +
+        (int.tryParse(_bodIcKapaliCtrl.text) ?? 0) +
+        (int.tryParse(_bodDisKapaliCtrl.text) ?? 0) +
+        (int.tryParse(_bodDonerCtrl.text) ?? 0) +
+        (int.tryParse(_bodDengelenmisCtrl.text) ?? 0) +
+        (int.tryParse(_bodDisAcikCtrl.text) ?? 0) +
+        (int.tryParse(_bodSahanliksizCtrl.text) ?? 0); 
+    
+    int direct = int.tryParse(_bodToplamDirectCtrl.text) ?? 0;
+        
+    return total > 0 && direct < total;
+  }
+
 
   String? _checkLimit(String text) {
     return InputValidator.validateNumber(
@@ -248,7 +311,13 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _bodDisAcikCtrl.dispose();
     _bodDonerCtrl.dispose();
     _bodSahanliksizCtrl.dispose();
-    _bodDengelenmisCtrl.dispose(); // NEW
+    _bodSahanliksizCtrl.dispose();
+    _bodDengelenmisCtrl.dispose();
+    
+    
+    _toplamDirectCtrl.dispose();
+
+    _bodToplamDirectCtrl.dispose();
 
     super.dispose();
   }
@@ -307,15 +376,25 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       int disAcik = int.tryParse(_disAcikCtrl.text) ?? 0;
       int doner = int.tryParse(_donerCtrl.text) ?? 0;
       int sahanliksiz = int.tryParse(_sahanliksizCtrl.text) ?? 0;
-      int dengelenmis = int.tryParse(_dengelenmisCtrl.text) ?? 0; // NEW
+      int dengelenmis = int.tryParse(_dengelenmisCtrl.text) ?? 0;
 
-      if (normal + icKapali + disKapali + disAcik + doner + sahanliksiz +
-              dengelenmis ==
-          0)
+
+      
+      int totalStairs = normal + icKapali + disKapali + disAcik + doner + sahanliksiz + dengelenmis;
+
+      // Validation: Direct Count <= Total Count
+      int totalDirect = int.tryParse(_toplamDirectCtrl.text) ?? 0;
+      if (totalDirect > totalStairs) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Dışarı açılan merdiven sayısı toplam merdiven sayısından fazla olamaz.")),
+        );
         return false;
+      }
+
+      if (totalStairs == 0) return false;
 
       // Validate Basement Stairs if Independent
-      int bNormal = 0, bIc = 0, bDisK = 0, bDisA = 0, bDoner = 0, bSahan = 0;
+      int bNormal = 0, bIc = 0, bDisK = 0, bDisA = 0, bDoner = 0, bSahan = 0, bDengelenmis = 0;
       if (_isBodrumIndependent) {
         bNormal = int.tryParse(_bodNormalCtrl.text) ?? 0;
         bIc = int.tryParse(_bodIcKapaliCtrl.text) ?? 0;
@@ -323,17 +402,27 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         bDisA = int.tryParse(_bodDisAcikCtrl.text) ?? 0;
         bDoner = int.tryParse(_bodDonerCtrl.text) ?? 0;
         bSahan = int.tryParse(_bodSahanliksizCtrl.text) ?? 0;
-        int bDengelenmis = int.tryParse(_bodDengelenmisCtrl.text) ?? 0; // NEW
+        bDengelenmis = int.tryParse(_bodDengelenmisCtrl.text) ?? 0; // NEW
 
-        if (bNormal + bIc + bDisK + bDisA + bDoner + bSahan + bDengelenmis ==
-            0) {
-          // Must enter at least 1 basement stair if confirmed independent
-          ScaffoldMessenger.of(context).showSnackBar(
+        int totalBasement = bNormal + bIc + bDisK + bDisA + bDoner + bSahan + bDengelenmis;
+
+        if (totalBasement == 0) {
+           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
                 "Bodrum kat için en az bir merdiven tipi girmelisiniz.",
               ),
             ),
+          );
+          return false;
+        }
+
+        // Validate Basement Direct Exits
+        int bTotalDirect = int.tryParse(_bodToplamDirectCtrl.text) ?? 0;
+
+        if (bTotalDirect > totalBasement) {
+           ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Bodrum kat: Dışarı açılan merdiven sayısı toplam sayıdan fazla olamaz.")),
           );
           return false;
         }
@@ -358,7 +447,12 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         binaDisiAcikYanginMerdiveniSayisi: disAcik,
         donerMerdivenSayisi: doner,
         sahanliksizMerdivenSayisi: sahanliksiz,
-        dengelenmisMerdivenSayisi: dengelenmis, // NEW
+        dengelenmisMerdivenSayisi: dengelenmis,
+        
+        // Save Direct Exits
+        toplamDisariAcilanMerdivenSayisi: int.tryParse(_toplamDirectCtrl.text) ?? 0,
+        
+        lobiTahliyeMesafeDurumu: _lobiMesafeDurumu,
 
         // Save Basement Data
         isBodrumIndependent: _isBodrumIndependent,
@@ -368,8 +462,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         bodrumBinaDisiAcikYanginMerdiveniSayisi: bDisA,
         bodrumDonerMerdivenSayisi: bDoner,
         bodrumSahanliksizMerdivenSayisi: bSahan,
-        bodrumDengelenmisMerdivenSayisi:
-            int.tryParse(_bodDengelenmisCtrl.text) ?? 0, // NEW
+        bodrumDengelenmisMerdivenSayisi: bDengelenmis,
+        
+        bodrumToplamDisariAcilanMerdivenSayisi: int.tryParse(_bodToplamDirectCtrl.text) ?? 0,
+        
+        bodrumLobiTahliyeMesafeDurumu: _bodLobiMesafeDurumu,
       );
     }
 
@@ -542,6 +639,16 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                 ],
               ),
             ),
+            
+            // Total Direct Exits Question (Upper Floors)
+            const SizedBox(height: 16),
+            _buildTotalDirectInput(), 
+            
+            // LOBI MESAFE SORUSU (Madde 41)
+            if (_shouldShowLobbyDistanceQuestion()) ...[
+              const SizedBox(height: 16),
+              _buildLobbyDistanceInput(),
+            ],
           ],
 
           // Stair Classification Summary
@@ -670,11 +777,21 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                   _buildStairInputGroup(
                     label: "Bodrum: ${Bolum20Content.cokKatOption7.uiTitle}",
                     ctrl: _bodDengelenmisCtrl,
-                    error: _bodDengelenmisErr, // FIXED
+                    error: _bodDengelenmisErr,
                   ),
                 ],
               ),
             ),
+            
+            // Total Direct Exits Question (Basement)
+            const SizedBox(height: 16),
+            _buildTotalDirectInput(isBasement: true),
+            
+            // Basement Lobby Distance
+            if (_shouldShowBasementLobbyDistanceQuestion()) ...[
+              const SizedBox(height: 16),
+              _buildLobbyDistanceInput(isBasement: true),
+            ],
           ],
 
           if (_hasDairesel)
@@ -710,10 +827,15 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   Widget _buildStairInputGroup({
     required String label,
     required TextEditingController ctrl,
+    TextEditingController? directCtrl, // Not used, keep signature compliant if others need it, or remove
     String? error,
     String? assetPath,
     List<String>? assetPaths,
   }) {
+    bool hasValue = (int.tryParse(ctrl.text) ?? 0) > 0;
+    
+    // Simplify: removed directCtrl sub-input logic from here
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -751,13 +873,79 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ],
         ),
         const SizedBox(height: 8),
-        if (assetPath != null)
-          TechnicalDrawingButton(assetPath: assetPath, title: label),
         if (assetPaths != null)
           ...assetPaths.map(
             (path) => TechnicalDrawingButton(assetPath: path, title: label),
           ),
+          
       ],
+    );
+  }
+
+  Widget _buildTotalDirectInput({bool isBasement = false}) {
+    int total = 0;
+    if (isBasement) {
+      total = (int.tryParse(_bodNormalCtrl.text) ?? 0) +
+          (int.tryParse(_bodIcKapaliCtrl.text) ?? 0) +
+          (int.tryParse(_bodDisKapaliCtrl.text) ?? 0) +
+          (int.tryParse(_bodDonerCtrl.text) ?? 0) +
+          (int.tryParse(_bodDengelenmisCtrl.text) ?? 0) +
+          (int.tryParse(_bodDisAcikCtrl.text) ?? 0) +
+          (int.tryParse(_bodSahanliksizCtrl.text) ?? 0);
+    } else {
+      total = (int.tryParse(_normalCtrl.text) ?? 0) +
+          (int.tryParse(_icKapaliCtrl.text) ?? 0) +
+          (int.tryParse(_disKapaliCtrl.text) ?? 0) +
+          (int.tryParse(_donerCtrl.text) ?? 0) +
+          (int.tryParse(_dengelenmisCtrl.text) ?? 0) +
+          (int.tryParse(_disAcikCtrl.text) ?? 0) +
+          (int.tryParse(_sahanliksizCtrl.text) ?? 0);
+    }
+    
+    if (total == 0) return const SizedBox.shrink();
+
+    final ctrl = isBasement ? _bodToplamDirectCtrl : _toplamDirectCtrl;
+    final title = isBasement ? "Bodrum Kat: Dışarıya Açılan Merdivenler" : "Dışarıya Açılan Merdivenler";
+    String desc = "Bu $total adet merdivenden kaç tanesi doğrudan dışarı (bina dışına) açılmaktadır?";
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isBasement ? Colors.orange.shade50 : Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: isBasement ? Colors.orange.shade200 : Colors.blue.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isBasement ? Colors.orange[800] : const Color(0xFF1565C0),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(desc, style: const TextStyle(fontSize: 14)),
+          const SizedBox(height: 12),
+           SizedBox(
+               width: 120,
+              child: TextField(
+                controller: ctrl,
+                keyboardType: TextInputType.number,
+                textAlign: TextAlign.center,
+                inputFormatters: [InputValidator.positiveInteger],
+                decoration: InputDecoration(
+                  hintText: "0",
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+           ),
+        ],
+      ),
     );
   }
 
@@ -821,6 +1009,89 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               isSelected: selected?.label == opt.label,
               onTap: () => _handleSelection(keyParam, opt),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLobbyDistanceInput({bool isBasement = false}) {
+    // Get sprinkler status from Bolum9
+    final hasSprinkler = BinaStore.instance.bolum9?.secim?.label == "9-1-A";
+    final limit = hasSprinkler ? 15 : 10;
+    
+    final title = isBasement 
+        ? "Bodrum Kat: Lobi/Koridor Tahliye Mesafesi"
+        : "Lobi/Koridor Tahliye Mesafesi";
+    
+    final question = "Dışarıya açılmayan merdivenlerin bina içi tahliye mesafesi $limit metrenin altında mı?";
+    
+    final currentSelection = isBasement ? _bodLobiMesafeDurumu : _lobiMesafeDurumu;
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isBasement ? Colors.orange.shade50 : Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isBasement ? Colors.orange.shade200 : Colors.blue.shade200,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isBasement ? Colors.orange[800] : const Color(0xFF1565C0),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            question,
+            style: const TextStyle(fontSize: 14),
+          ),
+          const SizedBox(height: 12),
+          SelectableCard(
+            choice: Bolum36Content.madde41MesafeAltinda,
+            isSelected: currentSelection?.label == Bolum36Content.madde41MesafeAltinda.label,
+            onTap: () {
+              setState(() {
+                if (isBasement) {
+                  _bodLobiMesafeDurumu = Bolum36Content.madde41MesafeAltinda;
+                } else {
+                  _lobiMesafeDurumu = Bolum36Content.madde41MesafeAltinda;
+                }
+              });
+            },
+          ),
+          SelectableCard(
+            choice: Bolum36Content.madde41MesafeUstunde,
+            isSelected: currentSelection?.label == Bolum36Content.madde41MesafeUstunde.label,
+            onTap: () {
+              setState(() {
+                if (isBasement) {
+                  _bodLobiMesafeDurumu = Bolum36Content.madde41MesafeUstunde;
+                } else {
+                  _lobiMesafeDurumu = Bolum36Content.madde41MesafeUstunde;
+                }
+              });
+            },
+          ),
+          SelectableCard(
+            choice: Bolum36Content.madde41MesafeBilmiyorum,
+            isSelected: currentSelection?.label == Bolum36Content.madde41MesafeBilmiyorum.label,
+            onTap: () {
+              setState(() {
+                if (isBasement) {
+                  _bodLobiMesafeDurumu = Bolum36Content.madde41MesafeBilmiyorum;
+                } else {
+                  _lobiMesafeDurumu = Bolum36Content.madde41MesafeBilmiyorum;
+                }
+              });
+            },
           ),
         ],
       ),

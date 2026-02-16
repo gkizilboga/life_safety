@@ -1629,6 +1629,26 @@ class ReportEngine {
             'report': '',
           });
 
+        // Madde 41 Detayları (Veri artık Bölüm 20'den geliyor)
+        final b20 = s.bolum20;
+        if (b20 != null) {
+          int directExits = b20.toplamDisariAcilanMerdivenSayisi;
+          if (directExits > 0) {
+            details.add({
+              'label': 'Doğrudan Dışarı Açılan Merdiven Sayısı',
+              'value': '$directExits adet',
+              'report': '',
+            });
+          }
+          if (b20.lobiTahliyeMesafeDurumu != null) {
+            details.add({
+              'label': 'Lobi/Koridor Tahliye Mesafesi Durumu',
+              'value': b20.lobiTahliyeMesafeDurumu!.uiTitle,
+              'report': '',
+            });
+          }
+        }
+
         // Ana değerlendirme metni
         details.add({
           'label': 'Merdiven Tipleri ve Kaçış Genişlikleri',
@@ -2549,6 +2569,81 @@ class ReportEngine {
           }
         }
 
+        // --- MADDE 41: DIŞ HAVAYA TAHLİYE (Refined & Simplified Logic) ---
+        final b20For41 = s.bolum20;
+        if (b20For41 != null) {
+          // --- 1. Üst Katlar / Genel Değerlendirme ---
+          int totalStairs = b20For41.normalMerdivenSayisi +
+              b20For41.binaIciYanginMerdiveniSayisi +
+              b20For41.binaDisiKapaliYanginMerdiveniSayisi +
+              b20For41.binaDisiAcikYanginMerdiveniSayisi +
+              b20For41.donerMerdivenSayisi +
+              b20For41.dengelenmisMerdivenSayisi +
+              b20For41.sahanliksizMerdivenSayisi;
+
+          int directExits = b20For41.toplamDisariAcilanMerdivenSayisi; 
+
+          // Get distance status choice
+          final lobiDurum = b20For41.lobiTahliyeMesafeDurumu;
+
+          // Rule: At least (Total + 1) ~/ 2 must be direct
+          int requiredDirect = (totalStairs + 1) ~/ 2; 
+
+          if (totalStairs > 0) {
+             if (directExits < requiredDirect) {
+              baseReport += "\n\n${Bolum36Content.madde41OranHata.reportText}";
+              baseReport += " (Mevcut: $totalStairs merdivenden $directExits tanesi dışarı açılıyor. Gereken en az: $requiredDirect)";
+             } else {
+               // Oran tutuyor, mesafe kontrolü (eğer hepsi dışarı açılmıyorsa)
+               if (directExits < totalStairs) {
+                 // Use ChoiceResult reportText if available
+                 if (lobiDurum != null) {
+                   baseReport += "\n\n${lobiDurum.reportText}";
+                 } else {
+                   // Fallback if user hasn't answered distance question
+                   baseReport += "\n\nBİLİNMİYOR: Lobi/koridor tahliye mesafesi bilgisi girilmemiştir.";
+                 }
+               } else {
+                 baseReport += "\n\nOLUMLU: Tüm merdivenler doğrudan dış havaya açılmaktadır (Madde 41).";
+               }
+             }
+          }
+
+          // --- 2. Bağımsız Bodrum Merdivenleri ---
+          if (b20For41.isBodrumIndependent) {
+             int totalBsmn = b20For41.bodrumNormalMerdivenSayisi +
+                b20For41.bodrumBinaIciYanginMerdiveniSayisi +
+                b20For41.bodrumBinaDisiKapaliYanginMerdiveniSayisi +
+                b20For41.bodrumBinaDisiAcikYanginMerdiveniSayisi +
+                b20For41.bodrumDonerMerdivenSayisi +
+                b20For41.bodrumDengelenmisMerdivenSayisi +
+                b20For41.bodrumSahanliksizMerdivenSayisi;
+             
+             int directBsmn = b20For41.bodrumToplamDisariAcilanMerdivenSayisi;
+
+             // Get basement distance status choice
+             final bodLobiDurum = b20For41.bodrumLobiTahliyeMesafeDurumu;
+             int requiredBsmnDirect = (totalBsmn + 1) ~/ 2;
+
+             if (totalBsmn > 0) {
+               if (directBsmn < requiredBsmnDirect) {
+                 baseReport += "\n\nKRİTİK RİSK (Bodrum): Bağımsız bodrum kat merdivenlerinin en az yarısı ($requiredBsmnDirect tanesi) doğrudan dışarı açılmalıdır. (Mevcut dışarı açılan: $directBsmn)";
+               } else {
+                 if (directBsmn < totalBsmn) {
+                   // Use ChoiceResult reportText if available
+                   if (bodLobiDurum != null) {
+                     baseReport += "\n\n(Bodrum) ${bodLobiDurum.reportText}";
+                   } else {
+                     // Fallback
+                     baseReport += "\n\nBİLİNMİYOR (Bodrum): Bodrum kat lobi tahliye mesafesi bilgisi girilmemiştir.";
+                   }
+                 } else {
+                   baseReport += "\n\nOLUMLU (Bodrum): Tüm bodrum merdivenleri doğrudan dışarı açılmaktadır.";
+                 }
+               }
+             }
+          }
+        }
         return baseReport;
       }
     }

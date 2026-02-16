@@ -500,7 +500,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       }
     }
 
-    return notes.join("\n\n");
+    if (notes.isEmpty) {
+      return "OLUMLU: Merdiven özellikleri genel olarak uygun görünüyor.";
+    } else {
+      return notes.join("\n\n");
+    }
   }
 
   bool get _isFormValid {
@@ -537,6 +541,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     }
 
     if (_model.gorunurluk == null) return false;
+
     return true;
   }
 
@@ -1155,9 +1160,48 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             Bolum36Content.gorunurlukOptionA,
             Bolum36Content.gorunurlukOptionB,
             Bolum36Content.gorunurlukOptionC,
-          ], _model.gorunurluk),
+            ], _model.gorunurluk),
 
-          // New Analysis Panels
+          // --- MADDE 41 UI BLOĞU ---
+          _buildSoruHeader(
+              "Kaçış merdivenlerinin bina dışına tahliyesi (Madde 41)"),
+          QuestionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSoruHeader("Toplam $_totalValidCikisSayisi merdivenin kaç tanesi doğrudan bina dışına (havaya) açılıyor?", isMain: false),
+                _buildInput(
+                  "Doğrudan Dışarı Açılan Adedi",
+                  _disariAcilanMerdCtrl,
+                  false,
+                  null,
+                  keyboardType: TextInputType.number,
+                ),
+                if ((int.tryParse(_disariAcilanMerdCtrl.text) ?? 0) < _totalValidCikisSayisi) ...[
+                  const SizedBox(height: 16),
+                  Builder(builder: (context) {
+                    final hasSprinkler = BinaStore.instance.bolum9?.varlik?.label == "9-1-A";
+                    final limit = hasSprinkler ? 15 : 10;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildInfoNote("Binada ${hasSprinkler ? "Sprinkler SİSTEMİ VAR" : "Sprinkler SİSTEMİ YOK"}. Bu durumda lobi tahliye mesafesi en fazla $limit metre olabilir."),
+                        _buildSoruHeader("Dışarı açılmayan merdivenlerin lobi/koridor içindeki tahliye mesafesi kaç metredir?", isMain: false),
+                        _buildInput(
+                          "Tahliye Mesafesi (m)",
+                          _lobiTahliyeMesafeCtrl,
+                          false,
+                          null,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        ),
+                      ],
+                    );
+                  }),
+                ],
+              ],
+            ),
+          ),
+
           _buildYghEvaluationPanel(),
           _buildStairAnalysisList(),
 
