@@ -375,69 +375,20 @@ class PdfService {
   static pw.Widget _buildRichText(String text, pw.Font font, pw.Font fontBold) {
     if (text.isEmpty) return pw.Text("");
 
-    final highLightPatterns = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
+    // Support for <b>...</b> tags
+    final RegExp regExp = RegExp(r'<b>(.*?)</b>', dotAll: true);
+    final List<pw.InlineSpan> spans = [];
 
-    // Bu kelimelerden herhangi biri var mı?
-    bool hasHighlight = highLightPatterns.any((pat) => text.contains(pat));
+    int lastMatchEnd = 0;
+    final matches = regExp.allMatches(text);
 
-    if (!hasHighlight) {
-      // Normal text
-      return pw.Text(
-        text,
-        style: pw.TextStyle(fontSize: 9, font: font, color: PdfColors.black),
-      );
-    }
-
-    // Kelimeleri parçala ve renklendir
-    List<pw.InlineSpan> spans = [];
-    String remaining = text;
-
-    while (remaining.isNotEmpty) {
-      int bestIndex = -1;
-      String bestMatch = "";
-
-      for (var pat in highLightPatterns) {
-        int idx = remaining.indexOf(pat);
-        if (idx != -1) {
-          if (bestIndex == -1 || idx < bestIndex) {
-            bestIndex = idx;
-            bestMatch = pat;
-          }
-        }
-      }
-
-      if (bestIndex != -1) {
-        // Eşleşme öncesi kısım
-        if (bestIndex > 0) {
-          spans.add(
-            pw.TextSpan(
-              text: remaining.substring(0, bestIndex),
-              style: pw.TextStyle(
-                fontSize: 9,
-                font: font,
-                color: PdfColors.black,
-              ),
-            ),
-          );
-        }
-        // Eşleşen kısım (KIRMIZI ve BOLD)
+    for (final match in matches) {
+      // Pre-match text
+      if (match.start > lastMatchEnd) {
+        String preText = text.substring(lastMatchEnd, match.start);
         spans.add(
           pw.TextSpan(
-            text: bestMatch,
-            style: pw.TextStyle(
-              fontSize: 9,
-              font: fontBold,
-              color: PdfColors.red700,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-        );
-        remaining = remaining.substring(bestIndex + bestMatch.length);
-      } else {
-        // Eşleşme kalmadı
-        spans.add(
-          pw.TextSpan(
-            text: remaining,
+            text: preText,
             style: pw.TextStyle(
               fontSize: 9,
               font: font,
@@ -445,7 +396,85 @@ class PdfService {
             ),
           ),
         );
-        remaining = "";
+      }
+
+      // Bolded text
+      spans.add(
+        pw.TextSpan(
+          text: match.group(1),
+          style: pw.TextStyle(
+            fontSize: 9,
+            font: fontBold,
+            color: PdfColors.black,
+            fontWeight: pw.FontWeight.bold,
+          ),
+        ),
+      );
+
+      lastMatchEnd = match.end;
+    }
+
+    // Remaining text
+    if (lastMatchEnd < text.length) {
+      spans.add(
+        pw.TextSpan(
+          text: text.substring(lastMatchEnd),
+          style: pw.TextStyle(fontSize: 9, font: font, color: PdfColors.black),
+        ),
+      );
+    }
+
+    // Secondary pass for specific highlights (Legacy logic)
+    // Note: This logic is simplified to work with spans if tags are not used
+    if (matches.isEmpty) {
+      final highLightPatterns = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
+      bool hasHighlight = highLightPatterns.any((pat) => text.contains(pat));
+      if (hasHighlight) {
+        // If no tags were found, we apply the legacy highlight logic
+        // (Keeping it simple for now)
+        List<pw.InlineSpan> highlightSpans = [];
+        String remaining = text;
+        while (remaining.isNotEmpty) {
+          int bestIndex = -1;
+          String bestMatch = "";
+          for (var pat in highLightPatterns) {
+            int idx = remaining.indexOf(pat);
+            if (idx != -1 && (bestIndex == -1 || idx < bestIndex)) {
+              bestIndex = idx;
+              bestMatch = pat;
+            }
+          }
+          if (bestIndex != -1) {
+            if (bestIndex > 0)
+              highlightSpans.add(
+                pw.TextSpan(
+                  text: remaining.substring(0, bestIndex),
+                  style: pw.TextStyle(fontSize: 9, font: font),
+                ),
+              );
+            highlightSpans.add(
+              pw.TextSpan(
+                text: bestMatch,
+                style: pw.TextStyle(
+                  fontSize: 9,
+                  font: fontBold,
+                  color: PdfColors.red700,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+            );
+            remaining = remaining.substring(bestIndex + bestMatch.length);
+          } else {
+            highlightSpans.add(
+              pw.TextSpan(
+                text: remaining,
+                style: pw.TextStyle(fontSize: 9, font: font),
+              ),
+            );
+            remaining = "";
+          }
+        }
+        return pw.RichText(text: pw.TextSpan(children: highlightSpans));
       }
     }
 

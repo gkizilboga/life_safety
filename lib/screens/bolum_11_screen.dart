@@ -72,7 +72,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSoru(
-            "İtfaiye aracının binaya yaklaşım mesafesi 45 metreyi aşıyor mu?",
+            "İtfaiye aracının binaya yaklaşım mesafesi <b>45 metreyi</b> aşıyor mu?",
             'mesafe',
             [
               Bolum11Content.mesafeOptionA,

@@ -120,7 +120,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
           ),
 
           _buildSoru(
-            "Asansör kapılarında 'YANGIN ANINDA KULLANMAYINIZ' uyarısı var mı?",
+            "Asansör kapılarında 'YANGIN ANINDA KULLANMAYINIZ' uyarısı asılı mı?",
             'levha',
             [
               Bolum23Content.levhaOptionA,
@@ -131,7 +131,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
           ),
 
           _buildSoru(
-            "Asansör kuyusunun tepesinde havalandırma penceresi var mı?",
+            "Asansör kuyusunun tepesinde <b>havalandırma</b> penceresi var mı?",
             'havalandirma',
             [
               Bolum23Content.havalandirmaOptionA,

@@ -103,7 +103,7 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
               child: Column(
                 children: [
                   _buildSoru(
-                    "Trafo odasının duvarları ve kapısı yangına dayanıklı mı?",
+                    "Trafo odasının duvarları ve kapısı <b>yangına dayanıklı</b> mı?",
                     'yapi',
                     [
                       Bolum31Content.yapiOptionA,
@@ -140,7 +140,7 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
                       _model.cukur,
                     ),
                     _buildSoru(
-                      "Trafo odasında otomatik yangın algılama veya söndürme sistemi var mı?",
+                      "Trafo odasında otomatik yangın <b>algılama</b> veya <b>söndürme</b> sistemi var mı?",
                       'sondurme',
                       [
                         Bolum31Content.sondurmeOptionA,
@@ -154,7 +154,7 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
                   ],
 
                   _buildSoru(
-                    "Trafo odasının içerisinden su borusu geçiyor mu veya üst katında ıslak zemin var mı?",
+                    "Trafo odasının içerisinden su borusu geçiyor mu veya <b>üst katında</b> ıslak zemin var mı?",
                     'cevre',
                     [
                       Bolum31Content.cevreOptionA,

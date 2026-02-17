@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dashboard_screen.dart';
+import '../services/auth_service.dart';
+import '../utils/app_theme.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,119 +12,233 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl = TextEditingController();
-  final _passCtrl = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1A237E),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                " ",
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                  letterSpacing: 2,
-                ),
+      backgroundColor: const Color(0xFF1A365D), // Darker, premium navy
+      body: Stack(
+        children: [
+          // Background Gradient decoration
+          Positioned(
+            top: -100,
+            right: -100,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.05),
               ),
-              const Text(
-                "YANGIN RİSK\nANALİZİ",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 38,
-                  fontWeight: FontWeight.bold,
-                  height: 1.1,
-                ),
-              ),
-              const SizedBox(height: 40),
-              _buildInput(
-                "E-Posta Adresi",
-                _emailCtrl,
-                Icons.email_outlined,
-                false,
-              ),
-              const SizedBox(height: 20),
-              _buildInput("Şifre", _passCtrl, Icons.lock_outline, true),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF1A237E),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Icon(
+                    Icons.security_rounded,
+                    color: Colors.white,
+                    size: 60,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "LIFE SAFETY",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                      letterSpacing: 4,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  onPressed: () {
-                    if (_emailCtrl.text.isEmpty || _passCtrl.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                            "Lütfen e-posta adresinizi ve şifrenizi giriniz.",
+                  const Text(
+                    "GİRİŞ YAPIN",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      height: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+
+                  // Google Sign In Button
+                  _buildGoogleButton(),
+
+                  const SizedBox(height: 30),
+
+                  // Divider
+                  Row(
+                    children: [
+                      Expanded(child: Divider(color: Colors.white24)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          "VEYA E-POSTA İLE",
+                          style: TextStyle(
+                            color: Colors.white38,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
                           ),
-                          backgroundColor: Colors.red,
                         ),
-                      );
-                      return;
-                    }
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DashboardScreen(),
                       ),
-                    );
-                  },
-                  child: const Text(
-                    "GİRİŞ YAP",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      Expanded(child: Divider(color: Colors.white24)),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Yeni Hesap Oluştur",
-                    style: TextStyle(color: Colors.white70),
+
+                  const SizedBox(height: 30),
+
+                  // Email Input
+                  _buildInput(
+                    "E-Posta Adresiniz",
+                    _emailCtrl,
+                    Icons.alternate_email_rounded,
                   ),
-                ),
+
+                  const SizedBox(height: 20),
+
+                  // Email Login Action
+                  SizedBox(
+                    height: 55,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Colors.white24),
+                        ),
+                      ),
+                      onPressed: _isLoading ? null : _handleEmailLogin,
+                      child: const Text(
+                        "DEVAM ET",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  if (_isLoading)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                    ),
+                ],
               ),
-            ],
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGoogleButton() {
+    return SizedBox(
+      height: 55,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black87,
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        onPressed: _isLoading ? null : _handleGoogleLogin,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Logo.png', // Temporary network image for branding
+              height: 20,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.account_circle),
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              "Google Hesabı ile Devam Et",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildInput(
-    String label,
-    TextEditingController ctrl,
-    IconData icon,
-    bool isPass,
-  ) {
+  Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoading = true);
+    try {
+      final account = await AuthService.signInWithGoogle();
+      if (account != null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Google Giriş Hatası: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleEmailLogin() async {
+    if (_emailCtrl.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Lütfen e-posta adresinizi giriniz.")),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await AuthService.signInWithEmail(_emailCtrl.text.trim());
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Widget _buildInput(String label, TextEditingController ctrl, IconData icon) {
     return TextField(
       controller: ctrl,
-      obscureText: isPass,
       style: const TextStyle(color: Colors.white),
+      keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.white70),
-        prefixIcon: Icon(icon, color: Colors.white70),
+        hintText: label,
+        hintStyle: const TextStyle(color: Colors.white38, fontSize: 14),
+        prefixIcon: Icon(icon, color: Colors.white70, size: 20),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.05),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white24),
+          borderSide: const BorderSide(color: Colors.white12),
           borderRadius: BorderRadius.circular(12),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white),
+          borderSide: const BorderSide(color: Colors.white38),
           borderRadius: BorderRadius.circular(12),
         ),
       ),

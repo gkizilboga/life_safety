@@ -7,9 +7,9 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/input_validator.dart';
+import '../../utils/app_theme.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
 
@@ -48,7 +48,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   final _bodDengelenmisCtrl = TextEditingController();
 
   // Direct Exit Controllers (Madde 41 - Simplified)
-  final _toplamDirectCtrl = TextEditingController(); 
+  final _toplamDirectCtrl = TextEditingController();
   /* Removed individual direct controllers
   final _normalDirectCtrl = TextEditingController();
   final _icKapaliDirectCtrl = TextEditingController();
@@ -58,12 +58,12 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   // Distance Status (Madde 41) - Changed from numeric to choice
   ChoiceResult? _lobiMesafeDurumu;
 
-  // Basement Direct Exit Controllers (Madde 41 - Simplified)
   final _bodToplamDirectCtrl = TextEditingController();
   /* Removed individual basement direct controllers
   final _bodNormalDirectCtrl = TextEditingController();
   ...
-  
+  */
+
   // Basement Distance Status (Madde 41) - Changed from numeric to choice
   ChoiceResult? _bodLobiMesafeDurumu;
 
@@ -97,10 +97,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _disAcikCtrl.addListener(_validateLimits);
     _donerCtrl.addListener(_validateLimits);
     _sahanliksizCtrl.addListener(_validateLimits);
-    _sahanliksizCtrl.addListener(_validateLimits);
     _dengelenmisCtrl.addListener(_validateLimits);
-
-
 
     // Listeners for Basement
     _bodNormalCtrl.addListener(_validateLimits);
@@ -129,13 +126,14 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         _donerCtrl.text = saved.donerMerdivenSayisi.toString();
       if (saved.sahanliksizMerdivenSayisi > 0)
         _sahanliksizCtrl.text = saved.sahanliksizMerdivenSayisi.toString();
-      if (saved.dengelenmisMerdivenSayisi > 0) 
+      if (saved.dengelenmisMerdivenSayisi > 0)
         _dengelenmisCtrl.text = saved.dengelenmisMerdivenSayisi.toString();
 
       // Load Direct Exits
       if (saved.toplamDisariAcilanMerdivenSayisi > 0)
-        _toplamDirectCtrl.text = saved.toplamDisariAcilanMerdivenSayisi.toString();
-      
+        _toplamDirectCtrl.text = saved.toplamDisariAcilanMerdivenSayisi
+            .toString();
+
       // Load Distance Status
       _lobiMesafeDurumu = saved.lobiTahliyeMesafeDurumu;
 
@@ -160,12 +158,14 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           _bodSahanliksizCtrl.text = saved.bodrumSahanliksizMerdivenSayisi
               .toString();
         if (saved.bodrumDengelenmisMerdivenSayisi > 0) // NEW
-          _bodDengelenmisCtrl.text =
-              saved.bodrumDengelenmisMerdivenSayisi.toString();
+          _bodDengelenmisCtrl.text = saved.bodrumDengelenmisMerdivenSayisi
+              .toString();
 
         if (saved.bodrumToplamDisariAcilanMerdivenSayisi > 0)
-          _bodToplamDirectCtrl.text = saved.bodrumToplamDisariAcilanMerdivenSayisi.toString();
-          
+          _bodToplamDirectCtrl.text = saved
+              .bodrumToplamDisariAcilanMerdivenSayisi
+              .toString();
+
         _bodLobiMesafeDurumu = saved.bodrumLobiTahliyeMesafeDurumu;
       }
     }
@@ -230,36 +230,39 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         _model = _model.copyWith(basinclandirma: null);
       }
     });
+  }
+
   bool _shouldShowLobbyDistanceQuestion() {
-    int total = (int.tryParse(_normalCtrl.text) ?? 0) +
+    int total =
+        (int.tryParse(_normalCtrl.text) ?? 0) +
         (int.tryParse(_icKapaliCtrl.text) ?? 0) +
         (int.tryParse(_disKapaliCtrl.text) ?? 0) +
         (int.tryParse(_donerCtrl.text) ?? 0) +
         (int.tryParse(_dengelenmisCtrl.text) ?? 0) +
         (int.tryParse(_disAcikCtrl.text) ?? 0) +
         (int.tryParse(_sahanliksizCtrl.text) ?? 0);
-    
+
     int direct = int.tryParse(_toplamDirectCtrl.text) ?? 0;
-        
+
     return total > 0 && direct < total;
   }
 
   bool _shouldShowBasementLobbyDistanceQuestion() {
     if (!_isBodrumIndependent) return false;
-    
-    int total = (int.tryParse(_bodNormalCtrl.text) ?? 0) +
+
+    int total =
+        (int.tryParse(_bodNormalCtrl.text) ?? 0) +
         (int.tryParse(_bodIcKapaliCtrl.text) ?? 0) +
         (int.tryParse(_bodDisKapaliCtrl.text) ?? 0) +
         (int.tryParse(_bodDonerCtrl.text) ?? 0) +
         (int.tryParse(_bodDengelenmisCtrl.text) ?? 0) +
         (int.tryParse(_bodDisAcikCtrl.text) ?? 0) +
-        (int.tryParse(_bodSahanliksizCtrl.text) ?? 0); 
-    
+        (int.tryParse(_bodSahanliksizCtrl.text) ?? 0);
+
     int direct = int.tryParse(_bodToplamDirectCtrl.text) ?? 0;
-        
+
     return total > 0 && direct < total;
   }
-
 
   String? _checkLimit(String text) {
     return InputValidator.validateNumber(
@@ -311,10 +314,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     _bodDisAcikCtrl.dispose();
     _bodDonerCtrl.dispose();
     _bodSahanliksizCtrl.dispose();
-    _bodSahanliksizCtrl.dispose();
     _bodDengelenmisCtrl.dispose();
-    
-    
+
     _toplamDirectCtrl.dispose();
 
     _bodToplamDirectCtrl.dispose();
@@ -359,6 +360,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       if (type == 'tekKatRampa') _model = _model.copyWith(tekKatRampa: choice);
       if (type == 'basinclandirma')
         _model = _model.copyWith(basinclandirma: choice);
+      if (type == 'havalandirma')
+        _model = _model.copyWith(havalandirma: choice);
       if (type == 'daireselH')
         _model = _model.copyWith(daireselMerdivenYuksekligi: choice);
     });
@@ -378,15 +381,24 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       int sahanliksiz = int.tryParse(_sahanliksizCtrl.text) ?? 0;
       int dengelenmis = int.tryParse(_dengelenmisCtrl.text) ?? 0;
 
-
-      
-      int totalStairs = normal + icKapali + disKapali + disAcik + doner + sahanliksiz + dengelenmis;
+      int totalStairs =
+          normal +
+          icKapali +
+          disKapali +
+          disAcik +
+          doner +
+          sahanliksiz +
+          dengelenmis;
 
       // Validation: Direct Count <= Total Count
       int totalDirect = int.tryParse(_toplamDirectCtrl.text) ?? 0;
       if (totalDirect > totalStairs) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Dışarı açılan merdiven sayısı toplam merdiven sayısından fazla olamaz.")),
+          const SnackBar(
+            content: Text(
+              "Dışarı açılan merdiven sayısı toplam merdiven sayısından fazla olamaz.",
+            ),
+          ),
         );
         return false;
       }
@@ -394,7 +406,13 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       if (totalStairs == 0) return false;
 
       // Validate Basement Stairs if Independent
-      int bNormal = 0, bIc = 0, bDisK = 0, bDisA = 0, bDoner = 0, bSahan = 0, bDengelenmis = 0;
+      int bNormal = 0,
+          bIc = 0,
+          bDisK = 0,
+          bDisA = 0,
+          bDoner = 0,
+          bSahan = 0,
+          bDengelenmis = 0;
       if (_isBodrumIndependent) {
         bNormal = int.tryParse(_bodNormalCtrl.text) ?? 0;
         bIc = int.tryParse(_bodIcKapaliCtrl.text) ?? 0;
@@ -404,10 +422,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         bSahan = int.tryParse(_bodSahanliksizCtrl.text) ?? 0;
         bDengelenmis = int.tryParse(_bodDengelenmisCtrl.text) ?? 0; // NEW
 
-        int totalBasement = bNormal + bIc + bDisK + bDisA + bDoner + bSahan + bDengelenmis;
+        int totalBasement =
+            bNormal + bIc + bDisK + bDisA + bDoner + bSahan + bDengelenmis;
 
         if (totalBasement == 0) {
-           ScaffoldMessenger.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
                 "Bodrum kat için en az bir merdiven tipi girmelisiniz.",
@@ -421,8 +440,12 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         int bTotalDirect = int.tryParse(_bodToplamDirectCtrl.text) ?? 0;
 
         if (bTotalDirect > totalBasement) {
-           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Bodrum kat: Dışarı açılan merdiven sayısı toplam sayıdan fazla olamaz.")),
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Bodrum kat: Dışarı açılan merdiven sayısı toplam sayıdan fazla olamaz.",
+              ),
+            ),
           );
           return false;
         }
@@ -440,6 +463,16 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
       if (_showBasinclandirma && _model.basinclandirma == null) return false;
 
+      // Havalandırma is required for all multi-story buildings
+      if (_model.havalandirma == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Lütfen havalandırma durumunu seçiniz."),
+          ),
+        );
+        return false;
+      }
+
       _model = _model.copyWith(
         normalMerdivenSayisi: normal,
         binaIciYanginMerdiveniSayisi: icKapali,
@@ -448,10 +481,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         donerMerdivenSayisi: doner,
         sahanliksizMerdivenSayisi: sahanliksiz,
         dengelenmisMerdivenSayisi: dengelenmis,
-        
+
         // Save Direct Exits
-        toplamDisariAcilanMerdivenSayisi: int.tryParse(_toplamDirectCtrl.text) ?? 0,
-        
+        toplamDisariAcilanMerdivenSayisi:
+            int.tryParse(_toplamDirectCtrl.text) ?? 0,
+
         lobiTahliyeMesafeDurumu: _lobiMesafeDurumu,
 
         // Save Basement Data
@@ -463,9 +497,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         bodrumDonerMerdivenSayisi: bDoner,
         bodrumSahanliksizMerdivenSayisi: bSahan,
         bodrumDengelenmisMerdivenSayisi: bDengelenmis,
-        
-        bodrumToplamDisariAcilanMerdivenSayisi: int.tryParse(_bodToplamDirectCtrl.text) ?? 0,
-        
+
+        bodrumToplamDisariAcilanMerdivenSayisi:
+            int.tryParse(_bodToplamDirectCtrl.text) ?? 0,
+
         bodrumLobiTahliyeMesafeDurumu: _bodLobiMesafeDurumu,
       );
     }
@@ -563,13 +598,13 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         children: [
           if (_isTekKatli) ...[
             _buildSoru(
-              "Binadan dışarıya (sokağa veya caddeye) çıkışınız nasıl?",
+              "Binadan <b>dışarıya</b> (sokağa veya caddeye) çıkışınız nasıl?",
               'tekKatCikis',
               [Bolum20Content.tekKatOptionA],
               _model.tekKatCikis,
             ),
             _buildSoru(
-              "Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?",
+              "Binadan dışarıya çıkarken <b>rampa</b> kullanmak zorunda kalıyor musunuz?",
               'tekKatRampa',
               [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC],
               _model.tekKatRampa,
@@ -639,11 +674,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                 ],
               ),
             ),
-            
+
             // Total Direct Exits Question (Upper Floors)
             const SizedBox(height: 16),
-            _buildTotalDirectInput(), 
-            
+            _buildTotalDirectInput(),
+
             // LOBI MESAFE SORUSU (Madde 41)
             if (_shouldShowLobbyDistanceQuestion()) ...[
               const SizedBox(height: 16),
@@ -659,10 +694,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             decoration: BoxDecoration(
               color: const Color(0xFFF3F4F6),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: const Color(0xFFE0E0E0),
-                width: 1,
-              ),
+              border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -698,7 +730,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
           if (_hasBodrum)
             _buildSoru(
-              "Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?",
+              "Bodrum kata inen merdiveniniz, <b>üst katlara</b> çıkan merdivenin devamı mı?",
               'bodrum',
               [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB],
               _model.bodrumMerdivenDevami,
@@ -709,7 +741,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             const Padding(
               padding: EdgeInsets.only(left: 4, bottom: 16, top: 20),
               child: Text(
-                "Bodrum Katlar İçin Özel Merdiven Bilgileri",
+                "<b>Bodrum Katlar</b> İçin Özel Merdiven Bilgileri",
                 style: AppStyles
                     .questionTitle, // Fixed style: headerTitle was white on white
               ),
@@ -728,7 +760,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      "Bağımsız olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
+                      "<b>Bağımsız</b> olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
                       style: TextStyle(color: Colors.black87, fontSize: 13),
                     ),
                   ),
@@ -782,11 +814,11 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                 ],
               ),
             ),
-            
+
             // Total Direct Exits Question (Basement)
             const SizedBox(height: 16),
             _buildTotalDirectInput(isBasement: true),
-            
+
             // Basement Lobby Distance
             if (_shouldShowBasementLobbyDistanceQuestion()) ...[
               const SizedBox(height: 16),
@@ -796,7 +828,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
           if (_hasDairesel)
             _buildSoru(
-              "Binadaki dairesel merdivenin yüksekliği nedir?",
+              "Binadaki <b>dairesel</b> merdivenin yüksekliği nedir?",
               'daireselH',
               [
                 Bolum20Content.daireselYukseklikOptionA,
@@ -808,7 +840,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
           if (_showBasinclandirma)
             _buildSoruWithDef(
-              "Merdivenlerde basınçlandırma sistemi var mı?",
+              "Merdivenlerde <b>basınçlandırma</b> sistemi var mı?",
               AppDefinitions.basinclandirma,
               "Basınçlandırma Sistemi",
               'basinclandirma',
@@ -819,6 +851,22 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               ],
               _model.basinclandirma,
             ),
+
+          // Havalandırma Question (Madde 45) - Always shown for multi-story
+          if (!_isTekKatli)
+            _buildSoruWithDef(
+              "Merdivenlerde doğal <b>havalandırma</b> var mı?",
+              AppDefinitions.havalandirma,
+              "Havalandırma (Madde 45)",
+              'havalandirma',
+              [
+                Bolum20Content.havalandirmaOptionA,
+                Bolum20Content.havalandirmaOptionB,
+                Bolum20Content.havalandirmaOptionC,
+                Bolum20Content.havalandirmaOptionD,
+              ],
+              _model.havalandirma,
+            ),
         ],
       ),
     );
@@ -827,13 +875,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   Widget _buildStairInputGroup({
     required String label,
     required TextEditingController ctrl,
-    TextEditingController? directCtrl, // Not used, keep signature compliant if others need it, or remove
     String? error,
     String? assetPath,
     List<String>? assetPaths,
   }) {
-    bool hasValue = (int.tryParse(ctrl.text) ?? 0) > 0;
-    
     // Simplify: removed directCtrl sub-input logic from here
 
     return Column(
@@ -877,7 +922,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ...assetPaths.map(
             (path) => TechnicalDrawingButton(assetPath: path, title: label),
           ),
-          
       ],
     );
   }
@@ -885,7 +929,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   Widget _buildTotalDirectInput({bool isBasement = false}) {
     int total = 0;
     if (isBasement) {
-      total = (int.tryParse(_bodNormalCtrl.text) ?? 0) +
+      total =
+          (int.tryParse(_bodNormalCtrl.text) ?? 0) +
           (int.tryParse(_bodIcKapaliCtrl.text) ?? 0) +
           (int.tryParse(_bodDisKapaliCtrl.text) ?? 0) +
           (int.tryParse(_bodDonerCtrl.text) ?? 0) +
@@ -893,7 +938,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           (int.tryParse(_bodDisAcikCtrl.text) ?? 0) +
           (int.tryParse(_bodSahanliksizCtrl.text) ?? 0);
     } else {
-      total = (int.tryParse(_normalCtrl.text) ?? 0) +
+      total =
+          (int.tryParse(_normalCtrl.text) ?? 0) +
           (int.tryParse(_icKapaliCtrl.text) ?? 0) +
           (int.tryParse(_disKapaliCtrl.text) ?? 0) +
           (int.tryParse(_donerCtrl.text) ?? 0) +
@@ -901,19 +947,24 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           (int.tryParse(_disAcikCtrl.text) ?? 0) +
           (int.tryParse(_sahanliksizCtrl.text) ?? 0);
     }
-    
+
     if (total == 0) return const SizedBox.shrink();
 
     final ctrl = isBasement ? _bodToplamDirectCtrl : _toplamDirectCtrl;
-    final title = isBasement ? "Bodrum Kat: Dışarıya Açılan Merdivenler" : "Dışarıya Açılan Merdivenler";
-    String desc = "Bu $total adet merdivenden kaç tanesi doğrudan dışarı (bina dışına) açılmaktadır?";
-    
+    final title = isBasement
+        ? "Bodrum Kat: Dışarıya Açılan Merdivenler"
+        : "Dışarıya Açılan Merdivenler";
+    String desc =
+        "Bu $total adet merdivenden kaç tanesi <b>doğrudan dışarı</b> (bina dışına) açılmaktadır?";
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isBasement ? Colors.orange.shade50 : Colors.blue.shade50,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isBasement ? Colors.orange.shade200 : Colors.blue.shade200),
+        border: Border.all(
+          color: isBasement ? Colors.orange.shade200 : Colors.blue.shade200,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -929,21 +980,23 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           const SizedBox(height: 8),
           Text(desc, style: const TextStyle(fontSize: 14)),
           const SizedBox(height: 12),
-           SizedBox(
-               width: 120,
-              child: TextField(
-                controller: ctrl,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                inputFormatters: [InputValidator.positiveInteger],
-                decoration: InputDecoration(
-                  hintText: "0",
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          SizedBox(
+            width: 120,
+            child: TextField(
+              controller: ctrl,
+              keyboardType: TextInputType.number,
+              textAlign: TextAlign.center,
+              inputFormatters: [InputValidator.positiveInteger],
+              decoration: InputDecoration(
+                hintText: "0",
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-           ),
+            ),
+          ),
         ],
       ),
     );
@@ -1019,15 +1072,18 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     // Get sprinkler status from Bolum9
     final hasSprinkler = BinaStore.instance.bolum9?.secim?.label == "9-1-A";
     final limit = hasSprinkler ? 15 : 10;
-    
-    final title = isBasement 
+
+    final title = isBasement
         ? "Bodrum Kat: Lobi/Koridor Tahliye Mesafesi"
         : "Lobi/Koridor Tahliye Mesafesi";
-    
-    final question = "Dışarıya açılmayan merdivenlerin bina içi tahliye mesafesi $limit metrenin altında mı?";
-    
-    final currentSelection = isBasement ? _bodLobiMesafeDurumu : _lobiMesafeDurumu;
-    
+
+    final question =
+        "Dışarıya açılmayan merdivenlerin bina içi tahliye mesafesi $limit metrenin altında mı?";
+
+    final currentSelection = isBasement
+        ? _bodLobiMesafeDurumu
+        : _lobiMesafeDurumu;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1049,14 +1105,13 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            question,
-            style: const TextStyle(fontSize: 14),
-          ),
+          Text(question, style: const TextStyle(fontSize: 14)),
           const SizedBox(height: 12),
           SelectableCard(
             choice: Bolum36Content.madde41MesafeAltinda,
-            isSelected: currentSelection?.label == Bolum36Content.madde41MesafeAltinda.label,
+            isSelected:
+                currentSelection?.label ==
+                Bolum36Content.madde41MesafeAltinda.label,
             onTap: () {
               setState(() {
                 if (isBasement) {
@@ -1069,7 +1124,9 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ),
           SelectableCard(
             choice: Bolum36Content.madde41MesafeUstunde,
-            isSelected: currentSelection?.label == Bolum36Content.madde41MesafeUstunde.label,
+            isSelected:
+                currentSelection?.label ==
+                Bolum36Content.madde41MesafeUstunde.label,
             onTap: () {
               setState(() {
                 if (isBasement) {
@@ -1082,7 +1139,9 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ),
           SelectableCard(
             choice: Bolum36Content.madde41MesafeBilmiyorum,
-            isSelected: currentSelection?.label == Bolum36Content.madde41MesafeBilmiyorum.label,
+            isSelected:
+                currentSelection?.label ==
+                Bolum36Content.madde41MesafeBilmiyorum.label,
             onTap: () {
               setState(() {
                 if (isBasement) {

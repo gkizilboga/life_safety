@@ -119,7 +119,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
           _buildHeightInfoCard(),
 
           _buildSoru(
-            "Binanızda İtfaiye (acil durum) asansörü var mı?",
+            "Binanızda <b>İtfaiye</b> (acil durum) asansörü var mı?",
             'varlik',
             [
               Bolum22Content.varlikOptionA,
@@ -140,7 +140,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             ),
 
             _buildSoru(
-              "Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?",
+              "Bu <b>İtfaiye</b> (acil durum) asansörünün kapısı nereye açılıyor?",
               'konum',
               [
                 Bolum22Content.konumOptionA,
@@ -151,7 +151,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             ),
 
             _buildSoru(
-              "İtfaiye asansörünün açıldığı yangın güvenlik holünün taban alanı kaç metrekaredir?",
+              "İtfaiye asansörünün açıldığı yangın güvenlik holünün <b>taban alanı</b> kaç metrekaredir?",
               'boyut',
               [
                 Bolum22Content.boyutOptionA,
@@ -163,7 +163,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             ),
 
             _buildSoru(
-              "Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?",
+              "Kabin genişliği en az <b>1.8 m²</b> ve en alt kattan en üst kata <b>1 dakika</b> içerisinde çıkabiliyor mu?",
               'kabin',
               [
                 Bolum22Content.kabinOptionA,
@@ -176,7 +176,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             ),
 
             _buildSoru(
-              "Bu asansör, elektrik kesildiğinde en az 60 dakika çalışabilen bir jeneratöre bağlı mı?",
+              "Bu asansör, elektrik kesildiğinde en az 60 dakika çalışabilen bir <b>jeneratöre</b> bağlı mı?",
               'enerji',
               [
                 Bolum22Content.enerjiOptionA,
@@ -187,7 +187,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             ),
 
             _buildSoru(
-              "İtfaiye asansörünün kuyusu basınçlandırılmış mı?",
+              "İtfaiye asansörünün kuyusu <b>basınçlandırılmış</b> mı?",
               'basinc',
               [
                 Bolum22Content.basincOptionA,

@@ -164,7 +164,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
                   // --- ZEMİN KAT SORUSU ---
                   if (_hasTicariZemin)
                     _buildSoru(
-                      "Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?",
+                      "<b>Zemin</b> kattaki ticari alanların <b>doğrudan</b> sokağa/bahçeye açılan kendilerine ait kapıları var mı?",
                       'zemin',
                       [
                         Bolum34Content.zeminOptionA,
@@ -181,7 +181,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
                         "Zemin kat tespiti yapıldı. Lütfen bodrum kat ticari alan çıkışlarını da kontrol ediniz.",
                       ),
                     _buildSoru(
-                      "Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?",
+                      "<b>Bodrum</b> kattaki ticari alanların <b>doğrudan</b> dışarıya çıkan kendilerine ait merdiveni veya çıkışları var mı?",
                       'bodrum',
                       [
                         Bolum34Content.bodrumOptionA,
@@ -200,7 +200,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
                         "Lütfen normal katlardaki ticari alan çıkışlarını da kontrol ediniz.",
                       ),
                     _buildSoru(
-                      "Normal katlardaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?",
+                      "<b>Normal</b> katlardaki ticari alanların <b>doğrudan</b> dışarıya çıkan kendilerine ait merdiveni veya çıkışları var mı?",
                       'normal',
                       [
                         Bolum34Content.normalOptionA,

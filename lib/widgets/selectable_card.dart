@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:life_safety/data/bina_store.dart';
 import '../models/choice_result.dart';
+import '../utils/text_formatter.dart';
 
 class SelectableCard extends StatelessWidget {
   final ChoiceResult choice;
@@ -68,7 +69,7 @@ class SelectableCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  FormattedText(
                     choice.uiTitle,
                     style: TextStyle(
                       fontSize: 15,
@@ -83,7 +84,7 @@ class SelectableCard extends StatelessWidget {
                   ),
                   if (choice.uiSubtitle.isNotEmpty) ...[
                     const SizedBox(height: 4),
-                    Text(
+                    FormattedText(
                       choice.uiSubtitle,
                       style: TextStyle(
                         fontSize: 12,

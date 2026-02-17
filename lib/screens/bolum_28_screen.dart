@@ -113,14 +113,14 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Daire İçi Mesafeler",
-      subtitle: "Daire içi kaçış uzaklığı ve plan analizi",
+      subtitle: "Daire içi kaçış uzaklığı",
       screenType: widget.runtimeType,
       isNextEnabled: true,
       onNext: _onNextPressed,
       child: Column(
         children: [
           _buildSoru(
-            "Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?",
+            "Evinizin içindeki <b>en uzak</b> odadan daire <b>giriş kapısına</b> kadar olan mesafe ne kadardır?",
             'mesafe',
             [
               Bolum28Content.mesafeOptionA,
@@ -130,7 +130,7 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
             _model.mesafe,
           ),
 
-          _buildSoru("Daireniz Dubleks (İki katlı) mi?", 'dubleks', [
+          _buildSoru("Daireniz <b>dubleks</b> (iki katlı) mi?", 'dubleks', [
             Bolum28Content.dubleksOptionA,
             Bolum28Content.dubleksOptionB,
           ], _model.dubleks),
@@ -139,10 +139,12 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
             _buildInfoNote(
               "Dubleks daire seçildiği için üst kat alan bilgisi gereklidir.",
             ),
-            _buildSoru("Üst katınızın alanı 70 m²'den büyük mü?", 'alan', [
-              Bolum28Content.alanOption1,
-              Bolum28Content.alanOption2,
-            ], _model.alan),
+            _buildSoru(
+              "Üst katınızın alanı <b>70 m²'den</b> büyük mü?",
+              'alan',
+              [Bolum28Content.alanOption1, Bolum28Content.alanOption2],
+              _model.alan,
+            ),
           ],
 
           if (_model.alan?.label == Bolum28Content.alanOption2.label) ...[
@@ -150,7 +152,7 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
               "70 m² üzeri dublekslerde ikinci çıkış kapısı sorgulanmaktadır.",
             ),
             _buildSoru(
-              "Üst kattan apartman koridoruna açılan ikinci bir çelik kapı (çıkış) var mı?",
+              "Üst kattan apartman koridoruna açılan <b>ikinci</b> bir çelik kapı(çıkış) var mı?",
               'cikis',
               [Bolum28Content.cikisOptionA, Bolum28Content.cikisOptionB],
               _model.cikis,

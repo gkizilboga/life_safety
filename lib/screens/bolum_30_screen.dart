@@ -147,7 +147,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       child: Column(
         children: [
           _buildSoru(
-            "Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?",
+            "Kazan dairesinin konumu ve kapısının <b>açıldığı yer</b> nasıl?",
             'konum',
             [
               Bolum30Content.konumOptionA,
@@ -163,7 +163,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Kazan kapasitesini (kW) giriniz:",
+                  "Kazan kapasitesini <b>(kW)</b> giriniz:",
                   style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 10),
@@ -201,14 +201,19 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             ),
           ),
 
-          _buildSoru("Kazan dairesinin kaç adet çıkış kapısı var?", 'kapi', [
-            Bolum30Content.kapiOptionA,
-            Bolum30Content.kapiOptionB,
-            Bolum30Content.kapiOptionC,
-          ], _model.kapi),
+          _buildSoru(
+            "Kazan dairesinin kaç adet <b>çıkış kapısı</b> var?",
+            'kapi',
+            [
+              Bolum30Content.kapiOptionA,
+              Bolum30Content.kapiOptionB,
+              Bolum30Content.kapiOptionC,
+            ],
+            _model.kapi,
+          ),
 
           _buildSoru(
-            "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?",
+            "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan <b>menfezler</b> var mı?",
             'hava',
             [
               Bolum30Content.havaOptionA,
@@ -229,7 +234,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
               "Sıvı yakıtlı kazanlar için drenaj and sızıntı kontrolü gereklidir.",
             ),
             _buildSoru(
-              "Zeminde dökülen yakıtı toplayacak kanallar ve bir pis su çukuru var mı?",
+              "Zeminde dökülen yakıtı toplayacak kanallar ve pis su çukuru var mı?",
               'drenaj',
               [
                 Bolum30Content.drenajOptionA,

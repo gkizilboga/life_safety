@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../data/bina_store.dart';
-import 'register_screen.dart';
+import 'login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -18,19 +18,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<Map<String, String>> _pages = [
     {
       "title": "Neden Binanımızda Yangın Risk Analizi Yapmalıyız?",
-      "desc": "Yangın, sadece bir kaza değil; çoğunlukla yapının mimari eksikliklerinin sonucudur. Bu analizde, binanızdaki görülmeyen risklerin ve alınması gereken önlemlerin sizin tarafınızdan fark edilmesini sağlamak amaçlanmaktadır.",
+      "desc":
+          "Yangın, sadece bir kaza değil; çoğunlukla yapının mimari eksikliklerinin sonucudur. Bu analizde, binanızdaki görülmeyen risklerin ve alınması gereken önlemlerin sizin tarafınızdan fark edilmesini sağlamak amaçlanmaktadır.",
     },
     {
       "title": "Kapsamlı İnceleme",
-      "desc": "Binanız taşıyıcı sistemden kaçış yollarına, asansörlerden tesisat şaftlarına kadar birçok farklı başlıkta kontrol edilmektedir.",
+      "desc":
+          "Binanız taşıyıcı sistemden kaçış yollarına, asansörlerden tesisat şaftlarına kadar birçok farklı başlıkta kontrol edilmektedir.",
     },
     {
       "title": "Çözüm Önerileri",
-      "desc": "Analiz sonuçları Yangın Yönetmeliği kriterlerine göre değerlendirilmekte ve size özel iyileştirme önerileri sunulmaktadır.",
+      "desc":
+          "Analiz sonuçları Yangın Yönetmeliği kriterlerine göre değerlendirilmekte ve size özel iyileştirme önerileri sunulmaktadır.",
     },
     {
       "title": "Veri Gizliliği",
-      "desc": "Girdiğiniz tüm teknik veriler ve bina bilgileri sadece bu cihazda saklanmakta, başka kişilere veya kurumlara aktarılmamaktadır.",
+      "desc":
+          "Girdiğiniz tüm teknik veriler ve bina bilgileri sadece bu cihazda saklanmakta, başka kişilere veya kurumlara aktarılmamaktadır.",
     },
   ];
 
@@ -57,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     BinaStore.instance.hasSeenOnboarding = true;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const RegisterScreen()),
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
 
@@ -98,9 +102,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Expanded(
                   child: PageView.builder(
                     controller: _pageController,
-                    onPageChanged: (index) => setState(() => _currentPage = index),
+                    onPageChanged: (index) =>
+                        setState(() => _currentPage = index),
                     itemCount: _pages.length,
-                    itemBuilder: (context, index) => _buildPageContent(_pages[index]),
+                    itemBuilder: (context, index) =>
+                        _buildPageContent(_pages[index]),
                   ),
                 ),
                 _buildBottomControls(),
@@ -120,17 +126,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           const Text(
             "YANGIN RİSK ANALİZİ",
-            style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 2),
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 2,
+            ),
           ),
           const SizedBox(height: 15),
           Text(
             page["title"]!,
-            style: const TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 25),
           Text(
             page["desc"]!,
-            style: const TextStyle(color: Colors.white60, fontSize: 16, height: 1.6, fontWeight: FontWeight.w400),
+            style: const TextStyle(
+              color: Colors.white60,
+              fontSize: 16,
+              height: 1.6,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ],
       ),
@@ -154,15 +174,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: const Color(0xFF1A237E),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 elevation: 0,
               ),
-              onPressed: _currentPage == _pages.length - 1 
-                  ? _finishOnboarding 
-                  : () => _pageController.nextPage(duration: const Duration(milliseconds: 400), curve: Curves.ease),
+              onPressed: _currentPage == _pages.length - 1
+                  ? _finishOnboarding
+                  : () => _pageController.nextPage(
+                      duration: const Duration(milliseconds: 400),
+                      curve: Curves.ease,
+                    ),
               child: Text(
                 _currentPage == _pages.length - 1 ? "HEMEN BAŞLA" : "DEVAM ET",
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
               ),
             ),
           ),

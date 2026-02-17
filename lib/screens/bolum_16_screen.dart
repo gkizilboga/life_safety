@@ -98,7 +98,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Dış Cephe Özellikleri",
-      subtitle: "Cephe malzemesi ve yangın sıçrama önlemleri",
+      subtitle: "Cephe malzemesi ve yangın yayılım önlemleri",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -239,19 +239,19 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ),
             _buildSubQuestion(
               null,
-              "Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?",
+              "Pencerelerin yanlarında en az <b>15 cm</b> eninde yanmaz bariyer var mı?",
               _model.bariyerYan,
               (v) => setState(() => _model = _model.copyWith(bariyerYan: v)),
             ),
             _buildSubQuestion(
               null,
-              "Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?",
+              "Pencerelerin üstünde <b>30 cm</b> eninde yanmaz bariyer var mı?",
               _model.bariyerUst,
               (v) => setState(() => _model = _model.copyWith(bariyerUst: v)),
             ),
             _buildSubQuestion(
               null,
-              "Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?",
+              "Zemin seviyesinden <b>150 cm</b> yüksekliğe kadar yanmaz malzemeyle kaplama var mı?",
               _model.bariyerZemin,
               (v) => setState(() => _model = _model.copyWith(bariyerZemin: v)),
             ),
@@ -267,7 +267,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ),
 
           _buildSoru(
-            "Katlar arasında sağır (yanmaz) yüzey var mı?",
+            "Katlar arasında <b>yanmaz</b> (sağır) yüzey var mı?",
             'sagir',
             [
               Bolum16Content.sagirYuzeyOptionA,
@@ -280,7 +280,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
           if (_model.sagirYuzey?.label ==
               Bolum16Content.sagirYuzeyOptionB.label)
             _buildSubQuestionRadio(
-              "Cepheye doğru bakan özel sprinkler sistemi var mı?",
+              "Cepheye doğru bakan özel <b>sprinkler</b> başlıkları var mı?",
               _model.sagirYuzeySprinkler,
               (v) => setState(
                 () => _model = _model.copyWith(sagirYuzeySprinkler: v),
@@ -289,7 +289,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
 
           if (_askBitisik)
             _buildSoru(
-              "Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?",
+              "Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında <b>yükseklik</b> durumu nedir?",
               'bitisik',
               [
                 Bolum16Content.bitisikOptionA,
@@ -308,7 +308,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Binanızın en uzun cephesinin uzunluğu kaç metredir?",
+                    "Binanızın <b>en uzun</b> cephesinin uzunluğu kaç metredir?",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),

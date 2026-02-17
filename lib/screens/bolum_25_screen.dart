@@ -116,18 +116,23 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
             ),
           ),
           const SizedBox(height: 8),
-          _buildSoru("Merdiven kol genişliği yeterli mi?", 'genislik', [
-            Bolum25Content.genislikOptionA,
-            Bolum25Content.genislikOptionB,
-            Bolum25Content.genislikOptionC,
-          ], _model.genislik),
-          _buildSoru("Basamak genişliği yeterli mi?", 'basamak', [
+          _buildSoru(
+            "Merdiven <b>kol</b> genişliği yeterli mi?",
+            'genislik',
+            [
+              Bolum25Content.genislikOptionA,
+              Bolum25Content.genislikOptionB,
+              Bolum25Content.genislikOptionC,
+            ],
+            _model.genislik,
+          ),
+          _buildSoru("<b>Basamak</b> genişliği yeterli mi?", 'basamak', [
             Bolum25Content.basamakOptionA,
             Bolum25Content.basamakOptionB,
             Bolum25Content.basamakOptionC,
           ], _model.basamak),
           _buildSoru(
-            "Baş kurtarma yüksekliği yeterli mi?",
+            "<b>Baş kurtarma</b> yüksekliği yeterli mi?",
             'basKurtarma',
             [
               Bolum25Content.basKurtarmaOptionA,

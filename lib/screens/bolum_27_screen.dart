@@ -149,7 +149,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
               "Binada korunumlu yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır.",
             ),
             SizedBox(key: _dayanimKey, height: 1),
-            _buildSoruHeader("Kapalı yangın merdiveni kapısı nasıl?"),
+            _buildSoruHeader("Kapalı yangın merdiveni <b>kapısı</b> nasıl?"),
             _buildSoruCard('dayanim', [
               Bolum27Content.dayanimOptionA,
               Bolum27Content.dayanimOptionB,
@@ -205,7 +205,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           SizedBox(width: 12),
           Expanded(
             child: Text(
-              "Lütfen kaçış yolunuz üzerinde EN KÖTÜ durumdaki kapıyı baz alarak cevap veriniz. (daire kapısı hariç)",
+              "Lütfen kaçış yolunuz üzerinde EN KÖTÜ durumdaki <b>kapıyı</b> baz alarak cevap veriniz. (daire kapısı hariç)",
               style: TextStyle(
                 color: Colors.red,
                 fontWeight: FontWeight.bold,

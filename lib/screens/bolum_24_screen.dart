@@ -74,7 +74,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Dairenizden itibaren bina dışına çıkış nasıl?",
+                  "Dairenizden itibaren <b>bina dışına</b> çıkış nasıl?",
                   style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 12),
@@ -129,12 +129,12 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: _buildInfoNote(
-                "Açık kaçış yolu tespit edildiği için ek güvenlik soruları açılmıştır.",
+                "Açık kaçış güzergahı tespit edildiği için ek güvenlik soruları açılmıştır.",
               ),
             ),
 
             _buildSoru(
-              "Açık kaçış yoluna bakan dairelere ait pencereler var mı?",
+              "Açık kaçış güzergahına bakan dairelere ait <b>pencereler</b> var mı?",
               'pencere',
               [
                 Bolum24Content.pencereOptionA,
@@ -145,7 +145,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
             ),
 
             _buildSoru(
-              "Açık kaçış yoluna açılan daire kapınızın özelliği nedir?",
+              "Açık kaçış güzergahına açılan daire <b>kapınızın</b> özelliği nedir?",
               'kapi',
               [
                 Bolum24Content.kapiOptionA,

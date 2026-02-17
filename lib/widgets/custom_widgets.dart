@@ -3,6 +3,7 @@ import '../utils/app_progress.dart';
 import '../utils/app_theme.dart';
 import '../data/bina_store.dart';
 import '../models/choice_result.dart';
+import '../utils/text_formatter.dart';
 
 class ModernHeader extends StatelessWidget {
   final String title;
@@ -134,7 +135,7 @@ class ModernHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(title, style: AppStyles.headerTitle),
+          FormattedText(title, style: AppStyles.headerTitle),
           const SizedBox(height: 12),
           Column(
             children: [
@@ -186,22 +187,27 @@ class QuestionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 12), // Reduced from 16
-      padding: const EdgeInsets.all(16), // Reduced from 20
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.cardBorder, width: 1.5),
       ),
-      child: DefaultTextStyle(
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w900,
-          color: AppColors.primaryBlue,
-          height: 1.3,
-        ),
-        child: child,
-      ),
+      child: child,
+    );
+  }
+}
+
+class QuestionTitle extends StatelessWidget {
+  final String title;
+  const QuestionTitle(this.title, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 12),
+      child: FormattedText(title, style: AppStyles.questionTitle),
     );
   }
 }

@@ -80,7 +80,7 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
         children: [
           // 1. Duvar Kaplaması
           _buildSoru(
-            "Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük (içten yalıtım) gibi bir kaplama var mı?",
+            "Daire içlerinde veya koridor duvarlarında; kağıt, <b>ahşap</b>, plastik veya köpük gibi bir <b>kaplama</b> var mı?",
             'duvar',
             [
               Bolum18Content.duvarOptionA,
@@ -108,7 +108,7 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
             const SizedBox(height: 10),
             SizedBox(key: _boruKey, height: 1),
             _buildSoru(
-              "Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?",
+              "Binanız yüksek katlı olduğu için <b>tesisat şaftlarından</b> geçen <b>plastik</b> su borularında önlem alınmış mı?",
               'boru',
               [
                 Bolum18Content.boruOptionA,

@@ -77,7 +77,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       child: Column(
         children: [
           _buildSoru(
-            "Çatınızın en üst katmanında hangi malzeme kullanılıyor?",
+            "Çatınızın <b>en üst</b> katmanında hangi malzeme kullanılıyor?",
             'kaplama',
             [
               Bolum17Content.kaplamaOptionA,
@@ -91,7 +91,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
           ),
 
           _buildSoru(
-            "Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?",
+            "Çatıyı taşıyan iskelet ve altındaki <b>ısı yalıtımı</b> nedir?",
             'iskelet',
             [
               Bolum17Content.iskeletOptionA,
@@ -103,7 +103,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
 
           if (_askBitisik)
             _buildSoru(
-              "Çatılar arasında yangını kesecek bir duvar var mı?",
+              "Çatılar arasında yangını kesecek bir <b>duvar</b> var mı?",
               'duvar',
               [
                 Bolum17Content.bitisikOptionA,
@@ -114,7 +114,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
             ),
 
           _buildSoru(
-            "Çatınızda camlı ışıklık veya aydınlatma kubbesi var mı?",
+            "Çatınızda camlı <b>ışıklık</b> veya aydınlatma kubbesi var mı?",
             'isiklik',
             [
               Bolum17Content.isiklikOptionA,
@@ -168,7 +168,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           ),
                           const Expanded(
                             child: Text(
-                              "Temperli ve yangına dayanıklı cam ışıklık",
+                              "<b>Temperli</b> ve <b>yangına dayanıklı</b> cam ışıklık",
                               style: TextStyle(fontSize: 14),
                             ),
                           ),
@@ -209,7 +209,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           ),
                           const Expanded(
                             child: Text(
-                              "Plastik, Pleksi veya Polikarbon ışıklık",
+                              "Plastik, Pleksi veya <b>Polikarbon</b> ışıklık",
                               style: TextStyle(fontSize: 14),
                             ),
                           ),

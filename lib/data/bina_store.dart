@@ -590,6 +590,13 @@ class BinaStore {
     }
   }
 
+  Future<void> importBuilding(Map<String, dynamic> data) async {
+    // Add to archive
+    archive.add(data);
+    // Save archive to disk
+    await _prefs?.setString('bina_archive', json.encode(archive));
+  }
+
   void deleteFromArchive(String id) {
     archive.removeWhere((element) => element['id'] == id);
     if (currentBinaId == id) reset();

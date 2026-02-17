@@ -146,7 +146,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         children: [
           if (_askOtopark) ...[
             _buildSoru(
-              "Otoparktan bina içine açılan kapının özelliği nedir?",
+              "Otoparktan <b>bina içine</b> açılan kapının özelliği nedir?",
               'otopark',
               [
                 Bolum13Content.otoparkOptionA,
@@ -158,7 +158,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             ),
             // ALT SORU: Otopark Alanı
             _buildSoru(
-              "Otopark alanları tüm katlarda toplam kaç metrekare?",
+              "Otopark alanları <b>tüm katlarda</b> toplam kaç metrekare?",
               'otoparkAlan',
               [
                 Bolum13Content.otoparkAlanOptionA,
@@ -260,7 +260,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askDuvar)
             _buildSoru(
-              "Yan bina ile ortak kullandığınız duvarın özelliği nedir?",
+              "Yan bina ile ortak kullandığınız <b>duvarın</b> özelliği nedir?",
               'duvar',
               [
                 Bolum13Content.ortakDuvarOptionA,
@@ -272,7 +272,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askTicari)
             _buildSoru(
-              "Ticari alanlardan konut merdivenine geçiş nasıl?",
+              "Ticari alanlardan konut merdivenine <b>geçiş</b> nasıl?",
               'ticari',
               [
                 Bolum13Content.ticariOptionA,

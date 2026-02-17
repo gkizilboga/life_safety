@@ -103,7 +103,8 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
       },
       child: Column(
         children: [
-          _buildSoru("Zemin kaplama malzemesi nedir?", 'kaplama', [
+          const QuestionTitle("<b>Zemin</b> kaplama malzemesi nedir?"),
+          _buildSoru("", 'kaplama', [
             Bolum15Content.kaplamaOptionA,
             Bolum15Content.kaplamaOptionB,
             Bolum15Content.kaplamaOptionD,
@@ -111,7 +112,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
           ], _model.kaplama),
 
           _buildSoru(
-            "Döşeme üzerinde ısı yalıtım malzemesi var mı?",
+            "<b>Döşeme</b> üzerinde ısı yalıtım malzemesi var mı?",
             'yalitim',
             [
               Bolum15Content.yalitimOptionA,
@@ -138,7 +139,8 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ),
           ],
 
-          _buildSoru("Asma Tavan var mı?", 'tavan', [
+          const QuestionTitle("<b>Asma Tavan</b> var mı?"),
+          _buildSoru("", 'tavan', [
             Bolum15Content.tavanOptionA,
             Bolum15Content.tavanOptionB,
             Bolum15Content.tavanOptionC,
@@ -180,23 +182,25 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
     ChoiceResult? selected, {
     String? assetPath,
   }) {
-    return QuestionCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: AppStyles.questionTitle),
-          if (assetPath != null)
-            TechnicalDrawingButton(assetPath: assetPath, title: "Teknik Detay"),
-          const SizedBox(height: 12),
-          ...options.map(
-            (opt) => SelectableCard(
-              choice: opt,
-              isSelected: selected?.label == opt.label,
-              onTap: () => _handleSelection(key, opt),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title.isNotEmpty) QuestionTitle(title),
+        QuestionCard(
+          child: Column(
+            children: [
+              if (assetPath != null) SectionImage(assetPath: assetPath),
+              ...options.map(
+                (opt) => SelectableCard(
+                  choice: opt,
+                  isSelected: selected?.label == opt.label,
+                  onTap: () => _handleSelection(key, opt),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

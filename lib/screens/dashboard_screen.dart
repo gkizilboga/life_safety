@@ -48,6 +48,7 @@ import '../services/pdf_service.dart';
 import 'paywall_screen.dart';
 import '../logic/report_engine.dart';
 import '../utils/app_theme.dart';
+import '../services/analysis_file_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -107,6 +108,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 const SizedBox(height: 25),
                 _buildSectionLabel("BİLGİLER VE AYARLAR"),
                 _buildSecondaryMenu(context),
+                const SizedBox(height: 25),
+                _buildSectionLabel("PAYLAŞIM VE TRANSFER"),
+                _buildFileActionSection(context, completedActions),
                 const SizedBox(height: 25),
                 _buildSectionLabel("DESTEK VE İLETİŞİM"),
                 _buildSupportCard(context),
@@ -795,6 +799,86 @@ class _DashboardScreenState extends State<DashboardScreen> {
               '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
         )
         .join('&');
+  }
+
+  Widget _buildFileActionSection(
+    BuildContext context,
+    List<Map<String, dynamic>> completedActions,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.grey.shade100),
+      ),
+      child: Column(
+        children: [
+          _buildFileActionButton(
+            context,
+            icon: Icons.upload_file_rounded,
+            title: "Analiz Dosyası Yükle (.lsf)",
+            color: AppColors.primaryBlue,
+            onTap: () async {
+              final success = await AnalysisFileService.importAnalysis(context);
+              if (success && mounted) {
+                setState(() {});
+              }
+            },
+          ),
+          if (completedActions.isNotEmpty) ...[
+            const Divider(height: 24, thickness: 0.5),
+            _buildFileActionButton(
+              context,
+              icon: Icons.ios_share_rounded,
+              title: "Tamamlanan Analizi Paylaş",
+              color: Colors.orange.shade700,
+              onTap: () {
+                // En son tamamlananı paylaş
+                final latest = completedActions.last;
+                AnalysisFileService.exportAnalysis(latest);
+              },
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFileActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: AppColors.textDark,
+              ),
+            ),
+          ),
+          const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
+        ],
+      ),
+    );
   }
 
   Widget _getResumeScreen() {
