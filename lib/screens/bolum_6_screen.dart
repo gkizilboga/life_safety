@@ -125,7 +125,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                   const Padding(
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
-                      "Binanızda konut <b>haricinde</b> aşağıdakilerden hangileri mevcut?",
+                      "Binanızda konut haricinde aşağıdakilerden hangileri mevcut?",
                       style: AppStyles.questionTitle,
                     ),
                   ),

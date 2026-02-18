@@ -102,8 +102,9 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
         );
       },
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, // Left alignment
         children: [
-          const QuestionTitle("<b>Zemin</b> kaplama malzemesi nedir?"),
+          const QuestionTitle("Zemin kaplama malzemesi nedir?"),
           _buildSoru("", 'kaplama', [
             Bolum15Content.kaplamaOptionA,
             Bolum15Content.kaplamaOptionB,
@@ -112,7 +113,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
           ], _model.kaplama),
 
           _buildSoru(
-            "<b>Döşeme</b> üzerinde ısı yalıtım malzemesi var mı?",
+            "Döşeme üzerinde ısı yalıtım malzemesi var mı?",
             'yalitim',
             [
               Bolum15Content.yalitimOptionA,
@@ -120,7 +121,10 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
               Bolum15Content.yalitimOptionC,
             ],
             _model.yalitim,
+          ),
+          TechnicalDrawingButton(
             assetPath: AppAssets.section15DosemeYalitim,
+            title: "Döşeme Yalıtım Örneği",
           ),
 
           if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) ...[
@@ -139,7 +143,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ),
           ],
 
-          const QuestionTitle("<b>Asma Tavan</b> var mı?"),
+          const QuestionTitle("Asma Tavan var mı?"),
           _buildSoru("", 'tavan', [
             Bolum15Content.tavanOptionA,
             Bolum15Content.tavanOptionB,
@@ -158,17 +162,15 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ], _model.tavanMalzeme),
           ],
 
-          _buildSoru(
-            "Tesisat geçişleri nasıl kapatılmış?",
-            'tesisat',
-            [
-              Bolum15Content.tesisatOptionA,
-              Bolum15Content.tesisatOptionB,
-              Bolum15Content.tesisatOptionC,
-              Bolum15Content.tesisatOptionD,
-            ],
-            _model.tesisat,
+          _buildSoru("Tesisat geçişleri nasıl kapatılmış?", 'tesisat', [
+            Bolum15Content.tesisatOptionA,
+            Bolum15Content.tesisatOptionB,
+            Bolum15Content.tesisatOptionC,
+            Bolum15Content.tesisatOptionD,
+          ], _model.tesisat),
+          TechnicalDrawingButton(
             assetPath: AppAssets.section15Gecis,
+            title: "Tesisat Geçiş Örneği",
           ),
         ],
       ),
@@ -179,9 +181,8 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
     String title,
     String key,
     List<ChoiceResult> options,
-    ChoiceResult? selected, {
-    String? assetPath,
-  }) {
+    ChoiceResult? selected,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -189,7 +190,6 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
         QuestionCard(
           child: Column(
             children: [
-              if (assetPath != null) SectionImage(assetPath: assetPath),
               ...options.map(
                 (opt) => SelectableCard(
                   choice: opt,

@@ -160,7 +160,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kullanıcı Yükü ve Çıkış Adedi",
-      subtitle: "Merdiven uygunluk kontrolü <b>HARİÇ</b>",
+      subtitle: "Merdiven uygunluk kontrolü HARİÇ",
       screenType: widget.runtimeType,
       isNextEnabled: _isConfirmed,
       onNext: () {
@@ -266,14 +266,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: Color(0xFF1A237E),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const Divider(),
           _buildRow("Tahmini Kişi:", "$yuk Kişi"),
           _buildRow("Gereken Çıkış:", "$gerekli Adet"),

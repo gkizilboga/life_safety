@@ -224,7 +224,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Binanızın yapı ruhsat tarihi nedir?"),
+                const QuestionTitle("Binanızın yapı ruhsat tarihi nedir?"),
                 const SizedBox(height: 20),
                 SelectableCard(
                   choice: Bolum1Content.ruhsatSonrasi,

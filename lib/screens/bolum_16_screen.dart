@@ -239,19 +239,19 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ),
             _buildSubQuestion(
               null,
-              "Pencerelerin yanlarında en az <b>15 cm</b> eninde yanmaz bariyer var mı?",
+              "Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?",
               _model.bariyerYan,
               (v) => setState(() => _model = _model.copyWith(bariyerYan: v)),
             ),
             _buildSubQuestion(
               null,
-              "Pencerelerin üstünde <b>30 cm</b> eninde yanmaz bariyer var mı?",
+              "Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?",
               _model.bariyerUst,
               (v) => setState(() => _model = _model.copyWith(bariyerUst: v)),
             ),
             _buildSubQuestion(
               null,
-              "Zemin seviyesinden <b>150 cm</b> yüksekliğe kadar yanmaz malzemeyle kaplama var mı?",
+              "Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?",
               _model.bariyerZemin,
               (v) => setState(() => _model = _model.copyWith(bariyerZemin: v)),
             ),
@@ -267,7 +267,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ),
 
           _buildSoru(
-            "Katlar arasında <b>yanmaz</b> (sağır) yüzey var mı?",
+            "Katlar arasında yanmaz (sağır) yüzey var mı?",
             'sagir',
             [
               Bolum16Content.sagirYuzeyOptionA,
@@ -280,7 +280,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
           if (_model.sagirYuzey?.label ==
               Bolum16Content.sagirYuzeyOptionB.label)
             _buildSubQuestionRadio(
-              "Cepheye doğru bakan özel <b>sprinkler</b> başlıkları var mı?",
+              "Cepheye doğru bakan özel sprinkler başlıkları var mı?",
               _model.sagirYuzeySprinkler,
               (v) => setState(
                 () => _model = _model.copyWith(sagirYuzeySprinkler: v),
@@ -289,7 +289,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
 
           if (_askBitisik)
             _buildSoru(
-              "Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında <b>yükseklik</b> durumu nedir?",
+              "Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?",
               'bitisik',
               [
                 Bolum16Content.bitisikOptionA,
@@ -307,9 +307,9 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Binanızın <b>en uzun</b> cephesinin uzunluğu kaç metredir?",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    "Binanızın en uzun cephesinin uzunluğu kaç metredir?",
+                    style: AppStyles.questionTitle,
                   ),
                   const SizedBox(height: 12),
                   const Text(
@@ -326,17 +326,22 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                     onChanged: (val) {
                       setState(() {}); // Trigget button state update
                     },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Örn: 45",
-                      suffixText: "m",
-                      helperText: "En fazla 200m",
-                    ),
                     validator: (value) => InputValidator.validateNumber(
                       value,
                       min: 5,
                       max: 200,
                       unit: "m",
+                    ),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: "Örn: 45",
+                      suffixText: "m",
+                      helperText: "En fazla 200m",
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      isDense: true,
                     ),
                   ),
                 ],
@@ -402,14 +407,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF455A64),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle.copyWith(fontSize: 14)),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -457,14 +455,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF455A64),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle.copyWith(fontSize: 14)),
           const SizedBox(height: 4),
           Row(
             children: [

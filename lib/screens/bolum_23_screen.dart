@@ -131,7 +131,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
           ),
 
           _buildSoru(
-            "Asansör kuyusunun tepesinde <b>havalandırma</b> penceresi var mı?",
+            "Asansör kuyusunun tepesinde havalandırma penceresi var mı?",
             'havalandirma',
             [
               Bolum23Content.havalandirmaOptionA,

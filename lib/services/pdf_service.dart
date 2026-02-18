@@ -103,10 +103,20 @@ class PdfService {
     return PdfColors.red300;
   }
 
-  static pw.PageTheme _buildPageTheme(pw.Font ttf, pw.Font ttfBold) {
+  static pw.PageTheme _buildPageTheme(
+    pw.Font base,
+    pw.Font bold,
+    pw.Font italic,
+    pw.Font boldItalic,
+  ) {
     return pw.PageTheme(
       pageFormat: PdfPageFormat.a4,
-      theme: pw.ThemeData.withFont(base: ttf, bold: ttfBold),
+      theme: pw.ThemeData.withFont(
+        base: base,
+        bold: bold,
+        italic: italic,
+        boldItalic: boldItalic,
+      ),
     );
   }
 
@@ -487,8 +497,18 @@ class PdfService {
     // Bundle edilmiş Roboto fontları - offline çalışır, Türkçe karakterleri destekler
     final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
     final fontDataBold = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
+    final fontDataItalic = await rootBundle.load(
+      "assets/fonts/Roboto-Italic.ttf",
+    );
+    final fontDataBoldItalic = await rootBundle.load(
+      "assets/fonts/Roboto-BoldItalic.ttf",
+    );
+
     final ttf = pw.Font.ttf(fontData);
     final ttfBold = pw.Font.ttf(fontDataBold);
+    final ttfItalic = pw.Font.ttf(fontDataItalic);
+    final ttfBoldItalic = pw.Font.ttf(fontDataBoldItalic);
+
     final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 
@@ -496,7 +516,7 @@ class PdfService {
     final metrics = ReportEngine.calculateRiskMetrics();
     final moduleScores = ReportEngine.calculateModuleScores();
 
-    final pageTheme = _buildPageTheme(ttf, ttfBold);
+    final pageTheme = _buildPageTheme(ttf, ttfBold, ttfItalic, ttfBoldItalic);
 
     // 1. Kapak
     pdf.addPage(
@@ -678,10 +698,11 @@ class PdfService {
                         // Soru
                         if (label.isNotEmpty) ...[
                           pw.Text(
-                            "Soru:",
+                            "Konu:",
                             style: pw.TextStyle(
                               fontSize: 9,
                               fontWeight: pw.FontWeight.bold,
+                              fontStyle: pw.FontStyle.italic,
                               color: PdfColors.blue900,
                             ),
                           ),
@@ -703,6 +724,7 @@ class PdfService {
                             style: pw.TextStyle(
                               fontSize: 9,
                               fontWeight: pw.FontWeight.bold,
+                              fontStyle: pw.FontStyle.italic,
                               color: PdfColors.blue900,
                             ),
                           ),
@@ -724,11 +746,12 @@ class PdfService {
                             style: pw.TextStyle(
                               fontSize: 9,
                               fontWeight: pw.FontWeight.bold,
+                              fontStyle: pw.FontStyle.italic,
                               color: PdfColors.blue900,
                             ),
                           ),
                           // Highlight "YÜKSEK BİNA" etc
-                          _buildRichText(report, ttf, ttfBold),
+                          _buildRichText(report, ttfBold, ttfBold),
                         ],
 
                         // Öneri (Advice)
@@ -780,14 +803,24 @@ class PdfService {
     // Bundle edilmiş Roboto fontları - offline çalışır, Türkçe karakterleri destekler
     final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
     final fontDataBold = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
+    final fontDataItalic = await rootBundle.load(
+      "assets/fonts/Roboto-Italic.ttf",
+    );
+    final fontDataBoldItalic = await rootBundle.load(
+      "assets/fonts/Roboto-BoldItalic.ttf",
+    );
+
     final ttf = pw.Font.ttf(fontData);
     final ttfBold = pw.Font.ttf(fontDataBold);
+    final ttfItalic = pw.Font.ttf(fontDataItalic);
+    final ttfBoldItalic = pw.Font.ttf(fontDataBoldItalic);
+
     final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 
     final store = BinaStore.instance;
     final activeSystems = ActiveSystemsEngine.calculateRequirements(store);
-    final pageTheme = _buildPageTheme(ttf, ttfBold);
+    final pageTheme = _buildPageTheme(ttf, ttfBold, ttfItalic, ttfBoldItalic);
 
     // 1. Kapak
     pdf.addPage(
@@ -864,22 +897,22 @@ class PdfService {
               // Critical Risk: Red background
               boxDecoration = pw.BoxDecoration(
                 color: PdfColor.fromInt(0xFFFFEBEE), // Soft Red
-                border: pw.Border.all(color: PdfColors.red700, width: 1.5),
-                borderRadius: pw.BorderRadius.circular(4),
+                border: pw.Border.all(color: PdfColors.red700, width: 0.5),
+                borderRadius: pw.BorderRadius.circular(2),
               );
             } else if (isWarning) {
               // Warning: Amber/Yellow background
               boxDecoration = pw.BoxDecoration(
                 color: PdfColor.fromInt(0xFFFFF8E1), // Soft Amber
-                border: pw.Border.all(color: PdfColors.amber700, width: 1.5),
-                borderRadius: pw.BorderRadius.circular(4),
+                border: pw.Border.all(color: PdfColors.amber700, width: 0.5),
+                borderRadius: pw.BorderRadius.circular(2),
               );
             } else {
               // Neutral (OLUMLU, BİLGİ, etc.)
               boxDecoration = const pw.BoxDecoration(
                 color: PdfColors.white,
                 border: pw.Border(
-                  left: pw.BorderSide(color: PdfColors.grey400, width: 4),
+                  left: pw.BorderSide(color: PdfColors.grey400, width: 2),
                 ),
               );
             }
@@ -887,8 +920,13 @@ class PdfService {
             return pw.Wrap(
               children: [
                 pw.Container(
-                  margin: const pw.EdgeInsets.only(bottom: 10),
-                  padding: const pw.EdgeInsets.all(8),
+                  margin: const pw.EdgeInsets.only(
+                    bottom: 4,
+                  ), // Reduced from 10
+                  padding: const pw.EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 4,
+                  ), // Reduced padding
                   decoration: boxDecoration,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -900,33 +938,30 @@ class PdfService {
                             child: pw.Text(
                               _cleanEmojis(req.name),
                               style: pw.TextStyle(
-                                fontSize: 10,
+                                fontSize: 10, // Standardized Size
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.black,
                               ),
                             ),
                           ),
-                          // Badge removed, maybe just text status if needed?
-                          // For now, keeping as is (empty) or minimal
-                          pw.SizedBox.shrink(),
                         ],
                       ),
-                      pw.SizedBox(height: 6),
+                      pw.SizedBox(height: 2), // Reduced from 6
                       pw.Text(
                         cleanReason,
                         style: const pw.TextStyle(
-                          fontSize: 9,
+                          fontSize: 9, // Standardized Size
                           color: PdfColors.black,
                         ),
                       ),
                       if (req.note.isNotEmpty) ...[
-                        pw.SizedBox(height: 4),
+                        pw.SizedBox(height: 2), // Reduced from 4
                         pw.Text(
                           "NOT: ${_cleanEmojis(req.note)}",
-                          style: pw.TextStyle(
-                            fontSize: 8,
+                          style: const pw.TextStyle(
+                            // Removed italic
+                            fontSize: 9, // Standardized Size
                             color: PdfColors.black,
-                            // fontStyle: pw.FontStyle.italic removed to fix character issues
                           ),
                         ),
                       ],

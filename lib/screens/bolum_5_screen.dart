@@ -290,11 +290,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       children: [
         Text(
           content.uiTitle,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            color: Color(0xFF455A64),
-          ),
+          style: AppStyles.questionTitle.copyWith(fontSize: 14),
         ),
         if (content.uiSubtitle.isNotEmpty)
           Text(
@@ -328,10 +324,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
         fillColor: isBold ? const Color(0xFFECEFF1) : Colors.white,
         isDense: true,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 12,
-        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
     );
   }
@@ -351,8 +344,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
           const Text(
             "HESAPLAMA DETAYI",
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF2E7D32),
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF4A148C),
               fontSize: 13,
             ),
           ),

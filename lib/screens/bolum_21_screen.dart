@@ -94,7 +94,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               children: [
                 Expanded(
                   child: Text(
-                    "Merdiven önünde <b>Yangın Güvenlik Holü</b> var mı?",
+                    "Merdiven önünde Yangın Güvenlik Holü var mı?",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -111,7 +111,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
 
           if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) ...[
             _buildSoru(
-              "YGH (Hol) içindeki <b>kaplama</b> malzemeleri yanmaz özellikte mi?",
+              "YGH (Hol) içindeki kaplama malzemeleri yanmaz özellikte mi?",
               'malzeme',
               [
                 Bolum21Content.malzemeOptionA,
@@ -121,7 +121,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               _model.malzeme,
             ),
             _buildSoru(
-              "YGH (Hol) <b>kapıları</b> duman sızdırmaz ve yangına dayanıklı mı?",
+              "YGH (Hol) kapıları duman sızdırmaz ve yangına dayanıklı mı?",
               'kapi',
               [
                 Bolum21Content.kapiOptionA,

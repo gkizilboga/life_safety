@@ -408,7 +408,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,
-            vertical: 12,
+            vertical: 8, // Reduced from 12 for compactness
           ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),

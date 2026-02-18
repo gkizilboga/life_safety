@@ -93,7 +93,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Kaçış yollarında aşağıdakilerden hangisi <b>mevcut</b>?",
+                  "Kaçış yollarında aşağıdakilerden hangisi mevcut?",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 12),

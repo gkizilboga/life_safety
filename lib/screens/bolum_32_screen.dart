@@ -96,7 +96,7 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
               child: Column(
                 children: [
                   _buildSoru(
-                    "Jeneratör odasının <b>duvarları</b> yangına dayanıklı mı ve <b>kapısı</b> nereye açılıyor?",
+                    "Jeneratör odasının duvarları yangına dayanıklı mı ve kapısı nereye açılıyor?",
                     'yapi',
                     [
                       Bolum32Content.yapiOptionA,
@@ -108,7 +108,7 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
                   ),
 
                   _buildSoru(
-                    "Jeneratörün yakıtı nerede ve nasıl <b>depolanıyor</b>?",
+                    "Jeneratörün yakıtı nerede ve nasıl depolanıyor?",
                     'yakit',
                     [
                       Bolum32Content.yakitOptionA,
@@ -124,7 +124,7 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
                     ),
 
                   _buildSoru(
-                    "Jeneratör odasının içinden su borusu geçiyor mu veya <b>üst katında</b> ıslak zemin var mı?",
+                    "Jeneratör odasının içinden su borusu geçiyor mu veya üst katında ıslak zemin var mı?",
                     'cevre',
                     [
                       Bolum32Content.cevreOptionA,
@@ -136,7 +136,7 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
                   ),
 
                   _buildSoru(
-                    "Jeneratörün <b>egzoz</b> borusu nereye veriliyor ve oda <b>havalandırılıyor</b> mu?",
+                    "Jeneratörün egzoz borusu nereye veriliyor ve oda havalandırılıyor mu?",
                     'egzoz',
                     [
                       Bolum32Content.egzozOptionA,

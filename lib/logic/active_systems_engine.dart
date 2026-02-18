@@ -693,8 +693,13 @@ class ActiveSystemsEngine {
       ),
     );
 
-    // Final sort/push to end: Atrium Duman Kontrolü, Gaz Algılama Sistemi, Sismik Askılama
+    // Final sort/push to end: Atrium Duman Kontrolü, Sismik Askılama (Warning), Gaz Algılama (Last)
     List<ActiveSystemRequirement> specialLast = [];
+
+    // 1. Atrium Duman (if exists)
+    // 2. Sismik (Warning only, mandatory goes with sprinkler usually but here we treated it separately)
+    // 3. Gaz Algılama (MUST BE LAST)
+
     requirements.removeWhere((r) {
       if (r.name == "Atrium Duman Kontrolü" ||
           r.name == "Gaz Algılama Sistemi" ||
@@ -705,6 +710,14 @@ class ActiveSystemsEngine {
         return true;
       }
       return false;
+    });
+
+    // Custom sorting for specialLast
+    specialLast.sort((a, b) {
+      // Gaz Algılama should be last
+      if (a.name == "Gaz Algılama Sistemi") return 1;
+      if (b.name == "Gaz Algılama Sistemi") return -1;
+      return 0;
     });
 
     requirements.addAll(specialLast);

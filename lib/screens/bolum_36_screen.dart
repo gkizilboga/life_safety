@@ -199,8 +199,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             double? stairW = double.tryParse(_genislikKorunumluCtrl.text);
             double? doorW = double.tryParse(_kapiGenislikKorunumluCtrl.text);
             if (stairW != null && doorW != null && doorW > stairW) {
-              _kGenKerr =
-                  "Kapı genişliği merdiven genişliğinden büyük <b>olamaz</b>.";
+              _kGenKerr = "Kapı genişliği merdiven genişliğinden büyük olamaz.";
             }
           }
         } else {
@@ -220,7 +219,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             double? doorW = double.tryParse(_kapiGenislikKorunumsuzCtrl.text);
             if (stairW != null && doorW != null && doorW > stairW) {
               _kGenKSerr =
-                  "Kapı genişliği merdiven genişliğinden büyük <b>olamaz</b>.";
+                  "Kapı genişliği merdiven genişliğinden büyük olamaz.";
             }
           }
         } else {
@@ -329,7 +328,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         );
       else
         notes.add(
-          "Yapı yüksekliği 21.50m-30.50m arasındadır. En az 1 adet <b>'Korunumlu Merdiven'</b> zorunludur.",
+          "Yapı yüksekliği 21.50m-30.50m arasındadır. En az 1 adet 'Korunumlu Merdiven' zorunludur.",
         );
     } else if (hYapi >= 30.50 && hYapi < 51.50) {
       if (korunumlu >= 2)
@@ -338,7 +337,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         );
       else
         notes.add(
-          "Yapı yüksekliği 30.50m-51.50m arasındadır. En az 2 adet <b>'Korunumlu Merdiven'</b> zorunludur.",
+          "Yapı yüksekliği 30.50m-51.50m arasındadır. En az 2 adet 'Korunumlu Merdiven' zorunludur.",
         );
     } else if (hYapi >= 51.50) {
       if (korunumlu >= 2)
@@ -347,11 +346,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         );
       else
         notes.add(
-          "Yapı yüksekliği 51.50m üzerindedir. En az 2 adet <b>'Korunumlu Merdiven'</b> zorunludur.",
+          "Yapı yüksekliği 51.50m üzerindedir. En az 2 adet 'Korunumlu Merdiven' zorunludur.",
         );
       if (!basinclandirmaVar)
         notes.add(
-          "51.50m üzeri binalarda her iki <b>'Korunumlu Merdiven'</b>inde hem <b>YGH</b> hem de <b>Basınçlandırma</b> Sistemi tesis edilmesi zorunludur.",
+          "51.50m üzeri binalarda her iki 'Korunumlu Merdiven'inde hem YGH hem de Basınçlandırma Sistemi tesis edilmesi zorunludur.",
         );
     }
 
@@ -579,11 +578,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               Expanded(
                 child: Text(
                   "YANGIN GÜVENLİK HOLÜ (YGH) ANALİZİ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade900,
-                    fontSize: 13,
-                  ),
+                  style: AppStyles.questionTitle.copyWith(fontSize: 14),
                 ),
               ),
             ],
@@ -620,7 +615,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           ),
           const SizedBox(height: 8),
           const Text(
-            "<b>Korunumlu</b> merdivenlere geçişte <b>YGH</b> (veya duruma göre <b>basınçlandırma</b>) uygulanması şarttır.",
+            "Korunumlu merdivenlere geçişte YGH (veya duruma göre basınçlandırma) uygulanması şarttır.",
             style: TextStyle(
               fontSize: 11,
               fontStyle: FontStyle.italic,
@@ -661,11 +656,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               Expanded(
                 child: Text(
                   "MERDİVEN UYGUNLUK ANALİZİ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade900,
-                    fontSize: 13,
-                  ),
+                  style: AppStyles.questionTitle.copyWith(fontSize: 14),
                 ),
               ),
             ],
@@ -733,8 +724,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       results.add({
         'status': 'FAIL',
         'title': 'Sahanlıksız Merdiven ($sahanliksiz adet)',
-        'desc':
-            'UYGUN DEĞİL: Hiçbir binada <b>kaçış yolu</b> olarak kabul edilemez.',
+        'desc': 'UYGUN DEĞİL: Hiçbir binada kaçış yolu olarak kabul edilemez.',
       });
     }
 
@@ -746,7 +736,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           'status': 'FAIL',
           'title': 'Dairesel Merdiven ($doner adet)',
           'desc':
-              'UYGUN DEĞİL: Bina yüksekliği 9.50m üzerinde olduğu için <b>kullanılamaz</b>.',
+              'UYGUN DEĞİL: Bina yüksekliği 9.50m üzerinde olduğu için kullanılamaz.',
         });
       } else {
         results.add({
@@ -766,7 +756,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           'status': 'FAIL',
           'title': 'Bina Dışı Açık Merdiven ($disAcik adet)',
           'desc':
-              'UYGUN DEĞİL: Bina yüksekliği 21.50m üzerinde olduğu için <b>kullanılamaz</b>.',
+              'UYGUN DEĞİL: Bina yüksekliği 21.50m üzerinde olduğu için kullanılamaz.',
         });
       } else {
         results.add({
@@ -973,7 +963,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSoruHeader(
-            "Binadan <b>dış havaya</b> (atmosfere) çıktığınız <b>kat</b> hangisidir?",
+            "Binadan dış havaya (atmosfere) çıktığınız kat hangisidir?",
           ),
           _buildSoruCard(
             'cikisKati',
@@ -982,7 +972,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           ),
           if (_cntDisCelik > 0) ...[
             _buildSoruHeader(
-              "Dışarıdaki yangın merdivenine <b>3 metre</b> mesafede açıklık var mı?",
+              "Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?",
             ),
             _buildSoruCard('disMerd', [
               Bolum36Content.disMerdOptionA,
@@ -996,7 +986,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               "Binada birden fazla çıkış tespit edildiği için konumlarının hususi olarak değerlendirilmesi gereklidir.",
             ),
             _buildSoruHeader(
-              "<b>Kaçış merdivenleri</b> birbirine göre nasıl konumlanmış?",
+              "Kaçış merdivenleri birbirine göre nasıl konumlanmış?",
             ),
             _buildSoruCard('konum', [
               Bolum36Content.konumOptionA,
@@ -1021,7 +1011,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                   child: SwitchListTile(
                     value: _areWidthsSame,
                     title: const Text(
-                      "Binada merdiven ve koridor genişlikleri <b>aynıdır</b>.",
+                      "Binada merdiven ve koridor genişlikleri aynıdır.",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -1051,7 +1041,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                         const SizedBox(width: 12),
                         const Expanded(
                           child: Text(
-                            "Bodrum kat merdivenleri, koridorları ve kapıları <b>üst katlarla</b> AYNI genişliktedir.",
+                            "Bodrum kat merdivenleri, koridorları ve kapıları üst katlarla AYNI genişliktedir.",
                             style: TextStyle(
                               fontSize: 13,
                               color: Colors.black54,
@@ -1072,7 +1062,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                   _buildInput(
                     _areWidthsSame
                         ? "Korunumlu Merdiven/Koridor Genişliği"
-                        : "<b>Korunumlu</b> Merdiven Genişliği",
+                        : "Korunumlu Merdiven Genişliği",
                     _genislikKorunumluCtrl,
                     _genislikBilinmiyor,
                     _genKerr,
@@ -1090,7 +1080,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                   _buildInput(
                     _areWidthsSame
                         ? "Korunumsuz Merdiven/Koridor Genişliği"
-                        : "<b>Korunumsuz</b> Merdiven Genişliği",
+                        : "Korunumsuz Merdiven Genişliği",
                     _genislikKorunumsuzCtrl,
                     _genislikBilinmiyor,
                     _genKSerr,
@@ -1121,7 +1111,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               ],
             ),
           ),
-          _buildSoruHeader("Katınızdaki çıkış kapılarının <b>tipi</b> nedir?"),
+          _buildSoruHeader("Katınızdaki çıkış kapılarının tipi nedir?"),
           _buildSoruCard('kapiTipi', [
             Bolum36Content.kapiTipiOptionA,
             Bolum36Content.kapiTipiOptionB,
@@ -1136,14 +1126,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               children: [
                 if (_hasKorunumlu)
                   _buildInput(
-                    "<b>Korunumlu</b> Merdiven Kapı Genişliği",
+                    "Korunumlu Merdiven Kapı Genişliği",
                     _kapiGenislikKorunumluCtrl,
                     _kapiGenislikBilinmiyor,
                     _kGenKerr,
                   ),
                 if (_hasKorunumsuz)
                   _buildInput(
-                    "<b>Korunumsuz</b> Merdiven Kapı Genişliği",
+                    "Korunumsuz Merdiven Kapı Genişliği",
                     _kapiGenislikKorunumsuzCtrl,
                     _kapiGenislikBilinmiyor,
                     _kGenKSerr,
@@ -1178,7 +1168,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildSoruHeader(
-                  "Toplam $_totalValidCikisSayisi merdivenin kaç tanesi <b>doğrudan</b> bina dışına (havaya) açılıyor?",
+                  "Toplam $_totalValidCikisSayisi merdivenin kaç tanesi doğrudan bina dışına (havaya) açılıyor?",
                   isMain: false,
                 ),
                 _buildInput(
@@ -1200,7 +1190,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildInfoNote(
-                            "Binada ${hasSprinkler ? "Sprinkler <b>VAR</b>" : "Sprinkler <b>YOK</b>"}. Bu durumda lobi tahliye mesafesi en fazla $limit metre olabilir.",
+                            "Binada ${hasSprinkler ? "Sprinkler VAR" : "Sprinkler YOK"}. Bu durumda lobi tahliye mesafesi en fazla $limit metre olabilir.",
                           ),
                           _buildSoruHeader(
                             "Dışarı açılmayan merdivenlerin lobi/koridor içindeki tahliye mesafesi kaç metredir?",

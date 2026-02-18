@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum17Screen extends StatefulWidget {
   const Bolum17Screen({super.key});
@@ -77,7 +78,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       child: Column(
         children: [
           _buildSoru(
-            "Çatınızın <b>en üst</b> katmanında hangi malzeme kullanılıyor?",
+            "Çatınızın en üst katmanında hangi malzeme kullanılıyor?",
             'kaplama',
             [
               Bolum17Content.kaplamaOptionA,
@@ -91,7 +92,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
           ),
 
           _buildSoru(
-            "Çatıyı taşıyan iskelet ve altındaki <b>ısı yalıtımı</b> nedir?",
+            "Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?",
             'iskelet',
             [
               Bolum17Content.iskeletOptionA,
@@ -103,7 +104,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
 
           if (_askBitisik)
             _buildSoru(
-              "Çatılar arasında yangını kesecek bir <b>duvar</b> var mı?",
+              "Çatılar arasında yangını kesecek bir duvar var mı?",
               'duvar',
               [
                 Bolum17Content.bitisikOptionA,
@@ -114,7 +115,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
             ),
 
           _buildSoru(
-            "Çatınızda camlı <b>ışıklık</b> veya aydınlatma kubbesi var mı?",
+            "Çatınızda camlı ışıklık veya aydınlatma kubbesi var mı?",
             'isiklik',
             [
               Bolum17Content.isiklikOptionA,
@@ -130,11 +131,11 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Işıklık malzemesi nedir?",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: AppStyles.questionTitle,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   // Temperli Cam seçeneği
                   InkWell(
                     onTap: () => setState(
@@ -142,7 +143,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                     ),
                     child: Container(
                       padding: const EdgeInsets.all(12),
-                      margin: const EdgeInsets.only(bottom: 8),
+                      margin: const EdgeInsets.only(bottom: 0),
                       decoration: BoxDecoration(
                         color: _model.isiklikMalzemesi == "cam"
                             ? const Color(0xFF1A237E).withOpacity(0.1)
@@ -168,7 +169,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           ),
                           const Expanded(
                             child: Text(
-                              "<b>Temperli</b> ve <b>yangına dayanıklı</b> cam ışıklık",
+                              "Temperli ve yangına dayanıklı cam ışıklık",
                               style: TextStyle(fontSize: 14),
                             ),
                           ),
@@ -209,7 +210,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           ),
                           const Expanded(
                             child: Text(
-                              "Plastik, Pleksi veya <b>Polikarbon</b> ışıklık",
+                              "Plastik, Pleksi veya Polikarbon ışıklık",
                               style: TextStyle(fontSize: 14),
                             ),
                           ),

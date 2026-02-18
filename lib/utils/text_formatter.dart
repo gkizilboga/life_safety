@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class TextFormatter {
-  /// Parses a string containing <b>...</b> tags and returns a TextSpan.
+  /// Parses a string containing ... tags and returns a TextSpan.
   static TextSpan parse(
     String text, {
     required TextStyle baseStyle,
     TextStyle? boldStyle,
   }) {
     final List<InlineSpan> spans = [];
-    final RegExp regExp = RegExp(r'<b>(.*?)</b>', dotAll: true);
+    final RegExp regExp = RegExp(r'(.*?)', dotAll: true);
 
     int lastMatchEnd = 0;
     final matches = regExp.allMatches(text);
@@ -44,7 +44,7 @@ class TextFormatter {
   }
 }
 
-/// A widget that renders text with <b> tags support.
+/// A widget that renders text with  tags support.
 class FormattedText extends StatelessWidget {
   final String text;
   final TextStyle? style;

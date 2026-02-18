@@ -12,13 +12,17 @@ class ChoiceResult {
     required this.reportText,
     this.adviceText,
   });
-  
+
+  factory ChoiceResult.empty() {
+    return ChoiceResult(label: '', uiTitle: '', uiSubtitle: '', reportText: '');
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     return other is ChoiceResult && other.label == label;
   }
-  
+
   @override
   int get hashCode => label.hashCode;
 }

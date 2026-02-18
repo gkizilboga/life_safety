@@ -120,7 +120,7 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
       child: Column(
         children: [
           _buildSoru(
-            "Evinizin içindeki <b>en uzak</b> odadan daire <b>giriş kapısına</b> kadar olan mesafe ne kadardır?",
+            "Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?",
             'mesafe',
             [
               Bolum28Content.mesafeOptionA,
@@ -130,7 +130,7 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
             _model.mesafe,
           ),
 
-          _buildSoru("Daireniz <b>dubleks</b> (iki katlı) mi?", 'dubleks', [
+          _buildSoru("Daireniz dubleks (iki katlı) mi?", 'dubleks', [
             Bolum28Content.dubleksOptionA,
             Bolum28Content.dubleksOptionB,
           ], _model.dubleks),
@@ -140,7 +140,7 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
               "Dubleks daire seçildiği için üst kat alan bilgisi gereklidir.",
             ),
             _buildSoru(
-              "Üst katınızın alanı <b>70 m²'den</b> büyük mü?",
+              "Üst katınızın alanı 70 m²'den büyük mü?",
               'alan',
               [Bolum28Content.alanOption1, Bolum28Content.alanOption2],
               _model.alan,
@@ -152,7 +152,7 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
               "70 m² üzeri dublekslerde ikinci çıkış kapısı sorgulanmaktadır.",
             ),
             _buildSoru(
-              "Üst kattan apartman koridoruna açılan <b>ikinci</b> bir çelik kapı(çıkış) var mı?",
+              "Üst kattan apartman koridoruna açılan ikinci bir çelik kapı(çıkış) var mı?",
               'cikis',
               [Bolum28Content.cikisOptionA, Bolum28Content.cikisOptionB],
               _model.cikis,

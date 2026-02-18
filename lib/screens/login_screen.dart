@@ -12,6 +12,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _surnameCtrl = TextEditingController();
   bool _isLoading = false;
 
   @override
@@ -46,16 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     size: 60,
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "LIFE SAFETY",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                      letterSpacing: 4,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   const Text(
                     "GİRİŞ YAPIN",
                     textAlign: TextAlign.center,
@@ -93,6 +85,29 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: 30),
+
+                  // Name & Surname (Optional)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildInput(
+                          "Ad (İsteğe bağlı)",
+                          _nameCtrl,
+                          Icons.person_outline,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildInput(
+                          "Soyad (İsteğe bağlı)",
+                          _surnameCtrl,
+                          Icons.person_outline,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
 
                   // Email Input
                   _buildInput(
@@ -210,7 +225,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() => _isLoading = true);
     try {
-      await AuthService.signInWithEmail(_emailCtrl.text.trim());
+      final String fullName =
+          "${_nameCtrl.text.trim()} ${_surnameCtrl.text.trim()}".trim();
+
+      await AuthService.signInWithEmail(
+        _emailCtrl.text.trim(),
+        name: fullName.isNotEmpty ? fullName : null,
+      );
       if (mounted) {
         Navigator.pushReplacement(
           context,

@@ -598,13 +598,13 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         children: [
           if (_isTekKatli) ...[
             _buildSoru(
-              "Binadan <b>dışarıya</b> (sokağa veya caddeye) çıkışınız nasıl?",
+              "Binadan dışarıya (sokağa veya caddeye) çıkışınız nasıl?",
               'tekKatCikis',
               [Bolum20Content.tekKatOptionA],
               _model.tekKatCikis,
             ),
             _buildSoru(
-              "Binadan dışarıya çıkarken <b>rampa</b> kullanmak zorunda kalıyor musunuz?",
+              "Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?",
               'tekKatRampa',
               [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC],
               _model.tekKatRampa,
@@ -627,21 +627,21 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     error: _normalErr,
                     assetPath: AppAssets.section20Normal,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption2.uiTitle,
                     ctrl: _icKapaliCtrl,
                     error: _icKapaliErr,
                     assetPath: AppAssets.section20IcKapali,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption3.uiTitle,
                     ctrl: _disKapaliCtrl,
                     error: _disKapaliErr,
                     assetPath: AppAssets.section20DisKapali,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption4.uiTitle,
                     ctrl: _disAcikCtrl,
@@ -651,20 +651,20 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                       AppAssets.section20DisAcik2,
                     ],
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption5.uiTitle,
                     ctrl: _donerCtrl,
                     error: _donerErr,
                     assetPath: AppAssets.section20Dairesel,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption6.uiTitle,
                     ctrl: _sahanliksizCtrl,
                     error: _sahanliksizErr,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: Bolum20Content.cokKatOption7.uiTitle,
                     ctrl: _dengelenmisCtrl,
@@ -701,11 +701,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               children: [
                 const Text(
                   'Merdiven Sınıflandırması',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A237E),
-                  ),
+                  style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 12),
                 _buildClassificationRow(
@@ -730,7 +726,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
           if (_hasBodrum)
             _buildSoru(
-              "Bodrum kata inen merdiveniniz, <b>üst katlara</b> çıkan merdivenin devamı mı?",
+              "Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?",
               'bodrum',
               [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB],
               _model.bodrumMerdivenDevami,
@@ -741,7 +737,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             const Padding(
               padding: EdgeInsets.only(left: 4, bottom: 16, top: 20),
               child: Text(
-                "<b>Bodrum Katlar</b> İçin Özel Merdiven Bilgileri",
+                "Bodrum Katlar İçin Özel Merdiven Bilgileri",
                 style: AppStyles
                     .questionTitle, // Fixed style: headerTitle was white on white
               ),
@@ -760,7 +756,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      "<b>Bağımsız</b> olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
+                      "Bağımsız olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
                       style: TextStyle(color: Colors.black87, fontSize: 13),
                     ),
                   ),
@@ -775,37 +771,37 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     ctrl: _bodNormalCtrl,
                     error: _bodNormalErr,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: "Bodrum: ${Bolum20Content.cokKatOption2.uiTitle}",
                     ctrl: _bodIcKapaliCtrl,
                     error: _bodIcKapaliErr,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: "Bodrum: ${Bolum20Content.cokKatOption3.uiTitle}",
                     ctrl: _bodDisKapaliCtrl,
                     error: _bodDisKapaliErr,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: "Bodrum: ${Bolum20Content.cokKatOption4.uiTitle}",
                     ctrl: _bodDisAcikCtrl,
                     error: _bodDisAcikErr,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: "Bodrum: ${Bolum20Content.cokKatOption5.uiTitle}",
                     ctrl: _bodDonerCtrl,
                     error: _bodDonerErr,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: "Bodrum: ${Bolum20Content.cokKatOption6.uiTitle}",
                     ctrl: _bodSahanliksizCtrl,
                     error: _bodSahanliksizErr,
                   ),
-                  const Divider(height: 32),
+                  const Divider(height: 16),
                   _buildStairInputGroup(
                     label: "Bodrum: ${Bolum20Content.cokKatOption7.uiTitle}",
                     ctrl: _bodDengelenmisCtrl,
@@ -828,7 +824,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
           if (_hasDairesel)
             _buildSoru(
-              "Binadaki <b>dairesel</b> merdivenin yüksekliği nedir?",
+              "Binadaki dairesel merdivenin yüksekliği nedir?",
               'daireselH',
               [
                 Bolum20Content.daireselYukseklikOptionA,
@@ -840,7 +836,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
 
           if (_showBasinclandirma)
             _buildSoruWithDef(
-              "Merdivenlerde <b>basınçlandırma</b> sistemi var mı?",
+              "Merdivenlerde basınçlandırma sistemi var mı?",
               AppDefinitions.basinclandirma,
               "Basınçlandırma Sistemi",
               'basinclandirma',
@@ -855,7 +851,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           // Havalandırma Question (Madde 45) - Always shown for multi-story
           if (!_isTekKatli)
             _buildSoruWithDef(
-              "Merdivenlerde doğal <b>havalandırma</b> var mı?",
+              "Merdivenlerde doğal havalandırma var mı?",
               AppDefinitions.havalandirma,
               "Havalandırma (Madde 45)",
               'havalandirma',
@@ -955,7 +951,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
         ? "Bodrum Kat: Dışarıya Açılan Merdivenler"
         : "Dışarıya Açılan Merdivenler";
     String desc =
-        "Bu $total adet merdivenden kaç tanesi <b>doğrudan dışarı</b> (bina dışına) açılmaktadır?";
+        "Bu $total adet merdivenden kaç tanesi doğrudan dışarı (bina dışına) açılmaktadır?";
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -969,14 +965,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: isBasement ? Colors.orange[800] : const Color(0xFF1565C0),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 8),
           Text(desc, style: const TextStyle(fontSize: 14)),
           const SizedBox(height: 12),
@@ -1096,14 +1085,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: isBasement ? Colors.orange[800] : const Color(0xFF1565C0),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 8),
           Text(question, style: const TextStyle(fontSize: 14)),
           const SizedBox(height: 12),

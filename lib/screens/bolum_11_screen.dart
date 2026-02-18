@@ -57,7 +57,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "İtfaiyenin Bina Yaklaşım Mesafesi",
+      title: "İtfaiyenin Binaya Yaklaşım Mesafesi",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
@@ -72,7 +72,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSoru(
-            "İtfaiye aracının binaya yaklaşım mesafesi <b>45 metreyi</b> aşıyor mu?",
+            "İtfaiye aracının binaya yaklaşım mesafesi 45 metreyi aşıyor mu?",
             'mesafe',
             [
               Bolum11Content.mesafeOptionA,

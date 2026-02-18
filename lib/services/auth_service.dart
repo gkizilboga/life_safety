@@ -26,10 +26,13 @@ class AuthService {
   }
 
   /// Handles manual email login (Simulated/Local only)
-  static Future<void> signInWithEmail(String email) async {
-    // In a real app without Firebase, this might call a custom API.
-    // Here we just accept the email and mark the user as registered.
-    BinaStore.instance.userName = email.split('@')[0]; // Simple nickname
+  static Future<void> signInWithEmail(String email, {String? name}) async {
+    // If name is provided, use it. Otherwise fallback to email prefix.
+    if (name != null && name.trim().isNotEmpty) {
+      BinaStore.instance.userName = name.trim();
+    } else {
+      BinaStore.instance.userName = email.split('@')[0];
+    }
     BinaStore.instance.isRegistered = true;
     await BinaStore.instance.saveToDisk(immediate: true);
   }

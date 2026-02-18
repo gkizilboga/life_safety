@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'bolum_1_screen.dart';
 import '../data/bina_store.dart';
 import '../data/turkiye_data.dart';
+import 'package:flutter/gestures.dart';
 import '../utils/turkish_utils.dart';
+import '../utils/app_strings.dart';
 
 class BuildingSetupScreen extends StatefulWidget {
   const BuildingSetupScreen({super.key});
@@ -145,6 +147,27 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
     );
   }
 
+  void _showContentDialog(String title, String content) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Text(content, style: const TextStyle(fontSize: 14)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("KAPAT"),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildLabel(String text) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8),
@@ -270,9 +293,46 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
         value: _isAgreed,
         onChanged: (val) => setState(() => _isAgreed = val ?? false),
         activeColor: const Color(0xFF1A237E),
-        title: const Text(
-          "Verilerimin anonim olarak istatistiksel amaçla kullanılmasını, Aydınlatma Metni ve Kullanım Şartlarını onaylıyorum.",
-          style: TextStyle(fontSize: 12, color: Colors.black87, height: 1.4),
+        title: Text.rich(
+          TextSpan(
+            text:
+                "Verilerimin anonim olarak istatistiksel amaçla kullanılmasını, ",
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.black87,
+              height: 1.4,
+            ),
+            children: [
+              TextSpan(
+                text: "Aydınlatma Metni",
+                style: const TextStyle(
+                  color: Color(0xFF1A237E),
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => _showContentDialog(
+                    AppStrings.kvkkTitle,
+                    AppStrings.kvkkContent,
+                  ),
+              ),
+              const TextSpan(text: " ve "),
+              TextSpan(
+                text: "Kullanım Şartlarını",
+                style: const TextStyle(
+                  color: Color(0xFF1A237E),
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => _showContentDialog(
+                    AppStrings.legalDisclaimerTitle,
+                    AppStrings.legalDisclaimerContent,
+                  ),
+              ),
+              const TextSpan(text: " onaylıyorum."),
+            ],
+          ),
         ),
         controlAffinity: ListTileControlAffinity.leading,
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),

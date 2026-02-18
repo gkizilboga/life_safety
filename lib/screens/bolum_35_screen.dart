@@ -164,7 +164,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
         children: [
           if (_tekCikis) ...[
             _buildSoruHeaderWithDef(
-              "Daire kapınızdan çıktığınızda kattaki <b>merdiven kapısına</b> kadar olan mesafe kaç metredir?",
+              "Daire kapınızdan çıktığınızda kattaki merdiven kapısına kadar olan mesafe kaç metredir?",
               "Kaçış Mesafesi",
               AppDefinitions.kacisMesafesi,
             ),
@@ -202,7 +202,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
             ],
           ] else ...[
             _buildSoruHeaderWithDef(
-              "Daire kapınızdan çıktığınızda, size EN YAKIN <b>merdivene</b> olan mesafe kaç metredir?",
+              "Daire kapınızdan çıktığınızda, size EN YAKIN merdivene olan mesafe kaç metredir?",
               "Kaçış Mesafesi",
               AppDefinitions.kacisMesafesi,
             ),

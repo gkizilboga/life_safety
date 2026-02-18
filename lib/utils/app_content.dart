@@ -1,4 +1,4 @@
-﻿import 'package:life_safety/models/choice_result.dart';
+import 'package:life_safety/models/choice_result.dart';
 
 class Bolum1Content {
   static final ruhsatSonrasi = ChoiceResult(
@@ -166,7 +166,7 @@ class Bolum6Content {
 
   static final ticariVar = ChoiceResult(
     label: "6-1-B (Ticari)",
-    uiTitle: "Binada konut haricinde <b>ticari</b> alanlar bulunmaktadır.",
+    uiTitle: "Binada konut haricinde ticari alanlar bulunmaktadır.",
     uiSubtitle: "Dükkan, mağaza, kafe, ofis, her türlü işyeri vb.",
     reportText:
         "BİLGİ: Binada konut harici ticari kullanım (işyerleri vb.) mevcuttur. Karma kullanımlı binalarda, ticari alanların konutlardan yangın duvarı ile ayrılması önerilmektedir. Özellikle içerisinde endüstriyel mutfak bulunan işletmelerin binanın diğer bölümlerinden ayrılması ve yönetmelikçe belirlenen önlemlerin alınması şiddetle önerilir.",
@@ -174,7 +174,7 @@ class Bolum6Content {
 
   static final depoVar = ChoiceResult(
     label: "6-1-C (Depo)",
-    uiTitle: "Binada <b>depolama</b> alanları bulunmaktadır.",
+    uiTitle: "Binada depolama alanları bulunmaktadır.",
     uiSubtitle: "Apartman sakinlerine ait (ortak) eşya deposu.",
     reportText:
         "BİLGİ: Binada konutlara ait ortak depo alanı bulunmaktadır. Depolanan malzemeler yangın yükleri sebebiyle risk oluşturur, depolama alanlarında ek önlemler alınması gereklidir.",
@@ -183,7 +183,7 @@ class Bolum6Content {
   static final sadeceKonut = ChoiceResult(
     label: "6-1-D (Sadece Konut)",
     uiTitle:
-        "Binada konut amacı dışında kullanılan herhangi bir alan <b>yok</b>.",
+        "Binada konut amacı dışında kullanılan herhangi bir alan yok.",
     uiSubtitle: "Sadece daireler var.",
     reportText:
         "BİLGİ: Bina sadece konut amaçlı kullanılmaktadır. Ekstra yangın yükü oluşturabilecek bir fonksiyon bulunmamaktadır. Konut risklerine göre alınacak yangın güvenlik önlemleri yeterli olacaktır.",
@@ -191,7 +191,7 @@ class Bolum6Content {
 
   static final otoparkKapali = ChoiceResult(
     label: "6-2-A (Otopark Tipi)",
-    uiTitle: "Otoparkın tavanı, tabanı ve tüm yan duvarları <b>kapalı</b>.",
+    uiTitle: "Otoparkın tavanı, tabanı ve tüm yan duvarları kapalı.",
     uiSubtitle: "Otopark, toprak altında veya duvarları örülü biçimdedir.",
     reportText:
         "BİLGİ (KAPALI OTOPARK): Otoparkın doğal havalandırma imkanı olmadığı için \"Kapalı Otopark\"statüsündedir. Yönetmeliğe göre kapalı otoparklarda alınması gereken, algılama, söndürme, duman tahliye vb. gibi önlemler değerlendirilmeli, elektrik araç şarj istasyonları vs. bulunması halinde mevcut duruma göre, Yönetmelik'te henüz işlenmeyen ancak Yangın Güvenlik Uzmanı tarafından belirlenebilecek ekstra önlemler alınması önerilir. ",
@@ -208,7 +208,7 @@ class Bolum6Content {
   static final otoparkYariAcik = ChoiceResult(
     label: "6-2-C (Otopark Tipi)",
     uiTitle:
-        "Otoparkın sadece TEK CEPHESİNDE <b>açıklık</b> var. Diğer cepheleri duvarla örülü.",
+        "Otoparkın sadece TEK CEPHESİNDE açıklık var. Diğer cepheleri duvarla örülü.",
     uiSubtitle: "",
     reportText:
         "BİLGİ: (YARI AÇIK OTOPARK): Otoparkta sadece tek cephede açıklık olması duman tahliyesi ve havalandırma için yeterli değildir. \"Kapalı Otopark\"kuralları geçerlidir.",
@@ -311,7 +311,7 @@ class Bolum7Content {
 class Bolum8Content {
   static final ayrikNizam = ChoiceResult(
     label: "8-1-A",
-    uiTitle: "<b>Ayrık</b> Nizam",
+    uiTitle: "Ayrık Nizam",
     uiSubtitle:
         "Binanın dört cephesi de açıktır, herhangi bir binaya yapışık veya bitişik değildir.",
     reportText:
@@ -320,7 +320,7 @@ class Bolum8Content {
 
   static final bitisikNizam = ChoiceResult(
     label: "8-1-B",
-    uiTitle: "<b>Bitişik</b> Nizam",
+    uiTitle: "Bitişik Nizam",
     uiSubtitle: "Binanın en az bir cephesi yan binaya yapışık veya bitişiktir.",
     reportText:
         "BİLGİ: Bina BİTİŞİK NİZAM olarak beyan edilmiştir. Bitişik nizam yapılarda, komşu bina ile ortak kullanılan duvarların yangın dayanım özelliği ve çatı birleşim detayları kritik öneme sahiptir.",
@@ -330,7 +330,7 @@ class Bolum8Content {
 class Bolum9Content {
   static final tamKapsam = ChoiceResult(
     label: "9-1-A",
-    uiTitle: "Evet, <b>tüm binada</b> otomatik söndürme sistemi var.",
+    uiTitle: "Evet, tüm binada otomatik söndürme sistemi var.",
     uiSubtitle: "Daireler, koridorlar, (varsa) dükkanlar, otopark dahil.",
     reportText:
         "BİLGİ: Binanın tüm katlarında ve tüm alanlarında otomatik yağmurlama (sprinkler) sistemi mevcuttur. Bu sistem, yangın anında kaçış mesafesi toleransını artırır ve yangın güvenliğini daha üst seviyeye taşır.",
@@ -363,21 +363,21 @@ class Bolum10Content {
 
   static final azYogunTicari = ChoiceResult(
     label: "10-B",
-    uiTitle: "<b>Az</b> yoğun ticari alan.",
+    uiTitle: "Az yoğun ticari alan.",
     uiSubtitle: "Büro, ofis, oto galeri vb.",
     reportText: "(Kullanıcı yükü hesabında 10 m²/kişi alınır.)",
   );
 
   static final ortaYogunTicari = ChoiceResult(
     label: "10-C",
-    uiTitle: "<b>Orta</b> yoğun ticari alan.",
+    uiTitle: "Orta yoğun ticari alan.",
     uiSubtitle: "Market, mağaza, dükkan, banka şubesi vb.",
     reportText: "(Kullanıcı yükü hesabında 5 m²/kişi alınır.)",
   );
 
   static final yuksekYogunTicari = ChoiceResult(
     label: "10-D",
-    uiTitle: "<b>Yüksek</b> yoğun ticari alan.",
+    uiTitle: "Yüksek yoğun ticari alan.",
     uiSubtitle: "Restaurant, kafe, spor salonu vb.",
     reportText: "(Kullanıcı yükü hesabında 1.5 m²/kişi alınır.)",
   );
@@ -396,7 +396,7 @@ class Bolum11Content {
     label: "11-1-A",
     uiTitle: "Hayır, aşmıyor.",
     uiSubtitle:
-        "İtfaiye aracı binanın tüm cephelerine 45 metre içerisinde <b>ulaşabilmektedir</b>.",
+        "İtfaiye aracı binanın tüm cephelerine 45 metre içerisinde ulaşabilmektedir.",
     reportText:
         "OLUMLU: İtfaiye yaklaşım mesafesi yeterli (tüm cepheler 45 metre menzil içerisinde) gözükmektedir. Bunun yanısıra itfaiyenin manevra yapabileceği alanların yeterli olup olmadığı yerinde kontrol edilmesi önerilir.",
   );
@@ -405,7 +405,7 @@ class Bolum11Content {
     label: "11-1-B",
     uiTitle: "Evet, aşıyor.",
     uiSubtitle:
-        "İtfaiye aracı binanın tüm cephelerine 45 metre içerisinde <b>ulaşamaz</b>.",
+        "İtfaiye aracı binanın tüm cephelerine 45 metre içerisinde ulaşamaz.",
     reportText:
         "KRİTİK RİSK: İtfaiye yaklaşım mesafesi sınırın üzerindedir. Yönetmeliğe göre itfaiye aracı, binanın her cephesine (arka cepheler dahil) en fazla 45 metre mesafede yaklaşabilmelidir. Mevcut durumda binanın bazı cephelerine müdahale edilemeyebilir. Bunun yanısıra itfaiyenin manevra yapabileceği alanın yeterli olup olmadığı yerinde kontrol edilmesi önerilir.",
   );
@@ -430,7 +430,7 @@ class Bolum11Content {
 
   static final engelOptionB = ChoiceResult(
     label: "11-2-B",
-    uiTitle: "Evet, duvar, kapı, çit gibi <b>engel</b> mevcut.",
+    uiTitle: "Evet, duvar, kapı, çit gibi engel mevcut.",
     uiSubtitle: "İtfaiye aracı binaya kolayca erişemiyor.",
     reportText:
         "KRİTİK RİSK: İtfaiye erişimini zorlaştıran fiziksel engeller (duvar, kapı vs.) tespit edilmiştir. Bu engellerin kaldırılması veya yıkılabilir geçiş bölgesi oluşturulması gerekmektedir.",
@@ -499,7 +499,7 @@ class Bolum12Content {
 
   static final betonOptionB = ChoiceResult(
     label: "12-B (Beton)",
-    uiTitle: "Binadaki paspayı ölçülerini <b>biliyorum</b>, kendim gireceğim.",
+    uiTitle: "Binadaki paspayı ölçülerini biliyorum, kendim gireceğim.",
     uiSubtitle:
         "Betonun içindeki demiri örten tabaka kalınlıklarını manuel gireceğim.",
     reportText: "(Girilen değerlere göre otomatik analiz edilir)",
@@ -508,7 +508,7 @@ class Bolum12Content {
   // YENİ EKLENEN C ŞIKKI
   static final betonOptionC = ChoiceResult(
     label: "12-C (Beton)",
-    uiTitle: "Bina yapım tarihimiz <b>2000 yılı</b> öncesi.",
+    uiTitle: "Bina yapım tarihimiz 2000 yılı öncesi.",
     uiSubtitle:
         "Eski standartlara göre inşa edilen yapılarda paspayı koruması zayıf olabilir.",
     reportText:
@@ -555,7 +555,7 @@ class Bolum13Content {
   static final otoparkOptionA = ChoiceResult(
     label: "13-1-A (Otopark)",
     uiTitle:
-        "Yangına <b>dayanıklı</b>, duman sızdırmaz, kendiliğinden kapanan yangın kapısı var.",
+        "Yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan yangın kapısı var.",
     uiSubtitle: "Duvarları da yangına dayanıklı",
     reportText:
         "OLUMLU: Otopark ile bina arasındaki geçişte yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan yangın kapısı mevcuttur. Bu kapı, olası bir araç yangınında dumanın merdiven boşluğuna dolmasını engelleyerek kaçış güvenliğini sağlar.",
@@ -564,7 +564,7 @@ class Bolum13Content {
   static final otoparkOptionB = ChoiceResult(
     label: "13-1-B (Otopark)",
     uiTitle:
-        "Yangına <b>dayanıksız</b> sac, demir, plastik, aluminyum, ahşap vb. kapı var.",
+        "Yangına dayanıksız sac, demir, plastik, aluminyum, ahşap vb. kapı var.",
     uiSubtitle: "Veya duvarları yangına dayanıklı değil",
     reportText:
         "KRİTİK RİSK: Otopark kapısı yangına dayanıksızdır. Yönetmelik gereği bu kapı en az 90 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanan bir kapı olmalıdır. Mevcut kapı, yangın anında ısı ve dumanı saniyeler içinde yaşam alanlarına geçirebilir.",
@@ -572,7 +572,7 @@ class Bolum13Content {
 
   static final otoparkOptionC = ChoiceResult(
     label: "13-1-C (Otopark)",
-    uiTitle: "Arada kapı yok, direkt <b>açık</b> (serbest) geçiş var.",
+    uiTitle: "Arada kapı yok, direkt açık (serbest) geçiş var.",
     uiSubtitle:
         "Otopark ile merdiven (veya asansör holü) arasında herhangi bir yangın kapısı bulunmuyor.",
     reportText:
@@ -590,7 +590,7 @@ class Bolum13Content {
   static final kazanOptionA = ChoiceResult(
     label: "13-2-A (Kazan D.)",
     uiTitle:
-        "Yangına <b>dayanıklı</b>, duman sızdırmaz, kendiliğinden kapanan yangın kapısı ve dışarıya doğru açılmaktadır.",
+        "Yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan yangın kapısı ve dışarıya doğru açılmaktadır.",
     uiSubtitle: "Duvarları yangına dayanıklı",
     reportText:
         "OLUMLU: Kazan dairesi kompartımantasyonu ve kapı özellikleri uygun gözükmektedir. Kazan dairesi duvarları yangına en az 120 dk, kapıları en az 90dk. yangın dayanıma sahip olması gereklidir. Aksi halde burada olası bir yangın hızlıca bina içerisine sirayet edebilir.",
@@ -599,7 +599,7 @@ class Bolum13Content {
   static final kazanOptionB = ChoiceResult(
     label: "13-2-B (Kazan D.)",
     uiTitle:
-        "Kapısı <b>dayanıksız</b> sac, plastik, ahşap, cam veya kapı içeriye doğru açılıyor.",
+        "Kapısı dayanıksız sac, plastik, ahşap, cam veya kapı içeriye doğru açılıyor.",
     uiSubtitle: "Veya duvarları yangına dayanıklı değil",
     reportText:
         "KRİTİK RİSK: Kazan dairesi kapısı yangına dayanıklı olmalı ve kaçış yönüne (dışarıya) açılması önerilir. İçeri açılan kapılar, patlama veya panik anında basınç nedeniyle açılamaz hale gelerek içeridekileri hapsedebilir.",
@@ -611,7 +611,7 @@ class Bolum13Content {
     label: "13-2-C (Kazan D.)",
     uiTitle: "Kazan dairesi binadan tamamen ayrı bir yerde.",
     uiSubtitle:
-        "Kazan dairesi bina kütlesinin <b>dışında</b>, bahçede veya <b>ayrı</b> bir yapıdadır.",
+        "Kazan dairesi bina kütlesinin dışında, bahçede veya ayrı bir yapıdadır.",
     reportText:
         "OLUMLU: Kazan dairesi binadan ayrı bir yerdedir. Olası bir yangında veya patlamada binaya etkisi az olacaktır.",
   );
@@ -626,7 +626,7 @@ class Bolum13Content {
 
   static final asansorOptionA = ChoiceResult(
     label: "13-3-A (Asansör)",
-    uiTitle: "Asansör kat / kabin kapıları yangına <b>dayanıklı</b>.",
+    uiTitle: "Asansör kat / kabin kapıları yangına dayanıklı.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Asansör kat / kabin kapılarının yangına dayanıklı oldukları beyan edilmiştir. Kapıların test raporu Uzman tarafından incelenerek uygunluğuna karar verilir.",
@@ -634,7 +634,7 @@ class Bolum13Content {
 
   static final asansorOptionB = ChoiceResult(
     label: "13-3-B (Asansör)",
-    uiTitle: "Asansör kat / kabin kapıları yangına dayanıklı <b>değil</b>.",
+    uiTitle: "Asansör kat / kabin kapıları yangına dayanıklı değil.",
     uiSubtitle: "",
     reportText:
         "UYARI: Asansör kat / kabin kapıları yangına dayanıklı değildir. Makine daireleri yangın riski taşır, kapısı dayanıklı olmalıdır.",
@@ -651,7 +651,7 @@ class Bolum13Content {
   static final jeneratorOptionA = ChoiceResult(
     label: "13-5-A (Jeneratör)",
     uiTitle:
-        "Yangına <b>dayanıklı</b>, duman sızdırmaz, kendiliğinden kapanan yangın kapısı var.",
+        "Yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan yangın kapısı var.",
     uiSubtitle: "Duvarları yangına dayanıklı",
     reportText:
         "OLUMLU: Jeneratör odası yangına dayanıklı duvar ve kapı ile ayrılmıştır. Oda kapısının yangın dayanım test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.",
@@ -660,7 +660,7 @@ class Bolum13Content {
   static final jeneratorOptionB = ChoiceResult(
     label: "13-5-B (Jeneratör)",
     uiTitle:
-        "Yangına <b>dayanıksız</b> sac, plastik, ahşap, cam veya kapı içeriye doğru açılıyor.",
+        "Yangına dayanıksız sac, plastik, ahşap, cam veya kapı içeriye doğru açılıyor.",
     uiSubtitle: "Veya duvarları yangına dayanıklı değil",
     reportText:
         "KRİTİK RİSK: Jeneratör odasında yer alan yakıtın alev alma riski bulunur, bu mahal yangın dayanımlı duvar ve yangın kapısı ile binanında geri kalanından ayrılmalıdır.",
@@ -677,7 +677,7 @@ class Bolum13Content {
   static final elekOdasiOptionA = ChoiceResult(
     label: "13-6-A (Elektrik Odası)",
     uiTitle:
-        "Yangına <b>dayanıklı</b>, duman sızdırmaz, kendiliğinden kapanan kapı.",
+        "Yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan kapı.",
     uiSubtitle: "Duvarları yangına dayanıklı",
     reportText:
         "OLUMLU: Elektrik odası yangına dayanıklı ve duman sızdırmaz kapı ile korunmaktadır. Oda kapısının yangın dayanım test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.",
@@ -685,7 +685,7 @@ class Bolum13Content {
 
   static final elekOdasiOptionB = ChoiceResult(
     label: "13-6-B (Elektrik Odası)",
-    uiTitle: "Yangına <b>dayanıksız</b> sac, demir, plastik, ahşap, cam kapı.",
+    uiTitle: "Yangına dayanıksız sac, demir, plastik, ahşap, cam kapı.",
     uiSubtitle: "Veya duvarları yangına dayanıklı değil",
     reportText:
         "UYARI: Elektrik odaları yangın başlangıç noktası olma ihtimali yüksektir, yangın dayanım özellikleri olması şarttır.",
@@ -702,7 +702,7 @@ class Bolum13Content {
   static final trafoOptionA = ChoiceResult(
     label: "13-7-A (Trafo)",
     uiTitle:
-        "Yangına <b>dayanıklı</b>, duman sızdırmaz, kendiliğinden kapanan kapı.",
+        "Yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan kapı.",
     uiSubtitle: "Duvarları yangına dayanıklı",
     reportText:
         "OLUMLU: Trafo odasının kapısı kilitli, yangına dayanıklı ve duman sızdırmaz özelliklidir.Yağlı tip trafo kullanılıyorsa oda kapısının yangın dayanım test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.",
@@ -710,7 +710,7 @@ class Bolum13Content {
 
   static final trafoOptionB = ChoiceResult(
     label: "13-7-B (Trafo)",
-    uiTitle: "Yangına <b>dayanıksız</b> sac, demir, plastik, ahşap, cam kapı.",
+    uiTitle: "Yangına dayanıksız sac, demir, plastik, ahşap, cam kapı.",
     uiSubtitle: "Veya duvarları yangına dayanıklı değil",
     reportText:
         "UYARI: Yağlı tip trafo odaları yüksek yangın riski taşır. Kapı ve duvarların yangın dayanım özellikli olması şarttır. Mevcut kapı bu riski karşılamamaktadır.",
@@ -727,7 +727,7 @@ class Bolum13Content {
   static final depoOptionA = ChoiceResult(
     label: "13-8-A (Depo)",
     uiTitle:
-        "Yangına <b>dayanıklı</b>, duman sızdırmaz, kendiliğinden kapanan kapı.",
+        "Yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan kapı.",
     uiSubtitle: "Duvarları yangına dayanıklı",
     reportText:
         "OLUMLU: Ortak depo/ardiye alanının kapısı metal yangın kapısı veya sac kapıdır. Depo kapısının test raporu Uzman tarafından incelenerek uygunluğuna karar verilir.",
@@ -735,7 +735,7 @@ class Bolum13Content {
 
   static final depoOptionB = ChoiceResult(
     label: "13-8-B (Depo)",
-    uiTitle: "Yangına <b>dayanıksız</b> sac, demir, plastik, ahşap, cam kapı.",
+    uiTitle: "Yangına dayanıksız sac, demir, plastik, ahşap, cam kapı.",
     uiSubtitle: "Veya duvarları yangına dayanıklı değil",
     reportText:
         "UYARI: Depolardaki eşyalar büyük yangın yükü oluşturur. Duman sızdırmaz ve yangına dayanıklı kapı kullanılması önerilir. Mevcut durum yangının yayılmasını kolaylaştırabilir.",
@@ -752,7 +752,7 @@ class Bolum13Content {
   static final copOptionA = ChoiceResult(
     label: "13-9-A (Çöp O.)",
     uiTitle:
-        "Yangına <b>dayanıklı</b>, duman sızdırmaz, kendiliğinden kapanan kapı.",
+        "Yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan kapı.",
     uiSubtitle: "Duvarları yangına dayanıklı",
     reportText:
         "OLUMLU: Çöp toplama odasında duman sızdırmaz yangın kapısı ve havalandırma mevcuttur.",
@@ -760,7 +760,7 @@ class Bolum13Content {
 
   static final copOptionB = ChoiceResult(
     label: "13-9-B (Çöp O.)",
-    uiTitle: "Yangına <b>dayanıksız</b> sac, demir, plastik, ahşap, cam kapı.",
+    uiTitle: "Yangına dayanıksız sac, demir, plastik, ahşap, cam kapı.",
     uiSubtitle: "Veya duvarları yangına dayanıklı değil",
     reportText:
         "KRİTİK RİSK: Çöp odaları metan gazı birikme riski taşır. Kapı yangına dayanıklı olmalı ve oda mutlaka havalandırılmalıdır. Mevcut durum patlama veya zehirlenme riski oluşturabilir.",
@@ -776,7 +776,7 @@ class Bolum13Content {
 
   static final ortakDuvarOptionA = ChoiceResult(
     label: "13-10-A (Ortak Duvar)",
-    uiTitle: "Kalın tuğla veya beton duvar <b>(En az 20-25cm)</b>.",
+    uiTitle: "Kalın tuğla veya beton duvar (En az 20-25cm).",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Yan bina ile ortak kullanılan duvar kalın tuğla veya betondur (En az 20-25cm).",
@@ -801,7 +801,7 @@ class Bolum13Content {
   static final ticariOptionA = ChoiceResult(
     label: "13-11-A (Ticari)",
     uiTitle:
-        "Yangına <b>dayanıklı</b>, duman sızdırmaz, kendiliğinden kapanan kapı var.",
+        "Yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan kapı var.",
     uiSubtitle: "Ticari alan ile konut arasında",
     reportText:
         "OLUMLU: Ticari alan ile konut arasındaki geçiş noktasında kullanılan duvar ve kapı yangına dayanıklıdır.",
@@ -810,7 +810,7 @@ class Bolum13Content {
   static final ticariOptionB = ChoiceResult(
     label: "13-11-B (Ticari)",
     uiTitle:
-        "Yangına <b>dayanıksız</b> sac, demir, plastik, ahşap, cam kapı var.",
+        "Yangına dayanıksız sac, demir, plastik, ahşap, cam kapı var.",
     uiSubtitle: "Ticari alan ile konut arasında",
     reportText:
         "UYARI: Farklı kullanım amaçlı mahaller yangına dayanıklı kapı ve duvar ile birbirinden ayrılmaları önerilir.",
@@ -836,7 +836,7 @@ class Bolum13Content {
   // OTOPARK ALANI
   static final otoparkAlanOptionA = ChoiceResult(
     label: "13-1-ALT-A (<600)",
-    uiTitle: "600 m²'nin <b>altında</b>",
+    uiTitle: "600 m²'nin altında",
     uiSubtitle: "",
     reportText: "",
   );
@@ -854,7 +854,7 @@ class Bolum13Content {
   );
   static final otoparkAlanOptionD = ChoiceResult(
     label: "13-1-ALT-D (>2000)",
-    uiTitle: "2000 m²'nin <b>üzerinde</b>",
+    uiTitle: "2000 m²'nin üzerinde",
     uiSubtitle: "",
     reportText: "",
   );
@@ -868,13 +868,13 @@ class Bolum13Content {
   // KAZAN DAİRESİ ALANI
   static final kazanAlanOptionA = ChoiceResult(
     label: "13-2-ALT-A",
-    uiTitle: "2000 m² veya <b>altında</b>",
+    uiTitle: "2000 m² veya altında",
     uiSubtitle: "",
     reportText: "",
   );
   static final kazanAlanOptionB = ChoiceResult(
     label: "13-2-ALT-B",
-    uiTitle: "2000 m²'nin <b>üzerinde</b>",
+    uiTitle: "2000 m²'nin üzerinde",
     uiSubtitle: "",
     reportText: "",
   );
@@ -888,13 +888,13 @@ class Bolum13Content {
   // SIĞINAK ALANI (Yeni Soru)
   static final siginakAlanOptionA = ChoiceResult(
     label: "13-12-A (Sığınak)",
-    uiTitle: "2000 m² veya <b>altında</b>",
+    uiTitle: "2000 m² veya altında",
     uiSubtitle: "",
     reportText: "",
   );
   static final siginakAlanOptionB = ChoiceResult(
     label: "13-12-B (Sığınak)",
-    uiTitle: "2000 m²'nin <b>üzerinde</b>",
+    uiTitle: "2000 m²'nin üzerinde",
     uiSubtitle: "",
     reportText: "",
   );
@@ -922,7 +922,7 @@ class Bolum15Content {
   static final kaplamaOptionA = ChoiceResult(
     label: "15-1-A",
     uiTitle:
-        "Ahşap parke, laminat, pvc vinil, karo halı, vb. <b>yanıcı</b> malzemeler.",
+        "Ahşap parke, laminat, pvc vinil, karo halı, vb. yanıcı malzemeler.",
     uiSubtitle: "",
     reportText:
         "UYARI: Döşeme kaplamasının yangına tepki sınıfı kontrol edilerek uygunluğuna karar verilmelidir.",
@@ -930,8 +930,8 @@ class Bolum15Content {
 
   static final kaplamaOptionB = ChoiceResult(
     label: "15-1-B",
-    uiTitle: "Taş, seramik, mermer, vb. <b>yanmaz</b> kaplama.",
-    uiSubtitle: "Veya <b>limitli</b> yanıcı malzemeler.",
+    uiTitle: "Taş, seramik, mermer, vb. yanmaz kaplama.",
+    uiSubtitle: "Veya limitli yanıcı malzemeler.",
     reportText:
         "OLUMLU: Zemin kaplaması yanmaz malzeme olarak beyan edilmiştir. Zemin kaplaması yangına tepki sınıfı test raporu Uzman tarafından incelenerek uygunluğuna karar verilir.",
   );
@@ -946,7 +946,7 @@ class Bolum15Content {
 
   static final kaplamaOptionD = ChoiceResult(
     label: "15-1-D",
-    uiTitle: "<b>Karma</b> zemin kaplama tipleri",
+    uiTitle: "Karma zemin kaplama tipleri",
     uiSubtitle: "Farklı mahallerde farklı kaplamalar mevcut.",
     reportText:
         "UYARI: Binada karma zemin kaplaması mevcuttur. Yönetmelik gereği yüksek binalarda döşeme kaplamalarının en az zor alevlenici olması gerekmektedir; aksi durumda yanıcı kaplamalar risk teşkil eder.",
@@ -955,7 +955,7 @@ class Bolum15Content {
   static final yalitimOptionA = ChoiceResult(
     label: "15-2-A",
     uiTitle: "Hayır, ısı yalıtım yok.",
-    uiSubtitle: "Döşeme betonunda yalıtım <b>bulunmuyor</b>.",
+    uiSubtitle: "Döşeme betonunda yalıtım bulunmuyor.",
     reportText:
         "OLUMLU: Döşeme betonu altında yanıcı yalıtım malzemesi bulunmamaktadır.",
   );
@@ -963,7 +963,7 @@ class Bolum15Content {
   static final yalitimOptionB = ChoiceResult(
     label: "15-2-B",
     uiTitle: "Evet, ısı yalıtımı (strafor, köpük, vb.) var.",
-    uiSubtitle: "<b>Yanıcı</b> malzemeler",
+    uiSubtitle: "Yanıcı malzemeler",
     reportText:
         "KRİTİK RİSK: Yanıcı yalıtım malzemesi kullanımı tespit edilmiştir.",
     adviceText:
@@ -980,7 +980,7 @@ class Bolum15Content {
 
   static final yalitimSapOptionA = ChoiceResult(
     label: "15-2-ALT-A",
-    uiTitle: "Evet, en az <b>2 cm şap</b> var.",
+    uiTitle: "Evet, en az 2 cm şap var.",
     uiSubtitle: "Koruma katmanı mevcut.",
     reportText: "OLUMLU: Yanıcı yalıtım şap ile korunmuştur.",
   );
@@ -1016,7 +1016,7 @@ class Bolum15Content {
 
   static final tavanOptionC = ChoiceResult(
     label: "15-3-C",
-    uiTitle: "<b>Karma</b> (Bazı alanlarda var, bazı alanlarda yok)",
+    uiTitle: "Karma (Bazı alanlarda var, bazı alanlarda yok)",
     uiSubtitle: "Binanın genelinde farklı tavan tipleri mevcut.",
     reportText:
         "UYARI: Binanın bazı bölümlerinde asma tavan tespit edilmiştir; kullanılan malzemenin yangın performansı ve tavan içi tesisat yalıtımı kontrol edilmelidir.",
@@ -1032,7 +1032,7 @@ class Bolum15Content {
 
   static final tavanMalzemeOptionA = ChoiceResult(
     label: "15-3-ALT-A",
-    uiTitle: "Alçıpanel, metal vb. <b>yanmaz</b> malzeme.",
+    uiTitle: "Alçıpanel, metal vb. yanmaz malzeme.",
     uiSubtitle: "A1, A2 sınıfı malzemeler.",
     reportText:
         "OLUMLU: Asma tavan malzemesinin yangına tepki sınıfı A1 veya A2 sınıfıdır. Yönetmelikçe sınıf bakımından yeterli olsa da malzemelerin yangına tepki test raporlarının kontrol edilmesi önerilir.",
@@ -1040,7 +1040,7 @@ class Bolum15Content {
 
   static final tavanMalzemeOptionB = ChoiceResult(
     label: "15-3-ALT-B",
-    uiTitle: "Ahşap, plastik, lambiri vb. <b>yanıcı</b> malzeme.",
+    uiTitle: "Ahşap, plastik, lambiri vb. yanıcı malzeme.",
     uiSubtitle: "Kolay alevlenici dekoratif malzemeler.",
     reportText:
         "KRİTİK RİSK: Tavan malzemeleri kuvvetle muhtemel yanıcıdır. Asma tavan malzemelerinin yangına tepki test raporları kontrol edildikten sonra Yönetmelik şartlarını karşılayıp karşılamaadığına karar verilir.",
@@ -1055,7 +1055,7 @@ class Bolum15Content {
   );
   static final tavanMalzemeOptionKarma = ChoiceResult(
     label: "15-3-Alt-D", // D for Mixed (inserted before Unknown C in UI list)
-    uiTitle: "<b>Karma</b> kullanım (yanıcı veya yanmaz malzemeler)",
+    uiTitle: "Karma kullanım (yanıcı veya yanmaz malzemeler)",
     uiSubtitle: "Kısmen yanıcı kısmen yanmaz",
     reportText:
         "UYARI: Asma tavan malzemesi olarak mahal bazlı karma (yanıcı ve yanmaz tipte) ürünler kullanıldığı belirtilmiştir. Özellikle kaçış yolları ve toplanma alanlarında asma tavanların tamamen yanmaz (A1 sınıfı) olması tercih edilir. Mahal bazlı asma tavan malzemelerinin mimari proje üzerinde veya sahada incelenmeleri önerilir.",
@@ -1063,7 +1063,7 @@ class Bolum15Content {
   static final tesisatOptionA = ChoiceResult(
     label: "15-4-A",
     uiTitle:
-        "Beton, harç veya yangına <b>dayanıklı</b> mastik vb. ile kapatılmış.",
+        "Beton, harç veya yangına dayanıklı mastik vb. ile kapatılmış.",
     uiSubtitle: "Sızdırmazlık sağlanmıştır.",
     reportText:
         "OLUMLU: Tesisat geçişleri yalıtılmıştır. Binadaki özellikle yangın kompartımanları, döşeme ve şaftlardaki tesisat geçişleri ve kullanılan malzemelerin akredite test raporları veya onay dokümanları kontrol edilerek uygunluklarına karar verilir.",
@@ -1072,7 +1072,7 @@ class Bolum15Content {
   static final tesisatOptionB = ChoiceResult(
     label: "15-4-B",
     uiTitle:
-        "Geçişlerde boşluklar var veya (sarı) <b>poliüretan</b> köpük vb. malzeme ile kapatılmış.",
+        "Geçişlerde boşluklar var veya (sarı) poliüretan köpük vb. malzeme ile kapatılmış.",
     uiSubtitle: "Duman geçişine açık noktalar.",
     reportText:
         "UYARI: Tesisat geçişlerinde boşluklar yangına dayanıklı olmayan malzemelerle kapatma yapılmış olabilir. Döşeme, şaft, yangın kompartımanı gibi mahallerde ve geçişlerde bu durum uygunsuzluk yaratır.",
@@ -1100,7 +1100,7 @@ class Bolum15Content {
 class Bolum16Content {
   static final mantolamaOptionA = ChoiceResult(
     label: "16-1-A (Mantolama)",
-    uiTitle: "Klasik Mantolama (EPS, <b>XPS</b>, Strafor, vb.).",
+    uiTitle: "Klasik Mantolama (EPS, XPS, Strafor, vb.).",
     uiSubtitle:
         "Dış cephede sıva altında köpük esaslı ısı yalıtım levhaları kullanılmıştır.",
     reportText:
@@ -1109,7 +1109,7 @@ class Bolum16Content {
 
   static final mantolamaOptionB = ChoiceResult(
     label: "16-1-B (Mantolama)",
-    uiTitle: "A1 veya A2 sınıf <b>taşyünü</b> ile mantolama.",
+    uiTitle: "A1 veya A2 sınıf taşyünü ile mantolama.",
     uiSubtitle: "Dış cephede yanmaz özellikli taşyünü vb. kullanılmıştır.",
     reportText:
         "OLUMLU: Dış cephe yalıtımında yanmaz (A1 veya A2 sınıfı) taşyünü malzeme kullanılmıştır. Bu tercih, cephe yangınlarının yayılmasını engelleyebilir. Cephe sisteminin veya malzemelerinin yangına tepki test raporları incelendikten sonra yönetmeliğe göre uygunluk kontrolü yapılmış olur.",
@@ -1117,7 +1117,7 @@ class Bolum16Content {
 
   static final giydirmeOptionC = ChoiceResult(
     label: "16-1-C (Giydirme)",
-    uiTitle: "Giydirme cephe (<b>Cam</b>, Kompozit, vb.).",
+    uiTitle: "Giydirme cephe (Cam, Kompozit, vb.).",
     uiSubtitle:
         "Bina dış yüzeyi alüminyum, cam veya kompozit panellerle kaplanmıştır.",
     reportText:
@@ -1126,7 +1126,7 @@ class Bolum16Content {
 
   static final mantolamaOptionD = ChoiceResult(
     label: "16-1-D (Sıva/Boya)",
-    uiTitle: "Cephede sadece <b>sıva</b> ve boya var (yalıtım yok).",
+    uiTitle: "Cephede sadece sıva ve boya var (yalıtım yok).",
     uiSubtitle: "Dış cephede herhangi bir ısı yalıtım katmanı bulunmamaktadır.",
     reportText:
         "OLUMLU: Dış cephede yanıcı bir yalıtım malzemesi bulunmamaktadır. Yangın yükü oluşturmaz.",
@@ -1144,7 +1144,7 @@ class Bolum16Content {
   static final sagirYuzeyOptionA = ChoiceResult(
     label: "16-2-A (Sağır Yüzey)",
     uiTitle:
-        "EVET, cephede katlar arasında en az <b>100 cm</b> yüksekliğinde yangın dayanımlı yüzey <b>var</b>.",
+        "EVET, cephede katlar arasında en az 100 cm yüksekliğinde yangın dayanımlı yüzey var.",
     uiSubtitle: "Dikeyde 100 cm",
     reportText:
         "OLUMLU: Katlar arasındaki yangın dayanıklı yüzey (veya sistem) yüksekliği 100 cm şartını sağlamaktadır. Bu mesafe, alevin bir kattan diğerine sıçramasını zorlaştırır. Yönetmelik şartlarını sağlayıp sağlamadığına yanmaz yüzeyin yerinde kontrol edilmesi ile karar verilir.",
@@ -1153,7 +1153,7 @@ class Bolum16Content {
   static final sagirYuzeyOptionB = ChoiceResult(
     label: "16-2-B (Sağır Yüzey)",
     uiTitle:
-        "HAYIR, cephede katlar arasında en az <b>100 cm</b> yüksekliğinde yangın dayanımlı yüzey <b>yok</b>.",
+        "HAYIR, cephede katlar arasında en az 100 cm yüksekliğinde yangın dayanımlı yüzey yok.",
     uiSubtitle:
         "Pencereler dikeyde birbirine çok yakın, aradaki duvar mesafesi 1 metreden az.",
     reportText:
@@ -1172,7 +1172,7 @@ class Bolum16Content {
 
   static final bitisikOptionA = ChoiceResult(
     label: "16-3-A (Bitişik)",
-    uiTitle: "<b>Aynı</b> yükseklikteyiz.",
+    uiTitle: "Aynı yükseklikteyiz.",
     uiSubtitle: "Yan bina ile çatı seviyemiz aynı.",
     reportText:
         "OLUMLU: Binalar aynı hizada olduğu için yan binadan cepheye yangın sıçrama riski düşüktür.",
@@ -1180,7 +1180,7 @@ class Bolum16Content {
 
   static final bitisikOptionB = ChoiceResult(
     label: "16-3-B (Bitişik)",
-    uiTitle: "Biz daha <b>alçaktayız</b>.",
+    uiTitle: "Biz daha alçaktayız.",
     uiSubtitle: "Bizim binamız yan binadan daha alçak.",
     reportText:
         "OLUMLU: Binanız yan binadan daha alçak olduğu için, yan binadan cephenize yangın sıçrama riski düşüktür.",
@@ -1188,7 +1188,7 @@ class Bolum16Content {
 
   static final bitisikOptionC = ChoiceResult(
     label: "16-3-C (Bitişik)",
-    uiTitle: "Biz daha <b>yüksekteyiz</b>.",
+    uiTitle: "Biz daha yüksekteyiz.",
     uiSubtitle: "Bizim binamız yan binadan daha yüksek.",
     reportText:
         "UYARI: Yan binanın çatısının bittiği hizaya denk gelen dış cephe kaplamanız 'Hiç Yanmaz'(A1 sınıfı) malzeme olmalıdır.",
@@ -1206,7 +1206,7 @@ class Bolum16Content {
 class Bolum17Content {
   static final kaplamaOptionA = ChoiceResult(
     label: "17-1-A (Kaplama)",
-    uiTitle: "<b>Kiremit</b>, metal kenet, beton, taş türünde yanmaz malzeme.",
+    uiTitle: "Kiremit, metal kenet, beton, taş türünde yanmaz malzeme.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Çatı kaplamasında hiç yanmaz (A1 sınıfı) malzeme kullanılmıştır. Bu durum, dışarıdan gelebilecek kıvılcımlara karşı koruma sağlar.",
@@ -1214,7 +1214,7 @@ class Bolum17Content {
 
   static final kaplamaOptionB = ChoiceResult(
     label: "17-1-B (Kaplama)",
-    uiTitle: "Shingle, Onduline, <b>Membran</b>, vb.",
+    uiTitle: "Shingle, Onduline, Membran, vb.",
     uiSubtitle: "Çatı yüzeyinde petrol türevi (bitümlü) örtü.",
     reportText:
         "UYARI: Çatıda kullanılan bitümlü örtüler (Shingle, Membran, vb.) yanıcı özellik gösterebilir. Bu malzemelerin 'BROOF'özellikli (dış yangına karşı dayanıklı) olması gerekmektedir. Ürünün test raporu incelenmelidr.",
@@ -1259,7 +1259,7 @@ class Bolum17Content {
   static final iskeletOptionA = ChoiceResult(
     label: "17-2-A (İskelet)",
     uiTitle:
-        "Taşıyıcılar beton veya <b>çeliktir</b>. Isı yalıtım olarak <b>taşyünü</b> vb. malzeme kullanılmıştır.",
+        "Taşıyıcılar beton veya çeliktir. Isı yalıtım olarak taşyünü vb. malzeme kullanılmıştır.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Çatı taşıyıcı sisteminin ve yalıtımının yanmaz malzemeden olması yangın güvenliği için en ideal durumdur.",
@@ -1268,7 +1268,7 @@ class Bolum17Content {
   static final iskeletOptionB = ChoiceResult(
     label: "17-2-B (İskelet)",
     uiTitle:
-        "Taşıyıcılar ve altındaki ısı yalıtım malzemesi <b>yanıcı</b> ürünlerdir.",
+        "Taşıyıcılar ve altındaki ısı yalıtım malzemesi yanıcı ürünlerdir.",
     uiSubtitle: "Ahşap, XPS, EPS, Strafor vb. malzemeler.",
     reportText:
         "(Yüksek Bina İse) KRİTİK RİSK: Yüksek binalarda ahşap çatı kullanılması yasaktır.(Yüksek Olmayan Bina İse) UYARI: Ahşap çatılarda yanıcı köpük vb. kullanımı risklidir.",
@@ -1285,7 +1285,7 @@ class Bolum17Content {
   static final bitisikOptionA = ChoiceResult(
     label: "17-3-A (Bitişik)",
     uiTitle:
-        "İki binanın çatıları arasında en az 60 cm yüksekliğinde yangın <b>dayanımlı</b> duvar <b>var</b>.",
+        "İki binanın çatıları arasında en az 60 cm yüksekliğinde yangın dayanımlı duvar var.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Yangın duvarı mevcuttur. Komşu binadan çatı yoluyla yangın geçişi engellenmiştir.",
@@ -1293,7 +1293,7 @@ class Bolum17Content {
 
   static final bitisikOptionB = ChoiceResult(
     label: "17-3-B (Bitişik)",
-    uiTitle: "Çatılar arasında yangın dayanımlı duvarı <b>yok</b>.",
+    uiTitle: "Çatılar arasında yangın dayanımlı duvarı yok.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Bitişik nizam binalarda, çatılar arasında yangın geçişini engelleyecek, çatı seviyesinden en az 60 cm yükseltilmiş 'Yangın Duvarı'olması zorunludur.",
@@ -1301,7 +1301,7 @@ class Bolum17Content {
 
   static final bitisikOptionC = ChoiceResult(
     label: "17-3-C (Bitişik)",
-    uiTitle: "Çatı birleşim yerlerini <b>göremiyorum</b>, bir fikrim yok.",
+    uiTitle: "Çatı birleşim yerlerini göremiyorum, bir fikrim yok.",
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Komşu bina ile çatı birleşim detayı bilinmiyor. Binanıza yangın sıçrama riski olabilir.",
@@ -1375,7 +1375,7 @@ class Bolum18Content {
 
   static final boruOptionB = ChoiceResult(
     label: "18-2-B (Boru)",
-    uiTitle: "Plastik boru ve yangın <b>dayanımlı</b> kelepçe kullanılmıştır.",
+    uiTitle: "Plastik boru ve yangın dayanımlı kelepçe kullanılmıştır.",
     uiSubtitle: "Plastik boruların döşeme geçişlerinde kelepçe var.",
     reportText:
         "OLUMLU: Plastik boruların kat geçişlerinde yangın dayanımlı kelepçe kullanılarak alev geçişi engellenmiştir.",
@@ -1384,7 +1384,7 @@ class Bolum18Content {
   static final boruOptionC = ChoiceResult(
     label: "18-2-C (Boru)",
     uiTitle:
-        "Plastik boru kullanılmış ancak yangın dayanımlı kelepçe <b>kullanılmamıştır</b>.",
+        "Plastik boru kullanılmış ancak yangın dayanımlı kelepçe kullanılmamıştır.",
     uiSubtitle: "Plastik boruların döşeme geçişlerinde kelepçe yok.",
     reportText:
         "UYARI: 21.50m ve üzeri binalarda standart plastik borular yangın anında eriyerek yok olur ve döşemede delik açılır. Bu delikten alevler üst kata geçebilir.",
@@ -1422,7 +1422,7 @@ class Bolum19Content {
 
   static final engelOptionC = ChoiceResult(
     label: "19-1-C",
-    uiTitle: "Kilitli kapı veya geçişi zorlaştıran <b>bariyer</b> var.",
+    uiTitle: "Kilitli kapı veya geçişi zorlaştıran bariyer var.",
     uiSubtitle: "Acil çıkış engellenmiş.",
     reportText:
         "KRİTİK RİSK: Kaçış yolunda kilitli kapı veya fiziksel engel mevcut olduğu beyan edilmiştir.",
@@ -1432,7 +1432,7 @@ class Bolum19Content {
 
   static final engelOptionD = ChoiceResult(
     label: "19-1-D",
-    uiTitle: "<b>Eşik</b>, basamak veya kaygan zemin var.",
+    uiTitle: "Eşik, basamak veya kaygan zemin var.",
     uiSubtitle: "Düşme ve takılma riski.",
     reportText:
         "UYARI: Kaçış yolu zemininde takılma veya kayma riski tespit edilmiştir.",
@@ -1443,14 +1443,14 @@ class Bolum19Content {
   static final levhaOptionA = ChoiceResult(
     label: "19-2-A",
     uiTitle:
-        "EVET, tüm çıkışlarda ledli, ışıklı acil yönlendirme işaretleri <b>var</b>.",
+        "EVET, tüm çıkışlarda ledli, ışıklı acil yönlendirme işaretleri var.",
     uiSubtitle: "Yeterince yönlendirme var.",
     reportText: "OLUMLU: Acil durum yönlendirme işaretleri mevcuttur.",
   );
 
   static final levhaOptionB = ChoiceResult(
     label: "19-2-B",
-    uiTitle: "HAYIR, hiçbir yerde yönlendirme levhası <b>yok</b>.",
+    uiTitle: "HAYIR, hiçbir yerde yönlendirme levhası yok.",
     uiSubtitle: "Karanlıkta veya dumanlı ortamda çıkış bulunması güçtür.",
     reportText:
         "KRİTİK RİSK: Binada acil durum yönlendirme işaretleri bulunmamaktadır.",
@@ -1458,7 +1458,7 @@ class Bolum19Content {
 
   static final levhaOptionC = ChoiceResult(
     label: "19-2-C",
-    uiTitle: "Yönlendirmeler var ama çalışmıyorlar, <b>arızalı</b> olabilir.",
+    uiTitle: "Yönlendirmeler var ama çalışmıyorlar, arızalı olabilir.",
     uiSubtitle: "",
     reportText:
         "UYARI: Yönlendirme işaretlemeleri mevcut ancak çalışır durumda değildir. Acil durumda bu işaretlerin çalışır durumda olması büyük önem taşır.",
@@ -1467,7 +1467,7 @@ class Bolum19Content {
   static final yanilticiOptionA = ChoiceResult(
     label: "19-3-A",
     uiTitle:
-        "HAYIR, yanıltıcı kapı <b>yok</b>, çıkış kapısını kolayca bulabilirim.",
+        "HAYIR, yanıltıcı kapı yok, çıkış kapısını kolayca bulabilirim.",
     uiSubtitle: "Tüm kapılar amacına uygun.",
     reportText:
         "OLUMLU: Kaçış yollarında kullanıcıyı yanıltacak kapı bulunmamaktadır. Bu durum uygundur.",
@@ -1476,7 +1476,7 @@ class Bolum19Content {
   static final yanilticiOptionB = ChoiceResult(
     label: "19-3-B",
     uiTitle:
-        "EVET, yanıltıcı kapı <b>var</b>, çıkış kapısını bulmakta güçlük çekebilirim.",
+        "EVET, yanıltıcı kapı var, çıkış kapısını bulmakta güçlük çekebilirim.",
     uiSubtitle: "Depo/Elektrik odası kapıları merdiven kapısına benziyor.",
     reportText:
         "UYARI: Kaçış yollarında yangın merdiveni ile karıştırılabilecek yanıltıcı kapılar mevcuttur.",
@@ -1486,7 +1486,7 @@ class Bolum19Content {
 
   static final etiketOptionA = ChoiceResult(
     label: "19-3-ALT-A",
-    uiTitle: "EVET, <b>'ÇIKIŞ DEĞİLDİR'</b>veya mahalin adı yazıyor.",
+    uiTitle: "EVET, 'ÇIKIŞ DEĞİLDİR'veya mahalin adı yazıyor.",
     uiSubtitle: "İşaretleme yapılmış.",
     reportText:
         "OLUMLU: Yanıltıcı kapılar üzerinde gerekli uyarı levhaları mevcuttur. Bu durum uygundur.",
@@ -1494,7 +1494,7 @@ class Bolum19Content {
 
   static final etiketOptionB = ChoiceResult(
     label: "19-3-ALT-B",
-    uiTitle: "HAYIR, herhangi bir yazı veya levha <b>yok</b>.",
+    uiTitle: "HAYIR, herhangi bir yazı veya levha yok.",
     uiSubtitle: "",
     reportText:
         "UYARI: Yanıltıcı kapılar üzerinde uyarı levhası bulunmamaktadır.",
@@ -1522,7 +1522,7 @@ class Bolum20Content {
 
   static final cokKatOption1 = ChoiceResult(
     label: "20-1 (Çok Kat)",
-    uiTitle: "Normal Apartman Merdiveni <b>(Kapısız)</b>.",
+    uiTitle: "Normal Apartman Merdiveni (Kapısız).",
     uiSubtitle:
         "Binanın ana sirkülasyon merdivenidir. Bu merdiven üzerinde yangın kapısı BULUNMAZ.",
     reportText: "(Sayısal veri olarak saklanır)",
@@ -1530,14 +1530,14 @@ class Bolum20Content {
 
   static final cokKatOption2 = ChoiceResult(
     label: "20-2 (Çok Kat)",
-    uiTitle: "Bina İçi <b>'Kapalı'</b> Yangın Merdiveni <b>(Kapılı)</b>.",
+    uiTitle: "Bina İçi 'Kapalı' Yangın Merdiveni (Kapılı).",
     uiSubtitle: "Betonarme, duvarla çevrili, YANGIN KAPISI bulunan merdiven.",
     reportText: "(Sayısal veri olarak saklanır)",
   );
 
   static final cokKatOption3 = ChoiceResult(
     label: "20-3 (Çok Kat)",
-    uiTitle: "Bina Dışı <b>'Kapalı'</b> Yangın Merdiveni <b>(Kapılı)</b>.",
+    uiTitle: "Bina Dışı 'Kapalı' Yangın Merdiveni (Kapılı).",
     uiSubtitle:
         "Çelik, yangın dayanımlı duvarla çevrili, YANGIN KAPISI bulunan merdiven",
     reportText: "(Sayısal veri olarak saklanır)",
@@ -1545,7 +1545,7 @@ class Bolum20Content {
 
   static final cokKatOption4 = ChoiceResult(
     label: "20-4 (Çok Kat)",
-    uiTitle: "Bina Dışı <b>'Açık'</b> Çelik Merdiven <b>(Kapılı)</b>.",
+    uiTitle: "Bina Dışı 'Açık' Çelik Merdiven (Kapılı).",
     uiSubtitle:
         "Çelik, genelde kollu (Z-tipi) merdiven, duvarsız, üzerinde YANGIN KAPISI olan merdiven",
     reportText: "(Sayısal veri olarak saklanır)",
@@ -1553,7 +1553,7 @@ class Bolum20Content {
 
   static final cokKatOption5 = ChoiceResult(
     label: "20-5 (Çok Kat)",
-    uiTitle: "<b>Dairesel</b> (Spiral, Döner) Merdiven.",
+    uiTitle: "Dairesel (Spiral, Döner) Merdiven.",
     uiSubtitle: "BİNA DIŞI, yuvarlak, dönerek inilen çelik merdiven.",
     reportText: "(Sayısal veri olarak saklanır)",
   );
@@ -1569,7 +1569,7 @@ class Bolum20Content {
     label: "20-7 (Çok Kat)",
     uiTitle: "Dengelenmiş Merdiven.",
     uiSubtitle:
-        "<b>BİNA İÇİ</b>, basamak genişliği içten dışa doğru artan, sahanlıklı veya sahanlıksız merdiven.",
+        "BİNA İÇİ, basamak genişliği içten dışa doğru artan, sahanlıklı veya sahanlıksız merdiven.",
     reportText: "(Sayısal veri olarak saklanır)",
   );
 
@@ -1599,14 +1599,14 @@ class Bolum20Content {
 
   static final bodrumOptionA = ChoiceResult(
     label: "20-Bodrum-A",
-    uiTitle: "<b>Evet</b>, aynı merdiven devam ediyor.",
+    uiTitle: "Evet, aynı merdiven devam ediyor.",
     uiSubtitle: "Üst kat merdiveni bodruma da iniyor.",
     reportText: "(Bodrum çıkış sayısı hesabında kullanılır)",
   );
 
   static final bodrumOptionB = ChoiceResult(
     label: "20-Bodrum-B",
-    uiTitle: "<b>Hayır</b>, bodrum kat merdivenleri bağımsızdır.",
+    uiTitle: "Hayır, bodrum kat merdivenleri bağımsızdır.",
     uiSubtitle: "Bodrum merdiveni üst katlarla bağlantılı değil.",
     reportText:
         "BİLGİ: Bodrum kat merdivenleri üst katlardan bağımsız olarak düzenlenmiştir.",
@@ -1737,14 +1737,14 @@ class Bolum21Content {
   static final kapiOptionA = ChoiceResult(
     label: "21-3-A",
     uiTitle:
-        "YGH kapıları yangına <b>dayanıklı</b>, duman sızdırmaz ve <b>kendiliğinden kapanan</b> özelliktedir.",
+        "YGH kapıları yangına dayanıklı, duman sızdırmaz ve kendiliğinden kapanan özelliktedir.",
     uiSubtitle: "",
     reportText: "OLUMLU: YGH kapıları uygun gözükmektedir.",
   );
 
   static final kapiOptionB = ChoiceResult(
     label: "21-3-B",
-    uiTitle: "YGH kapıları yangına dayanıklı </b>değil</b>.",
+    uiTitle: "YGH kapıları yangına dayanıklı değil.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: YGH kapıları en az 90 dakika yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.",
@@ -1789,7 +1789,7 @@ class Bolum22Content {
   static final varlikOptionA = ChoiceResult(
     label: "22-1-A",
     uiTitle:
-        "Hayır, itfaiye asansörü yok, <b>sadece</b> normal (insan taşıma) asansör var.",
+        "Hayır, itfaiye asansörü yok, sadece normal (insan taşıma) asansör var.",
     uiSubtitle: "",
     reportText:
         "BİLGİ:Binada itfaiye asansörü bulunmamaktadır. Yönetmelik gereği yapı yüksekliği 51.50 metreyi geçen binalarda yangın anında itfaiyenin kullanabileceği, jeneratöre bağlı ve korunumlu İtfaiye Asansörü tesisi mecburidir.",
@@ -1812,7 +1812,7 @@ class Bolum22Content {
 
   static final konumOptionA = ChoiceResult(
     label: "22-2-A",
-    uiTitle: "<b>Doğrudan</b> koridora veya lobiye açılıyor.",
+    uiTitle: "Doğrudan koridora veya lobiye açılıyor.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: İtfaiye asansörü doğrudan koridora açılmaktadır. Dumanın kuyuya girmemesi için asansörün bir yangın güvenlik holüne açılması teknik bir zorunluluktur.",
@@ -1871,7 +1871,7 @@ class Bolum22Content {
   static final kabinOptionA = ChoiceResult(
     label: "22-4-A",
     uiTitle:
-        "Evet, 1,8 m2'den <b>geniş</b> ve 1 dakikada en üst kata <b>hızlıca</b> çıkabiliyor.",
+        "Evet, 1,8 m2'den geniş ve 1 dakikada en üst kata hızlıca çıkabiliyor.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: İtfaiye asansörü kabin boyutu ve hızı yönetmelik şartlarını karşılamaktadır.",
@@ -1880,7 +1880,7 @@ class Bolum22Content {
   static final kabinOptionB = ChoiceResult(
     label: "22-4-B",
     uiTitle:
-        "Hayır, kabini küçük veya 1 dakikada en üst kata <b>ulaşamıyor</b>.",
+        "Hayır, kabini küçük veya 1 dakikada en üst kata ulaşamıyor.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: İtfaiye asansörü kabini 1.8 m²'den küçük veya hızı yetersizdir. Bu durum acil müdahaleyi geciktirebilir.",
@@ -1897,7 +1897,7 @@ class Bolum22Content {
   static final enerjiOptionA = ChoiceResult(
     label: "22-5-A",
     uiTitle:
-        "Evet, asansörlerin hepsi jeneratöre bağlı ve binada elektrik olmasa bile <b>60 dakika</b> boyunca çalışabilir durumda.",
+        "Evet, asansörlerin hepsi jeneratöre bağlı ve binada elektrik olmasa bile 60 dakika boyunca çalışabilir durumda.",
     uiSubtitle: "Elektrik kesilse bile asansörler çalışabiliyor.",
     reportText:
         "OLUMLU: İtfaiye asansörü acil durum enerji sistemine (jeneratör) bağlıdır.",
@@ -1947,7 +1947,7 @@ class Bolum22Content {
 class Bolum23Content {
   static final bodrumOptionA = ChoiceResult(
     label: "23-1-A (Bodrum)",
-    uiTitle: "Normal (insan taşıma) asansör bodrum katlara <b>inmiyor</b>.",
+    uiTitle: "Normal (insan taşıma) asansör bodrum katlara inmiyor.",
     uiSubtitle: "Asansör sadece zemin ve üst katlar arasında çalışıyor.",
     reportText: "Bilgi: Asansör bodrum katlara inmemektedir.",
   );
@@ -1955,7 +1955,7 @@ class Bolum23Content {
   static final bodrumOptionB = ChoiceResult(
     label: "23-1-B (Bodrum)",
     uiTitle:
-        "Normal asansör bodrum katlara da <b>iniyor</b> ve bodrum katta kapısını <b>korunumlu bir hole</b> açıyor.",
+        "Normal asansör bodrum katlara da iniyor ve bodrum katta kapısını korunumlu bir hole açıyor.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Asansör bodrum katta yangın güvenlik holüne açılmaktadır.",
@@ -1964,7 +1964,7 @@ class Bolum23Content {
   static final bodrumOptionC = ChoiceResult(
     label: "23-1-C (Bodrum)",
     uiTitle:
-        "Normal asansör bodrum katlara da <b>iniyor</b> ve <b>holsüz</b> biçimde direkt otoparka, depoya veya ticari alanlara açılıyor.",
+        "Normal asansör bodrum katlara da iniyor ve holsüz biçimde direkt otoparka, depoya veya ticari alanlara açılıyor.",
     uiSubtitle: "Asansörün bodrum kata çıktığı noktada bir YGH yok.",
     reportText:
         "KRİTİK RİSK: Asansör kuyuları binanın bacası gibidir. Bodrumdaki otoparkta veya kazan dairesinde çıkacak bir yangının dumanı, direkt asansör kapısından kuyuya girer ve saniyeler içinde tüm üst katlara yayılır.",
@@ -1981,7 +1981,7 @@ class Bolum23Content {
   static final yanginModuOptionA = ChoiceResult(
     label: "23-2-A (Yangın Modu)",
     uiTitle:
-        "Evet, otomatik olarak kendiliğinden <b>iniyor</b> ve kapısını açıyor.",
+        "Evet, otomatik olarak kendiliğinden iniyor ve kapısını açıyor.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Asansörlerin yangın anında nasıl hareket etmeleri gerektiğine dair senaryo mevcut ve çalışır durumda gözüküyor.",
@@ -1990,7 +1990,7 @@ class Bolum23Content {
   static final yanginModuOptionB = ChoiceResult(
     label: "23-2-B (Yangın Modu)",
     uiTitle:
-        "Hayır, asansör (normalin dışında) yangın anında herhangi bir aksiyon <b>almıyor</b>.",
+        "Hayır, asansör (normalin dışında) yangın anında herhangi bir aksiyon almıyor.",
     uiSubtitle: "Yangın anında normal çalışmasına devam ediyor.",
     reportText:
         "KRİTİK RİSK: Asansörlerin yangın anında özel aksiyon alması gereklidir.",
@@ -2006,7 +2006,7 @@ class Bolum23Content {
 
   static final konumOptionA = ChoiceResult(
     label: "23-3-A (Konum)",
-    uiTitle: "Asansör kapıları, <b>koridora veya hole</b> doğru açılıyor.",
+    uiTitle: "Asansör kapıları, koridora veya hole doğru açılıyor.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Asansör kapıları kat koridoruna veya holüne doğru açılmaktadır.",
@@ -2014,7 +2014,7 @@ class Bolum23Content {
 
   static final konumOptionB = ChoiceResult(
     label: "23-3-B (Konum)",
-    uiTitle: "Doğrudan <b>merdiveninin içine</b> açılıyor.",
+    uiTitle: "Doğrudan merdiveninin içine açılıyor.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Yönetmeliğe göre asansör kapıları ASLA merdiveni yuvasına açılamaz. Asansör kuyusundan sızan duman, insanların kaçtığı temiz bölgeyi (merdiveni) dumanla doldurur.",
@@ -2053,14 +2053,14 @@ class Bolum23Content {
 
   static final havalandirmaOptionA = ChoiceResult(
     label: "23-5-A (Havalandırma)",
-    uiTitle: "Evet, kuyuda <b>pencere</b> var.",
+    uiTitle: "Evet, kuyuda pencere var.",
     uiSubtitle: "",
     reportText: "OLUMLU: Asansör kuyusunda duman tahliye bacası mevcuttur.",
   );
 
   static final havalandirmaOptionB = ChoiceResult(
     label: "23-5-B (Havalandırma)",
-    uiTitle: "Hayır, kuyu tamamen <b>kapalı</b>.",
+    uiTitle: "Hayır, kuyu tamamen kapalı.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Asansör kuyusuna sızan dumanın tahliye edilmesi için en üst noktada 'Duman Tahliye Bacası'(0.1 m²'den az olmamak kaydıyla) zorunludur.",
@@ -2079,7 +2079,7 @@ class Bolum24Content {
   static final tipOptionA = ChoiceResult(
     label: "24-1-A (Tip)",
     uiTitle:
-        "Kapalı <b>koridordan</b> geçerek (dış) bina kapısına ulaşabiliyorum.",
+        "Kapalı koridordan geçerek (dış) bina kapısına ulaşabiliyorum.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Binadan çıkışta dış kaçış geçidi yer almamaktadır, Yönetmeliğe göre bir değerlendirmeye ihtiyaç bulunmaz.",
@@ -2088,7 +2088,7 @@ class Bolum24Content {
   static final tipOptionB = ChoiceResult(
     label: "24-1-B (Tip)",
     uiTitle:
-        "Bina dışına çıkabilmem için cephede, <b>üstü açık bir geçitten</b> veya yoldan geçmem gerekiyor.",
+        "Bina dışına çıkabilmem için cephede, üstü açık bir geçitten veya yoldan geçmem gerekiyor.",
     uiSubtitle:
         "Bina içerisindeki kapalı kat koridorundan dışarı çıkış yapamıyorum.",
     reportText:
@@ -2105,7 +2105,7 @@ class Bolum24Content {
 
   static final pencereOptionA = ChoiceResult(
     label: "24-2-A (Pencere)",
-    uiTitle: "Hayır, bu yola veya koridora bakan <b>pencere</b> hiç yok.",
+    uiTitle: "Hayır, bu yola veya koridora bakan pencere hiç yok.",
     uiSubtitle:
         "Açık kaçış yolu veya koridoru tarafındaki duvar sağır (penceresiz).",
     reportText:
@@ -2114,7 +2114,7 @@ class Bolum24Content {
 
   static final pencereOptionB = ChoiceResult(
     label: "24-2-B (Pencere)",
-    uiTitle: "Evet, pencereler <b>var</b>.",
+    uiTitle: "Evet, pencereler var.",
     uiSubtitle:
         "Açık kaçış yoluna veya koridora bakan daire pencereleri mevcut.",
     reportText:
@@ -2134,7 +2134,7 @@ class Bolum24Content {
   static final kapiOptionA = ChoiceResult(
     label: "24-3-A (Kapı)",
     uiTitle:
-        "Çelik, yangına <b>dayanıklı</b>, duman sızdırmaz, bırakınca kendiliğinden kapanıyor.",
+        "Çelik, yangına dayanıklı, duman sızdırmaz, bırakınca kendiliğinden kapanıyor.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Dış geçide açılan kapı yangına dayanıklı, duman sızdırmaz ve kendiliğinden kapanır özelliktedir.",
@@ -2142,7 +2142,7 @@ class Bolum24Content {
 
   static final kapiOptionB = ChoiceResult(
     label: "24-3-B (Kapı)",
-    uiTitle: "Yangına <b>dayanıksız</b>, kendiliğinden kapanmıyor.",
+    uiTitle: "Yangına dayanıksız, kendiliğinden kapanmıyor.",
     uiSubtitle: "Kapı ahşap, pvc, demir vs.",
     reportText:
         "KRİTİK RİSK: Dış kaçış geçitlerine açılan kapılar en az 30 dakika yangına dayanıklı olmalı ve bırakınca kendiliğinden kapanmalıdır.",
@@ -2193,7 +2193,7 @@ class Bolum25Content {
 
   static final basamakOptionB = ChoiceResult(
     label: "25-2-B",
-    uiTitle: "Hayır, basamaklar çok <b>dar</b>.",
+    uiTitle: "Hayır, basamaklar çok dar.",
     uiSubtitle: "Basamaklar üçgen şeklinde, basış alanı yetersiz.",
     reportText:
         "KRİTİK RİSK: Dairesel merdivenin basamak genişliği yetersizdir. Dar basamaklar tahliye sırasında düşme riski oluşturur.",
@@ -2211,14 +2211,14 @@ class Bolum25Content {
 
   static final basKurtarmaOptionA = ChoiceResult(
     label: "25-3-A",
-    uiTitle: "Standart (2.50 metreden <b>yüksek</b>).",
+    uiTitle: "Standart (2.50 metreden yüksek).",
     uiSubtitle: "İnerken başınız tavana veya üst basamağa değmiyor.",
     reportText: "OLUMLU: Baş kurtarma yüksekliği yeterli seviyededir.",
   );
 
   static final basKurtarmaOptionB = ChoiceResult(
     label: "25-3-B",
-    uiTitle: "<b>Alçak</b> (2.10 ila 2.50 metre arası).",
+    uiTitle: "Alçak (2.10 ila 2.50 metre arası).",
     uiSubtitle: "Tavan alçak, baş çarpma riski var.",
     reportText:
         "KRİTİK RİSK: Baş kurtarma yüksekliği sınır değerlerin altındadır (2.50m altı).",
@@ -2237,7 +2237,7 @@ class Bolum25Content {
 class Bolum26Content {
   static final varlikOptionA = ChoiceResult(
     label: "26-1-A",
-    uiTitle: "Hayır, sadece merdiven var, rampa <b>yok</b>.",
+    uiTitle: "Hayır, sadece merdiven var, rampa yok.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Binada rampa bulunmadığından Yönetmeliğe göre bu konuda bir değerlendirme yapılmaz.",
@@ -2245,7 +2245,7 @@ class Bolum26Content {
 
   static final varlikOptionB = ChoiceResult(
     label: "26-1-B",
-    uiTitle: "Evet, rampa <b>var</b>.",
+    uiTitle: "Evet, rampa var.",
     uiSubtitle: "",
     reportText:
         "UYARI: Binada kaçış rampası tespit edilmiştir. Eğimi ve sahanlık durumu Yönetmelik kriterlerine uygun olmalıdır. Aksi halde rampa kaçış yolu olarak kullanılamaz.",
@@ -2261,7 +2261,7 @@ class Bolum26Content {
 
   static final egimOptionA = ChoiceResult(
     label: "26-2-A",
-    uiTitle: "Eğim az (<b>%10</b>'dan az) ve zemin <b>kaymaz</b>.",
+    uiTitle: "Eğim az (%10'dan az) ve zemin kaymaz.",
     uiSubtitle: "Rahat yürünüyor, zeminde kaymaz bant veya malzeme var.",
     reportText:
         "OLUMLU: Rampa eğimi ve zemin kaplaması kaçış güvenliği için yeterli seviyededir.",
@@ -2269,7 +2269,7 @@ class Bolum26Content {
 
   static final egimOptionB = ChoiceResult(
     label: "26-2-B",
-    uiTitle: "Eğim fazla dik (<b>%10</b>'dan fazla) veya zemin <b>kaygan</b>.",
+    uiTitle: "Eğim fazla dik (%10'dan fazla) veya zemin kaygan.",
     uiSubtitle: "Yürürken insanı zorluyor, kayma tehlikesi var.",
     reportText:
         "KRİTİK RİSK: Kaçış rampalarının eğimi %10'dan fazla olamaz. Dik ve kaygan rampalar panik anında düşmelere sebep olur.",
@@ -2287,14 +2287,14 @@ class Bolum26Content {
 
   static final sahanlikOptionA = ChoiceResult(
     label: "26-3-A",
-    uiTitle: "Evet, sahanlık <b>var</b>, kapı önleri ve dönüşleri düz.",
+    uiTitle: "Evet, sahanlık var, kapı önleri ve dönüşleri düz.",
     uiSubtitle: "Rampa başlangıç ve bitişinde güvenli düzlükler var.",
     reportText: "OLUMLU: Rampa sahanlıkları ve kapı önü düzlükleri mevcuttur.",
   );
 
   static final sahanlikOptionB = ChoiceResult(
     label: "26-3-B",
-    uiTitle: "Hayır, rampadan önce veya sonra <b>eğim</b> var.",
+    uiTitle: "Hayır, rampadan önce veya sonra eğim var.",
     uiSubtitle: "Kapıyı açınca direkt eğimli yüzeye basılıyor.",
     reportText:
         "UYARI: Rampa giriş ve çıkışlarında, kapı önlerinde mutlaka düz sahanlık bulunmalıdır.",
@@ -2310,7 +2310,7 @@ class Bolum26Content {
 
   static final otoparkOptionA = ChoiceResult(
     label: "26-4-A",
-    uiTitle: "Evet, eğimi uygun (<b>%10</b> 'un altı).",
+    uiTitle: "Evet, eğimi uygun (%10 'un altı).",
     uiSubtitle: "Araç rampası yürüyerek çıkmaya müsait.",
     reportText:
         "OLUMLU: Otopark rampası, eğimi uygun olduğu için 2. kaçış yolu olarak kabul edilebilir.",
@@ -2337,7 +2337,7 @@ class Bolum27Content {
   // 1. BOYUT VE EŞİK
   static final boyutOptionA = ChoiceResult(
     label: "27-1-A",
-    uiTitle: "80 cm'den <b>geniş</b> ve eşiksiz.",
+    uiTitle: "80 cm'den geniş ve eşiksiz.",
     uiSubtitle: "Geçiş rahat ve ayağın takılma ihtimali yok.",
     reportText:
         "OLUMLU: Kaçış kapısı genişliği (min. 80cm) ve zemin düzgünlüğü uygundur.",
@@ -2345,7 +2345,7 @@ class Bolum27Content {
 
   static final boyutOptionB = ChoiceResult(
     label: "27-1-B",
-    uiTitle: "80 cm'den <b>dar</b> veya eşikli.",
+    uiTitle: "80 cm'den dar veya eşikli.",
     uiSubtitle: "Geçiş zor veya ayağın takılma ihtimali var.",
     reportText:
         "KRİTİK RİSK: Kaçış kapılarında temiz geçiş genişliği en az 80 cm olmalıdır. Ayrıca takılıp düşmeye sebep olacak 'Eşik'bulunması kesinlikle yasaktır.",
@@ -2362,14 +2362,14 @@ class Bolum27Content {
   // 2. YÖN
   static final yonOptionA = ChoiceResult(
     label: "27-2-A",
-    uiTitle: "Hepsi <b>dışarıya</b> doğru (kaçış yönünde) açılıyor.",
+    uiTitle: "Hepsi dışarıya doğru (kaçış yönünde) açılıyor.",
     uiSubtitle: "Kapıyı itince açılıyor.",
     reportText: "OLUMLU: Kapı açılış yönü (kaçış yönü) doğrudur.",
   );
 
   static final yonOptionB = ChoiceResult(
     label: "27-2-B",
-    uiTitle: "Hepsi <b>içeriye</b> doğru açılıyor.",
+    uiTitle: "Hepsi içeriye doğru açılıyor.",
     uiSubtitle: "Kapıyı açmak için kendinize çekmeniz gerekiyor.",
     reportText:
         "UYARI: Kullanıcı yükü 50 kişiyi geçen mahallerde ve katlarda kapılar mutlaka kaçış yönüne (dışarıya) doğru açılmalıdır.",
@@ -2404,7 +2404,7 @@ class Bolum27Content {
   // 3. KİLİT MEKANİZMASI
   static final kilitOptionA = ChoiceResult(
     label: "27-3-A",
-    uiTitle: "<b>Panik bar</b> mekanizması var.",
+    uiTitle: "Panik bar mekanizması var.",
     uiSubtitle: "Vücutla itince açılıyor.",
     reportText:
         "OLUMLU: Kapıda panik bar mekanizması mevcuttur, Yönetmelik gereksinimini karşılamaktadır.",
@@ -2412,7 +2412,7 @@ class Bolum27Content {
 
   static final kilitOptionB = ChoiceResult(
     label: "27-3-B",
-    uiTitle: "Normal <b>kapı kolu</b> var.",
+    uiTitle: "Normal kapı kolu var.",
     uiSubtitle: "",
     reportText:
         "UYARI: Kullanıcı yükü 100 kişiyi aşmayan yerlerde kapı kolu kabul edilebilir. 100 kişiyi aşan yerlerde Panik Bar zorunludur.",
@@ -2431,7 +2431,7 @@ class Bolum27Content {
   static final kilitOptionD = ChoiceResult(
     label: "27-3-D",
     uiTitle:
-        "<b>Karma</b> (Bazı kapılar panik barlı, bazıları kollu veya kilitli).",
+        "Karma (Bazı kapılar panik barlı, bazıları kollu veya kilitli).",
     uiSubtitle: "",
     reportText:
         "UYARI: Kaçış güzergahında karma kilit sistemleri mevcuttur. Kullanıcı yükü 100 kişiyi aşan binalarda tüm kapıların panik bar ile donatılması şarttır. Bazı kapıların kilitli olması veya anahtar gerektirmesi tahliyeyi imkansız kılar.",
@@ -2449,7 +2449,7 @@ class Bolum27Content {
   static final dayanimOptionA = ChoiceResult(
     label: "27-4-A",
     uiTitle:
-        "Çelik, yangına dayanıklı, duman sızdırmaz, kendiliğinden <b>kapanıyor</b>.",
+        "Çelik, yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanıyor.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Yangın kapısı kullanılması olumlu bir durumdur. Kapının yangın dayanım test raporu incelendikten sonra tam olarak uygunluğuna karar verilir.",
@@ -2458,7 +2458,7 @@ class Bolum27Content {
   static final dayanimOptionB = ChoiceResult(
     label: "27-4-B",
     uiTitle:
-        "Çelik, yangına dayanıklı, duman sızdırmaz ancak kendiliğinden <b>kapanmıyor</b>.",
+        "Çelik, yangına dayanıklı, duman sızdırmaz ancak kendiliğinden kapanmıyor.",
     uiSubtitle: "Hidroliği veya menteşeleri arızalı.",
     reportText:
         "UYARI: Yangın kapıları her zaman otomatik kapanır durumda olmalıdır.",
@@ -2466,7 +2466,7 @@ class Bolum27Content {
 
   static final dayanimOptionC = ChoiceResult(
     label: "27-4-C",
-    uiTitle: "Ahşap, PVC veya cam kapı (<b>dayanıksız</b>).",
+    uiTitle: "Ahşap, PVC veya cam kapı (dayanıksız).",
     uiSubtitle: "Yangın kapısı değildir.",
     reportText:
         "KRİTİK RİSK: Yangın merdiveni kapıları yanıcı malzemeden (Ahşap/PVC) yapılamaz. Bu Uygulama'nın Bölüm-14'ünde yer alan şaft kapağı yangın dayanım süresiyle aynı dayanım süresi alınabilir. Yangın kapısı en az 60 dk yangına dayanıklı olmalıdır.",
@@ -2475,7 +2475,7 @@ class Bolum27Content {
   static final dayanimOptionD = ChoiceResult(
     label: "27-4-D",
     uiTitle:
-        "<b>Karma</b> (Bazı kapılar yangına dayanıklı, bazıları dayanıksız).",
+        "Karma (Bazı kapılar yangına dayanıklı, bazıları dayanıksız).",
     uiSubtitle: "Farklı katlarda farklı özellikte kapılar mevcut.",
     reportText:
         "KRİTİK RİSK: Kaçış merdivenine açılan kapıların bir kısmının yangına dayanıksız (Ahşap/PVC/Cam) olması, yangın kompartıman bütünlüğünü bozar. Tüm kapıların sertifikalı yangın kapısı olması zorunludur.",
@@ -2501,7 +2501,7 @@ class Bolum28Content {
 
   static final mesafeOptionA = ChoiceResult(
     label: "28-2-A (Mesafe)",
-    uiTitle: "20 metreden <b>az</b>.",
+    uiTitle: "20 metreden az.",
     uiSubtitle: "En uzak odadan daire kapısına kadar olan mesafe.",
     reportText:
         "OLUMLU: Daire içi kaçış mesafesi 20 metrenin altındadır, Yönetmelik talebi karşılanıyor.",
@@ -2517,7 +2517,7 @@ class Bolum28Content {
 
   static final mesafeOptionC = ChoiceResult(
     label: "28-2-C (Mesafe)",
-    uiTitle: "30 metreden <b>fazla</b>.",
+    uiTitle: "30 metreden fazla.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Binanın tamamında sprinkler sistemi olsa bile daire içi kaçış mesafesi 30 metreyi geçemez.",
@@ -2541,7 +2541,7 @@ class Bolum28Content {
 
   static final alanOption1 = ChoiceResult(
     label: "28-3-B-1 (Alan)",
-    uiTitle: "Üst kat 70 m²'den <b>küçük</b>.",
+    uiTitle: "Üst kat 70 m²'den küçük.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Üst kat alanı 70 m²'den küçük olduğu için tek çıkış yeterlidir.",
@@ -2549,7 +2549,7 @@ class Bolum28Content {
 
   static final alanOption2 = ChoiceResult(
     label: "28-3-B-2 (Alan)",
-    uiTitle: "Üst kat 70 m²'den <b>büyük</b>.",
+    uiTitle: "Üst kat 70 m²'den büyük.",
     uiSubtitle: "",
     reportText:
         "Üst kat alanı 70 m²'yi geçtiği için ek bir çıkış kapısı olup olmadığı alt soruya göre kontrol edilmelidir.",
@@ -2557,7 +2557,7 @@ class Bolum28Content {
 
   static final cikisOptionA = ChoiceResult(
     label: "28-3-B-2-A (Çıkış)",
-    uiTitle: "Evet, üst katta kapı <b>var</b>.",
+    uiTitle: "Evet, üst katta kapı var.",
     uiSubtitle: "Üst kattan apartmana çıkış mevcut.",
     reportText:
         "OLUMLU: Üst kat alanı 70 m²'yi geçtiği için yapılan ikinci çıkış kapısı olması halinde Yönetmelik talebi karşılanmaktadır.",
@@ -2565,7 +2565,7 @@ class Bolum28Content {
 
   static final cikisOptionB = ChoiceResult(
     label: "28-3-B-2-B (Çıkış)",
-    uiTitle: "Hayır, üst katta kapı <b>yok</b>.",
+    uiTitle: "Hayır, üst katta kapı yok.",
     uiSubtitle: "Sadece alt kattan çıkılabiliyor.",
     reportText:
         "KRİTİK RİSK: Dubleks dairelerde üst kat alanı 70 m²'yi geçerse, üst kattan da apartman koridoruna açılan ikinci bir çıkış kapısı olması zorunludur.",
@@ -2576,14 +2576,14 @@ class Bolum29Content {
   // 1. OTOPARK
   static final otoparkOptionA = ChoiceResult(
     label: "29-1-A",
-    uiTitle: "<b>Hayır</b>, sadece taşıtlar var, alan temiz.",
+    uiTitle: "Hayır, sadece taşıtlar var, alan temiz.",
     uiSubtitle: "Otopark alanı düzenli.",
     reportText:
         "OLUMLU: Otopark alanı temiz, farklı risk grubuna ait depolama yapılmamıştır.",
   );
   static final otoparkOptionB = ChoiceResult(
     label: "29-1-B",
-    uiTitle: "<b>Evet</b>, eşya yığınları var.",
+    uiTitle: "Evet, eşya yığınları var.",
     uiSubtitle: "Lastik, koli, eski eşya vb. biriktirilmiş.",
     reportText:
         "UYARI: Otopark alanlarında araçlar haricinde hiçbir yanıcı malzeme (kışlık lastik, koli, eski eşya vb.) depolanmamalıdır. Araç yangınlarında bu malzemeler yangını hızla büyüterek kontrol edilemez hale getirir.",

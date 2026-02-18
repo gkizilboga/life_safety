@@ -80,7 +80,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
           const Padding(
             padding: EdgeInsets.only(left: 4, bottom: 12),
             child: Text(
-              "Binada kullanmak zorunda kaldığınız eğimli bir <b>rampa</b> var mı?",
+              "Binada kullanmak zorunda kaldığınız eğimli bir rampa var mı?",
               style: AppStyles.questionTitle,
             ),
           ),
@@ -136,7 +136,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
             ], _model.egim),
 
             _buildSoru(
-              "Rampanın başlangıcında ve bitişinde <b>sahanlık</b> (düzlük) var mı?",
+              "Rampanın başlangıcında ve bitişinde sahanlık (düzlük) var mı?",
               'sahanlik',
               [
                 Bolum26Content.sahanlikOptionA,
@@ -158,7 +158,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
               ),
             ),
             _buildSoru(
-              "Otopark araç <b>rampasını</b> acil durumda <b>kaçış yolu</b> olarak kullanabilir misiniz?",
+              "Otopark araç rampasını acil durumda kaçış yolu olarak kullanabilir misiniz?",
               'otopark',
               [
                 Bolum26Content.otoparkOptionA,

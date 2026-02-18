@@ -147,7 +147,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       child: Column(
         children: [
           _buildSoru(
-            "Kazan dairesinin konumu ve kapısının <b>açıldığı yer</b> nasıl?",
+            "Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?",
             'konum',
             [
               Bolum30Content.konumOptionA,
@@ -163,7 +163,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Kazan kapasitesini <b>(kW)</b> giriniz:",
+                  "Kazan kapasitesini (kW) giriniz:",
                   style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 10),
@@ -202,7 +202,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
           ),
 
           _buildSoru(
-            "Kazan dairesinin kaç adet <b>çıkış kapısı</b> var?",
+            "Kazan dairesinin kaç adet çıkış kapısı var?",
             'kapi',
             [
               Bolum30Content.kapiOptionA,
@@ -213,7 +213,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
           ),
 
           _buildSoru(
-            "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan <b>menfezler</b> var mı?",
+            "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?",
             'hava',
             [
               Bolum30Content.havaOptionA,
