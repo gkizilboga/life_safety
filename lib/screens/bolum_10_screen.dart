@@ -237,7 +237,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
 
           if (_checkIfComplete())
             Padding(
-              padding: const EdgeInsets.only(top: 15),
+              padding: const EdgeInsets.only(top: 4),
               child: _buildSummaryCard(),
             ),
         ],
@@ -358,7 +358,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
 
   Widget _buildSummaryCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.green.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),

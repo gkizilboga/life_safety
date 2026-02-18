@@ -134,7 +134,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
         // Yönetmelikte 600m2 sınırı sprinklersiz için değil, genel bir sınırdır ama senin mantığına göre:
         // Düzeltme: Sprinklersiz ise sınır daha düşüktür ama senin metnine sadık kalıyorum.
         _specialWarning =
-            "Normal kat alanı belli büyükküğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. 2. çıkış gerekebilir.";
+            "Normal kat alanı belli büyüklüğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. 2. çıkış gerekebilir.";
       }
     }
 
@@ -171,6 +171,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
         );
       },
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -253,7 +254,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   ) {
     bool isSuccess = (sonuc?.label.contains("OK") ?? false);
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,

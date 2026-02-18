@@ -171,26 +171,87 @@ class ReportEngine {
     // Eğer özel bir logic yoksa, standart cevabı ekle
     bool handled = false;
 
-    // Bölüm 3: Kat Adetleri
+    // Bölüm 3: Kat Adetleri ve Yükseklik Bilgileri
     if (id == 3) {
       final b3 = s.bolum3;
       if (b3 != null) {
-        if ((b3.normalKatSayisi ?? 0) > 0) {
+        // Kat sayıları
+        final int normalKat = b3.normalKatSayisi ?? 0;
+        final int bodrumKat = b3.bodrumKatSayisi ?? 0;
+        final int toplamKat = normalKat + bodrumKat + 1; // +1 zemin
+
+        if (normalKat > 0) {
           details.add({
             'label': 'Normal Kat Sayısı (Zemin Üstü)',
-            'value': '${b3.normalKatSayisi} adet',
+            'value': '$normalKat adet',
             'report': '',
           });
         }
-        if ((b3.bodrumKatSayisi ?? 0) > 0) {
+        if (bodrumKat > 0) {
           details.add({
             'label': 'Bodrum Kat Sayısı (Zemin Altı)',
-            'value': '${b3.bodrumKatSayisi} adet',
+            'value': '$bodrumKat adet',
             'report': '',
           });
         }
-        // Zemin kat her zaman var
         details.add({'label': 'Zemin Kat', 'value': '1 adet', 'report': ''});
+        details.add({
+          'label': 'Toplam Kat Adedi',
+          'value': '$toplamKat kat',
+          'report': '',
+        });
+
+        // Kat yükseklikleri
+        details.add({
+          'label': 'Zemin Kat Yüksekliği',
+          'value': '${b3.zeminYuksekligi?.toStringAsFixed(2) ?? "-"} m',
+          'report': '',
+        });
+        if (normalKat > 0) {
+          details.add({
+            'label': 'Normal Kat Yüksekliği',
+            'value': '${b3.normalYuksekligi?.toStringAsFixed(2) ?? "-"} m',
+            'report': '',
+          });
+        }
+        if (bodrumKat > 0) {
+          details.add({
+            'label': 'Bodrum Kat Yüksekliği',
+            'value': '${b3.bodrumYuksekligi?.toStringAsFixed(2) ?? "-"} m',
+            'report': '',
+          });
+        }
+
+        // Bina ve yapı yükseklikleri
+        details.add({
+          'label': 'Bina Yüksekliği (hBina)',
+          'value': '${b3.hBina?.toStringAsFixed(2) ?? "-"} m',
+          'report': '',
+        });
+        details.add({
+          'label': 'Yapı Yüksekliği (hYapı)',
+          'value': '${b3.hYapi?.toStringAsFixed(2) ?? "-"} m',
+          'report': '',
+        });
+
+        // Yüksek bina sınıflandırması
+        final bool isYuksek = b3.isYuksekBina;
+        details.add({
+          'label': 'Yüksek Bina Sınıflandırması',
+          'value': isYuksek ? 'YÜKSEK BİNA' : 'Yüksek Olmayan Bina',
+          'report': '',
+        });
+
+        // Varsayılan değer uyarısı
+        if (b3.yukseklikBilinmiyor == true) {
+          details.add({
+            'label': '',
+            'value': '',
+            'report':
+                'NOT: Kat yükseklikleri kullanıcı tarafından bilinmediğinden uygulama varsayılan değerler (Zemin: 3.50m, Normal: 3.00m, Bodrum: 3.50m) kullanarak hesaplama yapmıştır.',
+          });
+        }
+
         handled = true;
       }
     }

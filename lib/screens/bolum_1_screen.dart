@@ -45,7 +45,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
-                  "Teste istediğiniz zaman ara verebilirsiniz.",
+                  "Analize istediğiniz zaman ara verebilirsiniz.",
                   style: TextStyle(
                     fontSize: 14,
                     height: 1.4,
@@ -66,7 +66,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                     ),
                     Expanded(
                       child: Text(
-                        "Ekranın sağ üst köşesindeki \"KAYDET\" butonuna basarak ilerlemenizi kaydedip çıkabilir, daha sonra kaldığınız yerden devam edebilirsiniz.",
+                        "Ekranın sağ üst köşesindeki \"KAYDET\" butonuna basarak analizden çıkabilir, daha sonra kaldığınız yerden devam edebilirsiniz.",
                         style: TextStyle(
                           fontSize: 14,
                           height: 1.4,
@@ -97,9 +97,9 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                             color: Colors.black87,
                           ),
                           children: [
-                            TextSpan(text: "(DİKKAT: Bu test yalnızca "),
+                            TextSpan(text: "(DİKKAT: Bu analiz yalnızca "),
                             TextSpan(
-                              text: "KONUT",
+                              text: "KONUT ve KONUT + TİCARİ",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             TextSpan(
@@ -175,7 +175,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             ],
           ),
           content: const Text(
-            ' DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen güncel yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Uzman görüşüne başvurmanız tavsiye edilir.',
+            ' DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Uzman görüşüne başvurmanız tavsiye edilir.',
             style: TextStyle(fontSize: 14, height: 1.4),
           ),
           actions: [

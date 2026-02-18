@@ -260,7 +260,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
           _buildSectionTitle("Yükseklik Bilgisi"),
           _buildSummaryCard(vals),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 12),
           ConfirmationCheckbox(
             value: _isConfirmed,
             onChanged: (val) => setState(() => _isConfirmed = val ?? false),

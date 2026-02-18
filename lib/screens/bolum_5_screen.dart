@@ -77,6 +77,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   void _validate() {
     setState(() {
+      // Kullanıcı giriş alanlarını değiştirdiğinde hesaplama geçersiz olur
+      // Toplam alanı yeniden hesaplatması gerekir
+      _isCalculated = false;
+      _isConfirmed = false;
+
       // Zemin kat validasyonu (min: 5, max: 2500)
       double? taban = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
       if (_tabanCtrl.text.isNotEmpty && taban != null) {
@@ -184,6 +189,9 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   bool _isFormValid() {
     if (!_isConfirmed) return false;
+    if (!_isCalculated) return false;
+    if (_tabanCtrl.text.isEmpty) return false;
+    if (_nKat > 0 && _normalCtrl.text.isEmpty) return false;
     if (_toplamCtrl.text.isEmpty) return false;
     return _tabanError == null &&
         _normalError == null &&
@@ -269,7 +277,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
                 if (_isCalculated) _buildSummaryCard(),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 ConfirmationCheckbox(
                   value: _isConfirmed,
                   onChanged: (val) =>

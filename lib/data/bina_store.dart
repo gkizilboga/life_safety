@@ -399,7 +399,10 @@ class BinaStore {
   }
 
   Future<void> _performSave() async {
-    currentBinaId ??= DateTime.now().millisecondsSinceEpoch.toString();
+    // Kayıt yapılamaz: Henüz bir bina ID atanmamış.
+    // Bu durum kullanıcı login olduğunda ama henüz bir analiz başlatmadığında oluşur.
+    if (currentBinaId == null) return;
+
     final currentData = {
       'id': currentBinaId,
       'name': currentBinaName ?? "İsimsiz Bina",

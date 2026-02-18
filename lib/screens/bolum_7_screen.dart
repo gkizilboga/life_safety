@@ -203,7 +203,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
           const SizedBox(height: 8),
 
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.symmetric(vertical: 8),
             child: Divider(color: Color(0xFFECEFF1)),
           ),
 

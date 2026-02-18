@@ -886,14 +886,14 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               child: Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 8),
             SizedBox(
-              width: 70,
+              width: 55,
               child: TextFormField(
                 controller: ctrl,
                 keyboardType: TextInputType.number,
@@ -914,6 +914,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           ],
         ),
         const SizedBox(height: 8),
+        if (assetPath != null)
+          TechnicalDrawingButton(assetPath: assetPath, title: label),
         if (assetPaths != null)
           ...assetPaths.map(
             (path) => TechnicalDrawingButton(assetPath: path, title: label),
@@ -1069,9 +1071,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     final question =
         "Dışarıya açılmayan merdivenlerin bina içi tahliye mesafesi $limit metrenin altında mı?";
 
-    final currentSelection = isBasement
-        ? _bodLobiMesafeDurumu
-        : _lobiMesafeDurumu;
+    final currentSelection = isBasement ? _bodLobiMesafeDurumu : _lobiMesafeDurumu;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1090,46 +1090,48 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           Text(question, style: const TextStyle(fontSize: 14)),
           const SizedBox(height: 12),
           SelectableCard(
-            choice: Bolum36Content.madde41MesafeAltinda,
+            choice: Bolum20Content.madde41MesafeAltinda.copyWith(
+              uiTitle: "$limit m veya altında",
+            ),
             isSelected:
-                currentSelection?.label ==
-                Bolum36Content.madde41MesafeAltinda.label,
+                currentSelection?.label == Bolum20Content.madde41MesafeAltinda.label,
             onTap: () {
               setState(() {
                 if (isBasement) {
-                  _bodLobiMesafeDurumu = Bolum36Content.madde41MesafeAltinda;
+                  _bodLobiMesafeDurumu = Bolum20Content.madde41MesafeAltinda;
                 } else {
-                  _lobiMesafeDurumu = Bolum36Content.madde41MesafeAltinda;
+                  _lobiMesafeDurumu = Bolum20Content.madde41MesafeAltinda;
                 }
               });
             },
           ),
           SelectableCard(
-            choice: Bolum36Content.madde41MesafeUstunde,
+            choice: Bolum20Content.madde41MesafeUstunde.copyWith(
+              uiTitle: "$limit m üzerinde",
+            ),
             isSelected:
-                currentSelection?.label ==
-                Bolum36Content.madde41MesafeUstunde.label,
+                currentSelection?.label == Bolum20Content.madde41MesafeUstunde.label,
             onTap: () {
               setState(() {
                 if (isBasement) {
-                  _bodLobiMesafeDurumu = Bolum36Content.madde41MesafeUstunde;
+                  _bodLobiMesafeDurumu = Bolum20Content.madde41MesafeUstunde;
                 } else {
-                  _lobiMesafeDurumu = Bolum36Content.madde41MesafeUstunde;
+                  _lobiMesafeDurumu = Bolum20Content.madde41MesafeUstunde;
                 }
               });
             },
           ),
           SelectableCard(
-            choice: Bolum36Content.madde41MesafeBilmiyorum,
+            choice: Bolum20Content.madde41MesafeBilmiyorum,
             isSelected:
                 currentSelection?.label ==
-                Bolum36Content.madde41MesafeBilmiyorum.label,
+                Bolum20Content.madde41MesafeBilmiyorum.label,
             onTap: () {
               setState(() {
                 if (isBasement) {
-                  _bodLobiMesafeDurumu = Bolum36Content.madde41MesafeBilmiyorum;
+                  _bodLobiMesafeDurumu = Bolum20Content.madde41MesafeBilmiyorum;
                 } else {
-                  _lobiMesafeDurumu = Bolum36Content.madde41MesafeBilmiyorum;
+                  _lobiMesafeDurumu = Bolum20Content.madde41MesafeBilmiyorum;
                 }
               });
             },

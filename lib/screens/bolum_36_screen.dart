@@ -31,10 +31,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   final _kapiGenislikKorunumluCtrl = TextEditingController();
   final _kapiGenislikKorunumsuzCtrl = TextEditingController();
 
-  // Madde 41 Controllers
-  final _disariAcilanMerdCtrl = TextEditingController();
-  final _lobiTahliyeMesafeCtrl = TextEditingController();
-
   final GlobalKey _konumKey = GlobalKey();
   final GlobalKey _genislikKey = GlobalKey();
   final GlobalKey _kapiKey = GlobalKey();
@@ -891,6 +887,62 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       }
     }
 
+    // 7. Madde 41: Dış Havaya Tahliye
+    final int totalMain = (b20?.normalMerdivenSayisi ?? 0) +
+        (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
+        (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+        (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0) +
+        (b20?.donerMerdivenSayisi ?? 0) +
+        (b20?.sahanliksizMerdivenSayisi ?? 0) +
+        (b20?.dengelenmisMerdivenSayisi ?? 0);
+
+    if (totalMain > 0) {
+      final int directMain = b20?.toplamDisariAcilanMerdivenSayisi ?? 0;
+      final bool ratioOk = directMain >= (totalMain / 2);
+      bool distanceOk = true;
+      if (directMain < totalMain) {
+        distanceOk = b20?.lobiTahliyeMesafeDurumu?.label ==
+            Bolum20Content.madde41MesafeAltinda.label;
+      }
+
+      results.add({
+        'status': (ratioOk && distanceOk) ? 'OK' : 'FAIL',
+        'title': 'Dış Havaya Tahliye (Madde 41) - Ana Katlar',
+        'desc': (ratioOk && distanceOk)
+            ? 'UYGUN: Merdiven tahliye oranı ve mesafesi yeterli.'
+            : 'UYGUN DEĞİL: Tahliye oranı (<%50) veya lobi mesafesi hatalı.',
+      });
+    }
+
+    // 8. Madde 41 (Bodrum)
+    if (b20?.isBodrumIndependent == true) {
+      final int totalBod = (b20?.bodrumNormalMerdivenSayisi ?? 0) +
+          (b20?.bodrumBinaIciYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumBinaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumBinaDisiAcikYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumDonerMerdivenSayisi ?? 0) +
+          (b20?.bodrumSahanliksizMerdivenSayisi ?? 0) +
+          (b20?.bodrumDengelenmisMerdivenSayisi ?? 0);
+
+      if (totalBod > 0) {
+        final int directBod = b20?.bodrumToplamDisariAcilanMerdivenSayisi ?? 0;
+        final bool ratioOkB = directBod >= (totalBod / 2);
+        bool distanceOkB = true;
+        if (directBod < totalBod) {
+          distanceOkB = b20?.bodrumLobiTahliyeMesafeDurumu?.label ==
+              Bolum20Content.madde41MesafeAltinda.label;
+        }
+
+        results.add({
+          'status': (ratioOkB && distanceOkB) ? 'OK' : 'FAIL',
+          'title': 'Dış Havaya Tahliye (Madde 41) - Bodrum Katlar',
+          'desc': (ratioOkB && distanceOkB)
+              ? 'UYGUN: Bodrum tahliye oranı ve mesafesi yeterli.'
+              : 'UYGUN DEĞİL: Tahliye oranı (<%50) veya lobi mesafesi hatalı.',
+        });
+      }
+    }
+
     return results;
   }
 
@@ -1061,7 +1113,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                 if (_hasKorunumlu) ...[
                   _buildInput(
                     _areWidthsSame
-                        ? "Korunumlu Merdiven/Koridor Genişliği"
+                        ? "Korunumlu Merdiven ve Koridor Genişliği"
                         : "Korunumlu Merdiven Genişliği",
                     _genislikKorunumluCtrl,
                     _genislikBilinmiyor,
@@ -1079,7 +1131,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                 if (_hasKorunumsuz) ...[
                   _buildInput(
                     _areWidthsSame
-                        ? "Korunumsuz Merdiven/Koridor Genişliği"
+                        ? "Korunumsuz Merdiven ve Koridor Genişliği"
                         : "Korunumsuz Merdiven Genişliği",
                     _genislikKorunumsuzCtrl,
                     _genislikBilinmiyor,
@@ -1126,14 +1178,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               children: [
                 if (_hasKorunumlu)
                   _buildInput(
-                    "Korunumlu Merdiven Kapı Genişliği",
+                    "Korunumlu Merdivene Ait Kapı Genişliği",
                     _kapiGenislikKorunumluCtrl,
                     _kapiGenislikBilinmiyor,
                     _kGenKerr,
                   ),
                 if (_hasKorunumsuz)
                   _buildInput(
-                    "Korunumsuz Merdiven Kapı Genişliği",
+                    "Korunumsuz Merdivene Ait Kapı Genişliği",
                     _kapiGenislikKorunumsuzCtrl,
                     _kapiGenislikBilinmiyor,
                     _kGenKSerr,
@@ -1161,58 +1213,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             Bolum36Content.gorunurlukOptionC,
           ], _model.gorunurluk),
 
-          // --- MADDE 41 UI BLOĞU ---
-          _buildSoruHeader("Kaçış merdivenlerinin bina dışına tahliyesi"),
-          QuestionCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildSoruHeader(
-                  "Toplam $_totalValidCikisSayisi merdivenin kaç tanesi doğrudan bina dışına (havaya) açılıyor?",
-                  isMain: false,
-                ),
-                _buildInput(
-                  "Doğrudan Dışarı Açılan Adedi",
-                  _disariAcilanMerdCtrl,
-                  false,
-                  null,
-                  keyboardType: TextInputType.number,
-                ),
-                if ((int.tryParse(_disariAcilanMerdCtrl.text) ?? 0) <
-                    _totalValidCikisSayisi) ...[
-                  const SizedBox(height: 16),
-                  Builder(
-                    builder: (context) {
-                      final hasSprinkler =
-                          BinaStore.instance.bolum9?.secim?.label == "9-1-A";
-                      final limit = hasSprinkler ? 15 : 10;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildInfoNote(
-                            "Binada ${hasSprinkler ? "Sprinkler VAR" : "Sprinkler YOK"}. Bu durumda lobi tahliye mesafesi en fazla $limit metre olabilir.",
-                          ),
-                          _buildSoruHeader(
-                            "Dışarı açılmayan merdivenlerin lobi/koridor içindeki tahliye mesafesi kaç metredir?",
-                            isMain: false,
-                          ),
-                          _buildInput(
-                            "Tahliye Mesafesi (m)",
-                            _lobiTahliyeMesafeCtrl,
-                            false,
-                            null,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ],
-            ),
-          ),
+
 
           _buildYghEvaluationPanel(),
           _buildStairAnalysisList(),

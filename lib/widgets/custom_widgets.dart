@@ -297,7 +297,7 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 40),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
             decoration: const BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -633,7 +633,7 @@ class ConfirmationCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 16),
+      margin: const EdgeInsets.only(top: 4),
       decoration: BoxDecoration(
         // Açık yeşil arka plan - dikkat çekici
         gradient: LinearGradient(

@@ -250,9 +250,9 @@ class Bolum20Model {
           map['toplamDisariAcilanMerdivenSayisi'] ?? 0, // NEW
 
       lobiTahliyeMesafeDurumu: find(map['lobiTahliyeMesafeDurumu_label'], [
-        Bolum36Content.madde41MesafeAltinda,
-        Bolum36Content.madde41MesafeUstunde,
-        Bolum36Content.madde41MesafeBilmiyorum,
+        Bolum20Content.madde41MesafeAltinda,
+        Bolum20Content.madde41MesafeUstunde,
+        Bolum20Content.madde41MesafeBilmiyorum,
       ]),
       isBodrumIndependent: map['isBodrumIndependent'] ?? false,
       bodrumMerdivenDevami: find(map['bodrumMerdivenDevami_label'], [
@@ -271,15 +271,15 @@ class Bolum20Model {
           map['bodrumSahanliksizMerdivenSayisi'] ?? 0,
       bodrumDengelenmisMerdivenSayisi:
           map['bodrumDengelenmisMerdivenSayisi'] ?? 0,
-
+ 
       bodrumToplamDisariAcilanMerdivenSayisi:
           map['bodrumToplamDisariAcilanMerdivenSayisi'] ?? 0, // NEW
-
+ 
       bodrumLobiTahliyeMesafeDurumu:
           find(map['bodrumLobiTahliyeMesafeDurumu_label'], [
-            Bolum36Content.madde41MesafeAltinda,
-            Bolum36Content.madde41MesafeUstunde,
-            Bolum36Content.madde41MesafeBilmiyorum,
+            Bolum20Content.madde41MesafeAltinda,
+            Bolum20Content.madde41MesafeUstunde,
+            Bolum20Content.madde41MesafeBilmiyorum,
           ]),
       daireselMerdivenKovaGenisligi: map['daireselMerdivenKovaGenisligi'],
       basinclandirma: find(map['basinclandirma_label'], [

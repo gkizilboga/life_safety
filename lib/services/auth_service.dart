@@ -16,7 +16,6 @@ class AuthService {
         BinaStore.instance.userName = account.displayName ?? "Misafir";
         BinaStore.instance.isRegistered = true;
         // We could store email too if BinaStore supported it
-        await BinaStore.instance.saveToDisk(immediate: true);
       }
       return account;
     } catch (e) {
@@ -34,13 +33,11 @@ class AuthService {
       BinaStore.instance.userName = email.split('@')[0];
     }
     BinaStore.instance.isRegistered = true;
-    await BinaStore.instance.saveToDisk(immediate: true);
   }
 
   /// Logs out from Google and local session
   static Future<void> signOut() async {
     await _googleSignIn.signOut();
     BinaStore.instance.isRegistered = false;
-    await BinaStore.instance.saveToDisk(immediate: true);
   }
 }
