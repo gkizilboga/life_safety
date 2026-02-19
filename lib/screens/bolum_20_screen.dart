@@ -676,12 +676,12 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
             ),
 
             // Total Direct Exits Question (Upper Floors)
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             _buildTotalDirectInput(),
 
             // LOBI MESAFE SORUSU (Madde 41)
             if (_shouldShowLobbyDistanceQuestion()) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: 14),
               _buildLobbyDistanceInput(),
             ],
           ],
@@ -689,8 +689,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           // Stair Classification Summary
           const SizedBox(height: 24),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(horizontal: 3),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: const Color(0xFFF3F4F6),
               borderRadius: BorderRadius.circular(12),
@@ -886,7 +886,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               child: Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1071,7 +1071,9 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
     final question =
         "Dışarıya açılmayan merdivenlerin bina içi tahliye mesafesi $limit metrenin altında mı?";
 
-    final currentSelection = isBasement ? _bodLobiMesafeDurumu : _lobiMesafeDurumu;
+    final currentSelection = isBasement
+        ? _bodLobiMesafeDurumu
+        : _lobiMesafeDurumu;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1094,7 +1096,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               uiTitle: "$limit m veya altında",
             ),
             isSelected:
-                currentSelection?.label == Bolum20Content.madde41MesafeAltinda.label,
+                currentSelection?.label ==
+                Bolum20Content.madde41MesafeAltinda.label,
             onTap: () {
               setState(() {
                 if (isBasement) {
@@ -1110,7 +1113,8 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               uiTitle: "$limit m üzerinde",
             ),
             isSelected:
-                currentSelection?.label == Bolum20Content.madde41MesafeUstunde.label,
+                currentSelection?.label ==
+                Bolum20Content.madde41MesafeUstunde.label,
             onTap: () {
               setState(() {
                 if (isBasement) {

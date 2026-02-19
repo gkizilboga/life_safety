@@ -614,27 +614,15 @@ class PdfService {
             mainAxisAlignment: pw.MainAxisAlignment.start,
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              _buildLegendItem(
-                PdfColors.red700,
-                "KRİTİK RİSK",
-                "(-10 Puan) Acil önlem alınmalı",
-              ),
+              _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", "(-5 Puan)"),
               pw.SizedBox(width: 20),
-              _buildLegendItem(
-                PdfColors.yellow700,
-                "UYARI",
-                "(-2 Puan) Önlem gerekebilir",
-              ),
+              _buildLegendItem(PdfColors.yellow700, "UYARI", "(-2 Puan)"),
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
               pw.SizedBox(width: 20),
-              _buildLegendItem(
-                PdfColors.grey500,
-                "BİLİNMİYOR",
-                "(-1 Puan) Tespit yapılamadı",
-              ),
+              _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", "(-1 Puan)"),
             ],
           ),
 
@@ -921,12 +909,12 @@ class PdfService {
               children: [
                 pw.Container(
                   margin: const pw.EdgeInsets.only(
-                    bottom: 4,
-                  ), // Reduced from 10
+                    bottom: 12,
+                  ), // Increased from 4
                   padding: const pw.EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 4,
-                  ), // Reduced padding
+                    horizontal: 10,
+                    vertical: 10,
+                  ), // Increased padding
                   decoration: boxDecoration,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -946,7 +934,7 @@ class PdfService {
                           ),
                         ],
                       ),
-                      pw.SizedBox(height: 2), // Reduced from 6
+                      pw.SizedBox(height: 6), // Increased from 2
                       pw.Text(
                         cleanReason,
                         style: const pw.TextStyle(
@@ -955,7 +943,7 @@ class PdfService {
                         ),
                       ),
                       if (req.note.isNotEmpty) ...[
-                        pw.SizedBox(height: 2), // Reduced from 4
+                        pw.SizedBox(height: 6), // Increased from 2
                         pw.Text(
                           "NOT: ${_cleanEmojis(req.note)}",
                           style: const pw.TextStyle(

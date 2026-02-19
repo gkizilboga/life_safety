@@ -298,9 +298,7 @@ void main() {
         true,
       );
       expect(
-        details.any(
-          (d) => d['label'] == 'Asansör Makine Dairesi' && d['value'] == 'Yok',
-        ),
+        details.any((d) => d['label'] == 'Asansör' && d['value'] == 'Yok'),
         true,
       );
     });

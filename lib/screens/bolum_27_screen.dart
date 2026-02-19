@@ -52,25 +52,67 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
     setState(() {
       if (type == 'boyut') {
         _model = _model.copyWith(boyut: choice);
-        // Manual scroll preferred for standard questions
       }
       if (type == 'yon') {
-        _model = _model.copyWith(yon: choice);
+        final current = List<ChoiceResult>.from(_model.yon);
+        if (current.any((e) => e.label == choice.label)) {
+          current.removeWhere((e) => e.label == choice.label);
+        } else {
+          // Rule: Max 2
+          if (current.length < 2) {
+            current.add(choice);
+          } else {
+            // Optional: Replace last or show snackbar?
+            // Usually we just don't allow it, but for better UX, maybe replace the last one
+            current.removeAt(0);
+            current.add(choice);
+          }
+        }
+        _model = _model.copyWith(yon: current);
       }
       if (type == 'kilit') {
-        _model = _model.copyWith(kilit: choice);
+        List<ChoiceResult> current = List<ChoiceResult>.from(_model.kilit);
+        final label = choice.label;
 
-        // Only scroll if a NEW Dynamic section (Fire Door) appears?
-        // Logic says _needsFireDoor is calculated at init, so dayanim question is always there or not there.
-        // So no dynamic appearing here. No auto-scroll.
+        if (current.any((e) => e.label == label)) {
+          current.removeWhere((e) => e.label == label);
+        } else {
+          // Rule: A, B, D are exclusive to each other. C is extra.
+          // Labels: 27-3-A, 27-3-B, 27-3-C, 27-3-D, 27-3-E
+          if (label.contains('27-3-C')) {
+            // Always allow C if not present, unless E is there?
+            current.removeWhere((e) => e.label.contains('27-3-E'));
+            current.add(choice);
+          } else if (label.contains('27-3-E')) {
+            // Bilmiyorum is exclusive
+            current = [choice];
+          } else if (label.contains('27-3-A') ||
+              label.contains('27-3-B') ||
+              label.contains('27-3-D')) {
+            // Mutual exclusivity for A, B, D
+            current.removeWhere(
+              (e) =>
+                  e.label.contains('27-3-A') ||
+                  e.label.contains('27-3-B') ||
+                  e.label.contains('27-3-D') ||
+                  e.label.contains('27-3-E'),
+            );
+            current.add(choice);
+          } else {
+            // Fallback for any other options if they existed
+            current.add(choice);
+          }
+        }
+        _model = _model.copyWith(kilit: current);
       }
       if (type == 'dayanim') _model = _model.copyWith(dayanim: choice);
     });
   }
 
   bool _isReady() {
-    if (_model.boyut == null || _model.yon == null || _model.kilit == null)
+    if (_model.boyut == null || _model.yon.isEmpty || _model.kilit.isEmpty) {
       return false;
+    }
     if (_needsFireDoor && _model.dayanim == null) return false;
     return true;
   }
@@ -173,19 +215,23 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   Widget _buildSoruCard(
     String key,
     List<ChoiceResult> options,
-    ChoiceResult? selected,
+    dynamic selected,
   ) {
     return QuestionCard(
       child: Column(
-        children: options
-            .map(
-              (opt) => SelectableCard(
-                choice: opt,
-                isSelected: selected?.label == opt.label,
-                onTap: () => _handleSelection(key, opt),
-              ),
-            )
-            .toList(),
+        children: options.map((opt) {
+          bool isSelected = false;
+          if (selected is ChoiceResult) {
+            isSelected = selected.label == opt.label;
+          } else if (selected is List<ChoiceResult>) {
+            isSelected = selected.any((e) => e.label == opt.label);
+          }
+          return SelectableCard(
+            choice: opt,
+            isSelected: isSelected,
+            onTap: () => _handleSelection(key, opt),
+          );
+        }).toList(),
       ),
     );
   }

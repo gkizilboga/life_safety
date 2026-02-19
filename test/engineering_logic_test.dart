@@ -114,7 +114,7 @@ void main() {
           binaIciYanginMerdiveniSayisi: 2,
           toplamDisariAcilanMerdivenSayisi: 1, // 1/2 >= 1/2 -> Oran OK
           lobiTahliyeMesafeDurumu:
-              Bolum36Content.madde41MesafeUstunde, // Above limit
+              Bolum20Content.madde41MesafeUstunde, // Above limit
         );
         store.bolum9 = Bolum9Model(secim: Bolum9Content.yok); // Sprinkler yok
         store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
@@ -134,7 +134,7 @@ void main() {
           binaIciYanginMerdiveniSayisi: 2,
           toplamDisariAcilanMerdivenSayisi: 1, // 1/2 >= 1/2 -> Oran OK
           lobiTahliyeMesafeDurumu:
-              Bolum36Content.madde41MesafeAltinda, // Below limit
+              Bolum20Content.madde41MesafeAltinda, // Below limit
         );
         store.bolum9 = Bolum9Model(
           secim: Bolum9Content.tamKapsam,
@@ -225,7 +225,7 @@ void main() {
           bodrumNormalMerdivenSayisi: 2,
           bodrumToplamDisariAcilanMerdivenSayisi: 1, // 1 >= 1 -> Ratio OK
           bodrumLobiTahliyeMesafeDurumu:
-              Bolum36Content.madde41MesafeUstunde, // Above limit
+              Bolum20Content.madde41MesafeUstunde, // Above limit
         );
         store.bolum9 = Bolum9Model(secim: Bolum9Content.yok);
         store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");

@@ -121,10 +121,10 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
               Bolum15Content.yalitimOptionC,
             ],
             _model.yalitim,
-          ),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section15DosemeYalitim,
-            title: "Döşeme Yalıtım Örneği",
+            headerWidget: TechnicalDrawingButton(
+              assetPath: AppAssets.section15DosemeYalitim,
+              title: "Döşeme Yalıtım Örneği",
+            ),
           ),
 
           if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) ...[
@@ -162,15 +162,20 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ], _model.tavanMalzeme),
           ],
 
-          _buildSoru("Tesisat geçişleri nasıl kapatılmış?", 'tesisat', [
-            Bolum15Content.tesisatOptionA,
-            Bolum15Content.tesisatOptionB,
-            Bolum15Content.tesisatOptionC,
-            Bolum15Content.tesisatOptionD,
-          ], _model.tesisat),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section15Gecis,
-            title: "Tesisat Geçiş Örneği",
+          _buildSoru(
+            "Tesisat geçişleri nasıl kapatılmış?",
+            'tesisat',
+            [
+              Bolum15Content.tesisatOptionA,
+              Bolum15Content.tesisatOptionB,
+              Bolum15Content.tesisatOptionC,
+              Bolum15Content.tesisatOptionD,
+            ],
+            _model.tesisat,
+            headerWidget: TechnicalDrawingButton(
+              assetPath: AppAssets.section15Gecis,
+              title: "Tesisat Geçiş Örneği",
+            ),
           ),
         ],
       ),
@@ -181,12 +186,14 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
     String title,
     String key,
     List<ChoiceResult> options,
-    ChoiceResult? selected,
-  ) {
+    ChoiceResult? selected, {
+    Widget? headerWidget,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (title.isNotEmpty) QuestionTitle(title),
+        if (headerWidget != null) headerWidget,
         QuestionCard(
           child: Column(
             children: [

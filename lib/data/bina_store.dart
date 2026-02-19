@@ -687,7 +687,7 @@ class BinaStore {
         if (m7.hasCati) riskler.add("Çatı Arası");
         if (m7.hasJenerator) riskler.add("Jeneratör Odası");
         if (m7.hasElektrik) riskler.add("Elektrik/Pano Odası");
-        if (m7.hasTrafo) riskler.add("Trafo Merkezi");
+        if (m7.hasTrafo) riskler.add("Trafo Odası");
         if (m7.hasDepo) riskler.add("Depo Alanı");
         if (m7.hasCop) riskler.add("Çöp Odası");
         if (m7.hasSiginak) riskler.add("Sığınak");
@@ -824,7 +824,7 @@ class BinaStore {
             "Elektrik/Pano Odası Kapısı: ${m13.elektrikKapi!.reportText}",
           );
         if (m13.trafoKapi != null)
-          parts.add("Trafo Merkezi Kapısı: ${m13.trafoKapi!.reportText}");
+          parts.add("Trafo Odası Kapısı: ${m13.trafoKapi!.reportText}");
         if (m13.depoKapi != null)
           parts.add("Depo Alanı Kapısı: ${m13.depoKapi!.reportText}");
         if (m13.copKapi != null)
@@ -1054,8 +1054,8 @@ class BinaStore {
           reportText: "Kapı özellikleri analizi yapılmıştır.",
           adviceText: _joinAdvice([
             _bolum27!.boyut,
-            _bolum27!.yon,
-            _bolum27!.kilit,
+            ..._bolum27!.yon,
+            ..._bolum27!.kilit,
             _bolum27!.dayanim,
           ]),
         );

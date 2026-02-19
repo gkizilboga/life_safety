@@ -120,7 +120,10 @@ void main() {
     store.bolum24 = Bolum24Model(tip: mockRes("24-A", "Basınçlandırma"));
     store.bolum25 = Bolum25Model(genislik: mockRes("25-A", "120cm"));
     store.bolum26 = Bolum26Model(varlik: mockRes("26-A", "Yok"));
-    store.bolum27 = Bolum27Model(yon: mockRes("27-A", "Dışa Açılır"));
+    store.bolum27 = Bolum27Model(
+      yon: [mockRes("27-A", "Dışa Açılır")],
+      kilit: [mockRes("27-B", "Panik Bar")],
+    );
     store.bolum28 = Bolum28Model(mesafe: mockRes("28-A", "15m"));
     store.bolum29 = Bolum29Model(otopark: mockRes("29-A", "Yok"));
     store.bolum30 = Bolum30Model(konum: mockRes("30-A", "Uygun"));

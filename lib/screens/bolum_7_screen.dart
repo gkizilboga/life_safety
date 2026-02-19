@@ -200,10 +200,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             assetPath: AppAssets.section7OrtakDuvar,
             title: "Bitişik Nizam Ortak Duvar Detayı",
           ),
-          const SizedBox(height: 8),
-
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: EdgeInsets.only(top: 4, bottom: 8),
             child: Divider(color: Color(0xFFECEFF1)),
           ),
 

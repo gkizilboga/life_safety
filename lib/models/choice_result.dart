@@ -25,4 +25,20 @@ class ChoiceResult {
 
   @override
   int get hashCode => label.hashCode;
+
+  ChoiceResult copyWith({
+    String? label,
+    String? uiTitle,
+    String? uiSubtitle,
+    String? reportText,
+    String? adviceText,
+  }) {
+    return ChoiceResult(
+      label: label ?? this.label,
+      uiTitle: uiTitle ?? this.uiTitle,
+      uiSubtitle: uiSubtitle ?? this.uiSubtitle,
+      reportText: reportText ?? this.reportText,
+      adviceText: adviceText ?? this.adviceText,
+    );
+  }
 }

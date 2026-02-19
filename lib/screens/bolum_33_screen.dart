@@ -95,27 +95,30 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     int gBodrum = (hYapi >= 21.50) ? math.max(gBodrumLoad, 2) : gBodrumLoad;
 
     // 4. MEVCUT ÇIKIŞ SAYILARI
-    // Üst katlar için toplam merdiven sayısı (Sahanlıksız hariç)
-    // Sahanlıksız merdivenler kaçış yolu kabul edilmez
+    // Binadaki TÜM merdiven tiplerini dahil ediyoruz (Sahanlıksız ve Dengelenmiş dahil)
     int mevcutUst =
         (b20?.normalMerdivenSayisi ?? 0) +
         (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
         (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
         (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0) +
-        (b20?.donerMerdivenSayisi ?? 0);
+        (b20?.donerMerdivenSayisi ?? 0) +
+        (b20?.sahanliksizMerdivenSayisi ?? 0) +
+        (b20?.dengelenmisMerdivenSayisi ?? 0);
 
     // Bodrum için Çıkış Sayısı
     int mevcutBodrum = 0;
     bool isBodrumIndependent = b20?.isBodrumIndependent ?? false;
 
     if (isBodrumIndependent) {
-      // Bağımsız ise kendi sayısını topla (Sahanlıksız hariç)
+      // Bağımsız ise kendi sayısını topla (TÜM tipler)
       mevcutBodrum =
           (b20?.bodrumNormalMerdivenSayisi ?? 0) +
           (b20?.bodrumBinaIciYanginMerdiveniSayisi ?? 0) +
           (b20?.bodrumBinaDisiKapaliYanginMerdiveniSayisi ?? 0) +
           (b20?.bodrumBinaDisiAcikYanginMerdiveniSayisi ?? 0) +
-          (b20?.bodrumDonerMerdivenSayisi ?? 0);
+          (b20?.bodrumDonerMerdivenSayisi ?? 0) +
+          (b20?.bodrumSahanliksizMerdivenSayisi ?? 0) +
+          (b20?.bodrumDengelenmisMerdivenSayisi ?? 0);
     } else {
       // Bağımsız değilse, merdiven bodruma iniyor mu?
       if (b20?.bodrumMerdivenDevami?.label == "20-Bodrum-A") {
@@ -252,7 +255,6 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     int? mevcut,
     ChoiceResult? sonuc,
   ) {
-    bool isSuccess = (sonuc?.label.contains("OK") ?? false);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(16),
@@ -269,39 +271,10 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
         children: [
           Text(title, style: AppStyles.questionTitle),
           const Divider(),
-          _buildRow("Tahmini Kişi:", "$yuk Kişi"),
-          _buildRow("Gereken Çıkış:", "$gerekli Adet"),
-          _buildRow("Mevcut Çıkış:", "$mevcut Adet"),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: isSuccess ? Colors.green.shade50 : Colors.red.shade50,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  isSuccess ? Icons.check_circle : Icons.error,
-                  color: isSuccess ? Colors.green : Colors.red,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    sonuc?.reportText ?? "",
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: isSuccess
-                          ? Colors.green.shade900
-                          : Colors.red.shade900,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          _buildRow("Kullanıcı Yükü:", "$yuk Kişi"),
+          _buildRow("Gereken Merdiven:", "$gerekli Adet"),
+          _buildRow("Mevcut Merdiven:", "$mevcut Adet"),
+          const SizedBox(height: 4),
         ],
       ),
     );
