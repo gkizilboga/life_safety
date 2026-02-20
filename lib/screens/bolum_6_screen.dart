@@ -112,7 +112,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
       body: Column(
         children: [
           ModernHeader(
-            title: "Kullanım Amaçları",
+            title: "Bina Kullanım Amacı",
             subtitle: "Konut harici fonksiyonlar",
             screenType: widget.runtimeType,
           ),
@@ -125,7 +125,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                   const Padding(
                     padding: EdgeInsets.only(left: 4, bottom: 12),
                     child: Text(
-                      "Binanızda konut haricinde aşağıdakilerden hangileri mevcut?",
+                      "Binada konut haricinde aşağıdakilerden hangileri mevcut?",
                       style: AppStyles.questionTitle,
                     ),
                   ),
@@ -145,7 +145,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                   ),
                   TechnicalDrawingButton(
                     assetPath: AppAssets.section6Ticari,
-                    title: "Ticari Alan ve Dükkan Tanımları",
+                    title: "Ticari Alan Tanımları",
                   ),
                   const SizedBox(height: 8),
 
@@ -172,7 +172,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                     const Padding(
                       padding: EdgeInsets.only(left: 4, bottom: 12),
                       child: Text(
-                        "Otoparkınızın tipi nedir?",
+                        "Otopark tipi nedir?",
                         style: AppStyles.questionTitle,
                       ),
                     ),

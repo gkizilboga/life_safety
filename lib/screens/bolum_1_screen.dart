@@ -224,7 +224,21 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const QuestionTitle("Binanızın yapı ruhsat tarihi nedir?"),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Expanded(
+                      child: QuestionTitle(
+                        "Binanızın yapı ruhsat tarihi nedir?",
+                      ),
+                    ),
+                    const DefinitionButton(
+                      term: "Yapı Ruhsat Tarihi",
+                      definition:
+                          'Yapı ruhsat tarihi, bir parselde inşaatın başlayabilmesi için ilgili belediye tarafından düzenlenen "Yapı Ruhsatı" belgesinin üzerinde yazan resmi onay tarihidir.',
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
                 SelectableCard(
                   choice: Bolum1Content.ruhsatSonrasi,

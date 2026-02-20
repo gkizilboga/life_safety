@@ -203,7 +203,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionTitle("Kat Sayıları"),
+          _buildSectionTitle("Kat adetleri nedir?"),
           _buildInput(
             "Normal Kat Sayısı (Zemin Üstü)",
             _normalCountCtrl,
@@ -218,7 +218,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
           ),
 
           const SizedBox(height: 10),
-          _buildSectionTitle("Kat Yükseklikleri"),
+          _buildSectionTitle("Kat yükseklikleri nedir?"),
           SelectableCard(
             choice: Bolum3Content.biliniyor,
             isSelected: !_isUnknown,

@@ -104,7 +104,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Katların Kullanım Amacı ve Yoğunlukları",
+      title: "Katların Kullanım Amacı",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
@@ -115,7 +115,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
             builder: (ctx) => AlertDialog(
               title: const Text("Eksik Seçim"),
               content: const Text(
-                "Bu uygulama Konut binalarının yangın güvenliği analizi için tasarlanmıştır. Lütfen binanızdaki katlardan en az bir tanesi için 'Konut' (Daire) seçeneğini işaretleyiniz.",
+                "Bu uygulama Konut binaları için tasarlanmıştır. Katlardan en az biri için 'Konut' (Daire) seçeneğini işaretlemelisiniz.",
               ),
               actions: [
                 TextButton(

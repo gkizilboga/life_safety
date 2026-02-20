@@ -3,7 +3,7 @@ import 'package:life_safety/models/choice_result.dart';
 class Bolum1Content {
   static final ruhsatSonrasi = ChoiceResult(
     label: "1-A",
-    uiTitle: "19.12.2007 veya sonrası.",
+    uiTitle: "19.12.2007 ve sonrası.",
     uiSubtitle: "Yeni Bina",
     reportText:
         "BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 veya sonrasında alındığı için analiz, \"Binaların Yangından Korunması Hakkında Yönetmelik\"(BYKHY) kapsamındaki \"YENİ BİNA\"hükümlerine göre yapılmıştır.",
@@ -156,7 +156,7 @@ class Bolum5Content {
 class Bolum6Content {
   static final otoparkVar = ChoiceResult(
     label: "6-1-A (Otopark)",
-    uiTitle: "Binada (kapalı) otopark bulunmaktadır.",
+    uiTitle: "Otopark bulunmaktadır.",
     uiSubtitle: "Zemin (ve/veya bodrum) katta kapalı otopark alanı mevcut.",
     reportText:
         "BİLGİ: Binada kapalı veya yarı-açık (tek cephesinde açıklık olan) otopark alanı bulunmaktadır. Özellikle lpg 'li araçların, elektrik motorlu araçların park edildiği / şarj edildiği otoparklar yangın yükü bakımından konut katlarına göre yüksek olduğundan ek önlemler almak mutlaka şarttır. ",
@@ -164,7 +164,7 @@ class Bolum6Content {
 
   static final ticariVar = ChoiceResult(
     label: "6-1-B (Ticari)",
-    uiTitle: "Binada konut haricinde ticari alanlar bulunmaktadır.",
+    uiTitle: "Ticari alanlar bulunmaktadır.",
     uiSubtitle: "Dükkan, mağaza, kafe, ofis, her türlü işyeri vb.",
     reportText:
         "BİLGİ: Binada konut harici ticari kullanım (işyerleri vb.) mevcuttur. Karma kullanımlı binalarda, ticari alanların konutlardan yangın duvarı ile ayrılması önerilmektedir. Özellikle içerisinde endüstriyel mutfak bulunan işletmelerin binanın diğer bölümlerinden ayrılması ve yönetmelikçe belirlenen önlemlerin alınması şiddetle önerilir.",
@@ -172,15 +172,15 @@ class Bolum6Content {
 
   static final depoVar = ChoiceResult(
     label: "6-1-C (Depo)",
-    uiTitle: "Binada depolama alanları bulunmaktadır.",
-    uiSubtitle: "Apartman sakinlerine ait (ortak) eşya deposu.",
+    uiTitle: "Depolama alanları bulunmaktadır.",
+    uiSubtitle: "Apartman sakinlerine ait ortak eşya deposu.",
     reportText:
         "BİLGİ: Binada konutlara ait ortak depo alanı bulunmaktadır. Depolanan malzemeler yangın yükleri sebebiyle risk oluşturur, depolama alanlarında ek önlemler alınması gereklidir.",
   );
 
   static final sadeceKonut = ChoiceResult(
     label: "6-1-D (Sadece Konut)",
-    uiTitle: "Binada konut amacı dışında kullanılan herhangi bir alan yok.",
+    uiTitle: "Konut harici hiçbir alan yok.",
     uiSubtitle: "Sadece daireler var.",
     reportText:
         "BİLGİ: Bina sadece konut amaçlı kullanılmaktadır. Ekstra yangın yükü oluşturabilecek bir fonksiyon bulunmamaktadır. Konut risklerine göre alınacak yangın güvenlik önlemleri yeterli olacaktır.",
@@ -571,7 +571,7 @@ class Bolum13Content {
     label: "13-1-C (Otopark)",
     uiTitle: "Arada kapı yok, direkt açık (serbest) geçiş var.",
     uiSubtitle:
-        "Otopark ile merdiven (veya asansör holü) arasında herhangi bir yangın kapısı bulunmuyor.",
+        "Otopark ile merdiven arasında herhangi bir yangın kapısı bulunmuyor.",
     reportText:
         "KRİTİK RİSK: Otopark ile bina arasında yangına dayanıklı ayrım (kompatımantasyon) yoktur. Bir araç yangınında duman doğrudan binanın içine dolarak tüm kaçış yollarını kullanılamaz hale getirebilir. Yangın duvarı ve kapısı ile ayrım yapılmalıdır.",
   );
@@ -596,7 +596,7 @@ class Bolum13Content {
   static final kazanOptionB = ChoiceResult(
     label: "13-2-B (Kazan D.)",
     uiTitle:
-        "Kapısı dayanıksız sac, plastik, ahşap, cam veya kapı içeriye doğru açılıyor.",
+        "Yangına dayanıksız sac, demir, plastik, aluminyum, ahşap vb. kapı var veya kapı içeriye doğru açılıyor.",
     uiSubtitle: "Veya duvarları yangına dayanıklı değil",
     reportText:
         "KRİTİK RİSK: Kazan dairesi kapısı yangına dayanıklı olmalı ve kaçış yönüne (dışarıya) açılması önerilir. İçeri açılan kapılar, patlama veya panik anında basınç nedeniyle açılamaz hale gelerek içeridekileri hapsedebilir.",
@@ -639,7 +639,7 @@ class Bolum13Content {
 
   static final asansorOptionC = ChoiceResult(
     label: "13-3-C (Asansör)",
-    uiTitle: "Bu konuda bilgim yok.",
+    uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Kapı özellikleri bilinmiyor, duvarlarıyla birlikte kapısının da yangına dayanıklı olması gereklidir. Asansör kat kapılarının yangın dayanım test raporu incelenerek uygunluklarına karar verilir.",

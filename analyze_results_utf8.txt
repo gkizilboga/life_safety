@@ -1,0 +1,12 @@
+﻿Analyzing life_safety...                                        
+
+  error - The method 'copyWith' isn't defined for the type 'ChoiceResult' - lib\screens\bolum_20_screen.dart:1093:57 - undefined_method
+  error - The method 'copyWith' isn't defined for the type 'ChoiceResult' - lib\screens\bolum_20_screen.dart:1109:57 - undefined_method
+  error - Undefined name '_disariAcilanMerdCtrl' - lib\screens\bolum_36_screen.dart:239:5 - undefined_identifier
+  error - Undefined name '_lobiTahliyeMesafeCtrl' - lib\screens\bolum_36_screen.dart:240:5 - undefined_identifier
+warning - A value for optional parameter 'isMain' isn't ever given - lib\screens\bolum_36_screen.dart:1254:47 - unused_element_parameter
+  error - The name 'kapiGenislikBilinmiyor' is already defined - lib\utils\app_content.dart:3644:16 - duplicate_definition
+  error - The getter 'madde41MesafeUstunde' isn't defined for the type 'Bolum36Content' - test\engineering_logic_test.dart:117:30 - undefined_getter
+  error - The getter 'madde41MesafeAltinda' isn't defined for the type 'Bolum36Content' - test\engineering_logic_test.dart:137:30 - undefined_getter
+  error - The getter 'madde41MesafeUstunde' isn't defined for the type 'Bolum36Content' - test\engineering_logic_test.dart:228:30 - undefined_getter
+
