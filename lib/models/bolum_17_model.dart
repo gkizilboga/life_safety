@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum17Model {
@@ -45,30 +45,45 @@ class Bolum17Model {
   factory Bolum17Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? k;
     final l1 = map['kaplama_label'];
-    if (l1 == Bolum17Content.kaplamaOptionA.label) k = Bolum17Content.kaplamaOptionA;
-    else if (l1 == Bolum17Content.kaplamaOptionB.label) k = Bolum17Content.kaplamaOptionB;
-    else if (l1 == Bolum17Content.kaplamaOptionC.label) k = Bolum17Content.kaplamaOptionC;
-    else if (l1 == Bolum17Content.kaplamaOptionD.label) k = Bolum17Content.kaplamaOptionD;
-    else if (l1 == Bolum17Content.kaplamaOptionE.label) k = Bolum17Content.kaplamaOptionE;
-    else if (l1 == Bolum17Content.kaplamaOptionF.label) k = Bolum17Content.kaplamaOptionF;
+    if (l1 == Bolum17Content.kaplamaOptionA.label)
+      k = Bolum17Content.kaplamaOptionA;
+    else if (l1 == Bolum17Content.kaplamaOptionB.label)
+      k = Bolum17Content.kaplamaOptionB;
+    else if (l1 == Bolum17Content.kaplamaOptionC.label)
+      k = Bolum17Content.kaplamaOptionC;
+    else if (l1 == Bolum17Content.kaplamaOptionD.label)
+      k = Bolum17Content.kaplamaOptionD;
+    else if (l1 == Bolum17Content.kaplamaOptionE.label)
+      k = Bolum17Content.kaplamaOptionE;
+    else if (l1 == Bolum17Content.kaplamaOptionF.label)
+      k = Bolum17Content.kaplamaOptionF;
 
     ChoiceResult? i;
     final l2 = map['iskelet_label'];
-    if (l2 == Bolum17Content.iskeletOptionA.label) i = Bolum17Content.iskeletOptionA;
-    else if (l2 == Bolum17Content.iskeletOptionB.label) i = Bolum17Content.iskeletOptionB;
-    else if (l2 == Bolum17Content.iskeletOptionC.label) i = Bolum17Content.iskeletOptionC;
+    if (l2 == Bolum17Content.iskeletOptionA.label)
+      i = Bolum17Content.iskeletOptionA;
+    else if (l2 == Bolum17Content.iskeletOptionB.label)
+      i = Bolum17Content.iskeletOptionB;
+    else if (l2 == Bolum17Content.iskeletOptionC.label)
+      i = Bolum17Content.iskeletOptionC;
 
     ChoiceResult? b;
     final l3 = map['bitisikDuvar_label'];
-    if (l3 == Bolum17Content.bitisikOptionA.label) b = Bolum17Content.bitisikOptionA;
-    else if (l3 == Bolum17Content.bitisikOptionB.label) b = Bolum17Content.bitisikOptionB;
-    else if (l3 == Bolum17Content.bitisikOptionC.label) b = Bolum17Content.bitisikOptionC;
+    if (l3 == Bolum17Content.bitisikOptionA.label)
+      b = Bolum17Content.bitisikOptionA;
+    else if (l3 == Bolum17Content.bitisikOptionB.label)
+      b = Bolum17Content.bitisikOptionB;
+    else if (l3 == Bolum17Content.bitisikOptionC.label)
+      b = Bolum17Content.bitisikOptionC;
 
     ChoiceResult? ls;
     final l4 = map['isiklik_label'];
-    if (l4 == Bolum17Content.isiklikOptionA.label) ls = Bolum17Content.isiklikOptionA;
-    else if (l4 == Bolum17Content.isiklikOptionB.label) ls = Bolum17Content.isiklikOptionB;
-    else if (l4 == Bolum17Content.isiklikOptionC.label) ls = Bolum17Content.isiklikOptionC;
+    if (l4 == Bolum17Content.isiklikOptionA.label)
+      ls = Bolum17Content.isiklikOptionA;
+    else if (l4 == Bolum17Content.isiklikOptionB.label)
+      ls = Bolum17Content.isiklikOptionB;
+    else if (l4 == Bolum17Content.isiklikOptionC.label)
+      ls = Bolum17Content.isiklikOptionC;
 
     return Bolum17Model(
       kaplama: k,
@@ -78,4 +93,4 @@ class Bolum17Model {
       isiklikMalzemesi: map['isiklikMalzemesi'],
     );
   }
- }  
+}

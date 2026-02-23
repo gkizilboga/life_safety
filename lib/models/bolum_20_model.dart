@@ -271,10 +271,10 @@ class Bolum20Model {
           map['bodrumSahanliksizMerdivenSayisi'] ?? 0,
       bodrumDengelenmisMerdivenSayisi:
           map['bodrumDengelenmisMerdivenSayisi'] ?? 0,
- 
+
       bodrumToplamDisariAcilanMerdivenSayisi:
           map['bodrumToplamDisariAcilanMerdivenSayisi'] ?? 0, // NEW
- 
+
       bodrumLobiTahliyeMesafeDurumu:
           find(map['bodrumLobiTahliyeMesafeDurumu_label'], [
             Bolum20Content.madde41MesafeAltinda,

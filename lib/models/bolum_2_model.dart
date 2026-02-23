@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum2Model {
@@ -16,14 +16,19 @@ class Bolum2Model {
 
   factory Bolum2Model.fromMap(Map<String, dynamic> map) {
     final label = map['secim_label'];
-    
+
     // Etikete göre doğru nesneyi bulup getiriyoruz
-    if (label == Bolum2Content.betonarme.label) return Bolum2Model(secim: Bolum2Content.betonarme);
-    if (label == Bolum2Content.celik.label) return Bolum2Model(secim: Bolum2Content.celik);
-    if (label == Bolum2Content.ahsap.label) return Bolum2Model(secim: Bolum2Content.ahsap);
-    if (label == Bolum2Content.yigma.label) return Bolum2Model(secim: Bolum2Content.yigma);
-    if (label == Bolum2Content.bilinmiyor.label) return Bolum2Model(secim: Bolum2Content.bilinmiyor);
-    
+    if (label == Bolum2Content.betonarme.label)
+      return Bolum2Model(secim: Bolum2Content.betonarme);
+    if (label == Bolum2Content.celik.label)
+      return Bolum2Model(secim: Bolum2Content.celik);
+    if (label == Bolum2Content.ahsap.label)
+      return Bolum2Model(secim: Bolum2Content.ahsap);
+    if (label == Bolum2Content.yigma.label)
+      return Bolum2Model(secim: Bolum2Content.yigma);
+    if (label == Bolum2Content.bilinmiyor.label)
+      return Bolum2Model(secim: Bolum2Content.bilinmiyor);
+
     return Bolum2Model();
   }
 }

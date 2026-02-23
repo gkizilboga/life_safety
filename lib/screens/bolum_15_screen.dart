@@ -172,9 +172,18 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
               Bolum15Content.tesisatOptionD,
             ],
             _model.tesisat,
-            headerWidget: TechnicalDrawingButton(
-              assetPath: AppAssets.section15Gecis,
-              title: "Tesisat Geçiş Örneği",
+            headerWidget: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section15Gecis,
+                  title: "Tesisat Geçiş Örneği 1",
+                ),
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section15Gecis2,
+                  title: "Tesisat Geçiş Örneği 2",
+                ),
+              ],
             ),
           ),
         ],

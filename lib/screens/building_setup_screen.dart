@@ -191,6 +191,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
       padding: const EdgeInsets.only(bottom: 20),
       child: TextField(
         controller: ctrl,
+        maxLength: 40, // Güvenlik: Kaynak tüketimini ve PDF taşmasını önler
         decoration: InputDecoration(
           hintText: hint,
           prefixIcon: Icon(icon, color: const Color(0xFF1A237E), size: 22),

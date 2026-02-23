@@ -19,8 +19,10 @@ class Bolum4Model {
   }) {
     return Bolum4Model(
       binaYukseklikSinifi: binaYukseklikSinifi ?? this.binaYukseklikSinifi,
-      hesaplananBinaYuksekligi: hesaplananBinaYuksekligi ?? this.hesaplananBinaYuksekligi,
-      hesaplananYapiYuksekligi: hesaplananYapiYuksekligi ?? this.hesaplananYapiYuksekligi,
+      hesaplananBinaYuksekligi:
+          hesaplananBinaYuksekligi ?? this.hesaplananBinaYuksekligi,
+      hesaplananYapiYuksekligi:
+          hesaplananYapiYuksekligi ?? this.hesaplananYapiYuksekligi,
     );
   }
 
@@ -39,14 +41,19 @@ class Bolum4Model {
         Bolum4Content.yukseklikSinifiDusuk,
         Bolum4Content.yukseklikSinifiYuksek,
         Bolum4Content.yukseklikSinifiCokYuksek,
-        Bolum4Content.yukseklikSinifiMaksimum
-      ].firstWhere((e) => e.label == label, orElse: () => Bolum4Content.yukseklikSinifiDusuk);
+        Bolum4Content.yukseklikSinifiMaksimum,
+      ].firstWhere(
+        (e) => e.label == label,
+        orElse: () => Bolum4Content.yukseklikSinifiDusuk,
+      );
     }
-    
+
     return Bolum4Model(
       binaYukseklikSinifi: findSinif(map['binaYukseklikSinifi_label']),
-      hesaplananBinaYuksekligi: (map['hesaplananBinaYuksekligi'] as num?)?.toDouble(),
-      hesaplananYapiYuksekligi: (map['hesaplananYapiYuksekligi'] as num?)?.toDouble(),
+      hesaplananBinaYuksekligi: (map['hesaplananBinaYuksekligi'] as num?)
+          ?.toDouble(),
+      hesaplananYapiYuksekligi: (map['hesaplananYapiYuksekligi'] as num?)
+          ?.toDouble(),
     );
   }
 }

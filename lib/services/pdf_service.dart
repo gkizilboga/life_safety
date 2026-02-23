@@ -330,13 +330,28 @@ class PdfService {
             color: PdfColors.blue900,
           ),
         ),
-        pw.SizedBox(height: 20),
+        pw.SizedBox(height: 15), // Slightly reduced spacing
         pw.Text(
           AppStrings.legalDisclaimerContent,
-          style: const pw.TextStyle(fontSize: 9),
+          style: const pw.TextStyle(
+            fontSize: 6.5,
+            lineSpacing: 1.2,
+          ), // Reduced font and added slight line spacing for readability
         ),
-        pw.SizedBox(height: 20),
-        pw.Text(AppStrings.kvkkContent, style: const pw.TextStyle(fontSize: 9)),
+        pw.SizedBox(height: 15),
+        pw.Text(
+          AppStrings.kvkkTitle,
+          style: pw.TextStyle(
+            fontSize: 12, // Added title for KVKK for better visual hierarchy
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.blue900,
+          ),
+        ),
+        pw.SizedBox(height: 5),
+        pw.Text(
+          AppStrings.kvkkContent,
+          style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 1.2),
+        ),
       ],
     );
   }
@@ -372,7 +387,7 @@ class PdfService {
             child: pw.Text(
               "BU BELGE, UYGULAMA İLE ÜRETİLMİŞ OLUP RESMİ BELGE NİTELİĞİ TAŞIMAZ. ISLAK İMZA VEYA KAŞE YERİNE GEÇMEZ. "
               "YASAL UYARILARIN TÜMÜ VE TCK SORUMLULUK BEYANI BU DOKÜMANIN AYRILMAZ PARÇASIDIR.",
-              style: const pw.TextStyle(fontSize: 5, color: PdfColors.black),
+              style: const pw.TextStyle(fontSize: 4.2, color: PdfColors.black),
               textAlign: pw.TextAlign.right,
             ),
           ),
@@ -989,7 +1004,7 @@ class PdfService {
               ),
             ],
           );
-        }).toList(),
+        }),
       ],
     );
   }

@@ -86,15 +86,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
           CircleAvatar(
             radius: 30,
             backgroundColor: AppColors.primaryBlue.withOpacity(0.1),
-            child: const Icon(Icons.person, color: AppColors.primaryBlue, size: 30),
+            child: const Icon(
+              Icons.person,
+              color: AppColors.primaryBlue,
+              size: 30,
+            ),
           ),
           const SizedBox(width: 15),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(store.userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                Text(store.userProfession, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                Text(
+                  store.userName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  store.userProfession,
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
+                ),
               ],
             ),
           ),
@@ -106,11 +119,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSectionLabel(String label) {
     return Padding(
       padding: const EdgeInsets.only(left: 5, bottom: 10),
-      child: Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+          letterSpacing: 1,
+        ),
+      ),
     );
   }
 
-  Widget _buildSettingTile({required IconData icon, required String title, required String subtitle, Widget? trailing, VoidCallback? onTap}) {
+  Widget _buildSettingTile({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    Widget? trailing,
+    VoidCallback? onTap,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -120,9 +147,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       child: ListTile(
         leading: Icon(icon, color: AppColors.primaryBlue),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
         subtitle: Text(subtitle, style: const TextStyle(fontSize: 11)),
-        trailing: trailing ?? const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
+        trailing:
+            trailing ??
+            const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
         onTap: onTap,
       ),
     );
@@ -133,15 +165,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Arşivi Temizle"),
-        content: const Text("Tüm geçmiş analizleriniz kalıcı olarak silinecektir. Bu işlem geri alınamaz."),
+        content: const Text(
+          "Tüm geçmiş analizleriniz kalıcı olarak silinecektir. Bu işlem geri alınamaz.",
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("VAZGEÇ")),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("VAZGEÇ"),
+          ),
           TextButton(
             onPressed: () {
               BinaStore.instance.archive = [];
               BinaStore.instance.saveToDisk();
               Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Arşiv temizlendi.")));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Arşiv temizlendi.")),
+              );
             },
             child: const Text("SİL", style: TextStyle(color: Colors.red)),
           ),
@@ -155,13 +194,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Kaydı Sıfırla"),
-        content: const Text("Profil bilgileriniz silinecek ve kayıt ekranına yönlendirileceksiniz. Emin misiniz?"),
+        content: const Text(
+          "Profil bilgileriniz silinecek ve kayıt ekranına yönlendirileceksiniz. Emin misiniz?",
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("VAZGEÇ")),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("VAZGEÇ"),
+          ),
           TextButton(
             onPressed: () {
               BinaStore.instance.isRegistered = false;
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const RegisterScreen()), (r) => false);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                (r) => false,
+              );
             },
             child: const Text("SIFIRLA", style: TextStyle(color: Colors.red)),
           ),

@@ -7,7 +7,7 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_theme.dart';
-
+import '../../utils/app_assets.dart';
 import '../../utils/input_validator.dart';
 
 class Bolum16Screen extends StatefulWidget {
@@ -44,6 +44,12 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
         b8?.secim?.label == "8-1-B") {
       _askBitisik = true;
     }
+  }
+
+  @override
+  void dispose() {
+    _enUzunCepheController.dispose();
+    super.dispose();
   }
 
   void _handleSection16Selection(ChoiceResult choice) {
@@ -88,9 +94,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       return false;
     if (_askBitisik && _model.bitisikNizam == null) return false;
 
-    // Validate facade length input exists but actual validation happens in Form
-    if (_enUzunCepheController.text.isEmpty) return false;
-
+    // We no longer block the Next button based on enUzunCepheController to avoid setState on every keystroke.
+    // Validation will catch empty or invalid inputs on tap.
     return true;
   }
 
@@ -103,9 +108,9 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       isNextEnabled: _isReady(),
       onNext: () {
         if (_formKey.currentState!.validate()) {
-          // Save valid value to model before proceeding
+          // Save valid value to model before proceeding, handling empty/invalid parsing as 0.0 to prevent crash.
           _model = _model.copyWith(
-            enUzunCephe: double.tryParse(_enUzunCepheController.text),
+            enUzunCephe: double.tryParse(_enUzunCepheController.text) ?? 0.0,
           );
 
           BinaStore.instance.bolum16 = _model;
@@ -123,232 +128,242 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
           );
         }
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Custom built Question Card for strict layout control
-          QuestionCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Binanızdaki dış cephe kaplama veya ısı yalıtım sistemi nedir?",
-                  style: AppStyles.questionTitle,
-                ),
-                const SizedBox(height: 12),
-
-                // Option A: Klasik Mantolama
-                SelectableCard(
-                  choice: Bolum16Content.mantolamaOptionA,
-                  isSelected:
-                      _model.mantolama?.label ==
-                      Bolum16Content.mantolamaOptionA.label,
-                  onTap: () => _handleSection16Selection(
-                    Bolum16Content.mantolamaOptionA,
-                  ),
-                ),
-                // Buttons always visible under the option
-                TechnicalDrawingButton(
-                  assetPath: 'assets/images/sections/eps_mantolama.webp',
-                  title: "EPS Mantolama",
-                ),
-                TechnicalDrawingButton(
-                  assetPath: 'assets/images/sections/xps_mantolama.webp',
-                  title: "XPS Mantolama",
-                ),
-
-                // Option B: A1, A2 (Taşyünü)
-                SelectableCard(
-                  choice: Bolum16Content.mantolamaOptionB,
-                  isSelected:
-                      _model.mantolama?.label ==
-                      Bolum16Content.mantolamaOptionB.label,
-                  onTap: () => _handleSection16Selection(
-                    Bolum16Content.mantolamaOptionB,
-                  ),
-                ),
-                TechnicalDrawingButton(
-                  assetPath: 'assets/images/sections/tasyunu_mantolama.webp',
-                  title: "Taşyünü Mantolama",
-                ),
-
-                // Option C: Giydirme Cephe
-                SelectableCard(
-                  choice: Bolum16Content.giydirmeOptionC,
-                  isSelected:
-                      _model.mantolama?.label ==
-                      Bolum16Content.giydirmeOptionC.label,
-                  onTap: () =>
-                      _handleSection16Selection(Bolum16Content.giydirmeOptionC),
-                ),
-                TechnicalDrawingButton(
-                  assetPath: 'assets/images/sections/giydirme_cephe.webp',
-                  title: "Giydirme Cephe Örneği",
-                ),
-
-                // Other Options
-                SelectableCard(
-                  choice: Bolum16Content.mantolamaOptionD,
-                  isSelected:
-                      _model.mantolama?.label ==
-                      Bolum16Content.mantolamaOptionD.label,
-                  onTap: () => _handleSection16Selection(
-                    Bolum16Content.mantolamaOptionD,
-                  ),
-                ),
-                SelectableCard(
-                  choice: Bolum16Content.mantolamaOptionE,
-                  isSelected:
-                      _model.mantolama?.label ==
-                      Bolum16Content.mantolamaOptionE.label,
-                  onTap: () => _handleSection16Selection(
-                    Bolum16Content.mantolamaOptionE,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          if (_model.mantolama?.label ==
-                  Bolum16Content.mantolamaOptionA.label &&
-              _hBina <= 28.50) ...[
-            Container(
-              margin: const EdgeInsets.only(top: 10, bottom: 10),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.blue.shade200),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.info, color: Colors.blue),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      "Seçtiğiniz \"Klasik Mantolama (EPS/XPS)\" yanıcı özellikte olduğu için, yönetmelik gereği aşağıdaki yangın bariyeri önlemlerinin alınıp alınmadığı kontrol edilmelidir.",
-                      style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            _buildSubQuestion(
-              null,
-              "Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?",
-              _model.bariyerYan,
-              (v) => setState(() => _model = _model.copyWith(bariyerYan: v)),
-            ),
-            _buildSubQuestion(
-              null,
-              "Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?",
-              _model.bariyerUst,
-              (v) => setState(() => _model = _model.copyWith(bariyerUst: v)),
-            ),
-            _buildSubQuestion(
-              null,
-              "Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?",
-              _model.bariyerZemin,
-              (v) => setState(() => _model = _model.copyWith(bariyerZemin: v)),
-            ),
-          ],
-
-          if (_model.mantolama?.label == Bolum16Content.giydirmeOptionC.label)
-            _buildSubQuestionRadio(
-              "Cephe ile döşeme arasındaki boşluklar yalıtılmış mı?",
-              _model.giydirmeBoslukYalitim,
-              (v) => setState(
-                () => _model = _model.copyWith(giydirmeBoslukYalitim: v),
-              ),
-            ),
-
-          _buildSoru(
-            "Katlar arasında yanmaz (sağır) yüzey var mı?",
-            'sagir',
-            [
-              Bolum16Content.sagirYuzeyOptionA,
-              Bolum16Content.sagirYuzeyOptionB,
-              Bolum16Content.sagirYuzeyOptionC,
-            ],
-            _model.sagirYuzey,
-          ),
-
-          if (_model.sagirYuzey?.label ==
-              Bolum16Content.sagirYuzeyOptionB.label)
-            _buildSubQuestionRadio(
-              "Cepheye doğru bakan özel sprinkler başlıkları var mı?",
-              _model.sagirYuzeySprinkler,
-              (v) => setState(
-                () => _model = _model.copyWith(sagirYuzeySprinkler: v),
-              ),
-            ),
-
-          if (_askBitisik)
-            _buildSoru(
-              "Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?",
-              'bitisik',
-              [
-                Bolum16Content.bitisikOptionA,
-                Bolum16Content.bitisikOptionB,
-                Bolum16Content.bitisikOptionC,
-                Bolum16Content.bitisikOptionD,
-              ],
-              _model.bitisikNizam,
-            ),
-
-          const SizedBox(height: 16),
-          QuestionCard(
-            child: Form(
-              key: _formKey,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.translucent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Custom built Question Card for strict layout control
+            QuestionCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Binanızın en uzun cephesinin uzunluğu kaç metredir?",
+                    "Binanızdaki dış cephe kaplama veya ısı yalıtım sistemi nedir?",
                     style: AppStyles.questionTitle,
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    "İtfaiye su verme bağlantısı zorunluluğu için bu bilgi gereklidir.",
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
+
+                  // Option A: Klasik Mantolama
+                  SelectableCard(
+                    choice: Bolum16Content.mantolamaOptionA,
+                    isSelected:
+                        _model.mantolama?.label ==
+                        Bolum16Content.mantolamaOptionA.label,
+                    onTap: () => _handleSection16Selection(
+                      Bolum16Content.mantolamaOptionA,
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _enUzunCepheController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
+                  // Buttons always visible under the option
+                  TechnicalDrawingButton(
+                    assetPath: AppAssets.section16EpsMantolama,
+                    title: "EPS Mantolama",
+                  ),
+                  TechnicalDrawingButton(
+                    assetPath: AppAssets.section16XpsMantolama,
+                    title: "XPS Mantolama",
+                  ),
+
+                  // Option B: A1, A2 (Taşyünü)
+                  SelectableCard(
+                    choice: Bolum16Content.mantolamaOptionB,
+                    isSelected:
+                        _model.mantolama?.label ==
+                        Bolum16Content.mantolamaOptionB.label,
+                    onTap: () => _handleSection16Selection(
+                      Bolum16Content.mantolamaOptionB,
                     ),
-                    inputFormatters: [InputValidator.flexDecimal],
-                    onChanged: (val) {
-                      setState(() {}); // Trigget button state update
-                    },
-                    validator: (value) => InputValidator.validateNumber(
-                      value,
-                      min: 5,
-                      max: 200,
-                      unit: "m",
+                  ),
+                  TechnicalDrawingButton(
+                    assetPath: AppAssets.section16TasyunuMantolama,
+                    title: "Taşyünü Mantolama",
+                  ),
+
+                  // Option C: Giydirme Cephe
+                  SelectableCard(
+                    choice: Bolum16Content.giydirmeOptionC,
+                    isSelected:
+                        _model.mantolama?.label ==
+                        Bolum16Content.giydirmeOptionC.label,
+                    onTap: () => _handleSection16Selection(
+                      Bolum16Content.giydirmeOptionC,
                     ),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "Örn: 45",
-                      suffixText: "m",
-                      helperText: "En fazla 200m",
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      isDense: true,
+                  ),
+                  TechnicalDrawingButton(
+                    assetPath: AppAssets.section16Giydirme,
+                    title: "Giydirme Cephe Örneği",
+                  ),
+
+                  // Other Options
+                  SelectableCard(
+                    choice: Bolum16Content.mantolamaOptionD,
+                    isSelected:
+                        _model.mantolama?.label ==
+                        Bolum16Content.mantolamaOptionD.label,
+                    onTap: () => _handleSection16Selection(
+                      Bolum16Content.mantolamaOptionD,
+                    ),
+                  ),
+                  SelectableCard(
+                    choice: Bolum16Content.mantolamaOptionE,
+                    isSelected:
+                        _model.mantolama?.label ==
+                        Bolum16Content.mantolamaOptionE.label,
+                    onTap: () => _handleSection16Selection(
+                      Bolum16Content.mantolamaOptionE,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
+
+            if (_model.mantolama?.label ==
+                    Bolum16Content.mantolamaOptionA.label &&
+                _hBina <= 28.50) ...[
+              Container(
+                margin: const EdgeInsets.only(top: 10, bottom: 10),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.blue.shade200),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info, color: Colors.blue),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        "Seçtiğiniz \"Klasik Mantolama (EPS/XPS)\" yanıcı özellikte olduğu için, yönetmelik gereği aşağıdaki yangın bariyeri önlemlerinin alınıp alınmadığı kontrol edilmelidir.",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _buildSubQuestion(
+                null,
+                "Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?",
+                _model.bariyerYan,
+                (v) => setState(() => _model = _model.copyWith(bariyerYan: v)),
+              ),
+              _buildSubQuestion(
+                null,
+                "Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?",
+                _model.bariyerUst,
+                (v) => setState(() => _model = _model.copyWith(bariyerUst: v)),
+              ),
+              _buildSubQuestion(
+                null,
+                "Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?",
+                _model.bariyerZemin,
+                (v) =>
+                    setState(() => _model = _model.copyWith(bariyerZemin: v)),
+              ),
+            ],
+
+            if (_model.mantolama?.label == Bolum16Content.giydirmeOptionC.label)
+              _buildSubQuestionRadio(
+                "Cephe ile döşeme arasındaki boşluklar yalıtılmış mı?",
+                _model.giydirmeBoslukYalitim,
+                (v) => setState(
+                  () => _model = _model.copyWith(giydirmeBoslukYalitim: v),
+                ),
+              ),
+
+            _buildSoru(
+              "Katlar arasında yanmaz (sağır) yüzey var mı?",
+              'sagir',
+              [
+                Bolum16Content.sagirYuzeyOptionA,
+                Bolum16Content.sagirYuzeyOptionB,
+                Bolum16Content.sagirYuzeyOptionC,
+              ],
+              _model.sagirYuzey,
+              headerWidget: TechnicalDrawingButton(
+                assetPath: AppAssets.section16Spandrel,
+                title: "Spandrel Örneği",
+              ),
+            ),
+
+            if (_model.sagirYuzey?.label ==
+                Bolum16Content.sagirYuzeyOptionB.label)
+              _buildSubQuestionRadio(
+                "Cepheye doğru bakan özel sprinkler başlıkları var mı?",
+                _model.sagirYuzeySprinkler,
+                (v) => setState(
+                  () => _model = _model.copyWith(sagirYuzeySprinkler: v),
+                ),
+              ),
+
+            if (_askBitisik)
+              _buildSoru(
+                "Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?",
+                'bitisik',
+                [
+                  Bolum16Content.bitisikOptionA,
+                  Bolum16Content.bitisikOptionB,
+                  Bolum16Content.bitisikOptionC,
+                  Bolum16Content.bitisikOptionD,
+                ],
+                _model.bitisikNizam,
+              ),
+
+            const SizedBox(height: 16),
+            QuestionCard(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Binanızın en uzun cephesinin uzunluğu kaç metredir?",
+                      style: AppStyles.questionTitle,
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "İtfaiye su verme bağlantısı zorunluluğu için bu bilgi gereklidir.",
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      controller: _enUzunCepheController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      inputFormatters: [InputValidator.flexDecimal],
+                      onChanged: (val) {
+                        // Removed setState(() {}) to prevent rebuilding the 400+ line widget tree on every keystroke
+                      },
+                      validator: (value) => InputValidator.validateNumber(
+                        value,
+                        min: 5,
+                        max: 200,
+                        unit: "m",
+                      ),
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: "Örn: 45",
+                        suffixText: "m",
+                        helperText: "En fazla 200m",
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        isDense: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -357,13 +372,18 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
     String title,
     String k,
     List<ChoiceResult> o,
-    ChoiceResult? s,
-  ) {
+    ChoiceResult? s, {
+    Widget? headerWidget,
+  }) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: AppStyles.questionTitle),
+          if (headerWidget != null) ...[
+            const SizedBox(height: 8),
+            headerWidget,
+          ],
           const SizedBox(height: 12),
           ...o.map(
             (opt) => SelectableCard(

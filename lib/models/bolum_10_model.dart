@@ -8,7 +8,7 @@ class Bolum10Model {
   final bool bodrumlarAyni;
   final bool normallerAyni;
 
-  ChoiceResult? get secim => zemin; 
+  ChoiceResult? get secim => zemin;
 
   Bolum10Model({
     this.zemin,
@@ -52,14 +52,22 @@ class Bolum10Model {
         Bolum10Content.azYogunTicari,
         Bolum10Content.ortaYogunTicari,
         Bolum10Content.yuksekYogunTicari,
-        Bolum10Content.teknikDepo
+        Bolum10Content.teknikDepo,
       ].firstWhere((e) => e.label == label, orElse: () => Bolum10Content.konut);
     }
 
     return Bolum10Model(
       zemin: findChoice(map['zemin']),
-      bodrumlar: (map['bodrumlar'] as List?)?.map((e) => findChoice(e.toString())).toList() ?? [],
-      normaller: (map['normaller'] as List?)?.map((e) => findChoice(e.toString())).toList() ?? [],
+      bodrumlar:
+          (map['bodrumlar'] as List?)
+              ?.map((e) => findChoice(e.toString()))
+              .toList() ??
+          [],
+      normaller:
+          (map['normaller'] as List?)
+              ?.map((e) => findChoice(e.toString()))
+              .toList() ??
+          [],
       bodrumlarAyni: map['bodrumlarAyni'] ?? true,
       normallerAyni: map['normallerAyni'] ?? true,
     );

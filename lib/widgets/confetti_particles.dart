@@ -9,7 +9,8 @@ class ConfettiParticles extends StatefulWidget {
   State<ConfettiParticles> createState() => _ConfettiParticlesState();
 }
 
-class _ConfettiParticlesState extends State<ConfettiParticles> with SingleTickerProviderStateMixin {
+class _ConfettiParticlesState extends State<ConfettiParticles>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final List<Particle> _particles = [];
   final Random _random = Random();
@@ -17,12 +18,11 @@ class _ConfettiParticlesState extends State<ConfettiParticles> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 4),
-    )..addListener(() {
-        _updateParticles();
-      });
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 4))
+          ..addListener(() {
+            _updateParticles();
+          });
 
     // Create initial particles
     _initParticles();
@@ -31,16 +31,18 @@ class _ConfettiParticlesState extends State<ConfettiParticles> with SingleTicker
 
   void _initParticles() {
     for (int i = 0; i < 100; i++) {
-      _particles.add(Particle(
-        x: _random.nextDouble() * 400, // Will be updated on first layout
-        y: -_random.nextDouble() * 800,
-        size: _random.nextDouble() * 8 + 4,
-        color: _getRandomColor(),
-        vx: _random.nextDouble() * 4 - 2,
-        vy: _random.nextDouble() * 5 + 2,
-        rotation: _random.nextDouble() * pi * 2,
-        rotationSpeed: _random.nextDouble() * 0.2 - 0.1,
-      ));
+      _particles.add(
+        Particle(
+          x: _random.nextDouble() * 400, // Will be updated on first layout
+          y: -_random.nextDouble() * 800,
+          size: _random.nextDouble() * 8 + 4,
+          color: _getRandomColor(),
+          vx: _random.nextDouble() * 4 - 2,
+          vy: _random.nextDouble() * 5 + 2,
+          rotation: _random.nextDouble() * pi * 2,
+          rotationSpeed: _random.nextDouble() * 0.2 - 0.1,
+        ),
+      );
     }
   }
 
@@ -65,7 +67,7 @@ class _ConfettiParticlesState extends State<ConfettiParticles> with SingleTicker
         p.y += p.vy;
         p.x += p.vx;
         p.rotation += p.rotationSpeed;
-        
+
         // Reset particle if it goes off screen (approximate height)
         if (p.y > 1000) {
           p.y = -20;
@@ -122,17 +124,21 @@ class ConfettiPainter extends CustomPainter {
     if (size.width == 0) return;
     for (var p in particles) {
       final paint = Paint()..color = p.color;
-      
+
       canvas.save();
       canvas.translate(p.x % size.width, p.y);
       canvas.rotate(p.rotation);
-      
+
       // Draw rectangular confetti piece
       canvas.drawRect(
-        Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size * 0.6),
+        Rect.fromCenter(
+          center: Offset.zero,
+          width: p.size,
+          height: p.size * 0.6,
+        ),
         paint,
       );
-      
+
       canvas.restore();
     }
   }

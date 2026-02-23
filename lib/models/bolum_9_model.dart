@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum9Model {
@@ -16,9 +16,12 @@ class Bolum9Model {
 
   factory Bolum9Model.fromMap(Map<String, dynamic> map) {
     final label = map['secim_label'];
-    if (label == Bolum9Content.tamKapsam.label) return Bolum9Model(secim: Bolum9Content.tamKapsam);
-    if (label == Bolum9Content.yok.label) return Bolum9Model(secim: Bolum9Content.yok);
-    if (label == Bolum9Content.kismen.label) return Bolum9Model(secim: Bolum9Content.kismen);
+    if (label == Bolum9Content.tamKapsam.label)
+      return Bolum9Model(secim: Bolum9Content.tamKapsam);
+    if (label == Bolum9Content.yok.label)
+      return Bolum9Model(secim: Bolum9Content.yok);
+    if (label == Bolum9Content.kismen.label)
+      return Bolum9Model(secim: Bolum9Content.kismen);
     return Bolum9Model();
   }
 }

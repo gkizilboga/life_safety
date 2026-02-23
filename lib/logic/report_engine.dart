@@ -83,15 +83,13 @@ class ReportEngine {
           // İlk 10 bölüm sadece BİLGİ - skor hesaplamasını etkilemez
           if (i <= 10) continue;
 
-          final Color color = getStatusColor(res, sectionId: i, store: s);
-          if (color == const Color(0xFFE53935)) {
+          final level = getSectionRiskLevel(i, store: s);
+          if (level == RiskLevel.critical) {
             criticalRisks++;
             criticalTitles.add("Bölüm $i");
-          } else if (color == const Color(0xFFFFC107)) {
-            // Sarı (UYARI)
+          } else if (level == RiskLevel.warning) {
             warnings++;
-          } else if (color == Colors.grey.shade600) {
-            // Gri (BİLMİYORUM)
+          } else if (level == RiskLevel.unknown) {
             unknowns++;
           }
         }
@@ -123,7 +121,7 @@ class ReportEngine {
         ].reduce((curr, next) => curr > next ? curr : next);
       }
 
-      if (hBina > 15.50 || maxYuk > 100) {
+      if (hBina > (15.50 - 0.001) || maxYuk > 100) {
         if (!criticalTitles.contains("Bölüm 20")) {
           criticalRisks++;
           criticalTitles.add("Bölüm 20");
@@ -1906,51 +1904,53 @@ class ReportEngine {
     return sectionQuestions[sectionId];
   }
 
+  static RiskLevel getSectionRiskLevel(int sectionId, {BinaStore? store}) {
+    final s = _getStore(store);
+    final res = s.getResultForSection(sectionId);
+
+    // İlk 10 bölüm BİLGİ amaçlıdır. 11-36 arası bölümler skoru etkiler ve çoğu kompozit (birden fazla alt soru) yapıdadır.
+    // Bu yüzden bu bölümlerin risk seviyesini doğrudan oluşturulan tam rapor metni üzerinden okumak en garantisidir.
+    if (sectionId >= 11) {
+      return _textToLevel(getSectionFullReport(sectionId, store: s));
+    }
+
+    return res?.level ?? RiskLevel.positive;
+  }
+
+  static RiskLevel _textToLevel(String text) {
+    final upper = text.toUpperCase();
+    if (upper.contains("KRİTİK RİSK") || upper.contains("KRITIK RISK"))
+      return RiskLevel.critical;
+    if (upper.contains("UYARI")) return RiskLevel.warning;
+    if (upper.contains("BİLİNMİYOR") || upper.contains("BİLMİYORUM"))
+      return RiskLevel.unknown;
+    if (upper.contains("BİLGİ") || upper.contains("BILGI"))
+      return RiskLevel.info;
+    if (upper.contains("OLUMLU")) return RiskLevel.positive;
+    return RiskLevel.positive;
+  }
+
   static Color getStatusColor(
     ChoiceResult? result, {
     int? sectionId,
     BinaStore? store,
   }) {
-    if (result == null) return Colors.grey.shade300;
+    final level = sectionId != null
+        ? getSectionRiskLevel(sectionId, store: store)
+        : (result?.level ?? RiskLevel.positive);
 
-    // Metin Analizi (getSectionFullReport sonucuna göre hiyerarşik kontrol)
-    String reportText = result.reportText;
-    if (sectionId != null) {
-      reportText = getSectionFullReport(sectionId, store: store);
+    switch (level) {
+      case RiskLevel.critical:
+        return const Color(0xFFE53935);
+      case RiskLevel.warning:
+        return const Color(0xFFFFC107);
+      case RiskLevel.unknown:
+        return Colors.grey.shade600;
+      case RiskLevel.info:
+        return const Color(0xFF1E88E5);
+      case RiskLevel.positive:
+        return const Color(0xFF43A047);
     }
-    final text = reportText.toUpperCase();
-
-    // 1. KRİTİK RİSK (KIRMIZI) - EN YÜKSEK ÖNCELİK
-    if (text.contains("KRİTİK RİSK")) {
-      return const Color(0xFFE53935);
-    }
-
-    // 2. UYARI (Sarı)
-    if (text.contains("UYARI")) {
-      return const Color(0xFFFFC107);
-    }
-
-    // 3. BİLMİYORUM (Gri)
-    if (text.contains("BİLMİYORUM")) {
-      return Colors.grey.shade600;
-    }
-
-    // 4. BİLGİ (Mavi)
-    if (sectionId != null &&
-        (sectionId <= 10 || sectionId == 14 || sectionId == 20)) {
-      return const Color(0xFF1E88E5);
-    }
-    if (text.contains("BİLGİ")) {
-      return const Color(0xFF1E88E5);
-    }
-
-    // 5. OLUMLU (Yeşil)
-    if (text.contains("OLUMLU")) {
-      return const Color(0xFF43A047);
-    }
-
-    // Varsayılan
-    return const Color(0xFF43A047);
   }
 
   static String getSectionFullReport(int id, {BinaStore? store}) {
@@ -2176,7 +2176,7 @@ class ReportEngine {
             ].reduce((curr, next) => curr > next ? curr : next);
           }
 
-          if (hBina > 15.50 || maxYuk > 100) {
+          if (hBina > (15.50 - 0.001) || maxYuk > 100) {
             parts.add(
               "KRİTİK RİSK: Binada 'Dengelenmiş Merdiven' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur. (Mevcut: $hBina m, Max Yük: $maxYuk kişi)",
             );
@@ -2230,7 +2230,7 @@ class ReportEngine {
               ].reduce((curr, next) => curr > next ? curr : next);
             }
 
-            if (hBina > 15.50 || maxYuk > 100) {
+            if (hBina > (15.50 - 0.001) || maxYuk > 100) {
               parts.add(
                 "KRİTİK RİSK: Bodrumda 'Dengelenmiş Merdiven' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur.",
               );
@@ -2707,9 +2707,9 @@ class ReportEngine {
             b20.binaDisiKapaliYanginMerdiveniSayisi;
 
         int requiredProtected = 0;
-        if (hYapi >= 21.50 && hYapi < 30.50)
+        if (hYapi >= (21.50 - 0.001) && hYapi < (30.50 - 0.001))
           requiredProtected = 1;
-        else if (hYapi >= 30.50)
+        else if (hYapi >= (30.50 - 0.001))
           requiredProtected = 2;
 
         if (requiredProtected > 0) {
@@ -2850,11 +2850,11 @@ class ReportEngine {
     final hYapi = _getHYapi(s);
 
     // 1. Yapı Yüksekliği >= 51.50m (En üst limit - diğer yükseklik şartlarını kapsar)
-    if (hYapi >= 51.50) {
+    if (hYapi >= (51.50 - 0.001)) {
       reasons.add("KRİTİK RİSK: Yapı Yüksekliği ≥ 51.50 metre");
     }
     // 2. Yapı Yüksekliği > 30.50m (Basınçlandırma yoksa zorunlu)
-    else if (hYapi > 30.50) {
+    else if (hYapi > (30.50 - 0.001)) {
       final b20 = s.bolum20;
       if (b20 != null && b20.basinclandirma?.label.contains("-B") == true) {
         // 20-BAS-B: Hayır
@@ -2864,7 +2864,7 @@ class ReportEngine {
       }
     }
     // 3. Bina Yüksekliği > 21.50m (Varsa ek kurallar buraya eklenebilir)
-    else if ((s.bolum3?.hBina ?? 0) > 21.50) {
+    else if ((s.bolum3?.hBina ?? 0) > (21.50 - 0.001)) {
       // Şu an için 21.50m üstü için YGH'yi doğrudan zorunlu kılan genel bir kural ekli değil
       // Ancak hiyerarşi bozulmasın diye bu blok ayrıldı.
     }

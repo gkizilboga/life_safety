@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum30Model {
@@ -68,14 +68,40 @@ class Bolum30Model {
     }
 
     return Bolum30Model(
-      konum: find(map['konum_label'], [Bolum30Content.konumOptionA, Bolum30Content.konumOptionB, Bolum30Content.konumOptionC, Bolum30Content.konumOptionD]),
+      konum: find(map['konum_label'], [
+        Bolum30Content.konumOptionA,
+        Bolum30Content.konumOptionB,
+        Bolum30Content.konumOptionC,
+        Bolum30Content.konumOptionD,
+      ]),
       kapasite: map['kapasite'],
       kapasiteBilinmiyor: map['kapasiteBilinmiyor'] ?? false,
-      kapi: find(map['kapi_label'], [Bolum30Content.kapiOptionA, Bolum30Content.kapiOptionB, Bolum30Content.kapiOptionC]),
-      hava: find(map['hava_label'], [Bolum30Content.havaOptionA, Bolum30Content.havaOptionB, Bolum30Content.havaOptionC]),
-      yakit: find(map['yakit_label'], [Bolum30Content.yakitOptionA, Bolum30Content.yakitOptionB, Bolum30Content.yakitOptionC]),
-      drenaj: find(map['drenaj_label'], [Bolum30Content.drenajOptionA, Bolum30Content.drenajOptionB, Bolum30Content.drenajOptionC]),
-      tup: find(map['tup_label'], [Bolum30Content.tupOptionA, Bolum30Content.tupOptionB, Bolum30Content.tupOptionC, Bolum30Content.tupOptionD]),
+      kapi: find(map['kapi_label'], [
+        Bolum30Content.kapiOptionA,
+        Bolum30Content.kapiOptionB,
+        Bolum30Content.kapiOptionC,
+      ]),
+      hava: find(map['hava_label'], [
+        Bolum30Content.havaOptionA,
+        Bolum30Content.havaOptionB,
+        Bolum30Content.havaOptionC,
+      ]),
+      yakit: find(map['yakit_label'], [
+        Bolum30Content.yakitOptionA,
+        Bolum30Content.yakitOptionB,
+        Bolum30Content.yakitOptionC,
+      ]),
+      drenaj: find(map['drenaj_label'], [
+        Bolum30Content.drenajOptionA,
+        Bolum30Content.drenajOptionB,
+        Bolum30Content.drenajOptionC,
+      ]),
+      tup: find(map['tup_label'], [
+        Bolum30Content.tupOptionA,
+        Bolum30Content.tupOptionB,
+        Bolum30Content.tupOptionC,
+        Bolum30Content.tupOptionD,
+      ]),
     );
   }
 }

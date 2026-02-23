@@ -139,12 +139,10 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
             _buildInfoNote(
               "Dubleks daire seçildiği için üst kat alan bilgisi gereklidir.",
             ),
-            _buildSoru(
-              "Üst katınızın alanı 70 m²'den büyük mü?",
-              'alan',
-              [Bolum28Content.alanOption1, Bolum28Content.alanOption2],
-              _model.alan,
-            ),
+            _buildSoru("Üst katınızın alanı 70 m²'den büyük mü?", 'alan', [
+              Bolum28Content.alanOption1,
+              Bolum28Content.alanOption2,
+            ], _model.alan),
           ],
 
           if (_model.alan?.label == Bolum28Content.alanOption2.label) ...[

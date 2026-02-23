@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum23Model {
@@ -8,7 +8,8 @@ class Bolum23Model {
   final ChoiceResult? levha;
   final ChoiceResult? havalandirma;
 
-  ChoiceResult? get secim => bodrum ?? yanginModu ?? konum ?? levha ?? havalandirma;
+  ChoiceResult? get secim =>
+      bodrum ?? yanginModu ?? konum ?? levha ?? havalandirma;
 
   Bolum23Model({
     this.bodrum,
@@ -48,12 +49,26 @@ class Bolum23Model {
     ChoiceResult? find(String? l) {
       if (l == null) return null;
       return [
-        Bolum23Content.bodrumOptionA, Bolum23Content.bodrumOptionB, Bolum23Content.bodrumOptionC, Bolum23Content.bodrumOptionD,
-        Bolum23Content.yanginModuOptionA, Bolum23Content.yanginModuOptionB, Bolum23Content.yanginModuOptionC,
-        Bolum23Content.konumOptionA, Bolum23Content.konumOptionB, Bolum23Content.konumOptionC,
-        Bolum23Content.levhaOptionA, Bolum23Content.levhaOptionB, Bolum23Content.levhaOptionC,
-        Bolum23Content.havalandirmaOptionA, Bolum23Content.havalandirmaOptionB, Bolum23Content.havalandirmaOptionC,
-      ].firstWhere((e) => e.label == l, orElse: () => Bolum23Content.levhaOptionC);
+        Bolum23Content.bodrumOptionA,
+        Bolum23Content.bodrumOptionB,
+        Bolum23Content.bodrumOptionC,
+        Bolum23Content.bodrumOptionD,
+        Bolum23Content.yanginModuOptionA,
+        Bolum23Content.yanginModuOptionB,
+        Bolum23Content.yanginModuOptionC,
+        Bolum23Content.konumOptionA,
+        Bolum23Content.konumOptionB,
+        Bolum23Content.konumOptionC,
+        Bolum23Content.levhaOptionA,
+        Bolum23Content.levhaOptionB,
+        Bolum23Content.levhaOptionC,
+        Bolum23Content.havalandirmaOptionA,
+        Bolum23Content.havalandirmaOptionB,
+        Bolum23Content.havalandirmaOptionC,
+      ].firstWhere(
+        (e) => e.label == l,
+        orElse: () => Bolum23Content.levhaOptionC,
+      );
     }
 
     return Bolum23Model(

@@ -1,0 +1,387 @@
+﻿00:00 +0: loading C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart
+00:00 +0: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Yang─▒n Alg─▒lama: hYapi >= 51.50 -> Zorunlu
+00:00 +1: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Yang─▒n Alg─▒lama: hYapi < 51.50 -> Zorunlu De─şil
+00:00 +2: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Sprinkler: hYapi >= 51.50 -> Zorunlu
+00:00 +3: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Sprinkler: Otopark < 600 -> Zorunlu De─şil (13-1-ALT-A)
+00:00 +4: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Sprinkler: Otopark Bilmiyorum -> Uyar─▒ (13-1-ALT-E)
+00:00 +5: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Sprinkler: Ka├ğ─▒┼ş Mesafesi (35-1-C) -> Zorunlu DE─Ş─░L art─▒k
+00:00 +6: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests ─░tfaiye Su Alma: hBina >= 21.50 -> Zorunlu
+00:00 +7: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Hidrant: Taban > 5000 -> Zorunlu
+00:00 +8: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Bas─▒n├ğland─▒rma: 23-5-B (Kuyu Kapal─▒) -> Normal Asans├Âr Kuyu Bas─▒n├ğland─▒rma
+00:00 +9: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Sismik Ask─▒lama (Uyar─▒): Sprinkler Zorunlu -> isWarning=true, isMandatory=false
+00:00 +10: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Sismik Ask─▒lama: Sprinkler Zorunlu De─şil -> Sismik ├ûncelikli De─şil
+00:00 +11: C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart: ActiveSystemsEngine Logic Tests Sprinkler: Bilmiyorum Durumu (Section 35) -> Uyar─▒ VER─░LMEMEL─░ (Sprinkler i├ğin)
+00:00 +12: C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart: Chaos & Robustness: Logic Engines Stress: Absurdly High Building (10km high)
+00:00 +13: C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart: Chaos & Robustness: Logic Engines Stress: Near-Zero Building (1mm high)
+00:00 +14: C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart: Chaos & Robustness: Logic Engines Stress: Extreme Area Values (Millions of m2)
+00:00 +15: C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart: Chaos & Robustness: Logic Engines Robustness: Missing/Null Models
+00:00 +16: C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart: Chaos & Robustness: Logic Engines Robustness: Malformed Choice Labels
+00:00 +17: C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart: Chaos & Robustness: Logic Engines Robustness: Large Strings in Choices
+00:00 +18: C:/Users/SGM/Desktop/Vs1/life_safety/test/comprehensive_report_audit_test.dart: (setUpAll)
+00:00 +18: C:/Users/SGM/Desktop/Vs1/life_safety/test/comprehensive_report_audit_test.dart: Comprehensive Report Audit: Verify All 36 Sections
+
+--- [DETAYLI RAPOR DENET─░M─░ BA┼ŞLADI] ---
+
+
+SECTION 1:
+  - [Binan─▒z─▒n yap─▒ ruhsat tarihi nedir?]: 2007 sonras─▒
+
+SECTION 2:
+  - [Binan─▒z─▒n ta┼ş─▒y─▒c─▒ sistemi (yap─▒ t├╝r├╝) nedir?]: Betonarme
+
+SECTION 3:
+  - [Normal Kat Say─▒s─▒ (Zemin ├£st├╝)]: 10 adet
+  - [Bodrum Kat Say─▒s─▒ (Zemin Alt─▒)]: 2 adet
+  - [Zemin Kat]: 1 adet
+  - [Toplam Kat Adedi]: 13 kat
+  - [Zemin Kat Y├╝ksekli─şi]: - m
+  - [Normal Kat Y├╝ksekli─şi]: - m
+  - [Bodrum Kat Y├╝ksekli─şi]: - m
+  - [Bina Y├╝ksekli─şi (hBina)]: 30.50 m
+  - [Yap─▒ Y├╝ksekli─şi (hYap─▒)]: 30.50 m
+  - [Y├╝ksek Bina S─▒n─▒fland─▒rmas─▒]: Y├╝ksek Olmayan Bina
+
+SECTION 4:
+  - [Bina Y├╝kseklik Bilgisi]: BYK-4
+
+SECTION 5:
+  - [Zemin Kat Taban Alan─▒]: 500.0 m┬▓
+  - [Toplam ─░n┼şaat Alan─▒]: 5000.0 m┬▓
+
+SECTION 6:
+  - [Binan─▒zda konut haricinde a┼şa─ş─▒dakilerden hangileri mevcut?]: 
+  - [Otopark]: Mevcut
+  - [Ticari Alan]: Mevcut
+
+SECTION 7:
+  - [Kazan Dairesi]: Mevcut
+  - [Asans├Âr]: Mevcut
+  - [├çat─▒ Aras─▒]: Yok
+  - [Jenerat├Âr Odas─▒]: Yok
+  - [Elektrik Odas─▒]: Yok
+  - [Trafo Odas─▒]: Yok
+  - [E┼şya Deposu]: Yok
+  - [├ç├Âp Odas─▒]: Yok
+  - [S─▒─ş─▒nak]: Mevcut
+  - [Biti┼şik Nizam Ortak Duvar─▒]: Yok
+
+SECTION 8:
+  - [Binan─▒z─▒n yerle┼şim d├╝zeni nedir?]: Ayr─▒k
+
+SECTION 9:
+  - [Binada otomatik ya─şmurlama (sprinkler) sistemi var m─▒?]: Yanmaz
+
+SECTION 10:
+  - [Zemin Kat─▒n Bask─▒n Kullan─▒m Amac─▒]: Konut
+
+SECTION 11:
+  - [─░tfaiye arac─▒n─▒n binaya yakla┼ş─▒m mesafesi 45 metreyi a┼ş─▒yor mu?]: 5m+
+
+SECTION 12:
+  - [Betonarme ta┼ş─▒y─▒c─▒lar─▒n─▒zdaki paspay─▒ (demir koruma tabakas─▒) durumu nedir?]: Betonarme
+
+SECTION 13:
+  - [Otoparktan bina i├ğine a├ğ─▒lan kap─▒n─▒n ├Âzelli─şi nedir?]: Yang─▒na Dayan─▒kl─▒
+
+SECTION 14:
+  - [Tesisat ┼Şaftlar─▒]: ┼Şaft Kapak Analizi
+
+SECTION 15:
+  - [Zemin kaplama malzemesi nedir?]: Yanmaz
+
+SECTION 16:
+  - [Binan─▒zdaki d─▒┼ş cephe kaplama veya ─▒s─▒ yal─▒t─▒m sistemi nedir?]: Yanmaz
+
+SECTION 17:
+  - [├çat─▒n─▒z─▒n en ├╝st katman─▒nda hangi malzeme kullan─▒l─▒yor?]: Yanmaz
+
+SECTION 18:
+  - [Bina i├ğindeki duvar y├╝zeylerinde ne t├╝r malzeme var?]: Yanmaz
+  - [Daire i├ğlerinde veya koridor duvarlar─▒nda; ka─ş─▒t, ah┼şap, plastik veya k├Âp├╝k (i├ğten yal─▒t─▒m) gibi bir kaplama var m─▒?]: Yanmaz
+
+SECTION 19:
+  - [Y├Ânlendirme levhalar─▒ as─▒l─▒ m─▒?]: Mevcut
+
+SECTION 20:
+  - [Normal Merdiven Say─▒s─▒ (Adet)]: 1 adet
+  - [Bina ─░├ği Yang─▒n Merdiveni Say─▒s─▒ (Adet)]: 1 adet
+
+SECTION 21:
+  - [Merdiven ├Ân├╝nde Yang─▒n G├╝venlik Hol├╝ var m─▒?]: Evet
+  - [YGH (Hol) i├ğindeki kaplama malzemeleri yanmaz ├Âzellikte mi?]: Yanmaz
+  - [YGH (Hol) kap─▒lar─▒ duman s─▒zd─▒rmaz and yang─▒na dayan─▒kl─▒ m─▒?]: Uygun
+  - [YGH (Hol) i├ğinde e┼şya (bisiklet, dolap vb.) var m─▒?]: Yok
+
+SECTION 22:
+  - [Binan─▒zda ─░tfaiye (y├╝k) Asans├Âr├╝ var m─▒?]: Var
+
+SECTION 23:
+  - [Asans├Âr├╝n├╝z bodrum katlara da iniyor mu?]: Var
+
+SECTION 24:
+  - [Dairenizden itibaren bina d─▒┼ş─▒na ├ğ─▒k─▒┼ş nas─▒l?]: Bas─▒n├ğland─▒rma
+
+SECTION 25:
+  - [Merdiven kol geni┼şli─şi yeterli mi?]: 120cm
+
+SECTION 26:
+  - [Binada kullanmak zorunda kald─▒─ş─▒n─▒z e─şimli bir rampa var m─▒?]: Yok
+
+SECTION 27:
+  - [Ka├ğ─▒┼ş kap─▒lar─▒ hangi y├Âne a├ğ─▒l─▒yor? (daire kap─▒s─▒ hari├ğ)]: D─▒┼şa A├ğ─▒l─▒r
+  - [Ka├ğ─▒┼ş kap─▒lar─▒n─▒n kilit mekanizmas─▒ nas─▒ld─▒r? (daire kap─▒s─▒ hari├ğ)]: Panik Bar
+
+SECTION 28:
+  - [Evinizin i├ğindeki en uzak odadan daire giri┼ş kap─▒s─▒na kadar olan mesafe ne kadard─▒r?]: 15m
+
+SECTION 29:
+  - [Otoparkta yan─▒c─▒ t├╝rden e┼şyalar (lastik, boya, e┼şya vb.) bulunuyor mu?]: Yok
+
+SECTION 30:
+  - [Kazan dairesinin konumu ve kap─▒s─▒n─▒n a├ğ─▒ld─▒─ş─▒ yer nas─▒l?]: Uygun
+
+SECTION 31:
+  - [Trafo odas─▒n─▒n duvarlar─▒ ve kap─▒s─▒ yang─▒na dayan─▒kl─▒ m─▒?]: Uygun
+
+SECTION 32:
+  - [Jenerat├Âr odas─▒n─▒n duvarlar─▒ yang─▒na dayan─▒kl─▒ m─▒ ve kap─▒s─▒ nereye a├ğ─▒l─▒yor?]: Uygun
+
+SECTION 33:
+  - [Kullan─▒c─▒ y├╝k├╝ hesab─▒]: Kullan─▒c─▒ Y├╝k├╝ ve ├ç─▒k─▒┼şlar
+
+SECTION 34:
+  - [Zemin kattaki ticari alanlar─▒n do─şrudan soka─şa/bah├ğeye a├ğ─▒lan kendilerine ait kap─▒lar─▒ var m─▒?]: Ba─ş─▒ms─▒z
+
+SECTION 35:
+  - [Daire kap─▒n─▒zdan ├ğ─▒kt─▒─ş─▒n─▒zda bina merdiven kap─▒s─▒na kadar olan mesafe ka├ğ metredir?]: 15m
+
+SECTION 36:
+  - [Binadan d─▒┼ş havaya ├ğ─▒kt─▒─ş─▒n─▒z kat hangisidir?]: Zemin
+  - [Merdiven Tipleri ve Ka├ğ─▒┼ş Geni┼şlikleri]: Detayl─▒ Rapor
+
+--- [DENET─░M TAMAMLANDI] ---
+
+00:00 +19: C:/Users/SGM/Desktop/Vs1/life_safety/test/comprehensive_report_audit_test.dart: (tearDownAll)
+00:00 +19: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 1. K├Ât├╝ Niyetli Girdi Testi: Emoji ve A┼ş─▒r─▒ Uzun ─░sim
+00:00 +20: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 2. A┼ş─▒r─▒ De─şerler Testi: 99 Kat, 10 Bodrum, 999999 m┬▓
+00:00 +21: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 3. ReportText Emoji Temizli─şi Kontrol├╝
+00:00 +22: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 4. Kategori Renk E┼şle┼ştirmesi Testi
+00:00 +23: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 5. Kaydet & Devam Et Sim├╝lasyonu
+00:00 +24: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 6. ├ûzet Ekran─▒ Risk Metrikleri Testi
+00:00 +25: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 7. PDF Haz─▒rl─▒k Verisi Testi (Badge Renkleri)
+00:00 +26: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 8. T├╝m B├Âl├╝m ─░├ğeriklerinde Emoji Taramas─▒
+00:00 +27: C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart: U├ğtan Uca Test: Telefonu Olan Bir Kullan─▒c─▒ Gibi 9. DEMO SENARYO: Dairesel Merdiven Bulunan Bina - Tam Analiz
+
+ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+­şÅó DEMO: Dairesel Merdiven Analizi
+ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+
+­şôı Bina: Boutique Apartman - Ni┼şanta┼ş─▒
+­şôÉ Yap─▒ Bilgileri:
+   ÔÇó Zemin + 4 normal kat (toplam 5 kat)
+   ÔÇó Yap─▒ y├╝ksekli─şi: 15.5m
+   ÔÇó Kat alan─▒: 150 m┬▓ (kompakt boutique apartman)
+
+­şöä Merdiven Durumu:
+   ÔÇó 1 adet DA─░RESEL MERD─░VEN (spiral stairs)
+   ÔÇó Y├╝kseklik: 8.5m (Ôëñ 9.50m) Ô£ô
+
+­şæÑ Kullan─▒c─▒ Y├╝k├╝ (KONUT):
+   ÔÇó Zemin kat: 20 ki┼şi (konut kullan─▒m─▒)
+   ÔÇó Normal katlar: 20 ki┼şi/kat (konut kullan─▒m─▒)
+   ÔÇó Maksimum: 20 ki┼şi (Ôëñ 25) Ô£ô
+
+­şôè DA─░RESEL MERD─░VEN KURALLARI:
+   ÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöü
+   Kural 1: Y├╝kseklik Ôëñ 9.50m olmal─▒
+   Kural 2: Kullan─▒c─▒ y├╝k├╝ Ôëñ 25 ki┼şi olmal─▒
+   ÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöü
+
+­şôä RAPOR SONUCU:
+ÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöü
+
+­şôï Rapor ─░├ğeri─şi:
+Bu b├Âl├╝m de─şerlendirme kapsam─▒ d─▒┼ş─▒ndad─▒r.
+ÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöü
+ÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöüÔöü
+
+­şôï Tam Rapor Metni:
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+Bu b├Âl├╝m de─şerlendirme kapsam─▒ d─▒┼ş─▒ndad─▒r.
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+­şôê Risk Metrikleri:
+   ÔÇó G├╝venlik Skoru: 98/100
+   ÔÇó Kritik Riskler: 0
+   ÔÇó Uyar─▒lar: 1
+
+Ô£à Demo senaryo ba┼şar─▒yla tamamland─▒!
+ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+
+00:00 +28: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: (setUpAll)
+00:01 +28: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri YGH Analizi: Yap─▒ y├╝ksekli─şi 52m ve YGH yoksa KR─░T─░K R─░SK say─▒lmal─▒
+00:01 +29: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 33: Mevcut ├ğ─▒k─▒┼ş (1), gereken ├ğ─▒k─▒┼ştan (2) az ise KR─░T─░K R─░SK olu┼şmal─▒
+00:01 +30: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 25: D├Âner merdiven geni┼şli─şi < 100cm ise KR─░T─░K R─░SK olu┼şmal─▒
+00:01 +31: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri Skorlama: Sahanl─▒ks─▒z Merdiven varsa puan %95 alt─▒na d├╝┼şmeli
+00:01 +32: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 36 (Madde 41): Merdivenlerin yar─▒s─▒ndan az─▒ d─▒┼şar─▒ a├ğ─▒l─▒yorsa KR─░T─░K R─░SK
+00:01 +32 -1: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 36 (Madde 41): Merdivenlerin yar─▒s─▒ndan az─▒ d─▒┼şar─▒ a├ğ─▒l─▒yorsa KR─░T─░K R─░SK [E]
+  Expected: <true>
+    Actual: <false>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\engineering_logic_test.dart 106:9              main.<fn>.<fn>
+  
+00:01 +32 -1: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Sprinkler yoksa ve tahliye mesafesi > 10m ise KR─░T─░K R─░SK
+00:01 +32 -2: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Sprinkler yoksa ve tahliye mesafesi > 10m ise KR─░T─░K R─░SK [E]
+  Expected: <true>
+    Actual: <false>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\engineering_logic_test.dart 126:9              main.<fn>.<fn>
+  
+00:01 +32 -2: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Sprinkler varsa ve tahliye mesafesi <= 15m ise OLUMLU
+00:01 +33 -2: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Tek Merdiven varsa (1/1) d─▒┼şar─▒ a├ğ─▒lmal─▒
+00:01 +33 -3: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Tek Merdiven varsa (1/1) d─▒┼şar─▒ a├ğ─▒lmal─▒ [E]
+  Expected: <true>
+    Actual: <false>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\engineering_logic_test.dart 171:7              main.<fn>.<fn>
+  
+00:01 +33 -3: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): 3 Merdiven varsa (ceil(3/2)=2) d─▒┼şar─▒ a├ğ─▒lmal─▒
+00:01 +33 -4: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): 3 Merdiven varsa (ceil(3/2)=2) d─▒┼şar─▒ a├ğ─▒lmal─▒ [E]
+  Expected: <true>
+    Actual: <false>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\engineering_logic_test.dart 185:9              main.<fn>.<fn>
+  
+00:01 +33 -4: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): 5 Merdiven varsa (ceil(5/2)=3) d─▒┼şar─▒ a├ğ─▒lmal─▒
+00:01 +33 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): 5 Merdiven varsa (ceil(5/2)=3) d─▒┼şar─▒ a├ğ─▒lmal─▒ [E]
+  Expected: <true>
+    Actual: <false>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\engineering_logic_test.dart 200:9              main.<fn>.<fn>
+  
+00:01 +33 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Ba─ş─▒ms─▒z Bodrum Merdivenleri Kontrol├╝ (2 merdiven, 0 direkt)
+00:01 +34 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Ba─ş─▒ms─▒z Bodrum Merdivenleri Mesafe Kontrol├╝
+00:01 +35 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart: (tearDownAll)
+00:01 +35 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart: Malicious User Simulation Attacker Attempt: Storage Exhaustion via Massive Strings
+00:01 +36 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart: Malicious User Simulation Attacker Attempt: Character Injection for PDF/UI Breakage
+00:01 +37 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart: Malicious User Simulation Attacker Attempt: Negative and NaN forcing
+00:01 +38 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/pdf_ordering_test.dart: Active Systems Engine Requirement Ordering
+Verified: Yang─▒n Senaryosu is first.
+Verified: Gaz Alg─▒lama Sistemi is last.
+00:01 +39 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: (setUpAll)
+00:01 +39 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: YGH Zorunluluk Kriterleri Testleri Kriter 1: Yap─▒ y├╝ksekli─şi 51.50m ve ├╝zeri ise YGH zorunlu olmal─▒ (30.5m mesaj─▒ gizlenmeli)
+00:01 +40 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: YGH Zorunluluk Kriterleri Testleri Kriter 2: Bodrum katta ticari/teknik kullan─▒m (10-C) varsa YGH zorunlu olmal─▒
+00:01 +41 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: YGH Zorunluluk Kriterleri Testleri Kriter 3: ─░tfaiye asans├Âr├╝ (22-1-B) varsa YGH zorunlu olmal─▒
+00:01 +42 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: YGH Zorunluluk Kriterleri Testleri Kriter 4: Bodrum kat var ve B├Âl├╝m 23 se├ğimi 23-1-C ise YGH zorunlu olmal─▒
+00:01 +43 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: YGH Zorunluluk Kriterleri Testleri Kriter 5: hYapi > 30.50m ve bas─▒n├ğland─▒rma yok (20-BAS-B) ise YGH zorunlu olmal─▒
+00:01 +44 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: YGH Zorunluluk Kriterleri Testleri Kriter 6: Merdiven bodruma kesintisiz devam ediyorsa (20-Bodrum-A) YGH zorunlu olmal─▒
+00:01 +45 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Dairesel Merdiven De─şerlendirmesi Testleri Senaryo 1: Dairesel merdiven y├╝ksekli─şi <= 9.50m VE kullan─▒c─▒ y├╝k├╝ <= 25 - GE├çERL─░
+00:01 +46 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Dairesel Merdiven De─şerlendirmesi Testleri Senaryo 2: Dairesel merdiven y├╝ksekli─şi > 9.50m - GE├çERS─░Z
+00:01 +47 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Dairesel Merdiven De─şerlendirmesi Testleri Senaryo 3: Kullan─▒c─▒ y├╝k├╝ > 25 ki┼şi - GE├çERS─░Z
+00:01 +48 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Dairesel Merdiven De─şerlendirmesi Testleri Senaryo 4: Y├╝kseklik bilinmiyor - UYARI
+00:01 +49 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Dairesel Merdiven De─şerlendirmesi Testleri Senaryo 5: B├Âl├╝m 34 ba─ş─▒ms─▒z ├ğ─▒k─▒┼ş - Ticari alan y├╝k├╝ say─▒lmaz
+00:01 +50 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Dairesel Merdiven De─şerlendirmesi Testleri Senaryo 6: HER ─░K─░ ┼ŞART DA sa─şlanm─▒yor - ├çoklu sebep
+00:01 +51 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Rapor Etiketi De─şerlendirme Testleri B├Âl├╝m 1 ve 2 Etiketleri Do─şru Gelmeli
+00:01 +52 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Rapor Etiketi De─şerlendirme Testleri B├Âl├╝m 7 Teknik Hacimler Detayl─▒ Listelenmeli
+00:01 +53 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Rapor Etiketi De─şerlendirme Testleri B├Âl├╝m 21 YGH Alt Sorular─▒ Listelenmeli
+00:01 +54 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: Rapor Etiketi De─şerlendirme Testleri B├Âl├╝m 36 Merdiven Analizi Etiketi Do─şru Gelmeli
+00:01 +55 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart: (tearDownAll)
+00:01 +55 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/simulation_audit_test.dart: Simulation: Architect Audit of 55m Mixed-Use Building
+
+--- [S─░M├£LASYON BA┼ŞLATILDI: M─░MAR G├ûZ├£YLE ANAL─░Z] ---
+
+B─░NA PROF─░L─░: 55m Y├╝kseklik, Karma Kullan─▒m, 22 Kat Toplam.
+
+[GENEL R─░SK DURUMU]
+G├╝venlik Skoru: %95
+Kritik Risk Say─▒s─▒: 1
+Kritik Alanlar: [B├Âl├╝m 21]
+
+[AKT─░F S─░STEM GEREKS─░N─░MLER─░]
+[ZORUNLU] Yang─▒n Senaryosu
+   - Sebep: KR─░T─░K R─░SK: Binada zorunlu aktif sistemler bulundu─şu i├ğin bir Yang─▒n Senaryosu olu┼şturulmas─▒ zorunludur.
+   - Not: Aktif sistem gereksinimlerinin belirtildi─şi bu ├ğal─▒┼şmadaki hi├ğbir sistem veya ekipman binan─▒zda zorunlu de─şil ise ve binada asans├Âr de yok ise yang─▒n SENARYOSU ve yang─▒n MATR─░S─░ olu┼şturulmas─▒ zorunlu olmayabilir.
+[ZORUNLU] Yang─▒n Matrisi (Cause and Effect)
+   - Sebep: KR─░T─░K R─░SK: Sistemlerin birbiriyle entegrasyonu i├ğin Yang─▒n Matrisi (Cause and Effect) haz─▒rlanmal─▒d─▒r.
+[ZORUNLU] Yang─▒n Alg─▒lama ve Uyar─▒ Sistemi
+   - Sebep: KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 51.50m oldu─şu i├ğin zorunludur.
+[ZORUNLU] Acil Ayd─▒nlatma Sistemi
+   - Sebep: KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+[─░STE─ŞE BA─ŞLI] Acil Durum Y├Ânlendirmeleri
+[ZORUNLU] Sesli Tahliye (Anons) Sistemi
+   - Sebep: KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 51.50m oldu─şu i├ğin zorunludur.
+[ZORUNLU] Elle ─░hbar Sistemi (K─▒r-Bas Yang─▒n Butonu)
+   - Sebep: KR─░T─░K R─░SK: Bina Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+[ZORUNLU] Sesli ve I┼ş─▒kl─▒ Alarm Cihazlar─▒
+   - Sebep: KR─░T─░K R─░SK: Elle ihbar sistemi (Buton) zorunlu oldu─şu i├ğin alarm cihazlar─▒ da zorunludur.
+[ZORUNLU] Yang─▒n Dolab─▒ Sistemi
+   - Sebep: KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+[ZORUNLU] ─░tfaiye Su Alma A─şz─▒
+   - Sebep: KR─░T─░K R─░SK: Bina Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+[ZORUNLU] ─░tfaiye Su Verme A─şz─▒ (Siyam ─░kizi)
+   - Sebep: KR─░T─░K R─░SK: Bina Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+[ZORUNLU] Otomatik Ya─şmurlama (Sprinkler) Sistemi
+   - Sebep: KR─░T─░K R─░SK: Zorunluluk Sebebi: Yap─▒ Y├╝ksekli─şi ÔëÑ 51.50m.
+[─░STE─ŞE BA─ŞLI] Yang─▒n Hidrant Sistemi(Bina ├çevresinde)
+[ZORUNLU] Duman Kontrol Sistemi
+   - Sebep: KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 51.50m oldu─şu i├ğin zorunludur.
+[ZORUNLU] Bas─▒n├ğland─▒rma Sistemi
+   - Sebep: KR─░T─░K R─░SK: A┼şa─ş─▒daki alanlarda bas─▒n├ğland─▒rma yap─▒lmas─▒ ZORUNLUDUR:
+   - Not: Merdivenlerin en az ikisinde.
+[ZORUNLU] Ta┼ş─▒nabilir (Portatif) S├Ând├╝r├╝c├╝ler (YSC)
+   - Sebep: KR─░T─░K R─░SK: Her yap─▒da zorunludur.
+   - Not: Toplam ─░n┼şaat Alan─▒ (16000.0 m┬▓) hesab─▒na g├Âre binada en az 64 adet 6kg Kuru Kimyevi Tozlu (KKT) Yang─▒n S├Ând├╝rme Cihaz─▒ bulunmal─▒d─▒r.
+[UYARI] Yang─▒n Damperi
+   - Sebep: UYARI: Yang─▒n kompart─▒man─▒ veya yang─▒n zonu olarak tan─▒mlanm─▒┼ş alanlar─▒n d├Â┼şeme ve t├╝m duvarlar─▒nda yer alan, havaland─▒rma kanal─▒ ge├ği┼şi vb. korunumsuz a├ğ─▒kl─▒klarda Yang─▒n Damperi kullan─▒lmal─▒d─▒r.
+[UYARI] Duman Damperi
+   - Sebep: UYARI: Duman tahliye sistemine ait kanallar─▒n yang─▒n kompart─▒man─▒ veya yang─▒n zonundan ge├ğmesi halinde ge├ği┼ş noktalar─▒nda duman damperi kullan─▒lmal─▒d─▒r.
+[UYARI] Atrium Duman Kontrol├╝
+   - Sebep: UYARI: Alan─▒ 90 m┬▓'den k├╝├ğ├╝k olan atrium bo┼şluklar─▒n─▒n ├ğevresi her katta en az 45 cm y├╝ksekli─şinde duman perdesi ile ├ğevrelenir ve ya─şmurlama sistemi ile korunan binalarda duman perdesinden 15 ila 30 cm uzakl─▒kta, aralar─▒ndaki mesafe en ├ğok 2 m olacak ┼şekilde ya─şmurlama ba┼şl─▒─ş─▒ yerle┼ştirilir. Atriumlarda do─şal veya mekanik olarak duman kontrol├╝ yap─▒l─▒r.
+[UYARI] Sismik Ask─▒lama (Depreme Kar┼ş─▒ Tesisat Koruyucu) Sistemler
+   - Sebep: UYARI: Otomatik Ya─şmurlama (Sprinkler) sistemi zorunlu oldu─şu i├ğin, binan─▒z─▒n deprem b├Âlgesine g├Âre sismik ├Ânlemler al─▒nmas─▒ gerekebilir. Kesin sismik ├Ânlemler i├ğin binan─▒z─▒n bulundu─şu b├Âlgeye g├Âre yorum yap─▒lmal─▒d─▒r.
+   - Not: Birinci ve ikinci derece deprem b├Âlgelerinde, sismik hareketlere kar┼ş─▒ ana kolonlar─▒n herhangi bir y├Âne s├╝r├╝klenmemesi i├ğin, d├Ârt yollu destek kullan─▒lmas─▒ ve 65 mm ve daha b├╝y├╝k nominal ├ğapl─▒ borular─▒n katlardan ana da─ş─▒t─▒m borular─▒na ba─şlanmas─▒nda esnek ba─şlant─▒lar ile borular─▒n tavanlara tutturulmas─▒nda iki yollu enlemesine ve boylamas─▒na sabitleme ask─▒ elemanlar─▒ kullan─▒larak borular─▒n k─▒r─▒lmas─▒n─▒n ├Ânlenmesi gerekir. Dilatasyon ge├ği┼şlerinde her ├╝├ğ y├Ânde hareketi kar┼ş─▒layacak detaylar uygulan─▒r.
+[UYARI] Gaz Alg─▒lama Sistemi
+   - Sebep: UYARI: Kazan dairesi (do─şalgaz/LPG), otopark (karbonmonoksit) veya mutfak gibi alanlarda uygun gaz alg─▒lama dedekt├Ârleri kullan─▒lmal─▒d─▒r.
+
+--- [S─░M├£LASYON TAMAMLANDI] ---
+
+00:02 +56 -5: C:/Users/SGM/Desktop/Vs1/life_safety/test/stress_test.dart: Zorlu Kullan─▒c─▒ Sim├╝lasyonu: Maksimum De─şerler Alt─▒nda Sistem Davran─▒┼ş─▒
+--- STRESS TEST─░ BA┼ŞLATILIYOR (MAKS─░MUM DE─ŞERLER) ---
+
+[SONU├çLAR]
+Toplam ─░n┼şaat Alan─▒: 200000.0 m2
+Yap─▒ Y├╝ksekli─şi: 125.0 m
+G├╝venlik Skoru: %73
+Kritik Risk Say─▒s─▒: 5
+Gereken ├ç─▒k─▒┼ş Say─▒s─▒ (B├Âl├╝m 33): 67
+Mevcut ├ç─▒k─▒┼ş Say─▒s─▒: 1
+
+[AKT─░F S─░STEM ANAL─░Z─░]
+ZORUNLU: Yang─▒n Senaryosu - KR─░T─░K R─░SK: Binada zorunlu aktif sistemler bulundu─şu i├ğin bir Yang─▒n Senaryosu olu┼şturulmas─▒ zorunludur.
+ZORUNLU: Yang─▒n Matrisi (Cause and Effect) - KR─░T─░K R─░SK: Sistemlerin birbiriyle entegrasyonu i├ğin Yang─▒n Matrisi (Cause and Effect) haz─▒rlanmal─▒d─▒r.
+ZORUNLU: Yang─▒n Alg─▒lama ve Uyar─▒ Sistemi - KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 51.50m oldu─şu i├ğin zorunludur.
+ZORUNLU: Acil Ayd─▒nlatma Sistemi - KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+ZORUNLU: Sesli Tahliye (Anons) Sistemi - KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 51.50m oldu─şu i├ğin zorunludur.
+ZORUNLU: Elle ─░hbar Sistemi (K─▒r-Bas Yang─▒n Butonu) - KR─░T─░K R─░SK: Bina Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+ZORUNLU: Sesli ve I┼ş─▒kl─▒ Alarm Cihazlar─▒ - KR─░T─░K R─░SK: Elle ihbar sistemi (Buton) zorunlu oldu─şu i├ğin alarm cihazlar─▒ da zorunludur.
+ZORUNLU: Yang─▒n Dolab─▒ Sistemi - KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+ZORUNLU: ─░tfaiye Su Alma A─şz─▒ - KR─░T─░K R─░SK: Bina Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+ZORUNLU: ─░tfaiye Su Verme A─şz─▒ (Siyam ─░kizi) - KR─░T─░K R─░SK: Bina Y├╝ksekli─şi ÔëÑ 21.50m oldu─şu i├ğin zorunludur.
+ZORUNLU: Otomatik Ya─şmurlama (Sprinkler) Sistemi - KR─░T─░K R─░SK: Zorunluluk Sebebi: Yap─▒ Y├╝ksekli─şi ÔëÑ 51.50m.
+ZORUNLU: Duman Kontrol Sistemi - KR─░T─░K R─░SK: Yap─▒ Y├╝ksekli─şi ÔëÑ 51.50m oldu─şu i├ğin zorunludur.
+ZORUNLU: Bas─▒n├ğland─▒rma Sistemi - KR─░T─░K R─░SK: A┼şa─ş─▒daki alanlarda bas─▒n├ğland─▒rma yap─▒lmas─▒ ZORUNLUDUR:
+ZORUNLU: Ta┼ş─▒nabilir (Portatif) S├Ând├╝r├╝c├╝ler (YSC) - KR─░T─░K R─░SK: Her yap─▒da zorunludur.
+
+--- STRESS TEST─░ BA┼ŞARIYLA TAMAMLANDI ---
+
+00:02 +57 -5: Some tests failed.

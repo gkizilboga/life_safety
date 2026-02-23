@@ -215,16 +215,11 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
             ),
 
           if (_askTrafo)
-            _buildSoru(
-              "Trafo odası temiz mi ve menfezler açık mı?",
-              'trafo',
-              [
-                Bolum29Content.trafoOptionA,
-                Bolum29Content.trafoOptionB,
-                Bolum29Content.trafoOptionC,
-              ],
-              _model.trafo,
-            ),
+            _buildSoru("Trafo odası temiz mi ve menfezler açık mı?", 'trafo', [
+              Bolum29Content.trafoOptionA,
+              Bolum29Content.trafoOptionB,
+              Bolum29Content.trafoOptionC,
+            ], _model.trafo),
 
           if (_askDepo)
             _buildSoru(

@@ -1,9 +1,12 @@
+enum RiskLevel { critical, warning, positive, unknown, info }
+
 class ChoiceResult {
   final String label;
   final String uiTitle;
   final String uiSubtitle;
   final String reportText;
   final String? adviceText;
+  final RiskLevel level;
 
   ChoiceResult({
     required this.label,
@@ -11,10 +14,17 @@ class ChoiceResult {
     required this.uiSubtitle,
     required this.reportText,
     this.adviceText,
+    this.level = RiskLevel.positive,
   });
 
   factory ChoiceResult.empty() {
-    return ChoiceResult(label: '', uiTitle: '', uiSubtitle: '', reportText: '');
+    return ChoiceResult(
+      label: '',
+      uiTitle: '',
+      uiSubtitle: '',
+      reportText: '',
+      level: RiskLevel.unknown,
+    );
   }
 
   @override
@@ -32,6 +42,7 @@ class ChoiceResult {
     String? uiSubtitle,
     String? reportText,
     String? adviceText,
+    RiskLevel? level,
   }) {
     return ChoiceResult(
       label: label ?? this.label,
@@ -39,6 +50,7 @@ class ChoiceResult {
       uiSubtitle: uiSubtitle ?? this.uiSubtitle,
       reportText: reportText ?? this.reportText,
       adviceText: adviceText ?? this.adviceText,
+      level: level ?? this.level,
     );
   }
 }

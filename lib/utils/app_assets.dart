@@ -28,7 +28,9 @@ class AppAssets {
   static const String section15DosemeYalitim =
       'assets/images/sections/doseme_yalitim.webp';
   static const String section15Gecis =
-      'assets/images/sections/tesisat_gecis.webp';
+      'assets/images/sections/tesisat_gecis_1.webp';
+  static const String section15Gecis2 =
+      'assets/images/sections/tesisat_gecis_2.webp';
   static const String section16EpsMantolama =
       'assets/images/sections/eps_mantolama.webp';
   static const String section16XpsMantolama =
@@ -55,6 +57,8 @@ class AppAssets {
       'assets/images/sections/dis_acik_merdiven_1.webp';
   static const String section20DisAcik2 =
       'assets/images/sections/dis_acik_merdiven_2.webp';
+  static const String section20DisAcik3 =
+      'assets/images/sections/dis_acik_merdiven_3.webp';
   static const String section20Dairesel =
       'assets/images/sections/dairesel_merdiven.webp';
   static const String section20Dengelenmis =
@@ -84,4 +88,12 @@ class AppAssets {
       'assets/images/sections/daireden_olcum.webp';
   static const String section35KacisGosterim =
       'assets/images/sections/kacis_mesafe_gosterim.webp';
+
+  // Newly discovered assets
+  static const String section1RuhsatTarih =
+      'assets/images/sections/ruhsat_tarih_1.webp';
+  static const String section7ElektrikOdasi =
+      'assets/images/sections/elektrik_odasi.webp';
+  static const String section3KatYuksekligi =
+      'assets/images/sections/kat_yuksekligi_1.webp';
 }

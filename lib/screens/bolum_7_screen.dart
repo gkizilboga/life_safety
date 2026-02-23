@@ -168,6 +168,11 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasElektrik,
             () => _toggleOption('elektrik'),
           ),
+          TechnicalDrawingButton(
+            assetPath: AppAssets.section7ElektrikOdasi,
+            title: "Elektrik Tesisat Odası",
+          ),
+          const SizedBox(height: 8),
 
           _buildOption(
             Bolum7Content.trafo,

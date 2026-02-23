@@ -49,7 +49,8 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     if (kisi <= 50) return 1;
     if (kisi <= 500) return 2;
     if (kisi <= 1000) return 3;
-    return 4; // 1000 üzeri için her 500 kişide +1 artar ama şimdilik 4 diyelim
+    // Yönetmelik gereği 1000'den sonra her 500 kişide 1 çıkış eklenir:
+    return 4 + ((kisi - 1000) / 500).ceil();
   }
 
   void _hesapla() {

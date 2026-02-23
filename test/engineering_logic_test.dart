@@ -103,7 +103,12 @@ void main() {
         expect(metrics['criticalCount'] >= 1, true);
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("Madde 41/1 gereği"), true);
+        expect(
+          report.contains(
+            "Kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması zorunludur",
+          ),
+          true,
+        );
       },
     );
 
@@ -123,7 +128,12 @@ void main() {
         expect(metrics['criticalCount'] >= 1, true);
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("Madde 41/2 gereği"), true);
+        expect(
+          report.contains(
+            "Doğrudan dışarıya açılmayan merdivenlerin tahliye mesafesi",
+          ),
+          true,
+        );
       },
     );
 
@@ -154,7 +164,12 @@ void main() {
         );
         // If there are no other errors in Section 36 for this mock store, it should be green or blue
         // But we just want to ensure it doesn't have "KRİTİK RİSK" from Madde 41
-        expect(report.contains("KRİTİK RİSK: Madde 41"), false);
+        expect(
+          report.contains(
+            "KRİTİK RİSK: Doğrudan dışarıya açılmayan merdivenlerin tahliye mesafesi",
+          ),
+          false,
+        );
       },
     );
 
@@ -168,8 +183,13 @@ void main() {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
-      expect(report.contains("KRİTİK RİSK: Madde 41/1 gereği"), true);
-      expect(report.contains("Gereken en az: 1"), true);
+      expect(
+        report.contains(
+          "Kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması zorunludur",
+        ),
+        true,
+      );
+      expect(report.contains("1 tanesi doğrudan dışarı açılmalıdır"), true);
     });
 
     test(
@@ -182,7 +202,12 @@ void main() {
         store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("KRİTİK RİSK: Madde 41/1 gereği"), true);
+        expect(
+          report.contains(
+            "Kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması zorunludur",
+          ),
+          true,
+        );
         expect(report.contains("2"), true); // Check for number 2
       },
     );
@@ -194,10 +219,23 @@ void main() {
           normalMerdivenSayisi: 5,
           toplamDisariAcilanMerdivenSayisi: 2, // 2 < 3 -> Fail
         );
-        store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
+        store.bolum36 = Bolum36Model(
+          cikisKati: ChoiceResult(
+            label: "test",
+            uiTitle: "test",
+            uiSubtitle: "",
+            reportText: "",
+          ),
+          merdivenDegerlendirme: "",
+        );
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("KRİTİK RİSK: Madde 41/1 gereği"), true);
+        expect(
+          report.contains(
+            "Kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması zorunludur",
+          ),
+          true,
+        );
         expect(report.contains("3"), true);
       },
     );
@@ -210,7 +248,15 @@ void main() {
           bodrumNormalMerdivenSayisi: 4,
           bodrumToplamDisariAcilanMerdivenSayisi: 1, // 1/4 < 2/4 -> Ratio Fail
         );
-        store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
+        store.bolum36 = Bolum36Model(
+          cikisKati: ChoiceResult(
+            label: "test",
+            uiTitle: "test",
+            uiSubtitle: "",
+            reportText: "",
+          ),
+          merdivenDegerlendirme: "",
+        );
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
         expect(report.contains("KRİTİK RİSK (Bodrum)"), true);
@@ -228,7 +274,15 @@ void main() {
               Bolum20Content.madde41MesafeUstunde, // Above limit
         );
         store.bolum9 = Bolum9Model(secim: Bolum9Content.yok);
-        store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
+        store.bolum36 = Bolum36Model(
+          cikisKati: ChoiceResult(
+            label: "test",
+            uiTitle: "test",
+            uiSubtitle: "",
+            reportText: "",
+          ),
+          merdivenDegerlendirme: "",
+        );
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
         expect(report.contains("KRİTİK RİSK"), true);

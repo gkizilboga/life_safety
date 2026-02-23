@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum19Model {
@@ -43,13 +43,20 @@ class Bolum19Model {
     ChoiceResult? find(String? l) {
       if (l == null) return null;
       final allChoices = [
-        Bolum19Content.engelOptionA, Bolum19Content.engelOptionB, 
-        Bolum19Content.engelOptionC, Bolum19Content.engelOptionD,
-        Bolum19Content.levhaOptionA, Bolum19Content.levhaOptionB, Bolum19Content.levhaOptionC,
-        Bolum19Content.yanilticiOptionA, Bolum19Content.yanilticiOptionB,
-        Bolum19Content.etiketOptionA, Bolum19Content.etiketOptionB, Bolum19Content.etiketOptionC,
+        Bolum19Content.engelOptionA,
+        Bolum19Content.engelOptionB,
+        Bolum19Content.engelOptionC,
+        Bolum19Content.engelOptionD,
+        Bolum19Content.levhaOptionA,
+        Bolum19Content.levhaOptionB,
+        Bolum19Content.levhaOptionC,
+        Bolum19Content.yanilticiOptionA,
+        Bolum19Content.yanilticiOptionB,
+        Bolum19Content.etiketOptionA,
+        Bolum19Content.etiketOptionB,
+        Bolum19Content.etiketOptionC,
       ];
-      
+
       for (var choice in allChoices) {
         if (choice.label == l) return choice;
       }

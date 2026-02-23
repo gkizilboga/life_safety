@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum32Model {
@@ -7,12 +7,7 @@ class Bolum32Model {
   final ChoiceResult? cevre;
   final ChoiceResult? egzoz;
 
-  Bolum32Model({
-    this.yapi,
-    this.yakit,
-    this.cevre,
-    this.egzoz,
-  });
+  Bolum32Model({this.yapi, this.yakit, this.cevre, this.egzoz});
 
   Bolum32Model copyWith({
     ChoiceResult? yapi,
@@ -48,10 +43,28 @@ class Bolum32Model {
     }
 
     return Bolum32Model(
-      yapi: find(map['yapi_label'], [Bolum32Content.yapiOptionA, Bolum32Content.yapiOptionB, Bolum32Content.yapiOptionC, Bolum32Content.yapiOptionD]),
-      yakit: find(map['yakit_label'], [Bolum32Content.yakitOptionA, Bolum32Content.yakitOptionB, Bolum32Content.yakitOptionC]),
-      cevre: find(map['cevre_label'], [Bolum32Content.cevreOptionA, Bolum32Content.cevreOptionB, Bolum32Content.cevreOptionC, Bolum32Content.cevreOptionD]),
-      egzoz: find(map['egzoz_label'], [Bolum32Content.egzozOptionA, Bolum32Content.egzozOptionB, Bolum32Content.egzozOptionC]),
+      yapi: find(map['yapi_label'], [
+        Bolum32Content.yapiOptionA,
+        Bolum32Content.yapiOptionB,
+        Bolum32Content.yapiOptionC,
+        Bolum32Content.yapiOptionD,
+      ]),
+      yakit: find(map['yakit_label'], [
+        Bolum32Content.yakitOptionA,
+        Bolum32Content.yakitOptionB,
+        Bolum32Content.yakitOptionC,
+      ]),
+      cevre: find(map['cevre_label'], [
+        Bolum32Content.cevreOptionA,
+        Bolum32Content.cevreOptionB,
+        Bolum32Content.cevreOptionC,
+        Bolum32Content.cevreOptionD,
+      ]),
+      egzoz: find(map['egzoz_label'], [
+        Bolum32Content.egzozOptionA,
+        Bolum32Content.egzozOptionB,
+        Bolum32Content.egzozOptionC,
+      ]),
     );
   }
 }

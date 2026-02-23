@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum16Model {
@@ -7,7 +7,7 @@ class Bolum16Model {
   final ChoiceResult? sagirYuzey;
   final bool? sagirYuzeySprinkler;
   final ChoiceResult? bitisikNizam;
-  
+
   final int? bariyerYan;
   final int? bariyerUst;
   final int? bariyerZemin;
@@ -39,7 +39,8 @@ class Bolum16Model {
   }) {
     return Bolum16Model(
       mantolama: mantolama ?? this.mantolama,
-      giydirmeBoslukYalitim: giydirmeBoslukYalitim ?? this.giydirmeBoslukYalitim,
+      giydirmeBoslukYalitim:
+          giydirmeBoslukYalitim ?? this.giydirmeBoslukYalitim,
       sagirYuzey: sagirYuzey ?? this.sagirYuzey,
       sagirYuzeySprinkler: sagirYuzeySprinkler ?? this.sagirYuzeySprinkler,
       bitisikNizam: bitisikNizam ?? this.bitisikNizam,
@@ -67,28 +68,32 @@ class Bolum16Model {
   factory Bolum16Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? l, List<ChoiceResult> options) {
       if (l == null) return null;
-      try { return options.firstWhere((e) => e.label == l); } catch (_) { return null; }
+      try {
+        return options.firstWhere((e) => e.label == l);
+      } catch (_) {
+        return null;
+      }
     }
 
     return Bolum16Model(
       mantolama: find(map['mantolama_label'], [
-        Bolum16Content.mantolamaOptionA, 
-        Bolum16Content.mantolamaOptionB, 
-        Bolum16Content.giydirmeOptionC, 
-        Bolum16Content.mantolamaOptionD, 
-        Bolum16Content.mantolamaOptionE
+        Bolum16Content.mantolamaOptionA,
+        Bolum16Content.mantolamaOptionB,
+        Bolum16Content.giydirmeOptionC,
+        Bolum16Content.mantolamaOptionD,
+        Bolum16Content.mantolamaOptionE,
       ]),
       giydirmeBoslukYalitim: map['giydirmeBoslukYalitim'],
       sagirYuzey: find(map['sagirYuzey_label'], [
-        Bolum16Content.sagirYuzeyOptionA, 
-        Bolum16Content.sagirYuzeyOptionB, 
-        Bolum16Content.sagirYuzeyOptionC
+        Bolum16Content.sagirYuzeyOptionA,
+        Bolum16Content.sagirYuzeyOptionB,
+        Bolum16Content.sagirYuzeyOptionC,
       ]),
       sagirYuzeySprinkler: map['sagirYuzeySprinkler'],
       bitisikNizam: find(map['bitisikNizam_label'], [
-        Bolum16Content.bitisikOptionA, 
-        Bolum16Content.bitisikOptionB, 
-        Bolum16Content.bitisikOptionC
+        Bolum16Content.bitisikOptionA,
+        Bolum16Content.bitisikOptionB,
+        Bolum16Content.bitisikOptionC,
       ]),
       bariyerYan: map['bariyerYan'],
       bariyerUst: map['bariyerUst'],

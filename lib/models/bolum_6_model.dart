@@ -10,7 +10,8 @@ class Bolum6Model {
 
   // Alt Sorular
   final ChoiceResult? otoparkTipi; // Sadece hasOtopark true ise
-  final double? kapaliOtoparkAlani; // Kapalı otopark m² (A veya C şıkkı seçildiğinde)
+  final double?
+  kapaliOtoparkAlani; // Kapalı otopark m² (A veya C şıkkı seçildiğinde)
 
   Bolum6Model({
     this.hasOtopark = false,
@@ -36,7 +37,9 @@ class Bolum6Model {
       hasDepo: hasDepo ?? this.hasDepo,
       isSadeceKonut: isSadeceKonut ?? this.isSadeceKonut,
       otoparkTipi: otoparkTipi ?? this.otoparkTipi,
-      kapaliOtoparkAlani: clearKapaliOtoparkAlani ? null : (kapaliOtoparkAlani ?? this.kapaliOtoparkAlani),
+      kapaliOtoparkAlani: clearKapaliOtoparkAlani
+          ? null
+          : (kapaliOtoparkAlani ?? this.kapaliOtoparkAlani),
     );
   }
 
@@ -45,7 +48,7 @@ class Bolum6Model {
     if (!hasOtopark || otoparkTipi == null) return false;
     // A şıkkı (Tamamen Kapalı) veya C şıkkı (Tek cephede pencere)
     return otoparkTipi!.label == Bolum6Content.otoparkKapali.label ||
-           otoparkTipi!.label == Bolum6Content.otoparkYariAcik.label;
+        otoparkTipi!.label == Bolum6Content.otoparkYariAcik.label;
   }
 
   Map<String, dynamic> toMap() {
@@ -62,11 +65,13 @@ class Bolum6Model {
   factory Bolum6Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? otoparkSecim;
     final label = map['otoparkTipi_label'];
-    
+
     if (label == Bolum6Content.otoparkKapali.label) {
       otoparkSecim = Bolum6Content.otoparkKapali;
-    } else if (label == Bolum6Content.otoparkAcik.label) otoparkSecim = Bolum6Content.otoparkAcik;
-    else if (label == Bolum6Content.otoparkYariAcik.label) otoparkSecim = Bolum6Content.otoparkYariAcik;
+    } else if (label == Bolum6Content.otoparkAcik.label)
+      otoparkSecim = Bolum6Content.otoparkAcik;
+    else if (label == Bolum6Content.otoparkYariAcik.label)
+      otoparkSecim = Bolum6Content.otoparkYariAcik;
 
     return Bolum6Model(
       hasOtopark: map['hasOtopark'] ?? false,

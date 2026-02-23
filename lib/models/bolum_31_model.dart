@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum31Model {
@@ -8,13 +8,7 @@ class Bolum31Model {
   final ChoiceResult? sondurme;
   final ChoiceResult? cevre;
 
-  Bolum31Model({
-    this.yapi,
-    this.tip,
-    this.cukur,
-    this.sondurme,
-    this.cevre,
-  });
+  Bolum31Model({this.yapi, this.tip, this.cukur, this.sondurme, this.cevre});
 
   Bolum31Model copyWith({
     ChoiceResult? yapi,
@@ -46,12 +40,27 @@ class Bolum31Model {
     ChoiceResult? find(String? l) {
       if (l == null) return null;
       return [
-        Bolum31Content.yapiOptionA, Bolum31Content.yapiOptionB, Bolum31Content.yapiOptionC, Bolum31Content.yapiOptionD,
-        Bolum31Content.tipOptionA, Bolum31Content.tipOptionB, Bolum31Content.tipOptionC,
-        Bolum31Content.cukurOptionA, Bolum31Content.cukurOptionB, Bolum31Content.cukurOptionC,
-        Bolum31Content.sondurmeOptionA, Bolum31Content.sondurmeOptionB, Bolum31Content.sondurmeOptionC,
-        Bolum31Content.cevreOptionA, Bolum31Content.cevreOptionB, Bolum31Content.cevreOptionC, Bolum31Content.cevreOptionD,
-      ].firstWhere((e) => e.label == l, orElse: () => Bolum31Content.tipOptionC);
+        Bolum31Content.yapiOptionA,
+        Bolum31Content.yapiOptionB,
+        Bolum31Content.yapiOptionC,
+        Bolum31Content.yapiOptionD,
+        Bolum31Content.tipOptionA,
+        Bolum31Content.tipOptionB,
+        Bolum31Content.tipOptionC,
+        Bolum31Content.cukurOptionA,
+        Bolum31Content.cukurOptionB,
+        Bolum31Content.cukurOptionC,
+        Bolum31Content.sondurmeOptionA,
+        Bolum31Content.sondurmeOptionB,
+        Bolum31Content.sondurmeOptionC,
+        Bolum31Content.cevreOptionA,
+        Bolum31Content.cevreOptionB,
+        Bolum31Content.cevreOptionC,
+        Bolum31Content.cevreOptionD,
+      ].firstWhere(
+        (e) => e.label == l,
+        orElse: () => Bolum31Content.tipOptionC,
+      );
     }
 
     return Bolum31Model(

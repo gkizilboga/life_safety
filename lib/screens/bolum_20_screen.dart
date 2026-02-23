@@ -593,261 +593,266 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
           }
         }
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (_isTekKatli) ...[
-            _buildSoru(
-              "Binadan dışarıya (sokağa veya caddeye) çıkışınız nasıl?",
-              'tekKatCikis',
-              [Bolum20Content.tekKatOptionA],
-              _model.tekKatCikis,
-            ),
-            _buildSoru(
-              "Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?",
-              'tekKatRampa',
-              [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC],
-              _model.tekKatRampa,
-            ),
-          ] else ...[
-            const Padding(
-              padding: EdgeInsets.only(left: 4, bottom: 16),
-              child: Text(
-                "Binanızda aşağıdaki merdiven türlerinden kaçar tane var?",
-                style: AppStyles.questionTitle,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.translucent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (_isTekKatli) ...[
+              _buildSoru(
+                "Binadan dışarıya (sokağa veya caddeye) çıkışınız nasıl?",
+                'tekKatCikis',
+                [Bolum20Content.tekKatOptionA],
+                _model.tekKatCikis,
               ),
-            ),
-
-            QuestionCard(
-              child: Column(
-                children: [
-                  _buildStairInputGroup(
-                    label: Bolum20Content.cokKatOption1.uiTitle,
-                    ctrl: _normalCtrl,
-                    error: _normalErr,
-                    assetPath: AppAssets.section20Normal,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: Bolum20Content.cokKatOption2.uiTitle,
-                    ctrl: _icKapaliCtrl,
-                    error: _icKapaliErr,
-                    assetPath: AppAssets.section20IcKapali,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: Bolum20Content.cokKatOption3.uiTitle,
-                    ctrl: _disKapaliCtrl,
-                    error: _disKapaliErr,
-                    assetPath: AppAssets.section20DisKapali,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: Bolum20Content.cokKatOption4.uiTitle,
-                    ctrl: _disAcikCtrl,
-                    error: _disAcikErr,
-                    assetPaths: [
-                      AppAssets.section20DisAcik1,
-                      AppAssets.section20DisAcik2,
-                    ],
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: Bolum20Content.cokKatOption5.uiTitle,
-                    ctrl: _donerCtrl,
-                    error: _donerErr,
-                    assetPath: AppAssets.section20Dairesel,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: Bolum20Content.cokKatOption6.uiTitle,
-                    ctrl: _sahanliksizCtrl,
-                    error: _sahanliksizErr,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: Bolum20Content.cokKatOption7.uiTitle,
-                    ctrl: _dengelenmisCtrl,
-                    error: _dengelenmisErr,
-                    assetPath: AppAssets.section20Dengelenmis,
-                  ),
-                ],
+              _buildSoru(
+                "Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?",
+                'tekKatRampa',
+                [Bolum20Content.rampaOptionB, Bolum20Content.rampaOptionC],
+                _model.tekKatRampa,
               ),
-            ),
-
-            // Total Direct Exits Question (Upper Floors)
-            const SizedBox(height: 12),
-            _buildTotalDirectInput(),
-
-            // LOBI MESAFE SORUSU (Madde 41)
-            if (_shouldShowLobbyDistanceQuestion()) ...[
-              const SizedBox(height: 14),
-              _buildLobbyDistanceInput(),
-            ],
-          ],
-
-          // Stair Classification Summary
-          const SizedBox(height: 24),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 3),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF3F4F6),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Merdiven Sınıflandırması (Otomatik Hesaplandı)',
+            ] else ...[
+              const Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 16),
+                child: Text(
+                  "Binanızda aşağıdaki merdiven türlerinden kaçar tane var?",
                   style: AppStyles.questionTitle,
                 ),
-                const SizedBox(height: 12),
-                _buildClassificationRow(
-                  'Korunumlu Merdiven',
-                  (int.tryParse(_icKapaliCtrl.text) ?? 0) +
-                      (int.tryParse(_disKapaliCtrl.text) ?? 0),
-                  Colors.green.shade700,
-                ),
-                const SizedBox(height: 8),
-                _buildClassificationRow(
-                  'Korunumsuz Merdiven',
-                  (int.tryParse(_normalCtrl.text) ?? 0) +
-                      (int.tryParse(_disAcikCtrl.text) ?? 0) +
-                      (int.tryParse(_donerCtrl.text) ?? 0) +
-                      (int.tryParse(_sahanliksizCtrl.text) ?? 0) +
-                      (int.tryParse(_dengelenmisCtrl.text) ?? 0),
-                  Colors.orange.shade700,
-                ),
-              ],
-            ),
-          ),
-
-          if (_hasBodrum)
-            _buildSoru(
-              "Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?",
-              'bodrum',
-              [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB],
-              _model.bodrumMerdivenDevami,
-            ),
-
-          // Independent Basement Stairs Section
-          if (_isBodrumIndependent) ...[
-            const Padding(
-              padding: EdgeInsets.only(left: 4, bottom: 16, top: 20),
-              child: Text(
-                "Bodrum Katlar İçin Özel Merdiven Bilgileri",
-                style: AppStyles
-                    .questionTitle, // Fixed style: headerTitle was white on white
               ),
-            ),
-            CustomInfoNote(
-              text:
-                  "Bağımsız olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
-              icon: Icons.info_outline,
-            ),
-            QuestionCard(
+
+              QuestionCard(
+                child: Column(
+                  children: [
+                    _buildStairInputGroup(
+                      label: Bolum20Content.cokKatOption1.uiTitle,
+                      ctrl: _normalCtrl,
+                      error: _normalErr,
+                      assetPath: AppAssets.section20Normal,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: Bolum20Content.cokKatOption2.uiTitle,
+                      ctrl: _icKapaliCtrl,
+                      error: _icKapaliErr,
+                      assetPath: AppAssets.section20IcKapali,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: Bolum20Content.cokKatOption3.uiTitle,
+                      ctrl: _disKapaliCtrl,
+                      error: _disKapaliErr,
+                      assetPath: AppAssets.section20DisKapali,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: Bolum20Content.cokKatOption4.uiTitle,
+                      ctrl: _disAcikCtrl,
+                      error: _disAcikErr,
+                      assetPaths: [
+                        AppAssets.section20DisAcik1,
+                        AppAssets.section20DisAcik2,
+                        AppAssets.section20DisAcik3,
+                      ],
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: Bolum20Content.cokKatOption5.uiTitle,
+                      ctrl: _donerCtrl,
+                      error: _donerErr,
+                      assetPath: AppAssets.section20Dairesel,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: Bolum20Content.cokKatOption6.uiTitle,
+                      ctrl: _sahanliksizCtrl,
+                      error: _sahanliksizErr,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: Bolum20Content.cokKatOption7.uiTitle,
+                      ctrl: _dengelenmisCtrl,
+                      error: _dengelenmisErr,
+                      assetPath: AppAssets.section20Dengelenmis,
+                    ),
+                  ],
+                ),
+              ),
+
+              // Total Direct Exits Question (Upper Floors)
+              const SizedBox(height: 12),
+              _buildTotalDirectInput(),
+
+              // LOBI MESAFE SORUSU (Madde 41)
+              if (_shouldShowLobbyDistanceQuestion()) ...[
+                const SizedBox(height: 14),
+                _buildLobbyDistanceInput(),
+              ],
+            ],
+
+            // Stair Classification Summary
+            const SizedBox(height: 24),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF3F4F6),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+              ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildStairInputGroup(
-                    label: "Bodrum: ${Bolum20Content.cokKatOption1.uiTitle}",
-                    ctrl: _bodNormalCtrl,
-                    error: _bodNormalErr,
+                  const Text(
+                    'Merdiven Sınıflandırması (Otomatik Hesaplandı)',
+                    style: AppStyles.questionTitle,
                   ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: "Bodrum: ${Bolum20Content.cokKatOption2.uiTitle}",
-                    ctrl: _bodIcKapaliCtrl,
-                    error: _bodIcKapaliErr,
+                  const SizedBox(height: 12),
+                  _buildClassificationRow(
+                    'Korunumlu Merdiven',
+                    (int.tryParse(_icKapaliCtrl.text) ?? 0) +
+                        (int.tryParse(_disKapaliCtrl.text) ?? 0),
+                    Colors.green.shade700,
                   ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: "Bodrum: ${Bolum20Content.cokKatOption3.uiTitle}",
-                    ctrl: _bodDisKapaliCtrl,
-                    error: _bodDisKapaliErr,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: "Bodrum: ${Bolum20Content.cokKatOption4.uiTitle}",
-                    ctrl: _bodDisAcikCtrl,
-                    error: _bodDisAcikErr,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: "Bodrum: ${Bolum20Content.cokKatOption5.uiTitle}",
-                    ctrl: _bodDonerCtrl,
-                    error: _bodDonerErr,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: "Bodrum: ${Bolum20Content.cokKatOption6.uiTitle}",
-                    ctrl: _bodSahanliksizCtrl,
-                    error: _bodSahanliksizErr,
-                  ),
-                  const Divider(height: 16),
-                  _buildStairInputGroup(
-                    label: "Bodrum: ${Bolum20Content.cokKatOption7.uiTitle}",
-                    ctrl: _bodDengelenmisCtrl,
-                    error: _bodDengelenmisErr,
+                  const SizedBox(height: 8),
+                  _buildClassificationRow(
+                    'Korunumsuz Merdiven',
+                    (int.tryParse(_normalCtrl.text) ?? 0) +
+                        (int.tryParse(_disAcikCtrl.text) ?? 0) +
+                        (int.tryParse(_donerCtrl.text) ?? 0) +
+                        (int.tryParse(_sahanliksizCtrl.text) ?? 0) +
+                        (int.tryParse(_dengelenmisCtrl.text) ?? 0),
+                    Colors.orange.shade700,
                   ),
                 ],
               ),
             ),
 
-            // Total Direct Exits Question (Basement)
-            const SizedBox(height: 16),
-            _buildTotalDirectInput(isBasement: true),
+            if (_hasBodrum)
+              _buildSoru(
+                "Bodrum kata inen merdiveniniz, üst katlara çıkan merdivenin devamı mı?",
+                'bodrum',
+                [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB],
+                _model.bodrumMerdivenDevami,
+              ),
 
-            // Basement Lobby Distance
-            if (_shouldShowBasementLobbyDistanceQuestion()) ...[
+            // Independent Basement Stairs Section
+            if (_isBodrumIndependent) ...[
+              const Padding(
+                padding: EdgeInsets.only(left: 4, bottom: 16, top: 20),
+                child: Text(
+                  "Bodrum Katlar İçin Özel Merdiven Bilgileri",
+                  style: AppStyles
+                      .questionTitle, // Fixed style: headerTitle was white on white
+                ),
+              ),
+              CustomInfoNote(
+                text:
+                    "Bağımsız olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
+                icon: Icons.info_outline,
+              ),
+              QuestionCard(
+                child: Column(
+                  children: [
+                    _buildStairInputGroup(
+                      label: "Bodrum: ${Bolum20Content.cokKatOption1.uiTitle}",
+                      ctrl: _bodNormalCtrl,
+                      error: _bodNormalErr,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: "Bodrum: ${Bolum20Content.cokKatOption2.uiTitle}",
+                      ctrl: _bodIcKapaliCtrl,
+                      error: _bodIcKapaliErr,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: "Bodrum: ${Bolum20Content.cokKatOption3.uiTitle}",
+                      ctrl: _bodDisKapaliCtrl,
+                      error: _bodDisKapaliErr,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: "Bodrum: ${Bolum20Content.cokKatOption4.uiTitle}",
+                      ctrl: _bodDisAcikCtrl,
+                      error: _bodDisAcikErr,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: "Bodrum: ${Bolum20Content.cokKatOption5.uiTitle}",
+                      ctrl: _bodDonerCtrl,
+                      error: _bodDonerErr,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: "Bodrum: ${Bolum20Content.cokKatOption6.uiTitle}",
+                      ctrl: _bodSahanliksizCtrl,
+                      error: _bodSahanliksizErr,
+                    ),
+                    const Divider(height: 16),
+                    _buildStairInputGroup(
+                      label: "Bodrum: ${Bolum20Content.cokKatOption7.uiTitle}",
+                      ctrl: _bodDengelenmisCtrl,
+                      error: _bodDengelenmisErr,
+                    ),
+                  ],
+                ),
+              ),
+
+              // Total Direct Exits Question (Basement)
               const SizedBox(height: 16),
-              _buildLobbyDistanceInput(isBasement: true),
+              _buildTotalDirectInput(isBasement: true),
+
+              // Basement Lobby Distance
+              if (_shouldShowBasementLobbyDistanceQuestion()) ...[
+                const SizedBox(height: 16),
+                _buildLobbyDistanceInput(isBasement: true),
+              ],
             ],
+
+            if (_hasDairesel)
+              _buildSoru(
+                "Binadaki dairesel merdivenin yüksekliği nedir?",
+                'daireselH',
+                [
+                  Bolum20Content.daireselYukseklikOptionA,
+                  Bolum20Content.daireselYukseklikOptionB,
+                  Bolum20Content.daireselYukseklikOptionC,
+                ],
+                _model.daireselMerdivenYuksekligi,
+              ),
+
+            if (_showBasinclandirma)
+              _buildSoruWithDef(
+                "Merdivenlerde basınçlandırma sistemi var mı?",
+                AppDefinitions.basinclandirma,
+                "Basınçlandırma Sistemi",
+                'basinclandirma',
+                [
+                  Bolum20Content.basYghOptionA,
+                  Bolum20Content.basYghOptionB,
+                  Bolum20Content.basYghOptionC,
+                ],
+                _model.basinclandirma,
+              ),
+
+            // Havalandırma Question (Madde 45) - Always shown for multi-story
+            if (!_isTekKatli)
+              _buildSoruWithDef(
+                "Merdivenlerde doğal havalandırma var mı?",
+                AppDefinitions.havalandirma,
+                "Havalandırma (Madde 45)",
+                'havalandirma',
+                [
+                  Bolum20Content.havalandirmaOptionA,
+                  Bolum20Content.havalandirmaOptionB,
+                  Bolum20Content.havalandirmaOptionC,
+                  Bolum20Content.havalandirmaOptionD,
+                ],
+                _model.havalandirma,
+              ),
           ],
-
-          if (_hasDairesel)
-            _buildSoru(
-              "Binadaki dairesel merdivenin yüksekliği nedir?",
-              'daireselH',
-              [
-                Bolum20Content.daireselYukseklikOptionA,
-                Bolum20Content.daireselYukseklikOptionB,
-                Bolum20Content.daireselYukseklikOptionC,
-              ],
-              _model.daireselMerdivenYuksekligi,
-            ),
-
-          if (_showBasinclandirma)
-            _buildSoruWithDef(
-              "Merdivenlerde basınçlandırma sistemi var mı?",
-              AppDefinitions.basinclandirma,
-              "Basınçlandırma Sistemi",
-              'basinclandirma',
-              [
-                Bolum20Content.basYghOptionA,
-                Bolum20Content.basYghOptionB,
-                Bolum20Content.basYghOptionC,
-              ],
-              _model.basinclandirma,
-            ),
-
-          // Havalandırma Question (Madde 45) - Always shown for multi-story
-          if (!_isTekKatli)
-            _buildSoruWithDef(
-              "Merdivenlerde doğal havalandırma var mı?",
-              AppDefinitions.havalandirma,
-              "Havalandırma (Madde 45)",
-              'havalandirma',
-              [
-                Bolum20Content.havalandirmaOptionA,
-                Bolum20Content.havalandirmaOptionB,
-                Bolum20Content.havalandirmaOptionC,
-                Bolum20Content.havalandirmaOptionD,
-              ],
-              _model.havalandirma,
-            ),
-        ],
+        ),
       ),
     );
   }

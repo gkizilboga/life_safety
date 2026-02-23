@@ -6,6 +6,7 @@ import '../widgets/custom_widgets.dart';
 import '../widgets/selectable_card.dart';
 import '../utils/app_content.dart';
 import '../models/choice_result.dart';
+import '../utils/app_assets.dart';
 
 class Bolum1Screen extends StatefulWidget {
   const Bolum1Screen({super.key});
@@ -239,7 +240,12 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section1RuhsatTarih,
+                  title: "Ruhsat Tarihi Nasıl Bulunur?",
+                ),
+                const SizedBox(height: 8),
                 SelectableCard(
                   choice: Bolum1Content.ruhsatSonrasi,
                   isSelected:

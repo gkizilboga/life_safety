@@ -9,6 +9,7 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/bolum_4_model.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_assets.dart';
 import 'bolum_5_screen.dart';
 
 class Bolum3Screen extends StatefulWidget {
@@ -53,6 +54,16 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     _zeminHCtrl.addListener(_validate);
     _normalHCtrl.addListener(_validate);
     _bodrumHCtrl.addListener(_validate);
+  }
+
+  @override
+  void dispose() {
+    _normalCountCtrl.dispose();
+    _bodrumCountCtrl.dispose();
+    _zeminHCtrl.dispose();
+    _normalHCtrl.dispose();
+    _bodrumHCtrl.dispose();
+    super.dispose();
   }
 
   void _validateCounts() {
@@ -193,79 +204,139 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   @override
   Widget build(BuildContext context) {
     final vals = _calculateValues();
+    final bool isLocked = BinaStore.instance.bolum11 != null;
 
     return AnalysisPageLayout(
       title: "Kat bilgilerinizi giriniz.",
       subtitle: "",
       screenType: widget.runtimeType,
-      isNextEnabled: _isReady(),
-      onNext: _onNextPressed,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      isNextEnabled: _isReady() || isLocked,
+      onNext: () {
+        if (!isLocked)
+          _onNextPressed();
+        else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Bolum5Screen()),
+          );
+        }
+      },
+      child: Stack(
         children: [
-          _buildSectionTitle("Kat adetleri nedir?"),
-          _buildInput(
-            "Normal Kat Sayısı (Zemin Üstü)",
-            _normalCountCtrl,
-            hint: "0 - 20 arası",
-            error: _normalCountErr,
-          ),
-          _buildInput(
-            "Bodrum Kat Sayısı (Zemin Altı)",
-            _bodrumCountCtrl,
-            hint: "0 - 10 arası",
-            error: _bodrumCountErr,
-          ),
+          IgnorePointer(
+            ignoring: isLocked,
+            child: Opacity(
+              opacity: isLocked ? 0.6 : 1.0,
+              child: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                behavior: HitTestBehavior.translucent,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSectionTitle("Kat adetleri nedir?"),
+                    _buildInput(
+                      "Normal Kat Sayısı (Zemin Üstü)",
+                      _normalCountCtrl,
+                      hint: "0 - 20 arası",
+                      error: _normalCountErr,
+                    ),
+                    _buildInput(
+                      "Bodrum Kat Sayısı (Zemin Altı)",
+                      _bodrumCountCtrl,
+                      hint: "0 - 10 arası",
+                      error: _bodrumCountErr,
+                    ),
 
-          const SizedBox(height: 10),
-          _buildSectionTitle("Kat yükseklikleri nedir?"),
-          SelectableCard(
-            choice: Bolum3Content.biliniyor,
-            isSelected: !_isUnknown,
-            onTap: () => setState(() => _isUnknown = false),
-          ),
-          SelectableCard(
-            choice: Bolum3Content.bilinmiyor,
-            isSelected: _isUnknown,
-            onTap: () => setState(() => _isUnknown = true),
-          ),
+                    const SizedBox(height: 10),
+                    _buildSectionTitle("Kat yükseklikleri nedir?"),
+                    TechnicalDrawingButton(
+                      assetPath: AppAssets.section3KatYuksekligi,
+                      title: "Kat Yüksekliği Nasıl Ölçülür?",
+                    ),
+                    const SizedBox(height: 8),
+                    SelectableCard(
+                      choice: Bolum3Content.biliniyor,
+                      isSelected: !_isUnknown,
+                      onTap: () => setState(() => _isUnknown = false),
+                    ),
+                    SelectableCard(
+                      choice: Bolum3Content.bilinmiyor,
+                      isSelected: _isUnknown,
+                      onTap: () => setState(() => _isUnknown = true),
+                    ),
 
-          if (!_isUnknown) ...[
-            const SizedBox(height: 20),
-            _buildInput(
-              "Zemin Kat Yüksekliği (m)",
-              _zeminHCtrl,
-              isDecimal: true,
-              hint: "Örn: 3.50",
-              error: _zeminErr,
-            ),
-            _buildInput(
-              "Normal Kat Yüksekliği (m)",
-              _normalHCtrl,
-              isDecimal: true,
-              hint: "Örn: 3.00",
-              error: _normalErr,
-            ),
-            if ((int.tryParse(_bodrumCountCtrl.text) ?? 0) > 0)
-              _buildInput(
-                "Bodrum Kat Yüksekliği (m)",
-                _bodrumHCtrl,
-                isDecimal: true,
-                hint: "Örn: 3.50",
-                error: _bodrumErr,
+                    if (!_isUnknown) ...[
+                      const SizedBox(height: 20),
+                      _buildInput(
+                        "Zemin Kat Yüksekliği (m)",
+                        _zeminHCtrl,
+                        isDecimal: true,
+                        hint: "Örn: 3.50",
+                        error: _zeminErr,
+                      ),
+                      _buildInput(
+                        "Normal Kat Yüksekliği (m)",
+                        _normalHCtrl,
+                        isDecimal: true,
+                        hint: "Örn: 3.00",
+                        error: _normalErr,
+                      ),
+                      if ((int.tryParse(_bodrumCountCtrl.text) ?? 0) > 0)
+                        _buildInput(
+                          "Bodrum Kat Yüksekliği (m)",
+                          _bodrumHCtrl,
+                          isDecimal: true,
+                          hint: "Örn: 3.50",
+                          error: _bodrumErr,
+                        ),
+                    ],
+
+                    const SizedBox(height: 20),
+                    _buildSectionTitle("Yükseklik Bilgisi"),
+                    _buildSummaryCard(vals),
+
+                    const SizedBox(height: 12),
+                    ConfirmationCheckbox(
+                      value: _isConfirmed,
+                      onChanged: (val) =>
+                          setState(() => _isConfirmed = val ?? false),
+                      text: "Yukarıdaki bilgilerin doğruluğunu teyit ediyorum.",
+                    ),
+                  ],
+                ),
               ),
-          ],
-
-          const SizedBox(height: 20),
-          _buildSectionTitle("Yükseklik Bilgisi"),
-          _buildSummaryCard(vals),
-
-          const SizedBox(height: 12),
-          ConfirmationCheckbox(
-            value: _isConfirmed,
-            onChanged: (val) => setState(() => _isConfirmed = val ?? false),
-            text: "Yukarıdaki bilgilerin doğruluğunu teyit ediyorum.",
+            ),
           ),
+          if (isLocked)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.lock_outline, color: Colors.red),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        "Temel veriler kilitlenmiştir. İleriki bölümlerdeki hesaplamaların (kapasite, sistem vb.) bozulmaması için bu aşamadan sonra yükseklik bilgisi değiştirilemez. Değiştirmek isterseniz yeni bir analiz başlatmalısınız.",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.red.shade900,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );

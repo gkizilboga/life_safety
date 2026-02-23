@@ -21,5 +21,8 @@
         "Ö": true,
         "Ş": true,
         "Ü": true
-    }
+    },
+    "java.project.sourcePaths": [
+        "assets/images/sections"
+    ]
 }

@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum24Model {
@@ -10,7 +10,11 @@ class Bolum24Model {
 
   Bolum24Model({this.tip, this.pencere, this.kapi});
 
-  Bolum24Model copyWith({ChoiceResult? tip, ChoiceResult? pencere, ChoiceResult? kapi}) {
+  Bolum24Model copyWith({
+    ChoiceResult? tip,
+    ChoiceResult? pencere,
+    ChoiceResult? kapi,
+  }) {
     return Bolum24Model(
       tip: tip ?? this.tip,
       pencere: pencere ?? this.pencere,
@@ -30,10 +34,19 @@ class Bolum24Model {
     ChoiceResult? find(String? l) {
       if (l == null) return null;
       return [
-        Bolum24Content.tipOptionA, Bolum24Content.tipOptionB, Bolum24Content.tipOptionC,
-        Bolum24Content.pencereOptionA, Bolum24Content.pencereOptionB, Bolum24Content.pencereOptionC,
-        Bolum24Content.kapiOptionA, Bolum24Content.kapiOptionB, Bolum24Content.kapiOptionC,
-      ].firstWhere((e) => e.label == l, orElse: () => Bolum24Content.tipOptionC);
+        Bolum24Content.tipOptionA,
+        Bolum24Content.tipOptionB,
+        Bolum24Content.tipOptionC,
+        Bolum24Content.pencereOptionA,
+        Bolum24Content.pencereOptionB,
+        Bolum24Content.pencereOptionC,
+        Bolum24Content.kapiOptionA,
+        Bolum24Content.kapiOptionB,
+        Bolum24Content.kapiOptionC,
+      ].firstWhere(
+        (e) => e.label == l,
+        orElse: () => Bolum24Content.tipOptionC,
+      );
     }
 
     return Bolum24Model(

@@ -9,7 +9,12 @@ class Bolum21Model {
 
   Bolum21Model({this.varlik, this.malzeme, this.kapi, this.esya});
 
-  Bolum21Model copyWith({ChoiceResult? varlik, ChoiceResult? malzeme, ChoiceResult? kapi, ChoiceResult? esya}) {
+  Bolum21Model copyWith({
+    ChoiceResult? varlik,
+    ChoiceResult? malzeme,
+    ChoiceResult? kapi,
+    ChoiceResult? esya,
+  }) {
     return Bolum21Model(
       varlik: varlik ?? this.varlik,
       malzeme: malzeme ?? this.malzeme,
@@ -31,12 +36,23 @@ class Bolum21Model {
     ChoiceResult? find(String? label) {
       if (label == null) return null;
       return [
-        Bolum21Content.varlikOptionA, Bolum21Content.varlikOptionB,
-        Bolum21Content.malzemeOptionA, Bolum21Content.malzemeOptionB, Bolum21Content.malzemeOptionC,
-        Bolum21Content.kapiOptionA, Bolum21Content.kapiOptionB, Bolum21Content.kapiOptionC,
-        Bolum21Content.esyaOptionA, Bolum21Content.esyaOptionB, Bolum21Content.esyaOptionC,
-      ].firstWhere((e) => e.label == label, orElse: () => Bolum21Content.varlikOptionB);
+        Bolum21Content.varlikOptionA,
+        Bolum21Content.varlikOptionB,
+        Bolum21Content.malzemeOptionA,
+        Bolum21Content.malzemeOptionB,
+        Bolum21Content.malzemeOptionC,
+        Bolum21Content.kapiOptionA,
+        Bolum21Content.kapiOptionB,
+        Bolum21Content.kapiOptionC,
+        Bolum21Content.esyaOptionA,
+        Bolum21Content.esyaOptionB,
+        Bolum21Content.esyaOptionC,
+      ].firstWhere(
+        (e) => e.label == label,
+        orElse: () => Bolum21Content.varlikOptionB,
+      );
     }
+
     return Bolum21Model(
       varlik: find(map['varlik']),
       malzeme: find(map['malzeme']),

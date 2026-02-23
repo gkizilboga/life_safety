@@ -201,92 +201,154 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLocked = BinaStore.instance.bolum11 != null;
+
     return AnalysisPageLayout(
       title: "Kat Alan Bilgileri",
       subtitle: "",
       screenType: widget.runtimeType,
-      isNextEnabled: _isFormValid(),
-      onNext: _onNextPressed,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      isNextEnabled: _isFormValid() || isLocked,
+      onNext: () {
+        if (!isLocked)
+          _onNextPressed();
+        else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Bolum6Screen()),
+          );
+        }
+      },
+      child: Stack(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 4, bottom: 12),
-            child: Text(
-              "Brüt Alan Girişi (m²)",
-              style: AppStyles.questionTitle,
-            ),
-          ),
-          QuestionCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildInputLabel(Bolum5Content.oturumAlani),
-                _buildNumberInput(_tabanCtrl, "Örn: 500", error: _tabanError),
-
-                if (_nKat > 0) ...[
-                  const SizedBox(height: 16),
-                  _buildInputLabel(Bolum5Content.normalKatAlani),
-                  _buildNumberInput(
-                    _normalCtrl,
-                    "Örn: 500",
-                    error: _normalError,
-                  ),
-                ],
-
-                if (_bKat > 0) ...[
-                  const SizedBox(height: 16),
-                  _buildInputLabel(Bolum5Content.bodrumKatAlani),
-                  _buildNumberInput(
-                    _bodrumCtrl,
-                    "Örn: 500",
-                    error: _bodrumError,
-                  ),
-                ],
-
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: _otomatikHesapla,
-                    icon: const Icon(Icons.calculate_outlined, size: 20),
-                    label: const Text("TOPLAM BRÜT ALANI HESAPLA"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange.shade800,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+          IgnorePointer(
+            ignoring: isLocked,
+            child: Opacity(
+              opacity: isLocked ? 0.6 : 1.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 4, bottom: 12),
+                    child: Text(
+                      "Brüt Alan Girişi (m²)",
+                      style: AppStyles.questionTitle,
                     ),
                   ),
-                ),
+                  QuestionCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildInputLabel(Bolum5Content.oturumAlani),
+                        _buildNumberInput(
+                          _tabanCtrl,
+                          "Örn: 500",
+                          error: _tabanError,
+                        ),
 
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Divider(thickness: 1, color: Color(0xFFECEFF1)),
-                ),
+                        if (_nKat > 0) ...[
+                          const SizedBox(height: 16),
+                          _buildInputLabel(Bolum5Content.normalKatAlani),
+                          _buildNumberInput(
+                            _normalCtrl,
+                            "Örn: 500",
+                            error: _normalError,
+                          ),
+                        ],
 
-                _buildInputLabel(Bolum5Content.toplamInsaat),
-                _buildNumberInput(
-                  _toplamCtrl,
-                  "Toplam m²",
-                  isBold: true,
-                  error: _toplamError,
-                ),
+                        if (_bKat > 0) ...[
+                          const SizedBox(height: 16),
+                          _buildInputLabel(Bolum5Content.bodrumKatAlani),
+                          _buildNumberInput(
+                            _bodrumCtrl,
+                            "Örn: 500",
+                            error: _bodrumError,
+                          ),
+                        ],
 
-                if (_isCalculated) _buildSummaryCard(),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: _otomatikHesapla,
+                            icon: const Icon(
+                              Icons.calculate_outlined,
+                              size: 20,
+                            ),
+                            label: const Text("TOPLAM BRÜT ALANI HESAPLA"),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange.shade800,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
 
-                const SizedBox(height: 12),
-                ConfirmationCheckbox(
-                  value: _isConfirmed,
-                  onChanged: (val) =>
-                      setState(() => _isConfirmed = val ?? false),
-                  text: "Yukarıdaki bilgilerin doğruluğunu teyit ediyorum.",
-                ),
-              ],
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(
+                            thickness: 1,
+                            color: Color(0xFFECEFF1),
+                          ),
+                        ),
+
+                        _buildInputLabel(Bolum5Content.toplamInsaat),
+                        _buildNumberInput(
+                          _toplamCtrl,
+                          "Toplam m²",
+                          isBold: true,
+                          error: _toplamError,
+                        ),
+
+                        if (_isCalculated) _buildSummaryCard(),
+
+                        const SizedBox(height: 12),
+                        ConfirmationCheckbox(
+                          value: _isConfirmed,
+                          onChanged: (val) =>
+                              setState(() => _isConfirmed = val ?? false),
+                          text:
+                              "Yukarıdaki bilgilerin doğruluğunu teyit ediyorum.",
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+          if (isLocked)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.lock_outline, color: Colors.red),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        "Temel veriler kilitlenmiştir. İleriki bölümlerdeki hesaplamaların bozulmaması için bu aşamadan sonra alan bilgisi değiştirilemez. Değiştirmek isterseniz yeni bir analiz başlatmalısınız.",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.red.shade900,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );

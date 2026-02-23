@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum29Model {
@@ -78,16 +78,56 @@ class Bolum29Model {
     }
 
     return Bolum29Model(
-      otopark: find(map['otopark_label'], [Bolum29Content.otoparkOptionA, Bolum29Content.otoparkOptionB, Bolum29Content.otoparkOptionC]),
-      kazan: find(map['kazan_label'], [Bolum29Content.kazanOptionA, Bolum29Content.kazanOptionB, Bolum29Content.kazanOptionC]),
-      cati: find(map['cati_label'], [Bolum29Content.catiOptionA, Bolum29Content.catiOptionB, Bolum29Content.catiOptionC]),
-      asansor: find(map['asansor_label'], [Bolum29Content.asansorOptionA, Bolum29Content.asansorOptionB, Bolum29Content.asansorOptionC]),
-      jenerator: find(map['jenerator_label'], [Bolum29Content.jeneratorOptionA, Bolum29Content.jeneratorOptionB, Bolum29Content.jeneratorOptionC]),
-      pano: find(map['pano_label'], [Bolum29Content.panoOptionA, Bolum29Content.panoOptionB, Bolum29Content.panoOptionC]),
-      trafo: find(map['trafo_label'], [Bolum29Content.trafoOptionA, Bolum29Content.trafoOptionB, Bolum29Content.trafoOptionC]),
-      depo: find(map['depo_label'], [Bolum29Content.depoOptionA, Bolum29Content.depoOptionB, Bolum29Content.depoOptionC]),
-      cop: find(map['cop_label'], [Bolum29Content.copOptionA, Bolum29Content.copOptionB, Bolum29Content.copOptionC]),
-      siginak: find(map['siginak_label'], [Bolum29Content.siginakOptionA, Bolum29Content.siginakOptionB, Bolum29Content.siginakOptionC]),
+      otopark: find(map['otopark_label'], [
+        Bolum29Content.otoparkOptionA,
+        Bolum29Content.otoparkOptionB,
+        Bolum29Content.otoparkOptionC,
+      ]),
+      kazan: find(map['kazan_label'], [
+        Bolum29Content.kazanOptionA,
+        Bolum29Content.kazanOptionB,
+        Bolum29Content.kazanOptionC,
+      ]),
+      cati: find(map['cati_label'], [
+        Bolum29Content.catiOptionA,
+        Bolum29Content.catiOptionB,
+        Bolum29Content.catiOptionC,
+      ]),
+      asansor: find(map['asansor_label'], [
+        Bolum29Content.asansorOptionA,
+        Bolum29Content.asansorOptionB,
+        Bolum29Content.asansorOptionC,
+      ]),
+      jenerator: find(map['jenerator_label'], [
+        Bolum29Content.jeneratorOptionA,
+        Bolum29Content.jeneratorOptionB,
+        Bolum29Content.jeneratorOptionC,
+      ]),
+      pano: find(map['pano_label'], [
+        Bolum29Content.panoOptionA,
+        Bolum29Content.panoOptionB,
+        Bolum29Content.panoOptionC,
+      ]),
+      trafo: find(map['trafo_label'], [
+        Bolum29Content.trafoOptionA,
+        Bolum29Content.trafoOptionB,
+        Bolum29Content.trafoOptionC,
+      ]),
+      depo: find(map['depo_label'], [
+        Bolum29Content.depoOptionA,
+        Bolum29Content.depoOptionB,
+        Bolum29Content.depoOptionC,
+      ]),
+      cop: find(map['cop_label'], [
+        Bolum29Content.copOptionA,
+        Bolum29Content.copOptionB,
+        Bolum29Content.copOptionC,
+      ]),
+      siginak: find(map['siginak_label'], [
+        Bolum29Content.siginakOptionA,
+        Bolum29Content.siginakOptionB,
+        Bolum29Content.siginakOptionC,
+      ]),
     );
   }
 }

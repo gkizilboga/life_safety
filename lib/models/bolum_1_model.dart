@@ -16,8 +16,10 @@ class Bolum1Model {
 
   factory Bolum1Model.fromMap(Map<String, dynamic> map) {
     final label = map['secim_label'];
-    if (label == Bolum1Content.ruhsatSonrasi.label) return Bolum1Model(secim: Bolum1Content.ruhsatSonrasi);
-    if (label == Bolum1Content.ruhsatOncesi.label) return Bolum1Model(secim: Bolum1Content.ruhsatOncesi);
+    if (label == Bolum1Content.ruhsatSonrasi.label)
+      return Bolum1Model(secim: Bolum1Content.ruhsatSonrasi);
+    if (label == Bolum1Content.ruhsatOncesi.label)
+      return Bolum1Model(secim: Bolum1Content.ruhsatOncesi);
     return Bolum1Model();
   }
 }

@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum12Model {
@@ -10,7 +10,8 @@ class Bolum12Model {
   final ChoiceResult? ahsapKesit;
   final ChoiceResult? yigmaDuvar;
 
-  ChoiceResult? get secim => celikKoruma ?? betonPaspayi ?? ahsapKesit ?? yigmaDuvar;
+  ChoiceResult? get secim =>
+      celikKoruma ?? betonPaspayi ?? ahsapKesit ?? yigmaDuvar;
 
   Bolum12Model({
     this.celikKoruma,
@@ -57,17 +58,35 @@ class Bolum12Model {
   factory Bolum12Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? l, List<ChoiceResult> options) {
       if (l == null) return null;
-      try { return options.firstWhere((e) => e.label == l); } catch (_) { return null; }
+      try {
+        return options.firstWhere((e) => e.label == l);
+      } catch (_) {
+        return null;
+      }
     }
 
     return Bolum12Model(
-      celikKoruma: find(map['celikKoruma_label'], [Bolum12Content.celikOptionA, Bolum12Content.celikOptionB, Bolum12Content.celikOptionC]),
-      betonPaspayi: find(map['betonPaspayi_label'], [Bolum12Content.betonOptionA, Bolum12Content.betonOptionB, Bolum12Content.betonOptionC]),
+      celikKoruma: find(map['celikKoruma_label'], [
+        Bolum12Content.celikOptionA,
+        Bolum12Content.celikOptionB,
+        Bolum12Content.celikOptionC,
+      ]),
+      betonPaspayi: find(map['betonPaspayi_label'], [
+        Bolum12Content.betonOptionA,
+        Bolum12Content.betonOptionB,
+        Bolum12Content.betonOptionC,
+      ]),
       kolonPaspayi: (map['kolonPaspayi'] as num?)?.toDouble(),
       kirisPaspayi: (map['kirisPaspayi'] as num?)?.toDouble(),
       dosemePaspayi: (map['dosemePaspayi'] as num?)?.toDouble(),
-      ahsapKesit: find(map['ahsapKesit_label'], [Bolum12Content.ahsapOptionA, Bolum12Content.ahsapOptionB]),
-      yigmaDuvar: find(map['yigmaDuvar_label'], [Bolum12Content.yigmaOptionA, Bolum12Content.yigmaOptionB]),
+      ahsapKesit: find(map['ahsapKesit_label'], [
+        Bolum12Content.ahsapOptionA,
+        Bolum12Content.ahsapOptionB,
+      ]),
+      yigmaDuvar: find(map['yigmaDuvar_label'], [
+        Bolum12Content.yigmaOptionA,
+        Bolum12Content.yigmaOptionB,
+      ]),
     );
   }
 }

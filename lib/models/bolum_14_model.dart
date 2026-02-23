@@ -7,17 +7,13 @@ class Bolum14Model {
 
   // Rapor motorunun bu hesaplama sonucunu anlayabilmesi için "secim" olarak paketliyoruz
   ChoiceResult? get secim => ChoiceResult(
-    label: "14-Analiz", 
-    uiTitle: "Şaft Kapak Analizi", 
+    label: "14-Analiz",
+    uiTitle: "Şaft Kapak Analizi",
     uiSubtitle: "Otomatik hesaplanan dayanım süreleri", // BU SATIRI EKLEDİK
-    reportText: raporMesaji ?? ""
+    reportText: raporMesaji ?? "",
   );
 
-  Bolum14Model({
-    this.gerekenDuvarDk,
-    this.gerekenKapakDk,
-    this.raporMesaji,
-  });
+  Bolum14Model({this.gerekenDuvarDk, this.gerekenKapakDk, this.raporMesaji});
 
   Map<String, dynamic> toMap() {
     return {

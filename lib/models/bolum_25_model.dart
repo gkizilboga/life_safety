@@ -6,11 +6,7 @@ class Bolum25Model {
   final ChoiceResult? basamak;
   final ChoiceResult? basKurtarma;
 
-  Bolum25Model({
-    this.genislik,
-    this.basamak,
-    this.basKurtarma,
-  });
+  Bolum25Model({this.genislik, this.basamak, this.basKurtarma});
 
   Bolum25Model copyWith({
     ChoiceResult? genislik,
@@ -46,16 +42,16 @@ class Bolum25Model {
       genislik: find(map['genislik_label'], [
         Bolum25Content.genislikOptionA,
         Bolum25Content.genislikOptionB,
-        Bolum25Content.genislikOptionC
+        Bolum25Content.genislikOptionC,
       ]),
       basamak: find(map['basamak_label'], [
         Bolum25Content.basamakOptionA,
         Bolum25Content.basamakOptionB,
-        Bolum25Content.basamakOptionC
+        Bolum25Content.basamakOptionC,
       ]),
       basKurtarma: find(map['basKurtarma_label'], [
         Bolum25Content.basKurtarmaOptionA,
-        Bolum25Content.basKurtarmaOptionB
+        Bolum25Content.basKurtarmaOptionB,
       ]),
     );
   }

@@ -201,16 +201,11 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             ),
           ),
 
-          _buildSoru(
-            "Kazan dairesinin kaç adet çıkış kapısı var?",
-            'kapi',
-            [
-              Bolum30Content.kapiOptionA,
-              Bolum30Content.kapiOptionB,
-              Bolum30Content.kapiOptionC,
-            ],
-            _model.kapi,
-          ),
+          _buildSoru("Kazan dairesinin kaç adet çıkış kapısı var?", 'kapi', [
+            Bolum30Content.kapiOptionA,
+            Bolum30Content.kapiOptionB,
+            Bolum30Content.kapiOptionC,
+          ], _model.kapi),
 
           _buildSoru(
             "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?",

@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum18Model {
@@ -7,15 +7,9 @@ class Bolum18Model {
 
   ChoiceResult? get secim => duvarKaplama ?? boruTipi;
 
-  Bolum18Model({
-    this.duvarKaplama,
-    this.boruTipi,
-  });
+  Bolum18Model({this.duvarKaplama, this.boruTipi});
 
-  Bolum18Model copyWith({
-    ChoiceResult? duvarKaplama,
-    ChoiceResult? boruTipi,
-  }) {
+  Bolum18Model copyWith({ChoiceResult? duvarKaplama, ChoiceResult? boruTipi}) {
     return Bolum18Model(
       duvarKaplama: duvarKaplama ?? this.duvarKaplama,
       boruTipi: boruTipi ?? this.boruTipi,
@@ -35,22 +29,25 @@ class Bolum18Model {
     final l1 = map['duvarKaplama_label'];
     if (l1 == Bolum18Content.duvarOptionA.label) {
       d = Bolum18Content.duvarOptionA;
-    } else if (l1 == Bolum18Content.duvarOptionB.label) d = Bolum18Content.duvarOptionB;
-    else if (l1 == Bolum18Content.duvarOptionC.label) d = Bolum18Content.duvarOptionC;
-    else if (l1 == Bolum18Content.duvarOptionD.label) d = Bolum18Content.duvarOptionD;
+    } else if (l1 == Bolum18Content.duvarOptionB.label)
+      d = Bolum18Content.duvarOptionB;
+    else if (l1 == Bolum18Content.duvarOptionC.label)
+      d = Bolum18Content.duvarOptionC;
+    else if (l1 == Bolum18Content.duvarOptionD.label)
+      d = Bolum18Content.duvarOptionD;
 
     // Boru Tipi
     ChoiceResult? b;
     final l2 = map['boruTipi_label'];
     if (l2 == Bolum18Content.boruOptionA.label) {
       b = Bolum18Content.boruOptionA;
-    } else if (l2 == Bolum18Content.boruOptionB.label) b = Bolum18Content.boruOptionB;
-    else if (l2 == Bolum18Content.boruOptionC.label) b = Bolum18Content.boruOptionC;
-    else if (l2 == Bolum18Content.boruOptionD.label) b = Bolum18Content.boruOptionD;
+    } else if (l2 == Bolum18Content.boruOptionB.label)
+      b = Bolum18Content.boruOptionB;
+    else if (l2 == Bolum18Content.boruOptionC.label)
+      b = Bolum18Content.boruOptionC;
+    else if (l2 == Bolum18Content.boruOptionD.label)
+      b = Bolum18Content.boruOptionD;
 
-    return Bolum18Model(
-      duvarKaplama: d,
-      boruTipi: b,
-    );
+    return Bolum18Model(duvarKaplama: d, boruTipi: b);
   }
 }
