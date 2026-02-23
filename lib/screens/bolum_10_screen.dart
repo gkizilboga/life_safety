@@ -185,10 +185,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                       ),
                       child: Text(
                         "${i + 1}. Bodrum Katların Baskın  Kullanım Amacı",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppStyles.questionTitle.copyWith(fontSize: 14),
                       ),
                     ),
                     _buildChoiceGrid('bodrum', i, _model.bodrumlar[i]),
@@ -223,10 +220,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                       ),
                       child: Text(
                         "${i + 1}. Normal Katın Kullanım Amacı",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppStyles.questionTitle.copyWith(fontSize: 14),
                       ),
                     ),
                     _buildChoiceGrid('normal', i, _model.normaller[i]),
@@ -249,42 +243,11 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     final bool hasTicari = BinaStore.instance.bolum6?.hasTicari ?? false;
     if (hasTicari) return const SizedBox.shrink();
 
-    return Container(
+    return CustomInfoNote(
+      icon: Icons.storefront_outlined,
+      text:
+          "Binanızda ticari alanlar (dükkan, işyeri, vb.) mevcutsa, lütfen Bölüm-6'ya dönerek 'Ticari Alan' seçeneğini işaretlemeniz gereklidir.",
       margin: const EdgeInsets.only(bottom: 24),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.orange.shade200),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.orange.shade100.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.storefront_outlined,
-            color: Colors.orange.shade800,
-            size: 28,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              "Binanızda ticari alanlar (dükkan, işyeri, vb.) mevcutsa, lütfen Bölüm-6'ya dönerek 'Ticari Alan' seçeneğini işaretlemeniz gereklidir.",
-              style: TextStyle(
-                color: Colors.orange.shade900,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -319,14 +282,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12, left: 4),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF1A237E),
-        ),
-      ),
+      child: Text(title, style: AppStyles.questionTitle),
     );
   }
 

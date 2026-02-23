@@ -205,37 +205,15 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
   }
 
   Widget _buildHeightInfoCard() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _isMandatory ? Colors.orange.shade50 : Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: _isMandatory ? Colors.orange.shade200 : Colors.blue.shade200,
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            _isMandatory ? Icons.warning_amber_rounded : Icons.info_outline,
-            color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              _isMandatory
-                  ? "Yapı yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
-                  : "Yapı yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
-              style: TextStyle(
-                color: _isMandatory
-                    ? Colors.orange.shade900
-                    : Colors.blue.shade900,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return CustomInfoNote(
+      icon: _isMandatory ? Icons.warning_amber_rounded : Icons.info_outline,
+      backgroundColor: _isMandatory ? null : Colors.blue.shade50,
+      borderColor: _isMandatory ? null : Colors.blue.shade200,
+      iconColor: _isMandatory ? null : Colors.blue.shade900,
+      textColor: _isMandatory ? null : Colors.blue.shade900,
+      text: _isMandatory
+          ? "Yapı yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
+          : "Yapı yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
     );
   }
 
@@ -252,14 +230,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF263238),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           if (description != null) ...[
             const SizedBox(height: 6),
             Text(

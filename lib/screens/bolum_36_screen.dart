@@ -312,8 +312,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     }
 
     // --- Madde 41: Doğrudan Dışarıya Tahliye ve Lobi Kontrolleri ---
-    final b31 = store.bolum31;
-    bool hasSprinkler = b31?.sondurme?.label == "31-4-A";
+    final hasSprinkler = store.bolum9?.secim?.label == "9-1-A";
 
     final int totalMain =
         (b20?.normalMerdivenSayisi ?? 0) +
@@ -622,71 +621,24 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     final yghReasons = ReportEngine.evaluateYghRequirement();
     if (yghReasons.isEmpty) return const SizedBox.shrink();
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return CustomInfoNote(
+      icon: Icons.warning_amber_rounded,
+      richText: TextSpan(
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.orange.shade900,
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  "YANGIN GÜVENLİK HOLÜ (YGH) ANALİZİ",
-                  style: AppStyles.questionTitle.copyWith(fontSize: 14),
-                ),
-              ),
-            ],
+          TextSpan(
+            text: "YANGIN GÜVENLİK HOLÜ (YGH) ANALİZİ\n",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
-          const SizedBox(height: 12),
-          Text(
-            "Yönetmelik gereği binanızda YGH zorunluluğu tespit edilmiştir:",
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+          const TextSpan(
+            text:
+                "Yönetmelik gereği binanızda YGH zorunluluğu tespit edilmiştir:\n\n",
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
-          ...yghReasons.map(
-            (r) => Padding(
-              padding: const EdgeInsets.only(bottom: 6),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "• ",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Expanded(
-                    child: Text(
-                      r,
-                      style: const TextStyle(fontSize: 12, height: 1.3),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            "Korunumlu merdivenlere geçişte YGH (veya duruma göre basınçlandırma) uygulanması şarttır.",
-            style: TextStyle(
-              fontSize: 11,
-              fontStyle: FontStyle.italic,
-              color: Colors.black54,
-            ),
+          ...yghReasons.map((r) => TextSpan(text: "• $r\n")),
+          const TextSpan(
+            text:
+                "\nKorunumlu merdivenlere geçişte YGH (veya duruma göre basınçlandırma) uygulanması şarttır.",
+            style: TextStyle(fontStyle: FontStyle.italic),
           ),
         ],
       ),
@@ -694,78 +646,30 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   }
 
   Widget _buildStairAnalysisList() {
-    // This widget visualizes the analysis that _evaluateStairsAndExits generates text for.
-    // Ideally we should unify the logic, but for UI display we replicate the checks.
-
     final validation = _generateStairAnalysis();
     if (validation.isEmpty) return const SizedBox.shrink();
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return CustomInfoNote(
+      icon: Icons.assignment_turned_in,
+      backgroundColor: Colors.blue.shade50,
+      borderColor: Colors.blue.shade200,
+      iconColor: Colors.blue.shade900,
+      textColor: Colors.blue.shade900,
+      richText: TextSpan(
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.assignment_turned_in,
-                color: Colors.blue.shade900,
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  "MERDİVEN UYGUNLUK ANALİZİ",
-                  style: AppStyles.questionTitle.copyWith(fontSize: 14),
-                ),
-              ),
-            ],
+          TextSpan(
+            text: "MERDİVEN UYGUNLUK ANALİZİ\n\n",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
-          const SizedBox(height: 12),
-          ...validation.map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    item['status'] == 'OK' ? Icons.check_circle : Icons.cancel,
-                    color: item['status'] == 'OK' ? Colors.green : Colors.red,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item['title']!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          item['desc']!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey.shade800,
-                            height: 1.3,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+          ...validation.expand(
+            (item) => [
+              TextSpan(text: item['status'] == 'OK' ? "✅ " : "❌ "),
+              TextSpan(
+                text: "${item['title']!}\n",
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-            ),
+              TextSpan(text: "${item['desc']!}\n\n"),
+            ],
           ),
         ],
       ),
@@ -1351,30 +1255,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF3E0),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFFFE0B2)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.arrow_downward, color: Color(0xFFE65100), size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFFE65100),
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }

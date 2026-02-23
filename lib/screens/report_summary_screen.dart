@@ -246,65 +246,21 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   }
 
   Widget _buildYghEvaluationPanel(List<String> reasons) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.orange.shade200, width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return CustomInfoNote(
+      icon: Icons.security_rounded,
+      margin: const EdgeInsets.only(top: 20),
+      richText: TextSpan(
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.security_rounded,
-                color: Colors.orange.shade900,
-                size: 24,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                "YGH DEĞERLENDİRMESİ",
-                style: TextStyle(
-                  color: Colors.orange.shade900,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
+          TextSpan(
+            text: "YGH DEĞERLENDİRMESİ\n",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
-          const SizedBox(height: 15),
-          const Text(
-            "Yönetmelik Madde 48 ve ilgili hükümler uyarınca binanızda Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmiştir:",
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.black87,
-            ),
+          const TextSpan(
+            text:
+                "Yönetmelik Madde 48 ve ilgili hükümler uyarınca binanızda Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmiştir:\n\n",
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 12),
-          ...reasons.map(
-            (reason) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "• ",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Expanded(
-                    child: Text(
-                      reason,
-                      style: const TextStyle(fontSize: 12, height: 1.4),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          ...reasons.map((reason) => TextSpan(text: "• $reason\n")),
         ],
       ),
     );

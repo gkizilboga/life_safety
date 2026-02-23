@@ -95,7 +95,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
                 Expanded(
                   child: Text(
                     "Merdiven önünde Yangın Güvenlik Holü var mı?",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: AppStyles.questionTitle,
                   ),
                 ),
                 DefinitionButton(
@@ -147,43 +147,21 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
   }
 
   Widget _buildInfoCard() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _isMandatory ? Colors.orange.shade50 : Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: _isMandatory ? Colors.orange.shade200 : Colors.blue.shade200,
-        ),
-      ),
-      child: Row(
+    return CustomInfoNote(
+      icon: _isMandatory ? Icons.warning_amber : Icons.info_outline,
+      backgroundColor: _isMandatory ? null : Colors.blue.shade50,
+      borderColor: _isMandatory ? null : Colors.blue.shade200,
+      iconColor: _isMandatory ? null : Colors.blue.shade900,
+      textColor: _isMandatory ? null : Colors.blue.shade900,
+      richText: TextSpan(
         children: [
-          Icon(
-            _isMandatory ? Icons.warning_amber : Icons.info_outline,
-            color: _isMandatory ? Colors.orange.shade900 : Colors.blue.shade900,
+          TextSpan(
+            text: _isMandatory ? "YGH ZORUNLUDUR\n" : "YGH ZORUNLU DEĞİLDİR\n",
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _isMandatory ? "YGH ZORUNLUDUR" : "YGH ZORUNLU DEĞİLDİR",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: _isMandatory
-                        ? Colors.orange.shade900
-                        : Colors.blue.shade900,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  _mandatoryReason,
-                  style: const TextStyle(fontSize: 12, color: Colors.black87),
-                ),
-              ],
-            ),
+          TextSpan(
+            text: _mandatoryReason,
+            style: const TextStyle(fontWeight: FontWeight.normal),
           ),
         ],
       ),

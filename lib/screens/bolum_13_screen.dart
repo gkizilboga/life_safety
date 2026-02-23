@@ -6,6 +6,7 @@ import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum13Screen extends StatefulWidget {
   const Bolum13Screen({super.key});
@@ -297,14 +298,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 16,
-              color: Color(0xFF4A148C), // Koyu Mor - Soru rengi
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 10),
           ...options.map(
             (opt) => SelectableCard(
@@ -332,16 +326,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         children: [
           Row(
             children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 16,
-                    color: Color(0xFF4A148C),
-                  ),
-                ),
-              ),
+              Expanded(child: Text(title, style: AppStyles.questionTitle)),
               DefinitionButton(term: term, definition: def),
             ],
           ),

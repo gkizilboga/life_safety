@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_14_model.dart';
 import '../../models/bolum_3_model.dart';
-import '../../models/choice_result.dart';
 import '../../utils/app_theme.dart';
 import 'bolum_15_screen.dart';
 import '../../widgets/custom_widgets.dart';
@@ -88,14 +87,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
         children: [
           const Padding(
             padding: EdgeInsets.only(left: 4, bottom: 12),
-            child: Text(
-              "Sonuç",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF263238),
-              ),
-            ),
+            child: Text("Sonuç", style: AppStyles.questionTitle),
           ),
           Container(
             width: double.infinity,
@@ -165,14 +157,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
           const SizedBox(height: 20),
           const Padding(
             padding: EdgeInsets.only(left: 4, bottom: 12),
-            child: Text(
-              "Şaft ve Kapak Detayı",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF263238),
-              ),
-            ),
+            child: Text("Şaft ve Kapak Detayı", style: AppStyles.questionTitle),
           ),
           SectionImage(assetPath: AppAssets.section14SaftDuvarKapi),
           const SizedBox(height: 12),

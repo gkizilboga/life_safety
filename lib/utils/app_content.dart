@@ -974,14 +974,16 @@ class Bolum15Content {
     label: "15-2-ALT-A",
     uiTitle: "Evet, en az 2 cm şap var.",
     uiSubtitle: "Koruma katmanı mevcut.",
-    reportText: "OLUMLU: Yanıcı yalıtım şap ile korunmuştur.",
+    reportText:
+        "OLUMLU: Döşemedeki yanıcı yalıtım malzemesi, şap tabakası ile korunmuştur.",
   );
 
   static final yalitimSapOptionB = ChoiceResult(
     label: "15-2-ALT-B",
     uiTitle: "Hayır, şap yok.",
     uiSubtitle: "Yalıtım malzemesinin üzeri çıplak durumda.",
-    reportText: "KRİTİK RİSK: Yalıtımın üzeri en az 2 cm şap ile örtülmelidir.",
+    reportText:
+        "KRİTİK RİSK: Yalıtımın üzeri en az 2 cm şap tabakası ile örtülmelidir.",
   );
 
   static final yalitimSapOptionC = ChoiceResult(
@@ -989,7 +991,7 @@ class Bolum15Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Koruyucu şap tabakası olup olmadığı bilinmiyor. Varsa yanıcı yalıtım malzemelerinin üzeri en az 2 cm şap ile örtülmelidir. ",
+        "UYARI: Koruyucu şap tabakası olup olmadığı bilinmiyor. Varsa yanıcı yalıtım malzemelerinin üzeri en az 2 cm şap tabakası ile örtülmelidir. ",
   );
 
   static final tavanOptionA = ChoiceResult(
@@ -1593,8 +1595,7 @@ class Bolum20Content {
   static final basYghOptionA = ChoiceResult(
     label: "20-BAS-A",
     uiTitle: "Evet, var.",
-    uiSubtitle:
-        "Merdiven kovasında pozitif basınç sağlayan fan sistemi mevcut.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Kapalı yangın merdivenlerinde basınçlandırma sistemi olduğu beyan edilmiştir.",
   );
@@ -1602,7 +1603,7 @@ class Bolum20Content {
   static final basYghOptionB = ChoiceResult(
     label: "20-BAS-B",
     uiTitle: "Hayır, yok.",
-    uiSubtitle: "Herhangi bir mekanik basınçlandırma sistemi bulunmuyor.",
+    uiSubtitle: "",
     reportText:
         "UYARI: Kapalı yangın merdivenlerinde basınçlandırma sistemi bulunmamaktadır. Yönetmeliğe göre binadaki yangın merdiveninde basınçlandırma sistemi ihtiyacı yoksa uygundur, ihtiyaç varsa durum, mimari proje üzerinden veya sahada Uzman tarafından değerlendirilmelidir.",
   );
@@ -1720,7 +1721,7 @@ class Bolum20Content {
     uiTitle: "Bina içi tahliye mesafesi sınır değerleri aşıyor.",
     uiSubtitle: "Madde 41/2 ihlali.",
     reportText:
-        "KRİTİK RİSK: Madde 41/2 gereği, doğrudan dışarı açılmayan merdivenlerin lobi/koridor içindeki tahliye mesafesi yönetmelik limitlerini (sprinklersiz binalarda 10m, sprinklerli binalarda 15m) aşmamalıdır. Mevcut durumda bu mesafe sınır değerlerin dışındadır.",
+        "KRİTİK RİSK: Madde 41/2 gereği, doğrudan dışarı açılmayan merdivenlerin koridor içindeki tahliye mesafesi yönetmelik limitlerini (sprinklersiz binalarda 10m, sprinklerli binalarda 15m) aşmamalıdır. Mevcut durumda bu mesafe sınır değerlerin dışındadır.",
   );
 
   static final madde41Uygundur = ChoiceResult(
@@ -1936,8 +1937,7 @@ class Bolum22Content {
 
   static final kabinOptionA = ChoiceResult(
     label: "22-4-A",
-    uiTitle:
-        "Evet, 1,8 m2'den geniş ve 1 dakikada en üst kata hızlıca çıkabiliyor.",
+    uiTitle: "Evet, geniş ve hızlıca çıkabiliyor.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: İtfaiye asansörü kabin boyutu ve hızı yönetmelik şartlarını karşılamaktadır.",
@@ -1945,7 +1945,7 @@ class Bolum22Content {
 
   static final kabinOptionB = ChoiceResult(
     label: "22-4-B",
-    uiTitle: "Hayır, kabini küçük veya 1 dakikada en üst kata ulaşamıyor.",
+    uiTitle: "Hayır, küçük veya hızlıca çıkamıyor.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: İtfaiye asansörü kabini 1.8 m²'den küçük veya hızı yetersizdir. Bu durum acil müdahaleyi geciktirebilir.",
@@ -1962,7 +1962,7 @@ class Bolum22Content {
   static final enerjiOptionA = ChoiceResult(
     label: "22-5-A",
     uiTitle:
-        "Evet, asansörlerin hepsi jeneratöre bağlı ve binada elektrik olmasa bile 60 dakika boyunca çalışabilir durumda.",
+        "Evet, jeneratöre bağlı ve binada elektrik olmasa bile 60 dakika boyunca çalışabilir durumda.",
     uiSubtitle: "Elektrik kesilse bile asansörler çalışabiliyor.",
     reportText:
         "OLUMLU: İtfaiye asansörü acil durum enerji sistemine (jeneratör) bağlıdır.",
@@ -1970,7 +1970,7 @@ class Bolum22Content {
 
   static final enerjiOptionB = ChoiceResult(
     label: "22-5-B",
-    uiTitle: "Hayır, jeneratör yok.",
+    uiTitle: "Hayır, jeneratör yok veya bağlı değil.",
     uiSubtitle: "Elektrik kesilince asansör duruyor.",
     reportText:
         "KRİTİK RİSK: İtfaiye asansörünün acil durum enerji beslemesi bulunmamaktadır. Yangın anında enerji kesilirse asansör işlevsiz kalacaktır.",
@@ -2013,7 +2013,7 @@ class Bolum23Content {
   static final bodrumOptionA = ChoiceResult(
     label: "23-1-A (Bodrum)",
     uiTitle: "Normal (insan taşıma) asansör bodrum katlara inmiyor.",
-    uiSubtitle: "Asansör sadece zemin ve üst katlar arasında çalışıyor.",
+    uiSubtitle: "Sadece üst katlara hizmet veriyor.",
     reportText: "Bilgi: Asansör bodrum katlara inmemektedir.",
   );
 
@@ -2434,7 +2434,7 @@ class Bolum27Content {
   static final yonOptionB = ChoiceResult(
     label: "27-2-B",
     uiTitle: "Hepsi içeriye doğru açılıyor.",
-    uiSubtitle: "Kapıyı açmak için kendinize çekmeniz gerekiyor.",
+    uiSubtitle: "",
     reportText:
         "UYARI: Kullanıcı yükü 50 kişiyi geçen mahallerde ve katlarda kapılar mutlaka kaçış yönüne (dışarıya) doğru açılmalıdır.",
     adviceText:
@@ -2638,15 +2638,15 @@ class Bolum29Content {
   // 1. OTOPARK
   static final otoparkOptionA = ChoiceResult(
     label: "29-1-A",
-    uiTitle: "Hayır, sadece taşıtlar var, alan temiz.",
-    uiSubtitle: "Otopark alanı düzenli.",
+    uiTitle: "Hayır, sadece taşıtlar var, alan temiz ve düzenli.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Otopark alanı temiz, farklı risk grubuna ait depolama yapılmamıştır.",
   );
   static final otoparkOptionB = ChoiceResult(
     label: "29-1-B",
-    uiTitle: "Evet, eşya yığınları var.",
-    uiSubtitle: "Lastik, koli, eski eşya vb. biriktirilmiş.",
+    uiTitle: "Evet, lastik, mobilya vb. eşya yığınları var.",
+    uiSubtitle: "",
     reportText:
         "UYARI: Otopark alanlarında araçlar haricinde hiçbir yanıcı malzeme (kışlık lastik, koli, eski eşya vb.) depolanmamalıdır. Araç yangınlarında bu malzemeler yangını hızla büyüterek kontrol edilemez hale getirir.",
   );
@@ -2661,15 +2661,15 @@ class Bolum29Content {
   // 2. KAZAN DAİRESİ
   static final kazanOptionA = ChoiceResult(
     label: "29-2-A",
-    uiTitle: "Hayır, sadece kazan ve tesisat var.",
-    uiSubtitle: "Kazan dairesi boş ve temiz.",
+    uiTitle: "Hayır, sadece kazanlar var, temiz ve düzenli.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Kazan dairesinde gereksiz yanıcı madde bulunmamaktadır.",
   );
   static final kazanOptionB = ChoiceResult(
     label: "29-2-B",
-    uiTitle: "Evet, eşyalar var.",
-    uiSubtitle: "Odun, kömür, kağıt, eski eşya vb. var.",
+    uiTitle: "Evet, gereksiz eşyalar var.",
+    uiSubtitle: "",
     reportText:
         "UYARI: Kazan daireleri depo değildir. Yakıt tankının veya kazanın yanındaki en ufak bir kıvılcım, oradaki eşyaları tutuşturup binayı tehlikeye atar.",
     adviceText:
@@ -2687,7 +2687,7 @@ class Bolum29Content {
   static final catiOptionA = ChoiceResult(
     label: "29-3-A",
     uiTitle: "Hayır, boş ve kilitli.",
-    uiSubtitle: "Çatı arası temiz.",
+    uiSubtitle: "",
     reportText: "OLUMLU: Çatı arası temiz ve güvenlidir.",
   );
   static final catiOptionB = ChoiceResult(
@@ -3441,14 +3441,14 @@ class Bolum35Content {
   static final tekYonOptionB = ChoiceResult(
     label: "35-1-B",
     uiTitle: "Tahminen [LİMİT] metreden KISA.",
-    uiSubtitle: "Mesafe yakın.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Tek yön kaçış mesafesi Yönetmelik sınırları içerisindedir.",
   );
   static final tekYonOptionC = ChoiceResult(
     label: "35-1-C",
     uiTitle: "Tahminen [LİMİT] metreden UZUN.",
-    uiSubtitle: "Mesafe uzun.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Tek yön kaçış mesafesi Yönetmelik sınırının üzerindedir. ",
   );

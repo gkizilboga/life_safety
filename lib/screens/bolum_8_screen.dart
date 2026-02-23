@@ -76,43 +76,18 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
         children: [
           // Warning banner if locked due to Ortak Duvar selection
           if (_isLocked)
-            Container(
-              margin: const EdgeInsets.only(bottom: 16),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF3E0),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFFFF9800)),
-              ),
-              child: Row(
+            CustomInfoNote(
+              icon: Icons.lock_person_rounded,
+              richText: TextSpan(
                 children: [
-                  const Icon(
-                    Icons.lock_person_rounded, // Improved lock icon
-                    color: Color(0xFFE65100),
-                    size: 24,
+                  TextSpan(
+                    text: "$_lockReason\n\n",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          color: Colors.orange.shade900,
-                          fontSize: 12,
-                          fontFamily: 'Roboto', // Match app font
-                        ),
-                        children: [
-                          TextSpan(
-                            text: "$_lockReason\n\n",
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const TextSpan(
-                            text:
-                                "Değişiklik yapmak istiyorsanız lütfen Bölüm-7'ye giderek 'Ortak Duvar' seçeneğini güncelleyin.",
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ],
-                      ),
-                    ),
+                  const TextSpan(
+                    text:
+                        "Değişiklik yapmak istiyorsanız lütfen Bölüm-7'ye giderek 'Ortak Duvar' seçeneğini güncelleyin.",
+                    style: TextStyle(fontStyle: FontStyle.italic),
                   ),
                 ],
               ),

@@ -744,12 +744,19 @@ class ReportEngine {
     if (id == 28) {
       final b28 = s.bolum28;
       if (b28 != null) {
+        final hasSprinkler = s.bolum9?.secim?.label == "9-1-A";
+        final limitTekYon = hasSprinkler ? 30 : 20;
+
         if (b28.mesafe != null)
           details.add({
             'label':
                 'Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?',
             'value': b28.mesafe!.uiTitle,
-            'report': b28.mesafe!.reportText,
+            'report': _filterSprinklerText(
+              b28.mesafe!.reportText,
+              hasSprinkler,
+              limit: limitTekYon.toString(),
+            ),
             'advice': b28.mesafe!.adviceText,
           });
         if (b28.dubleks != null)
@@ -778,7 +785,10 @@ class ReportEngine {
           details.add({
             'label': 'Daire içi mesafe muafiyeti',
             'value': b28.muafiyet!.uiTitle,
-            'report': b28.muafiyet!.reportText,
+            'report': _filterSprinklerText(
+              b28.muafiyet!.reportText,
+              hasSprinkler,
+            ),
             'advice': b28.muafiyet!.adviceText,
           });
         handled = true;
@@ -1183,190 +1193,58 @@ class ReportEngine {
             'report': b20.havalandirma!.reportText,
             'advice': b20.havalandirma!.adviceText,
           });
-        // Sadece değer girilen merdiven tiplerini göster
         if (b20.normalMerdivenSayisi > 0)
           details.add({
-            'label': 'Normal (Yangın Merdiveni Olmayan) Merdiven Sayısı (Adet)',
+            'label': 'Normal Merdiven Sayısı (Adet)',
             'value': '${b20.normalMerdivenSayisi} adet',
-            'report': 'BİLGİ: Normal merdiven mevcuttur.',
+            'report': _cleanRiskPrefix('BİLGİ: Normal merdiven mevcuttur.'),
           });
         if (b20.binaIciYanginMerdiveniSayisi > 0)
           details.add({
-            'label': 'Bina İçi Korunumlu Yangın Merdiveni Sayısı (Adet)',
+            'label': 'Bina İçi Yangın Merdiveni Sayısı (Adet)',
             'value': '${b20.binaIciYanginMerdiveniSayisi} adet',
-            'report': 'BİLGİ: Bina içi korunumlu yangın merdiveni mevcuttur.',
+            'report': _cleanRiskPrefix(
+              'BİLGİ: Bina içi yangın merdiveni mevcuttur.',
+            ),
           });
         if (b20.binaDisiKapaliYanginMerdiveniSayisi > 0)
           details.add({
             'label': 'Bina Dışı Kapalı Yangın Merdiveni Sayısı (Adet)',
             'value': '${b20.binaDisiKapaliYanginMerdiveniSayisi} adet',
-            'report': 'BİLGİ: Bina dışı kapalı yangın merdiveni mevcuttur.',
+            'report': _cleanRiskPrefix(
+              'BİLGİ: Bina dışı kapalı yangın merdiveni mevcuttur.',
+            ),
           });
         if (b20.binaDisiAcikYanginMerdiveniSayisi > 0)
           details.add({
             'label': 'Bina Dışı Açık Yangın Merdiveni Sayısı (Adet)',
             'value': '${b20.binaDisiAcikYanginMerdiveniSayisi} adet',
-            'report': 'BİLGİ: Bina dışı açık yangın merdiveni mevcuttur.',
+            'report': _cleanRiskPrefix(
+              'BİLGİ: Bina dışı açık yangın merdiveni mevcuttur.',
+            ),
           });
         if (b20.donerMerdivenSayisi > 0)
           details.add({
             'label': 'Döner Merdiven Sayısı (Adet)',
             'value': '${b20.donerMerdivenSayisi} adet',
-            'report': 'UYARI: Döner merdivenler kaçış güvenliğini azaltabilir.',
+            'report': _cleanRiskPrefix(
+              'UYARI: Döner merdivenler kaçış güvenliğini azaltabilir.',
+            ),
           });
         if (b20.sahanliksizMerdivenSayisi > 0)
           details.add({
             'label': 'Sahanlıksız (Düz) Merdiven Sayısı (Adet)',
             'value': '${b20.sahanliksizMerdivenSayisi} adet',
-            'report':
-                'KRİTİK RİSK: Sahanlıksız merdivenler kaçış yolu olarak kabul edilmez.',
+            'report': _cleanRiskPrefix(
+              'KRİTİK RİSK: Sahanlıksız merdivenler kaçış yolu olarak kabul edilmez.',
+            ),
           });
         if (b20.dengelenmisMerdivenSayisi > 0) {
-          // Validation Logic
-          double hBina = s.bolum3?.hBina ?? 0;
-          int maxYuk = 0;
-          if (s.bolum33 != null) {
-            maxYuk = [
-              s.bolum33?.yukZemin ?? 0,
-              s.bolum33?.yukNormal ?? 0,
-              s.bolum33?.yukBodrum ?? 0,
-            ].reduce((curr, next) => curr > next ? curr : next);
-          }
-
-          String report =
-              'OLUMLU: Binada \'Dengelenmiş Merdiven\' mevcuttur. Bina yüksekliği (≤15.50m) ve kullanıcı yükü (≤100 kişi) sınırları içerisinde kaldığı için bu merdiven tipi kaçış yolu olarak kabul edilebilir.';
-          if (hBina > 15.50 || maxYuk > 100) {
-            report =
-                'KRİTİK RİSK: Binada \'Dengelenmiş Merdiven\' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m\'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur. (Mevcut: $hBina m, Max Yük: $maxYuk kişi)';
-          }
-
           details.add({
             'label': 'Dengelenmiş Merdiven Sayısı (Adet)',
             'value': '${b20.dengelenmisMerdivenSayisi} adet',
-            'report': report,
+            'report': 'Binada \'Dengelenmiş Merdiven\' mevcuttur.',
           });
-        }
-
-        // --- EKSTRA KONTROL: MERDİVEN TİPİ ANALİZİ (Migrated from Section 36) ---
-        final hYapi = _getHYapi(s);
-        int totalProtected =
-            b20.binaIciYanginMerdiveniSayisi +
-            b20.binaDisiKapaliYanginMerdiveniSayisi;
-
-        if (hYapi > 30.50) {
-          int requiredProtected = (hYapi > 51.50) ? 2 : 1;
-          if (totalProtected < requiredProtected) {
-            details.add({
-              'label': 'Yapı Yüksekliği ve Korunumlu Merdiven Analizi',
-              'value': '$totalProtected / $requiredProtected Korunumlu',
-              'report':
-                  'KRİTİK RİSK: Bina yüksekliği $hYapi m (> 30.50m) olduğu için en az $requiredProtected adet KORUNUMLU (yangın merdiveni) gereklidir. Mevcut merdiven tipi bu zorunluluğu karşılamamaktadır.',
-              'advice':
-                  'Binadaki merdivenlerden en az $requiredProtected tanesi, Yangın Yönetmeliği kriterlerine uygun (korunumlu, duman sızdırmaz ve yangın güvenlik hollü) hale getirilmelidir.',
-            });
-          } else {
-            details.add({
-              'label': 'Yapı Yüksekliği ve Korunumlu Merdiven Analizi',
-              'value': 'UYGUN',
-              'report':
-                  'OLUMLU: Bina yüksekliğine ($hYapi m) göre gereken korunumlu merdiven sayısı sağlanmaktadır.',
-            });
-          }
-        }
-
-        // --- Dairesel Merdiven Kontrolü (Migrated from Section 36) ---
-        if (b20.hasDaireselMerdiven) {
-          final daireselH = b20.daireselMerdivenYuksekligi?.label;
-          final b33 = s.bolum33;
-          final b34 = s.bolum34;
-
-          bool heightOk =
-              daireselH != null &&
-              daireselH.contains(Bolum20Content.daireselYukseklikLabelA);
-
-          int maxOccupancy = 0;
-          if (b33 != null) {
-            bool zBagimsiz = b34?.zemin?.label.contains("34-1-A") ?? false;
-            if (!zBagimsiz) maxOccupancy = b33.yukZemin ?? 0;
-
-            bool nBagimsiz = b34?.normal?.label.contains("34-3-A") ?? false;
-            if (!nBagimsiz) {
-              int val = b33.yukNormal ?? 0;
-              if (val > maxOccupancy) maxOccupancy = val;
-            }
-
-            bool bBagimsiz = b34?.bodrum?.label.contains("34-2-A") ?? false;
-            if (!bBagimsiz) {
-              int val = b33.yukBodrum ?? 0;
-              if (val > maxOccupancy) maxOccupancy = val;
-            }
-          }
-
-          bool occupancyOk = maxOccupancy <= 25;
-
-          if (daireselH == null ||
-              daireselH.contains(Bolum20Content.daireselYukseklikLabelC)) {
-            details.add({
-              'label': 'Dairesel Merdiven Analizi',
-              'value': 'Bilinmiyor',
-              'report':
-                  'UYARI: Binada dairesel merdiven bulunmaktadır ancak yüksekliği belirtilmemiştir. Dairesel merdivenler sadece 9.50m yüksekliğe kadar ve kullanıcı yükü 25 kişiyi aşmayan katlarda kaçış yolu olarak kullanılabilir.',
-            });
-          } else if (!heightOk || !occupancyOk) {
-            String reason = !heightOk
-                ? "Yükseklik sınırı (>9.50m) aşılmıştır."
-                : "Kullanıcı yükü sınırı (>25 kişi) aşılmıştır.";
-            details.add({
-              'label': 'Dairesel Merdiven Analizi',
-              'value': 'UYGUN DEĞİL',
-              'report':
-                  'KRİTİK RİSK: Dairesel merdiven kaçış yolu olarak kabul edilemez. $reason (Mevcut Maks Yük: $maxOccupancy kişi)',
-              'advice':
-                  'Yönetmelik Madde 43 gereği dairesel merdivenler her bina türünde kaçış yolu sayılamaz. Bina yüksekliği veya kullanıcı yükü sınırları aşıldığı için normal kaçış merdiveni sağlanmalıdır.',
-            });
-          } else {
-            details.add({
-              'label': 'Dairesel Merdiven Analizi',
-              'value': 'UYGUN',
-              'report':
-                  'OLUMLU: Dairesel merdiven, yükseklik ve kullanıcı yükü sınırları (≤9.50m ve ≤25 kişi) içerisinde olduğu için kaçış yolu olarak kabul edilebilir.',
-            });
-          }
-        }
-
-        // Madde 41: Dış Havaya Tahliye Merdiven Oranı (Üst Katlar)
-        final int totalMain =
-            b20.normalMerdivenSayisi +
-            b20.binaIciYanginMerdiveniSayisi +
-            b20.binaDisiKapaliYanginMerdiveniSayisi +
-            b20.binaDisiAcikYanginMerdiveniSayisi +
-            b20.donerMerdivenSayisi +
-            b20.sahanliksizMerdivenSayisi +
-            b20.dengelenmisMerdivenSayisi;
-
-        if (totalMain > 0) {
-          final int directMain = b20.toplamDisariAcilanMerdivenSayisi;
-          final bool isPassMain = directMain >= (totalMain / 2);
-
-          details.add({
-            'label': 'Dış Havaya Tahliye (Madde 41) - Ana Katlar',
-            'value': '$directMain / $totalMain Merdiven',
-            'report': isPassMain
-                ? 'OLUMLU: Merdivenlerin en az %50\'si doğrudan dışarıya açılmaktadır.'
-                : 'KRİTİK RİSK: Kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması gerekir (Madde 41). Mevcut oran: $directMain / $totalMain.',
-            'advice': !isPassMain
-                ? 'Dışarıya açılmayan merdiven adetleri artırılarak veya çıkış güzergahları değiştirilerek doğrudan tahliye oranı %50\'ye yükseltilmelidir.'
-                : '',
-          });
-
-          if (directMain < totalMain && b20.lobiTahliyeMesafeDurumu != null) {
-            details.add({
-              'label': 'Bina İçi Tahliye Koridoru Mesafesi (Ana Katlar)',
-              'value': b20.lobiTahliyeMesafeDurumu!.uiTitle,
-              'report': b20.lobiTahliyeMesafeDurumu!.reportText,
-              'advice': b20.lobiTahliyeMesafeDurumu!.adviceText,
-            });
-          }
         }
 
         // Bodrum merdivenleri
@@ -1375,7 +1253,7 @@ class ReportEngine {
             'label': 'Bodrum kat merdivenleri bağımsız mı?',
             'value': 'Evet (Bağımsız)',
             'report':
-                'BİLGİ: Bodrum kat merdivenleri bağımsız olarak değerlendirilmiştir.',
+                'Bodrum kat merdivenleri bağımsız olarak değerlendirilmiştir.',
           });
           if (b20.bodrumNormalMerdivenSayisi > 0)
             details.add({
@@ -1413,69 +1291,16 @@ class ReportEngine {
             details.add({
               'label': 'Bodrum Kat Sahanlıksız (Düz) Merdiven Sayısı (Adet)',
               'value': '${b20.bodrumSahanliksizMerdivenSayisi} adet',
-              'report':
-                  'KRİTİK RİSK: Bodrumda sahanlıksız merdiven tespit edildi.',
+              'report': _cleanRiskPrefix(
+                'KRİTİK RİSK: Bodrumda sahanlıksız merdiven tespit edildi.',
+              ),
             });
           if (b20.bodrumDengelenmisMerdivenSayisi > 0) {
-            // Validation Logic for Basement (Consistent with building-wide rule)
-            double hBina = s.bolum3?.hBina ?? 0;
-            int maxYuk = 0;
-            if (s.bolum33 != null) {
-              maxYuk = [
-                s.bolum33?.yukZemin ?? 0,
-                s.bolum33?.yukNormal ?? 0,
-                s.bolum33?.yukBodrum ?? 0,
-              ].reduce((curr, next) => curr > next ? curr : next);
-            }
-
-            String report =
-                'OLUMLU: Bodrumda \'Dengelenmiş Merdiven\' mevcuttur. Bina yüksekliği (≤15.50m) ve kullanıcı yükü (≤100 kişi) sınırları içerisinde kaldığı için bu merdiven tipi kaçış yolu olarak kabul edilebilir.';
-            if (hBina > 15.50 || maxYuk > 100) {
-              report =
-                  'KRİTİK RİSK: Bodrumda \'Dengelenmiş Merdiven\' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m\'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur. (Mevcut H: $hBina m, Max Yük: $maxYuk kişi)';
-            }
-
             details.add({
               'label': 'Bodrum Kat Dengelenmiş Merdiven Sayısı (Adet)',
               'value': '${b20.bodrumDengelenmisMerdivenSayisi} adet',
-              'report': report,
+              'report': 'Bodrumda \'Dengelenmiş Merdiven\' mevcuttur.',
             });
-          }
-
-          // Madde 41 (Bodrum): Dış Havaya Tahliye Merdiven Oranı
-          final int totalBod =
-              b20.bodrumNormalMerdivenSayisi +
-              b20.bodrumBinaIciYanginMerdiveniSayisi +
-              b20.bodrumBinaDisiKapaliYanginMerdiveniSayisi +
-              b20.bodrumBinaDisiAcikYanginMerdiveniSayisi +
-              b20.bodrumDonerMerdivenSayisi +
-              b20.bodrumSahanliksizMerdivenSayisi +
-              b20.bodrumDengelenmisMerdivenSayisi;
-
-          if (totalBod > 0) {
-            final int directBod = b20.bodrumToplamDisariAcilanMerdivenSayisi;
-            final bool isPassBod = directBod >= (totalBod / 2);
-
-            details.add({
-              'label': 'Dış Havaya Tahliye (Madde 41) - Bodrum Katlar',
-              'value': '$directBod / $totalBod Merdiven',
-              'report': isPassBod
-                  ? 'OLUMLU: Bodrum merdivenlerinin en az %50\'si doğrudan dışarıya açılmaktadır.'
-                  : 'KRİTİK RİSK: Bodrum kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması gerekir (Madde 41). Mevcut oran: $directBod / $totalBod.',
-              'advice': !isPassBod
-                  ? 'Bodrumda doğrudan dışarıya açılmayan merdivenler için çıkış güzergahları revize edilmelidir.'
-                  : '',
-            });
-
-            if (directBod < totalBod &&
-                b20.bodrumLobiTahliyeMesafeDurumu != null) {
-              details.add({
-                'label': 'Bina İçi Tahliye Koridoru Mesafesi (Bodrum)',
-                'value': b20.bodrumLobiTahliyeMesafeDurumu!.uiTitle,
-                'report': b20.bodrumLobiTahliyeMesafeDurumu!.reportText,
-                'advice': b20.bodrumLobiTahliyeMesafeDurumu!.adviceText,
-              });
-            }
           }
         }
         handled = true;
@@ -2742,28 +2567,31 @@ class ReportEngine {
         List<String> parts = [];
         if (b35.tekYon != null) {
           parts.add(
-            b35.tekYon!.reportText.replaceAll(
-              "[LİMİT]",
-              limitTekYon.toString(),
+            _filterSprinklerText(
+              b35.tekYon!.reportText,
+              hasSprinkler,
+              limit: limitTekYon.toString(),
             ),
           );
         }
         if (b35.ciftYon != null) {
           parts.add(
-            b35.ciftYon!.reportText.replaceAll(
-              "[LİMİT]",
-              limitCiftYon.toString(),
+            _filterSprinklerText(
+              b35.ciftYon!.reportText,
+              hasSprinkler,
+              limit: limitCiftYon.toString(),
             ),
           );
         }
         if (b35.cikmaz != null) {
-          parts.add(b35.cikmaz!.reportText);
+          parts.add(_filterSprinklerText(b35.cikmaz!.reportText, hasSprinkler));
         }
         if (b35.cikmazMesafe != null) {
           parts.add(
-            b35.cikmazMesafe!.reportText.replaceAll(
-              "[LİMİT]",
-              limitTekYon.toString(),
+            _filterSprinklerText(
+              b35.cikmazMesafe!.reportText,
+              hasSprinkler,
+              limit: limitTekYon.toString(),
             ),
           );
         }
@@ -2782,8 +2610,7 @@ class ReportEngine {
       List<String> analysisParts = [];
 
       final b20 = s.bolum20;
-      final b31 = s.bolum31; // Sprinkler status in section 31
-      bool hasSprinkler = b31?.sondurme?.label == "31-4-A";
+      final hasSprinkler = s.bolum9?.secim?.label == "9-1-A";
 
       if (b20 != null) {
         // --- 1. Madde 41/1: Doğrudan Dışarıya Tahliye Oranı ---
@@ -3094,5 +2921,79 @@ class ReportEngine {
     final res = BinaStore.instance.getResultForSection(id);
     if (res == null) return "Değerlendirilmedi";
     return res.label;
+  }
+
+  static String _cleanRiskPrefix(String text) {
+    if (text.startsWith("BİLGİ: ")) return text.substring(7);
+    if (text.startsWith("UYARI: ")) return text.substring(7);
+    if (text.startsWith("KRİTİK RİSK: ")) return text.substring(13);
+    if (text.startsWith("OLUMLU: ")) return text.substring(8);
+    return text;
+  }
+
+  static String _filterSprinklerText(
+    String text,
+    bool hasSprinkler, {
+    String? limit,
+  }) {
+    String result = text;
+
+    // Her iki varyasyonu da içeren metinleri ayıkla
+    // Format 1: (Binada sprinkler varsa) ... (Binada sprinkler yoksa) ...
+    if (text.contains("(Binada sprinkler varsa)") ||
+        text.contains("(Binada sprinkler yoksa)")) {
+      if (hasSprinkler) {
+        // Sprinkler varsa kısmını al
+        final startIndex = text.indexOf("(Binada sprinkler varsa)");
+        if (startIndex != -1) {
+          int endIndex = text.indexOf("(Binada sprinkler yoksa)");
+          if (endIndex == -1) endIndex = text.length;
+          result = text
+              .substring(startIndex, endIndex)
+              .replaceAll("(Binada sprinkler varsa)", "");
+        }
+      } else {
+        // Sprinkler yoksa kısmını al
+        final startIndex = text.indexOf("(Binada sprinkler yoksa)");
+        if (startIndex != -1) {
+          result = text
+              .substring(startIndex)
+              .replaceAll("(Binada sprinkler yoksa)", "");
+        }
+      }
+    }
+
+    // Format 2: ... (Binada sprinkler varsa: [LİMİT], Binada sprinkler yoksa: [LİMİT])
+    if (result.contains("(Binada sprinkler varsa:") &&
+        result.contains("Binada sprinkler yoksa:")) {
+      String replacement = "";
+      if (hasSprinkler) {
+        final start = result.indexOf("Binada sprinkler varsa:");
+        final end = result.indexOf(",", start);
+        if (start != -1 && end != -1) {
+          replacement = result.substring(start + 23, end).trim();
+        }
+      } else {
+        final start = result.indexOf("Binada sprinkler yoksa:");
+        final end = result.indexOf(")", start);
+        if (start != -1 && end != -1) {
+          replacement = result.substring(start + 23, end).trim();
+        }
+      }
+      // Parantez içindeki kısmı temizle ve yerine seçileni koy
+      final pStart = result.indexOf("(");
+      final pEnd = result.lastIndexOf(")");
+      if (pStart != -1 && pEnd != -1) {
+        result =
+            "${result.substring(0, pStart)}(Limit: $replacement)${result.substring(pEnd + 1)}";
+      }
+    }
+
+    // [LİMİT] placeholder'larını temizle
+    if (limit != null) {
+      result = result.replaceAll("[LİMİT]", limit);
+    }
+
+    return result.trim();
   }
 }

@@ -349,13 +349,9 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "HESAPLAMA DETAYI",
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              color: Color(0xFF4A148C),
-              fontSize: 13,
-            ),
+            style: AppStyles.questionTitle.copyWith(fontSize: 13),
           ),
           const SizedBox(height: 8),
           _buildSummaryRow("Zemin Kat:", "${_tabanCtrl.text} m²"),

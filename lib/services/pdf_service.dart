@@ -673,104 +673,61 @@ class PdfService {
                   pw.Divider(thickness: 0.8, color: PdfColors.indigo100),
 
                   // Detailed Items Loop
-                  ...details.map((item) {
-                    final label = item['label'] ?? '';
-                    final value = item['value'] ?? '';
-                    final report = _cleanEmojis(item['report'] ?? '');
-                    final isLast = item == details.last;
+                  // Detailed Items Loop
+                  ...(() {
+                    final bool useTable = [3, 5, 7, 12].contains(id);
 
-                    return pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.SizedBox(height: 4), // Reduced from 8
-                        // Soru
-                        if (label.isNotEmpty) ...[
-                          pw.Text(
-                            "Konu:",
-                            style: pw.TextStyle(
-                              fontSize: 9,
-                              fontWeight: pw.FontWeight.bold,
-                              fontStyle: pw.FontStyle.italic,
-                              color: PdfColors.blue900,
-                            ),
-                          ),
-                          pw.Text(
-                            label,
-                            style: pw.TextStyle(
-                              fontSize: 9,
-                              font: ttf,
-                              color: PdfColors.black,
-                            ),
-                          ),
-                          pw.SizedBox(height: 2), // Reduced from 4
-                        ],
+                    if (!useTable) {
+                      return details.map((item) {
+                        return _buildStandardVerticalItem(
+                          item,
+                          ttf,
+                          ttfBold,
+                          isLast: item == details.last,
+                        );
+                      }).toList();
+                    }
 
-                        // Yanıt
-                        if (value.isNotEmpty && value != 'Seçilmedi') ...[
-                          pw.Text(
-                            "Kullanıcı Yanıtı:",
-                            style: pw.TextStyle(
-                              fontSize: 9,
-                              fontWeight: pw.FontWeight.bold,
-                              fontStyle: pw.FontStyle.italic,
-                              color: PdfColors.blue900,
-                            ),
-                          ),
-                          pw.Text(
-                            value,
-                            style: pw.TextStyle(
-                              fontSize: 9,
-                              font: ttf,
-                              color: PdfColors.black,
-                            ),
-                          ),
-                          pw.SizedBox(height: 2), // Reduced from 4
-                        ],
+                    List<pw.Widget> widgets = [];
+                    List<Map<String, dynamic>> tableGroup = [];
 
-                        // Değerlendirme (Hem başlık hem metin KALIN)
-                        if (report.isNotEmpty) ...[
-                          pw.Text(
-                            "Değerlendirme:",
-                            style: pw.TextStyle(
-                              fontSize: 9,
-                              fontWeight: pw.FontWeight.bold,
-                              fontStyle: pw.FontStyle.italic,
-                              color: PdfColors.blue900,
-                            ),
-                          ),
-                          // Highlight "YÜKSEK BİNA" etc
-                          _buildRichText(report, ttfBold, ttfBold),
-                        ],
+                    for (int i = 0; i < details.length; i++) {
+                      final item = details[i];
+                      final isLast = i == details.length - 1;
+                      final String report = _cleanEmojis(item['report'] ?? '');
+                      final String advice = _cleanEmojis(item['advice'] ?? '');
 
-                        // Öneri (Advice)
-                        if (item['advice'] != null &&
-                            item['advice']!.isNotEmpty) ...[
-                          pw.SizedBox(height: 2), // Reduced from 4
-                          pw.Text(
-                            "Öneri:",
-                            style: pw.TextStyle(
-                              fontSize: 9,
-                              fontWeight: pw.FontWeight.bold,
-                              color: PdfColors.blue900,
-                            ),
+                      // Rapor veya öneri boşsa tablo grubuna ekle
+                      if (report.isEmpty && advice.isEmpty) {
+                        tableGroup.add(item);
+                      } else {
+                        // Eğer birikmiş tablo varsa önce onu bas
+                        if (tableGroup.isNotEmpty) {
+                          widgets.add(
+                            _buildInfoTable(tableGroup, ttf, ttfBold),
+                          );
+                          widgets.add(pw.SizedBox(height: 10));
+                          tableGroup = [];
+                        }
+                        // Değerlendirmeli olanı normal dikey düzende bas
+                        widgets.add(
+                          _buildStandardVerticalItem(
+                            item,
+                            ttf,
+                            ttfBold,
+                            isLast: isLast,
                           ),
-                          pw.Text(
-                            _cleanEmojis(item['advice']!),
-                            style: pw.TextStyle(
-                              fontSize: 9,
-                              font: ttf,
-                              color: PdfColors.black,
-                              fontStyle: pw.FontStyle.italic,
-                            ),
-                          ),
-                        ],
-                        if (!isLast) ...[
-                          pw.SizedBox(height: 4), // Reduced from 8
-                          pw.Divider(thickness: 0.1, color: PdfColors.grey300),
-                        ],
-                      ],
-                    );
-                  }),
+                        );
+                      }
+                    }
+
+                    // En sonda kalan tablo grubu varsa bas
+                    if (tableGroup.isNotEmpty) {
+                      widgets.add(_buildInfoTable(tableGroup, ttf, ttfBold));
+                    }
+
+                    return widgets;
+                  })(),
                 ],
               ),
             );
@@ -967,5 +924,167 @@ class PdfService {
     pdf.addPage(_buildLegalPage(pageTheme));
 
     await Printing.layoutPdf(onLayout: (format) async => pdf.save());
+  }
+
+  static pw.Widget _buildInfoTable(
+    List<Map<String, dynamic>> items,
+    pw.Font font,
+    pw.Font fontBold,
+  ) {
+    return pw.Table(
+      border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+      columnWidths: {
+        0: const pw.FlexColumnWidth(3),
+        1: const pw.FlexColumnWidth(2),
+      },
+      children: [
+        pw.TableRow(
+          decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
+          children: [
+            pw.Padding(
+              padding: const pw.EdgeInsets.all(5),
+              child: pw.Text(
+                "Konu",
+                style: pw.TextStyle(
+                  font: fontBold,
+                  fontSize: 9,
+                  color: PdfColors.indigo900,
+                ),
+              ),
+            ),
+            pw.Padding(
+              padding: const pw.EdgeInsets.all(5),
+              child: pw.Text(
+                "Yanıt / Durum",
+                style: pw.TextStyle(
+                  font: fontBold,
+                  fontSize: 9,
+                  color: PdfColors.indigo900,
+                ),
+              ),
+            ),
+          ],
+        ),
+        ...items.asMap().entries.map((entry) {
+          final i = entry.key;
+          final item = entry.value;
+          return pw.TableRow(
+            decoration: i % 2 == 1
+                ? const pw.BoxDecoration(color: PdfColors.grey50)
+                : const pw.BoxDecoration(color: PdfColors.white),
+            children: [
+              pw.Padding(
+                padding: const pw.EdgeInsets.all(5),
+                child: pw.Text(
+                  item['label'] ?? '',
+                  style: pw.TextStyle(font: font, fontSize: 8),
+                ),
+              ),
+              pw.Padding(
+                padding: const pw.EdgeInsets.all(5),
+                child: pw.Text(
+                  item['value'] ?? '',
+                  style: pw.TextStyle(font: font, fontSize: 8),
+                ),
+              ),
+            ],
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  static pw.Widget _buildStandardVerticalItem(
+    Map<String, dynamic> item,
+    pw.Font font,
+    pw.Font fontBold, {
+    bool isLast = false,
+  }) {
+    final label = item['label'] ?? '';
+    final value = item['value'] ?? '';
+    final report = _cleanEmojis(item['report'] ?? '');
+
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.SizedBox(height: 4),
+        if (label.isNotEmpty) ...[
+          pw.Text(
+            "Konu:",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              fontStyle: pw.FontStyle.italic,
+              color: PdfColors.blue900,
+            ),
+          ),
+          pw.Text(
+            label,
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: font,
+              color: PdfColors.black,
+            ),
+          ),
+          pw.SizedBox(height: 2),
+        ],
+        if (value.isNotEmpty && value != 'Seçilmedi') ...[
+          pw.Text(
+            "Kullanıcı Yanıtı:",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              fontStyle: pw.FontStyle.italic,
+              color: PdfColors.blue900,
+            ),
+          ),
+          pw.Text(
+            value,
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: font,
+              color: PdfColors.black,
+            ),
+          ),
+          pw.SizedBox(height: 2),
+        ],
+        if (report.isNotEmpty) ...[
+          pw.Text(
+            "Değerlendirme:",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              fontStyle: pw.FontStyle.italic,
+              color: PdfColors.blue900,
+            ),
+          ),
+          _buildRichText(report, fontBold, fontBold),
+        ],
+        if (item['advice'] != null && item['advice']!.isNotEmpty) ...[
+          pw.SizedBox(height: 2),
+          pw.Text(
+            "Öneri:",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.blue900,
+            ),
+          ),
+          pw.Text(
+            _cleanEmojis(item['advice']!),
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: font,
+              color: PdfColors.black,
+              fontStyle: pw.FontStyle.italic,
+            ),
+          ),
+        ],
+        if (!isLast) ...[
+          pw.SizedBox(height: 4),
+          pw.Divider(thickness: 0.1, color: PdfColors.grey300),
+        ],
+      ],
+    );
   }
 }

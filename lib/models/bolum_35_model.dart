@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum35Model {
@@ -20,17 +20,23 @@ class Bolum35Model {
     ChoiceResult? tekYon,
     ChoiceResult? ciftYon,
     ChoiceResult? cikmaz,
-    ChoiceResult? cikmazMesafe,
-    double? manuelMesafe,
+    Object? cikmazMesafe = _sentinel,
+    Object? manuelMesafe = _sentinel,
   }) {
     return Bolum35Model(
       tekYon: tekYon ?? this.tekYon,
       ciftYon: ciftYon ?? this.ciftYon,
       cikmaz: cikmaz ?? this.cikmaz,
-      cikmazMesafe: cikmazMesafe ?? this.cikmazMesafe,
-      manuelMesafe: manuelMesafe ?? this.manuelMesafe,
+      cikmazMesafe: cikmazMesafe == _sentinel
+          ? this.cikmazMesafe
+          : (cikmazMesafe as ChoiceResult?),
+      manuelMesafe: manuelMesafe == _sentinel
+          ? this.manuelMesafe
+          : (manuelMesafe as double?),
     );
   }
+
+  static const _sentinel = Object();
 
   Map<String, dynamic> toMap() {
     return {
@@ -44,14 +50,36 @@ class Bolum35Model {
 
   factory Bolum35Model.fromMap(Map<String, dynamic> map) {
     ChoiceResult? find(String? label, List<ChoiceResult> options) {
-      try { return options.firstWhere((e) => e.label == label); } catch (_) { return null; }
+      try {
+        return options.firstWhere((e) => e.label == label);
+      } catch (_) {
+        return null;
+      }
     }
 
     return Bolum35Model(
-      tekYon: find(map['tekYon_label'], [Bolum35Content.tekYonOptionA, Bolum35Content.tekYonOptionB, Bolum35Content.tekYonOptionC, Bolum35Content.tekYonOptionD]),
-      ciftYon: find(map['ciftYon_label'], [Bolum35Content.ciftYonOptionA, Bolum35Content.ciftYonOptionB, Bolum35Content.ciftYonOptionC, Bolum35Content.ciftYonOptionD]),
-      cikmaz: find(map['cikmaz_label'], [Bolum35Content.cikmazOptionA, Bolum35Content.cikmazOptionB]),
-      cikmazMesafe: find(map['cikmazMesafe_label'], [Bolum35Content.cikmazMesafeOptionA, Bolum35Content.cikmazMesafeOptionB, Bolum35Content.cikmazMesafeOptionC, Bolum35Content.cikmazMesafeOptionD]),
+      tekYon: find(map['tekYon_label'], [
+        Bolum35Content.tekYonOptionA,
+        Bolum35Content.tekYonOptionB,
+        Bolum35Content.tekYonOptionC,
+        Bolum35Content.tekYonOptionD,
+      ]),
+      ciftYon: find(map['ciftYon_label'], [
+        Bolum35Content.ciftYonOptionA,
+        Bolum35Content.ciftYonOptionB,
+        Bolum35Content.ciftYonOptionC,
+        Bolum35Content.ciftYonOptionD,
+      ]),
+      cikmaz: find(map['cikmaz_label'], [
+        Bolum35Content.cikmazOptionA,
+        Bolum35Content.cikmazOptionB,
+      ]),
+      cikmazMesafe: find(map['cikmazMesafe_label'], [
+        Bolum35Content.cikmazMesafeOptionA,
+        Bolum35Content.cikmazMesafeOptionB,
+        Bolum35Content.cikmazMesafeOptionC,
+        Bolum35Content.cikmazMesafeOptionD,
+      ]),
       manuelMesafe: (map['manuelMesafe'] as num?)?.toDouble(),
     );
   }

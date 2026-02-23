@@ -700,7 +700,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Merdiven Sınıflandırması',
+                  'Merdiven Sınıflandırması (Otomatik Hesaplandı)',
                   style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 12),
@@ -742,26 +742,10 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                     .questionTitle, // Fixed style: headerTitle was white on white
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade50,
-                // borderRadius: BorderRadius.circular(12), // Removed for stability
-                border: Border.all(color: Colors.orange.shade200),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.info_outline, color: Colors.orange),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      "Bağımsız olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
-                      style: TextStyle(color: Colors.black87, fontSize: 13),
-                    ),
-                  ),
-                ],
-              ),
+            CustomInfoNote(
+              text:
+                  "Bağımsız olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
+              icon: Icons.info_outline,
             ),
             QuestionCard(
               child: Column(
@@ -1003,10 +987,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(

@@ -54,17 +54,34 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
         _model = _model.copyWith(boyut: choice);
       }
       if (type == 'yon') {
-        final current = List<ChoiceResult>.from(_model.yon);
-        if (current.any((e) => e.label == choice.label)) {
-          current.removeWhere((e) => e.label == choice.label);
+        List<ChoiceResult> current = List<ChoiceResult>.from(_model.yon);
+        final label = choice.label;
+
+        if (current.any((e) => e.label == label)) {
+          current.removeWhere((e) => e.label == label);
         } else {
-          // Rule: Max 2
-          if (current.length < 2) {
+          if (label.contains('27-2-E')) {
+            // Bilmiyorum is exclusive
+            current = [choice];
+          } else if (label.contains('27-2-C')) {
+            // Turnike/Sürgülü (C) can pair with A, B, or D.
+            // Remove 'Bilmiyorum' if present.
+            current.removeWhere((e) => e.label.contains('27-2-E'));
+            current.add(choice);
+          } else if (label.contains('27-2-A') ||
+              label.contains('27-2-B') ||
+              label.contains('27-2-D')) {
+            // A, B, D are mutually exclusive.
+            // Remove any existing A, B, D or E.
+            current.removeWhere(
+              (e) =>
+                  e.label.contains('27-2-A') ||
+                  e.label.contains('27-2-B') ||
+                  e.label.contains('27-2-D') ||
+                  e.label.contains('27-2-E'),
+            );
             current.add(choice);
           } else {
-            // Optional: Replace last or show snackbar?
-            // Usually we just don't allow it, but for better UX, maybe replace the last one
-            current.removeAt(0);
             current.add(choice);
           }
         }

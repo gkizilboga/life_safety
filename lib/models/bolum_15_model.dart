@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum15Model {
@@ -21,20 +21,26 @@ class Bolum15Model {
   Bolum15Model copyWith({
     ChoiceResult? kaplama,
     ChoiceResult? yalitim,
-    ChoiceResult? yalitimSap,
+    Object? yalitimSap = _sentinel,
     ChoiceResult? tavan,
-    ChoiceResult? tavanMalzeme,
+    Object? tavanMalzeme = _sentinel,
     ChoiceResult? tesisat,
   }) {
     return Bolum15Model(
       kaplama: kaplama ?? this.kaplama,
       yalitim: yalitim ?? this.yalitim,
-      yalitimSap: yalitimSap ?? this.yalitimSap,
+      yalitimSap: yalitimSap == _sentinel
+          ? this.yalitimSap
+          : (yalitimSap as ChoiceResult?),
       tavan: tavan ?? this.tavan,
-      tavanMalzeme: tavanMalzeme ?? this.tavanMalzeme,
+      tavanMalzeme: tavanMalzeme == _sentinel
+          ? this.tavanMalzeme
+          : (tavanMalzeme as ChoiceResult?),
       tesisat: tesisat ?? this.tesisat,
     );
   }
+
+  static const _sentinel = Object();
 
   Map<String, dynamic> toMap() {
     return {
@@ -52,12 +58,27 @@ class Bolum15Model {
       if (label == null) return null;
       try {
         return [
-          Bolum15Content.kaplamaOptionA, Bolum15Content.kaplamaOptionB, Bolum15Content.kaplamaOptionC, Bolum15Content.kaplamaOptionD,
-          Bolum15Content.yalitimOptionA, Bolum15Content.yalitimOptionB, Bolum15Content.yalitimOptionC,
-          Bolum15Content.yalitimSapOptionA, Bolum15Content.yalitimSapOptionB, Bolum15Content.yalitimSapOptionC,
-          Bolum15Content.tavanOptionA, Bolum15Content.tavanOptionB, Bolum15Content.tavanOptionC, Bolum15Content.tavanOptionD,
-          Bolum15Content.tavanMalzemeOptionA, Bolum15Content.tavanMalzemeOptionB, Bolum15Content.tavanMalzemeOptionC,
-          Bolum15Content.tesisatOptionA, Bolum15Content.tesisatOptionB, Bolum15Content.tesisatOptionC, Bolum15Content.tesisatOptionD,
+          Bolum15Content.kaplamaOptionA,
+          Bolum15Content.kaplamaOptionB,
+          Bolum15Content.kaplamaOptionC,
+          Bolum15Content.kaplamaOptionD,
+          Bolum15Content.yalitimOptionA,
+          Bolum15Content.yalitimOptionB,
+          Bolum15Content.yalitimOptionC,
+          Bolum15Content.yalitimSapOptionA,
+          Bolum15Content.yalitimSapOptionB,
+          Bolum15Content.yalitimSapOptionC,
+          Bolum15Content.tavanOptionA,
+          Bolum15Content.tavanOptionB,
+          Bolum15Content.tavanOptionC,
+          Bolum15Content.tavanOptionD,
+          Bolum15Content.tavanMalzemeOptionA,
+          Bolum15Content.tavanMalzemeOptionB,
+          Bolum15Content.tavanMalzemeOptionC,
+          Bolum15Content.tesisatOptionA,
+          Bolum15Content.tesisatOptionB,
+          Bolum15Content.tesisatOptionC,
+          Bolum15Content.tesisatOptionD,
         ].firstWhere((e) => e.label == label);
       } catch (_) {
         return null;

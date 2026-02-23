@@ -3,10 +3,10 @@ import '../../data/bina_store.dart';
 import '../../models/bolum_17_model.dart';
 import 'bolum_18_screen.dart';
 import '../../widgets/custom_widgets.dart';
+import '../../utils/app_theme.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
-import '../../utils/app_theme.dart';
 
 class Bolum17Screen extends StatefulWidget {
   const Bolum17Screen({super.key});
@@ -265,14 +265,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 16,
-              color: Color(0xFF4A148C),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 10),
           ...options.map(
             (opt) => SelectableCard(

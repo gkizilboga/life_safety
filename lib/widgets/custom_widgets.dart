@@ -140,7 +140,7 @@ class ModernHeader extends StatelessWidget {
           Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const Text(
                     "İlerleme",
@@ -150,14 +150,8 @@ class ModernHeader extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    "%${(progress * 100).toInt()}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
+                  const SizedBox(width: 8),
+                  AnimatedPercentageText(percentage: (progress * 100).toInt()),
                 ],
               ),
               const SizedBox(height: 6),
@@ -258,6 +252,77 @@ class AnalysisPageLayout extends StatefulWidget {
 
   @override
   State<AnalysisPageLayout> createState() => _AnalysisPageLayoutState();
+}
+
+class AnimatedPercentageText extends StatefulWidget {
+  final int percentage;
+  const AnimatedPercentageText({super.key, required this.percentage});
+
+  @override
+  State<AnimatedPercentageText> createState() => _AnimatedPercentageTextState();
+}
+
+class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+
+    _scaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 1.0,
+          end: 1.35,
+        ).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 40,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(
+          begin: 1.35,
+          end: 1.0,
+        ).chain(CurveTween(curve: Curves.easeIn)),
+        weight: 60,
+      ),
+    ]).animate(_controller);
+
+    _controller.forward();
+  }
+
+  @override
+  void didUpdateWidget(covariant AnimatedPercentageText oldWidget) {
+    if (oldWidget.percentage != widget.percentage) {
+      _controller.forward(from: 0);
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: Text(
+        "%${widget.percentage}",
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+    );
+  }
 }
 
 class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
@@ -717,6 +782,80 @@ class ConfirmationCheckbox extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Standart bilgi ve uyarı notu widget'ı - Bölüm 8'deki tasarımı temel alır
+class CustomInfoNote extends StatelessWidget {
+  final String? text;
+  final InlineSpan? richText;
+  final IconData icon;
+  final Color? backgroundColor;
+  final Color? borderColor;
+  final Color? iconColor;
+  final Color? textColor;
+  final EdgeInsetsGeometry? margin;
+
+  const CustomInfoNote({
+    super.key,
+    this.text,
+    this.richText,
+    this.icon = Icons.info_outline,
+    this.backgroundColor,
+    this.borderColor,
+    this.iconColor,
+    this.textColor,
+    this.margin,
+  }) : assert(
+         text != null || richText != null,
+         'text veya richText alanlarından en az biri dolu olmalıdır.',
+       );
+
+  @override
+  Widget build(BuildContext context) {
+    final bg = backgroundColor ?? const Color(0xFFFFF3E0);
+    final bc = borderColor ?? const Color(0xFFFF9800);
+    final ic = iconColor ?? const Color(0xFFE65100);
+    final tc = textColor ?? Colors.orange.shade900;
+
+    return Container(
+      margin: margin ?? const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: bc),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: ic, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: richText != null
+                ? RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        color: tc,
+                        fontSize: 12,
+                        fontFamily: 'Roboto',
+                      ),
+                      children: [richText!],
+                    ),
+                  )
+                : Text(
+                    text!,
+                    style: TextStyle(
+                      color: tc,
+                      fontSize: 12,
+                      fontFamily: 'Roboto',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }

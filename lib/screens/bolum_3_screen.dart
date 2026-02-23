@@ -372,14 +372,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, left: 4),
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF1A237E),
-        ),
-      ),
+      child: Text(title, style: AppStyles.questionTitle),
     );
   }
 

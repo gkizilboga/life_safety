@@ -1,4 +1,4 @@
-import 'choice_result.dart'; 
+import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum28Model {
@@ -6,7 +6,8 @@ class Bolum28Model {
   final ChoiceResult? dubleks;
   final ChoiceResult? alan;
   final ChoiceResult? cikis;
-  final ChoiceResult? muafiyet; // Otomatik atlama (4 kat altı muafiyeti) için eklendi
+  final ChoiceResult?
+  muafiyet; // Otomatik atlama (4 kat altı muafiyeti) için eklendi
 
   Bolum28Model({
     this.mesafe,
@@ -19,18 +20,22 @@ class Bolum28Model {
   Bolum28Model copyWith({
     ChoiceResult? mesafe,
     ChoiceResult? dubleks,
-    ChoiceResult? alan,
-    ChoiceResult? cikis,
-    ChoiceResult? muafiyet,
+    Object? alan = _sentinel,
+    Object? cikis = _sentinel,
+    Object? muafiyet = _sentinel,
   }) {
     return Bolum28Model(
       mesafe: mesafe ?? this.mesafe,
       dubleks: dubleks ?? this.dubleks,
-      alan: alan ?? this.alan,
-      cikis: cikis ?? this.cikis,
-      muafiyet: muafiyet ?? this.muafiyet,
+      alan: alan == _sentinel ? this.alan : (alan as ChoiceResult?),
+      cikis: cikis == _sentinel ? this.cikis : (cikis as ChoiceResult?),
+      muafiyet: muafiyet == _sentinel
+          ? this.muafiyet
+          : (muafiyet as ChoiceResult?),
     );
   }
+
+  static const _sentinel = Object();
 
   Map<String, dynamic> toMap() {
     return {
@@ -47,10 +52,15 @@ class Bolum28Model {
       if (label == null) return null;
       try {
         return [
-          Bolum28Content.mesafeOptionA, Bolum28Content.mesafeOptionB, Bolum28Content.mesafeOptionC,
-          Bolum28Content.dubleksOptionA, Bolum28Content.dubleksOptionB,
-          Bolum28Content.alanOption1, Bolum28Content.alanOption2,
-          Bolum28Content.cikisOptionA, Bolum28Content.cikisOptionB,
+          Bolum28Content.mesafeOptionA,
+          Bolum28Content.mesafeOptionB,
+          Bolum28Content.mesafeOptionC,
+          Bolum28Content.dubleksOptionA,
+          Bolum28Content.dubleksOptionB,
+          Bolum28Content.alanOption1,
+          Bolum28Content.alanOption2,
+          Bolum28Content.cikisOptionA,
+          Bolum28Content.cikisOptionB,
           Bolum28Content.muafiyetOption,
         ].firstWhere((e) => e.label == label);
       } catch (_) {

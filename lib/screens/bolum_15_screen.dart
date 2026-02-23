@@ -212,29 +212,6 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF3E0),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.arrow_downward, color: Color(0xFFE65100)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFFE65100),
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }

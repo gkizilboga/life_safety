@@ -7,6 +7,7 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../utils/app_assets.dart';
 import '../../models/choice_result.dart';
+import '../../utils/app_theme.dart';
 
 class Bolum19Screen extends StatefulWidget {
   const Bolum19Screen({super.key});
@@ -94,7 +95,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               children: [
                 const Text(
                   "Kaçış yollarında aşağıdakilerden hangisi mevcut?",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 12),
                 ...[
@@ -157,30 +158,14 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
   }
 
   Widget _buildTopInfoNote(String text) {
-    return Container(
+    return CustomInfoNote(
+      text: text,
+      icon: Icons.info_outline,
+      backgroundColor: Colors.blue.shade50,
+      borderColor: Colors.blue.shade200,
+      iconColor: const Color(0xFF1A237E),
+      textColor: const Color(0xFF1A237E),
       margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.shade100),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.info_outline, color: Color(0xFF1A237E), size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFF1A237E),
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -196,14 +181,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 16,
-              color: Color(0xFF4A148C),
-            ),
-          ),
+          Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           if (imagePath != null)
             TechnicalDrawingButton(
@@ -223,29 +201,6 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF3E0),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.arrow_downward, color: Color(0xFFE65100)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFFE65100),
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+    return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }
