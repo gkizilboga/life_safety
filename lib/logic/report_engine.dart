@@ -63,8 +63,25 @@ class ReportEngine {
     int criticalRisks = 0;
     int warnings = 0;
     int unknowns = 0;
+
     int totalActiveSections = 0;
     List<String> criticalTitles = [];
+
+    // Senior QA: Logic Desync Guard
+    // If foundational data in S5 (Area) or S10 (Usage) exists, we verify S33 (Load) isn't stale.
+    final b5 = s.bolum5;
+    final b33 = s.bolum33;
+    if (b5 != null && b33 != null) {
+      bool isStale =
+          (b33.alanZemin != b5.tabanAlani) ||
+          (b33.alanNormal != b5.normalKatAlani) ||
+          (b33.alanBodrumMax != b5.bodrumKatAlani);
+
+      if (isStale) {
+        criticalRisks++;
+        criticalTitles.add("Bölüm 33 (VERİ UYUMSUZLUĞU)");
+      }
+    }
 
     for (int i = 1; i <= 36; i++) {
       bool isSkipped = false;

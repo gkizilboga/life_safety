@@ -194,7 +194,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     );
     // ---------------------------------
 
-    BinaStore.instance.saveToDisk();
+    BinaStore.instance.saveToDisk(immediate: true);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum5Screen()),

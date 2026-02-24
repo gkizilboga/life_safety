@@ -180,7 +180,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
       toplamInsaatAlani: InputValidator.parseFlex(_toplamCtrl.text),
     );
     BinaStore.instance.bolum5 = _model;
-    BinaStore.instance.saveToDisk();
+    BinaStore.instance.saveToDisk(immediate: true);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum6Screen()),

@@ -132,20 +132,26 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         if (_hasKorunumlu) {
           _genKerr = InputValidator.validateNumber(
             _genislikKorunumluCtrl.text,
-            min: 50,
-            max: 250,
+            min: 30,
+            max: 600,
             unit: "cm",
           );
+          if (_genKerr != null && _genislikKorunumluCtrl.text.isNotEmpty) {
+            _genKerr = "Değer 30 ile 600 cm arasında olmalıdır.";
+          }
         } else {
           _genKerr = null;
         }
         if (_hasKorunumsuz) {
           _genKSerr = InputValidator.validateNumber(
             _genislikKorunumsuzCtrl.text,
-            min: 50,
-            max: 250,
+            min: 30,
+            max: 600,
             unit: "cm",
           );
+          if (_genKSerr != null && _genislikKorunumsuzCtrl.text.isNotEmpty) {
+            _genKSerr = "Değer 30 ile 600 cm arasında olmalıdır.";
+          }
         } else {
           _genKSerr = null;
         }
@@ -159,20 +165,28 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         if (_hasKorunumlu) {
           _korKerr = InputValidator.validateNumber(
             _koridorGenislikKorunumluCtrl.text,
-            min: 50,
-            max: 250,
+            min: 30,
+            max: 600,
             unit: "cm",
           );
+          if (_korKerr != null &&
+              _koridorGenislikKorunumluCtrl.text.isNotEmpty) {
+            _korKerr = "Değer 30 ile 600 cm arasında olmalıdır.";
+          }
         } else {
           _korKerr = null;
         }
         if (_hasKorunumsuz) {
           _korKSerr = InputValidator.validateNumber(
             _koridorGenislikKorunumsuzCtrl.text,
-            min: 50,
-            max: 250,
+            min: 30,
+            max: 600,
             unit: "cm",
           );
+          if (_korKSerr != null &&
+              _koridorGenislikKorunumsuzCtrl.text.isNotEmpty) {
+            _korKSerr = "Değer 30 ile 600 cm arasında olmalıdır.";
+          }
         } else {
           _korKSerr = null;
         }
@@ -186,14 +200,23 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         if (_hasKorunumlu) {
           _kGenKerr = InputValidator.validateNumber(
             _kapiGenislikKorunumluCtrl.text,
-            min: 50,
-            max: 250,
+            min: 30,
+            max: 600,
             unit: "cm",
           );
+          if (_kGenKerr != null &&
+              _kapiGenislikKorunumluCtrl.text.isNotEmpty &&
+              !_kGenKerr!.contains("merdiven")) {
+            _kGenKerr = "Değer 30 ile 600 cm arasında olmalıdır.";
+          }
           // Check if door width > stair width (Compare with Stair Width always)
           if (_kGenKerr == null && _genKerr == null && !_genislikBilinmiyor) {
-            double? stairW = double.tryParse(_genislikKorunumluCtrl.text);
-            double? doorW = double.tryParse(_kapiGenislikKorunumluCtrl.text);
+            double? stairW = InputValidator.parseFlex(
+              _genislikKorunumluCtrl.text,
+            );
+            double? doorW = InputValidator.parseFlex(
+              _kapiGenislikKorunumluCtrl.text,
+            );
             if (stairW != null && doorW != null && doorW > stairW) {
               _kGenKerr = "Kapı genişliği merdiven genişliğinden büyük olamaz.";
             }
@@ -205,14 +228,23 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         if (_hasKorunumsuz) {
           _kGenKSerr = InputValidator.validateNumber(
             _kapiGenislikKorunumsuzCtrl.text,
-            min: 50,
-            max: 250,
+            min: 30,
+            max: 600,
             unit: "cm",
           );
+          if (_kGenKSerr != null &&
+              _kapiGenislikKorunumsuzCtrl.text.isNotEmpty &&
+              !_kGenKSerr!.contains("merdiven")) {
+            _kGenKSerr = "Değer 30 ile 600 cm arasında olmalıdır.";
+          }
           // Check if door width > stair width
           if (_kGenKSerr == null && _genKSerr == null && !_genislikBilinmiyor) {
-            double? stairW = double.tryParse(_genislikKorunumsuzCtrl.text);
-            double? doorW = double.tryParse(_kapiGenislikKorunumsuzCtrl.text);
+            double? stairW = InputValidator.parseFlex(
+              _genislikKorunumsuzCtrl.text,
+            );
+            double? doorW = InputValidator.parseFlex(
+              _kapiGenislikKorunumsuzCtrl.text,
+            );
             if (stairW != null && doorW != null && doorW > stairW) {
               _kGenKSerr =
                   "Kapı genişliği merdiven genişliğinden büyük olamaz.";
@@ -925,28 +957,28 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   }
 
   void _onFinishPressed() {
-    int? genK = _genislikBilinmiyor
+    double? genK = _genislikBilinmiyor
         ? null
-        : int.tryParse(_genislikKorunumluCtrl.text);
-    int? genKS = _genislikBilinmiyor
+        : InputValidator.parseFlex(_genislikKorunumluCtrl.text);
+    double? genKS = _genislikBilinmiyor
         ? null
-        : int.tryParse(_genislikKorunumsuzCtrl.text);
+        : InputValidator.parseFlex(_genislikKorunumsuzCtrl.text);
 
     // Parse Corridor Widths
-    int? korK = (_genislikBilinmiyor || _areWidthsSame)
+    double? korK = (_genislikBilinmiyor || _areWidthsSame)
         ? null // If same, we don't save separate corridor width? Or duplicate it? Best to save as null and fallback to genK in logic.
-        : int.tryParse(_koridorGenislikKorunumluCtrl.text);
+        : InputValidator.parseFlex(_koridorGenislikKorunumluCtrl.text);
 
-    int? korKS = (_genislikBilinmiyor || _areWidthsSame)
+    double? korKS = (_genislikBilinmiyor || _areWidthsSame)
         ? null
-        : int.tryParse(_koridorGenislikKorunumsuzCtrl.text);
+        : InputValidator.parseFlex(_koridorGenislikKorunumsuzCtrl.text);
 
-    int? kGenK = _kapiGenislikBilinmiyor
+    double? kGenK = _kapiGenislikBilinmiyor
         ? null
-        : int.tryParse(_kapiGenislikKorunumluCtrl.text);
-    int? kGenKS = _kapiGenislikBilinmiyor
+        : InputValidator.parseFlex(_kapiGenislikKorunumluCtrl.text);
+    double? kGenKS = _kapiGenislikBilinmiyor
         ? null
-        : int.tryParse(_kapiGenislikKorunumsuzCtrl.text);
+        : InputValidator.parseFlex(_kapiGenislikKorunumsuzCtrl.text);
 
     String finalReport = _evaluateStairsAndExits();
     _model = _model.copyWith(
@@ -957,11 +989,13 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       koridorGenislikKorunumsuz: korKS,
       kapiGenislikKorunumlu: kGenK,
       kapiGenislikKorunumsuz: kGenKS,
-      merdivenDegerlendirme: finalReport,
+      merdivenDegerlendirme: finalReport.length > 2000
+          ? finalReport.substring(0, 2000)
+          : finalReport,
     );
     BinaStore.instance.bolum36 = _model;
     BinaStore.instance.markAsCompleted();
-    BinaStore.instance.saveToDisk();
+    BinaStore.instance.saveToDisk(immediate: true);
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -1216,8 +1250,10 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             keyboardType ??
             const TextInputType.numberWithOptions(decimal: true),
         inputFormatters: [InputValidator.flexDecimal],
+        maxLength: 6, // Senior QA: Layout crash prevention (Supports 600.00)
         style: const TextStyle(fontSize: 14),
         decoration: AppStyles.inputDecoration(label, suffix: "cm").copyWith(
+          counterText: "", // Hide counter for cleaner UI
           labelText: label,
           hintText: "Örn: 120",
           errorText: error,

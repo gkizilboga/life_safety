@@ -169,6 +169,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
       isNextEnabled: _isConfirmed,
       onNext: () {
         BinaStore.instance.bolum33 = _model;
+        BinaStore.instance.saveToDisk(immediate: true);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Bolum34Screen()),

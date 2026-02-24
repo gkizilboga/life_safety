@@ -9,17 +9,17 @@ class Bolum36Model {
   final bool areWidthsSame; // Default true (Merdiven = Koridor)
 
   // Merdiven Genişlikleri
-  final int? genislikKorunumlu;
-  final int? genislikKorunumsuz;
+  final double? genislikKorunumlu;
+  final double? genislikKorunumsuz;
 
   // Koridor Genişlikleri (areWidthsSame = false ise kullanılır)
-  final int? koridorGenislikKorunumlu;
-  final int? koridorGenislikKorunumsuz;
+  final double? koridorGenislikKorunumlu;
+  final double? koridorGenislikKorunumsuz;
 
   final ChoiceResult? kapiTipi;
 
-  final int? kapiGenislikKorunumlu;
-  final int? kapiGenislikKorunumsuz;
+  final double? kapiGenislikKorunumlu;
+  final double? kapiGenislikKorunumsuz;
 
   final ChoiceResult? gorunurluk;
   final String? merdivenDegerlendirme;
@@ -45,13 +45,13 @@ class Bolum36Model {
     ChoiceResult? disMerd,
     ChoiceResult? konum,
     bool? areWidthsSame,
-    int? genislikKorunumlu,
-    int? genislikKorunumsuz,
-    int? koridorGenislikKorunumlu,
-    int? koridorGenislikKorunumsuz,
+    double? genislikKorunumlu,
+    double? genislikKorunumsuz,
+    double? koridorGenislikKorunumlu,
+    double? koridorGenislikKorunumsuz,
     ChoiceResult? kapiTipi,
-    int? kapiGenislikKorunumlu,
-    int? kapiGenislikKorunumsuz,
+    double? kapiGenislikKorunumlu,
+    double? kapiGenislikKorunumsuz,
     ChoiceResult? gorunurluk,
     String? merdivenDegerlendirme,
   }) {
@@ -98,12 +98,15 @@ class Bolum36Model {
   factory Bolum36Model.fromMap(Map<String, dynamic> map) {
     return Bolum36Model(
       areWidthsSame: map['areWidthsSame'] ?? true,
-      genislikKorunumlu: map['genislikKorunumlu'] as int?,
-      genislikKorunumsuz: map['genislikKorunumsuz'] as int?,
-      koridorGenislikKorunumlu: map['koridorGenislikKorunumlu'] as int?,
-      koridorGenislikKorunumsuz: map['koridorGenislikKorunumsuz'] as int?,
-      kapiGenislikKorunumlu: map['kapiGenislikKorunumlu'] as int?,
-      kapiGenislikKorunumsuz: map['kapiGenislikKorunumsuz'] as int?,
+      genislikKorunumlu: (map['genislikKorunumlu'] as num?)?.toDouble(),
+      genislikKorunumsuz: (map['genislikKorunumsuz'] as num?)?.toDouble(),
+      koridorGenislikKorunumlu: (map['koridorGenislikKorunumlu'] as num?)
+          ?.toDouble(),
+      koridorGenislikKorunumsuz: (map['koridorGenislikKorunumsuz'] as num?)
+          ?.toDouble(),
+      kapiGenislikKorunumlu: (map['kapiGenislikKorunumlu'] as num?)?.toDouble(),
+      kapiGenislikKorunumsuz: (map['kapiGenislikKorunumsuz'] as num?)
+          ?.toDouble(),
       merdivenDegerlendirme: map['merdivenDegerlendirme'],
     );
   }
