@@ -14,6 +14,9 @@ import 'package:life_safety/models/bolum_2_model.dart';
 import 'package:life_safety/models/bolum_7_model.dart';
 import 'package:life_safety/models/bolum_21_model.dart';
 import 'package:life_safety/models/bolum_36_model.dart';
+import 'package:life_safety/models/bolum_6_model.dart';
+import 'package:life_safety/models/bolum_9_model.dart';
+import 'package:life_safety/models/bolum_13_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 
 void main() {
@@ -350,6 +353,64 @@ void main() {
         details.any(
           (d) => d['label'] == 'Merdiven Tipleri ve Kaçış Genişlikleri',
         ),
+        true,
+      );
+    });
+
+    test('Endüstriyel Mutfak (Büyük Restoran) rapor içeriği doğrulaması', () {
+      store.bolum6 = Bolum6Model(
+        hasTicari: true,
+        buyukRestoran: ChoiceResult(
+          label: "6-3-A (Büyük Restoran)",
+          uiTitle: "Evet, var.",
+          uiSubtitle: "",
+          reportText: "Restoran var bilgisi",
+        ),
+      );
+
+      store.bolum7 = Bolum7Model(); // Fixes null skip
+
+      store.bolum9 = Bolum9Model(
+        davlumbaz: ChoiceResult(
+          label: "9-2-A (Davlumbaz)",
+          uiTitle: "Evet, var.",
+          uiSubtitle: "",
+          reportText: "Davlumbaz söndürme",
+        ),
+      );
+
+      store.bolum13 = Bolum13Model(
+        endustriyelMutfakKapi: ChoiceResult(
+          label: "13-13-A (Endüstriyel Mutfak)",
+          uiTitle: "120 dk dayanıklı",
+          uiSubtitle: "",
+          reportText: "120 dk kapı var",
+        ),
+      );
+
+      final det6 = ReportEngine.getSectionDetailedReport(6, store: store);
+      final det7 = ReportEngine.getSectionDetailedReport(7, store: store);
+      final det9 = ReportEngine.getSectionDetailedReport(9, store: store);
+      final report13 = ReportEngine.getSectionFullReport(13, store: store);
+
+      expect(
+        det6.any(
+          (d) => d['label'].contains('büyük restoran (endüstriyel mutfak)'),
+        ),
+        true,
+      );
+      expect(
+        det7.any(
+          (d) => d['label'] == 'Endüstriyel Mutfak' && d['value'] == 'Mevcut',
+        ),
+        true,
+      );
+      expect(
+        det9.any((d) => d['label'].contains('davlumbazında otomatik söndürme')),
+        true,
+      );
+      expect(
+        report13.contains('Endüstriyel Mutfak (Büyük Restoran) Kapısı'),
         true,
       );
     });

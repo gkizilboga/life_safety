@@ -156,20 +156,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "HOŞ GELDİNİZ,",
+                      "HOŞ GELDİNİZ",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      BinaStore.instance.userName.toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w300,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

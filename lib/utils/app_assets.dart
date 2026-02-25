@@ -28,7 +28,7 @@ class AppAssets {
   static const String section15DosemeYalitim =
       'assets/images/sections/doseme_yalitim.webp';
   static const String section15Gecis =
-      'assets/images/sections/tesisat_gecis_1.webp';
+      'assets/images/sections/tesisat_gecis.webp';
   static const String section15Gecis2 =
       'assets/images/sections/tesisat_gecis_2.webp';
   static const String section16EpsMantolama =
@@ -96,4 +96,6 @@ class AppAssets {
       'assets/images/sections/elektrik_odasi.webp';
   static const String section3KatYuksekligi =
       'assets/images/sections/kat_yuksekligi_1.webp';
+  static const String section9Davlumbaz =
+      'assets/images/sections/davlumbaz.webp';
 }

@@ -201,6 +201,54 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                           _handleOtoparkTipi(Bolum6Content.otoparkYariAcik),
                     ),
                   ],
+
+                  // TİCARİ ALAN DETAYI (Sadece Ticari Varsa)
+                  if (_model.hasTicari) ...[
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Divider(thickness: 1, color: Color(0xFFECEFF1)),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 4, bottom: 12),
+                      child: Text(
+                        "Ticari alan içerisinde büyük restoran (endüstriyel mutfak) var mı?",
+                        style: AppStyles.questionTitle,
+                      ),
+                    ),
+                    SelectableCard(
+                      choice: Bolum6Content.buyukRestoranVar,
+                      isSelected:
+                          _model.buyukRestoran?.label ==
+                          Bolum6Content.buyukRestoranVar.label,
+                      onTap: () => setState(
+                        () => _model = _model.copyWith(
+                          buyukRestoran: Bolum6Content.buyukRestoranVar,
+                        ),
+                      ),
+                    ),
+                    SelectableCard(
+                      choice: Bolum6Content.buyukRestoranYok,
+                      isSelected:
+                          _model.buyukRestoran?.label ==
+                          Bolum6Content.buyukRestoranYok.label,
+                      onTap: () => setState(
+                        () => _model = _model.copyWith(
+                          buyukRestoran: Bolum6Content.buyukRestoranYok,
+                        ),
+                      ),
+                    ),
+                    SelectableCard(
+                      choice: Bolum6Content.buyukRestoranBilmiyorum,
+                      isSelected:
+                          _model.buyukRestoran?.label ==
+                          Bolum6Content.buyukRestoranBilmiyorum.label,
+                      onTap: () => setState(
+                        () => _model = _model.copyWith(
+                          buyukRestoran: Bolum6Content.buyukRestoranBilmiyorum,
+                        ),
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

@@ -326,6 +326,16 @@ class ReportEngine {
           details.add({'label': 'Depo', 'value': 'Mevcut', 'report': ''});
         if (b6.isSadeceKonut)
           details.add({'label': 'Sadece Konut', 'value': 'Evet', 'report': ''});
+
+        if (b6.hasTicari && b6.buyukRestoran != null) {
+          details.add({
+            'label':
+                'Ticari alan içerisinde büyük restoran (endüstriyel mutfak) var mı?',
+            'value': b6.buyukRestoran!.uiTitle,
+            'report': b6.buyukRestoran!.reportText,
+            'advice': b6.buyukRestoran!.adviceText,
+          });
+        }
         // Otopark tipi (eğer seçildiyse)
         if (b6.otoparkTipi != null)
           details.add({
@@ -420,6 +430,10 @@ class ReportEngine {
           'Bitişik Nizam Ortak Duvarı': b7.hasDuvar,
         };
 
+        if (s.bolum6?.buyukRestoran?.label == "6-3-A (Büyük Restoran)") {
+          spaces['Endüstriyel Mutfak'] = true;
+        }
+
         spaces.forEach((name, exists) {
           details.add({
             'label': name,
@@ -427,6 +441,32 @@ class ReportEngine {
             'report': '',
           });
         });
+        handled = true;
+      }
+    }
+
+    // Bölüm 9: Sprinkler ve Davlumbaz
+    if (id == 9) {
+      final b9 = s.bolum9;
+      if (b9 != null) {
+        if (b9.secim != null) {
+          details.add({
+            'label': 'Binada otomatik yağmurlama (sprinkler) sistemi var mı?',
+            'value': b9.secim!.uiTitle,
+            'report': b9.secim!.reportText,
+            'advice': b9.secim!.adviceText,
+          });
+        }
+        if (s.bolum6?.buyukRestoran?.label == "6-3-A (Büyük Restoran)" &&
+            b9.davlumbaz != null) {
+          details.add({
+            'label':
+                'Büyük restoran davlumbazında otomatik söndürme sistemi var mı?',
+            'value': b9.davlumbaz!.uiTitle,
+            'report': b9.davlumbaz!.reportText,
+            'advice': b9.davlumbaz!.adviceText,
+          });
+        }
         handled = true;
       }
     }
@@ -2044,6 +2084,10 @@ class ReportEngine {
           );
         if (b13.ticariKapi != null)
           parts.add("Ticari Alan Kapısı: ${b13.ticariKapi!.reportText}");
+        if (b13.endustriyelMutfakKapi != null)
+          parts.add(
+            "Endüstriyel Mutfak (Büyük Restoran) Kapısı: ${b13.endustriyelMutfakKapi!.reportText}",
+          );
 
         // Duman Tahliye Sistemleri kaldırıldı (Kullanıcı talebi)
 

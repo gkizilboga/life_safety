@@ -33,6 +33,12 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
     });
   }
 
+  void _handleDavlumbaz(ChoiceResult choice) {
+    setState(() {
+      _model = _model.copyWith(davlumbaz: choice);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
@@ -89,6 +95,55 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
               ],
             ),
           ),
+
+          if (BinaStore.instance.bolum6?.buyukRestoran?.label ==
+              Bolum6Content.buyukRestoranVar.label) ...[
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 16),
+              child: Divider(thickness: 1, color: Color(0xFFECEFF1)),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 4, bottom: 12),
+              child: Text(
+                "Büyük restoran (endüstriyel mutfak) davlumbazında otomatik söndürme sistemi var mı?",
+                style: AppStyles.questionTitle,
+              ),
+            ),
+
+            // --- TEKNİK GÖRSEL BUTONU (Davlumbaz) ---
+            TechnicalDrawingButton(
+              assetPath: AppAssets.section9Davlumbaz,
+              title: "Davlumbaz Detayı",
+            ),
+            QuestionCard(
+              child: Column(
+                children: [
+                  SelectableCard(
+                    choice: Bolum9Content.davlumbazVar,
+                    isSelected:
+                        _model.davlumbaz?.label ==
+                        Bolum9Content.davlumbazVar.label,
+                    onTap: () => _handleDavlumbaz(Bolum9Content.davlumbazVar),
+                  ),
+                  SelectableCard(
+                    choice: Bolum9Content.davlumbazYok,
+                    isSelected:
+                        _model.davlumbaz?.label ==
+                        Bolum9Content.davlumbazYok.label,
+                    onTap: () => _handleDavlumbaz(Bolum9Content.davlumbazYok),
+                  ),
+                  SelectableCard(
+                    choice: Bolum9Content.davlumbazBilmiyorum,
+                    isSelected:
+                        _model.davlumbaz?.label ==
+                        Bolum9Content.davlumbazBilmiyorum.label,
+                    onTap: () =>
+                        _handleDavlumbaz(Bolum9Content.davlumbazBilmiyorum),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );

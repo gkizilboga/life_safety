@@ -29,6 +29,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   bool _askDuvar = false;
   bool _askTicari = false;
   bool _askSiginak = false;
+  bool _askEndustriyelMutfak = false;
 
   @override
   void initState() {
@@ -57,7 +58,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _askCop ||
         _askDuvar ||
         _askTicari ||
-        _askSiginak;
+        _askSiginak ||
+        _askEndustriyelMutfak;
   }
 
   void _loadVisibilityLogic() {
@@ -87,6 +89,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       // Hem Bölüm 6 hem de Bölüm 10'daki ticari alan seçimlerine bakıyoruz
       _askTicari = (b6?.hasTicari ?? false) || hasTicariInB10;
       _askSiginak = b7?.hasSiginak ?? false;
+      _askEndustriyelMutfak =
+          b6?.buyukRestoran?.label == Bolum6Content.buyukRestoranVar.label;
     });
   }
 
@@ -118,6 +122,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _model = _model.copyWith(kazanAlan: choice);
       else if (type == 'siginakAlan')
         _model = _model.copyWith(siginakAlan: choice);
+      else if (type == 'endustriyelMutfak')
+        _model = _model.copyWith(endustriyelMutfakKapi: choice);
     });
   }
 
@@ -282,6 +288,21 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
                 Bolum13Content.ticariOptionD,
               ],
               _model.ticariKapi,
+            ),
+
+          if (_askEndustriyelMutfak)
+            _buildSoruWithDef(
+              "Büyük restoranın kapısı ve duvarları nasıldır?",
+              "Yangın Kompartımanı",
+              AppDefinitions.yanginKompartimani,
+              'endustriyelMutfak',
+              [
+                Bolum13Content.endustriyelMutfakOptionA,
+                Bolum13Content.endustriyelMutfakOptionB,
+                Bolum13Content.endustriyelMutfakOptionC,
+                Bolum13Content.endustriyelMutfakOptionD,
+              ],
+              _model.endustriyelMutfakKapi,
             ),
         ],
       ),

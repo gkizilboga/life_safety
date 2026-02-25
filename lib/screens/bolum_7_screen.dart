@@ -205,6 +205,17 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             assetPath: AppAssets.section7OrtakDuvar,
             title: "Bitişik Nizam Ortak Duvar Detayı",
           ),
+
+          if (BinaStore.instance.bolum6?.buyukRestoran?.label ==
+              Bolum6Content.buyukRestoranVar.label) ...[
+            const SizedBox(height: 8),
+            _buildOption(
+              Bolum7Content.endustriyelMutfak,
+              true, // Otomatik seçili gelsin çünkü Bölüm 6'da var dedi
+              () {}, // Kilitli olsun, değiştiremesin
+            ),
+          ],
+
           const Padding(
             padding: EdgeInsets.only(top: 4, bottom: 8),
             child: Divider(color: Color(0xFFECEFF1)),

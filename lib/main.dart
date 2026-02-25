@@ -83,9 +83,7 @@ class BinaYanginRiskAnaliziApp extends StatelessWidget {
     if (!store.hasSeenOnboarding) {
       return const OnboardingScreen();
     }
-    if (!store.isRegistered) {
-      return const LoginScreen();
-    }
+    // Giriş ekranı şimdilik kaldırıldı.
     return const DashboardScreen();
   }
 }

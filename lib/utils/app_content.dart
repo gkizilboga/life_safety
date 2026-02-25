@@ -235,6 +235,33 @@ class Bolum6Content {
         "BİLGİ: (YARI AÇIK OTOPARK): Otoparkta sadece tek cephede açıklık olması duman tahliyesi ve havalandırma için yeterli değildir. \"Kapalı Otopark\"kuralları geçerlidir.",
     level: RiskLevel.info,
   );
+
+  static final buyukRestoranVar = ChoiceResult(
+    label: "6-3-A (Büyük Restoran)",
+    uiTitle: "Evet, var.",
+    uiSubtitle: "",
+    reportText:
+        "BİLGİ: Ticari alanda büyük restoran (endüstriyel mutfak) olduğu beyan edilmiştir. Endüstriyel mutfaklar yüksek yangın riski taşır. Yönetmelik gereği, ticari alan içerisinde yer alan endüstriyel mutfaklar, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve kapılar ile ayrılmış biçimde konumlandırılır. Aynı anda 100’den fazla kişiye hizmet verebilen restoranların davlumbazlarına otomatik söndürme sistemi yapılması ve ocaklarında kullanılan gazın özelliklerine göre gaz algılama, gaz kesme ve uyarı tesisatının kurulması şarttır.",
+    level: RiskLevel.info,
+  );
+
+  static final buyukRestoranYok = ChoiceResult(
+    label: "6-3-B (Büyük Restoran)",
+    uiTitle: "Hayır, yok.",
+    uiSubtitle: "",
+    reportText:
+        "Binanın ticari alanında büyük restoran (endüstriyel mutfak) bulunmamaktadır. Ektra önlem alınmasına gerek yoktur.",
+    level: RiskLevel.info,
+  );
+
+  static final buyukRestoranBilmiyorum = ChoiceResult(
+    label: "6-3-C (Büyük Restoran)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: Ticari alanda büyük restoran (endüstriyel mutfak) olup olmadığı bilinmemektedir. Endüstriyel mutfaklar yüksek yangın riski taşır. Mevcudiyeti halinde; Yönetmelik gereği, ticari alan içerisinde yer alan endüstriyel mutfaklar, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve kapılar ile ayrılmış biçimde konumlandırılması gerekir. Ayrıca belirli kapasite üzerindeki mutfaklarda otomatik söndürme ve gaz algılama sistemleri zorunludur. Uzman tarafından yerinde tespit yapılması önerilir.",
+    level: RiskLevel.info,
+  );
 }
 
 class Bolum7Content {
@@ -339,6 +366,15 @@ class Bolum7Content {
         "BİLGİ: Yan bina ile ortak duvar mevcuttur. Komşu binada çıkacak bir yangının geçişini engellemek için duvarın yangına dayanıklı olması gerekir.",
     level: RiskLevel.info,
   );
+
+  static final endustriyelMutfak = ChoiceResult(
+    label: "7-13 (Endüstriyel Mutfak)",
+    uiTitle: "Endüstriyel Mutfak (Büyük Restoran)",
+    uiSubtitle: "Bölüm 6'daki seçiminize istinaden eklenmiştir.",
+    reportText:
+        "BİLGİ: Binada endüstriyel mutfak (büyük restoran) mevcuttur. Yangın Yönetmeliği Madde 57/3'e göre mutfak ve çay ocakları binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı bölmeler ile ayrılmış biçimde konumlandırılmalıdır.",
+    level: RiskLevel.info,
+  );
 }
 
 class Bolum8Content {
@@ -388,6 +424,36 @@ class Bolum9Content {
     reportText:
         "BİLGİ: Sprinkler sistemi binada kısmi olarak bulunuyor. Yönetmelik gereği, kaçış güvenliği hesaplarında sistemin \"YOK\"olduğu varsayılacaktır. Sprinkler sisteminin binada kısmi bulunması, kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır. Bu Uygulama içerisinde yer alan Aktif Sistem Gereksinimleri çıktısında binanın sprinkler sistemi ihtiyacı belirtilmekteidir. Bu çıktıda sprinkler sistemi zorunlu olmadığı belirtilse bile proje üzerinde kat ve mahal bazında hususi çalışma yapılması mutlaka önerilir. ",
     level: RiskLevel.info,
+  );
+
+  static final davlumbazVar = ChoiceResult(
+    label: "9-2-A (Davlumbaz)",
+    uiTitle: "Evet, var.",
+    uiSubtitle:
+        "Endüstriyel mutfak davlumbazında otomatik söndürme sistemi var.",
+    reportText:
+        "OLUMLU: Endüstriyel mutfak davlumbazında otomatik söndürme sistemi olduğu beyan edilmiştir. Yangın Yönetmeliği Madde 57/1 gereği, alışveriş merkezleri, yüksek binalar içinde bulunan mutfaklar ve yemek fabrikaları ile bir anda 100'den fazla kişiye hizmet veren mutfakların davlumbazlarına otomatik söndürme sistemi yapılması şarttır.",
+    level: RiskLevel.positive,
+  );
+
+  static final davlumbazYok = ChoiceResult(
+    label: "9-2-B (Davlumbaz)",
+    uiTitle: "Hayır, yok.",
+    uiSubtitle: "Davlumbazda otomatik söndürme sistemi bulunmuyor.",
+    reportText:
+        "KRİTİK RİSK: Endüstriyel mutfak davlumbazında otomatik söndürme sistemi bulunmamaktadır. Yangın Yönetmeliği Madde 57/1 gereği, alışveriş merkezleri, yüksek binalar içinde bulunan mutfaklar ve yemek fabrikaları ile bir anda 100'den fazla kişiye hizmet veren mutfakların davlumbazlarına otomatik söndürme sistemi yapılması ve ocaklarda kullanılan gazın özelliklerine göre gaz algılama, gaz kesme ve uyarı tesisatının kurulması şarttır.",
+    adviceText:
+        "Endüstriyel mutfak davlumbazlarına ivedilikle otomatik söndürme sistemi tesis edilmelidir.",
+    level: RiskLevel.critical,
+  );
+
+  static final davlumbazBilmiyorum = ChoiceResult(
+    label: "9-2-C (Davlumbaz)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: Endüstriyel mutfak davlumbazında otomatik söndürme sistemi bulunup bulunmadığı bilinmemektedir. Yangın Yönetmeliği Madde 57/1 gereği kapsam içindeki mutfakların davlumbazlarına otomatik söndürme sistemi yapılması şarttır. Uzman kontrolü önerilir.",
+    level: RiskLevel.unknown,
   );
 }
 
@@ -918,6 +984,44 @@ class Bolum13Content {
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Farklı kullanım alanlarındaki geçiş bilinmiyor, Yangın Güvenlik Uzmanı görüşü alınması önerilir.",
+    level: RiskLevel.unknown,
+  );
+
+  static final endustriyelMutfakOptionA = ChoiceResult(
+    label: "13-13-A (Endüstriyel Mutfak)",
+    uiTitle: "Duvarları 120 dk, kapısı 90 dk yangına dayanıklı.",
+    uiSubtitle: "",
+    reportText:
+        "OLUMLU: Endüstriyel mutfak/büyük restoran, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve en az 90 dakika süreyle yangına dayanıklı kapılar ile ayrılmıştır (Madde 57/3 yönergelerine uygundur).",
+    level: RiskLevel.positive,
+  );
+
+  static final endustriyelMutfakOptionB = ChoiceResult(
+    label: "13-13-B (Endüstriyel Mutfak)",
+    uiTitle:
+        "Yangına dayanıksız duvar sistemi ile cam, ahşap, pvc kapılar kullanılmış.",
+    uiSubtitle: "",
+    reportText:
+        "KRİTİK RİSK: Endüstriyel mutfak/büyük restoran duvarları ve kapıları yeterli yangın dayanımına sahip değildir. Yangın Yönetmeliği Madde 57/3 gereği; Ticari alanda büyük restoran (endüstriyel mutfak) olduğu beyan edilmiştir. Endüstriyel mutfaklar yüksek yangın riski taşır. Yönetmelik gereği, ticari alan içerisinde yer alan endüstriyel mutfaklar, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve kapılar ile ayrılmış biçimde konumlandırılır. Aynı anda 100’den fazla kişiye hizmet verebilen restoranların davlumbazlarına otomatik söndürme sistemi yapılması ve ocaklarında kullanılan gazın özelliklerine göre gaz algılama, gaz kesme ve uyarı tesisatının kurulması şarttır.",
+    adviceText: "",
+    level: RiskLevel.critical,
+  );
+
+  static final endustriyelMutfakOptionC = ChoiceResult(
+    label: "13-13-C (Endüstriyel Mutfak)",
+    uiTitle: "Restoran, binadan tamamen bağımsız bir yerde.",
+    uiSubtitle: "",
+    reportText:
+        "OLUMLU: Endüstriyel mutfak binadan bağımsız ayrı bir kütlede yer almaktadır. Yangın sirayeti riski düşüktür. Ana binaya yakınlığına veya bağlantısına göre Uzman tarafından yerinde inceleme yapılması önerilir.",
+    level: RiskLevel.positive,
+  );
+
+  static final endustriyelMutfakOptionD = ChoiceResult(
+    label: "13-13-D (Endüstriyel Mutfak)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: Endüstriyel mutfak/büyük restoranın duvar ve kapı dayanımı bilinmemektedir. Endüstriyel mutfaklar yüksek yangın riski taşır. Yönetmelik gereği, ticari alan içerisinde yer alan endüstriyel mutfaklar, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve kapılar ile ayrılmış biçimde konumlandırılır. Aynı anda 100’den fazla kişiye hizmet verebilen restoranların davlumbazlarına otomatik söndürme sistemi yapılması ve ocaklarında kullanılan gazın özelliklerine göre gaz algılama, gaz kesme ve uyarı tesisatının kurulması şarttır.",
     level: RiskLevel.unknown,
   );
 

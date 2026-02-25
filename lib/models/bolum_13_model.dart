@@ -15,6 +15,7 @@ class Bolum13Model {
   final ChoiceResult? otoparkAlan;
   final ChoiceResult? kazanAlan;
   final ChoiceResult? siginakAlan;
+  final ChoiceResult? endustriyelMutfakKapi;
 
   Bolum13Model({
     this.otoparkKapi,
@@ -30,6 +31,7 @@ class Bolum13Model {
     this.otoparkAlan,
     this.kazanAlan,
     this.siginakAlan,
+    this.endustriyelMutfakKapi,
   });
 
   Bolum13Model copyWith({
@@ -46,6 +48,7 @@ class Bolum13Model {
     ChoiceResult? otoparkAlan,
     ChoiceResult? kazanAlan,
     ChoiceResult? siginakAlan,
+    ChoiceResult? endustriyelMutfakKapi,
   }) {
     return Bolum13Model(
       otoparkKapi: otoparkKapi ?? this.otoparkKapi,
@@ -61,6 +64,8 @@ class Bolum13Model {
       otoparkAlan: otoparkAlan ?? this.otoparkAlan,
       kazanAlan: kazanAlan ?? this.kazanAlan,
       siginakAlan: siginakAlan ?? this.siginakAlan,
+      endustriyelMutfakKapi:
+          endustriyelMutfakKapi ?? this.endustriyelMutfakKapi,
     );
   }
 
@@ -79,6 +84,7 @@ class Bolum13Model {
       'otoparkAlan_label': otoparkAlan?.label,
       'kazanAlan_label': kazanAlan?.label,
       'siginakAlan_label': siginakAlan?.label,
+      'endustriyelMutfakKapi_label': endustriyelMutfakKapi?.label,
     };
   }
 
@@ -160,6 +166,12 @@ class Bolum13Model {
         Bolum13Content.siginakAlanOptionA,
         Bolum13Content.siginakAlanOptionB,
         Bolum13Content.siginakAlanOptionC,
+      ]),
+      endustriyelMutfakKapi: find(map['endustriyelMutfakKapi_label'], [
+        Bolum13Content.endustriyelMutfakOptionA,
+        Bolum13Content.endustriyelMutfakOptionB,
+        Bolum13Content.endustriyelMutfakOptionC,
+        Bolum13Content.endustriyelMutfakOptionD,
       ]),
     );
   }
