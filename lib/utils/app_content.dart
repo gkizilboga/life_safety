@@ -1695,7 +1695,7 @@ class Bolum19Content {
   static final engelOptionA = ChoiceResult(
     label: "19-1-A",
     uiTitle: "Herhangi bir engel yok, yol tamamen açık.",
-    uiSubtitle: "Tahliye yolu mevzuata uygun.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Kaçış yollarında tahliyeyi engelleyici unsur bulunmamaktadır.",
     level: RiskLevel.positive,
@@ -1704,7 +1704,7 @@ class Bolum19Content {
   static final engelOptionB = ChoiceResult(
     label: "19-1-B",
     uiTitle: "Eşya, bisiklet, saksı vb. malzemeler var.",
-    uiSubtitle: "Yol genişliği daralmış.",
+    uiSubtitle: "",
     reportText:
         "UYARI: Kaçış yollarında eşya ve malzeme istifi tespit edilmiştir.",
     adviceText:
@@ -1715,7 +1715,7 @@ class Bolum19Content {
   static final engelOptionC = ChoiceResult(
     label: "19-1-C",
     uiTitle: "Kilitli kapı veya geçişi zorlaştıran bariyer var.",
-    uiSubtitle: "Acil çıkış engellenmiş.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Kaçış yolunda kilitli kapı veya fiziksel engel mevcut olduğu beyan edilmiştir.",
     adviceText:
@@ -1726,7 +1726,7 @@ class Bolum19Content {
   static final engelOptionD = ChoiceResult(
     label: "19-1-D",
     uiTitle: "Eşik, basamak veya kaygan zemin var.",
-    uiSubtitle: "Düşme ve takılma riski.",
+    uiSubtitle: "Düşme, takılma riski.",
     reportText:
         "UYARI: Kaçış yolu zemininde takılma veya kayma riski tespit edilmiştir.",
     adviceText:
@@ -1736,16 +1736,15 @@ class Bolum19Content {
 
   static final levhaOptionA = ChoiceResult(
     label: "19-2-A",
-    uiTitle:
-        "EVET, tüm çıkışlarda ledli, ışıklı acil yönlendirme işaretleri var.",
-    uiSubtitle: "Yeterince yönlendirme var.",
+    uiTitle: "EVET, tüm çıkışlarda ledli, ışıklı acil yönlendirme işareti var.",
+    uiSubtitle: "",
     reportText: "OLUMLU: Acil durum yönlendirme işaretleri mevcuttur.",
     level: RiskLevel.positive,
   );
 
   static final levhaOptionB = ChoiceResult(
     label: "19-2-B",
-    uiTitle: "HAYIR, hiçbir yerde yönlendirme levhası yok.",
+    uiTitle: "HAYIR, hiçbir yerde yönlendirme işareti yok.",
     uiSubtitle: "Karanlıkta veya dumanlı ortamda çıkış bulunması güçtür.",
     reportText:
         "KRİTİK RİSK: Binada acil durum yönlendirme işaretleri bulunmamaktadır.",
@@ -1754,7 +1753,7 @@ class Bolum19Content {
 
   static final levhaOptionC = ChoiceResult(
     label: "19-2-C",
-    uiTitle: "Yönlendirmeler var ama çalışmıyorlar, arızalı olabilir.",
+    uiTitle: "Yönlendirme işaretleri var ama hasarlılar.",
     uiSubtitle: "",
     reportText:
         "UYARI: Yönlendirme işaretlemeleri mevcut ancak çalışır durumda değildir. Acil durumda bu işaretlerin çalışır durumda olması büyük önem taşır.",
@@ -1763,8 +1762,8 @@ class Bolum19Content {
 
   static final yanilticiOptionA = ChoiceResult(
     label: "19-3-A",
-    uiTitle: "HAYIR, yanıltıcı kapı yok, çıkış kapısını kolayca bulabilirim.",
-    uiSubtitle: "Tüm kapılar amacına uygun.",
+    uiTitle: "HAYIR yok, çıkış kapısını kolayca bulabilirim.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Kaçış yollarında kullanıcıyı yanıltacak kapı bulunmamaktadır. Bu durum uygundur.",
     level: RiskLevel.positive,
@@ -1772,9 +1771,8 @@ class Bolum19Content {
 
   static final yanilticiOptionB = ChoiceResult(
     label: "19-3-B",
-    uiTitle:
-        "EVET, yanıltıcı kapı var, çıkış kapısını bulmakta güçlük çekebilirim.",
-    uiSubtitle: "Depo/Elektrik odası kapıları merdiven kapısına benziyor.",
+    uiTitle: "EVET var, çıkışı bulmakta güçlük çekiyorum.",
+    uiSubtitle: "",
     reportText:
         "UYARI: Kaçış yollarında yangın merdiveni ile karıştırılabilecek yanıltıcı kapılar mevcuttur.",
     adviceText:
@@ -1784,8 +1782,8 @@ class Bolum19Content {
 
   static final etiketOptionA = ChoiceResult(
     label: "19-3-ALT-A",
-    uiTitle: "EVET, 'ÇIKIŞ DEĞİLDİR'veya mahalin adı yazıyor.",
-    uiSubtitle: "İşaretleme yapılmış.",
+    uiTitle: "EVET, var.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Yanıltıcı kapılar üzerinde gerekli uyarı levhaları mevcuttur. Bu durum uygundur.",
     level: RiskLevel.warning,
@@ -1793,7 +1791,7 @@ class Bolum19Content {
 
   static final etiketOptionB = ChoiceResult(
     label: "19-3-ALT-B",
-    uiTitle: "HAYIR, herhangi bir yazı veya levha yok.",
+    uiTitle: "HAYIR, yok.",
     uiSubtitle: "",
     reportText:
         "UYARI: Yanıltıcı kapılar üzerinde uyarı levhası bulunmamaktadır.",

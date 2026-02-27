@@ -142,7 +142,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               "Yanıltıcı kapılar için etiketleme sorgulanmaktadır.",
             ),
             _buildSoru(
-              "Bu kapıların üzerinde yazı var mı?",
+              "Yanıltıcı kapıların üzerinde yazı var mı?",
               'etiket',
               [
                 Bolum19Content.etiketOptionA,

@@ -650,7 +650,6 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
                       ctrl: _disAcikCtrl,
                       error: _disAcikErr,
                       assetPaths: [
-                        AppAssets.section20DisAcik1,
                         AppAssets.section20DisAcik2,
                         AppAssets.section20DisAcik3,
                       ],

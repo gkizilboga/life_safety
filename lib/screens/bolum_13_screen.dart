@@ -292,7 +292,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askEndustriyelMutfak)
             _buildSoruWithDef(
-              "Büyük restoranın kapısı ve duvarları nasıldır?",
+              "Büyük restoran mutfağının kapısı ve duvarları nasıldır?",
               "Yangın Kompartımanı",
               AppDefinitions.yanginKompartimani,
               'endustriyelMutfak',
