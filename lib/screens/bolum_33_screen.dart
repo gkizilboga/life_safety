@@ -179,9 +179,10 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text("Kullanıcı Yükü Nedir?", style: AppStyles.questionTitle),
+              const SizedBox(width: 8),
               DefinitionButton(
                 term: "Kullanıcı Yükü",
                 definition: AppDefinitions.kullaniciYuku,
