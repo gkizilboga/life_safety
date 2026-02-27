@@ -85,7 +85,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
           // YGH görseli - Buton olarak
           const TechnicalDrawingButton(
             assetPath: 'assets/images/sections/ygh_1.webp',
-            title: "Örnek YGH Yerleşimi ve Detayını İncele",
+            title: "Örnek YGH Yerleşimi İncele",
           ),
           const SizedBox(height: 16),
           _buildInfoCard(),
@@ -121,7 +121,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               _model.malzeme,
             ),
             _buildSoru(
-              "YGH (Hol) kapıları duman sızdırmaz ve yangına dayanıklı mı?",
+              "YGH (Hol) kapıları yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan özellikte mi?",
               'kapi',
               [
                 Bolum21Content.kapiOptionA,

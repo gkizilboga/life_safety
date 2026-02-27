@@ -2012,8 +2012,8 @@ class Bolum20Content {
   // --- Madde 41 - Dış Havaya Tahliye ---
   static final madde41OranHata = ChoiceResult(
     label: "36-MADDE41-ORAN-HATA",
-    uiTitle: "Kaçış merdivenlerinin en az yarısı doğrudan dışarı açılmıyor.",
-    uiSubtitle: "Madde 41/1 ihlali.",
+    uiTitle: "Kaçış merdivenlerinin en az yarısı doğrudan dışarı AÇILMIYOR.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Madde 41/1 gereği, binadaki kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut durumda bu oran sağlanamamaktadır.",
     level: RiskLevel.critical,
@@ -2021,8 +2021,9 @@ class Bolum20Content {
 
   static final madde41MesafeHata = ChoiceResult(
     label: "36-MADDE41-MESAFE-HATA",
-    uiTitle: "Bina içi tahliye mesafesi sınır değerleri aşıyor.",
-    uiSubtitle: "Madde 41/2 ihlali.",
+    uiTitle:
+        "Kaçış merdivenlerinin doğrudan dışarı tahliye mesafesi limiti AŞILIYOR.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Madde 41/2 gereği, doğrudan dışarı açılmayan merdivenlerin koridor içindeki tahliye mesafesi yönetmelik limitlerini (sprinklersiz binalarda 10m, sprinklerli binalarda 15m) aşmamalıdır. Mevcut durumda bu mesafe sınır değerlerin dışındadır.",
     level: RiskLevel.critical,
@@ -2030,8 +2031,9 @@ class Bolum20Content {
 
   static final madde41Uygundur = ChoiceResult(
     label: "36-MADDE41-TAM",
-    uiTitle: "Kaçış merdivenlerinin dış havaya tahliyesi mesafesi yeterlidir.",
-    uiSubtitle: "Madde 41 kriterleri sağlanıyor.",
+    uiTitle:
+        "Kaçış merdivenlerinin doğrudan dışarı tahliye mesafesi yeterlidir.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Kaçış merdivenlerinin doğrudan dışarı açılma durumu ve bina içi tahliye mesafeleri Yönetmeliğin 41. maddesi kriterlerine uygundur.",
     level: RiskLevel.positive,
@@ -2040,7 +2042,7 @@ class Bolum20Content {
   static final madde41MesafeAltinda = ChoiceResult(
     label: "41-MESAFE-A",
     uiTitle: "Evet, limitin altında",
-    uiSubtitle: "Mesafe yeterli",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Bina içi tahliye mesafesi Yönetmelik limit değerlerinin (sprinklersiz 10m / sprinklerli 15m) altındadır.",
     level: RiskLevel.positive,
@@ -2049,7 +2051,7 @@ class Bolum20Content {
   static final madde41MesafeUstunde = ChoiceResult(
     label: "41-MESAFE-B",
     uiTitle: "Hayır, limitin üstünde",
-    uiSubtitle: "Mesafe yetersiz",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Madde 41/2 gereği, bina içi tahliye mesafesi Yönetmelik limit değerlerini (sprinklersiz 10m / sprinklerli 15m) aşmaktadır.",
     level: RiskLevel.critical,
@@ -2116,8 +2118,7 @@ class Bolum21Content {
 
   static final kapiOptionA = ChoiceResult(
     label: "21-3-A",
-    uiTitle:
-        "YGH kapıları yangına dayanıklı, duman sızdırmaz ve kendiliğinden kapanan özelliktedir.",
+    uiTitle: "Evet.",
     uiSubtitle: "",
     reportText: "OLUMLU: YGH kapıları uygun gözükmektedir.",
     level: RiskLevel.positive,
@@ -2125,7 +2126,7 @@ class Bolum21Content {
 
   static final kapiOptionB = ChoiceResult(
     label: "21-3-B",
-    uiTitle: "YGH kapıları yangına dayanıklı değil.",
+    uiTitle: "Hayır.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: YGH kapıları en az 90 dakika yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.",
