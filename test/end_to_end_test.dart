@@ -5,6 +5,7 @@ import 'package:life_safety/logic/active_systems_engine.dart';
 import 'package:life_safety/models/bolum_3_model.dart';
 import 'package:life_safety/models/bolum_5_model.dart';
 import 'package:life_safety/models/bolum_20_model.dart';
+import 'package:life_safety/models/bolum_25_model.dart';
 import 'package:life_safety/models/bolum_33_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 import 'package:life_safety/utils/app_content.dart';
@@ -254,8 +255,10 @@ void main() {
         binaDisiAcikYanginMerdiveniSayisi: 0,
         donerMerdivenSayisi: 1, // 1 adet dairesel merdiven!
         sahanliksizMerdivenSayisi: 0,
-        daireselMerdivenYuksekligi: ChoiceResult(
-          label: "20-Dairesel-A",
+      );
+      store.bolum25 = Bolum25Model(
+        yukseklik: ChoiceResult(
+          label: "25-Dairesel-A",
           uiTitle: "9.50 metre veya altında",
           uiSubtitle: "Dairesel merdivenin yüksekliği",
           reportText: "",
@@ -351,7 +354,7 @@ void main() {
 
       // Assertions
       expect(store.bolum20!.donerMerdivenSayisi, 1);
-      expect(store.bolum20!.daireselMerdivenYuksekligi, isNotNull);
+      expect(store.bolum25!.yukseklik, isNotNull);
       expect(metrics['score'], isNotNull);
     });
   });

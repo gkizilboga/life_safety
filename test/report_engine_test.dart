@@ -13,6 +13,7 @@ import 'package:life_safety/models/bolum_1_model.dart';
 import 'package:life_safety/models/bolum_2_model.dart';
 import 'package:life_safety/models/bolum_7_model.dart';
 import 'package:life_safety/models/bolum_21_model.dart';
+import 'package:life_safety/models/bolum_25_model.dart';
 import 'package:life_safety/models/bolum_36_model.dart';
 import 'package:life_safety/models/bolum_6_model.dart';
 import 'package:life_safety/models/bolum_9_model.dart';
@@ -136,10 +137,10 @@ void main() {
       () {
         store.bolum3 = Bolum3Model(hYapi: 20.0, bodrumKatSayisi: 0);
         store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
-        store.bolum20 = Bolum20Model(
-          donerMerdivenSayisi: 1,
-          daireselMerdivenYuksekligi: ChoiceResult(
-            label: "20-Dairesel-A",
+        store.bolum20 = Bolum20Model(donerMerdivenSayisi: 1);
+        store.bolum25 = Bolum25Model(
+          yukseklik: ChoiceResult(
+            label: "25-Dairesel-A",
             uiTitle: "9.50 metre veya altında",
             uiSubtitle: "",
             reportText: "",
@@ -155,10 +156,10 @@ void main() {
 
     test('Senaryo 2: Dairesel merdiven yüksekliği > 9.50m - GEÇERSİZ', () {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
-      store.bolum20 = Bolum20Model(
-        donerMerdivenSayisi: 1,
-        daireselMerdivenYuksekligi: ChoiceResult(
-          label: "20-Dairesel-B",
+      store.bolum20 = Bolum20Model(donerMerdivenSayisi: 1);
+      store.bolum25 = Bolum25Model(
+        yukseklik: ChoiceResult(
+          label: "25-Dairesel-B",
           uiTitle: "9.50 metrenin üzerinde",
           uiSubtitle: "",
           reportText: "",
@@ -168,16 +169,15 @@ void main() {
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       expect(report.contains("KRİTİK RİSK"), true);
-      expect(report.contains("KABUL EDİLEMEZ"), true);
-      expect(report.contains("9.50 metrenin üzerindedir"), true);
+      expect(report.contains("9.50m limitini aşmaktadır"), true);
     });
 
     test('Senaryo 3: Kullanıcı yükü > 25 kişi - GEÇERSİZ', () {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
-      store.bolum20 = Bolum20Model(
-        donerMerdivenSayisi: 1,
-        daireselMerdivenYuksekligi: ChoiceResult(
-          label: "20-Dairesel-A",
+      store.bolum20 = Bolum20Model(donerMerdivenSayisi: 1);
+      store.bolum25 = Bolum25Model(
+        yukseklik: ChoiceResult(
+          label: "25-Dairesel-A",
           uiTitle: "9.50 metre veya altında",
           uiSubtitle: "",
           reportText: "",
@@ -187,16 +187,15 @@ void main() {
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       expect(report.contains("KRİTİK RİSK"), true);
-      expect(report.contains("KABUL EDİLEMEZ"), true);
       expect(report.contains("25 kişiyi aşmaktadır"), true);
     });
 
     test('Senaryo 4: Yükseklik bilinmiyor - UYARI', () {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
-      store.bolum20 = Bolum20Model(
-        donerMerdivenSayisi: 1,
-        daireselMerdivenYuksekligi: ChoiceResult(
-          label: "20-Dairesel-C",
+      store.bolum20 = Bolum20Model(donerMerdivenSayisi: 1);
+      store.bolum25 = Bolum25Model(
+        yukseklik: ChoiceResult(
+          label: "25-Dairesel-C",
           uiTitle: "Bilmiyorum",
           uiSubtitle: "",
           reportText: "",
@@ -211,10 +210,10 @@ void main() {
 
     test('Senaryo 5: Bölüm 34 bağımsız çıkış - Ticari alan yükü sayılmaz', () {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
-      store.bolum20 = Bolum20Model(
-        donerMerdivenSayisi: 1,
-        daireselMerdivenYuksekligi: ChoiceResult(
-          label: "20-Dairesel-A",
+      store.bolum20 = Bolum20Model(donerMerdivenSayisi: 1);
+      store.bolum25 = Bolum25Model(
+        yukseklik: ChoiceResult(
+          label: "25-Dairesel-A",
           uiTitle: "9.50 metre veya altında",
           uiSubtitle: "",
           reportText: "",
@@ -242,10 +241,10 @@ void main() {
 
     test('Senaryo 6: HER İKİ ŞART DA sağlanmıyor - Çoklu sebep', () {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "Test");
-      store.bolum20 = Bolum20Model(
-        donerMerdivenSayisi: 1,
-        daireselMerdivenYuksekligi: ChoiceResult(
-          label: "20-Dairesel-B",
+      store.bolum20 = Bolum20Model(donerMerdivenSayisi: 1);
+      store.bolum25 = Bolum25Model(
+        yukseklik: ChoiceResult(
+          label: "25-Dairesel-B",
           uiTitle: "9.50 metrenin üzerinde",
           uiSubtitle: "",
           reportText: "",
@@ -259,7 +258,7 @@ void main() {
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       expect(report.contains("KRİTİK RİSK"), true);
-      expect(report.contains("9.50 metrenin üzerindedir"), true);
+      expect(report.contains("9.50m limitini aşmaktadır"), true);
       expect(report.contains("25 kişiyi aşmaktadır"), true);
     });
   });
@@ -371,6 +370,12 @@ void main() {
       store.bolum7 = Bolum7Model(); // Fixes null skip
 
       store.bolum9 = Bolum9Model(
+        secim: ChoiceResult(
+          label: "9-1-B",
+          uiTitle: "Hayır, yok.",
+          uiSubtitle: "",
+          reportText: "Sprinkler yok",
+        ),
         davlumbaz: ChoiceResult(
           label: "9-2-A (Davlumbaz)",
           uiTitle: "Evet, var.",

@@ -21,7 +21,6 @@ class Bolum36Model {
   final double? kapiGenislikKorunumlu;
   final double? kapiGenislikKorunumsuz;
 
-  final ChoiceResult? gorunurluk;
   final String? merdivenDegerlendirme;
 
   Bolum36Model({
@@ -36,7 +35,6 @@ class Bolum36Model {
     this.kapiTipi,
     this.kapiGenislikKorunumlu,
     this.kapiGenislikKorunumsuz,
-    this.gorunurluk,
     this.merdivenDegerlendirme,
   });
 
@@ -52,7 +50,6 @@ class Bolum36Model {
     ChoiceResult? kapiTipi,
     double? kapiGenislikKorunumlu,
     double? kapiGenislikKorunumsuz,
-    ChoiceResult? gorunurluk,
     String? merdivenDegerlendirme,
   }) {
     return Bolum36Model(
@@ -71,7 +68,6 @@ class Bolum36Model {
           kapiGenislikKorunumlu ?? this.kapiGenislikKorunumlu,
       kapiGenislikKorunumsuz:
           kapiGenislikKorunumsuz ?? this.kapiGenislikKorunumsuz,
-      gorunurluk: gorunurluk ?? this.gorunurluk,
       merdivenDegerlendirme:
           merdivenDegerlendirme ?? this.merdivenDegerlendirme,
     );
@@ -90,7 +86,6 @@ class Bolum36Model {
       'kapiTipi_label': kapiTipi?.label,
       'kapiGenislikKorunumlu': kapiGenislikKorunumlu,
       'kapiGenislikKorunumsuz': kapiGenislikKorunumsuz,
-      'gorunurluk_label': gorunurluk?.label,
       'merdivenDegerlendirme': merdivenDegerlendirme,
     };
   }

@@ -67,7 +67,7 @@ class ModernHeader extends StatelessWidget {
                 "ADIM $currentStep / $totalSteps",
                 style: const TextStyle(
                   color: Colors.white70,
-                  fontSize: 11,
+                  fontSize: 14,
                   fontWeight: FontWeight.w900,
                   letterSpacing: 1.2,
                 ),

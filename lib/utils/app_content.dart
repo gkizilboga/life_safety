@@ -1923,38 +1923,6 @@ class Bolum20Content {
     level: RiskLevel.info,
   );
 
-  // --- Dairesel Merdiven Yüksekliği ---
-  // Label Constants (Magic String Eliminator)
-  static const String daireselYukseklikLabelA = "20-Dairesel-A";
-  static const String daireselYukseklikLabelB = "20-Dairesel-B";
-  static const String daireselYukseklikLabelC = "20-Dairesel-C";
-
-  static final daireselYukseklikOptionA = ChoiceResult(
-    label: daireselYukseklikLabelA,
-    uiTitle: "9.50 metre veya altında.",
-    uiSubtitle: "",
-    reportText:
-        "BİLGİ: Dairesel merdiven yüksekliği 9.50m sınırının altındadır.",
-    level: RiskLevel.info,
-  );
-
-  static final daireselYukseklikOptionB = ChoiceResult(
-    label: daireselYukseklikLabelB,
-    uiTitle: "9.50 metrenin üzerinde.",
-    uiSubtitle: "",
-    reportText:
-        "UYARI: Dairesel merdiven yüksekliği 9.50m sınırını aşmaktadır.",
-    level: RiskLevel.warning,
-  );
-
-  static final daireselYukseklikOptionC = ChoiceResult(
-    label: daireselYukseklikLabelC,
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText: "BİLİNMİYOR: Dairesel merdiven yüksekliği bilinmiyor.",
-    level: RiskLevel.unknown,
-  );
-
   // --- Havalandırma (Madde 45) ---
   static final havalandirmaOptionA = ChoiceResult(
     label: "20-HAV-A",
@@ -2667,6 +2635,38 @@ class Bolum25Content {
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Baş kurtarma yüksekliği tespit edilememiştir, en az 2,50 metre yükseklik olmalıdır.",
+    level: RiskLevel.unknown,
+  );
+
+  // --- Dairesel Merdiven Yüksekliği ---
+  // Label Constants (Magic String Eliminator)
+  static const String daireselYukseklikLabelA = "25-Dairesel-A";
+  static const String daireselYukseklikLabelB = "25-Dairesel-B";
+  static const String daireselYukseklikLabelC = "25-Dairesel-C";
+
+  static final daireselYukseklikOptionA = ChoiceResult(
+    label: daireselYukseklikLabelA,
+    uiTitle: "9.50 metre veya altında.",
+    uiSubtitle: "",
+    reportText:
+        "BİLGİ: Dairesel merdiven yüksekliği 9.50m sınırının altındadır.",
+    level: RiskLevel.info,
+  );
+
+  static final daireselYukseklikOptionB = ChoiceResult(
+    label: daireselYukseklikLabelB,
+    uiTitle: "9.50 metrenin üzerinde.",
+    uiSubtitle: "",
+    reportText:
+        "UYARI: Dairesel merdiven yüksekliği 9.50m sınırını aşmaktadır.",
+    level: RiskLevel.warning,
+  );
+
+  static final daireselYukseklikOptionC = ChoiceResult(
+    label: daireselYukseklikLabelC,
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText: "BİLİNMİYOR: Dairesel merdiven yüksekliği bilinmiyor.",
     level: RiskLevel.unknown,
   );
 }
@@ -4174,32 +4174,6 @@ class Bolum36Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText: "BİLİNMİYOR: Çıkış kapısı net genişliği bilinmiyor.",
-    level: RiskLevel.unknown,
-  );
-
-  static final gorunurlukOptionA = ChoiceResult(
-    label: "36-5-A",
-    uiTitle: "Evet, açıkça görünüyor ve engel yok.",
-    uiSubtitle: "",
-    reportText:
-        "OLUMLU: Kaçış yolları ve çıkış kapıları açıkça görülebilir durumdadır.",
-    level: RiskLevel.positive,
-  );
-  static final gorunurlukOptionB = ChoiceResult(
-    label: "36-5-B",
-    uiTitle: "Hayır, önünde eşyalar var veya görmekte zorlanıyorum.",
-    uiSubtitle: "",
-    reportText:
-        "UYARI: Çıkışlar her an kullanılabilir durumda ve engelsiz olmalıdır.",
-    adviceText:
-        "Kaçış yollarındaki tüm engellerin (dolap, saksı, bisiklet vb.) derhal kaldırılması ve çıkış kapılarının önünün 7/24 açık tutulması yasal zorunluluktur.",
-    level: RiskLevel.warning,
-  );
-  static final gorunurlukOptionC = ChoiceResult(
-    label: "36-5-C",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText: "BİLİNMİYOR: Çıkışların erişilebilirliği tespit edilememiştir.",
     level: RiskLevel.unknown,
   );
 }

@@ -24,6 +24,10 @@ String _toUpperCaseTR(String text) {
 }
 
 class PdfService {
+  // Keywords that get bold+red highlighting in PDF output.
+  // Defined once here and used by both _buildHighlightedText and _buildRichText.
+  static const _highlightKeywords = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
+
   // Badge system removed - plain text only
 
   static pw.Widget _buildLegendItem(PdfColor color, String label, String desc) {
@@ -160,7 +164,7 @@ class PdfService {
               // Yönetmelik Başlığı
               pw.Center(
                 child: pw.Text(
-                  "BİNALARIN YANGINDAN KORUNMASI\nHAKKINDA YÖNETMELİĞİ'NE GÖRE",
+                  "BİNALARIN YANGINDAN KORUNMASI\\nHAKKINDA YÖNETMELİĞİ'NE GÖRE",
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
                     color: softGray,
@@ -396,24 +400,90 @@ class PdfService {
     );
   }
 
+  // --- Keyword Highlight Helper ---
+  // Scans for known keywords and renders them bold+red in the PDF.
+  // Called by _buildRichText as a fallback when no <b> tags are present.
+  static pw.Widget _buildHighlightedText(
+    String text,
+    pw.Font font,
+    pw.Font fontBold,
+  ) {
+    final highlights = _highlightKeywords;
+    final List<pw.InlineSpan> spans = [];
+    String remaining = text;
+
+    while (remaining.isNotEmpty) {
+      int bestIndex = -1;
+      String bestMatch = "";
+      for (final pat in highlights) {
+        final idx = remaining.indexOf(pat);
+        if (idx != -1 && (bestIndex == -1 || idx < bestIndex)) {
+          bestIndex = idx;
+          bestMatch = pat;
+        }
+      }
+
+      if (bestIndex != -1) {
+        if (bestIndex > 0) {
+          spans.add(
+            pw.TextSpan(
+              text: remaining.substring(0, bestIndex),
+              style: pw.TextStyle(fontSize: 9, font: font),
+            ),
+          );
+        }
+        spans.add(
+          pw.TextSpan(
+            text: bestMatch,
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: fontBold,
+              color: PdfColors.red700,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+        );
+        remaining = remaining.substring(bestIndex + bestMatch.length);
+      } else {
+        spans.add(
+          pw.TextSpan(
+            text: remaining,
+            style: pw.TextStyle(fontSize: 9, font: font),
+          ),
+        );
+        remaining = "";
+      }
+    }
+
+    return pw.RichText(text: pw.TextSpan(children: spans));
+  }
+
   // --- Helper for Rich Text Highlighting ---
+  // Primary system: <b>...</b> tags in source text → bold in PDF.
+  // Fallback: keyword-based highlight via _buildHighlightedText (PDF-only, no tags in source).
   static pw.Widget _buildRichText(String text, pw.Font font, pw.Font fontBold) {
     if (text.isEmpty) return pw.Text("");
 
-    // Support for <b>...</b> tags
     final RegExp regExp = RegExp(r'<b>(.*?)</b>', dotAll: true);
-    final List<pw.InlineSpan> spans = [];
-
-    int lastMatchEnd = 0;
     final matches = regExp.allMatches(text);
 
+    // Fallback: no <b> tags — use keyword-based highlight if relevant
+    if (matches.isEmpty) {
+      if (_highlightKeywords.any((pat) => text.contains(pat))) {
+        return _buildHighlightedText(text, font, fontBold);
+      }
+      return pw.Text(text, style: pw.TextStyle(fontSize: 9, font: font));
+    }
+
+    // Primary: parse <b> tags into bold spans
+    final List<pw.InlineSpan> spans = [];
+    int lastMatchEnd = 0;
+
     for (final match in matches) {
-      // Pre-match text
       if (match.start > lastMatchEnd) {
-        String preText = text.substring(lastMatchEnd, match.start);
         spans.add(
           pw.TextSpan(
-            text: preText,
+            text: text.substring(lastMatchEnd, match.start),
             style: pw.TextStyle(
               fontSize: 9,
               font: font,
@@ -422,8 +492,6 @@ class PdfService {
           ),
         );
       }
-
-      // Bolded text
       spans.add(
         pw.TextSpan(
           text: match.group(1),
@@ -435,11 +503,9 @@ class PdfService {
           ),
         ),
       );
-
       lastMatchEnd = match.end;
     }
 
-    // Remaining text
     if (lastMatchEnd < text.length) {
       spans.add(
         pw.TextSpan(
@@ -447,60 +513,6 @@ class PdfService {
           style: pw.TextStyle(fontSize: 9, font: font, color: PdfColors.black),
         ),
       );
-    }
-
-    // Secondary pass for specific highlights (Legacy logic)
-    // Note: This logic is simplified to work with spans if tags are not used
-    if (matches.isEmpty) {
-      final highLightPatterns = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
-      bool hasHighlight = highLightPatterns.any((pat) => text.contains(pat));
-      if (hasHighlight) {
-        // If no tags were found, we apply the legacy highlight logic
-        // (Keeping it simple for now)
-        List<pw.InlineSpan> highlightSpans = [];
-        String remaining = text;
-        while (remaining.isNotEmpty) {
-          int bestIndex = -1;
-          String bestMatch = "";
-          for (var pat in highLightPatterns) {
-            int idx = remaining.indexOf(pat);
-            if (idx != -1 && (bestIndex == -1 || idx < bestIndex)) {
-              bestIndex = idx;
-              bestMatch = pat;
-            }
-          }
-          if (bestIndex != -1) {
-            if (bestIndex > 0)
-              highlightSpans.add(
-                pw.TextSpan(
-                  text: remaining.substring(0, bestIndex),
-                  style: pw.TextStyle(fontSize: 9, font: font),
-                ),
-              );
-            highlightSpans.add(
-              pw.TextSpan(
-                text: bestMatch,
-                style: pw.TextStyle(
-                  fontSize: 9,
-                  font: fontBold,
-                  color: PdfColors.red700,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-            );
-            remaining = remaining.substring(bestIndex + bestMatch.length);
-          } else {
-            highlightSpans.add(
-              pw.TextSpan(
-                text: remaining,
-                style: pw.TextStyle(fontSize: 9, font: font),
-              ),
-            );
-            remaining = "";
-          }
-        }
-        return pw.RichText(text: pw.TextSpan(children: highlightSpans));
-      }
     }
 
     return pw.RichText(text: pw.TextSpan(children: spans));
@@ -612,7 +624,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               color: PdfColors.blueGrey700,
-              lineSpacing: 2,
+              lineSpacing: 2.5,
             ),
           ),
           pw.SizedBox(height: 8),
@@ -659,92 +671,111 @@ class PdfService {
             );
             final riskColor = _getRiskColor(fullReportForColor);
 
-            return pw.Container(
-              margin: const pw.EdgeInsets.only(bottom: 2), // Reduced from 5
-              decoration: pw.BoxDecoration(
-                border: pw.Border(
-                  left: pw.BorderSide(color: riskColor, width: 4),
-                ),
-                color: PdfColors.grey50,
-              ),
-              padding: const pw.EdgeInsets.all(5), // Reduced from 8
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  // Section Header
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Text(
-                        "BÖLÜM $id: ${_toUpperCaseTR(AppDefinitions.getSectionTitle(id))}",
-                        style: pw.TextStyle(
-                          fontSize: 10,
-                          fontWeight: pw.FontWeight.bold,
-                          color: PdfColors.indigo900,
-                        ),
-                      ),
-                    ],
+            return pw.Wrap(
+              children: [
+                pw.Container(
+                  margin: const pw.EdgeInsets.only(
+                    bottom: 3,
+                  ), // Increased from 2
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border(
+                      left: pw.BorderSide(color: riskColor, width: 4),
+                    ),
+                    color: PdfColors.grey50,
                   ),
-                  pw.Divider(thickness: 0.8, color: PdfColors.indigo100),
+                  padding: const pw.EdgeInsets.all(6.5), // Increased from 5
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      // Section Header
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text(
+                            "BÖLÜM $id: ${_toUpperCaseTR(AppDefinitions.getSectionTitle(id))}",
+                            style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.indigo900,
+                            ),
+                          ),
+                        ],
+                      ),
+                      pw.Divider(thickness: 0.8, color: PdfColors.indigo100),
 
-                  // Detailed Items Loop
-                  // Detailed Items Loop
-                  ...(() {
-                    final bool useTable = [3, 5, 7, 12].contains(id);
+                      // Detailed Items Loop
+                      // Detailed Items Loop
+                      ...(() {
+                        final bool useTable = [
+                          3,
+                          5,
+                          7,
+                          12,
+                          20,
+                          36,
+                        ].contains(id);
 
-                    if (!useTable) {
-                      return details.map((item) {
-                        return _buildStandardVerticalItem(
-                          item,
-                          ttf,
-                          ttfBold,
-                          isLast: item == details.last,
-                        );
-                      }).toList();
-                    }
+                        if (!useTable) {
+                          return details.map((item) {
+                            return _buildStandardVerticalItem(
+                              item,
+                              ttf,
+                              ttfBold,
+                              isLast: item == details.last,
+                            );
+                          }).toList();
+                        }
 
-                    List<pw.Widget> widgets = [];
-                    List<Map<String, dynamic>> tableGroup = [];
+                        List<pw.Widget> widgets = [];
+                        List<Map<String, dynamic>> tableGroup = [];
 
-                    for (int i = 0; i < details.length; i++) {
-                      final item = details[i];
-                      final isLast = i == details.length - 1;
-                      final String report = _cleanEmojis(item['report'] ?? '');
-                      final String advice = _cleanEmojis(item['advice'] ?? '');
+                        for (int i = 0; i < details.length; i++) {
+                          final item = details[i];
+                          final isLast = i == details.length - 1;
+                          final String report = _cleanEmojis(
+                            item['report'] ?? '',
+                          );
+                          final String advice = _cleanEmojis(
+                            item['advice'] ?? '',
+                          );
 
-                      // Rapor veya öneri boşsa tablo grubuna ekle
-                      if (report.isEmpty && advice.isEmpty) {
-                        tableGroup.add(item);
-                      } else {
-                        // Eğer birikmiş tablo varsa önce onu bas
+                          // Rapor veya öneri boşsa tablo grubuna ekle
+                          if (report.isEmpty && advice.isEmpty) {
+                            tableGroup.add(item);
+                          } else {
+                            // Eğer birikmiş tablo varsa önce onu bas
+                            if (tableGroup.isNotEmpty) {
+                              widgets.add(
+                                _buildInfoTable(tableGroup, ttf, ttfBold),
+                              );
+                              widgets.add(pw.SizedBox(height: 10));
+                              tableGroup = [];
+                            }
+                            // Değerlendirmeli olanı normal dikey düzende bas
+                            widgets.add(
+                              _buildStandardVerticalItem(
+                                item,
+                                ttf,
+                                ttfBold,
+                                isLast: isLast,
+                              ),
+                            );
+                          }
+                        }
+
+                        // En sonda kalan tablo grubu varsa bas
                         if (tableGroup.isNotEmpty) {
                           widgets.add(
                             _buildInfoTable(tableGroup, ttf, ttfBold),
                           );
-                          widgets.add(pw.SizedBox(height: 10));
-                          tableGroup = [];
                         }
-                        // Değerlendirmeli olanı normal dikey düzende bas
-                        widgets.add(
-                          _buildStandardVerticalItem(
-                            item,
-                            ttf,
-                            ttfBold,
-                            isLast: isLast,
-                          ),
-                        );
-                      }
-                    }
 
-                    // En sonda kalan tablo grubu varsa bas
-                    if (tableGroup.isNotEmpty) {
-                      widgets.add(_buildInfoTable(tableGroup, ttf, ttfBold));
-                    }
-
-                    return widgets;
-                  })(),
-                ],
-              ),
+                        return widgets;
+                      })(),
+                    ],
+                  ),
+                ),
+              ],
             );
           }),
         ],
@@ -823,7 +854,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               color: PdfColors.blueGrey700,
-              lineSpacing: 2,
+              lineSpacing: 2.5,
             ),
           ),
           pw.SizedBox(height: 8),
@@ -880,13 +911,11 @@ class PdfService {
             return pw.Wrap(
               children: [
                 pw.Container(
-                  margin: const pw.EdgeInsets.only(
-                    bottom: 12,
-                  ), // Increased from 4
+                  margin: const pw.EdgeInsets.only(bottom: 15), // Increased
                   padding: const pw.EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 10,
-                  ), // Increased padding
+                    vertical: 12,
+                  ), // Increased
                   decoration: boxDecoration,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1022,7 +1051,7 @@ class PdfService {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.SizedBox(height: 4),
+        pw.SizedBox(height: 5.5),
         if (label.isNotEmpty) ...[
           pw.Text(
             "Konu:",
@@ -1039,9 +1068,10 @@ class PdfService {
               fontSize: 9,
               font: font,
               color: PdfColors.black,
+              height: 1.25,
             ),
           ),
-          pw.SizedBox(height: 2),
+          pw.SizedBox(height: 2.5),
         ],
         if (value.isNotEmpty && value != 'Seçilmedi') ...[
           pw.Text(
@@ -1059,9 +1089,10 @@ class PdfService {
               fontSize: 9,
               font: font,
               color: PdfColors.black,
+              height: 1.25,
             ),
           ),
-          pw.SizedBox(height: 2),
+          pw.SizedBox(height: 2.5),
         ],
         if (report.isNotEmpty) ...[
           pw.Text(
@@ -1096,7 +1127,7 @@ class PdfService {
           ),
         ],
         if (!isLast) ...[
-          pw.SizedBox(height: 4),
+          pw.SizedBox(height: 5.5),
           pw.Divider(thickness: 0.1, color: PdfColors.grey300),
         ],
       ],

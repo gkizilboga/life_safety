@@ -36,7 +36,6 @@ class Bolum20Model {
 
   final ChoiceResult? bodrumMerdivenDevami;
   final ChoiceResult? basinclandirma;
-  final ChoiceResult? daireselMerdivenYuksekligi;
   final int? daireselMerdivenKovaGenisligi; // NEW
   final ChoiceResult? havalandirma; // NEW - Madde 45
 
@@ -47,10 +46,6 @@ class Bolum20Model {
   bool get hasDaireselMerdiven =>
       donerMerdivenSayisi > 0 ||
       (isBodrumIndependent && bodrumDonerMerdivenSayisi > 0);
-
-  /// Dairesel merdiven yüksekliği seçimi gerekli mi?
-  /// Dairesel merdiven varsa yükseklik bilgisi zorunludur.
-  bool get isDaireselYukseklikRequired => hasDaireselMerdiven;
 
   Bolum20Model({
     this.tekKatCikis,
@@ -80,7 +75,6 @@ class Bolum20Model {
 
     this.daireselMerdivenKovaGenisligi, // NEW
     this.basinclandirma,
-    this.daireselMerdivenYuksekligi,
     this.havalandirma, // NEW - Madde 45
   });
 
@@ -113,7 +107,6 @@ class Bolum20Model {
     ChoiceResult? bodrumLobiTahliyeMesafeDurumu,
     int? daireselMerdivenKovaGenisligi, // NEW
     ChoiceResult? basinclandirma,
-    ChoiceResult? daireselMerdivenYuksekligi,
     ChoiceResult? havalandirma, // NEW - Madde 45
   }) {
     return Bolum20Model(
@@ -169,8 +162,6 @@ class Bolum20Model {
       daireselMerdivenKovaGenisligi:
           daireselMerdivenKovaGenisligi ?? this.daireselMerdivenKovaGenisligi,
       basinclandirma: basinclandirma ?? this.basinclandirma,
-      daireselMerdivenYuksekligi:
-          daireselMerdivenYuksekligi ?? this.daireselMerdivenYuksekligi,
       havalandirma: havalandirma ?? this.havalandirma,
     );
   }
@@ -211,7 +202,6 @@ class Bolum20Model {
           bodrumLobiTahliyeMesafeDurumu?.label,
       'daireselMerdivenKovaGenisligi': daireselMerdivenKovaGenisligi,
       'basinclandirma_label': basinclandirma?.label,
-      'daireselMerdivenYuksekligi_label': daireselMerdivenYuksekligi?.label,
       'havalandirma_label': havalandirma?.label,
     };
   }
@@ -287,12 +277,6 @@ class Bolum20Model {
         Bolum20Content.basYghOptionB,
         Bolum20Content.basYghOptionC,
       ]),
-      daireselMerdivenYuksekligi:
-          find(map['daireselMerdivenYuksekligi_label'], [
-            Bolum20Content.daireselYukseklikOptionA,
-            Bolum20Content.daireselYukseklikOptionB,
-            Bolum20Content.daireselYukseklikOptionC,
-          ]),
       havalandirma: find(map['havalandirma_label'], [
         Bolum20Content.havalandirmaOptionA,
         Bolum20Content.havalandirmaOptionB,

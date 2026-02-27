@@ -65,13 +65,15 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       if (type == 'genislik') _model = _model.copyWith(genislik: choice);
       if (type == 'basamak') _model = _model.copyWith(basamak: choice);
       if (type == 'basKurtarma') _model = _model.copyWith(basKurtarma: choice);
+      if (type == 'yukseklik') _model = _model.copyWith(yukseklik: choice);
     });
   }
 
   bool _isReady() {
     return _model.genislik != null &&
         _model.basamak != null &&
-        _model.basKurtarma != null;
+        _model.basKurtarma != null &&
+        _model.yukseklik != null;
   }
 
   @override
@@ -134,6 +136,16 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
               Bolum25Content.basKurtarmaOptionC,
             ],
             _model.basKurtarma,
+          ),
+          _buildSoru(
+            "Dairesel merdiven yüksekliği ne kadardır?",
+            'yukseklik',
+            [
+              Bolum25Content.daireselYukseklikOptionA,
+              Bolum25Content.daireselYukseklikOptionB,
+              Bolum25Content.daireselYukseklikOptionC,
+            ],
+            _model.yukseklik,
           ),
         ],
       ),

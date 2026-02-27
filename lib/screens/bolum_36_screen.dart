@@ -283,7 +283,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       if (type == 'kapiTipi') {
         _model = _model.copyWith(kapiTipi: choice);
       }
-      if (type == 'gorunurluk') _model = _model.copyWith(gorunurluk: choice);
     });
   }
 
@@ -632,19 +631,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           return false;
       }
     }
-
-    if (_model.kapiTipi == null) return false;
-
-    if (!_kapiGenislikBilinmiyor) {
-      if (_hasKorunumlu &&
-          (_kapiGenislikKorunumluCtrl.text.isEmpty || _kGenKerr != null))
-        return false;
-      if (_hasKorunumsuz &&
-          (_kapiGenislikKorunumsuzCtrl.text.isEmpty || _kGenKSerr != null))
-        return false;
-    }
-
-    if (_model.gorunurluk == null) return false;
 
     return true;
   }
@@ -1217,13 +1203,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               ],
             ),
           ),
-
-          _buildSoruHeader("Kaçış Yolu Görünürlüğü"),
-          _buildSoruCard('gorunurluk', [
-            Bolum36Content.gorunurlukOptionA,
-            Bolum36Content.gorunurlukOptionB,
-            Bolum36Content.gorunurlukOptionC,
-          ], _model.gorunurluk),
 
           _buildYghEvaluationPanel(),
           _buildStairAnalysisList(),

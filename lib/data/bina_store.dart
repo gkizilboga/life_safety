@@ -957,7 +957,6 @@ class BinaStore {
             _bolum20!.tekKatRampa,
             _bolum20!.bodrumMerdivenDevami,
             _bolum20!.basinclandirma,
-            _bolum20!.daireselMerdivenYuksekligi,
           ]),
         );
       case 21:
@@ -1022,13 +1021,14 @@ class BinaStore {
         if (_bolum25 == null) return null;
         return ChoiceResult(
           label: "25",
-          uiTitle: "Dairesel Merdiven Analizi",
+          uiTitle: "Dairesel Merdiven Ölçümleri",
           uiSubtitle: "",
-          reportText: _bolum25!.genislik?.reportText ?? "",
+          reportText: "Dairesel merdiven teknik ölçümleri yapılmıştır.",
           adviceText: _joinAdvice([
             _bolum25!.genislik,
             _bolum25!.basamak,
             _bolum25!.basKurtarma,
+            _bolum25!.yukseklik,
           ]),
         );
       case 26:
@@ -1192,7 +1192,6 @@ class BinaStore {
             m.disMerd,
             m.konum,
             m.kapiTipi,
-            m.gorunurluk,
           ]),
         );
       default:

@@ -5,18 +5,21 @@ class Bolum25Model {
   final ChoiceResult? genislik;
   final ChoiceResult? basamak;
   final ChoiceResult? basKurtarma;
+  final ChoiceResult? yukseklik;
 
-  Bolum25Model({this.genislik, this.basamak, this.basKurtarma});
+  Bolum25Model({this.genislik, this.basamak, this.basKurtarma, this.yukseklik});
 
   Bolum25Model copyWith({
     ChoiceResult? genislik,
     ChoiceResult? basamak,
     ChoiceResult? basKurtarma,
+    ChoiceResult? yukseklik,
   }) {
     return Bolum25Model(
       genislik: genislik ?? this.genislik,
       basamak: basamak ?? this.basamak,
       basKurtarma: basKurtarma ?? this.basKurtarma,
+      yukseklik: yukseklik ?? this.yukseklik,
     );
   }
 
@@ -25,6 +28,7 @@ class Bolum25Model {
       'genislik_label': genislik?.label,
       'basamak_label': basamak?.label,
       'basKurtarma_label': basKurtarma?.label,
+      'yukseklik_label': yukseklik?.label,
     };
   }
 
@@ -52,6 +56,11 @@ class Bolum25Model {
       basKurtarma: find(map['basKurtarma_label'], [
         Bolum25Content.basKurtarmaOptionA,
         Bolum25Content.basKurtarmaOptionB,
+      ]),
+      yukseklik: find(map['yukseklik_label'], [
+        Bolum25Content.daireselYukseklikOptionA,
+        Bolum25Content.daireselYukseklikOptionB,
+        Bolum25Content.daireselYukseklikOptionC,
       ]),
     );
   }

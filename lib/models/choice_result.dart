@@ -1,5 +1,24 @@
 enum RiskLevel { critical, warning, positive, unknown, info }
 
+/// Priority mapping for risk level comparison.
+/// critical=4 (highest) > warning=3 > unknown=2 > positive=1 > info=0 (lowest)
+extension RiskLevelPriority on RiskLevel {
+  int get priority {
+    switch (this) {
+      case RiskLevel.critical:
+        return 4;
+      case RiskLevel.warning:
+        return 3;
+      case RiskLevel.unknown:
+        return 2;
+      case RiskLevel.positive:
+        return 1;
+      case RiskLevel.info:
+        return 0;
+    }
+  }
+}
+
 class ChoiceResult {
   final String label;
   final String uiTitle;
