@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'screens/dashboard_screen.dart';
-import 'screens/register_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/error_screen.dart';
-import 'screens/login_screen.dart';
 import 'data/bina_store.dart';
 import 'utils/app_theme.dart';
 

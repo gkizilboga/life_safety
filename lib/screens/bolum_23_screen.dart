@@ -81,7 +81,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
     }
 
     return AnalysisPageLayout(
-      title: "Normal (İnsan Taşıma) Asansör",
+      title: "Normal (İnsan Taşıma Amaçlı) Asansör",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isFormComplete(),

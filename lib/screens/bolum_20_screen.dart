@@ -516,7 +516,7 @@ class _Bolum20ScreenState extends State<Bolum20Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kaçış Merdivenleri",
-      subtitle: "Merdiven tipleri ve adetleri",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isLimitValid,
       onNext: () async {

@@ -53,8 +53,8 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Dış Kaçış Geçitleri",
-      subtitle: "Açık kaçış yollarının güvenlik analizi",
+      title: "Dış Kaçış Geçidi",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {

@@ -207,7 +207,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     final bool isLocked = BinaStore.instance.bolum11 != null;
 
     return AnalysisPageLayout(
-      title: "Kat bilgilerinizi giriniz.",
+      title: "Kat Yükseklik Bilgileri",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady() || isLocked,
@@ -400,16 +400,24 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
           ),
           const Divider(height: 24),
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(
-              color: isYuksek
-                  ? const Color(0xFFE53935)
-                  : const Color(0xFF43A047),
+              color: const Color(0xFF1A237E).withOpacity(0.05),
               borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: const Color(0xFF1A237E).withOpacity(0.1),
+              ),
             ),
             child: Text(
               isYuksek ? "YÜKSEK BİNA" : "YÜKSEK OLMAYAN BİNA",
-              style: const TextStyle(color: Colors.white, fontSize: 15),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Color(0xFF1A237E),
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
         ],

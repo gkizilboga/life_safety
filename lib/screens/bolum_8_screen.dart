@@ -59,8 +59,8 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Bina Yerleşimi",
-      subtitle: "Ayrık veya bitişik nizam tespiti",
+      title: "Nizam Durumu",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,
       onNext: () {

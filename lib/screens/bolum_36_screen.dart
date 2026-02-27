@@ -1018,7 +1018,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Merdiven Ölçüleri ve Tahliye Esnasında Güvenlik",
+      title: "Kaçış Merdivenleri Genel Değerlendirme",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isFormValid,

@@ -128,7 +128,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
     }
 
     return AnalysisPageLayout(
-      title: "Temizlik ve Düzen",
+      title: "Yanıcı Maddeler",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),

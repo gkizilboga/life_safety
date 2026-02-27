@@ -138,7 +138,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kaçış Yolu Kapıları",
-      subtitle: " ",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {

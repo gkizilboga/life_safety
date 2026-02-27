@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../data/bina_store.dart';
-import 'login_screen.dart';
+import 'dashboard_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -61,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     BinaStore.instance.hasSeenOnboarding = true;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      MaterialPageRoute(builder: (context) => const DashboardScreen()),
     );
   }
 

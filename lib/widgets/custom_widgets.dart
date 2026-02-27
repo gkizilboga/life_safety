@@ -272,34 +272,31 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 1000),
     );
 
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(
           begin: 1.0,
-          end: 1.35,
-        ).chain(CurveTween(curve: Curves.easeOut)),
-        weight: 40,
+          end: 1.2,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 50,
       ),
       TweenSequenceItem(
         tween: Tween<double>(
-          begin: 1.35,
+          begin: 1.2,
           end: 1.0,
-        ).chain(CurveTween(curve: Curves.easeIn)),
-        weight: 60,
+        ).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 50,
       ),
     ]).animate(_controller);
 
-    _controller.forward();
+    _controller.repeat();
   }
 
   @override
   void didUpdateWidget(covariant AnimatedPercentageText oldWidget) {
-    if (oldWidget.percentage != widget.percentage) {
-      _controller.forward(from: 0);
-    }
     super.didUpdateWidget(oldWidget);
   }
 
@@ -317,7 +314,7 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
         "%${widget.percentage}",
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 10,
+          fontSize: 14,
           fontWeight: FontWeight.w900,
         ),
       ),

@@ -57,7 +57,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "İtfaiyenin Binaya Yaklaşım Mesafesi",
+      title: "İtfaiye Yaklaşım Mesafesi",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),

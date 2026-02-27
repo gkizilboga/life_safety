@@ -15,7 +15,7 @@ class Bolum1Content {
     uiTitle: "19.12.2007 öncesi.",
     uiSubtitle: "Mevcut Bina",
     reportText:
-        "BİLGİ: Bina, yapı ruhsat tarihi itibarıyla \"Mevcut Bina\"statüsünde olmasına rağmen, kullanıcı talebi üzerine güncel yönetmeliğin \"YENİ BİNA\"standartlarına göre değerlendirilmiştir. MEVCUT BİNA kriterleri, Binaların Yangından Korunması Hakkında Yönetmeliği 'ndeki YENİ BİNA kriterlerine göre çoğunlukla daha esnektir. Bu sebeple binanız için Yangın Güvenlik Uzmanı tarafından hususi değerlendirme yapılması önerilir. ",
+        "BİLGİ: Bina, yapı ruhsat tarihi itibarıyla \"Mevcut Bina\"statüsünde olmasına rağmen, talebiniz üzerine güncel yönetmeliğin \"YENİ BİNA\"standartlarına göre değerlendirilecektir. MEVCUT BİNA kriterleri, Binaların Yangından Korunması Hakkında Yönetmeliği 'ndeki YENİ BİNA kriterlerine göre genellikle daha esnektir. Bu sebeple binanızın Yangın Güvenlik Uzmanı tarafından hususi olarak incelenmesi önerilir. ",
     level: RiskLevel.info,
   );
 }
@@ -429,8 +429,7 @@ class Bolum9Content {
   static final davlumbazVar = ChoiceResult(
     label: "9-2-A (Davlumbaz)",
     uiTitle: "Evet, var.",
-    uiSubtitle:
-        "Endüstriyel mutfak davlumbazında otomatik söndürme sistemi var.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: Endüstriyel mutfak davlumbazında otomatik söndürme sistemi olduğu beyan edilmiştir. Yangın Yönetmeliği Madde 57/1 gereği, alışveriş merkezleri, yüksek binalar içinde bulunan mutfaklar ve yemek fabrikaları ile bir anda 100'den fazla kişiye hizmet veren mutfakların davlumbazlarına otomatik söndürme sistemi yapılması şarttır.",
     level: RiskLevel.positive,
@@ -439,7 +438,7 @@ class Bolum9Content {
   static final davlumbazYok = ChoiceResult(
     label: "9-2-B (Davlumbaz)",
     uiTitle: "Hayır, yok.",
-    uiSubtitle: "Davlumbazda otomatik söndürme sistemi bulunmuyor.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Endüstriyel mutfak davlumbazında otomatik söndürme sistemi bulunmamaktadır. Yangın Yönetmeliği Madde 57/1 gereği, alışveriş merkezleri, yüksek binalar içinde bulunan mutfaklar ve yemek fabrikaları ile bir anda 100'den fazla kişiye hizmet veren mutfakların davlumbazlarına otomatik söndürme sistemi yapılması ve ocaklarda kullanılan gazın özelliklerine göre gaz algılama, gaz kesme ve uyarı tesisatının kurulması şarttır.",
     adviceText:

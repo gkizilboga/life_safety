@@ -139,7 +139,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     return AnalysisPageLayout(
-      title: "Kazan Dairesi (Isı Merkezi)",
+      title: "Kazan Dairesi",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isFormValid,

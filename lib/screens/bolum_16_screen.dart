@@ -102,8 +102,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Dış Cephe Özellikleri",
-      subtitle: "Cephe malzemesi ve yangın yayılım önlemleri",
+      title: "Dış Cephe",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {

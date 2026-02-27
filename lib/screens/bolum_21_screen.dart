@@ -67,7 +67,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Yangın Güvenlik Holü (YGH)",
+      title: "Yangın Güvenlik Holü",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.varlik != null,

@@ -42,7 +42,7 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Otomatik Yağmurlama (Sprinkler) Sistemi Varlığı",
+      title: "Sprinkler Sistemi",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,

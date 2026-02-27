@@ -121,7 +121,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Yapısal Yangın Dayanımı",
-      subtitle: "Taşıyıcı sistemin yangın anındaki stabilitesi",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onSave: () {

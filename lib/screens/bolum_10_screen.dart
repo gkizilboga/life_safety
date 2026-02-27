@@ -104,7 +104,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Katların Kullanım Amacı",
+      title: "Kat Kullanım Amacı",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
@@ -152,7 +152,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTicariGuidance(),
-          _buildSectionTitle("Zemin Katın Baskın Kullanım Amacı"),
+          _buildSectionTitle("Zemin Katın Kullanım Amacı"),
           TechnicalDrawingButton(
             assetPath: 'assets/images/sections/farkli_katlar_1.webp',
             title: "Kat Kullanım Örnekleri",
@@ -161,7 +161,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
 
           if (_model.bodrumlar.isNotEmpty) ...[
             const SizedBox(height: 12),
-            _buildSectionTitle("Bodrum Katların Baskın Kullanım Amacı"),
+            _buildSectionTitle("Bodrum Katların Kullanım Amacı"),
             _buildToggleRow(
               "Tüm bodrumlar aynı fonksiyona sahip",
               _model.bodrumlarAyni,
@@ -184,7 +184,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                         left: 4,
                       ),
                       child: Text(
-                        "${i + 1}. Bodrum Katların Baskın  Kullanım Amacı",
+                        "${i + 1}. Bodrum Katların Kullanım Amacı",
                         style: AppStyles.questionTitle.copyWith(fontSize: 14),
                       ),
                     ),
@@ -196,7 +196,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
 
           if (_model.normaller.isNotEmpty) ...[
             const SizedBox(height: 12),
-            _buildSectionTitle("Normal Katların Baskın Kullanım Amacı"),
+            _buildSectionTitle("Normal Katların Kullanım Amacı"),
             _buildToggleRow(
               "Tüm normal katlar aynı fonksiyona sahip",
               _model.normallerAyni,

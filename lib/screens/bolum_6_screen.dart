@@ -112,8 +112,8 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
       body: Column(
         children: [
           ModernHeader(
-            title: "Bina Kullanım Amacı",
-            subtitle: "Konut harici fonksiyonlar",
+            title: "Konut Harici Alanlar",
+            subtitle: "",
             screenType: widget.runtimeType,
           ),
           Expanded(

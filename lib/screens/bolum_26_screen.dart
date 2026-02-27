@@ -62,8 +62,8 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Kaçış Rampaları",
-      subtitle: "Rampa eğimi ve sahanlık",
+      title: "Rampa",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {

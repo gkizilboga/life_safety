@@ -78,7 +78,7 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Dairesel Merdiven",
-      subtitle: "Dairesel (döner, spiral) merdiven ölçüleri",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {

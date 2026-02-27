@@ -45,34 +45,14 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  "Analize istediğiniz zaman ara verebilirsiniz.",
-                  style: TextStyle(
-                    fontSize: 14,
-                    height: 1.4,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 12),
                 const Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "- ",
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 1.4,
-                        color: Colors.black87,
-                      ),
-                    ),
+                    Text("• ", style: TextStyle(fontSize: 14, height: 1.4)),
                     Expanded(
                       child: Text(
-                        "Ekranın sağ üst köşesindeki \"KAYDET\" butonuna basarak analizden çıkabilir, daha sonra kaldığınız yerden devam edebilirsiniz.",
-                        style: TextStyle(
-                          fontSize: 14,
-                          height: 1.4,
-                          color: Colors.black87,
-                        ),
+                        "Analiz süresi yaklaşık 15-20 dakikadır.",
+                        style: TextStyle(fontSize: 14, height: 1.4),
                       ),
                     ),
                   ],
@@ -82,12 +62,8 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "- ",
-                      style: TextStyle(
-                        fontSize: 14,
-                        height: 1.4,
-                        color: Colors.black87,
-                      ),
+                      "• ",
+                      style: TextStyle(fontSize: 14, height: 1.4),
                     ),
                     Expanded(
                       child: RichText(
@@ -98,13 +74,53 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                             color: Colors.black87,
                           ),
                           children: [
-                            TextSpan(text: "(DİKKAT: Bu analiz yalnızca "),
                             TextSpan(
-                              text: "KONUT ve KONUT + TİCARİ",
+                              text:
+                                  "İstediğinizde ekranın sağ üst köşesindeki ",
+                            ),
+                            TextSpan(
+                              text: "KAYDET",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             TextSpan(
-                              text: " ruhsatlı yapılar için geçerlidir.)",
+                              text:
+                                  " butonuna basarak çıkabilir, daha sonra kaldığınız yerden devam edebilirsiniz.",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "• ",
+                      style: TextStyle(fontSize: 14, height: 1.4),
+                    ),
+                    Expanded(
+                      child: RichText(
+                        text: const TextSpan(
+                          style: TextStyle(
+                            fontSize: 14,
+                            height: 1.4,
+                            color: Colors.black87,
+                          ),
+                          children: [
+                            TextSpan(text: "Analiz yalnızca "),
+                            TextSpan(
+                              text: "KONUT",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(text: " veya "),
+                            TextSpan(
+                              text: "KONUT+TİCARİ",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            TextSpan(
+                              text: " ruhsatlı yapılar için geçerlidir.",
                             ),
                           ],
                         ),
@@ -119,7 +135,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text(
-                "Tamam, Anladım",
+                "Tamam",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),

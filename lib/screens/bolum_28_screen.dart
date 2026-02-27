@@ -112,8 +112,8 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Daire İçi Mesafeler",
-      subtitle: "Daire içi kaçış uzaklığı",
+      title: "Daire İçi Kaçış Mesafesi",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: true,
       onNext: _onNextPressed,

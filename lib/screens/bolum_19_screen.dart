@@ -73,7 +73,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Kaçış Yolu Engelleri ve Yönlendirme",
+      title: "Acil Durum Yönlendirme",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),

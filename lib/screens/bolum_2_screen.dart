@@ -46,7 +46,7 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Bina Kullanım Sınıfı ve Taşıyıcı Sistemi",
+      title: "Taşıyıcı Sistem",
       subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,

@@ -133,8 +133,8 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Kaçış Mesafeleri",
-      subtitle: "Daire kapısından merdivene ulaşım",
+      title: "Kaçış Mesafesi",
+      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReadyToProceed(),
       onSave: () {

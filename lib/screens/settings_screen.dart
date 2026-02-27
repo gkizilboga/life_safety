@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/bina_store.dart';
 import '../utils/app_theme.dart';
 import '../widgets/custom_widgets.dart';
-import 'register_screen.dart';
+import 'onboarding_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -205,9 +205,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           TextButton(
             onPressed: () {
               BinaStore.instance.isRegistered = false;
+              BinaStore.instance.hasSeenOnboarding =
+                  false; // Also reset onboarding
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const OnboardingScreen(),
+                ),
                 (r) => false,
               );
             },
