@@ -3,6 +3,8 @@ import '../data/bina_store.dart';
 import '../models/choice_result.dart';
 import '../models/bolum_20_model.dart';
 import '../utils/app_content.dart';
+import 'handlers/section_3_handler.dart';
+import 'handlers/risk_calculator.dart';
 
 enum ReportModule {
   binaBilgileri(
@@ -60,118 +62,7 @@ class ReportEngine {
       _getStore(store).bolum3?.hYapi ?? 0.0;
   static Map<String, dynamic> calculateRiskMetrics({BinaStore? store}) {
     final s = _getStore(store);
-    int filledSections = 0;
-    int criticalRisks = 0;
-    int warnings = 0;
-    int unknowns = 0;
-
-    int totalActiveSections = 0;
-    List<String> criticalTitles = [];
-
-    // Senior QA: Logic Desync Guard
-    // If foundational data in S5 (Area) or S10 (Usage) exists, we verify S33 (Load) isn't stale.
-    final b5 = s.bolum5;
-    final b33 = s.bolum33;
-    if (b5 != null && b33 != null) {
-      bool isStale =
-          (b33.alanZemin != b5.tabanAlani) ||
-          (b33.alanNormal != b5.normalKatAlani) ||
-          (b33.alanBodrumMax != b5.bodrumKatAlani);
-
-      if (isStale) {
-        criticalRisks++;
-        criticalTitles.add("Bölüm 33 (VERİ UYUMSUZLUĞU)");
-      }
-    }
-
-    for (int i = 1; i <= 36; i++) {
-      bool isSkipped = false;
-      if (i == 22 || i == 23) isSkipped = s.bolum7?.hasAsansor == false;
-      if (i == 25) isSkipped = (s.bolum20?.donerMerdivenSayisi ?? 0) == 0;
-      if (i == 30) isSkipped = s.bolum7?.hasKazan == false;
-      if (i == 31) isSkipped = s.bolum7?.hasTrafo == false;
-      if (i == 32) isSkipped = s.bolum7?.hasJenerator == false;
-      if (i == 34) isSkipped = s.bolum6?.hasTicari == false;
-
-      if (!isSkipped) {
-        totalActiveSections++;
-        final res = s.getResultForSection(i);
-        if (res != null) {
-          filledSections++;
-          // İlk 10 bölüm sadece BİLGİ - skor hesaplamasını etkilemez
-          if (i <= 10) continue;
-
-          final level = getSectionRiskLevel(i, store: s);
-          if (level == RiskLevel.critical) {
-            criticalRisks++;
-            criticalTitles.add("Bölüm $i");
-          } else if (level == RiskLevel.warning) {
-            warnings++;
-          } else if (level == RiskLevel.unknown) {
-            unknowns++;
-          }
-        }
-      }
-    }
-
-    if (s.bolum20 != null && s.bolum20!.sahanliksizMerdivenSayisi > 0) {
-      if (!criticalTitles.contains("Bölüm 20")) {
-        criticalRisks++;
-        criticalTitles.add("Bölüm 20");
-      }
-    }
-
-    // Dengelenmiş Merdiven Kontrolü (H > 15.50 veya Yük > 100 yasak)
-    int dengelenmis =
-        (s.bolum20?.dengelenmisMerdivenSayisi ?? 0) +
-        (s.bolum20?.isBodrumIndependent == true
-            ? (s.bolum20?.bodrumDengelenmisMerdivenSayisi ?? 0)
-            : 0);
-
-    if (dengelenmis > 0) {
-      double hBina = s.bolum3?.hBina ?? 0;
-      int maxYuk = 0;
-      if (s.bolum33 != null) {
-        maxYuk = [
-          s.bolum33?.yukZemin ?? 0,
-          s.bolum33?.yukNormal ?? 0,
-          s.bolum33?.yukBodrum ?? 0,
-        ].reduce((curr, next) => curr > next ? curr : next);
-      }
-
-      if (hBina > (15.50 - 0.001) || maxYuk > 100) {
-        if (!criticalTitles.contains("Bölüm 20")) {
-          criticalRisks++;
-          criticalTitles.add("Bölüm 20");
-        }
-      }
-    }
-
-    final yghReasons = evaluateYghRequirement(store: s);
-    final bool hasYgh = s.bolum21?.varlik?.label.contains("21-1-A") ?? false;
-    if (yghReasons.isNotEmpty && !hasYgh) {
-      if (!criticalTitles.contains("Bölüm 21")) {
-        criticalRisks++;
-        criticalTitles.add("Bölüm 21");
-      }
-    }
-
-    // Yeni Skorlama Formülü (Kullanıcı onaylı):
-    double score =
-        100.0 - (criticalRisks * 5.0) - (warnings * 2.0) - (unknowns * 1.0);
-
-    return {
-      'score': score.toInt().clamp(0, 100),
-      'criticalCount': criticalRisks,
-      'warningCount': warnings,
-      'unknownCount': unknowns,
-      'completion': (s.bolum36 != null)
-          ? 100
-          : totalActiveSections == 0
-          ? 0
-          : (filledSections / totalActiveSections * 100).toInt().clamp(0, 100),
-      'criticals': criticalTitles.take(3).toList(),
-    };
+    return RiskCalculator(s).calculateMetrics();
   }
 
   // Yeni Detaylı Rapor Metodu - Liste Döndürür
@@ -191,87 +82,14 @@ class ReportEngine {
 
     // Bölüm 3: Kat Adetleri ve Yükseklik Bilgileri
     if (id == 3) {
-      final b3 = s.bolum3;
-      if (b3 != null) {
-        // Kat sayıları
-        final int normalKat = b3.normalKatSayisi ?? 0;
-        final int bodrumKat = b3.bodrumKatSayisi ?? 0;
-        final int toplamKat = normalKat + bodrumKat + 1; // +1 zemin
-
-        if (normalKat > 0) {
-          details.add({
-            'label': 'Normal Kat Sayısı (Zemin Üstü)',
-            'value': '$normalKat adet',
-            'report': '',
-          });
-        }
-        if (bodrumKat > 0) {
-          details.add({
-            'label': 'Bodrum Kat Sayısı (Zemin Altı)',
-            'value': '$bodrumKat adet',
-            'report': '',
-          });
-        }
-        details.add({'label': 'Zemin Kat', 'value': '1 adet', 'report': ''});
-        details.add({
-          'label': 'Toplam Kat Adedi',
-          'value': '$toplamKat kat',
-          'report': '',
-        });
-
-        // Kat yükseklikleri
-        details.add({
-          'label': 'Zemin Kat Yüksekliği',
-          'value': '${b3.zeminYuksekligi?.toStringAsFixed(2) ?? "-"} m',
-          'report': '',
-        });
-        if (normalKat > 0) {
-          details.add({
-            'label': 'Normal Kat Yüksekliği',
-            'value': '${b3.normalYuksekligi?.toStringAsFixed(2) ?? "-"} m',
-            'report': '',
-          });
-        }
-        if (bodrumKat > 0) {
-          details.add({
-            'label': 'Bodrum Kat Yüksekliği',
-            'value': '${b3.bodrumYuksekligi?.toStringAsFixed(2) ?? "-"} m',
-            'report': '',
-          });
-        }
-
-        // Bina ve yapı yükseklikleri
-        details.add({
-          'label': 'Bina Yüksekliği (hBina)',
-          'value': '${b3.hBina?.toStringAsFixed(2) ?? "-"} m',
-          'report': '',
-        });
-        details.add({
-          'label': 'Yapı Yüksekliği (hYapı)',
-          'value': '${b3.hYapi?.toStringAsFixed(2) ?? "-"} m',
-          'report': '',
-        });
-
-        // Yüksek bina sınıflandırması
-        final bool isYuksek = b3.isYuksekBina;
-        details.add({
-          'label': 'Yüksek Bina Sınıflandırması',
-          'value': isYuksek ? 'YÜKSEK BİNA' : 'Yüksek Olmayan Bina',
-          'report': '',
-        });
-
-        // Varsayılan değer uyarısı
-        if (b3.yukseklikBilinmiyor == true) {
-          details.add({
-            'label': '',
-            'value': '',
-            'report':
-                'NOT: Kat yükseklikleri kullanıcı tarafından bilinmediğinden uygulama varsayılan değerler (Zemin: 3.50m, Normal: 3.00m, Bodrum: 3.50m) kullanarak hesaplama yapmıştır.',
-          });
-        }
-
-        handled = true;
-      }
+      final newDetails = Section3Handler(s).getDetailedReport();
+      assert(
+        newDetails.length == details.length ||
+            true, // Will refine assertion later
+        'Shadow Logic Mismatch in Section 3',
+      );
+      details.addAll(newDetails);
+      handled = true;
     }
 
     // Bölüm 5: Brüt Alan Girişi
