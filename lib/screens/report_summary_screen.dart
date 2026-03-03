@@ -53,7 +53,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
         children: [
           const ModernHeader(
             title: "ÖZET",
-            subtitle: "(Kullanıcı Beyanına Dayalı)",
+            subtitle: "",
             screenType: ReportSummaryScreen,
           ),
           Expanded(
@@ -73,7 +73,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     const Padding(
                       padding: EdgeInsets.only(left: 8, bottom: 12),
                       child: Text(
-                        "RİSK ANALİZİ",
+                        "YANGIN RİSK ANALİZİ",
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -233,7 +233,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
           ),
           const SizedBox(height: 10),
           const Text(
-            "Merkeze yakın noktalar yüksek riskli alanları temsil eder.",
+            "Merkeze yakın noktalar riskli durumları temsil eder.",
             style: TextStyle(
               fontSize: 10,
               color: Colors.grey,
@@ -257,7 +257,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
           ),
           const TextSpan(
             text:
-                "Yönetmelik Madde 48 ve ilgili hükümler uyarınca binanızda Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmiştir:\n\n",
+                "Binanızda Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmiştir:\n\n",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           ...reasons.map((reason) => TextSpan(text: "• $reason\n")),
@@ -434,7 +434,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             _showDetailSheet(context, id, summary, fullReport, riskColor),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
         title: Text(
-          "Bölüm $id",
+          "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 11,
@@ -528,32 +528,18 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: color.withValues(alpha: 0.05),
+                      color: color.withOpacity(0.05),
                       borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: color.withValues(alpha: 0.1)),
+                      border: Border.all(color: color.withOpacity(0.1)),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "SORU: ${AppContent.getQuestionText(id)}",
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          report,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Color(0xFF2C3E50),
-                            height: 1.5,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      report,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF2C3E50),
+                        height: 1.5,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -603,6 +589,43 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // PDF indirme bilgi notu
+            Container(
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A237E).withOpacity(0.06),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color(0xFF1A237E).withOpacity(0.2),
+                ),
+              ),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline_rounded,
+                    color: Color(0xFF1A237E),
+                    size: 18,
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      "Binanıza ait iki PDF raporu hazırlanmaktadır: "
+                      "\"Yangın Risk Analizi\" (yaklaşık 15–25 sayfa) ve "
+                      "\"Aktif Sistem Gereksinimleri\" raporu. "
+                      "Her indirme işlemi 10–20 saniye sürebilir; bu sürede yazı tipleri yüklenmektedir. "
+                      "Lütfen bekleyiniz, işlem tamamlandığında rapor otomatik açılacaktır.",
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFF1A237E),
+                        height: 1.45,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(
               width: double.infinity,
               height: 54,
@@ -636,7 +659,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                 child: Text(
                   isPremium
                       ? "ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN"
-                      : "ÖN RAPOR VE İYİLEŞTİRME ÖNERİLERİNİ AL",
+                      : "ANALİZİ AL",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,

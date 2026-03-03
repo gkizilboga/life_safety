@@ -1,0 +1,24 @@
+﻿00:00 +0: loading C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: M├╝hendislik ve Kapasite Hesaplama Testleri YGH Analizi: Yap─▒ y├╝ksekli─şi 52m ve YGH yoksa KR─░T─░K R─░SK say─▒lmal─▒
+00:00 +1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 33: Mevcut ├ğ─▒k─▒┼ş (1), gereken ├ğ─▒k─▒┼ştan (2) az ise KR─░T─░K R─░SK olu┼şmal─▒
+00:00 +2: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 25: D├Âner merdiven geni┼şli─şi < 100cm ise KR─░T─░K R─░SK olu┼şmal─▒
+00:00 +2 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 25: D├Âner merdiven geni┼şli─şi < 100cm ise KR─░T─░K R─░SK olu┼şmal─▒ [E]
+  Expected: Color:<Color(alpha: 1.0000, red: 0.8980, green: 0.2235, blue: 0.2078, colorSpace: ColorSpace.sRGB)>
+    Actual: Color:<Color(alpha: 1.0000, red: 0.2627, green: 0.6275, blue: 0.2784, colorSpace: ColorSpace.sRGB)>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test\engineering_logic_test.dart 76:9               main.<fn>.<fn>
+  
+00:00 +2 -1: M├╝hendislik ve Kapasite Hesaplama Testleri Skorlama: Sahanl─▒ks─▒z Merdiven varsa puan %95 alt─▒na d├╝┼şmeli
+00:00 +3 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 36 (Madde 41): Merdivenlerin yar─▒s─▒ndan az─▒ d─▒┼şar─▒ a├ğ─▒l─▒yorsa KR─░T─░K R─░SK
+00:00 +4 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Sprinkler yoksa ve tahliye mesafesi > 10m ise KR─░T─░K R─░SK
+00:00 +5 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Sprinkler varsa ve tahliye mesafesi <= 15m ise OLUMLU
+00:00 +6 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Tek Merdiven varsa (1/1) d─▒┼şar─▒ a├ğ─▒lmal─▒
+00:00 +7 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): 3 Merdiven varsa (ceil(3/2)=2) d─▒┼şar─▒ a├ğ─▒lmal─▒
+00:00 +8 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): 5 Merdiven varsa (ceil(5/2)=3) d─▒┼şar─▒ a├ğ─▒lmal─▒
+00:00 +9 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Ba─ş─▒ms─▒z Bodrum Merdivenleri Kontrol├╝ (2 merdiven, 0 direkt)
+00:00 +10 -1: M├╝hendislik ve Kapasite Hesaplama Testleri B├Âl├╝m 20 (Madde 41): Ba─ş─▒ms─▒z Bodrum Merdivenleri Mesafe Kontrol├╝
+00:00 +11 -1: (tearDownAll)
+00:00 +11 -1: Some tests failed.

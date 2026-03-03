@@ -113,12 +113,13 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
           ], _model.kaplama),
 
           _buildSoru(
-            "Döşeme üzerinde ısı yalıtım malzemesi var mı?",
+            "Döşeme üzerinde ısı yalıtımı var mı?",
             'yalitim',
             [
               Bolum15Content.yalitimOptionA,
-              Bolum15Content.yalitimOptionB,
-              Bolum15Content.yalitimOptionC,
+              Bolum15Content.yalitimOptionBYanmaz,
+              Bolum15Content.yalitimOptionB, // Yanıcı = 15-2-C
+              Bolum15Content.yalitimOptionC, // Bilmiyorum = 15-2-D
             ],
             _model.yalitim,
             headerWidget: TechnicalDrawingButton(
@@ -129,7 +130,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
 
           if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) ...[
             _buildInfoNote(
-              "Yalıtım tespit edildiği için şap sorgulanmaktadır.",
+              "Yanıcı yalıtım tespit edildiği için şap sorgulanmaktadır.",
             ),
             _buildSoru(
               "Yalıtım üzerinde en az 2 cm şap var mı?",

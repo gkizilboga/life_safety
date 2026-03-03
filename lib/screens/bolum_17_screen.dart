@@ -123,6 +123,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
               Bolum17Content.isiklikOptionC,
             ],
             _model.isiklik,
+            compact: true,
           ),
 
           if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label) ...[
@@ -259,14 +260,15 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
     String title,
     String key,
     List<ChoiceResult> options,
-    ChoiceResult? selected,
-  ) {
+    ChoiceResult? selected, {
+    bool compact = false,
+  }) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: AppStyles.questionTitle),
-          const SizedBox(height: 10),
+          SizedBox(height: compact ? 4 : 10),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,

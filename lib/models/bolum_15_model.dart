@@ -63,6 +63,7 @@ class Bolum15Model {
           Bolum15Content.kaplamaOptionC,
           Bolum15Content.kaplamaOptionD,
           Bolum15Content.yalitimOptionA,
+          Bolum15Content.yalitimOptionBYanmaz,
           Bolum15Content.yalitimOptionB,
           Bolum15Content.yalitimOptionC,
           Bolum15Content.yalitimSapOptionA,

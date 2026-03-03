@@ -7,7 +7,6 @@ import '../utils/text_formatter.dart';
 
 class ModernHeader extends StatelessWidget {
   final String title;
-  final String subtitle;
   final Type screenType;
   final VoidCallback? onBack;
   final VoidCallback? onSave;
@@ -15,10 +14,11 @@ class ModernHeader extends StatelessWidget {
   const ModernHeader({
     super.key,
     required this.title,
-    required this.subtitle,
     required this.screenType,
     this.onBack,
     this.onSave,
+    // subtitle kept as optional ignored param for backward-compat
+    String subtitle = '',
   });
 
   @override
@@ -134,39 +134,30 @@ class ModernHeader extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 12),
-          FormattedText(title, style: AppStyles.headerTitle),
-          const SizedBox(height: 12),
-          Column(
+          const SizedBox(height: 10),
+          // Title + progress % on the same row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Text(
-                    "İlerleme",
-                    style: TextStyle(
-                      color: Colors.white60,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  AnimatedPercentageText(percentage: (progress * 100).toInt()),
-                ],
+              Expanded(
+                child: FormattedText(title, style: AppStyles.headerTitle),
               ),
-              const SizedBox(height: 6),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 5,
-                  backgroundColor: Colors.white.withValues(alpha: 0.1),
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.successGreen,
-                  ),
-                ),
-              ),
+              const SizedBox(width: 12),
+              AnimatedPercentageText(percentage: (progress * 100).toInt()),
             ],
+          ),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 5,
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.successGreen,
+              ),
+            ),
           ),
         ],
       ),

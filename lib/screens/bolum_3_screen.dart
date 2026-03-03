@@ -360,11 +360,11 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildMetric(
-                "hBina (Bodrum Hariç)",
+                "Bina Yüksekliği (Bodrum Hariç)",
                 "${vals['hBina'].toStringAsFixed(2)}m",
               ),
               _buildMetric(
-                "hYapi (Bodrum Dahil)",
+                "Yapı Yüksekliği (Bodrum Dahil)",
                 "${vals['hYapi'].toStringAsFixed(2)}m",
               ),
             ],

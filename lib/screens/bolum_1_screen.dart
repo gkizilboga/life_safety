@@ -6,7 +6,6 @@ import '../widgets/custom_widgets.dart';
 import '../widgets/selectable_card.dart';
 import '../utils/app_content.dart';
 import '../models/choice_result.dart';
-import '../utils/app_assets.dart';
 
 class Bolum1Screen extends StatefulWidget {
   const Bolum1Screen({super.key});
@@ -229,7 +228,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Yapı Ruhsat / Bina İnşa Tarihi",
+      title: "Yapı Ruhsat Tarihi",
       subtitle: " ",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,
@@ -246,7 +245,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                   children: [
                     const Expanded(
                       child: QuestionTitle(
-                        "Binanızın yapı ruhsat tarihi nedir?",
+                        "Binanızın yapı ruhsat (inşa) tarihi nedir?",
                       ),
                     ),
                     const DefinitionButton(
@@ -257,11 +256,6 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section1RuhsatTarih,
-                  title: "Ruhsat Tarihi Nasıl Bulunur?",
-                ),
-                const SizedBox(height: 8),
                 SelectableCard(
                   choice: Bolum1Content.ruhsatSonrasi,
                   isSelected:

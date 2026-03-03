@@ -180,7 +180,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askKazan) ...[
             _buildSoruWithDef(
-              "Kazan dairesinin duvarları ve kapısı nasıl?",
+              "Kazan dairesinin duvarları ve kapısı yangın dayanımlı mı?",
               "Yangın Kompartımanı",
               AppDefinitions.yanginKompartimani,
               'kazan',
@@ -193,20 +193,15 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               _model.kazanKapi,
             ),
             // ALT SORU: Kazan Dairesi Alanı
-            _buildSoru(
-              "Binadaki kazan dairesi kaç metrekare?",
-              'kazanAlan',
-              [
-                Bolum13Content.kazanAlanOptionA,
-                Bolum13Content.kazanAlanOptionB,
-                Bolum13Content.kazanAlanOptionC,
-              ],
-              _model.kazanAlan,
-            ),
+            _buildSoru("Kazan dairesi kaç metrekare?", 'kazanAlan', [
+              Bolum13Content.kazanAlanOptionA,
+              Bolum13Content.kazanAlanOptionB,
+              Bolum13Content.kazanAlanOptionC,
+            ], _model.kazanAlan),
           ],
 
           if (_askAsansor)
-            _buildSoru("Asansör kapısı nasıldır?", 'asansor', [
+            _buildSoru("Asansör kapısı yangın dayanımlı mı?", 'asansor', [
               Bolum13Content.asansorOptionA,
               Bolum13Content.asansorOptionB,
               Bolum13Content.asansorOptionC,
@@ -214,7 +209,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askJenerator)
             _buildSoru(
-              "Jeneratör odasının duvar ve kapısı nasıl?",
+              "Jeneratör odasının duvarı ve kapısı yangın dayanımlı mı?",
               'jenerator',
               [
                 Bolum13Content.jeneratorOptionA,
@@ -226,7 +221,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askElektrik)
             _buildSoru(
-              "Elektrik odasının duvarı ve kapısı nasıl?",
+              "Elektrik odasının duvarı ve kapısı yangın dayanımlı mı?",
               'elektrik',
               [
                 Bolum13Content.elekOdasiOptionA,
@@ -237,29 +232,44 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             ),
 
           if (_askTrafo)
-            _buildSoru("Trafo odasının duvar ve kapısı nasıl?", 'trafo', [
-              Bolum13Content.trafoOptionA,
-              Bolum13Content.trafoOptionB,
-              Bolum13Content.trafoOptionC,
-            ], _model.trafoKapi),
+            _buildSoru(
+              "Trafo odasının duvarı ve kapısı yangın dayanımlı mı?",
+              'trafo',
+              [
+                Bolum13Content.trafoOptionA,
+                Bolum13Content.trafoOptionB,
+                Bolum13Content.trafoOptionC,
+              ],
+              _model.trafoKapi,
+            ),
 
           if (_askDepo)
-            _buildSoru("Eşya deposunun duvar ve kapısı nasıl?", 'depo', [
-              Bolum13Content.depoOptionA,
-              Bolum13Content.depoOptionB,
-              Bolum13Content.depoOptionC,
-            ], _model.depoKapi),
+            _buildSoru(
+              "Eşya deposunun duvarı ve kapısı yangın dayanımlı mı?",
+              'depo',
+              [
+                Bolum13Content.depoOptionA,
+                Bolum13Content.depoOptionB,
+                Bolum13Content.depoOptionC,
+              ],
+              _model.depoKapi,
+            ),
 
           if (_askCop)
-            _buildSoru("Çöp toplama odasının duvar ve kapısı nasıl?", 'cop', [
-              Bolum13Content.copOptionA,
-              Bolum13Content.copOptionB,
-              Bolum13Content.copOptionC,
-            ], _model.copKapi),
+            _buildSoru(
+              "Çöp toplama odasının duvarı ve kapısı yangın dayanımlı mı?",
+              'cop',
+              [
+                Bolum13Content.copOptionA,
+                Bolum13Content.copOptionB,
+                Bolum13Content.copOptionC,
+              ],
+              _model.copKapi,
+            ),
 
           // YENİ SORU: Sığınak Alanı
           if (_askSiginak)
-            _buildSoru("Sığınak alanı kaç metrekare?", 'siginakAlan', [
+            _buildSoru("Sığınak kaç metrekare?", 'siginakAlan', [
               Bolum13Content.siginakAlanOptionA,
               Bolum13Content.siginakAlanOptionB,
               Bolum13Content.siginakAlanOptionC,
@@ -292,7 +302,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askEndustriyelMutfak)
             _buildSoruWithDef(
-              "Büyük restoran mutfağının kapısı ve duvarları nasıldır?",
+              "Büyük restoran mutfağının kapısı ve duvarları yangın dayanımlı mı?",
               "Yangın Kompartımanı",
               AppDefinitions.yanginKompartimani,
               'endustriyelMutfak',

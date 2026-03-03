@@ -285,18 +285,9 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 Bolum16Content.sagirYuzeyOptionC,
               ],
               _model.sagirYuzey,
-              headerWidget: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TechnicalDrawingButton(
-                    assetPath: AppAssets.section16Spandrel,
-                    title: "Spandrel Örneği",
-                  ),
-                  TechnicalDrawingButton(
-                    assetPath: AppAssets.section16Sicrama,
-                    title: "Yan Binadan Sıçrama Detayı",
-                  ),
-                ],
+              headerWidget: TechnicalDrawingButton(
+                assetPath: AppAssets.section16Spandrel,
+                title: "Spandrel Örneği",
               ),
             ),
 
@@ -321,6 +312,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                   Bolum16Content.bitisikOptionD,
                 ],
                 _model.bitisikNizam,
+                headerWidget: TechnicalDrawingButton(
+                  assetPath: AppAssets.section16Sicrama,
+                  title: "Yan Binadan Sıçrama Detayı",
+                ),
               ),
 
             const SizedBox(height: 16),

@@ -90,12 +90,17 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
         children: [
           // BODRUM SORUSU: Sadece bodrumKatSayisi >= 1 ise göster
           if (_hasBodrum)
-            _buildSoru("Asansörünüz bodrum katlara da iniyor mu?", 'bodrum', [
-              Bolum23Content.bodrumOptionA,
-              Bolum23Content.bodrumOptionB,
-              Bolum23Content.bodrumOptionC,
-              Bolum23Content.bodrumOptionD,
-            ], _model.bodrum),
+            _buildSoru(
+              "Normal asansörünüz bodrum katlara da iniyor mu?",
+              'bodrum',
+              [
+                Bolum23Content.bodrumOptionA,
+                Bolum23Content.bodrumOptionB,
+                Bolum23Content.bodrumOptionC,
+                Bolum23Content.bodrumOptionD,
+              ],
+              _model.bodrum,
+            ),
 
           _buildSoru(
             "Yangın anında asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?",

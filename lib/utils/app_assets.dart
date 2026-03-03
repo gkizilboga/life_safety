@@ -89,9 +89,6 @@ class AppAssets {
   static const String section35KacisGosterim =
       'assets/images/sections/kacis_mesafe_gosterim.webp';
 
-  // Newly discovered assets
-  static const String section1RuhsatTarih =
-      'assets/images/sections/ruhsat_tarih_1.webp';
   static const String section7ElektrikOdasi =
       'assets/images/sections/elektrik_odasi.webp';
   static const String section3KatYuksekligi =

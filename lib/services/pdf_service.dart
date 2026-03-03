@@ -323,6 +323,7 @@ class PdfService {
 
   static pw.Page _buildLegalPage(pw.PageTheme pageTheme) {
     return pw.MultiPage(
+      maxPages: 10,
       pageTheme: pageTheme,
       footer: _buildFooter,
       build: (context) => [
@@ -561,6 +562,7 @@ class PdfService {
     // 3. Risk Analizi ve Bölümler
     pdf.addPage(
       pw.MultiPage(
+        maxPages: 500,
         pageTheme: pageTheme,
         header: (context) => pw.Container(
           alignment: pw.Alignment.centerRight,
@@ -829,6 +831,7 @@ class PdfService {
     // 3. Aktif Sistem Listesi
     pdf.addPage(
       pw.MultiPage(
+        maxPages: 500,
         pageTheme: pageTheme,
         header: (context) => pw.Container(
           alignment: pw.Alignment.centerRight,

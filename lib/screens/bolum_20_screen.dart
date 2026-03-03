@@ -58,7 +58,7 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
     return AnalysisPageLayout(
       title: "Kaçış Merdivenleri",
       subtitle: "",
-      screenType: widget.runtimeType,
+      screenType: Bolum20Screen,
       isNextEnabled: isLimitValid,
       onNext: () async {
         if (provider.validateAndSave(context)) {
@@ -295,7 +295,8 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                 builder: (context, val, _) => StairQuestion(
                   key: const ValueKey('havalandirma_q'),
                   provider: provider,
-                  title: "Merdivenlerde doğal havalandırma var mı?",
+                  title:
+                      "Basınçlandırma olmayna merdivenlerde doğal havalandırma var mı?",
                   definition: AppDefinitions
                       .havalandirma, // In AppDefinitions (inside app_content)
                   term: "Havalandırma (Madde 45)",
@@ -434,7 +435,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
               const SizedBox(height: 12),
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeAltinda.copyWith(
-                  uiTitle: "$limit m veya altında",
+                  uiTitle: "$limit metre veya altında",
                 ),
                 isSelected:
                     currentSelection?.label ==
@@ -448,7 +449,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
               ),
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeUstunde.copyWith(
-                  uiTitle: "$limit m üzerinde",
+                  uiTitle: "$limit m. 'nin üzerinde",
                 ),
                 isSelected:
                     currentSelection?.label ==
