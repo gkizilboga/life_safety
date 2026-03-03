@@ -58,7 +58,6 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "İtfaiye Yaklaşım Mesafesi",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -150,3 +149,4 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
     return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }
+

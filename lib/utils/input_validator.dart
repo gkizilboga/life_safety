@@ -43,7 +43,7 @@ class InputValidator {
     }
 
     if (n > max) {
-      return "Maksimum değer $max $unit olmalıdır. Lütfen girdiğiniz değeri kontrol edin.";
+      return "Maksimum değer $max $unit olarak girilebilir.";
     }
 
     return null;

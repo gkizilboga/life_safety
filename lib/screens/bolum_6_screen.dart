@@ -113,7 +113,6 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
         children: [
           ModernHeader(
             title: "Konut Harici Alanlar",
-            subtitle: "",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -292,3 +291,4 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
     );
   }
 }
+

@@ -113,7 +113,6 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Daire İçi Kaçış Mesafesi",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: true,
       onNext: _onNextPressed,
@@ -213,3 +212,4 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
     );
   }
 }
+

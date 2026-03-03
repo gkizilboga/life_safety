@@ -94,7 +94,6 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
         children: [
           ModernHeader(
             title: "Trafo Odası",
-            subtitle: "Bina Enerji Beslemesi",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -252,3 +251,4 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
     );
   }
 }
+

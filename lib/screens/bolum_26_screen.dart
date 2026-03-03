@@ -63,7 +63,6 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Rampa",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -150,13 +149,6 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
           // --- OTOPARK RAMPASI (Sadece Otopark Varsa) ---
           if (_askOtopark) ...[
             const SizedBox(height: 12),
-            const Padding(
-              padding: EdgeInsets.only(left: 4, bottom: 12),
-              child: Text(
-                "Otopark Araç Rampası",
-                style: AppStyles.questionTitle,
-              ),
-            ),
             _buildSoru(
               "Otopark araç rampasını acil durumda kaçış yolu olarak kullanabilir misiniz?",
               'otopark',

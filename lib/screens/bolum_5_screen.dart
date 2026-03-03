@@ -205,7 +205,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
     return AnalysisPageLayout(
       title: "Kat Alan Bilgileri",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isFormValid() || isLocked,
       onNext: () {
@@ -463,3 +462,4 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     );
   }
 }
+

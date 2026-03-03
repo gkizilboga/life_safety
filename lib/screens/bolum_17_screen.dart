@@ -71,7 +71,6 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Çatı",
-      subtitle: "Çatı katmanları ve ışıklık",
       screenType: widget.runtimeType,
       isNextEnabled: _isComplete,
       onNext: _onNextPressed,
@@ -115,7 +114,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
             ),
 
           _buildSoru(
-            "Çatınızda camlı ışıklık veya aydınlatma kubbesi var mı?",
+            "Çatınızda ışıklık var mı?",
             'isiklik',
             [
               Bolum17Content.isiklikOptionA,
@@ -281,3 +280,4 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
     );
   }
 }
+

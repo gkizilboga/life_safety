@@ -103,3 +103,4 @@ class ModuleTransitionScreen extends StatelessWidget {
     );
   }
 }
+

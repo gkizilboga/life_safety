@@ -78,7 +78,6 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "İç Mekanlar",
-      subtitle: " ",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -225,3 +224,4 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
     return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }
+

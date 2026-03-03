@@ -87,7 +87,6 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
         children: [
           ModernHeader(
             title: "Jeneratör Odası",
-            subtitle: "Bina Yedek Güç Kaynağı",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -233,3 +232,4 @@ class _Bolum32ScreenState extends State<Bolum32Screen> {
     );
   }
 }
+

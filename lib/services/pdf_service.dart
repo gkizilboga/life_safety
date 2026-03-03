@@ -323,7 +323,7 @@ class PdfService {
 
   static pw.Page _buildLegalPage(pw.PageTheme pageTheme) {
     return pw.MultiPage(
-      maxPages: 10,
+      maxPages: 500,
       pageTheme: pageTheme,
       footer: _buildFooter,
       build: (context) => [
@@ -574,7 +574,7 @@ class PdfService {
         footer: _buildFooter,
         build: (context) => [
           pw.Text(
-            "MODÜL BAZINDA PUANLAMA",
+            "MODÜL BAZLI PUANLAMA",
             style: pw.TextStyle(
               fontSize: 12,
               fontWeight: pw.FontWeight.bold,

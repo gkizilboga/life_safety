@@ -47,7 +47,6 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Taşıyıcı Sistem",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,
       onNext: _onNextPressed,
@@ -103,3 +102,4 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
     );
   }
 }
+

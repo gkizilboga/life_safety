@@ -73,7 +73,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           const ModernHeader(
             title: "Yeni Kayıt",
-            subtitle: "Profilinizi Oluşturun",
             screenType: RegisterScreen,
           ),
           Expanded(
@@ -303,3 +302,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+

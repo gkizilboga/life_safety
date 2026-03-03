@@ -208,7 +208,6 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
 
     return AnalysisPageLayout(
       title: "Kat Yükseklik Bilgileri",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady() || isLocked,
       onNext: () {
@@ -488,3 +487,4 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     );
   }
 }
+

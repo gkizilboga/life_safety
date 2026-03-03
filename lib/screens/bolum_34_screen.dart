@@ -153,7 +153,6 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
         children: [
           ModernHeader(
             title: "Ticari Alanlar",
-            subtitle: "İşyeri vb. hacimlerin tahliyesi",
             screenType: widget.runtimeType,
           ),
           Expanded(
@@ -298,3 +297,4 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     );
   }
 }
+

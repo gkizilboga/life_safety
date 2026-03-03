@@ -60,9 +60,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
-    final metrics = ReportEngine.calculateRiskMetrics();
-    final currentModule = _getCurrentModule(metrics['completion']);
-
     final archive = BinaStore.instance.archive;
     final ongoingActions = archive
         .where((b) => !(b['isCompleted'] ?? false))
@@ -78,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: AppColors.backgroundGrey,
       body: Column(
         children: [
-          _buildHeader(context, metrics, currentModule),
+          _buildHeader(context),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -123,14 +120,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    Map<String, dynamic> metrics,
-    ReportModule module,
-  ) {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 60, 24, 30),
+      padding: EdgeInsets.fromLTRB(
+        24,
+        MediaQuery.of(context).padding.top + 16,
+        24,
+        24,
+      ),
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.only(bottomRight: Radius.circular(40)),
@@ -141,57 +139,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const Text(
             "YANGIN RİSK ANALİZİ",
             style: TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
-              letterSpacing: 1.5,
+              color: Colors.white54,
+              fontSize: 10,
+              letterSpacing: 1.8,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "HOŞ GELDİNİZ",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              _buildRankBadge(module),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRankBadge(ReportModule module) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white24),
-      ),
-      child: const Column(
-        children: [
-          Icon(Icons.shield_outlined, color: Color(0xFFFFD700), size: 24),
-          SizedBox(height: 4),
-          Text(
-            "KADEME",
+          const SizedBox(height: 6),
+          const Text(
+            "HOŞ GELDİNİZ",
             style: TextStyle(
-              color: Colors.white70,
-              fontSize: 8,
+              color: Colors.white,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
             ),
           ),
         ],
@@ -278,15 +239,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   onPressed: () async {
                     BinaStore.instance.loadBuildingFromArchive(building['id']);
                     if (isCompleted) {
-                      // Fix: Direkt PDF Raporunu oluştur ve göster
+                      // Bir frame bekle: store'un tamamen settle olmasını garantile
+                      await Future.delayed(Duration.zero);
+                      if (!context.mounted) return;
                       try {
                         await PdfService.generateRiskAnalysisPdf();
                       } catch (e) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("PDF oluşturulurken hata: $e"),
-                            ),
+                            SnackBar(content: Text("PDF hatası: $e")),
                           );
                         }
                       }
@@ -623,15 +584,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
     );
-  }
-
-  ReportModule _getCurrentModule(int completion) {
-    if (completion <= 27) return ReportModule.binaBilgileri;
-    if (completion <= 41) return ReportModule.modul1;
-    if (completion <= 55) return ReportModule.modul2;
-    if (completion <= 69) return ReportModule.modul3;
-    if (completion <= 83) return ReportModule.modul4;
-    return ReportModule.modul5;
   }
 
   void _startNewAnalysis(BuildContext context) async {

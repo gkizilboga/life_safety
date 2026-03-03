@@ -43,7 +43,6 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Sprinkler Sistemi",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,
       onNext: () {
@@ -149,3 +148,4 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
     );
   }
 }
+

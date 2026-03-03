@@ -60,7 +60,6 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Nizam Durumu",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,
       onNext: () {
@@ -148,3 +147,4 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
     );
   }
 }
+

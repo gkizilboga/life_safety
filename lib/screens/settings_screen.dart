@@ -22,7 +22,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           const ModernHeader(
             title: "Profil ve Ayarlar",
-            subtitle: "Kullanıcı tercihleri ve veri yönetimi",
             screenType: SettingsScreen,
           ),
           Expanded(
@@ -35,7 +34,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _buildSettingTile(
                   icon: Icons.vibration,
                   title: "Dokunsal Geri Bildirim",
-                  subtitle: "Buton tıklamalarında hafif titreşim",
                   trailing: Switch(
                     value: store.hapticEnabled,
                     activeColor: AppColors.primaryBlue,
@@ -49,13 +47,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _buildSettingTile(
                   icon: Icons.delete_forever_outlined,
                   title: "Tüm Arşivi Temizle",
-                  subtitle: "Kayıtlı tüm bina analizlerini siler",
                   onTap: () => _showDeleteArchiveDialog(),
                 ),
                 _buildSettingTile(
                   icon: Icons.person_remove_outlined,
                   title: "Kaydı Sıfırla",
-                  subtitle: "Profil bilgilerini siler ve baştan başlatır",
                   onTap: () => _showResetAccountDialog(),
                 ),
                 const SizedBox(height: 40),
@@ -134,7 +130,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSettingTile({
     required IconData icon,
     required String title,
-    required String subtitle,
+    String? subtitle,
     Widget? trailing,
     VoidCallback? onTap,
   }) {
@@ -151,7 +147,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 11)),
+        subtitle: subtitle != null
+            ? Text(subtitle, style: const TextStyle(fontSize: 11))
+            : null,
         trailing:
             trailing ??
             const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),

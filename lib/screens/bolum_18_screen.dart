@@ -72,7 +72,6 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "İç Duvarlar",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isComplete,
       onNext: _onNextPressed,
@@ -80,7 +79,7 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
         children: [
           // 1. Duvar Kaplaması
           _buildSoru(
-            "Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük gibi bir kaplama var mı?",
+            "Daire içlerinde veya koridorlarda duvar kaplamaları nasıl?",
             'duvar',
             [
               Bolum18Content.duvarOptionA,
@@ -108,7 +107,7 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
             const SizedBox(height: 10),
             SizedBox(key: _boruKey, height: 1),
             _buildSoru(
-              "Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?",
+              "Binanızda tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?",
               'boru',
               [
                 Bolum18Content.boruOptionA,

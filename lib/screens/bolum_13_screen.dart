@@ -145,7 +145,6 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
     return AnalysisPageLayout(
       title: "Teknik Hacimler",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: true,
       onNext: _onNextPressed,
@@ -374,3 +373,4 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     );
   }
 }
+

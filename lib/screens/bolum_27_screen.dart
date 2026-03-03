@@ -138,7 +138,6 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kaçış Yolu Kapıları",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -159,7 +158,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           ),
           TechnicalDrawingButton(
             assetPath: AppAssets.section27YanginKapisi,
-            title: "Kapı Genişliği ve Eşik Standartı",
+            title: "Kapı Genişliği ve Eşik",
           ),
           _buildSoruCard('boyut', [
             Bolum27Content.boyutOptionA,
@@ -171,6 +170,16 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           _buildSoruHeader(
             "Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)",
           ),
+          const SizedBox(height: 4),
+          const Text(
+            "Birden fazla seçenek işaretleyebilirsiniz.",
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          const SizedBox(height: 4),
           TechnicalDrawingButton(
             assetPath: AppAssets.section27KacisYonu,
             title: "Kapı Açılış Yönü Kriterleri",
@@ -187,6 +196,16 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           _buildSoruHeader(
             "Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)",
           ),
+          const SizedBox(height: 4),
+          const Text(
+            "Birden fazla seçenek işaretleyebilirsiniz.",
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          const SizedBox(height: 4),
           TechnicalDrawingButton(
             assetPath: AppAssets.section27KilitTipi,
             title: "Kilit ve Panik Bar Tipleri",
@@ -208,7 +227,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
               "Binada korunumlu yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır.",
             ),
             SizedBox(key: _dayanimKey, height: 1),
-            _buildSoruHeader("Kapalı yangın merdiveni kapısı nasıl?"),
+            _buildSoruHeader("Kapalı yangın merdiveninin kapısı nasıl?"),
             _buildSoruCard('dayanim', [
               Bolum27Content.dayanimOptionA,
               Bolum27Content.dayanimOptionB,
@@ -254,30 +273,10 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   }
 
   Widget _buildEnZayifHalkaUyarisi() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.withOpacity(0.2)),
-      ),
-      child: const Row(
-        children: [
-          Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24),
-          SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              "Lütfen kaçış yolunuz üzerinde EN KÖTÜ durumdaki kapıyı baz alarak cevap veriniz. (daire kapısı hariç)",
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return const CustomInfoNote(
+      text:
+          "Lütfen kaçış yolunuz üzerinde EN KÖTÜ durumdaki kapıyı baz alarak cevap veriniz. (daire kapısı hariç)",
+      icon: Icons.warning_amber_rounded,
     );
   }
 

@@ -103,7 +103,6 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Dış Cephe",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -267,7 +266,12 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               ),
             ],
 
-            if (_model.mantolama?.label == Bolum16Content.giydirmeOptionC.label)
+            if (_model.mantolama?.label ==
+                Bolum16Content.giydirmeOptionC.label) ...[
+              CustomInfoNote(
+                text: "Lütfen alttaki soruyu yanıtlayınız.",
+                icon: Icons.arrow_downward,
+              ),
               _buildSubQuestionRadio(
                 "Cephe ile döşeme arasındaki boşluklar yalıtılmış mı?",
                 _model.giydirmeBoslukYalitim,
@@ -275,9 +279,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                   () => _model = _model.copyWith(giydirmeBoslukYalitim: v),
                 ),
               ),
+            ],
 
             _buildSoru(
-              "Katlar arasında yanmaz (sağır) yüzey var mı?",
+              "Katlar arasında 100 cm yüksekliğinde yanmaz (sağır) yüzey var mı?",
               'sagir',
               [
                 Bolum16Content.sagirYuzeyOptionA,
@@ -292,7 +297,11 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ),
 
             if (_model.sagirYuzey?.label ==
-                Bolum16Content.sagirYuzeyOptionB.label)
+                Bolum16Content.sagirYuzeyOptionB.label) ...[
+              CustomInfoNote(
+                text: "Lütfen alttaki soruyu yanıtlayınız.",
+                icon: Icons.arrow_downward,
+              ),
               _buildSubQuestionRadio(
                 "Cepheye doğru bakan özel sprinkler başlıkları var mı?",
                 _model.sagirYuzeySprinkler,
@@ -300,6 +309,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                   () => _model = _model.copyWith(sagirYuzeySprinkler: v),
                 ),
               ),
+            ],
 
             if (_askBitisik)
               _buildSoru(
@@ -352,9 +362,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                       ),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: "Örn: 45",
+                        hintText: "Örn: 60",
                         suffixText: "m",
-                        helperText: "En fazla 200m",
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 8,

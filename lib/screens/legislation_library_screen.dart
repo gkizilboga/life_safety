@@ -64,7 +64,6 @@ class LegislationLibraryScreen extends StatelessWidget {
         children: [
           const ModernHeader(
             title: AppStrings.legislationTitle,
-            subtitle: AppStrings.legislationSubtitle,
             screenType: LegislationLibraryScreen,
           ),
           Expanded(

@@ -105,7 +105,6 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kat Kullanım Amacı",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
       onNext: () {
@@ -334,3 +333,4 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     );
   }
 }
+

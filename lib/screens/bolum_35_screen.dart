@@ -134,7 +134,6 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kaçış Mesafesi",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReadyToProceed(),
       onSave: () {
@@ -329,3 +328,4 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }
+

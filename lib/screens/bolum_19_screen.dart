@@ -74,7 +74,6 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Acil Durum Yönlendirme",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -96,6 +95,15 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
                 const Text(
                   "Kaçış yollarında aşağıdakilerden hangisi mevcut?",
                   style: AppStyles.questionTitle,
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  "Birden fazla seçenek işaretleyebilirsiniz.",
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 ...[
@@ -142,7 +150,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               "Yanıltıcı kapılar için etiketleme sorgulanmaktadır.",
             ),
             _buildSoru(
-              "Yanıltıcı kapıların üzerinde yazı var mı?",
+              "Yanıltıcı kapıların üzerinde mahalin adı yazıyor mu? (Depo, elektrik odası vb.)",
               'etiket',
               [
                 Bolum19Content.etiketOptionA,
@@ -204,3 +212,4 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }
+

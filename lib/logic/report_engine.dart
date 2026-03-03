@@ -2049,27 +2049,40 @@ class ReportEngine {
       final yghReasons = evaluateYghRequirement(store: s);
       final bool hasYgh = b21?.varlik?.label.contains("21-1-A") ?? false;
       final bool noYgh = b21?.varlik?.label.contains("21-1-B") ?? false;
+      final bool isMandatory = yghReasons.isNotEmpty;
 
-      if (yghReasons.isNotEmpty && !hasYgh) {
-        return "KRİTİK RİSK: Binada aşağıdaki sebeplerden dolayı Yangın Güvenlik Holü (YGH) zorunluluğu bulunmaktadır:\n\n${yghReasons.join('\n')}\n\nBinada mevcut YGH bulunmadığı beyan edilmiştir.";
+      List<String> parts = [];
+
+      // 1. Değerlendirme Özeti
+      if (isMandatory) {
+        parts.add(
+          "DEĞERLENDİRME: YGH ZORUNLUDUR\nBinada aşağıdaki teknik gerekçelerden dolayı Yangın Güvenlik Holü (YGH) bulunması zorunludur:\n${yghReasons.join('\n')}",
+        );
+      } else {
+        parts.add(
+          "DEĞERLENDİRME: YGH ZORUNLU DEĞİLDİR\nMevcut yapı verilerine göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
+        );
       }
 
-      // YGH yok seçildiyse ve zorunluluk yoksa BİLGİ olarak göster
-      if (noYgh && yghReasons.isEmpty) {
-        return "BİLGİ: Binada Yangın Güvenlik Holü (YGH) bulunmamaktadır. Mevcut yapı koşullarında YGH zorunluluğu tespit edilmemiştir.";
-      }
-
-      // YGH var ise, alt detayları raporla (Malzeme, Kapı, Eşya)
+      // 2. Mevcut Durum Raporu
       if (hasYgh) {
-        List<String> parts = [];
-        parts.add("OLUMLU: Binada Yangın Güvenlik Holü (YGH) mevcuttur.");
-
+        parts.add("DURUM: Binada Yangın Güvenlik Holü (YGH) mevcuttur.");
         if (b21?.malzeme != null) parts.add(b21!.malzeme!.reportText);
         if (b21?.kapi != null) parts.add(b21!.kapi!.reportText);
         if (b21?.esya != null) parts.add(b21!.esya!.reportText);
-
-        return parts.join("\n\n");
+      } else if (noYgh) {
+        if (isMandatory) {
+          parts.add(
+            "KRİTİK RİSK: Binada YGH zorunlu olmasına rağmen, mevcut olmadığı beyan edilmiştir.",
+          );
+        } else {
+          parts.add(
+            "DURUM: Binada Yangın Güvenlik Holü (YGH) bulunmamaktadır.",
+          );
+        }
       }
+
+      return parts.join("\n\n");
     }
 
     // Bölüm 26: Rampalar

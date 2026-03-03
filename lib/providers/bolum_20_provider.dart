@@ -63,6 +63,9 @@ class Bolum20Provider extends ChangeNotifier {
   String? bodSahanliksizErr;
   String? bodDengelenmisErr;
 
+  String? toplamDirectErr;
+  String? bodToplamDirectErr;
+
   Bolum20Provider() {
     _init();
   }
@@ -224,9 +227,14 @@ class Bolum20Provider extends ChangeNotifier {
         _model = _model.copyWith(bodrumDengelenmisMerdivenSayisi: numericVal);
         break;
       case 'toplamDirect':
+        toplamDirectErr = _validateDirectCount(numericVal, totalMainStairs);
         _model = _model.copyWith(toplamDisariAcilanMerdivenSayisi: numericVal);
         break;
       case 'bodToplamDirect':
+        bodToplamDirectErr = _validateDirectCount(
+          numericVal,
+          totalBasementStairs,
+        );
         _model = _model.copyWith(
           bodrumToplamDisariAcilanMerdivenSayisi: numericVal,
         );
@@ -281,6 +289,17 @@ class Bolum20Provider extends ChangeNotifier {
       }
       notifyListeners();
     } else {
+      // Also re-validate direct exit counts when stair totals change
+      toplamDirectErr = _validateDirectCount(
+        int.tryParse(toplamDirectCtrl.text) ?? 0,
+        totalMainStairs,
+      );
+      if (_isBodrumIndependent) {
+        bodToplamDirectErr = _validateDirectCount(
+          int.tryParse(bodToplamDirectCtrl.text) ?? 0,
+          totalBasementStairs,
+        );
+      }
       notifyListeners(); // Also notify for error state changes
     }
 
@@ -309,6 +328,15 @@ class Bolum20Provider extends ChangeNotifier {
     return total > 0 && direct < total;
   }
 
+  String? _validateDirectCount(int direct, int total) {
+    if (direct > total) {
+      if (total == 0)
+        return "Önce yukarıdaki merdivenlerden en az birini giriniz.";
+      return "Dışarı açılan sayı ($direct), toplam merdiven sayısından ($total) fazla olamaz.";
+    }
+    return null;
+  }
+
   bool get isLimitValid {
     if (_isTekKatli) {
       return _model.tekKatCikis != null && _model.tekKatRampa != null;
@@ -322,6 +350,7 @@ class Bolum20Provider extends ChangeNotifier {
         donerErr == null &&
         sahanliksizErr == null &&
         dengelenmisErr == null &&
+        toplamDirectErr == null &&
         totalMainStairs > 0;
 
     if (!_isBodrumIndependent) return mainValid;
@@ -334,6 +363,7 @@ class Bolum20Provider extends ChangeNotifier {
         bodDonerErr == null &&
         bodSahanliksizErr == null &&
         bodDengelenmisErr == null &&
+        bodToplamDirectErr == null &&
         totalBasementStairs > 0;
 
     return mainValid && bodrumValid;

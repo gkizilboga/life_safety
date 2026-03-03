@@ -14,7 +14,6 @@ class LegalTextScreen extends StatelessWidget {
         children: [
           const ModernHeader(
             title: "Yasal Bilgiler",
-            subtitle: "KVKK ve Kullanım Şartları",
             screenType: LegalTextScreen,
           ),
           Expanded(
@@ -75,3 +74,4 @@ class LegalTextScreen extends StatelessWidget {
     );
   }
 }
+

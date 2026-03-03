@@ -57,7 +57,6 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
 
     return AnalysisPageLayout(
       title: "Kaçış Merdivenleri",
-      subtitle: "",
       screenType: Bolum20Screen,
       isNextEnabled: isLimitValid,
       onNext: () async {
@@ -296,7 +295,7 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                   key: const ValueKey('havalandirma_q'),
                   provider: provider,
                   title:
-                      "Basınçlandırma olmayna merdivenlerde doğal havalandırma var mı?",
+                      "Basınçlandırma olmayan merdivenlerde doğal havalandırma var mı?",
                   definition: AppDefinitions
                       .havalandirma, // In AppDefinitions (inside app_content)
                   term: "Havalandırma (Madde 45)",
@@ -383,6 +382,24 @@ class _TotalDirectInputWidget extends StatelessWidget {
                   ),
                 ),
               ),
+              Selector<Bolum20Provider, String?>(
+                selector: (_, p) =>
+                    isBasement ? p.bodToplamDirectErr : p.toplamDirectErr,
+                builder: (context, err, _) {
+                  if (err == null) return const SizedBox.shrink();
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8, left: 2),
+                    child: Text(
+                      err,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         );
@@ -449,7 +466,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
               ),
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeUstunde.copyWith(
-                  uiTitle: "$limit m. 'nin üzerinde",
+                  uiTitle: "$limit metrenin üzerinde",
                 ),
                 isSelected:
                     currentSelection?.label ==
@@ -653,6 +670,7 @@ class _StairInputRow extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 8: Hata mesajını input'un altında değil, labelın altında göster
         Row(
           children: [
             Expanded(
@@ -669,24 +687,38 @@ class _StairInputRow extends StatelessWidget {
               width: 55,
               child: TextFormField(
                 controller: ctrl,
+                // 6: onChanged yerine FocusNode kullanmıyoruz - modal kapanınca re-focus olmaz
+                focusNode: FocusNode()..addListener(() {}),
                 onChanged: onChange,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
                 inputFormatters: [InputValidator.positiveInteger],
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
+                decoration: const InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(
                     vertical: 8,
                     horizontal: 4,
                   ),
-                  border: const OutlineInputBorder(),
+                  border: OutlineInputBorder(),
                   hintText: "0",
-                  errorText: error,
-                  errorStyle: const TextStyle(fontSize: 10),
+                  // errorText kaldırıldı - aşağıda okunabilir alanda gösteriliyor
                 ),
               ),
             ),
           ],
         ),
+        // Hata mesajı labelın altında, okunablır font'ta
+        if (error != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 2),
+            child: Text(
+              error!,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.red,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         const SizedBox(height: 8),
         if (assetPath != null)
           TechnicalDrawingButton(assetPath: assetPath!, title: label),
@@ -747,12 +779,57 @@ class StairQuestion extends StatelessWidget {
             (opt) => SelectableCard(
               choice: opt,
               isSelected: selected?.label == opt.label,
-              onTap: () {
+              onTap: () async {
                 if (keyParam == 'bodrum') {
-                  provider.setIsBodrumIndependent(
-                    opt.label == Bolum20Content.bodrumOptionB.label,
-                    opt,
-                  );
+                  final bool isIndependent =
+                      opt.label == Bolum20Content.bodrumOptionB.label;
+                  if (isIndependent) {
+                    // 7: Kullanıcıya onay sordur
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (ctx) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        title: const Row(
+                          children: [
+                            Icon(
+                              Icons.warning_amber_rounded,
+                              color: Colors.orange,
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                "Emin misiniz?",
+                                style: TextStyle(fontSize: 17),
+                              ),
+                            ),
+                          ],
+                        ),
+                        content: const Text(
+                          "\"Merdiven bodrum katlara inmiyor\" seçeneğini işaretlediniz.\n\nBu durum ilerideki birkaç soruyu doğrudan etkili. Eğer bodrum katların ayrı bir merdiveni varsa bu seçeneği onaylayınız.\n\nDoğru seçimi yaptığınızdan emin misiniz?",
+                          style: TextStyle(fontSize: 14, height: 1.5),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text("Geri Dön"),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryBlue,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text("Evet, Doğru"),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed != true) return;
+                  }
+                  provider.setIsBodrumIndependent(isIndependent, opt);
                 } else {
                   provider.handleSelection(keyParam, opt);
                 }

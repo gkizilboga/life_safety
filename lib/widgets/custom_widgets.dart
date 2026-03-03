@@ -17,8 +17,6 @@ class ModernHeader extends StatelessWidget {
     required this.screenType,
     this.onBack,
     this.onSave,
-    // subtitle kept as optional ignored param for backward-compat
-    String subtitle = '',
   });
 
   @override
@@ -42,6 +40,7 @@ class ModernHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Top row: Back | [spacer] | KAYDET
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -63,16 +62,7 @@ class ModernHeader extends StatelessWidget {
                 )
               else
                 const SizedBox(width: 28),
-              Text(
-                "ADIM $currentStep / $totalSteps",
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(width: 10),
+              const Spacer(),
               // Only show KAYDET button on Bolum screens (test sections 1-36)
               if (screenType.toString().contains('Bolum'))
                 GestureDetector(
@@ -95,12 +85,12 @@ class ModernHeader extends StatelessWidget {
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
+                      horizontal: 8,
+                      vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF059669), // Emerald Green
-                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xFF059669),
+                      borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2),
@@ -108,7 +98,7 @@ class ModernHeader extends StatelessWidget {
                           offset: const Offset(0, 2),
                         ),
                       ],
-                      border: Border.all(color: Colors.white24, width: 1.5),
+                      border: Border.all(color: Colors.white24, width: 1),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -116,16 +106,16 @@ class ModernHeader extends StatelessWidget {
                         Icon(
                           Icons.save_as_rounded,
                           color: Colors.white,
-                          size: 20,
+                          size: 15,
                         ),
-                        SizedBox(width: 6),
+                        SizedBox(width: 4),
                         Text(
                           "KAYDET",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: 10,
                             fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
+                            letterSpacing: 0.3,
                           ),
                         ),
                       ],
@@ -134,17 +124,48 @@ class ModernHeader extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 10),
-          // Title + progress % on the same row
+          const SizedBox(height: 4),
+          // Title row: Section title | BÖLÜM X/YZ | İlerleme %
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: FormattedText(title, style: AppStyles.headerTitle),
+                child: FormattedText(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              const SizedBox(width: 12),
-              AnimatedPercentageText(percentage: (progress * 100).toInt()),
+              const SizedBox(width: 8),
+              Text(
+                "BÖLÜM $currentStep/$totalSteps",
+                style: const TextStyle(
+                  color: Colors.white60,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.8,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "İlerleme",
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  AnimatedPercentageText(percentage: (progress * 100).toInt()),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -223,7 +244,6 @@ class SectionImage extends StatelessWidget {
 
 class AnalysisPageLayout extends StatefulWidget {
   final String title;
-  final String subtitle;
   final Type screenType;
   final Widget child;
   final VoidCallback? onNext;
@@ -233,7 +253,6 @@ class AnalysisPageLayout extends StatefulWidget {
   const AnalysisPageLayout({
     super.key,
     required this.title,
-    required this.subtitle,
     required this.screenType,
     required this.child,
     this.onNext,
@@ -339,7 +358,6 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
         children: [
           ModernHeader(
             title: widget.title,
-            subtitle: widget.subtitle,
             screenType: widget.screenType,
             onSave: widget.onSave,
           ),

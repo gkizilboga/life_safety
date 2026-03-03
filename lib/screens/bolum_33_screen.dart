@@ -164,7 +164,6 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Kullanıcı Yükü",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isConfirmed,
       onNext: () {

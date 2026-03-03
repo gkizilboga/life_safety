@@ -17,7 +17,6 @@ class ReportSummaryScreen extends StatefulWidget {
 
 class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   late Map<String, dynamic> _metrics;
-  late List<String> _yghReasons;
   late Map<ReportModule, double> _moduleScores;
   late bool _isPremium;
 
@@ -35,7 +34,6 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
     super.initState();
     // Perform heavy calculations once
     _metrics = ReportEngine.calculateRiskMetrics();
-    _yghReasons = ReportEngine.evaluateYghRequirement();
     _moduleScores = ReportEngine.calculateModuleScores();
     _isPremium = BinaStore.instance.isPremium;
 
@@ -51,11 +49,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       backgroundColor: const Color(0xFFF5F7FA),
       body: Column(
         children: [
-          const ModernHeader(
-            title: "ÖZET",
-            subtitle: "",
-            screenType: ReportSummaryScreen,
-          ),
+          const ModernHeader(title: "ÖZET", screenType: ReportSummaryScreen),
           Expanded(
             child: Stack(
               children: [
@@ -65,10 +59,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     _buildRiskPanel(_metrics),
                     const SizedBox(height: 20),
                     _buildVisualAnalysis(_moduleScores),
-                    if (_yghReasons.isNotEmpty) ...[
-                      const SizedBox(height: 20),
-                      _buildYghEvaluationPanel(_yghReasons),
-                    ],
+                    // 9: YGH DEĞERLENDİRMESİ kaldırıldı
                     const SizedBox(height: 25),
                     const Padding(
                       padding: EdgeInsets.only(left: 8, bottom: 12),
@@ -86,7 +77,9 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                       (ReportModule module) =>
                           _buildModuleCard(context, module),
                     ),
-                    const SizedBox(height: 120),
+                    // 10: PDF uyarı notu son modülün altına taşındı
+                    _buildPdfInfoNote(),
+                    const SizedBox(height: 32),
                   ],
                 ),
                 if (!_isPremium) _buildBlurredOverlay(context),
@@ -245,26 +238,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
     );
   }
 
-  Widget _buildYghEvaluationPanel(List<String> reasons) {
-    return CustomInfoNote(
-      icon: Icons.security_rounded,
-      margin: const EdgeInsets.only(top: 20),
-      richText: TextSpan(
-        children: [
-          TextSpan(
-            text: "YGH DEĞERLENDİRMESİ\n",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-          ),
-          const TextSpan(
-            text:
-                "Binanızda Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmiştir:\n\n",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          ...reasons.map((reason) => TextSpan(text: "• $reason\n")),
-        ],
-      ),
-    );
-  }
+  // _buildYghEvaluationPanel kaldırıldı — YGH paneli ÖZET sayfasına gösterilmiyor.
 
   Widget _buildRiskPanel(Map<String, dynamic> m) {
     return Container(
@@ -396,6 +370,18 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       visibleSections.add(_buildSectionTile(context, id));
     }
     if (visibleSections.isEmpty) return const SizedBox.shrink();
+
+    // 8: Module başlığını ilk bölümün numarası ile son bölümün numarasını
+    // içerecek şekilde oluştur: e.g. "Bölüm 1–10: Genel Bilgiler"
+    final ids = module.sectionIds;
+    final shortTitle = module.title
+        .replaceAll('Bina hakkında Genel Bilgiler', 'Genel Bilgiler')
+        .replaceAll('Dışavurum ve Çevre', 'Dışavurum & Çevre')
+        .trim();
+    final headerTitle = ids.length == 1
+        ? "Bölüm ${ids.first}: ${AppDefinitions.getSectionTitle(ids.first)}"
+        : "Bölüm ${ids.first}–${ids.last}: $shortTitle";
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -411,11 +397,11 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             color: Color(0xFF1A237E),
           ),
           title: Text(
-            module.title,
+            headerTitle,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Color(0xFF1A237E),
-              fontSize: 15,
+              fontSize: 14,
             ),
           ),
           children: visibleSections,
@@ -514,7 +500,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
               ),
               const SizedBox(height: 25),
               Text(
-                "Bölüm $id: $title",
+                "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -571,6 +557,64 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
     );
   }
 
+  // 10: PDF info notu — son modülün altında ayrı bir kart olarak gösterilir
+  Widget _buildPdfInfoNote() {
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A237E).withOpacity(0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF1A237E).withOpacity(0.18)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.picture_as_pdf_outlined,
+            color: Color(0xFF1A237E),
+            size: 22,
+          ),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "RAPORLAR HAKKINDA",
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1A237E),
+                    letterSpacing: 0.8,
+                  ),
+                ),
+                SizedBox(height: 6),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildBulletItem(
+                      "Binanıza ait 2 adet PDF raporu hazırlanmıştır.",
+                    ),
+                    _buildBulletItem(
+                      "\"Yangın Risk Analizi\" ve \"Aktif Sistem Gereksinimleri\" raporu.",
+                    ),
+                    _buildBulletItem(
+                      "PDF oluşturma işlemi 10–20 saniye sürebilir.",
+                    ),
+                    _buildBulletItem(
+                      "Devam etmek için aşağıdaki butona basınız.",
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBottomAction(BuildContext context, bool isPremium) {
     return SafeArea(
       top: false,
@@ -586,91 +630,74 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             ),
           ],
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // PDF indirme bilgi notu
-            Container(
-              padding: const EdgeInsets.all(12),
-              margin: const EdgeInsets.only(bottom: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1A237E).withOpacity(0.06),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color(0xFF1A237E).withOpacity(0.2),
-                ),
-              ),
-              child: const Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    color: Color(0xFF1A237E),
-                    size: 18,
+        child: SizedBox(
+          width: double.infinity,
+          height: 54,
+          child: ElevatedButton(
+            onPressed: () {
+              BinaStore.instance.saveToDisk();
+              if (isPremium) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const DashboardScreen(),
                   ),
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      "Binanıza ait iki PDF raporu hazırlanmaktadır: "
-                      "\"Yangın Risk Analizi\" (yaklaşık 15–25 sayfa) ve "
-                      "\"Aktif Sistem Gereksinimleri\" raporu. "
-                      "Her indirme işlemi 10–20 saniye sürebilir; bu sürede yazı tipleri yüklenmektedir. "
-                      "Lütfen bekleyiniz, işlem tamamlandığında rapor otomatik açılacaktır.",
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Color(0xFF1A237E),
-                        height: 1.45,
-                      ),
-                    ),
+                  (r) => false,
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PaywallScreen(),
                   ),
-                ],
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1A237E),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Her durumda önce kaydet
-                  BinaStore.instance.saveToDisk();
-
-                  if (isPremium) {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const DashboardScreen(),
-                      ),
-                      (r) => false,
-                    );
-                  } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PaywallScreen(),
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1A237E),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: Text(
-                  isPremium
-                      ? "ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN"
-                      : "ANALİZİ AL",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
-                ),
+            child: Text(
+              isPremium ? "ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN" : "ANALİZİ AL",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 12,
               ),
             ),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildBulletItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "• ",
+            style: TextStyle(
+              fontSize: 12,
+              color: Color(0xFF1A237E),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Color(0xFF1A237E),
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

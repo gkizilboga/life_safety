@@ -68,7 +68,6 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Yangın Güvenlik Holü",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _model.varlik != null,
       onNext: () {
@@ -81,20 +80,14 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       },
       child: Column(
         children: [
-          // YGH görseli - sorulardan bağımsız, her zaman görünür
-          // YGH görseli - Buton olarak
-          const TechnicalDrawingButton(
-            assetPath: 'assets/images/sections/ygh_1.webp',
-            title: "Örnek YGH Yerleşimi İncele",
-          ),
-          const SizedBox(height: 16),
           _buildInfoCard(),
+          const SizedBox(height: 16),
           _buildSoru(
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    "Merdiven önünde Yangın Güvenlik Holü var mı?",
+                    "Merdivenin önünde Yangın Güvenlik Holü (YGH) var mı?",
                     style: AppStyles.questionTitle,
                   ),
                 ),
@@ -107,6 +100,10 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
             'varlik',
             [Bolum21Content.varlikOptionA, Bolum21Content.varlikOptionB],
             _model.varlik,
+            footerWidget: const TechnicalDrawingButton(
+              assetPath: 'assets/images/sections/ygh_1.webp',
+              title: "Örnek YGH Yerleşimi İncele",
+            ),
           ),
 
           if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) ...[
@@ -130,16 +127,11 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               ],
               _model.kapi,
             ),
-            _buildSoru(
-              "YGH (Hol) içinde eşya (bisiklet, dolap vb.) var mı?",
-              'esya',
-              [
-                Bolum21Content.esyaOptionA,
-                Bolum21Content.esyaOptionB,
-                Bolum21Content.esyaOptionC,
-              ],
-              _model.esya,
-            ),
+            _buildSoru("YGH (Hol) içinde gereksiz eşyalar var mı?", 'esya', [
+              Bolum21Content.esyaOptionA,
+              Bolum21Content.esyaOptionB,
+              Bolum21Content.esyaOptionC,
+            ], _model.esya),
           ],
         ],
       ),
@@ -172,8 +164,9 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     dynamic title,
     String keyParam,
     List<ChoiceResult> options,
-    ChoiceResult? selected,
-  ) {
+    ChoiceResult? selected, {
+    Widget? footerWidget,
+  }) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,6 +192,10 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               }),
             ),
           ),
+          if (footerWidget != null) ...[
+            const SizedBox(height: 12),
+            footerWidget,
+          ],
         ],
       ),
     );

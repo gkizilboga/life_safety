@@ -121,7 +121,6 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Yapısal Yangın Dayanımı",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onSave: () {
@@ -381,3 +380,4 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     );
   }
 }
+

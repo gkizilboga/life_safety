@@ -229,7 +229,6 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Yapı Ruhsat Tarihi",
-      subtitle: " ",
       screenType: widget.runtimeType,
       isNextEnabled: _model.secim != null,
       onNext: _onNextPressed,
@@ -276,3 +275,4 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
     );
   }
 }
+

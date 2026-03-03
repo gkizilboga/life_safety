@@ -140,7 +140,6 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
 
     return AnalysisPageLayout(
       title: "Kazan Dairesi",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isFormValid,
       onNext: _onNextPressed,
@@ -163,7 +162,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Kazan kapasitesini (kW) giriniz:",
+                  "Kazanların toplam ısıl kapasitesini (kW) giriniz:",
                   style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 10),
@@ -201,14 +200,14 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             ),
           ),
 
-          _buildSoru("Kazan dairesinin kaç adet çıkış kapısı var?", 'kapi', [
+          _buildSoru("Kazan dairesinin kaç adet ÇIKIŞ kapısı var?", 'kapi', [
             Bolum30Content.kapiOptionA,
             Bolum30Content.kapiOptionB,
             Bolum30Content.kapiOptionC,
           ], _model.kapi),
 
           _buildSoru(
-            "İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?",
+            "İçeride hava sirkülasyonu sağlayan menfezler var mı?",
             'hava',
             [
               Bolum30Content.havaOptionA,
@@ -218,7 +217,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             _model.hava,
           ),
 
-          _buildSoru("Kazanınız sıvı yakıtlı (Mazot/Fuel-oil) mı?", 'yakit', [
+          _buildSoru("Kazanların yakıt tipi nedir?", 'yakit', [
             Bolum30Content.yakitOptionA,
             Bolum30Content.yakitOptionB,
             Bolum30Content.yakitOptionC,
@@ -241,7 +240,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
           ],
 
           _buildSoru(
-            "Kazan dairesinde yangın söndürme tüpü ve yangın dolabı var mı?",
+            "Kazan dairesinde yangın söndürme TÜPÜ ve yangın DOLABI var mı?",
             'tup',
             [
               Bolum30Content.tupOptionA,

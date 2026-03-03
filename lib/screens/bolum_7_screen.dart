@@ -89,7 +89,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Özel Riskli Alanlar",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isConfirmed,
       onNext: () async {
@@ -244,3 +243,4 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
     );
   }
 }
+

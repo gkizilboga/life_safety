@@ -102,7 +102,6 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
 
     return AnalysisPageLayout(
       title: "İtfaiye (Acil Durum) Asansörü",
-      subtitle: "",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
@@ -119,7 +118,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
           _buildHeightInfoCard(),
 
           _buildSoru(
-            "Binanızda İtfaiye (acil durum) asansörü var mı?",
+            "Binanızda itfaiye asansörü var mı?",
             'varlik',
             [
               Bolum22Content.varlikOptionA,
@@ -140,7 +139,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             ),
 
             _buildSoru(
-              "Bu İtfaiye (acil durum) asansörünün kapısı nereye açılıyor?",
+              "Bu itfaiye asansörünün kapısı nereye açılıyor?",
               'konum',
               [
                 Bolum22Content.konumOptionA,
@@ -163,7 +162,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             ),
 
             _buildSoru(
-              "Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?",
+              "Kabin genişliği en az 1.8 metrekare VE en alt kattan en üst kata 60 saniye içerisinde çıkabiliyor mu?",
               'kabin',
               [
                 Bolum22Content.kabinOptionA,
@@ -265,3 +264,4 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
     );
   }
 }
+

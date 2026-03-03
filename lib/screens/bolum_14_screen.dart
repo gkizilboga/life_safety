@@ -78,7 +78,6 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Tesisat Şaftları",
-      subtitle: "Bina yüksekliğine göre şaft gereksinimleri",
       screenType: widget.runtimeType,
       isNextEnabled: true,
       onNext: _onNextPressed,
@@ -228,3 +227,4 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
     );
   }
 }
+
