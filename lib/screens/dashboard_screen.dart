@@ -23,6 +23,7 @@ import 'bolum_19_screen.dart';
 import 'bolum_20_screen.dart';
 import 'bolum_21_screen.dart';
 import 'bolum_22_screen.dart';
+import '../widgets/custom_widgets.dart';
 import 'bolum_23_screen.dart';
 import 'bolum_24_screen.dart';
 import 'bolum_25_screen.dart';
@@ -346,30 +347,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  void _showDeleteConfirmation(BuildContext context, String id, String name) {
-    showDialog(
+  void _showDeleteConfirmation(
+    BuildContext context,
+    String id,
+    String name,
+  ) async {
+    final confirmed = await showCustomDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Analizi Sil"),
-        content: Text("'$name' analizini silmek istediğinize emin misiniz?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("VAZGEÇ", style: TextStyle(color: Colors.grey)),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () {
-              BinaStore.instance.deleteFromArchive(id);
-              Navigator.pop(context);
-              setState(() {});
-            },
-            child: const Text("SİL"),
-          ),
-        ],
-      ),
+      title: "Analizi Sil",
+      content: "'$name' analizini silmek istediğinize emin misiniz?",
+      confirmText: "SİL",
+      cancelText: "VAZGEÇ",
+      icon: Icons.delete_forever_rounded,
+      iconColor: Colors.red,
     );
+
+    if (confirmed == true) {
+      BinaStore.instance.deleteFromArchive(id);
+      setState(() {});
+    }
   }
 
   // Unused methods removed

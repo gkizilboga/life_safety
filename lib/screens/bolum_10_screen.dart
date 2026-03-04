@@ -109,20 +109,14 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       isNextEnabled: _checkIfComplete() && _isSummaryAccepted,
       onNext: () {
         if (!_hasKonutSelection()) {
-          showDialog(
+          showCustomDialog(
             context: context,
-            builder: (ctx) => AlertDialog(
-              title: const Text("Eksik Seçim"),
-              content: const Text(
+            title: "Eksik Seçim",
+            content:
                 "Bu uygulama Konut binaları için tasarlanmıştır. Katlardan en az biri için 'Konut' (Daire) seçeneğini işaretlemelisiniz.",
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: const Text("Tamam"),
-                ),
-              ],
-            ),
+            confirmText: "Tamam",
+            icon: Icons.error_outline_rounded,
+            iconColor: Colors.red,
           );
           return;
         }
@@ -333,4 +327,3 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     );
   }
 }
-

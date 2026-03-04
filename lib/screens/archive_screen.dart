@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../logic/report_engine.dart';
+import '../widgets/custom_widgets.dart';
 
 import '../../data/bina_store.dart';
 import 'report_summary_screen.dart';
@@ -168,36 +169,23 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
     );
   }
 
-  void _showDeleteDialog(String id, String name) {
-    showDialog(
+  void _showDeleteDialog(String id, String name) async {
+    final confirmed = await showCustomDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text("Analizi Sil"),
-        content: Text(
+      title: "Analizi Sil",
+      content:
           "'$name' binasına ait tüm veriler kalıcı olarak silinecektir. Bu işlem geri alınamaz.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text("Vazgeç"),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red.shade800,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              setState(() {
-                BinaStore.instance.deleteFromArchive(id);
-              });
-              Navigator.pop(ctx);
-            },
-            child: const Text("Sil"),
-          ),
-        ],
-      ),
+      confirmText: "Sil",
+      cancelText: "Vazgeç",
+      icon: Icons.delete_forever_rounded,
+      iconColor: Colors.red.shade800,
     );
+
+    if (confirmed == true) {
+      setState(() {
+        BinaStore.instance.deleteFromArchive(id);
+      });
+    }
   }
 
   void _showReportSelection(String id, BuildContext context) {
@@ -298,4 +286,3 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
     );
   }
 }
-

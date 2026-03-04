@@ -93,7 +93,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Kaçış yollarında aşağıdakilerden hangisi mevcut?",
+                  "Kaçış yolları nasıl?",
                   style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 4),
@@ -212,4 +212,3 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }
-

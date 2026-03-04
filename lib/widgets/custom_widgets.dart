@@ -866,3 +866,158 @@ class CustomInfoNote extends StatelessWidget {
     );
   }
 }
+
+/// Standart Uygulama Pop-up Penceresi - Tüm uygulamada tutarlı görünüm sağlar
+Future<T?> showCustomDialog<T>({
+  required BuildContext context,
+  required String title,
+  String? content,
+  Widget? contentWidget,
+  String confirmText = "TAMAM",
+  String? cancelText,
+  IconData? icon = Icons.info_outline,
+  Color? iconColor,
+  bool barrierDismissible = true,
+}) {
+  return showDialog<T>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    builder: (context) => CustomAlertDialog(
+      title: title,
+      content: content,
+      contentWidget: contentWidget,
+      confirmText: confirmText,
+      cancelText: cancelText,
+      icon: icon,
+      iconColor: iconColor ?? AppColors.primaryBlue,
+    ),
+  );
+}
+
+class CustomAlertDialog extends StatelessWidget {
+  final String title;
+  final String? content;
+  final Widget? contentWidget;
+  final String confirmText;
+  final String? cancelText;
+  final IconData? icon;
+  final Color iconColor;
+
+  const CustomAlertDialog({
+    super.key,
+    required this.title,
+    this.content,
+    this.contentWidget,
+    required this.confirmText,
+    this.cancelText,
+    this.icon,
+    this.iconColor = AppColors.primaryBlue,
+  }) : assert(content != null || contentWidget != null);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header Area
+          Container(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.05),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+            ),
+            child: Row(
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, color: iconColor, size: 28),
+                  const SizedBox(width: 12),
+                ],
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: iconColor.withOpacity(0.8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Content Area
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (contentWidget != null)
+                  contentWidget!
+                else
+                  Text(
+                    content!,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      height: 1.5,
+                      color: AppColors.textBody,
+                    ),
+                  ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    if (cancelText != null) ...[
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            side: const BorderSide(color: AppColors.cardBorder),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            cancelText!,
+                            style: const TextStyle(
+                              color: AppColors.textLabel,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: iconColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          confirmText,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

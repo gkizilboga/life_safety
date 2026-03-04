@@ -95,9 +95,11 @@ class PdfService {
   static PdfColor _getRiskColor(String text) {
     if (text.contains('KRİTİK RİSK')) return PdfColors.red700;
     if (text.contains('UYARI')) return PdfColors.amber700;
-    if (text.contains('OLUMLU')) return PdfColors.green700;
+    if (text.contains('OLUMLU') || text.contains('Olumlu'))
+      return PdfColors.green700;
     if (text.contains('BİLGİ')) return PdfColors.blue700;
-    if (text.contains('BİLİNMİYOR')) return PdfColors.grey500;
+    if (text.contains('BİLİNMİYOR') || text.contains('Bilinmiyor'))
+      return PdfColors.grey500;
     return PdfColors.grey500;
   }
 
@@ -164,7 +166,7 @@ class PdfService {
               // Yönetmelik Başlığı
               pw.Center(
                 child: pw.Text(
-                  "BİNALARIN YANGINDAN KORUNMASI\\nHAKKINDA YÖNETMELİĞİ'NE GÖRE",
+                  "BİNALARIN YANGINDAN KORUNMASI HAKKINDA YÖNETMELİĞİ'NE GÖRE",
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
                     color: softGray,
@@ -338,10 +340,7 @@ class PdfService {
         pw.SizedBox(height: 15), // Slightly reduced spacing
         pw.Text(
           AppStrings.legalDisclaimerContent,
-          style: const pw.TextStyle(
-            fontSize: 6.5,
-            lineSpacing: 1.2,
-          ), // Reduced font and added slight line spacing for readability
+          style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
         ),
         pw.SizedBox(height: 15),
         pw.Text(
@@ -355,7 +354,7 @@ class PdfService {
         pw.SizedBox(height: 5),
         pw.Text(
           AppStrings.kvkkContent,
-          style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 1.2),
+          style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
         ),
       ],
     );
@@ -429,7 +428,7 @@ class PdfService {
           spans.add(
             pw.TextSpan(
               text: remaining.substring(0, bestIndex),
-              style: pw.TextStyle(fontSize: 9, font: font),
+              style: pw.TextStyle(fontSize: 9, font: font, lineSpacing: 2.2),
             ),
           );
         }
@@ -441,6 +440,7 @@ class PdfService {
               font: fontBold,
               color: PdfColors.red700,
               fontWeight: pw.FontWeight.bold,
+              lineSpacing: 2.2,
             ),
           ),
         );
@@ -449,7 +449,7 @@ class PdfService {
         spans.add(
           pw.TextSpan(
             text: remaining,
-            style: pw.TextStyle(fontSize: 9, font: font),
+            style: pw.TextStyle(fontSize: 9, font: font, lineSpacing: 2.2),
           ),
         );
         remaining = "";
@@ -473,7 +473,10 @@ class PdfService {
       if (_highlightKeywords.any((pat) => text.contains(pat))) {
         return _buildHighlightedText(text, font, fontBold);
       }
-      return pw.Text(text, style: pw.TextStyle(fontSize: 9, font: font));
+      return pw.Text(
+        text,
+        style: pw.TextStyle(fontSize: 9, font: font, lineSpacing: 2.2),
+      );
     }
 
     // Primary: parse <b> tags into bold spans
@@ -489,6 +492,7 @@ class PdfService {
               fontSize: 9,
               font: font,
               color: PdfColors.black,
+              lineSpacing: 2.2,
             ),
           ),
         );
@@ -501,6 +505,7 @@ class PdfService {
             font: fontBold,
             color: PdfColors.black,
             fontWeight: pw.FontWeight.bold,
+            lineSpacing: 2.2,
           ),
         ),
       );
@@ -511,7 +516,12 @@ class PdfService {
       spans.add(
         pw.TextSpan(
           text: text.substring(lastMatchEnd),
-          style: pw.TextStyle(fontSize: 9, font: font, color: PdfColors.black),
+          style: pw.TextStyle(
+            fontSize: 9,
+            font: font,
+            color: PdfColors.black,
+            lineSpacing: 2.2,
+          ),
         ),
       );
     }
@@ -542,7 +552,6 @@ class PdfService {
 
     final store = BinaStore.instance;
     final metrics = ReportEngine.calculateRiskMetrics();
-    final moduleScores = ReportEngine.calculateModuleScores();
 
     final pageTheme = _buildPageTheme(ttf, ttfBold, ttfItalic, ttfBoldItalic);
 
@@ -562,7 +571,8 @@ class PdfService {
     // 3. Risk Analizi ve Bölümler
     pdf.addPage(
       pw.MultiPage(
-        maxPages: 500,
+        maxPages: 2000,
+
         pageTheme: pageTheme,
         header: (context) => pw.Container(
           alignment: pw.Alignment.centerRight,
@@ -573,43 +583,6 @@ class PdfService {
         ),
         footer: _buildFooter,
         build: (context) => [
-          pw.Text(
-            "MODÜL BAZLI PUANLAMA",
-            style: pw.TextStyle(
-              fontSize: 12,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.blue900,
-            ),
-          ),
-          pw.SizedBox(height: 10),
-          pw.Table(
-            border: pw.TableBorder.all(color: PdfColors.grey400, width: 0.5),
-            children: moduleScores.entries
-                .map(
-                  (e) => pw.TableRow(
-                    children: [
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
-                        child: pw.Text(
-                          e.key.title,
-                          style: const pw.TextStyle(fontSize: 9),
-                        ),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(5),
-                        child: pw.Text(
-                          "%${e.value.toInt()}",
-                          style: pw.TextStyle(
-                            fontSize: 9,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                .toList(),
-          ),
           pw.SizedBox(height: 20),
           pw.Text(
             "DEĞERLENDİRME NOTLARI",
@@ -626,7 +599,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               color: PdfColors.blueGrey700,
-              lineSpacing: 2.5,
+              lineSpacing: 2.2,
             ),
           ),
           pw.SizedBox(height: 8),
@@ -635,7 +608,7 @@ class PdfService {
             style: const pw.TextStyle(
               fontSize: 9,
               color: PdfColors.grey700,
-              lineSpacing: 1.5,
+              lineSpacing: 2.2,
             ),
           ),
           pw.SizedBox(height: 10),
@@ -649,7 +622,7 @@ class PdfService {
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
               pw.SizedBox(width: 20),
-              _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
+              _buildLegendItem(PdfColors.green700, "OLUMLU / UYGUN", ""),
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", "(-1 Puan)"),
             ],
@@ -673,111 +646,133 @@ class PdfService {
             );
             final riskColor = _getRiskColor(fullReportForColor);
 
-            return pw.Wrap(
-              children: [
-                pw.Container(
-                  margin: const pw.EdgeInsets.only(
-                    bottom: 3,
-                  ), // Increased from 2
-                  decoration: pw.BoxDecoration(
-                    border: pw.Border(
-                      left: pw.BorderSide(color: riskColor, width: 4),
+            // Each section emits its header + items as individual top-level
+            // widgets so MultiPage can freely break them across pages.
+            // Wrapping everything in a single Container caused TooManyPagesException
+            // when a section's notes didn't fit on one page.
+            // 1. Determine which sections use table format
+            final bool useTable = [3, 5, 7, 10, 12, 21, 36].contains(id);
+            final List<pw.Widget> itemsWidgets = [];
+
+            if (!useTable) {
+              for (final item in details) {
+                itemsWidgets.add(
+                  _buildStandardVerticalItem(
+                    item,
+                    ttf,
+                    ttfBold,
+                    riskColor: _getRiskColor(
+                      _cleanEmojis(item['report'] ?? ''),
                     ),
-                    color: PdfColors.grey50,
+                    isLast: item == details.last,
                   ),
-                  padding: const pw.EdgeInsets.all(6.5), // Increased from 5
+                );
+              }
+            } else {
+              List<Map<String, dynamic>> tableGroup = [];
+              for (int i = 0; i < details.length; i++) {
+                final item = details[i];
+                final isLast = i == details.length - 1;
+                final String report = _cleanEmojis(item['report'] ?? '');
+                final String advice = _cleanEmojis(item['advice'] ?? '');
+
+                if (report.isEmpty && advice.isEmpty) {
+                  tableGroup.add(item);
+                } else {
+                  if (tableGroup.isNotEmpty) {
+                    itemsWidgets.add(
+                      _buildInfoTable(tableGroup, ttf, ttfBold, riskColor),
+                    );
+                    itemsWidgets.add(pw.SizedBox(height: 10));
+                    tableGroup = [];
+                  }
+                  itemsWidgets.add(
+                    _buildStandardVerticalItem(
+                      item,
+                      ttf,
+                      ttfBold,
+                      riskColor: _getRiskColor(
+                        _cleanEmojis(item['report'] ?? ''),
+                      ),
+                      isLast: isLast,
+                    ),
+                  );
+                }
+              }
+              if (tableGroup.isNotEmpty) {
+                itemsWidgets.add(
+                  _buildInfoTable(tableGroup, ttf, ttfBold, riskColor),
+                );
+              }
+            }
+
+            // 2. Build Section Widgets with Orphan Prevention
+            final List<pw.Widget> finalSectionWidgets = [];
+
+            final headerWidget = pw.Container(
+              margin: const pw.EdgeInsets.only(top: 10, bottom: 4),
+              padding: const pw.EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 6,
+              ),
+              decoration: pw.BoxDecoration(
+                color: const PdfColor.fromInt(
+                  0xFF1a365d,
+                ), // Corporate Navy Blue
+                border: pw.Border(
+                  left: pw.BorderSide(color: riskColor, width: 4),
+                ),
+              ),
+              child: pw.Row(
+                children: [
+                  pw.Expanded(
+                    child: pw.Text(
+                      "BÖLÜM $id: ${_toUpperCaseTR(AppDefinitions.getSectionTitle(id))}",
+                      style: pw.TextStyle(
+                        fontSize: 11,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.white,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+
+            final dividerWidget = pw.Divider(
+              thickness: 0.8,
+              color: PdfColors.indigo100,
+            );
+
+            if (itemsWidgets.isNotEmpty) {
+              // Combine Header + Divider + First Item into an unbreakable block
+              // to prevent "Orphan Headers" at the bottom of pages.
+              // We use pw.Table here because it's unbreakable by default,
+              // serving as a reliable alternative to KeepTogether.
+              // Wrap in a Container to make the block unbreakable in MultiPage
+              finalSectionWidgets.add(
+                pw.Container(
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      // Section Header
-                      pw.Row(
-                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                        children: [
-                          pw.Text(
-                            "BÖLÜM $id: ${_toUpperCaseTR(AppDefinitions.getSectionTitle(id))}",
-                            style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.bold,
-                              color: PdfColors.indigo900,
-                            ),
-                          ),
-                        ],
-                      ),
-                      pw.Divider(thickness: 0.8, color: PdfColors.indigo100),
-
-                      // Detailed Items Loop
-                      // Detailed Items Loop
-                      ...(() {
-                        final bool useTable = [
-                          3,
-                          5,
-                          7,
-                          12,
-                          20,
-                          36,
-                        ].contains(id);
-
-                        if (!useTable) {
-                          return details.map((item) {
-                            return _buildStandardVerticalItem(
-                              item,
-                              ttf,
-                              ttfBold,
-                              isLast: item == details.last,
-                            );
-                          }).toList();
-                        }
-
-                        List<pw.Widget> widgets = [];
-                        List<Map<String, dynamic>> tableGroup = [];
-
-                        for (int i = 0; i < details.length; i++) {
-                          final item = details[i];
-                          final isLast = i == details.length - 1;
-                          final String report = _cleanEmojis(
-                            item['report'] ?? '',
-                          );
-                          final String advice = _cleanEmojis(
-                            item['advice'] ?? '',
-                          );
-
-                          // Rapor veya öneri boşsa tablo grubuna ekle
-                          if (report.isEmpty && advice.isEmpty) {
-                            tableGroup.add(item);
-                          } else {
-                            // Eğer birikmiş tablo varsa önce onu bas
-                            if (tableGroup.isNotEmpty) {
-                              widgets.add(
-                                _buildInfoTable(tableGroup, ttf, ttfBold),
-                              );
-                              widgets.add(pw.SizedBox(height: 10));
-                              tableGroup = [];
-                            }
-                            // Değerlendirmeli olanı normal dikey düzende bas
-                            widgets.add(
-                              _buildStandardVerticalItem(
-                                item,
-                                ttf,
-                                ttfBold,
-                                isLast: isLast,
-                              ),
-                            );
-                          }
-                        }
-
-                        // En sonda kalan tablo grubu varsa bas
-                        if (tableGroup.isNotEmpty) {
-                          widgets.add(
-                            _buildInfoTable(tableGroup, ttf, ttfBold),
-                          );
-                        }
-
-                        return widgets;
-                      })(),
-                    ],
+                    children: [headerWidget, dividerWidget, itemsWidgets.first],
                   ),
                 ),
-              ],
+              );
+              // Add remaining items
+              if (itemsWidgets.length > 1) {
+                finalSectionWidgets.addAll(itemsWidgets.sublist(1));
+              }
+            } else {
+              // No items, just add header (unlikely)
+              finalSectionWidgets.add(headerWidget);
+              finalSectionWidgets.add(dividerWidget);
+            }
+
+            finalSectionWidgets.add(pw.SizedBox(height: 8));
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: finalSectionWidgets,
             );
           }),
         ],
@@ -831,7 +826,8 @@ class PdfService {
     // 3. Aktif Sistem Listesi
     pdf.addPage(
       pw.MultiPage(
-        maxPages: 500,
+        maxPages: 2000,
+
         pageTheme: pageTheme,
         header: (context) => pw.Container(
           alignment: pw.Alignment.centerRight,
@@ -847,7 +843,7 @@ class PdfService {
             style: pw.TextStyle(
               fontSize: 16,
               fontWeight: pw.FontWeight.bold,
-              color: PdfColors.purple900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.SizedBox(height: 8),
@@ -857,16 +853,16 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               color: PdfColors.blueGrey700,
-              lineSpacing: 2.5,
+              lineSpacing: 2.2,
             ),
           ),
           pw.SizedBox(height: 8),
           pw.Text(
-            "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği 'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
+            "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
             style: const pw.TextStyle(
               fontSize: 10,
               color: PdfColors.black,
-              lineSpacing: 1.5,
+              lineSpacing: 2.2,
             ),
           ),
           pw.SizedBox(height: 20),
@@ -977,67 +973,73 @@ class PdfService {
     List<Map<String, dynamic>> items,
     pw.Font font,
     pw.Font fontBold,
+    PdfColor sectionColor,
   ) {
-    return pw.Table(
-      border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-      columnWidths: {
-        0: const pw.FlexColumnWidth(3),
-        1: const pw.FlexColumnWidth(2),
-      },
-      children: [
-        pw.TableRow(
-          decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
-          children: [
-            pw.Padding(
-              padding: const pw.EdgeInsets.all(5),
-              child: pw.Text(
-                "Konu",
-                style: pw.TextStyle(
-                  font: fontBold,
-                  fontSize: 9,
-                  color: PdfColors.indigo900,
-                ),
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.all(5),
-              child: pw.Text(
-                "Yanıt / Durum",
-                style: pw.TextStyle(
-                  font: fontBold,
-                  fontSize: 9,
-                  color: PdfColors.indigo900,
-                ),
-              ),
-            ),
-          ],
-        ),
-        ...items.asMap().entries.map((entry) {
-          final i = entry.key;
-          final item = entry.value;
-          return pw.TableRow(
-            decoration: i % 2 == 1
-                ? const pw.BoxDecoration(color: PdfColors.grey50)
-                : const pw.BoxDecoration(color: PdfColors.white),
+    return pw.Container(
+      decoration: pw.BoxDecoration(
+        border: pw.Border(left: pw.BorderSide(color: sectionColor, width: 4)),
+      ),
+      child: pw.Table(
+        border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+        columnWidths: {
+          0: const pw.FlexColumnWidth(3),
+          1: const pw.FlexColumnWidth(2),
+        },
+        children: [
+          pw.TableRow(
+            decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
             children: [
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
                 child: pw.Text(
-                  item['label'] ?? '',
-                  style: pw.TextStyle(font: font, fontSize: 8),
+                  "Konu",
+                  style: pw.TextStyle(
+                    font: fontBold,
+                    fontSize: 9,
+                    color: PdfColors.indigo900,
+                  ),
                 ),
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
                 child: pw.Text(
-                  item['value'] ?? '',
-                  style: pw.TextStyle(font: font, fontSize: 8),
+                  "Yanıt / Durum",
+                  style: pw.TextStyle(
+                    font: fontBold,
+                    fontSize: 9,
+                    color: PdfColors.indigo900,
+                  ),
                 ),
               ),
             ],
-          );
-        }),
-      ],
+          ),
+          ...items.asMap().entries.map((entry) {
+            final i = entry.key;
+            final item = entry.value;
+            return pw.TableRow(
+              decoration: i % 2 == 1
+                  ? const pw.BoxDecoration(color: PdfColors.grey50)
+                  : const pw.BoxDecoration(color: PdfColors.white),
+              children: [
+                pw.Padding(
+                  padding: const pw.EdgeInsets.all(5),
+                  child: pw.Text(
+                    item['label'] ?? '',
+                    style: pw.TextStyle(font: font, fontSize: 8),
+                  ),
+                ),
+                pw.Padding(
+                  padding: const pw.EdgeInsets.all(5),
+                  child: pw.Text(
+                    item['value'] ?? '',
+                    style: pw.TextStyle(font: font, fontSize: 8),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ],
+      ),
     );
   }
 
@@ -1045,95 +1047,101 @@ class PdfService {
     Map<String, dynamic> item,
     pw.Font font,
     pw.Font fontBold, {
+    required PdfColor riskColor,
     bool isLast = false,
   }) {
     final label = item['label'] ?? '';
     final value = item['value'] ?? '';
     final report = _cleanEmojis(item['report'] ?? '');
 
-    return pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.SizedBox(height: 5.5),
-        if (label.isNotEmpty) ...[
-          pw.Text(
-            "Konu:",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
-            ),
-          ),
-          pw.Text(
-            label,
-            style: pw.TextStyle(
-              fontSize: 9,
-              font: font,
-              color: PdfColors.black,
-              height: 1.25,
-            ),
-          ),
-          pw.SizedBox(height: 2.5),
-        ],
-        if (value.isNotEmpty && value != 'Seçilmedi') ...[
-          pw.Text(
-            "Kullanıcı Yanıtı:",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
-            ),
-          ),
-          pw.Text(
-            value,
-            style: pw.TextStyle(
-              fontSize: 9,
-              font: font,
-              color: PdfColors.black,
-              height: 1.25,
-            ),
-          ),
-          pw.SizedBox(height: 2.5),
-        ],
-        if (report.isNotEmpty) ...[
-          pw.Text(
-            "Değerlendirme:",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
-            ),
-          ),
-          _buildRichText(report, fontBold, fontBold),
-        ],
-        if (item['advice'] != null && item['advice']!.isNotEmpty) ...[
-          pw.SizedBox(height: 2),
-          pw.Text(
-            "Öneri:",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.blue900,
-            ),
-          ),
-          pw.Text(
-            _cleanEmojis(item['advice']!),
-            style: pw.TextStyle(
-              fontSize: 9,
-              font: font,
-              color: PdfColors.black,
-              fontStyle: pw.FontStyle.italic,
-            ),
-          ),
-        ],
-        if (!isLast) ...[
+    return pw.Container(
+      decoration: pw.BoxDecoration(
+        border: pw.Border(left: pw.BorderSide(color: riskColor, width: 4)),
+      ),
+      padding: const pw.EdgeInsets.only(left: 8),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
           pw.SizedBox(height: 5.5),
-          pw.Divider(thickness: 0.1, color: PdfColors.grey300),
+          if (label.isNotEmpty) ...[
+            pw.Text(
+              "Konu:",
+              style: pw.TextStyle(
+                fontSize: 9,
+                fontWeight: pw.FontWeight.bold,
+                fontStyle: pw.FontStyle.italic,
+                color: PdfColors.blue900,
+              ),
+            ),
+            pw.Text(
+              label,
+              style: pw.TextStyle(
+                fontSize: 9,
+                font: font,
+                color: PdfColors.black,
+                lineSpacing: 2.2,
+              ),
+            ),
+            pw.SizedBox(height: 2.5),
+          ],
+          if (value.isNotEmpty && value != 'Seçilmedi') ...[
+            pw.Text(
+              "Kullanıcı Yanıtı:",
+              style: pw.TextStyle(
+                fontSize: 9,
+                fontWeight: pw.FontWeight.bold,
+                fontStyle: pw.FontStyle.italic,
+                color: PdfColors.blue900,
+              ),
+            ),
+            pw.Text(
+              value,
+              style: pw.TextStyle(
+                fontSize: 9,
+                font: font,
+                color: PdfColors.black,
+                lineSpacing: 2.2,
+              ),
+            ),
+            pw.SizedBox(height: 2.5),
+          ],
+          if (report.isNotEmpty) ...[
+            pw.Text(
+              "Değerlendirme:",
+              style: pw.TextStyle(
+                fontSize: 9,
+                fontWeight: pw.FontWeight.bold,
+                fontStyle: pw.FontStyle.italic,
+                color: PdfColors.blue900,
+              ),
+            ),
+            _buildRichText(report, font, fontBold),
+          ],
+          if (item['advice'] != null && item['advice']!.isNotEmpty) ...[
+            pw.SizedBox(height: 2),
+            pw.Text(
+              "Öneri:",
+              style: pw.TextStyle(
+                fontWeight: pw.FontWeight.bold,
+                fontStyle: pw.FontStyle.italic,
+                color: PdfColors.blue900,
+              ),
+            ),
+            pw.Text(
+              _cleanEmojis(item['advice']!),
+              style: pw.TextStyle(
+                fontSize: 9,
+                font: font,
+                color: PdfColors.black,
+                fontStyle: pw.FontStyle.italic,
+                lineSpacing: 2.2,
+              ),
+            ),
+          ],
+          pw.SizedBox(height: 5.5),
+          if (!isLast) pw.Divider(thickness: 0.1, color: PdfColors.grey300),
         ],
-      ],
+      ),
     );
   }
 }

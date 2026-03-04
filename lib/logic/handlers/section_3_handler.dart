@@ -1,6 +1,7 @@
 import 'package:life_safety/data/bina_store.dart';
 import 'package:life_safety/models/bolum_3_model.dart';
 import 'package:life_safety/models/choice_result.dart';
+import 'package:life_safety/models/report_status.dart';
 
 class Section3Handler {
   final BinaStore _store;
@@ -23,6 +24,7 @@ class Section3Handler {
         'label': 'Normal Kat Sayısı (Zemin Üstü)',
         'value': '$normalKat adet',
         'report': '',
+        'status': ReportStatus.info,
       });
     }
     if (bodrumKat > 0) {
@@ -30,13 +32,20 @@ class Section3Handler {
         'label': 'Bodrum Kat Sayısı (Zemin Altı)',
         'value': '$bodrumKat adet',
         'report': '',
+        'status': ReportStatus.info,
       });
     }
-    details.add({'label': 'Zemin Kat', 'value': '1 adet', 'report': ''});
+    details.add({
+      'label': 'Zemin Kat',
+      'value': '1 adet',
+      'report': '',
+      'status': ReportStatus.info,
+    });
     details.add({
       'label': 'Toplam Kat Adedi',
       'value': '$toplamKat kat',
       'report': '',
+      'status': ReportStatus.info,
     });
 
     // Kat yükseklikleri
@@ -44,12 +53,14 @@ class Section3Handler {
       'label': 'Zemin Kat Yüksekliği',
       'value': '${b3.zeminYuksekligi?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
+      'status': ReportStatus.info,
     });
     if (normalKat > 0) {
       details.add({
         'label': 'Normal Kat Yüksekliği',
         'value': '${b3.normalYuksekligi?.toStringAsFixed(2) ?? "-"} m',
         'report': '',
+        'status': ReportStatus.info,
       });
     }
     if (bodrumKat > 0) {
@@ -57,6 +68,7 @@ class Section3Handler {
         'label': 'Bodrum Kat Yüksekliği',
         'value': '${b3.bodrumYuksekligi?.toStringAsFixed(2) ?? "-"} m',
         'report': '',
+        'status': ReportStatus.info,
       });
     }
 
@@ -65,11 +77,13 @@ class Section3Handler {
       'label': 'Bina Yüksekliği (hBina)',
       'value': '${b3.hBina?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
+      'status': ReportStatus.info,
     });
     details.add({
       'label': 'Yapı Yüksekliği (hYapı)',
       'value': '${b3.hYapi?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
+      'status': ReportStatus.info,
     });
 
     // Yüksek bina sınıflandırması
@@ -78,15 +92,17 @@ class Section3Handler {
       'label': 'Yüksek Bina Sınıflandırması',
       'value': isYuksek ? 'YÜKSEK BİNA' : 'Yüksek Olmayan Bina',
       'report': '',
+      'status': ReportStatus.info,
     });
 
     // Varsayılan değer uyarısı
     if (b3.yukseklikBilinmiyor == true) {
       details.add({
-        'label': '',
-        'value': '',
+        'label': 'Yükseklik Bilgisi Notu',
+        'value': 'Varsayılan Değerler',
         'report':
             'NOT: Kat yükseklikleri kullanıcı tarafından bilinmediğinden uygulama varsayılan değerler (Zemin: 3.50m, Normal: 3.00m, Bodrum: 3.50m) kullanarak hesaplama yapmıştır.',
+        'status': ReportStatus.info,
       });
     }
 

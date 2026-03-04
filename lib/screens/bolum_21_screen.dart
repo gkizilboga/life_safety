@@ -83,27 +83,33 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
           _buildInfoCard(),
           const SizedBox(height: 16),
           _buildSoru(
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    "Merdivenin önünde Yangın Güvenlik Holü (YGH) var mı?",
-                    style: AppStyles.questionTitle,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Merdivenin önünde Yangın Güvenlik Holü (YGH) var mı?",
+                        style: AppStyles.questionTitle,
+                      ),
+                    ),
+                    DefinitionButton(
+                      term: "Yangın Güvenlik Holü (YGH)",
+                      definition: AppDefinitions.yanginGuvenlikHolu,
+                    ),
+                  ],
                 ),
-                DefinitionButton(
-                  term: "Yangın Güvenlik Holü (YGH)",
-                  definition: AppDefinitions.yanginGuvenlikHolu,
+                const SizedBox(height: 8),
+                const TechnicalDrawingButton(
+                  assetPath: 'assets/images/sections/ygh_1.webp',
+                  title: "Örnek YGH Yerleşimi İncele",
                 ),
               ],
             ),
             'varlik',
             [Bolum21Content.varlikOptionA, Bolum21Content.varlikOptionB],
             _model.varlik,
-            footerWidget: const TechnicalDrawingButton(
-              assetPath: 'assets/images/sections/ygh_1.webp',
-              title: "Örnek YGH Yerleşimi İncele",
-            ),
           ),
 
           if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) ...[

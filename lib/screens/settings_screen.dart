@@ -158,65 +158,50 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  void _showDeleteArchiveDialog() {
-    showDialog(
+  void _showDeleteArchiveDialog() async {
+    final confirmed = await showCustomDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("Arşivi Temizle"),
-        content: const Text(
+      title: "Arşivi Temizle",
+      content:
           "Tüm geçmiş analizleriniz kalıcı olarak silinecektir. Bu işlem geri alınamaz.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text("VAZGEÇ"),
-          ),
-          TextButton(
-            onPressed: () {
-              BinaStore.instance.archive = [];
-              BinaStore.instance.saveToDisk();
-              Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Arşiv temizlendi.")),
-              );
-            },
-            child: const Text("SİL", style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      confirmText: "SİL",
+      cancelText: "VAZGEÇ",
+      icon: Icons.delete_sweep_rounded,
+      iconColor: Colors.red,
     );
+
+    if (confirmed == true) {
+      BinaStore.instance.archive = [];
+      BinaStore.instance.saveToDisk();
+      if (!mounted) return;
+      setState(() {});
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Arşiv temizlendi.")));
+    }
   }
 
-  void _showResetAccountDialog() {
-    showDialog(
+  void _showResetAccountDialog() async {
+    final confirmed = await showCustomDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("Kaydı Sıfırla"),
-        content: const Text(
+      title: "Kaydı Sıfırla",
+      content:
           "Profil bilgileriniz silinecek ve kayıt ekranına yönlendirileceksiniz. Emin misiniz?",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text("VAZGEÇ"),
-          ),
-          TextButton(
-            onPressed: () {
-              BinaStore.instance.isRegistered = false;
-              BinaStore.instance.hasSeenOnboarding =
-                  false; // Also reset onboarding
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const OnboardingScreen(),
-                ),
-                (r) => false,
-              );
-            },
-            child: const Text("SIFIRLA", style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      confirmText: "SIFIRLA",
+      cancelText: "VAZGEÇ",
+      icon: Icons.person_remove_rounded,
+      iconColor: Colors.red,
     );
+
+    if (confirmed == true) {
+      BinaStore.instance.isRegistered = false;
+      BinaStore.instance.hasSeenOnboarding = false;
+      if (!mounted) return;
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        (r) => false,
+      );
+    }
   }
 }

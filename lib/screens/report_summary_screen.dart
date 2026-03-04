@@ -23,8 +23,10 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   Color _getUiRiskColor(String text) {
     if (text.contains('KRİTİK RİSK')) return const Color(0xFFEF5350); // Red
     if (text.contains('UYARI')) return const Color(0xFFFFD600); // Yellow (A700)
-    if (text.contains('BİLİNMİYOR')) return Colors.grey;
-    if (text.contains('OLUMLU')) return const Color(0xFF66BB6A); // Green
+    if (text.contains('BİLİNMİYOR') || text.contains('Bilinmiyor'))
+      return Colors.grey;
+    if (text.contains('OLUMLU') || text.contains('Olumlu'))
+      return const Color(0xFF66BB6A); // Green
     if (text.contains('BİLGİ')) return const Color(0xFF42A5F5); // Blue
     return Colors.grey;
   }
@@ -238,8 +240,6 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
     );
   }
 
-  // _buildYghEvaluationPanel kaldırıldı — YGH paneli ÖZET sayfasına gösterilmiyor.
-
   Widget _buildRiskPanel(Map<String, dynamic> m) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -374,10 +374,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
     // 8: Module başlığını ilk bölümün numarası ile son bölümün numarasını
     // içerecek şekilde oluştur: e.g. "Bölüm 1–10: Genel Bilgiler"
     final ids = module.sectionIds;
-    final shortTitle = module.title
-        .replaceAll('Bina hakkında Genel Bilgiler', 'Genel Bilgiler')
-        .replaceAll('Dışavurum ve Çevre', 'Dışavurum & Çevre')
-        .trim();
+    final shortTitle = module.title.trim();
     final headerTitle = ids.length == 1
         ? "Bölüm ${ids.first}: ${AppDefinitions.getSectionTitle(ids.first)}"
         : "Bölüm ${ids.first}–${ids.last}: $shortTitle";

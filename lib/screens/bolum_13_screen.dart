@@ -373,4 +373,3 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     );
   }
 }
-

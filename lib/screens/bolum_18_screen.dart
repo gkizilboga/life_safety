@@ -100,14 +100,14 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text(
-                " Binanız 'Yüksek Bina' statüsünde olduğu için aşağıdaki soru açılmıştır.",
+                " Binanız 'Yüksek Bina' sınıfında olduğu için aşağıdaki soru açılmıştır.",
                 style: TextStyle(color: Colors.red, fontSize: 12),
               ),
             ),
             const SizedBox(height: 10),
             SizedBox(key: _boruKey, height: 1),
             _buildSoru(
-              "Binanızda tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?",
+              "Tesisat şaftlarından geçen su boruları nasıl?",
               'boru',
               [
                 Bolum18Content.boruOptionA,

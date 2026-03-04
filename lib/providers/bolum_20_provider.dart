@@ -71,8 +71,17 @@ class Bolum20Provider extends ChangeNotifier {
   }
 
   void _init() {
-    _loadBuildingInfo();
-    _loadSavedData();
+    try {
+      _loadBuildingInfo();
+      _loadSavedData();
+    } catch (e) {
+      // Safely handle corrupted load data
+      _isTekKatli = false;
+      _hasBodrum = false;
+      _showBasinclandirma = false;
+      _isBodrumIndependent = false;
+      _model = Bolum20Model();
+    }
   }
 
   void _loadBuildingInfo() {
@@ -145,8 +154,8 @@ class Bolum20Provider extends ChangeNotifier {
         _bodLobiMesafeDurumu = saved.bodrumLobiTahliyeMesafeDurumu;
       }
 
-      // Calculate derived state
-      _calculateDynamicState();
+      // Calculate derived state without notifying yet
+      _calculateDynamicState(shouldNotify: false);
     }
   }
 
@@ -240,7 +249,7 @@ class Bolum20Provider extends ChangeNotifier {
         );
         break;
     }
-    _calculateDynamicState();
+    _calculateDynamicState(shouldNotify: true);
   }
 
   // --- Stored Getters for UI and Logic (DRY) ---
@@ -274,7 +283,7 @@ class Bolum20Provider extends ChangeNotifier {
       (int.tryParse(bodSahanliksizCtrl.text) ?? 0) +
       (int.tryParse(bodDengelenmisCtrl.text) ?? 0);
 
-  void _calculateDynamicState() {
+  void _calculateDynamicState({bool shouldNotify = true}) {
     int ic = int.tryParse(icKapaliCtrl.text) ?? 0;
     int dis = int.tryParse(disKapaliCtrl.text) ?? 0;
     int bIc = int.tryParse(bodIcKapaliCtrl.text) ?? 0;
@@ -287,31 +296,46 @@ class Bolum20Provider extends ChangeNotifier {
       if (!_showBasinclandirma) {
         _model = _model.copyWith(basinclandirma: null);
       }
-      notifyListeners();
-    } else {
-      // Also re-validate direct exit counts when stair totals change
-      toplamDirectErr = _validateDirectCount(
+      if (shouldNotify) notifyListeners();
+    } else if (shouldNotify) {
+      // Defensive check: Only notify if errors or dependencies changed
+      final newTDE = _validateDirectCount(
         int.tryParse(toplamDirectCtrl.text) ?? 0,
         totalMainStairs,
       );
-      if (_isBodrumIndependent) {
-        bodToplamDirectErr = _validateDirectCount(
-          int.tryParse(bodToplamDirectCtrl.text) ?? 0,
-          totalBasementStairs,
-        );
-      }
-      notifyListeners(); // Also notify for error state changes
-    }
+      final newBTDE = _isBodrumIndependent
+          ? _validateDirectCount(
+              int.tryParse(bodToplamDirectCtrl.text) ?? 0,
+              totalBasementStairs,
+            )
+          : null;
 
-    // Reset relevance-based fields if they are no longer shown
-    if (!shouldShowLobbyDistanceQuestion && _lobiMesafeDurumu != null) {
-      _lobiMesafeDurumu = null;
-      _model = _model.copyWith(lobiTahliyeMesafeDurumu: null);
-    }
-    if (!shouldShowBasementLobbyDistanceQuestion &&
-        _bodLobiMesafeDurumu != null) {
-      _bodLobiMesafeDurumu = null;
-      _model = _model.copyWith(bodrumLobiTahliyeMesafeDurumu: null);
+      final bool lobbyReq = shouldShowLobbyDistanceQuestion;
+      final bool bLobbyReq = shouldShowBasementLobbyDistanceQuestion;
+
+      bool changed = false;
+      if (toplamDirectErr != newTDE) {
+        toplamDirectErr = newTDE;
+        changed = true;
+      }
+      if (bodToplamDirectErr != newBTDE) {
+        bodToplamDirectErr = newBTDE;
+        changed = true;
+      }
+
+      // Reset relevance-based fields if they are no longer shown
+      if (!lobbyReq && _lobiMesafeDurumu != null) {
+        _lobiMesafeDurumu = null;
+        _model = _model.copyWith(lobiTahliyeMesafeDurumu: null);
+        changed = true;
+      }
+      if (!bLobbyReq && _bodLobiMesafeDurumu != null) {
+        _bodLobiMesafeDurumu = null;
+        _model = _model.copyWith(bodrumLobiTahliyeMesafeDurumu: null);
+        changed = true;
+      }
+
+      if (changed) notifyListeners();
     }
   }
 
@@ -387,7 +411,7 @@ class Bolum20Provider extends ChangeNotifier {
         bodDengelenmisCtrl.clear();
         bodToplamDirectCtrl.clear();
       }
-      _calculateDynamicState();
+      _calculateDynamicState(shouldNotify: true);
     }
   }
 

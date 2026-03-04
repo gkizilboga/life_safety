@@ -5,6 +5,7 @@ import '../data/turkiye_data.dart';
 import 'package:flutter/gestures.dart';
 import '../utils/turkish_utils.dart';
 import '../utils/app_strings.dart';
+import '../widgets/custom_widgets.dart';
 
 class BuildingSetupScreen extends StatefulWidget {
   const BuildingSetupScreen({super.key});
@@ -148,23 +149,11 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   }
 
   void _showContentDialog(String title, String content) {
-    showDialog(
+    showCustomDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        content: SingleChildScrollView(
-          child: Text(content, style: const TextStyle(fontSize: 14)),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("KAPAT"),
-          ),
-        ],
-      ),
+      title: title,
+      content: content,
+      confirmText: "KAPAT",
     );
   }
 
@@ -475,4 +464,3 @@ class ListSelector extends StatelessWidget {
     );
   }
 }
-

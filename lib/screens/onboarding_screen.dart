@@ -17,12 +17,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<Map<String, String>> _pages = [
     {
-      "title": "Neden Binanımızda Yangın Risk Analizi Yapmalıyız?",
+      "title": "Neden Binamızda Yangın Risk Analizi Yapmalıyız?",
       "desc":
           "Yangın, sadece bir kaza değil; çoğunlukla yapının mimari eksikliklerinin sonucudur. Bu analizde, binanızdaki görülmeyen risklerin ve alınması gereken önlemlerin sizin tarafınızdan fark edilmesini sağlamak amaçlanmaktadır.",
     },
     {
-      "title": "Kapsamlı İnceleme",
+      "title": "Kapsamlı Kontrol",
       "desc":
           "Binanız taşıyıcı sistemden kaçış yollarına, asansörlerden tesisat şaftlarına kadar birçok farklı başlıkta kontrol edilmektedir.",
     },
@@ -213,4 +213,3 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 }
-

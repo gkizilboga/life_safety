@@ -342,6 +342,7 @@ void main() {
           reportText: "",
         ),
       );
+      store.bolum20 = Bolum20Model();
       final details = ReportEngine.getSectionDetailedReport(36, store: store);
 
       expect(

@@ -26,117 +26,89 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
 
     // Show startup info regarding "Save & Exit"
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
+      showCustomDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          title: const Row(
-            children: [
-              Icon(Icons.save_as_rounded, color: Colors.green, size: 28),
-              SizedBox(width: 10),
-              Text("Bilgilendirme"),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
+        title: "Bilgilendirme",
+        icon: Icons.save_as_rounded,
+        iconColor: Colors.green,
+        confirmText: "Tamam",
+        contentWidget: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                const Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("• ", style: TextStyle(fontSize: 14, height: 1.4)),
-                    Expanded(
-                      child: Text(
-                        "Analiz süresi yaklaşık 15-20 dakikadır.",
-                        style: TextStyle(fontSize: 14, height: 1.4),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "• ",
-                      style: TextStyle(fontSize: 14, height: 1.4),
-                    ),
-                    Expanded(
-                      child: RichText(
-                        text: const TextSpan(
-                          style: TextStyle(
-                            fontSize: 14,
-                            height: 1.4,
-                            color: Colors.black87,
-                          ),
-                          children: [
-                            TextSpan(
-                              text:
-                                  "İstediğinizde ekranın sağ üst köşesindeki ",
-                            ),
-                            TextSpan(
-                              text: "KAYDET",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text:
-                                  " butonuna basarak çıkabilir, daha sonra kaldığınız yerden devam edebilirsiniz.",
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "• ",
-                      style: TextStyle(fontSize: 14, height: 1.4),
-                    ),
-                    Expanded(
-                      child: RichText(
-                        text: const TextSpan(
-                          style: TextStyle(
-                            fontSize: 14,
-                            height: 1.4,
-                            color: Colors.black87,
-                          ),
-                          children: [
-                            TextSpan(text: "Analiz yalnızca "),
-                            TextSpan(
-                              text: "KONUT",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(text: " veya "),
-                            TextSpan(
-                              text: "KONUT+TİCARİ",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            TextSpan(
-                              text: " ruhsatlı yapılar için geçerlidir.",
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                Text("• ", style: TextStyle(fontSize: 14, height: 1.4)),
+                Expanded(
+                  child: Text(
+                    "Analiz süresi yaklaşık 15-20 dakikadır.",
+                    style: TextStyle(fontSize: 14, height: 1.4),
+                  ),
                 ),
               ],
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                "Tamam",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+            const SizedBox(height: 8),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("• ", style: TextStyle(fontSize: 14, height: 1.4)),
+                Expanded(
+                  child: RichText(
+                    text: const TextSpan(
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        color: Colors.black87,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "İstediğinizde ekranın sağ üst köşesindeki ",
+                        ),
+                        TextSpan(
+                          text: "KAYDET",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text:
+                              " butonuna basarak çıkabilir, daha sonra kaldığınız yerden devam edebilirsiniz.",
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text("• ", style: TextStyle(fontSize: 14, height: 1.4)),
+                Expanded(
+                  child: RichText(
+                    text: const TextSpan(
+                      style: TextStyle(
+                        fontSize: 14,
+                        height: 1.4,
+                        color: Colors.black87,
+                      ),
+                      children: [
+                        TextSpan(text: "Analiz yalnızca "),
+                        TextSpan(
+                          text: "KONUT",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(text: " veya "),
+                        TextSpan(
+                          text: "KONUT+TİCARİ",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(text: " ruhsatlı yapılar için geçerlidir."),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -170,59 +142,21 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
   }
 
   Future<void> _showWarningDialog() async {
-    await showDialog<void>(
+    final confirmed = await showCustomDialog<bool>(
       context: context,
+      title: 'UYARI',
+      content:
+          ' DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Uzman görüşüne başvurmanız tavsiye edilir.',
+      confirmText: 'Devam Et',
+      cancelText: 'Vazgeç',
+      icon: Icons.warning_amber_rounded,
+      iconColor: Colors.orange,
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          title: const Row(
-            children: [
-              Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 30),
-              SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  'UYARI',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
-          content: const Text(
-            ' DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Uzman görüşüne başvurmanız tavsiye edilir.',
-            style: TextStyle(fontSize: 14, height: 1.4),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Vazgeç',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _navigateToNext();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1A237E),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text('Devam Et'),
-            ),
-          ],
-        );
-      },
     );
+
+    if (confirmed == true) {
+      _navigateToNext();
+    }
   }
 
   @override
@@ -275,4 +209,3 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
     );
   }
 }
-

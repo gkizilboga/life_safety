@@ -22,10 +22,27 @@ class Bolum20Screen extends StatefulWidget {
 }
 
 class _Bolum20ScreenState extends State<Bolum20Screen> {
+  // CRITICAL: Provider must be created once in initState, NOT inside build().
+  // Creating it inside build() causes a new provider (with full initialization)
+  // to be created on every rebuild, causing an infinite rebuild loop.
+  late final Bolum20Provider _provider;
+
+  @override
+  void initState() {
+    super.initState();
+    _provider = Bolum20Provider();
+  }
+
+  @override
+  void dispose() {
+    _provider.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => Bolum20Provider(),
+    return ChangeNotifierProvider.value(
+      value: _provider,
       child: const _Bolum20ScreenContent(),
     );
   }
@@ -65,36 +82,16 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
 
           if (provider.isBodrumIndependent) {
             bool confirmed =
-                await showDialog<bool>(
+                await showCustomDialog<bool>(
                   context: context,
+                  title: "Dikkat:",
+                  content:
+                      "Bodrum kat merdivenlerinin, üst kat merdivenlerinden FARKLI bir konumda olduğunu belirttiniz.\n\nBu durum, kaçış yollarının sürekliliği açısından kritik bir bilgidir.\n\nOnaylıyor musunuz?",
+                  confirmText: "Evet",
+                  cancelText: "Hayır",
+                  icon: Icons.warning_amber_rounded,
+                  iconColor: Colors.orange,
                   barrierDismissible: false,
-                  builder: (dialogContext) => AlertDialog(
-                    title: const Row(
-                      children: [
-                        Icon(Icons.warning_amber_rounded, color: Colors.orange),
-                        SizedBox(width: 10),
-                        Expanded(child: Text("Dikkat: Merdiven Konumu")),
-                      ],
-                    ),
-                    content: const Text(
-                      "Bodrum kat merdivenlerinin, normal kat merdivenlerinden FARKLI bir konumda (bağımsız) olduğunu belirttiniz.\n\nBu durum, kaçış yollarının sürekliliği açısından kritik bir bilgidir.\n\nOnaylıyor musunuz?",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(dialogContext, false),
-                        child: const Text("Geri Dön"),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(dialogContext, true),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryBlue,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text("Anladım, Devam Et"),
-                      ),
-                    ],
-                  ),
                 ) ??
                 false;
 
@@ -687,8 +684,8 @@ class _StairInputRow extends StatelessWidget {
               width: 55,
               child: TextFormField(
                 controller: ctrl,
-                // 6: onChanged yerine FocusNode kullanmıyoruz - modal kapanınca re-focus olmaz
-                focusNode: FocusNode()..addListener(() {}),
+
+                // FocusNode kaldırıldı - sonsuz rebuild döngüsüne neden oluyordu
                 onChanged: onChange,
                 keyboardType: TextInputType.number,
                 textAlign: TextAlign.center,
@@ -779,56 +776,10 @@ class StairQuestion extends StatelessWidget {
             (opt) => SelectableCard(
               choice: opt,
               isSelected: selected?.label == opt.label,
-              onTap: () async {
+              onTap: () {
                 if (keyParam == 'bodrum') {
                   final bool isIndependent =
                       opt.label == Bolum20Content.bodrumOptionB.label;
-                  if (isIndependent) {
-                    // 7: Kullanıcıya onay sordur
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (ctx) => AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        title: const Row(
-                          children: [
-                            Icon(
-                              Icons.warning_amber_rounded,
-                              color: Colors.orange,
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                "Emin misiniz?",
-                                style: TextStyle(fontSize: 17),
-                              ),
-                            ),
-                          ],
-                        ),
-                        content: const Text(
-                          "\"Merdiven bodrum katlara inmiyor\" seçeneğini işaretlediniz.\n\nBu durum ilerideki birkaç soruyu doğrudan etkili. Eğer bodrum katların ayrı bir merdiveni varsa bu seçeneği onaylayınız.\n\nDoğru seçimi yaptığınızdan emin misiniz?",
-                          style: TextStyle(fontSize: 14, height: 1.5),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(ctx, false),
-                            child: const Text("Geri Dön"),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => Navigator.pop(ctx, true),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryBlue,
-                              foregroundColor: Colors.white,
-                            ),
-                            child: const Text("Evet, Doğru"),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirmed != true) return;
-                  }
                   provider.setIsBodrumIndependent(isIndependent, opt);
                 } else {
                   provider.handleSelection(keyParam, opt);
