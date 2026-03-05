@@ -12,7 +12,8 @@ class Bolum16Model {
   final int? bariyerUst;
   final int? bariyerZemin;
 
-  final double? enUzunCephe; // Yeni alan
+  /// Cephe uzunluğu seçimi: A (≤75m), B (>75m), C (Bilmiyorum)
+  final ChoiceResult? cepheUzunlugu;
 
   Bolum16Model({
     this.mantolama,
@@ -23,7 +24,7 @@ class Bolum16Model {
     this.bariyerYan,
     this.bariyerUst,
     this.bariyerZemin,
-    this.enUzunCephe,
+    this.cepheUzunlugu,
   });
 
   Bolum16Model copyWith({
@@ -35,7 +36,7 @@ class Bolum16Model {
     int? bariyerYan,
     int? bariyerUst,
     int? bariyerZemin,
-    double? enUzunCephe,
+    ChoiceResult? cepheUzunlugu,
   }) {
     return Bolum16Model(
       mantolama: mantolama ?? this.mantolama,
@@ -47,7 +48,7 @@ class Bolum16Model {
       bariyerYan: bariyerYan ?? this.bariyerYan,
       bariyerUst: bariyerUst ?? this.bariyerUst,
       bariyerZemin: bariyerZemin ?? this.bariyerZemin,
-      enUzunCephe: enUzunCephe ?? this.enUzunCephe,
+      cepheUzunlugu: cepheUzunlugu ?? this.cepheUzunlugu,
     );
   }
 
@@ -61,7 +62,7 @@ class Bolum16Model {
       'bariyerYan': bariyerYan,
       'bariyerUst': bariyerUst,
       'bariyerZemin': bariyerZemin,
-      'enUzunCephe': enUzunCephe,
+      'cepheUzunlugu_label': cepheUzunlugu?.label,
     };
   }
 
@@ -94,11 +95,16 @@ class Bolum16Model {
         Bolum16Content.bitisikOptionA,
         Bolum16Content.bitisikOptionB,
         Bolum16Content.bitisikOptionC,
+        Bolum16Content.bitisikOptionD,
       ]),
       bariyerYan: map['bariyerYan'],
       bariyerUst: map['bariyerUst'],
       bariyerZemin: map['bariyerZemin'],
-      enUzunCephe: map['enUzunCephe'],
+      cepheUzunlugu: find(map['cepheUzunlugu_label'], [
+        Bolum16Content.cepheUzunluguOlumlu,
+        Bolum16Content.cepheUzunluguKritik,
+        Bolum16Content.cepheUzunluguBilinmiyor,
+      ]),
     );
   }
 }

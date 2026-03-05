@@ -10,7 +10,9 @@ import 'package:life_safety/models/bolum_25_model.dart';
 import 'package:life_safety/models/bolum_21_model.dart';
 import 'package:life_safety/models/bolum_9_model.dart';
 import 'package:life_safety/models/bolum_36_model.dart';
+import 'package:life_safety/models/bolum_4_model.dart';
 import 'package:life_safety/models/choice_result.dart';
+import 'package:life_safety/models/report_status.dart';
 import 'package:life_safety/utils/app_content.dart';
 
 void main() {
@@ -286,6 +288,135 @@ void main() {
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
         expect(report.contains("KRİTİK RİSK"), true);
+      },
+    );
+
+    test(
+      'Bölüm 36: Genişlik Aralık Analizi - Başarılı Yönetmelik Uyumu (OLUMLU)',
+      () {
+        // Yük < 500, Yüksek Bina Değil -> Gereken = 120cm Merdiven, 110cm Koridor
+        store.bolum4 = Bolum4Model(
+          hesaplananBinaYuksekligi: 10.0,
+          hesaplananYapiYuksekligi: 10.0,
+        );
+        store.bolum33 = Bolum33Model(yukNormal: 100);
+        store.bolum36 = Bolum36Model(
+          areWidthsSame: false,
+          genislikKorunumlu: Bolum36WidthContent.merdGenislikB,
+          koridorGenislikKorunumlu: Bolum36WidthContent.koridorGenislikC,
+          merdivenDegerlendirme: "",
+        );
+
+        final details = ReportEngine.getSectionDetailedReport(36, store: store);
+        final merdDetail = details.firstWhere(
+          (d) => d['label'] == 'Korunumlu Merdiven Genişliği',
+        );
+        final koriDetail = details.firstWhere(
+          (d) => d['label'] == 'Korunumlu Koridor Genişliği',
+        );
+
+        expect(merdDetail['status'], ReportStatus.compliant);
+        expect(merdDetail['report'].contains("OLUMLU"), true);
+
+        expect(koriDetail['status'], ReportStatus.compliant);
+        expect(koriDetail['report'].contains("OLUMLU"), true);
+      },
+    );
+
+    test(
+      'Bölüm 36: Genişlik Aralık Analizi - Kesin İhlal Durumu (KRİTİK RİSK)',
+      () {
+        // Yük > 2000 -> Gereken = 200cm Merdiven, 200cm Koridor
+        store.bolum4 = Bolum4Model(
+          hesaplananBinaYuksekligi: 10.0,
+          hesaplananYapiYuksekligi: 10.0,
+        );
+        store.bolum33 = Bolum33Model(yukNormal: 2500);
+
+        store.bolum36 = Bolum36Model(
+          areWidthsSame: false,
+          genislikKorunumsuz: Bolum36WidthContent.merdGenislikB,
+          koridorGenislikKorunumsuz: Bolum36WidthContent.koridorGenislikC,
+          kapiGenislikKorunumsuz: Bolum36WidthContent.kapiGenislikKritik,
+          merdivenDegerlendirme: "",
+        );
+
+        final details = ReportEngine.getSectionDetailedReport(36, store: store);
+        final merdDetail = details.firstWhere(
+          (d) => d['label'] == 'Korunumsuz Merdiven Genişliği',
+        );
+        final koriDetail = details.firstWhere(
+          (d) => d['label'] == 'Korunumsuz Koridor Genişliği',
+        );
+        final kapiDetail = details.firstWhere(
+          (d) => d['label'] == 'Korunumsuz Alan Kapı Genişliği',
+        );
+
+        expect(merdDetail['status'], ReportStatus.risk);
+        expect(merdDetail['report'].contains("KRİTİK RİSK"), true);
+
+        expect(koriDetail['status'], ReportStatus.risk);
+        expect(koriDetail['report'].contains("KRİTİK RİSK"), true);
+
+        expect(kapiDetail['status'], ReportStatus.risk);
+        expect(kapiDetail['report'].contains("KRİTİK RİSK"), true);
+      },
+    );
+
+    test(
+      'Bölüm 36: Genişlik Aralık Analizi - Bilinmiyor Seçeneği (WARNING)',
+      () {
+        store.bolum4 = Bolum4Model();
+        store.bolum33 = Bolum33Model();
+        store.bolum36 = Bolum36Model(
+          areWidthsSame: false,
+          genislikKorunumlu: Bolum36WidthContent.merdGenislikBilinmiyor,
+          merdivenDegerlendirme: "",
+        );
+
+        final details = ReportEngine.getSectionDetailedReport(36, store: store);
+        final merdDetail = details.firstWhere(
+          (d) => d['label'] == 'Korunumlu Merdiven Genişliği',
+        );
+
+        expect(merdDetail['status'], ReportStatus.warning);
+        expect(merdDetail['report'].contains("BİLİNMİYOR"), true);
+      },
+    );
+
+    test(
+      'Bölüm 36: Birleşik Genişlik Girişi Analizi (areWidthsSame = true)',
+      () {
+        store.bolum4 = Bolum4Model(hesaplananBinaYuksekligi: 10.0);
+        store.bolum33 = Bolum33Model(yukNormal: 100);
+        store.bolum36 = Bolum36Model(
+          areWidthsSame: true,
+          genislikKorunumlu: Bolum36WidthContent.merdGenislikB, // 121-150cm
+          koridorGenislikKorunumlu:
+              Bolum36WidthContent.koridorGenislikC, // 121-150cm
+          kapiGenislikKorunumlu:
+              Bolum36WidthContent.kapiGenislikOlumlu, // 80cm ve üzeri
+        );
+
+        final details = ReportEngine.getSectionDetailedReport(36, store: store);
+
+        // Birleşik raporlamada etiketler "Genel" veya prefixsiz olmalı
+        final merdDetail = details.firstWhere(
+          (d) => d['label'] == 'Merdiven Genişliği (Genel)',
+        );
+        final koriDetail = details.firstWhere(
+          (d) => d['label'] == 'Kaçış Koridoru Genişliği (Genel)',
+        );
+        final kapiDetail = details.firstWhere(
+          (d) => d['label'] == 'Kaçış Kapısı Temiz Geçiş Genişliği',
+        );
+
+        expect(merdDetail['status'], ReportStatus.compliant);
+        expect(koriDetail['status'], ReportStatus.compliant);
+        expect(kapiDetail['status'], ReportStatus.compliant);
+
+        // Korunumsuz etiketleri bulunmamalı (çünkü areWidthsSame = true)
+        expect(details.any((d) => d['label'].contains('Korunumsuz')), false);
       },
     );
   });

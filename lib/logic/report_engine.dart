@@ -931,6 +931,17 @@ class ReportEngine {
             'advice': b16.bitisikNizam!.adviceText,
           });
         }
+
+        // En uzun cephe uzunluğu
+        if (b16.cepheUzunlugu != null) {
+          details.add({
+            'label': 'En uzun cephenin uzunluğu:',
+            'value': b16.cepheUzunlugu!.uiTitle,
+            'report': b16.cepheUzunlugu!.reportText,
+            'advice': b16.cepheUzunlugu!.adviceText,
+          });
+        }
+
         handled = true;
       }
     }
@@ -1706,55 +1717,212 @@ class ReportEngine {
           );
 
         // Genişlik ölçüleri VE Değerlendirmeleri
-        if (b36.genislikKorunumlu != null) {
-          final isOk = b36.genislikKorunumlu! >= 120;
-          _addDetail(
-            details,
-            label: 'Korunumlu Merdiven Genişliği',
-            value: '${b36.genislikKorunumlu} cm',
-            report: isOk
-                ? "OLUMLU: Merdiven genişliği (${b36.genislikKorunumlu} cm) yönetmelik sınırı olan 120 cm üzerindedir."
-                : "KRİTİK RİSK: Merdiven genişliği (${b36.genislikKorunumlu} cm) yönetmelik sınırı olan 120 cm altındadır.",
-            status: isOk ? ReportStatus.compliant : ReportStatus.risk,
-          );
-        }
-        if (b36.genislikKorunumsuz != null) {
-          final isOk = b36.genislikKorunumsuz! >= 100;
-          _addDetail(
-            details,
-            label: 'Korunumsuz Merdiven Genişliği',
-            value: '${b36.genislikKorunumsuz} cm',
-            report: isOk
-                ? "OLUMLU: Korunumsuz merdiven genişliği (${b36.genislikKorunumsuz} cm) yönetmelik sınırı olan 100 cm üzerindedir."
-                : "UYARI: Korunumsuz merdiven genişliği (${b36.genislikKorunumsuz} cm) yönetmelik sınırı olan 100 cm altındadır.",
-            status: isOk ? ReportStatus.compliant : ReportStatus.warning,
-          );
+        final b4 = s.bolum4;
+        final b33 = s.bolum33;
+        final b34 = s.bolum34;
+        double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
+        double hYapi = b4?.hesaplananYapiYuksekligi ?? 0.0;
+        bool isYuksekBina = (hBina >= 21.50 || hYapi >= 30.50);
+
+        int yukBodrum = b33?.yukBodrum ?? 0;
+        int effectiveLoad = 0;
+        if (b33 != null) {
+          bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
+          int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
+          int yukNormal = b33.yukNormal ?? 0;
+          effectiveLoad = [
+            yukZemin,
+            yukNormal,
+            yukBodrum,
+          ].reduce((a, b) => a > b ? a : b);
         }
 
-        // Kapı genişlikleri
-        if (b36.kapiGenislikKorunumlu != null) {
-          final isOk = b36.kapiGenislikKorunumlu! >= 80;
-          _addDetail(
-            details,
-            label: 'Korunumlu Alan Kapı Genişliği',
-            value: '${b36.kapiGenislikKorunumlu} cm',
-            report: isOk
-                ? "OLUMLU: Kapı temiz geçiş genişliği (${b36.kapiGenislikKorunumlu} cm) yönetmelik sınırı olan 80 cm üzerindedir."
-                : "KRİTİK RİSK: Kapı temiz geçiş genişliği (${b36.kapiGenislikKorunumlu} cm) yönetmelik sınırı olan 80 cm altındadır.",
-            status: isOk ? ReportStatus.compliant : ReportStatus.risk,
-          );
+        int reqMerdiven = 120;
+        int reqKoridor = 110;
+        String reqReason = "Genel asgari sınır";
+
+        if (effectiveLoad >= 2001) {
+          reqMerdiven = 200;
+          reqKoridor = 200;
+          reqReason = "Kullanıcı yükü > 2000 ($effectiveLoad kişi)";
+        } else if (effectiveLoad >= 501) {
+          reqMerdiven = 150;
+          reqKoridor = 150;
+          reqReason = "Kullanıcı yükü > 500 ($effectiveLoad kişi)";
+        } else if (isYuksekBina) {
+          reqMerdiven = 120;
+          reqKoridor = 120;
+          reqReason = "Yüksek Bina Kriteri";
         }
-        if (b36.kapiGenislikKorunumsuz != null) {
-          final isOk = b36.kapiGenislikKorunumsuz! >= 80;
-          _addDetail(
-            details,
-            label: 'Korunumsuz Alan Kapı Genişliği',
-            value: '${b36.kapiGenislikKorunumsuz} cm',
-            report: isOk
-                ? "OLUMLU: Kapı genişliği (${b36.kapiGenislikKorunumsuz} cm) yönetmelik sınırı olan 80 cm üzerindedir."
-                : "KRİTİK RİSK: Kapı genişliği (${b36.kapiGenislikKorunumsuz} cm) yönetmelik sınırı olan 80 cm altındadır.",
-            status: isOk ? ReportStatus.compliant : ReportStatus.risk,
+
+        List<int>? getMerdRange(ChoiceResult? c) {
+          if (c == null) return null;
+          if (c.label == "36-Merd-A") return [0, 119];
+          if (c.label == "36-Merd-B") return [120, 150];
+          if (c.label == "36-Merd-C") return [151, 200];
+          if (c.label == "36-Merd-D") return [201, 9999];
+          return null;
+        }
+
+        List<int>? getKoriRange(ChoiceResult? c) {
+          if (c == null) return null;
+          if (c.label == "36-Koridor-A") return [0, 99];
+          if (c.label == "36-Koridor-B") return [100, 120];
+          if (c.label == "36-Koridor-C") return [121, 150];
+          if (c.label == "36-Koridor-D") return [151, 200];
+          if (c.label == "36-Koridor-E") return [201, 9999];
+          return null;
+        }
+
+        void evaluateWidth(
+          String label,
+          ChoiceResult? choice,
+          int requiredVal,
+          bool isMerdiven,
+        ) {
+          if (choice == null) return;
+          if (choice.label.endsWith("-E") && isMerdiven) {
+            _addDetail(
+              details,
+              label: label,
+              value: choice.uiTitle,
+              report:
+                  "BİLİNMİYOR: Genişlik belli değil. Asgari gereksinim: $requiredVal cm ($reqReason).",
+              status: ReportStatus.warning,
+            );
+            return;
+          }
+          if (choice.label.endsWith("-F") && !isMerdiven) {
+            _addDetail(
+              details,
+              label: label,
+              value: choice.uiTitle,
+              report:
+                  "BİLİNMİYOR: Genişlik belli değil. Asgari gereksinim: $requiredVal cm ($reqReason).",
+              status: ReportStatus.warning,
+            );
+            return;
+          }
+
+          var range = isMerdiven ? getMerdRange(choice) : getKoriRange(choice);
+          if (range == null) return; // for kapi or other weird cases
+          int wMax = range[1];
+
+          if (wMax < requiredVal) {
+            _addDetail(
+              details,
+              label: label,
+              value: choice.uiTitle,
+              report:
+                  "KRİTİK RİSK: Genişlik yetersiz. Gereken: En az $requiredVal cm ($reqReason).",
+              status: ReportStatus.risk,
+            );
+          } else {
+            _addDetail(
+              details,
+              label: label,
+              value: choice.uiTitle,
+              report:
+                  "OLUMLU: Genişliği uygun. Asgari sınır olan $requiredVal cm sağlanmaktadır.",
+              status: ReportStatus.compliant,
+            );
+          }
+        }
+
+        if (b36.areWidthsSame) {
+          // Birleşik Raporlama
+          evaluateWidth(
+            'Merdiven Genişliği (Genel)',
+            b36.genislikKorunumlu,
+            reqMerdiven,
+            true,
           );
+          evaluateWidth(
+            'Kaçış Koridoru Genişliği (Genel)',
+            b36.koridorGenislikKorunumlu,
+            reqKoridor,
+            false,
+          );
+          if (b36.kapiGenislikKorunumlu != null) {
+            _addDetail(
+              details,
+              label: 'Kaçış Kapısı Temiz Geçiş Genişliği',
+              value: b36.kapiGenislikKorunumlu!.uiTitle,
+              report: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                  ? "KRİTİK RİSK: Kapı temiz geçiş genişliği yönetmelik sınırı olan 80 cm altındadır."
+                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                        ? "OLUMLU: Kapı genişliği yönetmeliğe uygun olarak 80 cm ve üzerindedir."
+                        : "BİLİNMİYOR: Kapı genişliği bilinmemektedir."),
+              status: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                  ? ReportStatus.risk
+                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                        ? ReportStatus.compliant
+                        : ReportStatus.warning),
+            );
+          }
+        } else {
+          // Ayrı Raporlama (Eski Sistem)
+          // Korunumlu
+          evaluateWidth(
+            'Korunumlu Merdiven Genişliği',
+            b36.genislikKorunumlu,
+            reqMerdiven,
+            true,
+          );
+          evaluateWidth(
+            'Korunumlu Koridor Genişliği',
+            b36.koridorGenislikKorunumlu,
+            reqKoridor,
+            false,
+          );
+          if (b36.kapiGenislikKorunumlu != null) {
+            _addDetail(
+              details,
+              label: 'Korunumlu Alan Kapı Genişliği',
+              value: b36.kapiGenislikKorunumlu!.uiTitle,
+              report: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                  ? "KRİTİK RİSK: Kapı temiz geçiş genişliği yönetmelik sınırı olan 80 cm altındadır."
+                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                        ? "OLUMLU: Kapı genişliği yönetmeliğe uygun olarak 80 cm ve üzerindedir."
+                        : "BİLİNMİYOR: Kapı genişliği bilinmemektedir."),
+              status: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                  ? ReportStatus.risk
+                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                        ? ReportStatus.compliant
+                        : ReportStatus.warning),
+            );
+          }
+
+          // Korunumsuz
+          evaluateWidth(
+            'Korunumsuz Merdiven Genişliği',
+            b36.genislikKorunumsuz,
+            reqMerdiven,
+            true,
+          );
+          evaluateWidth(
+            'Korunumsuz Koridor Genişliği',
+            b36.koridorGenislikKorunumsuz,
+            reqKoridor,
+            false,
+          );
+          if (b36.kapiGenislikKorunumsuz != null) {
+            _addDetail(
+              details,
+              label: 'Korunumsuz Alan Kapı Genişliği',
+              value: b36.kapiGenislikKorunumsuz!.uiTitle,
+              report: b36.kapiGenislikKorunumsuz!.label.contains("-A")
+                  ? "KRİTİK RİSK: Kapı temiz geçiş genişliği yönetmelik sınırı olan 80 cm altındadır."
+                  : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
+                        ? "OLUMLU: Kapı genişliği yönetmeliğe uygun olarak 80 cm ve üzerindedir."
+                        : "BİLİNMİYOR: Kapı genişliği bilinmemektedir."),
+              status: b36.kapiGenislikKorunumsuz!.label.contains("-A")
+                  ? ReportStatus.risk
+                  : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
+                        ? ReportStatus.compliant
+                        : ReportStatus.warning),
+            );
+          }
         }
 
         // Madde 41 Detayları (Merdiven dökümü Bölüm 20 ile ortak metot üzerinden yapılır)
@@ -1973,6 +2141,8 @@ class ReportEngine {
           if (b?.bariyerZemin != null && b!.bariyerZemin != 1)
             RiskLevel.critical,
           if (b?.sagirYuzeySprinkler == false) RiskLevel.warning,
+          // Cephe uzunluğu level
+          b?.cepheUzunlugu?.level,
         ];
         return _maxLevel(bariyerLevels);
       case 17:

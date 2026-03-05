@@ -68,7 +68,7 @@ void main() {
 
       // 5. Cephe (Bölüm 16) - Çok uzun cephe
       store.bolum16 = Bolum16Model(
-        enUzunCephe: 200.0, // Maks limit
+        cepheUzunlugu: Bolum16Content.cepheUzunluguKritik, // > 75m
         mantolama: Bolum16Content.mantolamaOptionA,
       );
 

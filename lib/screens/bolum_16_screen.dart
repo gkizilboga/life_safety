@@ -22,10 +22,6 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
   bool _askBitisik = false;
   double _hBina = 0.0;
 
-  // En uzun cephe kontrolcüsü
-  final TextEditingController _enUzunCepheController = TextEditingController();
-  final _formKey = GlobalKey<FormState>(); // Form key for validation
-
   @override
   void initState() {
     super.initState();
@@ -34,9 +30,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
     // Load existing data if available
     final savedModel = BinaStore.instance.bolum16;
     if (savedModel != null) {
-      if (savedModel.enUzunCephe != null) {
-        _enUzunCepheController.text = savedModel.enUzunCephe.toString();
-      }
+      _model = savedModel;
     }
 
     final b8 = BinaStore.instance.bolum8;
@@ -48,7 +42,6 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
 
   @override
   void dispose() {
-    _enUzunCepheController.dispose();
     super.dispose();
   }
 
@@ -93,9 +86,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
         _model.sagirYuzeySprinkler == null)
       return false;
     if (_askBitisik && _model.bitisikNizam == null) return false;
-
-    // We no longer block the Next button based on enUzunCepheController to avoid setState on every keystroke.
-    // Validation will catch empty or invalid inputs on tap.
+    if (_model.cepheUzunlugu == null) return false;
     return true;
   }
 
@@ -106,26 +97,12 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
-        if (_formKey.currentState!.validate()) {
-          // Save valid value to model before proceeding, handling empty/invalid parsing as 0.0 to prevent crash.
-          _model = _model.copyWith(
-            enUzunCephe: double.tryParse(_enUzunCepheController.text) ?? 0.0,
-          );
-
-          BinaStore.instance.bolum16 = _model;
-          BinaStore.instance.saveToDisk();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Bolum17Screen()),
-          );
-        } else {
-          // Show error if validation fails despite button being enabled
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Lütfen tüm alanları doğru şekilde doldurunuz."),
-            ),
-          );
-        }
+        BinaStore.instance.bolum16 = _model;
+        BinaStore.instance.saveToDisk();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Bolum17Screen()),
+        );
       },
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -330,49 +307,52 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
 
             const SizedBox(height: 16),
             QuestionCard(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Binanızın en uzun cephesinin uzunluğu kaç metredir?",
-                      style: AppStyles.questionTitle,
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      "İtfaiye su verme bağlantısı zorunluluğu için bu bilgi gereklidir.",
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _enUzunCepheController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      inputFormatters: [InputValidator.flexDecimal],
-                      onChanged: (val) {
-                        // Removed setState(() {}) to prevent rebuilding the 400+ line widget tree on every keystroke
-                      },
-                      validator: (value) => InputValidator.validateNumber(
-                        value,
-                        min: 5,
-                        max: 200,
-                        unit: "m",
-                      ),
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Örn: 60",
-                        suffixText: "m",
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        isDense: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Binanızın en uzun cephesinin uzunluğu kaç metredir?",
+                    style: AppStyles.questionTitle,
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    "İtfaiye su verme bağlantısı zorunluluğu için bu bilgi gereklidir.",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  SelectableCard(
+                    choice: Bolum16Content.cepheUzunluguOlumlu,
+                    isSelected:
+                        _model.cepheUzunlugu?.label ==
+                        Bolum16Content.cepheUzunluguOlumlu.label,
+                    onTap: () => setState(
+                      () => _model = _model.copyWith(
+                        cepheUzunlugu: Bolum16Content.cepheUzunluguOlumlu,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  SelectableCard(
+                    choice: Bolum16Content.cepheUzunluguKritik,
+                    isSelected:
+                        _model.cepheUzunlugu?.label ==
+                        Bolum16Content.cepheUzunluguKritik.label,
+                    onTap: () => setState(
+                      () => _model = _model.copyWith(
+                        cepheUzunlugu: Bolum16Content.cepheUzunluguKritik,
+                      ),
+                    ),
+                  ),
+                  SelectableCard(
+                    choice: Bolum16Content.cepheUzunluguBilinmiyor,
+                    isSelected:
+                        _model.cepheUzunlugu?.label ==
+                        Bolum16Content.cepheUzunluguBilinmiyor.label,
+                    onTap: () => setState(
+                      () => _model = _model.copyWith(
+                        cepheUzunlugu: Bolum16Content.cepheUzunluguBilinmiyor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

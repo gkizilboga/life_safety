@@ -19,6 +19,8 @@ import 'bolum_15_screen.dart';
 import 'bolum_16_screen.dart';
 import 'bolum_17_screen.dart';
 import 'bolum_18_screen.dart';
+import '../models/choice_result.dart';
+import 'terminology_screen.dart';
 import 'bolum_19_screen.dart';
 import 'bolum_20_screen.dart';
 import 'bolum_21_screen.dart';
@@ -497,6 +499,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildSecondaryMenu(BuildContext context) {
     return Column(
       children: [
+        _buildMenuTile(
+          Icons.collections_bookmark_outlined,
+          "Terimler Sözlüğü",
+          "Teknik Tanımlar ve Kavramlar",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TerminologyScreen()),
+          ),
+        ),
         _buildMenuTile(
           Icons.menu_book_outlined,
           "Mevzuatlar",

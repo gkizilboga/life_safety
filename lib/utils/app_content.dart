@@ -1446,6 +1446,34 @@ class Bolum16Content {
         "BİLİNMİYOR: Bitişik bina ile yükseklik durumu bilinmiyor. Eğer yan binadan yüksekseniz, o bölgedeki cephe malzemesinin yangına tepki sınıfı kritik öneme sahiptir.",
     level: RiskLevel.unknown,
   );
+
+  // En uzun cephe uzunluğu — sayısal değer girildiğinde (≤ 75m): bilgi notu
+  static final cepheUzunluguOlumlu = ChoiceResult(
+    label: "16-4-A (Cephe)",
+    uiTitle: "Cephe uzunluğu 75m ve altında",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+
+  // En uzun cephe uzunluğu — sayısal değer girildiğinde (> 75m): bilgi notu
+  static final cepheUzunluguKritik = ChoiceResult(
+    label: "16-4-B (Cephe)",
+    uiTitle: "Cephe uzunluğu 75m üzerinde",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+
+  // En uzun cephe uzunluğu — "Bilmiyorum" seçildiğinde kullanılır
+  static final cepheUzunluguBilinmiyor = ChoiceResult(
+    label: "16-4-C (Cephe)",
+    uiTitle: "Cephe uzunluğu bilinmiyor",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: En uzun cephe bilgisi beyan edilmemiştir. Cephe uzunluğu 75 metreyi aşıyor ise İtfaiye Su Verme Bağlantısı (Siyam İkizi) zorunlu hale gelmektedir. Bu belirsizliğin giderilmesi için cephe ölçüsünün tespit edilmesi önerilir.",
+    level: RiskLevel.unknown,
+  );
 }
 
 class Bolum17Content {
@@ -4264,6 +4292,113 @@ class AppContent {
         return "Bölüm $id Analizi";
     }
   }
+}
+
+class Bolum36WidthContent {
+  // Kapı Genişliği
+  static final kapiGenislikKritik = ChoiceResult(
+    label: "36-Kapi-A",
+    uiTitle: "80 cm'in altında",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.critical,
+  );
+  static final kapiGenislikOlumlu = ChoiceResult(
+    label: "36-Kapi-B",
+    uiTitle: "80 cm ve üzeri",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final kapiGenislikBilinmiyor = ChoiceResult(
+    label: "36-Kapi-C",
+    uiTitle: "Bilmiyorum",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.unknown,
+  );
+
+  // Merdiven Genişliği
+  static final merdGenislikA = ChoiceResult(
+    label: "36-Merd-A",
+    uiTitle: "120 cm'in altında",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel
+        .info, // Risk level will be evaluated in engine based on context
+  );
+  static final merdGenislikB = ChoiceResult(
+    label: "36-Merd-B",
+    uiTitle: "120 cm - 150 cm arası",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final merdGenislikC = ChoiceResult(
+    label: "36-Merd-C",
+    uiTitle: "151 cm - 200 cm arası",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final merdGenislikD = ChoiceResult(
+    label: "36-Merd-D",
+    uiTitle: "201 cm ve üzeri",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final merdGenislikBilinmiyor = ChoiceResult(
+    label: "36-Merd-E",
+    uiTitle: "Bilmiyorum",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.unknown,
+  );
+
+  // Koridor Genişliği
+  static final koridorGenislikA = ChoiceResult(
+    label: "36-Koridor-A",
+    uiTitle: "100 cm'in altında",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final koridorGenislikB = ChoiceResult(
+    label: "36-Koridor-B",
+    uiTitle: "100 cm - 120 cm arası",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final koridorGenislikC = ChoiceResult(
+    label: "36-Koridor-C",
+    uiTitle: "121 cm - 150 cm arası",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final koridorGenislikD = ChoiceResult(
+    label: "36-Koridor-D",
+    uiTitle: "151 cm - 200 cm arası",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final koridorGenislikE = ChoiceResult(
+    label: "36-Koridor-E",
+    uiTitle: "201 cm ve üzeri",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final koridorGenislikBilinmiyor = ChoiceResult(
+    label: "36-Koridor-F",
+    uiTitle: "Bilmiyorum",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.unknown,
+  );
 }
 
 class AppDefinitions {

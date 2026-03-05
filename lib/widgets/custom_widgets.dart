@@ -47,16 +47,22 @@ class ModernHeader extends StatelessWidget {
               if (canPop)
                 GestureDetector(
                   onTap: onBack ?? () => Navigator.pop(context),
+                  behavior: HitTestBehavior.opaque,
                   child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Colors.white,
-                      size: 16,
+                    width: 48,
+                    height: 48,
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 16,
+                      ),
                     ),
                   ),
                 )
@@ -83,97 +89,108 @@ class ModernHeader extends StatelessWidget {
                       ),
                     );
                   },
+                  behavior: HitTestBehavior.opaque,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF059669),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                      border: Border.all(color: Colors.white24, width: 1),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(
-                          Icons.save_as_rounded,
-                          color: Colors.white,
-                          size: 15,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          "KAYDET",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.3,
+                    height: 48,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF059669),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
                           ),
-                        ),
-                      ],
+                        ],
+                        border: Border.all(color: Colors.white24, width: 1),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(
+                            Icons.save_as_rounded,
+                            color: Colors.white,
+                            size: 15,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            "KAYDET",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
             ],
           ),
-          const SizedBox(height: 4),
-          // Title row: Section title | BÖLÜM X/YZ | İlerleme %
+          const SizedBox(height: 12),
+          // Progress info row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: FormattedText(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
               Text(
                 "BÖLÜM $currentStep/$totalSteps",
                 style: const TextStyle(
-                  color: Colors.white60,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.8,
+                  color: Colors.white70,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
                 ),
               ),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    "İlerleme",
+                    "İlerleme: ",
                     style: TextStyle(
                       color: Colors.white54,
-                      fontSize: 9,
+                      fontSize: 11,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  AnimatedPercentageText(percentage: (progress * 100).toInt()),
+                  AnimatedPercentageText(
+                    percentage: (progress * 100).toInt(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
+          // Main Title
+          FormattedText(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              height: 1.2,
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Progress Bar
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: progress,
-              minHeight: 5,
+              minHeight: 4,
               backgroundColor: Colors.white.withValues(alpha: 0.1),
               valueColor: const AlwaysStoppedAnimation<Color>(
                 AppColors.successGreen,
@@ -266,7 +283,12 @@ class AnalysisPageLayout extends StatefulWidget {
 
 class AnimatedPercentageText extends StatefulWidget {
   final int percentage;
-  const AnimatedPercentageText({super.key, required this.percentage});
+  final TextStyle? style;
+  const AnimatedPercentageText({
+    super.key,
+    required this.percentage,
+    this.style,
+  });
 
   @override
   State<AnimatedPercentageText> createState() => _AnimatedPercentageTextState();
@@ -322,11 +344,13 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
       scale: _scaleAnimation,
       child: Text(
         "%${widget.percentage}",
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.w900,
-        ),
+        style:
+            widget.style ??
+            const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w900,
+            ),
       ),
     );
   }
@@ -413,18 +437,23 @@ class DefinitionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => _showDefinition(context),
+      behavior: HitTestBehavior.opaque,
       child: Container(
-        margin: const EdgeInsets.only(left: 8),
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: Colors.orange.shade100,
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.orange.shade400, width: 1.5),
-        ),
-        child: Icon(
-          Icons.help_outline_rounded,
-          size: 18,
-          color: Colors.orange.shade800,
+        width: 48,
+        height: 48,
+        alignment: Alignment.centerRight,
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: Colors.orange.shade100,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.orange.shade400, width: 1.5),
+          ),
+          child: Icon(
+            Icons.help_outline_rounded,
+            size: 18,
+            color: Colors.orange.shade800,
+          ),
         ),
       ),
     );
@@ -522,46 +551,53 @@ class TechnicalDrawingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (ctx) => _buildModal(ctx),
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF43A047), // Green color
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+    return Row(
+      mainAxisAlignment:
+          MainAxisAlignment.center, // Keep centered in the parent
+      children: [
+        GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (ctx) => _buildModal(ctx),
+            );
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF43A047), // Green color
+              borderRadius: BorderRadius.circular(
+                20,
+              ), // More rounded/pill shape
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.image_search, color: Colors.white, size: 20),
-            const SizedBox(width: 8),
-            const Text(
-              "- İlgili görseli incele -", // Fixed text as requested
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.image_search, color: Colors.white, size: 18),
+                const SizedBox(width: 8),
+                const Text(
+                  "- İlgili görseli incele -",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 

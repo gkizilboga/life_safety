@@ -2,13 +2,19 @@ import '../data/bina_store.dart';
 import '../models/active_system_requirement.dart';
 import '../models/bolum_6_model.dart';
 import '../models/bolum_35_model.dart';
+import '../utils/app_content.dart';
 
 class ActiveSystemsEngine {
   static List<ActiveSystemRequirement> calculateRequirements(BinaStore store) {
     List<ActiveSystemRequirement> requirements = [];
 
-    // Facade width artık Bölüm 16 modelinden okunuyor.
-    final facadeWidth = store.bolum16?.enUzunCephe;
+    // Facade width artık Bölüm 16 modelinden ChoiceResult olarak okunuyor.
+    final b16 = store.bolum16;
+    final isCepheKritik =
+        b16?.cepheUzunlugu?.label == Bolum16Content.cepheUzunluguKritik.label;
+    final isCepheBilinmiyor =
+        b16?.cepheUzunlugu?.label ==
+        Bolum16Content.cepheUzunluguBilinmiyor.label;
 
     final hYapi = store.bolum3?.hYapi ?? 0;
     final hBina = store.bolum3?.hBina ?? 0;
@@ -271,21 +277,43 @@ class ActiveSystemsEngine {
       siyamZorunlu = true;
       siyamReason =
           "KRİTİK RİSK: Taban Alanı > 1000 m² olduğu için zorunludur.";
-    } else if ((facadeWidth ?? 0) > 75) {
+    } else if (isCepheKritik) {
       siyamZorunlu = true;
       siyamReason =
           "KRİTİK RİSK: Cephe Genişliği > 75m olduğu için zorunludur.";
     }
 
-    requirements.add(
-      ActiveSystemRequirement(
-        name: "İtfaiye Su Verme Ağzı (Siyam İkizi)",
-        isMandatory: siyamZorunlu,
-        reason: siyamZorunlu
-            ? siyamReason
-            : "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
-      ),
-    );
+    if (siyamZorunlu) {
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "İtfaiye Su Verme Ağzı (Siyam İkizi)",
+          isMandatory: true,
+          reason: siyamReason,
+        ),
+      );
+    } else if (!siyamZorunlu && isCepheBilinmiyor) {
+      // Diğer 3 kriter zorunluluk oluşturmadı ama cephe uzunluğu bilinmiyor.
+      // Cephe > 75m olsaydı zorunlu olabilirdi: uyarı ver.
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "İtfaiye Su Verme Ağzı (Siyam İkizi)",
+          isMandatory: false,
+          isWarning: true,
+          reason:
+              "UYARI: Diğer zorunluluk kriterleri (yükseklik, taban alanı) oluşmamıştır. Ancak cephe uzunluğu beyan edilmediğinden, cepheye bağlı zorunluluk (> 75m) netleşmemiştir.",
+          note:
+              "Binanızın en uzun cephesi 75 metreyi aşıyorsa, İtfaiye Su Verme Bağlantısı (Siyam İkizi) zorunlu hale gelecektir. Lütfen cephe ölçüsünü kontrol ediniz.",
+        ),
+      );
+    } else {
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "İtfaiye Su Verme Ağzı (Siyam İkizi)",
+          isMandatory: false,
+          reason: "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
+        ),
+      );
+    }
 
     // 10. Sprinkler Sistemi
     bool sprinklerZorunlu = false;

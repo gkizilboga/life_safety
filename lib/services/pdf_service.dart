@@ -910,11 +910,11 @@ class PdfService {
             return pw.Wrap(
               children: [
                 pw.Container(
-                  margin: const pw.EdgeInsets.only(bottom: 15), // Increased
+                  margin: const pw.EdgeInsets.only(bottom: 10),
                   padding: const pw.EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 12,
-                  ), // Increased
+                    vertical: 8,
+                  ),
                   decoration: boxDecoration,
                   child: pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -926,30 +926,32 @@ class PdfService {
                             child: pw.Text(
                               _cleanEmojis(req.name),
                               style: pw.TextStyle(
-                                fontSize: 10, // Standardized Size
+                                fontSize: 10,
                                 fontWeight: pw.FontWeight.bold,
                                 color: PdfColors.black,
+                                lineSpacing: 2.2,
                               ),
                             ),
                           ),
                         ],
                       ),
-                      pw.SizedBox(height: 6), // Increased from 2
+                      pw.SizedBox(height: 2),
                       pw.Text(
                         cleanReason,
                         style: const pw.TextStyle(
-                          fontSize: 9, // Standardized Size
+                          fontSize: 9,
                           color: PdfColors.black,
+                          lineSpacing: 2.2,
                         ),
                       ),
                       if (req.note.isNotEmpty) ...[
-                        pw.SizedBox(height: 6), // Increased from 2
+                        pw.SizedBox(height: 2),
                         pw.Text(
                           "NOT: ${_cleanEmojis(req.note)}",
                           style: const pw.TextStyle(
-                            // Removed italic
-                            fontSize: 9, // Standardized Size
+                            fontSize: 9,
                             color: PdfColors.black,
+                            lineSpacing: 2.2,
                           ),
                         ),
                       ],
