@@ -108,7 +108,11 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               ],
             ),
             'varlik',
-            [Bolum21Content.varlikOptionA, Bolum21Content.varlikOptionB],
+            [
+              Bolum21Content.varlikOptionA,
+              Bolum21Content.varlikOptionB,
+              Bolum21Content.varlikOptionC,
+            ],
             _model.varlik,
           ),
 
@@ -137,6 +141,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               Bolum21Content.esyaOptionA,
               Bolum21Content.esyaOptionB,
               Bolum21Content.esyaOptionC,
+              Bolum21Content.esyaOptionD,
             ], _model.esya),
           ],
         ],

@@ -105,12 +105,7 @@ void main() {
         expect(metrics['criticalCount'] >= 1, true);
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(
-          report.contains(
-            "Kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması zorunludur",
-          ),
-          true,
-        );
+        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
       },
     );
 
@@ -131,9 +126,7 @@ void main() {
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
         expect(
-          report.contains(
-            "Doğrudan dışarıya açılmayan merdivenlerin tahliye mesafesi",
-          ),
+          report.contains("tahliye mesafesi 10 metre sınırını aşmaktadır"),
           true,
         );
       },
@@ -167,9 +160,7 @@ void main() {
         // If there are no other errors in Section 36 for this mock store, it should be green or blue
         // But we just want to ensure it doesn't have "KRİTİK RİSK" from Madde 41
         expect(
-          report.contains(
-            "KRİTİK RİSK: Doğrudan dışarıya açılmayan merdivenlerin tahliye mesafesi",
-          ),
+          report.contains("tahliye mesafesi 10 metre sınırını aşmaktadır"),
           false,
         );
       },
@@ -185,13 +176,8 @@ void main() {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
-      expect(
-        report.contains(
-          "Kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması zorunludur",
-        ),
-        true,
-      );
-      expect(report.contains("1 tanesi doğrudan dışarı açılmalıdır"), true);
+      expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
+      expect(report.contains("En az 1 açılmalı"), true);
     });
 
     test(
@@ -204,13 +190,8 @@ void main() {
         store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(
-          report.contains(
-            "Kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması zorunludur",
-          ),
-          true,
-        );
-        expect(report.contains("2"), true); // Check for number 2
+        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
+        expect(report.contains("En az 2 açılmalı"), true); // Check for number 2
       },
     );
 
@@ -232,13 +213,8 @@ void main() {
         );
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(
-          report.contains(
-            "Kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması zorunludur",
-          ),
-          true,
-        );
-        expect(report.contains("3"), true);
+        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
+        expect(report.contains("En az 3 açılmalı"), true);
       },
     );
 
@@ -261,7 +237,10 @@ void main() {
         );
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("KRİTİK RİSK (Bodrum)"), true);
+        expect(
+          report.contains("KRİTİK RİSK: Bodrum katlarda kaçış merdivenlerinin"),
+          true,
+        );
       },
     );
 

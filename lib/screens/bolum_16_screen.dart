@@ -315,10 +315,6 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                     style: AppStyles.questionTitle,
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    "İtfaiye su verme bağlantısı zorunluluğu için bu bilgi gereklidir.",
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
                   SelectableCard(
                     choice: Bolum16Content.cepheUzunluguOlumlu,
                     isSelected:

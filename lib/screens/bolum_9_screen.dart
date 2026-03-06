@@ -56,25 +56,20 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 16),
-            child: Text(
-              "Binada otomatik yağmurlama (sprinkler) sistemi var mı?",
-              style: AppStyles.questionTitle,
-            ),
-          ),
-
-          // --- TEKNİK GÖRSEL BUTONU (Sorunun Hemen Altında) ---
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section9Sprinkler,
-            title: "Sprinkler Detayı",
-          ),
-
-          const SizedBox(height: 12),
-
           QuestionCard(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  "Binada otomatik sprinkler sistemi var mı?",
+                  style: AppStyles.questionTitle,
+                ),
+                // --- TEKNİK GÖRSEL BUTONU (Sorunun Hemen Altında) ---
+                TechnicalDrawingButton(
+                  assetPath: AppAssets.section9Sprinkler,
+                  title: "Sprinkler Detayı",
+                ),
+                const SizedBox(height: 12),
                 SelectableCard(
                   choice: Bolum9Content.tamKapsam,
                   isSelected:
@@ -101,22 +96,20 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
               padding: EdgeInsets.symmetric(vertical: 16),
               child: Divider(thickness: 1, color: Color(0xFFECEFF1)),
             ),
-            const Padding(
-              padding: EdgeInsets.only(left: 4, bottom: 12),
-              child: Text(
-                "Büyük restoran (endüstriyel mutfak) davlumbazında otomatik söndürme sistemi var mı?",
-                style: AppStyles.questionTitle,
-              ),
-            ),
-
-            // --- TEKNİK GÖRSEL BUTONU (Davlumbaz) ---
-            TechnicalDrawingButton(
-              assetPath: AppAssets.section9Davlumbaz,
-              title: "Davlumbaz Detayı",
-            ),
             QuestionCard(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    "Büyük restoran (endüstriyel mutfak) davlumbazında otomatik söndürme sistemi var mı?",
+                    style: AppStyles.questionTitle,
+                  ),
+                  // --- TEKNİK GÖRSEL BUTONU (Davlumbaz) ---
+                  TechnicalDrawingButton(
+                    assetPath: AppAssets.section9Davlumbaz,
+                    title: "Davlumbaz Detayı",
+                  ),
+                  const SizedBox(height: 12),
                   SelectableCard(
                     choice: Bolum9Content.davlumbazVar,
                     isSelected:
@@ -148,4 +141,3 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
     );
   }
 }
-

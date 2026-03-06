@@ -9,6 +9,8 @@ import 'package:life_safety/models/bolum_35_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 import 'package:life_safety/models/bolum_6_model.dart';
 import 'package:life_safety/models/bolum_13_model.dart';
+import 'package:life_safety/models/bolum_16_model.dart';
+import 'package:life_safety/models/bolum_21_model.dart';
 import 'package:life_safety/utils/app_content.dart';
 
 void main() {
@@ -147,7 +149,9 @@ void main() {
         expect(seismicItem.isWarning, true); // Verified IsWarning
         // Not/Gerekçe içinde kullanıcı metninin bir kısmı geçmeli
         expect(
-          seismicItem.reason.contains("Sprinkler) sistemi zorunlu olduğu için"),
+          seismicItem.reason.contains(
+            "Otomatik Sprinkler sistemi zorunlu olduğu için",
+          ),
           true,
         );
         expect(
@@ -209,5 +213,122 @@ void main() {
         ); // Artık Section 35 bilinmiyorsa Sprinkler uyarısı verilmez
       },
     );
+
+    test('Senaryo 1: Yüksek ve Karma Kullanımlı Bina (Tüm Sistemler Zorunlu)', () {
+      // 55m yükseklik, 1500m2 kapalı otopark, kazan dairesi var (Bolum 6), Kazan/Mutfak gibi alanlar gaz algılama tetikler mi? Orada `hasTicari`, `hasKazanDairesi` vs var mı bakmak lazım.
+      // Sadece ana sistemlerin ZORUNLU olarak döndüğünü test edelim.
+      store.bolum3 = Bolum3Model(hYapi: 55.0, hBina: 55.0);
+      store.bolum5 = Bolum5Model(
+        tabanAlani: 6000,
+        toplamInsaatAlani: 20000,
+      ); // Hidrant > 5000, YSC
+      store.bolum13 = Bolum13Model(
+        otoparkAlan: ChoiceResult(
+          label: "13-1-ALT-D", // > 600 m2
+          uiTitle: "> 600 m2",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      store.bolum6 = Bolum6Model(hasOtopark: true, hasTicari: true);
+
+      final reqs = ActiveSystemsEngine.calculateRequirements(store);
+
+      final mandatoryNames = reqs
+          .where((r) => r.isMandatory)
+          .map((r) => r.name)
+          .toList();
+
+      expect(mandatoryNames.contains("Yangın Senaryosu"), true);
+      expect(mandatoryNames.contains("Yangın Algılama ve Uyarı Sistemi"), true);
+      expect(mandatoryNames.contains("Sesli Tahliye (Anons) Sistemi"), true);
+      expect(mandatoryNames.contains("İtfaiye Su Alma Ağzı"), true);
+      expect(
+        mandatoryNames.contains("Yangın Hidrant Sistemi (Bina Çevresinde)"),
+        true,
+      );
+      // Not testing ALL of them, but making sure multiple are triggered securely
+      expect(mandatoryNames.contains("Yangın Dolabı Sistemi"), true);
+    });
+
+    test('Edge Case: Siyam İkizi - Cephe Genişliği > 75m', () {
+      // Diğerleri düşükken sadece cephe uzunluğu Siyam zorunluluğunu tetikler
+      store.bolum3 = Bolum3Model(hYapi: 10.0, hBina: 10.0);
+      store.bolum5 = Bolum5Model(tabanAlani: 500);
+      store.bolum16 = Bolum16Model(
+        cepheUzunlugu: Bolum16Content.cepheUzunluguKritik,
+      );
+
+      final reqs = ActiveSystemsEngine.calculateRequirements(store);
+      final item = reqs.firstWhere((e) => e.name.contains("Siyam İkizi"));
+
+      expect(item.isMandatory, true);
+      expect(item.reason.contains("Cephe Genişliği > 75m"), true);
+    });
+
+    test('Edge Case: Gaz Algılama Dedektörleri (Kazan Dairesi/Ticari)', () {
+      store.bolum3 = Bolum3Model(); // Defaults
+      store.bolum6 = Bolum6Model(hasTicari: true);
+      // The logic in active systems checks unconditionally and returns as Warning right now,
+      // but if the user wants this to be checked when Kazan Dairesi or Ticari is present, we ensure it's there as a warning.
+      final reqs = ActiveSystemsEngine.calculateRequirements(store);
+      final item = reqs.firstWhere((e) => e.name.contains("Gaz Algılama"));
+
+      expect(item.isMandatory, false);
+      expect(item.isWarning, true);
+    });
+
+    test(
+      'Mutually Exclusive Kontrolü: isMandatory ve isWarning aynı anda true olamaz',
+      () {
+        store.bolum3 = Bolum3Model(hYapi: 55.0); // Karmaşık senaryo
+        final reqs = ActiveSystemsEngine.calculateRequirements(store);
+
+        for (var req in reqs) {
+          if (req.isMandatory) {
+            expect(
+              req.isWarning,
+              false,
+              reason: '${req.name} hem zorunlu hem uyarı olamaz.',
+            );
+          }
+          expect(
+            req.reason.isNotEmpty,
+            true,
+            reason: '${req.name} için reason boş olamaz.',
+          );
+        }
+      },
+    );
+
+    test(
+      'Sıralama (Ordering) Testi: Yangın Senaryosu başta, Gaz Algılama sonda',
+      () {
+        // Birkaç zorunlu sistem ekleyelim
+        store.bolum3 = Bolum3Model(hYapi: 55.0);
+        final reqs = ActiveSystemsEngine.calculateRequirements(store);
+
+        expect(reqs.first.name, "Yangın Senaryosu");
+        expect(reqs.last.name, "Gaz Algılama Sistemi");
+      },
+    );
+
+    test('75. TEST: Basınçlandırma - Yüksek Bina Kriteri (hYapi >= 30.50)', () {
+      store.bolum3 = Bolum3Model(hYapi: 31.0);
+      // Pressurization is mandatory if hYapi >= 30.50 AND there is NO Fire Lobby (21-1-B)
+      store.bolum21 = Bolum21Model(
+        varlik: ChoiceResult(
+          label: "21-1-B",
+          uiTitle: "Hayır",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      final reqs = ActiveSystemsEngine.calculateRequirements(store);
+      final item = reqs.firstWhere((e) => e.name.contains("Basınçlandırma"));
+
+      expect(item.isMandatory, true);
+      expect(item.note.contains("Merdivenlerin en az birinde"), true);
+    });
   });
 }

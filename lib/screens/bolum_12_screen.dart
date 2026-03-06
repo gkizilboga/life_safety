@@ -338,6 +338,14 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
                 onTap: () =>
                     _handleSelection('ahsap', Bolum12Content.ahsapOptionB),
               ),
+              SelectableCard(
+                choice: Bolum12Content.ahsapOptionC,
+                isSelected:
+                    _model.ahsapKesit?.label ==
+                    Bolum12Content.ahsapOptionC.label,
+                onTap: () =>
+                    _handleSelection('ahsap', Bolum12Content.ahsapOptionC),
+              ),
             ],
           ),
         ),
@@ -373,6 +381,14 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
                 onTap: () =>
                     _handleSelection('yigma', Bolum12Content.yigmaOptionB),
               ),
+              SelectableCard(
+                choice: Bolum12Content.yigmaOptionC,
+                isSelected:
+                    _model.yigmaDuvar?.label ==
+                    Bolum12Content.yigmaOptionC.label,
+                onTap: () =>
+                    _handleSelection('yigma', Bolum12Content.yigmaOptionC),
+              ),
             ],
           ),
         ),
@@ -380,4 +396,3 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     );
   }
 }
-

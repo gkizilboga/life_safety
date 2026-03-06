@@ -568,6 +568,26 @@ class StairInputGroupCard extends StatelessWidget {
             assetPath: AppAssets.section20Dengelenmis,
             onChange: (val) => provider.updateController('dengelenmis', val),
           ),
+          Selector<Bolum20Provider, bool>(
+            selector: (_, p) =>
+                (int.tryParse(p.donerCtrl.text) ?? 0) > 0 ||
+                (int.tryParse(p.bodDonerCtrl.text) ?? 0) > 0,
+            builder: (context, show, _) {
+              if (!show) return const SizedBox.shrink();
+              return Column(
+                children: [
+                  const Divider(height: 16),
+                  _StairInputRow(
+                    key: const ValueKey('kova_genisligi'),
+                    label: "Döner Merdiven Kova (Kuyu) Genişliği (cm)",
+                    ctrl: provider.kovaGenisligiCtrl,
+                    onChange: (val) =>
+                        provider.updateController('kovaGenisligi', val),
+                  ),
+                ],
+              );
+            },
+          ),
         ],
       ),
     );

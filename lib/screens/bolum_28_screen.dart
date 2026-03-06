@@ -125,6 +125,7 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
               Bolum28Content.mesafeOptionA,
               Bolum28Content.mesafeOptionB,
               Bolum28Content.mesafeOptionC,
+              Bolum28Content.mesafeOptionD,
             ],
             _model.mesafe,
           ),
@@ -212,4 +213,3 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
     );
   }
 }
-

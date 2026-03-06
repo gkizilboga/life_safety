@@ -622,7 +622,7 @@ class PdfService {
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
               pw.SizedBox(width: 20),
-              _buildLegendItem(PdfColors.green700, "OLUMLU / UYGUN", ""),
+              _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", "(-1 Puan)"),
             ],
@@ -645,6 +645,9 @@ class PdfService {
               store: store,
             );
             final riskColor = _getRiskColor(fullReportForColor);
+            final effectiveSectionRiskColor = id <= 10
+                ? const PdfColor.fromInt(0x00000000)
+                : riskColor;
 
             // Each section emits its header + items as individual top-level
             // widgets so MultiPage can freely break them across pages.
@@ -661,9 +664,9 @@ class PdfService {
                     item,
                     ttf,
                     ttfBold,
-                    riskColor: _getRiskColor(
-                      _cleanEmojis(item['report'] ?? ''),
-                    ),
+                    riskColor: id <= 10
+                        ? const PdfColor.fromInt(0x00000000)
+                        : _getRiskColor(_cleanEmojis(item['report'] ?? '')),
                     isLast: item == details.last,
                   ),
                 );
@@ -681,7 +684,12 @@ class PdfService {
                 } else {
                   if (tableGroup.isNotEmpty) {
                     itemsWidgets.add(
-                      _buildInfoTable(tableGroup, ttf, ttfBold, riskColor),
+                      _buildInfoTable(
+                        tableGroup,
+                        ttf,
+                        ttfBold,
+                        effectiveSectionRiskColor,
+                      ),
                     );
                     itemsWidgets.add(pw.SizedBox(height: 10));
                     tableGroup = [];
@@ -691,9 +699,9 @@ class PdfService {
                       item,
                       ttf,
                       ttfBold,
-                      riskColor: _getRiskColor(
-                        _cleanEmojis(item['report'] ?? ''),
-                      ),
+                      riskColor: id <= 10
+                          ? const PdfColor.fromInt(0x00000000)
+                          : _getRiskColor(_cleanEmojis(item['report'] ?? '')),
                       isLast: isLast,
                     ),
                   );
@@ -701,7 +709,12 @@ class PdfService {
               }
               if (tableGroup.isNotEmpty) {
                 itemsWidgets.add(
-                  _buildInfoTable(tableGroup, ttf, ttfBold, riskColor),
+                  _buildInfoTable(
+                    tableGroup,
+                    ttf,
+                    ttfBold,
+                    effectiveSectionRiskColor,
+                  ),
                 );
               }
             }
@@ -719,9 +732,6 @@ class PdfService {
                 color: const PdfColor.fromInt(
                   0xFF1a365d,
                 ), // Corporate Navy Blue
-                border: pw.Border(
-                  left: pw.BorderSide(color: riskColor, width: 4),
-                ),
               ),
               child: pw.Row(
                 children: [
@@ -868,18 +878,11 @@ class PdfService {
           pw.SizedBox(height: 20),
 
           ...activeSystems.map((req) {
-            // Clean redundant prefixes for display
-            String cleanReason = _cleanEmojis(req.reason)
-                .replaceAll("KRİTİK RİSK:", "")
-                .replaceAll("UYARI:", "")
-                .replaceAll("OLUMLU:", "")
-                .replaceAll("BİLGİ:", "")
-                .replaceAll("BİLMİYORUM:", "")
-                .trim();
+            // Redundant prefix cleaning is no longer needed
+            String cleanReason = _cleanEmojis(req.reason).trim();
 
-            final statusColor = _getRiskColor(req.reason);
-            final isMandatory = statusColor == PdfColors.red700;
-            final isWarning = statusColor == PdfColors.amber700;
+            final isMandatory = req.isMandatory;
+            final isWarning = req.isWarning;
 
             // Determine box decoration based on status
             pw.BoxDecoration boxDecoration;
@@ -1018,6 +1021,7 @@ class PdfService {
           ...items.asMap().entries.map((entry) {
             final i = entry.key;
             final item = entry.value;
+            final isBold = item['isBold'] == true;
             return pw.TableRow(
               decoration: i % 2 == 1
                   ? const pw.BoxDecoration(color: PdfColors.grey50)
@@ -1027,14 +1031,20 @@ class PdfService {
                   padding: const pw.EdgeInsets.all(5),
                   child: pw.Text(
                     item['label'] ?? '',
-                    style: pw.TextStyle(font: font, fontSize: 8),
+                    style: pw.TextStyle(
+                      font: isBold ? fontBold : font,
+                      fontSize: 8,
+                    ),
                   ),
                 ),
                 pw.Padding(
                   padding: const pw.EdgeInsets.all(5),
                   child: pw.Text(
                     item['value'] ?? '',
-                    style: pw.TextStyle(font: font, fontSize: 8),
+                    style: pw.TextStyle(
+                      font: isBold ? fontBold : font,
+                      fontSize: 8,
+                    ),
                   ),
                 ),
               ],

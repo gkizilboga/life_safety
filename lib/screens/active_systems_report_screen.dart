@@ -146,21 +146,8 @@ class ActiveSystemsReportScreen extends StatelessWidget {
     );
   }
 
-  /// Cleans reason text by removing emoji prefixes and labels
+  /// Cleans reason text by removing extra whitespaces if any
   static String _cleanReasonText(String text) {
-    return text
-        .replaceAll(' KRİTİK RİSK: ', '')
-        .replaceAll('OLUMLU: ', '')
-        .replaceAll('UYARI: ', '')
-        .replaceAll(' BİLMİYORUM: ', '')
-        .replaceAll(' BİLMİYORUM: ', '')
-        .replaceAll(' BİLGİ: ', '')
-        .replaceAll('KRİTİK RİSK: ', '')
-        .replaceAll('OLUMLU: ', '')
-        .replaceAll('UYARI: ', '')
-        .replaceAll('BİLMİYORUM: ', '')
-        .replaceAll('BİLGİ: ', '')
-        .trim();
+    return text.trim();
   }
 }
-

@@ -246,6 +246,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
             _buildSoruCard('cikmaz', [
               Bolum35Content.cikmazOptionA,
               Bolum35Content.cikmazOptionB,
+              Bolum35Content.cikmazOptionC,
             ], _model.cikmaz),
             if (_model.cikmaz?.label == Bolum35Content.cikmazOptionB.label) ...[
               _buildInfoNote(
@@ -328,4 +329,3 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }
-

@@ -117,63 +117,22 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
   String _evaluateStairsAndExits() {
     final store = BinaStore.instance;
     final b4 = store.bolum4;
-    final b20 = store.bolum20;
     final b33 = store.bolum33;
     final b34 = store.bolum34;
 
     double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
     double hYapi = b4?.hesaplananYapiYuksekligi ?? 0.0;
 
-    int sahanliksiz = b20?.sahanliksizMerdivenSayisi ?? 0;
-    int disAcik = b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0;
-    int dengelenmis =
-        (b20?.dengelenmisMerdivenSayisi ?? 0) +
-        (b20?.isBodrumIndependent == true
-            ? (b20?.bodrumDengelenmisMerdivenSayisi ?? 0)
-            : 0);
-    bool basinclandirmaVar = b20?.basinclandirma?.label == "20-BAS-A";
-
     List<String> notes = [];
 
-    // --- Ekran Özel Merdiven Tipi Kontrolleri ---
-    if (sahanliksiz > 0)
-      notes.add(
-        "Binada 'Sahanlıksız Merdiven' tespit edilmiştir. Bu merdiven tipi hiçbir binada kaçış yolu olarak kabul edilmemektedir. YENİ BİNA 'larda tüm merdiven tiplerinde insanların tahliye esnasında dinlenebileceği sahanlıkların bulunması Yönetmeliğe göre zorunludur.",
-      );
-
-    if (hBina > 21.50 && disAcik > 0)
-      notes.add(
-        "Bina yüksekliği 21.50m üzerinde olduğu için 'Bina Dışı Açık Çelik Merdiven' kullanılamaz.",
-      );
-
-    if (dengelenmis > 0) {
-      int maxYuk = [
-        b33?.yukZemin ?? 0,
-        b33?.yukNormal ?? 0,
-        b33?.yukBodrum ?? 0,
-      ].reduce((a, b) => a > b ? a : b);
-
-      if (hBina > 15.50 || maxYuk > 100) {
-        notes.add(
-          "Binada 'Dengelenmiş Merdiven' tespit edilmiştir. Yönetmelik gereği, bina yüksekliğinin 15.50 m'den fazla olduğu binalarda veya herhangi bir katta kullanıcı yükünün 100 kişiyi aştığı durumlarda dengelenmiş merdivenlerin kaçış yolu olarak kullanılmasına izin verilmez. Mevcut durumda bu kriterler aşıldığı için merdiven uygunsuzdur.",
-        );
-      } else {
-        notes.add(
-          "Binada 'Dengelenmiş Merdiven' mevcuttur. Bina yüksekliği (≤15.50m) ve kullanıcı yükü (≤100 kişi) sınırları içerisinde kaldığı için bu merdiven tipi kaçış yolu olarak kabul edilebilir.",
-        );
-      }
-    }
-
-    if (hYapi >= 51.50) {
-      if (!basinclandirmaVar)
-        notes.add(
-          "51.50m üzeri binalarda her iki 'Korunumlu Merdiven' inde hem YGH hem de Basınçlandırma Sistemi tesis edilmesi zorunludur.",
-        );
-    }
+    // Sahanlıksız, Dengelenmiş, Dış Açık Çelik ve Basınçlandırma kuralları
+    // tümüyle report_engine.dart içindeki Section36Handler'a taşındı.
+    // Bu metod (MÜHENDİS NOTU olarak kullanılacak) artık SADECE merdiven/koridor genişliklerini hesaplar.
 
     // --- Genişlik Kontrolleri (ChoiceResult tabanlı Yeni Kurgu) ---
     int yukBodrum = b33?.yukBodrum ?? 0;
-    bool isYuksekBina = (hBina >= 21.50 || hYapi >= 30.50);
+    double hPrimary = hYapi >= hBina ? hYapi : hBina;
+    bool isYuksekBina = hPrimary >= (21.50 - 0.001);
 
     int effectiveLoad = 0;
     if (b33 != null) {
@@ -239,8 +198,15 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       List<String> violations = [];
 
       var sRange = getMerdRange(sChoice);
+      bool hasSpiral =
+          (BinaStore.instance.bolum20?.donerMerdivenSayisi ?? 0) > 0 ||
+          (BinaStore.instance.bolum20?.bodrumDonerMerdivenSayisi ?? 0) > 0;
+
       if (sRange != null) {
-        if (sRange[1] < minMerdiven) {
+        // User instruction: For spiral-related checks (or if spiral exists in building),
+        // use upper bound (range[1]). Otherwise use safe-logic (range[0]).
+        int comparisonValue = hasSpiral ? sRange[1] : sRange[0];
+        if (comparisonValue < minMerdiven) {
           violations.add(
             "Merdiven genişliği yetersiz (Gereken: en az $minMerdiven cm, Seçim: ${sChoice!.uiTitle})",
           );
@@ -249,7 +215,8 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
       var cRange = getKoriRange(cChoice);
       if (cRange != null) {
-        if (cRange[1] < minKoridor) {
+        // Safe logic for corridors as well
+        if (cRange[0] < minKoridor) {
           violations.add(
             "Koridor genişliği yetersiz (Gereken: en az $minKoridor cm, Seçim: ${cChoice!.uiTitle})",
           );
@@ -429,14 +396,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Genişlikleri Birleştir",
+                        "Benzer Genişlikler",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppColors.primaryBlue,
                         ),
                       ),
                       const Text(
-                        "Tüm merdiven, koridor ve kapılarda aynı genişlikler mi var?",
+                        "Merdiven, koridor ve kapılar benzer genişlikte mi?",
                         style: TextStyle(fontSize: 12, color: Colors.black54),
                       ),
                     ],

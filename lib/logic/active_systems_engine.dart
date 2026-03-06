@@ -56,8 +56,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Yangın Algılama ve Uyarı Sistemi",
           isMandatory: true,
-          reason:
-              "KRİTİK RİSK: Yapı Yüksekliği ≥ 51.50m olduğu için zorunludur.",
+          reason: "Yapı Yüksekliği ≥ 51.50m olduğu için zorunludur.",
         ),
       );
     } else {
@@ -66,7 +65,7 @@ class ActiveSystemsEngine {
           name: "Yangın Algılama ve Uyarı Sistemi",
           isMandatory: false,
           reason:
-              "OLUMLU: Yapı Yüksekliği < 51.50m (ve diğer ek şartlar oluşmadığı varsayılarak) zorunlu değildir.",
+              "Yapı Yüksekliği < 51.50m (ve diğer ek şartlar oluşmadığı varsayılarak) zorunlu değildir.",
         ),
       );
     }
@@ -79,8 +78,8 @@ class ActiveSystemsEngine {
           name: "Acil Aydınlatma Sistemi",
           isMandatory: true,
           reason: hYapi >= 21.50
-              ? "KRİTİK RİSK: Yapı Yüksekliği ≥ 21.50m olduğu için zorunludur."
-              : "KRİTİK RİSK: Binadaki toplam kullanıcı yükü 200 kişiyi aştığı için zorunludur.",
+              ? "Yapı Yüksekliği ≥ 21.50m olduğu için zorunludur."
+              : "Binadaki toplam kullanıcı yükü 200 kişiyi aştığı için zorunludur.",
         ),
       );
     } else {
@@ -88,7 +87,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Acil Aydınlatma Sistemi",
           isMandatory: false,
-          reason: "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
+          reason: "Zorunluluk kriterleri oluşmamıştır.",
         ),
       );
     }
@@ -100,8 +99,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Acil Durum Yönlendirmeleri",
           isMandatory: true,
-          reason:
-              "KRİTİK RİSK: Birden fazla çıkış (kaçış yolu) bulunduğu için zorunludur.",
+          reason: "Birden fazla çıkış (kaçış yolu) bulunduğu için zorunludur.",
         ),
       );
     } else {
@@ -110,7 +108,7 @@ class ActiveSystemsEngine {
           name: "Acil Durum Yönlendirmeleri",
           isMandatory: false,
           reason:
-              "OLUMLU: Tek çıkışlı binalarda zorunlu tutulmamıştır (ancak önerilmektedir).",
+              "Tek çıkışlı binalarda zorunlu tutulmamıştır (ancak önerilmektedir).",
         ),
       );
     }
@@ -122,8 +120,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Sesli Tahliye (Anons) Sistemi",
           isMandatory: true,
-          reason:
-              "KRİTİK RİSK: Yapı Yüksekliği ≥ 51.50m olduğu için zorunludur.",
+          reason: "Yapı Yüksekliği ≥ 51.50m olduğu için zorunludur.",
         ),
       );
     } else {
@@ -131,8 +128,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Sesli Tahliye (Anons) Sistemi",
           isMandatory: false,
-          reason:
-              "OLUMLU: Yapı Yüksekliği < 51.50m olduğu için zorunlu değildir.",
+          reason: "Yapı Yüksekliği < 51.50m olduğu için zorunlu değildir.",
         ),
       );
     }
@@ -147,8 +143,8 @@ class ActiveSystemsEngine {
           name: "Elle İhbar Sistemi (Kır-Bas Yangın Butonu)",
           isMandatory: true,
           reason: hBina >= 21.50
-              ? "KRİTİK RİSK: Bina Yüksekliği ≥ 21.50m olduğu için zorunludur."
-              : "KRİTİK RİSK: Yapı Yüksekliği ≥ 30.50m olduğu için zorunludur.",
+              ? "Bina Yüksekliği ≥ 21.50m olduğu için zorunludur."
+              : "Yapı Yüksekliği ≥ 30.50m olduğu için zorunludur.",
         ),
       );
     } else {
@@ -156,7 +152,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Elle İhbar Sistemi (Kır-Bas Yangın Butonu)",
           isMandatory: false,
-          reason: "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
+          reason: "Zorunluluk kriterleri oluşmamıştır.",
         ),
       );
     }
@@ -169,7 +165,7 @@ class ActiveSystemsEngine {
           name: "Sesli ve Işıklı Alarm Cihazları",
           isMandatory: true,
           reason:
-              "KRİTİK RİSK: Elle ihbar sistemi (Buton) zorunlu olduğu için alarm cihazları da zorunludur.",
+              "Elle ihbar sistemi (Buton) zorunlu olduğu için alarm cihazları da zorunludur.",
         ),
       );
     } else {
@@ -177,8 +173,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Sesli ve Işıklı Alarm Cihazları",
           isMandatory: false,
-          reason:
-              "OLUMLU: Elle ihbar sistemi zorunlu olmadığı için şart değildir.",
+          reason: "Elle ihbar sistemi zorunlu olmadığı için şart değildir.",
         ),
       );
     }
@@ -207,8 +202,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Yangın Dolabı Sistemi",
           isMandatory: true,
-          reason:
-              "KRİTİK RİSK: ${dolapReasons.join(', ')} olduğu için zorunludur.",
+          reason: "${dolapReasons.join(', ')} olduğu için zorunludur.",
         ),
       );
     } else {
@@ -217,7 +211,7 @@ class ActiveSystemsEngine {
           name: "Yangın Dolabı Sistemi",
           isMandatory: false,
           reason:
-              "OLUMLU: Yapı Yüksekliği < 21.50m ve özel riskli alanlar (Otopark > 600m²) bulunmadığı için zorunlu değildir.",
+              "Yapı Yüksekliği < 21.50m ve özel riskli alanlar (Otopark > 600m²) bulunmadığı için zorunlu değildir.",
         ),
       );
     }
@@ -247,8 +241,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "İtfaiye Su Alma Ağzı",
           isMandatory: true,
-          reason:
-              "KRİTİK RİSK: ${suAlmaReasons.join(', ')} olduğu için zorunludur.",
+          reason: "${suAlmaReasons.join(', ')} olduğu için zorunludur.",
         ),
       );
     } else {
@@ -256,7 +249,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "İtfaiye Su Alma Ağzı",
           isMandatory: false,
-          reason: "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
+          reason: "Zorunluluk kriterleri oluşmamıştır.",
         ),
       );
     }
@@ -267,20 +260,16 @@ class ActiveSystemsEngine {
 
     if (hBina >= 21.50) {
       siyamZorunlu = true;
-      siyamReason =
-          "KRİTİK RİSK: Bina Yüksekliği ≥ 21.50m olduğu için zorunludur.";
+      siyamReason = "Bina Yüksekliği ≥ 21.50m olduğu için zorunludur.";
     } else if (hYapi >= 30.50) {
       siyamZorunlu = true;
-      siyamReason =
-          "KRİTİK RİSK: Yapı Yüksekliği ≥ 30.50m olduğu için zorunludur.";
+      siyamReason = "Yapı Yüksekliği ≥ 30.50m olduğu için zorunludur.";
     } else if (tabanAlani > 1000) {
       siyamZorunlu = true;
-      siyamReason =
-          "KRİTİK RİSK: Taban Alanı > 1000 m² olduğu için zorunludur.";
+      siyamReason = "Taban Alanı > 1000 m² olduğu için zorunludur.";
     } else if (isCepheKritik) {
       siyamZorunlu = true;
-      siyamReason =
-          "KRİTİK RİSK: Cephe Genişliği > 75m olduğu için zorunludur.";
+      siyamReason = "Cephe Genişliği > 75m olduğu için zorunludur.";
     }
 
     if (siyamZorunlu) {
@@ -300,7 +289,7 @@ class ActiveSystemsEngine {
           isMandatory: false,
           isWarning: true,
           reason:
-              "UYARI: Diğer zorunluluk kriterleri (yükseklik, taban alanı) oluşmamıştır. Ancak cephe uzunluğu beyan edilmediğinden, cepheye bağlı zorunluluk (> 75m) netleşmemiştir.",
+              "Diğer zorunluluk kriterleri (yükseklik, taban alanı) oluşmamıştır. Ancak cephe uzunluğu beyan edilmediğinden, cepheye bağlı zorunluluk (> 75m) netleşmemiştir.",
           note:
               "Binanızın en uzun cephesi 75 metreyi aşıyorsa, İtfaiye Su Verme Bağlantısı (Siyam İkizi) zorunlu hale gelecektir. Lütfen cephe ölçüsünü kontrol ediniz.",
         ),
@@ -310,7 +299,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "İtfaiye Su Verme Ağzı (Siyam İkizi)",
           isMandatory: false,
-          reason: "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
+          reason: "Zorunluluk kriterleri oluşmamıştır.",
         ),
       );
     }
@@ -337,12 +326,12 @@ class ActiveSystemsEngine {
       } else if (otoparkAlanLabel.contains("13-1-ALT-A")) {
         // < 600 m2
         otoparkSpecificReason =
-            "OLUMLU: Otopark alanı içerisinde kaçış mesafelerinin Yönetmelik limitlerinin altında olması halinde sprinkler zorunluluğu yoktur.";
+            "Otopark alanı içerisinde kaçış mesafelerinin Yönetmelik limitlerinin altında olması halinde sprinkler zorunluluğu yoktur.";
       } else if (otoparkAlanLabel.contains("13-1-ALT-E")) {
         // Bilmiyorum
         sprinklerBilmiyorum = true;
         otoparkSpecificReason =
-            "BİLMİYORUM: Eğer binanızdaki otopark alanları toplamı 600 m²'nin üzerindeyse otopark alanlarında sprinkler sistemi zorunludur.";
+            "Eğer binanızdaki otopark alanları toplamı 600 m²'nin üzerindeyse otopark alanlarında sprinkler sistemi zorunludur.";
         otoparkSpecificNote = "";
       }
     }
@@ -351,10 +340,9 @@ class ActiveSystemsEngine {
     if (sprinklerZorunlu) {
       requirements.add(
         ActiveSystemRequirement(
-          name: "Otomatik Yağmurlama (Sprinkler) Sistemi",
+          name: "Otomatik Sprinkler Sistemi",
           isMandatory: true,
-          reason:
-              "KRİTİK RİSK: Zorunluluk Sebebi: ${sprinklerReasons.join(', ')}.",
+          reason: "Zorunluluk Sebebi: ${sprinklerReasons.join(', ')}.",
           note: otoparkSpecificNote ?? "",
         ),
       );
@@ -362,12 +350,12 @@ class ActiveSystemsEngine {
       // Otopark alanı bilinmiyorsa: UYARI
       requirements.add(
         ActiveSystemRequirement(
-          name: "Otomatik Yağmurlama (Sprinkler) Sistemi",
+          name: "Otomatik Sprinkler Sistemi",
           isMandatory: false,
           isWarning: true,
           reason:
               otoparkSpecificReason ??
-              "BİLMİYORUM: Otopark alanı bilgisi girilmediği için sprinkler zorunluluğu netleşmemiştir.",
+              "Otopark alanı bilgisi girilmediği için sprinkler zorunluluğu netleşmemiştir.",
           note: otoparkSpecificNote ?? "",
         ),
       );
@@ -375,11 +363,10 @@ class ActiveSystemsEngine {
       // Zorunlu değil ve otopark alanı < 600m2 veya otopark yok
       requirements.add(
         ActiveSystemRequirement(
-          name: "Otomatik Yağmurlama (Sprinkler) Sistemi",
+          name: "Otomatik Sprinkler Sistemi",
           isMandatory: false,
           reason:
-              otoparkSpecificReason ??
-              "OLUMLU: Zorunluluk kriterleri oluşmamıştır.",
+              otoparkSpecificReason ?? "Zorunluluk kriterleri oluşmamıştır.",
         ),
       );
     }
@@ -389,10 +376,10 @@ class ActiveSystemsEngine {
     if (tabanAlani > 5000) {
       requirements.add(
         ActiveSystemRequirement(
-          name: "Yangın Hidrant Sistemi(Bina Çevresinde)",
+          name: "Yangın Hidrant Sistemi (Bina Çevresinde)",
           isMandatory: true,
           reason:
-              "KRİTİK RİSK: Taban Alanı > 5000 m² olduğu için zorunludur. Binanızın oturumu zemin kat seviyesinde değil de başka bir seviyede veya katta ise o katın taban alanı baz alınmalıdır.",
+              "Taban Alanı > 5000 m² olduğu için zorunludur. Binanızın oturumu zemin kat seviyesinde değil de başka bir seviyede veya katta ise o katın taban alanı baz alınmalıdır.",
         ),
       );
     } else {
@@ -401,7 +388,7 @@ class ActiveSystemsEngine {
           name: "Yangın Hidrant Sistemi(Bina Çevresinde)",
           isMandatory: false,
           reason:
-              "OLUMLU: Taban Alanı < 5000 m² olduğu için zorunlu değildir. Bina taban alanı hesabında beyan ettiğiniz zemin katınızın alanı ele alınmıştır. Eğer farklı bir kat oturum alanı olarak kabul ediliyorsa ve bu alan 5000 m2 'yi aşıyorsa hidrant sistemi zorunlu olacaktır.",
+              "Taban Alanı < 5000 m² olduğu için zorunlu değildir. Bina taban alanı hesabında beyan ettiğiniz zemin katınızın alanı ele alınmıştır. Eğer farklı bir kat oturum alanı olarak kabul ediliyorsa ve bu alan 5000 m2 'yi aşıyorsa hidrant sistemi zorunlu olacaktır.",
         ),
       );
     }
@@ -477,7 +464,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Duman Kontrol Sistemi",
           isMandatory: true,
-          reason: "KRİTİK RİSK: ${dumanReasons.join('. ')}.",
+          reason: "${dumanReasons.join('. ')}.",
           note: dumanNotes.isNotEmpty ? dumanNotes.join(' ') : "",
         ),
       );
@@ -489,7 +476,7 @@ class ActiveSystemsEngine {
             isMandatory: false,
             isWarning: true,
             reason:
-                "UYARI: Genel bir duman kontrol sistemi zorunluluğu tespit edilmemiştir ancak bazı alanlar için belirsizlik bulunmaktadır.",
+                "Genel bir duman kontrol sistemi zorunluluğu tespit edilmemiştir ancak bazı alanlar için belirsizlik bulunmaktadır.",
             note: dumanNotes.join(' '),
           ),
         );
@@ -516,7 +503,7 @@ class ActiveSystemsEngine {
             name: "Duman Kontrol Sistemi",
             isMandatory: false,
             reason:
-                "OLUMLU: Yapı Yüksekliği < 51.50m ve özel riskli alanlar (Otopark, Kazan Dairesi vb.) sınırların altında olduğu için duman kontrol sistemi zorunlu değildir.",
+                "Yapı Yüksekliği < 51.50m ve özel riskli alanlar (Otopark, Kazan Dairesi vb.) sınırların altında olduğu için duman kontrol sistemi zorunlu değildir.",
             note: positiveNotes.join(' '),
           ),
         );
@@ -530,7 +517,7 @@ class ActiveSystemsEngine {
         isMandatory: false,
         isWarning: true,
         reason:
-            "UYARI: Alanı 90 m²'den küçük olan atrium boşluklarının çevresi her katta en az 45 cm yüksekliğinde duman perdesi ile çevrelenir ve yağmurlama sistemi ile korunan binalarda duman perdesinden 15 ila 30 cm uzaklıkta, aralarındaki mesafe en çok 2 m olacak şekilde yağmurlama başlığı yerleştirilir. Atriumlarda doğal veya mekanik olarak duman kontrolü yapılır.",
+            "(Binanızda varsa) Alanı 90 m²'den küçük olan atrium boşluklarının çevresi her katta en az 45 cm yüksekliğinde duman perdesi ile çevrelenir ve yağmurlama sistemi ile korunan binalarda duman perdesinden 15 ila 30 cm uzaklıkta, aralarındaki mesafe en çok 2 m olacak şekilde yağmurlama başlığı yerleştirilir. Atriumlarda doğal veya mekanik olarak duman kontrolü yapılır.",
         definitionTerm: "Atrium",
         definitionText:
             "İki veya daha çok sayıda katın içine açıldığı, merdiven yuvası, asansör kuyusu, yürüyenmerdiven boşluğu veya su, elektrik, havalandırma, iklimlendirme, haberleşme, tesisat bacaları ve şaftlar hariç, üstü kapalı geniş ve yüksek hacmi ifade eder.",
@@ -576,8 +563,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Basınçlandırma Sistemi",
           isMandatory: true,
-          reason:
-              "KRİTİK RİSK: Aşağıdaki alanlarda basınçlandırma yapılması ZORUNLUDUR:",
+          reason: "Aşağıdaki alanlarda basınçlandırma yapılması ZORUNLUDUR:",
           note: "$noteText.",
         ),
       );
@@ -587,7 +573,7 @@ class ActiveSystemsEngine {
           name: "Basınçlandırma Sistemi",
           isMandatory: false,
           isWarning: true,
-          reason: "UYARI: Asansör kuyusunda havalandırma durumu belirsizdir.",
+          reason: "Asansör kuyusunda havalandırma durumu belirsizdir.",
           note:
               "Asansör kuyusunda mimari proje üzerinde veya Yangın Güvenlik Mühendisi tarafından yerinde inceleme yapılması gereklidir. İnceleme sonucuna göre eğer kuyu tepesinde duman tahliye penceresi/bacası yoksa basınçlandırma sistemi zorunlu hale gelebilir.",
         ),
@@ -597,8 +583,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Basınçlandırma Sistemi",
           isMandatory: false,
-          reason:
-              "OLUMLU: Basınçlandırma gerektiren bir durum tespit edilmemiştir.",
+          reason: "Basınçlandırma gerektiren bir durum tespit edilmemiştir.",
         ),
       );
     }
@@ -607,11 +592,11 @@ class ActiveSystemsEngine {
     if (sprinklerZorunlu) {
       requirements.add(
         ActiveSystemRequirement(
-          name: "Sismik Askılama (Depreme Karşı Tesisat Koruyucu) Sistemler",
+          name: "Sismik Askılama (Depreme Karşı Tesisat Koruma) Sistemleri",
           isMandatory: false,
           isWarning: true,
           reason:
-              "UYARI: Otomatik Yağmurlama (Sprinkler) sistemi zorunlu olduğu için, binanızın deprem bölgesine göre sismik önlemler alınması gerekebilir. Kesin sismik önlemler için binanızın bulunduğu bölgeye göre yorum yapılmalıdır.",
+              "Otomatik Sprinkler sistemi zorunlu olduğu için, binanızın deprem bölgesine göre sismik önlemler alınması gerekebilir. Kesin sismik önlemler için binanızın bulunduğu bölgeye göre yorum yapılmalıdır.",
           note:
               "Birinci ve ikinci derece deprem bölgelerinde, sismik hareketlere karşı ana kolonların herhangi bir yöne sürüklenmemesi için, dört yollu destek kullanılması ve 65 mm ve daha büyük nominal çaplı boruların katlardan ana dağıtım borularına bağlanmasında esnek bağlantılar ile boruların tavanlara tutturulmasında iki yollu enlemesine ve boylamasına sabitleme askı elemanları kullanılarak boruların kırılmasının önlenmesi gerekir. Dilatasyon geçişlerinde her üç yönde hareketi karşılayacak detaylar uygulanır.",
         ),
@@ -621,8 +606,7 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Sismik Askılama Sistemleri",
           isMandatory: false,
-          reason:
-              "OLUMLU: Sprinkler sistemi zorunlu olmadığı için öncelikli değildir.",
+          reason: "Sprinkler sistemi zorunlu olmadığı için öncelikli değildir.",
         ),
       );
     }
@@ -633,7 +617,7 @@ class ActiveSystemsEngine {
       ActiveSystemRequirement(
         name: "Taşınabilir (Portatif) Söndürücüler (YSC)",
         isMandatory: true,
-        reason: "KRİTİK RİSK: Her yapıda zorunludur.",
+        reason: "Her yapıda zorunludur.",
         note:
             "Toplam İnşaat Alanı ($toplamInsaat m²) hesabına göre binada en az ${neededExtinguishers.toInt()} adet 6kg Kuru Kimyevi Tozlu (KKT) Yangın Söndürme Cihazı bulunmalıdır.",
       ),
@@ -646,7 +630,7 @@ class ActiveSystemsEngine {
         isMandatory: false,
         isWarning: true,
         reason:
-            "UYARI: Kazan dairesi (doğalgaz/LPG), otopark (karbonmonoksit) veya mutfak gibi alanlarda uygun gaz algılama dedektörleri kullanılmalıdır.",
+            "Kazan dairesi (doğalgaz, LPG), otopark (karbonmonoksit) veya varsa ticari/endüstriyel mutfak alanlarında uygun gaz algılama dedektörleri, gaz kesme tertibatı vs. kullanılmalıdır.",
       ),
     );
 
@@ -657,7 +641,7 @@ class ActiveSystemsEngine {
         isMandatory: false,
         isWarning: true,
         reason:
-            "UYARI: Yangın kompartımanı veya yangın zonu olarak tanımlanmış alanların döşeme ve tüm duvarlarında yer alan, havalandırma kanalı geçişi vb. korunumsuz açıklıklarda Yangın Damperi kullanılmalıdır.",
+            "Yangın kompartımanı veya yangın zonu olarak tanımlanmış alanların döşeme ve tüm duvarlarında yer alan, havalandırma kanalı geçişi vb. korunumsuz açıklıklarda Yangın Damperi kullanılmalıdır.",
       ),
     );
 
@@ -668,7 +652,7 @@ class ActiveSystemsEngine {
         isMandatory: false,
         isWarning: true,
         reason:
-            "UYARI: Duman tahliye sistemine ait kanalların yangın kompartımanı veya yangın zonundan geçmesi halinde geçiş noktalarında duman damperi kullanılmalıdır.",
+            "Duman tahliye sistemine ait kanalların yangın kompartımanı veya yangın zonundan geçmesi halinde geçiş noktalarında duman damperi kullanılmalıdır.",
       ),
     );
 
@@ -678,7 +662,7 @@ class ActiveSystemsEngine {
     // Actually, user said: "if any AT LEAST 1 requirement is ZORUNLU ... (e.g. sprinkler, algilama, basinc) ... i.e. RED"
     bool anyOtherMandatory = requirements.any(
       (r) =>
-          r.reason.contains("KRİTİK RİSK:") &&
+          r.isMandatory &&
           r.name != "Taşınabilir (Portatif) Söndürücüler (YSC)" &&
           r.name != "Yangın Senaryosu" &&
           r.name != "Yangın Matrisi (Cause and Effect)",
@@ -693,12 +677,12 @@ class ActiveSystemsEngine {
     );
 
     final scenarioReason = anyOtherMandatory
-        ? "KRİTİK RİSK: Binada zorunlu aktif sistemler bulunduğu için bir Yangın Senaryosu oluşturulması zorunludur."
-        : "BİLGİ: Her binada, yangın anında sistemlerin nasıl çalışacağını, tahliyenin nasıl yapılacağını ve ekiplerin nasıl müdahale edeceğini anlatan bir Yangın Senaryosu oluşturulmalıdır.";
+        ? "Binada zorunlu aktif sistemler bulunduğu için bir Yangın Senaryosu oluşturulması zorunludur."
+        : "Her binada, yangın anında sistemlerin nasıl çalışacağını, tahliyenin nasıl yapılacağını ve ekiplerin nasıl müdahale edeceğini anlatan bir Yangın Senaryosu oluşturulmalıdır.";
 
     final matrixReason = anyOtherMandatory
-        ? "KRİTİK RİSK: Sistemlerin birbiriyle entegrasyonu için Yangın Matrisi (Cause and Effect) hazırlanmalıdır."
-        : "BİLGİ: Sistemlerin birbiriyle entegrasyonu (Örn: Alarm çalınca asansörün inmesi, fanların devreye girmesi vb.) için bir matris hazırlanması önerilir.";
+        ? "Sistemlerin birbiriyle entegrasyonu için Yangın Matrisi (Cause and Effect) hazırlanmalıdır."
+        : "Sistemlerin birbiriyle entegrasyonu (Örn: Alarm çalınca asansörün inmesi, fanların devreye girmesi vb.) için bir matris hazırlanması önerilir.";
 
     // Insert at top
     requirements.insert(

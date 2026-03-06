@@ -185,6 +185,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                     ),
                     child: Container(
                       padding: const EdgeInsets.all(12),
+                      margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
                         color: _model.isiklikMalzemesi == "plastik"
                             ? const Color(0xFF1A237E).withOpacity(0.1)
@@ -211,6 +212,50 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           const Expanded(
                             child: Text(
                               "Plastik, Pleksi veya Polikarbon ışıklık",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Bilmiyorum seçeneği
+                  InkWell(
+                    onTap: () => setState(
+                      () => _model = _model.copyWith(
+                        isiklikMalzemesi: "bilinmiyor",
+                      ),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: _model.isiklikMalzemesi == "bilinmiyor"
+                            ? const Color(0xFF1A237E).withOpacity(0.1)
+                            : Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: _model.isiklikMalzemesi == "bilinmiyor"
+                              ? const Color(0xFF1A237E)
+                              : Colors.grey.shade300,
+                          width: _model.isiklikMalzemesi == "bilinmiyor"
+                              ? 2
+                              : 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Radio<String>(
+                            value: "bilinmiyor",
+                            groupValue: _model.isiklikMalzemesi,
+                            activeColor: const Color(0xFF1A237E),
+                            onChanged: (v) => setState(
+                              () =>
+                                  _model = _model.copyWith(isiklikMalzemesi: v),
+                            ),
+                          ),
+                          const Expanded(
+                            child: Text(
+                              "Bilmiyorum.",
                               style: TextStyle(fontSize: 14),
                             ),
                           ),
@@ -280,4 +325,3 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
     );
   }
 }
-

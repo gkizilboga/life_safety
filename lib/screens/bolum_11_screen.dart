@@ -109,6 +109,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
               [
                 Bolum11Content.zayifNoktaOptionA,
                 Bolum11Content.zayifNoktaOptionB,
+                Bolum11Content.zayifNoktaOptionC,
               ],
               _model.zayifNokta,
             ),
@@ -149,4 +150,3 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
     return CustomInfoNote(text: text, icon: Icons.arrow_downward);
   }
 }
-

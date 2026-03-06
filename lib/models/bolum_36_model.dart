@@ -106,6 +106,30 @@ class Bolum36Model {
       Bolum36WidthContent.kapiGenislikBilinmiyor,
     ];
 
+    final kapiTipiOptions = [
+      Bolum36Content.kapiTipiOptionA,
+      Bolum36Content.kapiTipiOptionB,
+      Bolum36Content.kapiTipiOptionC,
+    ];
+
+    final cikisKatiOptions = [
+      Bolum36Content.cikisKatiOptionA,
+      Bolum36Content.cikisKatiOptionB,
+      Bolum36Content.cikisKatiOptionC,
+    ];
+
+    final disMerdOptions = [
+      Bolum36Content.disMerdOptionA,
+      Bolum36Content.disMerdOptionB,
+      Bolum36Content.disMerdOptionC,
+    ];
+
+    final konumOptions = [
+      Bolum36Content.konumOptionA,
+      Bolum36Content.konumOptionB,
+      Bolum36Content.konumOptionC,
+    ];
+
     final merdOptions = [
       Bolum36WidthContent.merdGenislikA,
       Bolum36WidthContent.merdGenislikB,
@@ -124,6 +148,10 @@ class Bolum36Model {
     ];
 
     return Bolum36Model(
+      cikisKati: findChoice(map['cikisKati_label'], cikisKatiOptions),
+      disMerd: findChoice(map['disMerd_label'], disMerdOptions),
+      konum: findChoice(map['konum_label'], konumOptions),
+      kapiTipi: findChoice(map['kapiTipi_label'], kapiTipiOptions),
       genislikKorunumlu: findChoice(
         map['genislikKorunumlu_label'],
         merdOptions,

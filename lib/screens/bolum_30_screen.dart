@@ -21,21 +21,15 @@ class Bolum30Screen extends StatefulWidget {
 
 class _Bolum30ScreenState extends State<Bolum30Screen> {
   Bolum30Model _model = Bolum30Model();
-  final TextEditingController _kapasiteCtrl = TextEditingController();
   bool _hasKazan = false;
-  String? _kapasiteErr;
 
   @override
   void initState() {
     super.initState();
     if (BinaStore.instance.bolum30 != null) {
       _model = BinaStore.instance.bolum30!;
-      if (_model.kapasite != null) {
-        _kapasiteCtrl.text = _model.kapasite.toString();
-      }
     }
     _checkKazanAndRedirect();
-    _kapasiteCtrl.addListener(_validate);
   }
 
   void _checkKazanAndRedirect() {
@@ -52,30 +46,10 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     }
   }
 
-  void _validate() {
-    setState(() {
-      if (_model.kapasiteBilinmiyor) {
-        _kapasiteErr = null;
-        return;
-      }
-      _kapasiteErr = InputValidator.validateNumber(
-        _kapasiteCtrl.text,
-        min: 10,
-        max: 5000,
-        unit: "kW",
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _kapasiteCtrl.dispose();
-    super.dispose();
-  }
-
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
       if (type == 'konum') _model = _model.copyWith(konum: choice);
+      if (type == 'kapasite') _model = _model.copyWith(kapasiteChoice: choice);
       if (type == 'kapi') _model = _model.copyWith(kapi: choice);
       if (type == 'hava') _model = _model.copyWith(hava: choice);
       if (type == 'tup') _model = _model.copyWith(tup: choice);
@@ -93,9 +67,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
   bool get _isFormValid {
     if (!_hasKazan) return true;
     if (_model.konum == null) return false;
-    if (!_model.kapasiteBilinmiyor &&
-        (_kapasiteCtrl.text.isEmpty || _kapasiteErr != null))
-      return false;
+    if (_model.kapasiteChoice == null) return false;
     if (_model.kapi == null) return false;
     if (_model.hava == null) return false;
     if (_model.yakit == null) return false;
@@ -107,13 +79,6 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
   }
 
   void _onNextPressed() {
-    if (_hasKazan) {
-      int? kap = _model.kapasiteBilinmiyor
-          ? null
-          : InputValidator.parseFlex(_kapasiteCtrl.text)?.toInt();
-      _model = _model.copyWith(kapasite: kap);
-    }
-
     BinaStore.instance.bolum30 = _model;
     BinaStore.instance.saveToDisk();
 
@@ -157,47 +122,15 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             _model.konum,
           ),
 
-          QuestionCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Kazanların toplam ısıl kapasitesini (kW) giriniz:",
-                  style: AppStyles.questionTitle,
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: _kapasiteCtrl,
-                  enabled: !_model.kapasiteBilinmiyor,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  inputFormatters: [InputValidator.flexDecimal],
-                  decoration: InputDecoration(
-                    hintText: "Örn: 400",
-                    suffixText: "kW",
-                    border: const OutlineInputBorder(),
-                    errorText: _kapasiteErr,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SelectableCard(
-                  choice: Bolum30Content.kapasiteBilinmiyorOption,
-                  isSelected: _model.kapasiteBilinmiyor,
-                  onTap: () {
-                    setState(() {
-                      _model = _model.copyWith(
-                        kapasiteBilinmiyor: !_model.kapasiteBilinmiyor,
-                      );
-                      if (_model.kapasiteBilinmiyor) {
-                        _kapasiteCtrl.clear();
-                        _kapasiteErr = null;
-                      }
-                    });
-                  },
-                ),
-              ],
-            ),
+          _buildSoru(
+            "Kazanların toplam ısıl kapasitesi hangi aralıktadır?",
+            'kapasite',
+            [
+              Bolum30Content.kapasiteAlt,
+              Bolum30Content.kapasiteUst,
+              Bolum30Content.kapasiteBilinmiyorOption,
+            ],
+            _model.kapasiteChoice,
           ),
 
           _buildSoru("Kazan dairesinin kaç adet ÇIKIŞ kapısı var?", 'kapi', [

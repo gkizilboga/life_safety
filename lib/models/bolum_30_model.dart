@@ -3,8 +3,7 @@ import '../utils/app_content.dart';
 
 class Bolum30Model {
   final ChoiceResult? konum;
-  final int? kapasite;
-  final bool kapasiteBilinmiyor;
+  final ChoiceResult? kapasiteChoice;
   final ChoiceResult? kapi;
   final ChoiceResult? hava;
   final ChoiceResult? yakit;
@@ -13,8 +12,7 @@ class Bolum30Model {
 
   Bolum30Model({
     this.konum,
-    this.kapasite,
-    this.kapasiteBilinmiyor = false,
+    this.kapasiteChoice,
     this.kapi,
     this.hava,
     this.yakit,
@@ -24,8 +22,7 @@ class Bolum30Model {
 
   Bolum30Model copyWith({
     ChoiceResult? konum,
-    int? kapasite,
-    bool? kapasiteBilinmiyor,
+    ChoiceResult? kapasiteChoice,
     ChoiceResult? kapi,
     ChoiceResult? hava,
     ChoiceResult? yakit,
@@ -34,8 +31,7 @@ class Bolum30Model {
   }) {
     return Bolum30Model(
       konum: konum ?? this.konum,
-      kapasite: kapasite ?? this.kapasite,
-      kapasiteBilinmiyor: kapasiteBilinmiyor ?? this.kapasiteBilinmiyor,
+      kapasiteChoice: kapasiteChoice ?? this.kapasiteChoice,
       kapi: kapi ?? this.kapi,
       hava: hava ?? this.hava,
       yakit: yakit ?? this.yakit,
@@ -47,8 +43,7 @@ class Bolum30Model {
   Map<String, dynamic> toMap() {
     return {
       'konum_label': konum?.label,
-      'kapasite': kapasite,
-      'kapasiteBilinmiyor': kapasiteBilinmiyor,
+      'kapasiteChoice_label': kapasiteChoice?.label,
       'kapi_label': kapi?.label,
       'hava_label': hava?.label,
       'yakit_label': yakit?.label,
@@ -74,8 +69,11 @@ class Bolum30Model {
         Bolum30Content.konumOptionC,
         Bolum30Content.konumOptionD,
       ]),
-      kapasite: map['kapasite'],
-      kapasiteBilinmiyor: map['kapasiteBilinmiyor'] ?? false,
+      kapasiteChoice: find(map['kapasiteChoice_label'], [
+        Bolum30Content.kapasiteAlt,
+        Bolum30Content.kapasiteUst,
+        Bolum30Content.kapasiteBilinmiyorOption,
+      ]),
       kapi: find(map['kapi_label'], [
         Bolum30Content.kapiOptionA,
         Bolum30Content.kapiOptionB,

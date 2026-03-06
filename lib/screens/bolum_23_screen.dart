@@ -173,4 +173,3 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
     );
   }
 }
-

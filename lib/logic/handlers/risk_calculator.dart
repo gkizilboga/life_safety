@@ -31,7 +31,7 @@ class RiskCalculator {
       }
     }
 
-    // Main section loop
+    // Main section loop (Section based counts for titles and completion)
     for (int i = 1; i <= 36; i++) {
       bool isSkipped = false;
       if (i == 22 || i == 23) isSkipped = _store.bolum7?.hasAsansor == false;
@@ -46,27 +46,36 @@ class RiskCalculator {
         final res = _store.getResultForSection(i);
         if (res != null) {
           filledSections++;
-          if (i <= 10) continue;
-
-          // Calling ReportEngine's static level getter for now to keep it consistent
-          final level = ReportEngine.getSectionRiskLevel(i, store: _store);
-          if (level == RiskLevel.critical) {
-            criticalRisks++;
-            criticalTitles.add("Bölüm $i");
-          } else if (level == RiskLevel.warning) {
-            warnings++;
-          } else if (level == RiskLevel.unknown) {
-            unknowns++;
+          // Titles for UI (Section level)
+          if (i > 10) {
+            final sectionLevel = ReportEngine.getSectionRiskLevel(
+              i,
+              store: _store,
+            );
+            if (sectionLevel == RiskLevel.critical) {
+              criticalTitles.add("Bölüm $i");
+            }
           }
         }
       }
     }
 
-    // Special Condition S20 (Sahanliksiz)
+    // Granular scoring (Question based counts for 11-36)
+    final allRiskLevels = ReportEngine.getAllQuestionsRiskLevels(store: _store);
+    for (var level in allRiskLevels) {
+      if (level == RiskLevel.critical) {
+        criticalRisks++;
+      } else if (level == RiskLevel.warning) {
+        warnings++;
+      } else if (level == RiskLevel.unknown) {
+        unknowns++;
+      }
+    }
+
+    // Special Condition S20 (Sahanliksiz) - captured in getAllQuestionsRiskLevels, add to titles
     if (_store.bolum20 != null &&
         _store.bolum20!.sahanliksizMerdivenSayisi > 0) {
       if (!criticalTitles.contains("Bölüm 20")) {
-        criticalRisks++;
         criticalTitles.add("Bölüm 20");
       }
     }
@@ -91,8 +100,9 @@ class RiskCalculator {
 
       if (hBina > (15.50 - 0.001) || maxYuk > 100) {
         if (!criticalTitles.contains("Bölüm 20")) {
-          criticalRisks++;
           criticalTitles.add("Bölüm 20");
+          // Add extra penalty for this numeric check
+          criticalRisks++;
         }
       }
     }
@@ -103,12 +113,12 @@ class RiskCalculator {
         _store.bolum21?.varlik?.label.contains("21-1-A") ?? false;
     if (yghReasons.isNotEmpty && !hasYgh) {
       if (!criticalTitles.contains("Bölüm 21")) {
-        criticalRisks++;
         criticalTitles.add("Bölüm 21");
+        criticalRisks++;
       }
     }
 
-    // Scoring formula
+    // Scoring formula (Base 100, weights: -5, -2, -1)
     double score =
         100.0 - (criticalRisks * 5.0) - (warnings * 2.0) - (unknowns * 1.0);
 
@@ -122,7 +132,7 @@ class RiskCalculator {
           : totalActiveSections == 0
           ? 0
           : (filledSections / totalActiveSections * 100).toInt().clamp(0, 100),
-      'criticals': criticalTitles.take(3).toList(),
+      'criticals': criticalTitles.toSet().toList().take(3).toList(),
     };
   }
 }

@@ -29,7 +29,7 @@ class ModernHeader extends StatelessWidget {
     final double topPadding = MediaQuery.of(context).padding.top;
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(20, topPadding + 10, 20, 15),
+      padding: EdgeInsets.fromLTRB(20, topPadding + 8, 20, 10),
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.only(
@@ -49,11 +49,11 @@ class ModernHeader extends StatelessWidget {
                   onTap: onBack ?? () => Navigator.pop(context),
                   behavior: HitTestBehavior.opaque,
                   child: Container(
-                    width: 48,
-                    height: 48,
+                    width: 40,
+                    height: 40,
                     alignment: Alignment.centerLeft,
                     child: Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
@@ -61,7 +61,7 @@ class ModernHeader extends StatelessWidget {
                       child: const Icon(
                         Icons.arrow_back_ios_new,
                         color: Colors.white,
-                        size: 16,
+                        size: 14,
                       ),
                     ),
                   ),
@@ -91,17 +91,17 @@ class ModernHeader extends StatelessWidget {
                   },
                   behavior: HitTestBehavior.opaque,
                   child: Container(
-                    height: 48,
+                    height: 40,
                     alignment: Alignment.center,
                     padding: const EdgeInsets.only(left: 10),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
+                        horizontal: 8,
+                        vertical: 4,
                       ),
                       decoration: BoxDecoration(
                         color: const Color(0xFF059669),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
@@ -117,14 +117,14 @@ class ModernHeader extends StatelessWidget {
                           Icon(
                             Icons.save_as_rounded,
                             color: Colors.white,
-                            size: 15,
+                            size: 14,
                           ),
                           SizedBox(width: 4),
                           Text(
                             "KAYDET",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 9,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 0.3,
                             ),
@@ -136,67 +136,76 @@ class ModernHeader extends StatelessWidget {
                 ),
             ],
           ),
-          const SizedBox(height: 12),
-          // Progress info row
+          const SizedBox(height: 8),
+          // Integrated Title, Section and Progress Row
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                "BÖLÜM $currentStep/$totalSteps",
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
+              // Main Title (Ufaltılmış font)
+              Expanded(
+                child: FormattedText(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    height: 1.1,
+                  ),
                 ),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "İlerleme: ",
-                    style: TextStyle(
-                      color: Colors.white54,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                    ),
+              if (currentStep > 0) ...[
+                const SizedBox(width: 12),
+                // Bölüm X/Y (Ortada gibi konumlanmış)
+                Text(
+                  "Bölüm $currentStep",
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
                   ),
-                  AnimatedPercentageText(
-                    percentage: (progress * 100).toInt(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
+                ),
+                const SizedBox(width: 12),
+                // İlerleme (Sağda)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "İlerleme: ",
+                      style: TextStyle(
+                        color: Colors.white54,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    AnimatedPercentageText(
+                      percentage: (progress * 100).toInt(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
-          const SizedBox(height: 6),
-          // Main Title
-          FormattedText(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              height: 1.2,
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Progress Bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 4,
-              backgroundColor: Colors.white.withValues(alpha: 0.1),
-              valueColor: const AlwaysStoppedAnimation<Color>(
-                AppColors.successGreen,
+          if (currentStep > 0) ...[
+            const SizedBox(height: 10),
+            // Progress Bar
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 3,
+                backgroundColor: Colors.white.withValues(alpha: 0.1),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  AppColors.successGreen,
+                ),
               ),
             ),
-          ),
+          ] else
+            const SizedBox(height: 5),
         ],
       ),
     );
@@ -552,8 +561,7 @@ class TechnicalDrawingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment:
-          MainAxisAlignment.center, // Keep centered in the parent
+      mainAxisAlignment: MainAxisAlignment.end, // Align to the right
       children: [
         GestureDetector(
           onTap: () {
@@ -586,7 +594,7 @@ class TechnicalDrawingButton extends StatelessWidget {
                 const Icon(Icons.image_search, color: Colors.white, size: 18),
                 const SizedBox(width: 8),
                 const Text(
-                  "- İlgili görseli incele -",
+                  "Görseli İncele",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,

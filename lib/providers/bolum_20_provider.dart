@@ -26,6 +26,7 @@ class Bolum20Provider extends ChangeNotifier {
   final donerCtrl = TextEditingController();
   final sahanliksizCtrl = TextEditingController();
   final dengelenmisCtrl = TextEditingController();
+  final kovaGenisligiCtrl = TextEditingController(); // NEW
 
   // Basement Independent Stair Controllers
   final bodNormalCtrl = TextEditingController();
@@ -117,6 +118,10 @@ class Bolum20Provider extends ChangeNotifier {
         sahanliksizCtrl.text = saved.sahanliksizMerdivenSayisi.toString();
       if (saved.dengelenmisMerdivenSayisi > 0)
         dengelenmisCtrl.text = saved.dengelenmisMerdivenSayisi.toString();
+      if (saved.daireselMerdivenKovaGenisligi != null &&
+          saved.daireselMerdivenKovaGenisligi! > 0) {
+        kovaGenisligiCtrl.text = saved.daireselMerdivenKovaGenisligi.toString();
+      }
 
       if (saved.toplamDisariAcilanMerdivenSayisi > 0)
         toplamDirectCtrl.text = saved.toplamDisariAcilanMerdivenSayisi
@@ -200,6 +205,9 @@ class Bolum20Provider extends ChangeNotifier {
       case 'dengelenmis':
         dengelenmisErr = error;
         _model = _model.copyWith(dengelenmisMerdivenSayisi: numericVal);
+        break;
+      case 'kovaGenisligi':
+        _model = _model.copyWith(daireselMerdivenKovaGenisligi: numericVal);
         break;
       case 'bodNormal':
         bodNormalErr = error;
@@ -394,13 +402,14 @@ class Bolum20Provider extends ChangeNotifier {
   }
 
   void setIsBodrumIndependent(bool val, ChoiceResult choice) {
+    // Seçim her halükarda modele işlenmeli (ilk seçim null olabilir)
+    _model = _model.copyWith(
+      bodrumMerdivenDevami: choice,
+      isBodrumIndependent: val,
+    );
+
     if (_isBodrumIndependent != val) {
       _isBodrumIndependent = val;
-      _model = _model.copyWith(
-        bodrumMerdivenDevami: choice,
-        isBodrumIndependent: val,
-      );
-
       if (!val) {
         bodNormalCtrl.clear();
         bodIcKapaliCtrl.clear();
@@ -411,8 +420,9 @@ class Bolum20Provider extends ChangeNotifier {
         bodDengelenmisCtrl.clear();
         bodToplamDirectCtrl.clear();
       }
-      _calculateDynamicState(shouldNotify: true);
     }
+    _calculateDynamicState(shouldNotify: true);
+    notifyListeners(); // Model değiştiği için bildirmeliyiz
   }
 
   void handleSelection(String type, ChoiceResult choice) {
@@ -551,6 +561,7 @@ class Bolum20Provider extends ChangeNotifier {
         donerMerdivenSayisi: int.tryParse(donerCtrl.text) ?? 0,
         sahanliksizMerdivenSayisi: int.tryParse(sahanliksizCtrl.text) ?? 0,
         dengelenmisMerdivenSayisi: int.tryParse(dengelenmisCtrl.text) ?? 0,
+        daireselMerdivenKovaGenisligi: int.tryParse(kovaGenisligiCtrl.text),
         toplamDisariAcilanMerdivenSayisi: totalDirect,
         lobiTahliyeMesafeDurumu: _lobiMesafeDurumu,
         isBodrumIndependent: _isBodrumIndependent,
@@ -590,6 +601,7 @@ class Bolum20Provider extends ChangeNotifier {
     donerCtrl.dispose();
     sahanliksizCtrl.dispose();
     dengelenmisCtrl.dispose();
+    kovaGenisligiCtrl.dispose();
 
     bodNormalCtrl.dispose();
     bodIcKapaliCtrl.dispose();

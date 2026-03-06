@@ -126,8 +126,6 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               Bolum22Content.varlikOptionC,
             ],
             _model.varlik,
-            description:
-                "Yalnızca 51,5 m ve üzeri binalarda zorunludur. Binanızda normal (insan taşıma) asansörü varsa bu soru için 'Hayır' yanıtını işaretleyiniz.",
             assetPath: AppAssets.section22ItfaiyeHol,
             assetTitle: "İtfaiye Asansörü ve Hol Uygulama Detayı",
           ),
@@ -264,4 +262,3 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
     );
   }
 }
-
