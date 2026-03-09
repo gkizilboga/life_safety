@@ -695,11 +695,21 @@ class _StairInputRow extends StatelessWidget {
                 label,
                 style: const TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            const SizedBox(width: 4),
+            if (assetPath != null) ...[
+              const SizedBox(width: 6),
+              _buildCameraIcon(context, assetPath!, label),
+            ],
+            if (assetPaths != null) ...[
+              for (var path in assetPaths!) ...[
+                const SizedBox(width: 6),
+                _buildCameraIcon(context, path, label),
+              ]
+            ],
+            const SizedBox(width: 6),
             SizedBox(
               width: 55,
               child: TextFormField(
@@ -736,14 +746,28 @@ class _StairInputRow extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(height: 8),
-        if (assetPath != null)
-          TechnicalDrawingButton(assetPath: assetPath!, title: label),
-        if (assetPaths != null)
-          ...assetPaths!.map(
-            (path) => TechnicalDrawingButton(assetPath: path, title: label),
-          ),
       ],
+    );
+  }
+
+  Widget _buildCameraIcon(BuildContext context, String path, String title) {
+    return GestureDetector(
+      onTap: () => ImageModalHelper.show(context, assetPath: path, title: title),
+      child: Tooltip(
+        message: 'Görseli İncele',
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: const Color(0xFF43A047).withOpacity(0.12),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(
+            Icons.photo_camera,
+            color: Color(0xFF2E7D32),
+            size: 24,
+          ),
+        ),
+      ),
     );
   }
 }

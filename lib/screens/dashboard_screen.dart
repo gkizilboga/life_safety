@@ -175,8 +175,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     // However, metrics are global current.
     // For a list, we might just show basic info or pre-calculated completion if we added it to data.
     // We DO have lastActiveSection.
+    final int storedCompletion = building['completion'] ?? 0;
     final int lastSection = building['lastActiveSection'] ?? 1;
-    final double completion = (lastSection / 36.0 * 100).clamp(0, 100);
+    // Fallback if completion isn't stored:
+    final double completion = storedCompletion > 0 
+        ? storedCompletion.toDouble() 
+        : (lastSection / 36.0 * 100);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 15),

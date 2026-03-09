@@ -38,6 +38,8 @@ import '../models/bolum_33_model.dart';
 import '../models/bolum_34_model.dart';
 import '../models/bolum_35_model.dart';
 import '../models/bolum_36_model.dart';
+import '../models/report_status.dart';
+import '../utils/app_progress.dart';
 import '../models/choice_result.dart';
 import '../utils/app_content.dart';
 
@@ -411,6 +413,7 @@ class BinaStore {
       'date': DateTime.now().toIso8601String(),
       'lastActiveSection': _lastActiveSection,
       'isCompleted': _isCompleted,
+      'completion': AppProgress.getAnalysisProgress(this).percentage,
       'isPremium': isPremium,
       'sections': {
         'bolum1': _bolum1?.toMap(),

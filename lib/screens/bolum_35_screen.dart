@@ -166,10 +166,8 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               "Daire kapınızdan çıktığınızda kattaki merdiven kapısına kadar olan mesafe kaç metredir?",
               "Kaçış Mesafesi",
               AppDefinitions.kacisMesafesi,
-            ),
-            TechnicalDrawingButton(
-              assetPath: AppAssets.section35DairedenOlcum,
-              title: "Tek Yön Kaçış Mesafesi Ölçüm Detayı",
+              imagePath: AppAssets.section35DairedenOlcum,
+              imageTitle: "Tek Yön Kaçış Mesafesi Ölçüm Detayı",
             ),
             _buildSoruCard('tekYon', [
               Bolum35Content.tekYonOptionA,
@@ -204,10 +202,8 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               "Daire kapınızdan çıktığınızda, size EN YAKIN merdivene olan mesafe kaç metredir?",
               "Kaçış Mesafesi",
               AppDefinitions.kacisMesafesi,
-            ),
-            TechnicalDrawingButton(
-              assetPath: AppAssets.section35KacisGosterim,
-              title: "Çift Yön Kaçış Mesafesi Ölçüm Detayı",
+              imagePath: AppAssets.section35KacisGosterim,
+              imageTitle: "Çift Yön Kaçış Mesafesi Ölçüm Detayı",
             ),
             _buildSoruCard('ciftYon', [
               Bolum35Content.ciftYonOptionA,
@@ -293,12 +289,39 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     );
   }
 
-  Widget _buildSoruHeaderWithDef(String title, String term, String def) {
+  Widget _buildSoruHeaderWithDef(String title, String term, String def, {String? imagePath, String? imageTitle}) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(child: Text(title, style: AppStyles.questionTitle)),
+          const SizedBox(width: 8),
+          if (imagePath != null) ...[
+            GestureDetector(
+              onTap: () => ImageModalHelper.show(
+                context,
+                assetPath: imagePath,
+                title: imageTitle ?? 'Görseli İncele',
+              ),
+              child: Tooltip(
+                message: 'Görseli İncele',
+                child: Container(
+                  padding: const EdgeInsets.all(7),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF43A047).withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.photo_camera,
+                    color: Color(0xFF2E7D32),
+                    size: 26,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+          ],
           DefinitionButton(term: term, definition: def),
         ],
       ),

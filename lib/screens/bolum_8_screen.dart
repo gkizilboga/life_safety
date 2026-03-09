@@ -114,10 +114,8 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                   isDisabled:
                       _isLocked &&
                       _model.secim?.label != Bolum8Content.ayrikNizam.label,
-                ),
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section8Ayrik,
-                  title: "Ayrık Nizam Yerleşim Detayı",
+                  imageAssetPath: AppAssets.section8Ayrik,
+                  imageTitle: "Ayrık Nizam Yerleşim Detayı",
                 ),
 
                 const SizedBox(height: 16),
@@ -134,10 +132,8 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                   isDisabled:
                       _isLocked &&
                       _model.secim?.label != Bolum8Content.bitisikNizam.label,
-                ),
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section8Bitisik,
-                  title: "Bitişik Nizam Yerleşim Detayı",
+                  imageAssetPath: AppAssets.section8Bitisik,
+                  imageTitle: "Bitişik Nizam Yerleşim Detayı",
                 ),
               ],
             ),

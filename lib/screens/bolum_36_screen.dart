@@ -127,7 +127,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
     // Sahanlıksız, Dengelenmiş, Dış Açık Çelik ve Basınçlandırma kuralları
     // tümüyle report_engine.dart içindeki Section36Handler'a taşındı.
-    // Bu metod (MÜHENDİS NOTU olarak kullanılacak) artık SADECE merdiven/koridor genişliklerini hesaplar.
+    // Bu metod (Manuel Değerlendirme olarak kullanılacak) artık SADECE merdiven/koridor genişliklerini hesaplar.
 
     // --- Genişlik Kontrolleri (ChoiceResult tabanlı Yeni Kurgu) ---
     int yukBodrum = b33?.yukBodrum ?? 0;

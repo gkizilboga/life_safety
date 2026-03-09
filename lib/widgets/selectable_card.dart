@@ -3,12 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:life_safety/data/bina_store.dart';
 import '../models/choice_result.dart';
 import '../utils/text_formatter.dart';
+import 'custom_widgets.dart' show ImageModalHelper;
 
 class SelectableCard extends StatelessWidget {
   final ChoiceResult choice;
   final bool isSelected;
   final VoidCallback? onTap;
   final bool isDisabled;
+  final String? imageAssetPath;
+  final String? imageTitle;
 
   const SelectableCard({
     super.key,
@@ -16,6 +19,8 @@ class SelectableCard extends StatelessWidget {
     required this.isSelected,
     this.onTap,
     this.isDisabled = false,
+    this.imageAssetPath,
+    this.imageTitle,
   });
 
   @override
@@ -31,7 +36,7 @@ class SelectableCard extends StatelessWidget {
             },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        margin: const EdgeInsets.only(bottom: 4),
+        margin: const EdgeInsets.only(bottom: 6),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isDisabled
@@ -46,7 +51,7 @@ class SelectableCard extends StatelessWidget {
                 : (isSelected
                       ? const Color(0xFF1A237E)
                       : const Color(0xFFCFD8DC)),
-            width: isSelected ? 2.5 : 1.2,
+            width: isSelected ? 2.5 : 1.5,
           ),
         ),
         child: Row(
@@ -73,7 +78,7 @@ class SelectableCard extends StatelessWidget {
                     choice.uiTitle,
                     style: TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w700,
                       color: isDisabled
                           ? Colors.grey.shade600
                           : (isSelected
@@ -91,20 +96,43 @@ class SelectableCard extends StatelessWidget {
                         color: isDisabled
                             ? Colors.grey.shade500
                             : (isSelected
-                                  ? const Color(0xFF1A237E).withOpacity(
-                                      0.8,
-                                    ) // Increased opacity for better visibility
+                                  ? const Color(0xFF1A237E).withOpacity(0.8)
                                   : Colors.grey.shade700),
                         height: 1.4,
-                        fontWeight:
-                            FontWeight.w500, // Standardized to w500 (Medium)
-                        fontStyle: FontStyle.normal, // Ensure normal style
+                        fontWeight: FontWeight.w500,
+                        fontStyle: FontStyle.normal,
                       ),
                     ),
                   ],
                 ],
               ),
             ),
+            // Option-level camera icon
+            if (imageAssetPath != null) ...[
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () => ImageModalHelper.show(
+                  context,
+                  assetPath: imageAssetPath!,
+                  title: imageTitle ?? 'Görseli İncele',
+                ),
+                child: Tooltip(
+                  message: 'Görseli İncele',
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF43A047).withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.photo_camera,
+                      color: Color(0xFF2E7D32),
+                      size: 28,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

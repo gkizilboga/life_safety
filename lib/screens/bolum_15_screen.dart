@@ -111,21 +111,19 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             Bolum15Content.kaplamaOptionC,
           ], _model.kaplama),
 
-          _buildSoru(
-            "Döşeme üzerinde ısı yalıtımı var mı?",
-            'yalitim',
-            [
-              Bolum15Content.yalitimOptionA,
-              Bolum15Content.yalitimOptionBYanmaz,
-              Bolum15Content.yalitimOptionB, // Yanıcı = 15-2-C
-              Bolum15Content.yalitimOptionC, // Bilmiyorum = 15-2-D
-            ],
-            _model.yalitim,
-            headerWidget: TechnicalDrawingButton(
-              assetPath: AppAssets.section15DosemeYalitim,
-              title: "Döşeme Yalıtım Örneği",
+            _buildSoru(
+              "Döşeme üzerinde ısı yalıtımı var mı?",
+              'yalitim',
+              [
+                Bolum15Content.yalitimOptionA,
+                Bolum15Content.yalitimOptionBYanmaz,
+                Bolum15Content.yalitimOptionB, // Yanıcı = 15-2-C
+                Bolum15Content.yalitimOptionC, // Bilmiyorum = 15-2-D
+              ],
+              _model.yalitim,
+              imagePath: AppAssets.section15DosemeYalitim,
+              imageTitle: "Döşeme Yalıtım Örneği",
             ),
-          ),
 
           if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) ...[
             _buildInfoNote(
@@ -162,30 +160,19 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ], _model.tavanMalzeme),
           ],
 
-          _buildSoru(
-            "Tesisat geçişleri nasıl kapatılmış?",
-            'tesisat',
-            [
-              Bolum15Content.tesisatOptionA,
-              Bolum15Content.tesisatOptionB,
-              Bolum15Content.tesisatOptionC,
-              Bolum15Content.tesisatOptionD,
-            ],
-            _model.tesisat,
-            headerWidget: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section15Gecis,
-                  title: "Tesisat Geçiş Örneği 1",
-                ),
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section15Gecis2,
-                  title: "Tesisat Geçiş Örneği 2",
-                ),
+            _buildSoru(
+              "Tesisat geçişleri nasıl kapatılmış?",
+              'tesisat',
+              [
+                Bolum15Content.tesisatOptionA,
+                Bolum15Content.tesisatOptionB,
+                Bolum15Content.tesisatOptionC,
+                Bolum15Content.tesisatOptionD,
               ],
+              _model.tesisat,
+              imagePath: AppAssets.section15Gecis,
+              imageTitle: "Tesisat Geçiş Örneği 1",
             ),
-          ),
         ],
       ),
     );
@@ -196,13 +183,24 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
     String key,
     List<ChoiceResult> options,
     ChoiceResult? selected, {
-    Widget? headerWidget,
+    String? imagePath,
+    String? imageTitle,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (title.isNotEmpty) QuestionTitle(title),
-        if (headerWidget != null) headerWidget,
+        if (title.isNotEmpty)
+          if (imagePath != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: QuestionHeaderWithImage(
+                questionText: title,
+                imageAssetPath: imagePath,
+                imageTitle: imageTitle ?? "Görseli İncele",
+              ),
+            )
+          else
+            QuestionTitle(title),
         QuestionCard(
           child: Column(
             children: [

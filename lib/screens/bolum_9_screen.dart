@@ -60,14 +60,10 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Binada otomatik sprinkler sistemi var mı?",
-                  style: AppStyles.questionTitle,
-                ),
-                // --- TEKNİK GÖRSEL BUTONU (Sorunun Hemen Altında) ---
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section9Sprinkler,
-                  title: "Sprinkler Detayı",
+                QuestionHeaderWithImage(
+                  questionText: "Binada otomatik sprinkler sistemi var mı?",
+                  imageAssetPath: AppAssets.section9Sprinkler,
+                  imageTitle: "Sprinkler Detayı",
                 ),
                 const SizedBox(height: 12),
                 SelectableCard(
@@ -100,14 +96,10 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Büyük restoran (endüstriyel mutfak) davlumbazında otomatik söndürme sistemi var mı?",
-                    style: AppStyles.questionTitle,
-                  ),
-                  // --- TEKNİK GÖRSEL BUTONU (Davlumbaz) ---
-                  TechnicalDrawingButton(
-                    assetPath: AppAssets.section9Davlumbaz,
-                    title: "Davlumbaz Detayı",
+                  QuestionHeaderWithImage(
+                    questionText: "Büyük restoran (endüstriyel mutfak) davlumbazında otomatik söndürme sistemi var mı?",
+                    imageAssetPath: AppAssets.section9Davlumbaz,
+                    imageTitle: "Davlumbaz Detayı",
                   ),
                   const SizedBox(height: 12),
                   SelectableCard(

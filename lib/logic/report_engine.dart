@@ -1174,6 +1174,22 @@ class ReportEngine {
     if (id == 27) {
       final b27 = s.bolum27;
       if (b27 != null) {
+        // Kullanıcı yükü hesabı (Bölüm 33'ten)
+        int maxYuk = 0;
+        final b33 = s.bolum33;
+        final b34 = s.bolum34;
+        if (b33 != null) {
+          bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
+          int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
+          int yukNormal = b33.yukNormal ?? 0;
+          int yukBodrum = b33.yukBodrum ?? 0;
+          maxYuk = [
+            yukZemin,
+            yukNormal,
+            yukBodrum,
+          ].reduce((curr, next) => curr > next ? curr : next);
+        }
+
         if (b27.boyut != null) {
           _addDetail(
             details,
@@ -1185,25 +1201,69 @@ class ReportEngine {
             level: b27.boyut!.level,
           );
         }
+
         if (b27.yon.isNotEmpty) {
+          List<String> reports = [];
+          List<RiskLevel> levels = [];
+          for (var e in b27.yon) {
+            if (e.label == "27-2-B") {
+              if (maxYuk <= 50) {
+                reports.add(
+                  "OLUMLU: Kaçış yolu üzerindeki kapıların içeriye doğru açılması, kullanıcı yükü hiçbir katta 50 kişiyi aşmadığı için uygundur.",
+                );
+                levels.add(RiskLevel.positive);
+              } else {
+                reports.add(
+                  "KRİTİK RİSK: Herhangi bir katta kullanıcı yükü 50 kişiyi aştığı ($maxYuk kişi) için kapıların içeriye doğru açılması uygun değildir. Kapıların kaçış yönüne (dışarıya) doğru açılması zorunludur.",
+                );
+                levels.add(RiskLevel.critical);
+              }
+            } else {
+              reports.add(e.reportText);
+              levels.add(e.level);
+            }
+          }
+
           _addDetail(
             details,
             label: 'Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)',
             value: b27.yon.map((e) => e.uiTitle).join(' | '),
-            report: b27.yon.map((e) => e.reportText).join('\n\n'),
+            report: reports.join('\n\n'),
             advice: b27.yon.map((e) => e.adviceText ?? "").join('\n\n'),
-            level: _maxLevel(b27.yon.map((e) => e.level)),
+            level: _maxLevel(levels),
           );
         }
+
         if (b27.kilit.isNotEmpty) {
+          List<String> reports = [];
+          List<RiskLevel> levels = [];
+          for (var e in b27.kilit) {
+            if (e.label == "27-3-B") {
+              if (maxYuk <= 100) {
+                reports.add(
+                  "OLUMLU: Kaçış yolu üzerindeki kapılarda normal kapı kolu kullanımı, kullanıcı yükü 100 kişiyi aşmadığı için uygundur.",
+                );
+                levels.add(RiskLevel.positive);
+              } else {
+                reports.add(
+                  "KRİTİK RİSK: Herhangi bir katta kullanıcı yükü 100 kişiyi aştığı ($maxYuk kişi) için kapılarda Panik Bar mekanizması kullanımı zorunludur. Mevcut kapı kolu sistemi uygun değildir.",
+                );
+                levels.add(RiskLevel.critical);
+              }
+            } else {
+              reports.add(e.reportText);
+              levels.add(e.level);
+            }
+          }
+
           _addDetail(
             details,
             label:
                 'Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)',
             value: b27.kilit.map((e) => e.uiTitle).join(' | '),
-            report: b27.kilit.map((e) => e.reportText).join('\n\n'),
+            report: reports.join('\n\n'),
             advice: b27.kilit.map((e) => e.adviceText ?? "").join('\n\n'),
-            level: _maxLevel(b27.kilit.map((e) => e.level)),
+            level: _maxLevel(levels),
           );
         }
         if (b27.dayanim != null) {
@@ -2181,8 +2241,11 @@ class ReportEngine {
         ]);
       case 27:
         final b = s.bolum27;
-        final yonLevels = b?.yon.map((e) => e.level as RiskLevel?) ?? [];
-        final kilitLevels = b?.kilit.map((e) => e.level as RiskLevel?) ?? [];
+        final maxYuk = _calculateMaxYuk(s);
+        final yonLevels =
+            b?.yon.map((e) => _getDynamicLevel(e, maxYuk)) ?? [];
+        final kilitLevels =
+            b?.kilit.map((e) => _getDynamicLevel(e, maxYuk)) ?? [];
         return _maxLevel([
           b?.boyut?.level,
           b?.dayanim?.level,
@@ -2496,10 +2559,15 @@ class ReportEngine {
     // --- BÖLÜM 27 (Kapılar) ---
     final b27 = s.bolum27;
     if (b27 != null) {
+      final maxYuk = _calculateMaxYuk(s);
       add(b27.boyut);
+      for (var e in b27.yon) {
+        addLevel(_getDynamicLevel(e, maxYuk));
+      }
+      for (var e in b27.kilit) {
+        addLevel(_getDynamicLevel(e, maxYuk));
+      }
       add(b27.dayanim);
-      addAll(b27.yon);
-      addAll(b27.kilit);
     }
 
     // --- BÖLÜM 28 (Daire İçi) ---
@@ -3686,5 +3754,34 @@ class ReportEngine {
     }
 
     return result.trim();
+  }
+
+  static int _calculateMaxYuk(BinaStore s) {
+    int maxYuk = 0;
+    final b33 = s.bolum33;
+    final b34 = s.bolum34;
+    if (b33 != null) {
+      bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
+      int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
+      int yukNormal = b33.yukNormal ?? 0;
+      int yukBodrum = b33.yukBodrum ?? 0;
+      maxYuk = [
+        yukZemin,
+        yukNormal,
+        yukBodrum,
+      ].reduce((a, b) => a > b ? a : b);
+    }
+    return maxYuk;
+  }
+
+  static RiskLevel? _getDynamicLevel(ChoiceResult? res, int maxYuk) {
+    if (res == null) return null;
+    if (res.label == "27-2-B") {
+      return maxYuk <= 50 ? RiskLevel.positive : RiskLevel.critical;
+    }
+    if (res.label == "27-3-B") {
+      return maxYuk <= 100 ? RiskLevel.positive : RiskLevel.critical;
+    }
+    return res.level;
   }
 }

@@ -17,8 +17,10 @@ class Bolum5Screen extends StatefulWidget {
   State<Bolum5Screen> createState() => _Bolum5ScreenState();
 }
 
-class _Bolum5ScreenState extends State<Bolum5Screen> {
+class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderStateMixin {
   Bolum5Model _model = Bolum5Model();
+  late AnimationController _pulseController;
+  late Animation<double> _scaleAnimation;
   final TextEditingController _tabanCtrl = TextEditingController();
   final TextEditingController _normalCtrl = TextEditingController();
   final TextEditingController _bodrumCtrl = TextEditingController();
@@ -40,6 +42,15 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     final Bolum3Model? b3 = BinaStore.instance.bolum3;
     _nKat = b3?.normalKatSayisi ?? 0;
     _bKat = b3?.bodrumKatSayisi ?? 0;
+
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
 
     // Load existing data
     final existing = BinaStore.instance.bolum5;
@@ -133,6 +144,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
 
   @override
   void dispose() {
+    _pulseController.dispose();
     _tabanCtrl.dispose();
     _normalCtrl.dispose();
     _bodrumCtrl.dispose();
@@ -164,9 +176,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            "Lütfen zemin ve (varsa) normal katlara ait alan bilgilerini giriniz.",
-          ),
+          content: Text("Lütfen katlara ait alan bilgilerini giriniz."),
         ),
       );
     }
@@ -265,21 +275,31 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
                         ],
 
                         const SizedBox(height: 12),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton.icon(
-                            onPressed: _otomatikHesapla,
-                            icon: const Icon(
-                              Icons.calculate_outlined,
-                              size: 20,
-                            ),
-                            label: const Text("TOPLAM BRÜT ALANI HESAPLA"),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange.shade800,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                        ScaleTransition(
+                          scale: (!_isCalculated &&
+                                  _tabanCtrl.text.isNotEmpty &&
+                                  (_nKat == 0 || _normalCtrl.text.isNotEmpty))
+                              ? _scaleAnimation
+                              : const AlwaysStoppedAnimation(1.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: _otomatikHesapla,
+                              icon: const Icon(
+                                Icons.calculate_outlined,
+                                size: 20,
+                              ),
+                              label: const Text(
+                                "TOPLAM BRÜT ALANI HESAPLA",
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFF57C00), // Soft orange (Orange 700-800 mix)
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             ),
                           ),
@@ -298,6 +318,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
                           _toplamCtrl,
                           "Toplam m²",
                           isBold: true,
+                          readOnly: true,
                           error: _toplamError,
                         ),
 
@@ -375,10 +396,12 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     TextEditingController controller,
     String hint, {
     bool isBold = false,
+    bool readOnly = false,
     String? error,
   }) {
     return TextFormField(
       controller: controller,
+      readOnly: readOnly,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [InputValidator.flexDecimal],
       style: TextStyle(
@@ -414,7 +437,33 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
             "HESAPLAMA DETAYI",
             style: AppStyles.questionTitle.copyWith(fontSize: 13),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
+          // Toplam Kat Adedi (Bölüm 3'ten gelen veri)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Toplam Kat Adedi:",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2E7D32), // Dark green
+                ),
+              ),
+              Text(
+                "${_nKat + _bKat + 1} Kat",
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2E7D32),
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: Divider(height: 1, thickness: 0.5),
+          ),
           _buildSummaryRow("Zemin Kat:", "${_tabanCtrl.text} m²"),
           if (_nKat > 0)
             _buildSummaryRow(
@@ -462,4 +511,3 @@ class _Bolum5ScreenState extends State<Bolum5Screen> {
     );
   }
 }
-

@@ -194,13 +194,16 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle),
-          const SizedBox(height: 12),
           if (imagePath != null)
-            TechnicalDrawingButton(
-              assetPath: imagePath,
-              title: imageTitle ?? "İlgili Görsel",
-            ),
+            QuestionHeaderWithImage(
+              questionText: title,
+              imageAssetPath: imagePath,
+              imageTitle: imageTitle ?? "Görseli İncele",
+            )
+          else ...[
+            Text(title, style: AppStyles.questionTitle),
+            const SizedBox(height: 12),
+          ],
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,

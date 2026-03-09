@@ -76,20 +76,11 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // --- SORU 1: VARLIK ---
-          const Padding(
-            padding: EdgeInsets.only(left: 4, bottom: 12),
-            child: Text(
-              "Binada kullanmak zorunda kaldığınız eğimli bir rampa var mı?",
-              style: AppStyles.questionTitle,
-            ),
+          QuestionHeaderWithImage(
+            questionText: "Binada kullanmak zorunda kaldığınız eğimli bir rampa var mı?",
+            imageAssetPath: AppAssets.section26Rampa,
+            imageTitle: "Kaçış Rampası Örneği",
           ),
-
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section26Rampa,
-            title: "Kaçış Rampası Örneği",
-          ),
-
-          const SizedBox(height: 8),
 
           QuestionCard(
             child: Column(

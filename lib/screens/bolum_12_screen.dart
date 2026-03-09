@@ -164,16 +164,13 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 4, bottom: 12),
-          child: Text(
-            "Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?",
-            style: AppStyles.questionTitle,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: QuestionHeaderWithImage(
+            questionText: "Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?",
+            imageAssetPath: AppAssets.section12Paspayi,
+            imageTitle: "Paspayı Detayı",
           ),
-        ),
-        TechnicalDrawingButton(
-          assetPath: AppAssets.section12Paspayi,
-          title: "Paspayı Detayı",
         ),
         const SizedBox(height: 12),
         QuestionCard(

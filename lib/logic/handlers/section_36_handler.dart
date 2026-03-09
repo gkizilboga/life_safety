@@ -383,7 +383,7 @@ class Section36Handler {
 
     String manualEval = _store.bolum36?.merdivenDegerlendirme ?? "";
     if (manualEval.isNotEmpty) {
-      analysisParts.insert(0, "MÜHENDİS NOTU: $manualEval");
+      analysisParts.insert(0, manualEval);
     }
 
     return analysisParts;
@@ -404,14 +404,15 @@ class Section36Handler {
     // Sadece KRİTİK RİSK ve UYARI mesajlarını özet ekrana taşıyalım (daha sade).
     for (String part in parts) {
       if (part.startsWith("KRİTİK RİSK:") ||
-          part.startsWith("UYARI:") ||
-          part.startsWith("MÜHENDİS NOTU:")) {
+          part.startsWith("UYARI:")) {
         // Önekleri kaldıralım, UI liste tasarımı daha temiz olsun.
         String cleanText = part
             .replaceAll("KRİTİK RİSK: ", "")
-            .replaceAll("UYARI: ", "")
-            .replaceAll("MÜHENDİS NOTU: ", "");
+            .replaceAll("UYARI: ", "");
         summaryBullets.add("• $cleanText");
+      } else if (!part.startsWith("OLUMLU:")) {
+        // "Mühendis Notu" artık ön eksiz geldiği için doğrudan ekleyelim.
+        summaryBullets.add("• $part");
       }
     }
 

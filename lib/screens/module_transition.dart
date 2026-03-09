@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../logic/report_engine.dart';
 import '../widgets/confetti_particles.dart';
+import '../utils/app_progress.dart';
+import '../data/bina_store.dart';
 
 class ModuleTransitionScreen extends StatelessWidget {
   final ReportModule module;
@@ -33,7 +35,8 @@ class ModuleTransitionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final metrics = ReportEngine.calculateRiskMetrics();
     final int criticalCount = metrics['criticalCount'] ?? 0;
-    final int completion = metrics['completion'] ?? 0;
+    final progressRes = AppProgress.getAnalysisProgress(BinaStore.instance);
+    final int completion = progressRes.percentage;
     final String? encouragingMessage = _getEncouragingMessage();
 
     return Scaffold(

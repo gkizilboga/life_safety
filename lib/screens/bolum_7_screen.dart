@@ -115,10 +115,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.kazan,
             _model.hasKazan,
             () => _toggleOption('kazan'),
-          ),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section7Kazan,
-            title: "Kazan Dairesi Teknik Detayı",
+            imagePath: AppAssets.section7Kazan,
+            imageTitle: "Kazan Dairesi Teknik Detayı",
           ),
           const SizedBox(height: 8),
 
@@ -126,6 +124,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.asansor,
             _model.hasAsansor,
             () => _toggleOption('asansor'),
+            imagePath: AppAssets.section7Asansor,
+            imageTitle: "Asansör Kuyusu ve Makine Dairesi",
           ),
           if (_isAutoSelected && _model.hasAsansor)
             Padding(
@@ -139,10 +139,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
                 ),
               ),
             ),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section7Asansor,
-            title: "Asansör Kuyusu ve Makine Dairesi",
-          ),
           const SizedBox(height: 8),
 
           _buildOption(
@@ -155,10 +151,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.jenerator,
             _model.hasJenerator,
             () => _toggleOption('jenerator'),
-          ),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section7Jenerator,
-            title: "Jeneratör Odası Yerleşimi",
+            imagePath: AppAssets.section7Jenerator,
+            imageTitle: "Jeneratör Odası Yerleşimi",
           ),
           const SizedBox(height: 8),
 
@@ -166,10 +160,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.elektrik,
             _model.hasElektrik,
             () => _toggleOption('elektrik'),
-          ),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section7ElektrikOdasi,
-            title: "Elektrik Tesisat Odası",
+            imagePath: AppAssets.section7ElektrikOdasi,
+            imageTitle: "Elektrik Tesisat Odası",
           ),
           const SizedBox(height: 8),
 
@@ -177,10 +169,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.trafo,
             _model.hasTrafo,
             () => _toggleOption('trafo'),
-          ),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section7Trafo,
-            title: "Trafo Odası ve Yağ Çukuru",
+            imagePath: AppAssets.section7Trafo,
+            imageTitle: "Trafo Odası ve Yağ Çukuru",
           ),
           const SizedBox(height: 8),
 
@@ -199,10 +189,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.duvar,
             _model.hasDuvar,
             () => _toggleOption('duvar'),
-          ),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section7OrtakDuvar,
-            title: "Bitişik Nizam Ortak Duvar Detayı",
+            imagePath: AppAssets.section7OrtakDuvar,
+            imageTitle: "Bitişik Nizam Ortak Duvar Detayı",
           ),
 
           if (BinaStore.instance.bolum6?.buyukRestoran?.label ==
@@ -232,13 +220,21 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
     );
   }
 
-  Widget _buildOption(dynamic choice, bool isSelected, VoidCallback onTap) {
+  Widget _buildOption(
+    dynamic choice,
+    bool isSelected,
+    VoidCallback onTap, {
+    String? imagePath,
+    String? imageTitle,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: SelectableCard(
         choice: choice,
         isSelected: isSelected,
         onTap: onTap,
+        imageAssetPath: imagePath,
+        imageTitle: imageTitle,
       ),
     );
   }

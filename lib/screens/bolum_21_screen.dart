@@ -94,16 +94,35 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
                         style: AppStyles.questionTitle,
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => ImageModalHelper.show(
+                        context,
+                        assetPath: 'assets/images/sections/ygh_1.webp',
+                        title: "Örnek YGH Yerleşimi İncele",
+                      ),
+                      child: Tooltip(
+                        message: 'Görseli İncele',
+                        child: Container(
+                          padding: const EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF43A047).withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.photo_camera,
+                            color: Color(0xFF2E7D32),
+                            size: 26,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
                     DefinitionButton(
                       term: "Yangın Güvenlik Holü (YGH)",
                       definition: AppDefinitions.yanginGuvenlikHolu,
                     ),
                   ],
-                ),
-                const SizedBox(height: 8),
-                const TechnicalDrawingButton(
-                  assetPath: 'assets/images/sections/ygh_1.webp',
-                  title: "Örnek YGH Yerleşimi İncele",
                 ),
               ],
             ),

@@ -129,7 +129,7 @@ class ActiveSystemsReportScreen extends StatelessWidget {
                       ),
                       width: double.infinity,
                       child: Text(
-                        " UZMAN NOTU: ${req.note}",
+                        " ${req.note}",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.orange.shade900,

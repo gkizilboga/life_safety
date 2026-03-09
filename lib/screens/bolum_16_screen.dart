@@ -130,15 +130,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                     onTap: () => _handleSection16Selection(
                       Bolum16Content.mantolamaOptionA,
                     ),
-                  ),
-                  // Buttons always visible under the option
-                  TechnicalDrawingButton(
-                    assetPath: AppAssets.section16EpsMantolama,
-                    title: "EPS Mantolama",
-                  ),
-                  TechnicalDrawingButton(
-                    assetPath: AppAssets.section16XpsMantolama,
-                    title: "XPS Mantolama",
+                    imageAssetPath: AppAssets.section16EpsMantolama,
+                    imageTitle: "EPS / XPS Mantolama",
                   ),
 
                   // Option B: A1, A2 (Taşyünü)
@@ -150,10 +143,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                     onTap: () => _handleSection16Selection(
                       Bolum16Content.mantolamaOptionB,
                     ),
-                  ),
-                  TechnicalDrawingButton(
-                    assetPath: AppAssets.section16TasyunuMantolama,
-                    title: "Taşyünü Mantolama",
+                    imageAssetPath: AppAssets.section16TasyunuMantolama,
+                    imageTitle: "Taşyünü Mantolama",
                   ),
 
                   // Option C: Giydirme Cephe
@@ -165,10 +156,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                     onTap: () => _handleSection16Selection(
                       Bolum16Content.giydirmeOptionC,
                     ),
-                  ),
-                  TechnicalDrawingButton(
-                    assetPath: AppAssets.section16Giydirme,
-                    title: "Giydirme Cephe Örneği",
+                    imageAssetPath: AppAssets.section16Giydirme,
+                    imageTitle: "Giydirme Cephe Örneği",
                   ),
 
                   // Other Options
@@ -267,10 +256,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 Bolum16Content.sagirYuzeyOptionC,
               ],
               _model.sagirYuzey,
-              headerWidget: TechnicalDrawingButton(
-                assetPath: AppAssets.section16Spandrel,
-                title: "Spandrel Örneği",
-              ),
+              imagePath: AppAssets.section16Spandrel,
+              imageTitle: "Spandrel Örneği",
             ),
 
             if (_model.sagirYuzey?.label ==
@@ -299,10 +286,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                   Bolum16Content.bitisikOptionD,
                 ],
                 _model.bitisikNizam,
-                headerWidget: TechnicalDrawingButton(
-                  assetPath: AppAssets.section16Sicrama,
-                  title: "Yan Binadan Sıçrama Detayı",
-                ),
+                imagePath: AppAssets.section16Sicrama,
+                imageTitle: "Yan Binadan Sıçrama Detayı",
               ),
 
             const SizedBox(height: 16),
@@ -362,17 +347,21 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
     String k,
     List<ChoiceResult> o,
     ChoiceResult? s, {
-    Widget? headerWidget,
+    String? imagePath,
+    String? imageTitle,
   }) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle),
-          if (headerWidget != null) ...[
-            const SizedBox(height: 8),
-            headerWidget,
-          ],
+          if (imagePath != null)
+            QuestionHeaderWithImage(
+              questionText: title,
+              imageAssetPath: imagePath,
+              imageTitle: imageTitle ?? "Görseli İncele",
+            )
+          else
+            Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...o.map(
             (opt) => SelectableCard(

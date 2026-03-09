@@ -155,10 +155,8 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
 
           _buildSoruHeader(
             "Kaçış kapılarının genişliği ve zemini ne durumdadır? (daire kapısı hariç)",
-          ),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section27YanginKapisi,
-            title: "Kapı Genişliği ve Eşik",
+            imagePath: AppAssets.section27YanginKapisi,
+            imageTitle: "Kapı Genişliği ve Eşik",
           ),
           _buildSoruCard('boyut', [
             Bolum27Content.boyutOptionA,
@@ -169,21 +167,22 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           SizedBox(key: _yonKey, height: 1),
           _buildSoruHeader(
             "Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)",
+            imagePath: AppAssets.section27KacisYonu,
+            imageTitle: "Kapı Açılış Yönü Kriterleri",
           ),
           const SizedBox(height: 4),
-          const Text(
-            "Birden fazla seçenek işaretleyebilirsiniz.",
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey,
-              fontStyle: FontStyle.italic,
+          const Padding(
+            padding: EdgeInsets.only(left: 4),
+            child: Text(
+              "Birden fazla seçenek işaretleyebilirsiniz.",
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section27KacisYonu,
-            title: "Kapı Açılış Yönü Kriterleri",
-          ),
+          const SizedBox(height: 8),
           _buildSoruCard('yon', [
             Bolum27Content.yonOptionA,
             Bolum27Content.yonOptionB,
@@ -195,21 +194,22 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           SizedBox(key: _kilitKey, height: 1),
           _buildSoruHeader(
             "Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)",
+            imagePath: AppAssets.section27KilitTipi,
+            imageTitle: "Kilit ve Panik Bar Tipleri",
           ),
           const SizedBox(height: 4),
-          const Text(
-            "Birden fazla seçenek işaretleyebilirsiniz.",
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey,
-              fontStyle: FontStyle.italic,
+          const Padding(
+            padding: EdgeInsets.only(left: 4),
+            child: Text(
+              "Birden fazla seçenek işaretleyebilirsiniz.",
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section27KilitTipi,
-            title: "Kilit ve Panik Bar Tipleri",
-          ),
+          const SizedBox(height: 8),
           _buildSoruCard('kilit', [
             Bolum27Content.kilitOptionA,
             Bolum27Content.kilitOptionB,
@@ -241,7 +241,17 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
     );
   }
 
-  Widget _buildSoruHeader(String title) {
+  Widget _buildSoruHeader(String title, {String? imagePath, String? imageTitle}) {
+    if (imagePath != null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 12, bottom: 8),
+        child: QuestionHeaderWithImage(
+          questionText: title,
+          imageAssetPath: imagePath,
+          imageTitle: imageTitle ?? "Görseli İncele",
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8, top: 12),
       child: Text(title, style: AppStyles.questionTitle),

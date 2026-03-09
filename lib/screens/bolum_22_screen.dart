@@ -227,7 +227,15 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle),
+          if (assetPath != null)
+            QuestionHeaderWithImage(
+              questionText: title,
+              imageAssetPath: assetPath,
+              imageTitle: assetTitle ?? "Teknik Detay",
+            )
+          else
+            Text(title, style: AppStyles.questionTitle),
+
           if (description != null) ...[
             const SizedBox(height: 6),
             Text(
@@ -238,14 +246,6 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
                 fontWeight: FontWeight.w500,
                 height: 1.3,
               ),
-            ),
-          ],
-
-          if (assetPath != null) ...[
-            const SizedBox(height: 12),
-            TechnicalDrawingButton(
-              assetPath: assetPath,
-              title: assetTitle ?? "Teknik Detay",
             ),
           ],
 

@@ -1,6 +1,7 @@
 import 'package:life_safety/data/bina_store.dart';
 import 'package:life_safety/models/choice_result.dart';
 import 'package:life_safety/logic/report_engine.dart';
+import 'package:life_safety/utils/app_progress.dart';
 
 class RiskCalculator {
   final BinaStore _store;
@@ -8,12 +9,10 @@ class RiskCalculator {
   RiskCalculator(this._store);
 
   Map<String, dynamic> calculateMetrics() {
-    int filledSections = 0;
     int criticalRisks = 0;
     int warnings = 0;
     int unknowns = 0;
 
-    int totalActiveSections = 0;
     List<String> criticalTitles = [];
 
     // Logic Desync Guard
@@ -33,19 +32,8 @@ class RiskCalculator {
 
     // Main section loop (Section based counts for titles and completion)
     for (int i = 1; i <= 36; i++) {
-      bool isSkipped = false;
-      if (i == 22 || i == 23) isSkipped = _store.bolum7?.hasAsansor == false;
-      if (i == 25) isSkipped = (_store.bolum20?.donerMerdivenSayisi ?? 0) == 0;
-      if (i == 30) isSkipped = _store.bolum7?.hasKazan == false;
-      if (i == 31) isSkipped = _store.bolum7?.hasTrafo == false;
-      if (i == 32) isSkipped = _store.bolum7?.hasJenerator == false;
-      if (i == 34) isSkipped = _store.bolum6?.hasTicari == false;
-
-      if (!isSkipped) {
-        totalActiveSections++;
-        final res = _store.getResultForSection(i);
-        if (res != null) {
-          filledSections++;
+      if (AppProgress.isSectionActive(i, _store)) {
+        if (_store.getResultForSection(i) != null) {
           // Titles for UI (Section level)
           if (i > 10) {
             final sectionLevel = ReportEngine.getSectionRiskLevel(
@@ -127,11 +115,7 @@ class RiskCalculator {
       'criticalCount': criticalRisks,
       'warningCount': warnings,
       'unknownCount': unknowns,
-      'completion': (_store.bolum36 != null)
-          ? 100
-          : totalActiveSections == 0
-          ? 0
-          : (filledSections / totalActiveSections * 100).toInt().clamp(0, 100),
+      'completion': AppProgress.getAnalysisProgress(_store).percentage,
       'criticals': criticalTitles.toSet().toList().take(3).toList(),
     };
   }

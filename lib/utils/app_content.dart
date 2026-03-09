@@ -2774,7 +2774,8 @@ class Bolum25Content {
     label: daireselYukseklikLabelC,
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText: "BİLİNMİYOR: Dairesel merdiven yüksekliği bilinmiyor.",
+    reportText:
+        "BİLİNMİYOR: Dairesel merdiven yüksekliği bilinmiyor. Binanızdaki dairesel merdiven 9,5 metrenin üzerinde ise kaçış yolu olarak kullanılamaz. Mimari proje üzerinde veya sahada bu durumun kontrolü yapılmalıdır.",
     level: RiskLevel.unknown,
   );
 }

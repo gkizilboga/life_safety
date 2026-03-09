@@ -21,9 +21,12 @@ class ModernHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int currentStep = AppProgress.currentStep(screenType);
-    int totalSteps = AppProgress.totalSteps;
-    double progress = currentStep / totalSteps;
+    final progressResult = AppProgress.getAnalysisProgress(
+      BinaStore.instance,
+      screenType,
+    );
+    double progress = progressResult.percentage / 100.0;
+    String stepLabel = progressResult.stepString;
     final bool canPop = Navigator.canPop(context);
 
     final double topPadding = MediaQuery.of(context).padding.top;
@@ -153,11 +156,11 @@ class ModernHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              if (currentStep > 0) ...[
+              if (progress > 0) ...[
                 const SizedBox(width: 12),
-                // Bölüm X/Y (Ortada gibi konumlanmış)
+                // Bölüm X (Ortada gibi konumlanmış)
                 Text(
-                  "Bölüm $currentStep",
+                  stepLabel,
                   style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 11,
@@ -190,7 +193,7 @@ class ModernHeader extends StatelessWidget {
               ],
             ],
           ),
-          if (currentStep > 0) ...[
+          if (progress > 0) ...[
             const SizedBox(height: 10),
             // Progress Bar
             ClipRRect(
@@ -371,8 +374,9 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
     super.initState();
     // Auto-track current section
     // Moved to initState to prevent overwriting when background screens rebuild
+    final progressRes = AppProgress.getAnalysisProgress(BinaStore.instance, widget.screenType);
     final step = AppProgress.currentStep(widget.screenType);
-    if (step > 0) {
+    if (progressRes.percentage > 0) {
       // Use addPostFrameCallback to ensure build is safely started/done
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -548,77 +552,39 @@ class DefinitionButton extends StatelessWidget {
   }
 }
 
-class TechnicalDrawingButton extends StatelessWidget {
+// ─────────────────────────────────────────────────────────────────────────────
+// ImageModalHelper — shared modal logic for both question-level & option-level
+// ─────────────────────────────────────────────────────────────────────────────
+class ImageModalHelper {
+  static void show(
+    BuildContext context, {
+    required String assetPath,
+    required String title,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => _ImageModal(assetPath: assetPath, title: title),
+    );
+  }
+}
+
+class _ImageModal extends StatelessWidget {
   final String assetPath;
   final String title;
-
-  const TechnicalDrawingButton({
-    super.key,
-    required this.assetPath,
-    required this.title,
-  });
+  const _ImageModal({required this.assetPath, required this.title});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end, // Align to the right
-      children: [
-        GestureDetector(
-          onTap: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (ctx) => _buildModal(ctx),
-            );
-          },
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 4),
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF43A047), // Green color
-              borderRadius: BorderRadius.circular(
-                20,
-              ), // More rounded/pill shape
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.image_search, color: Colors.white, size: 18),
-                const SizedBox(width: 8),
-                const Text(
-                  "Görseli İncele",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildModal(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.60, // Reduced from 0.85
+      height: MediaQuery.of(context).size.height * 0.60,
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
         children: [
-          // Drag handle
           Container(
             width: 40,
             height: 4,
@@ -628,7 +594,6 @@ class TechnicalDrawingButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          // Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
@@ -651,7 +616,6 @@ class TechnicalDrawingButton extends StatelessWidget {
             ),
           ),
           const Divider(),
-          // Image
           Expanded(
             child: InteractiveViewer(
               minScale: 0.5,
@@ -663,20 +627,15 @@ class TechnicalDrawingButton extends StatelessWidget {
                   errorBuilder: (c, o, s) => Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
-                        Icons.broken_image,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
+                      const Icon(Icons.broken_image, size: 50, color: Colors.grey),
                       const SizedBox(height: 8),
-                      Text("Görsel yüklenemedi: \$assetPath"),
+                      Text("Görsel yüklenemedi: $assetPath"),
                     ],
                   ),
                 ),
               ),
             ),
           ),
-          // Footer
           Container(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             decoration: BoxDecoration(
@@ -715,7 +674,7 @@ class TechnicalDrawingButton extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 15,
                         ),
                       ),
                     ),
@@ -730,6 +689,71 @@ class TechnicalDrawingButton extends StatelessWidget {
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// QuestionHeaderWithImage — soru başlığı + sağda 📷 kamera ikonu
+// Kullanım: tüm şıkları kapsayan görseller için
+// ─────────────────────────────────────────────────────────────────────────────
+class QuestionHeaderWithImage extends StatelessWidget {
+  final String questionText;
+  final String imageAssetPath;
+  final String imageTitle;
+
+  const QuestionHeaderWithImage({
+    super.key,
+    required this.questionText,
+    required this.imageAssetPath,
+    required this.imageTitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 12, top: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              questionText,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF1A237E),
+                height: 1.35,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          GestureDetector(
+            onTap: () => ImageModalHelper.show(
+              context,
+              assetPath: imageAssetPath,
+              title: imageTitle,
+            ),
+            child: Tooltip(
+              message: 'Görseli İncele',
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF43A047).withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.photo_camera,
+                  color: Color(0xFF2E7D32),
+                  size: 32,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
 
 /// Standart onay kutusu widget'ı - tüm ekranlarda tutarlı görünüm sağlar
 /// Açık yeşil arka plan ile dikkat çekici tasarım
@@ -748,7 +772,7 @@ class ConfirmationCheckbox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 4),
+      margin: const EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
         // Açık yeşil arka plan - dikkat çekici
         gradient: LinearGradient(
@@ -820,7 +844,7 @@ class ConfirmationCheckbox extends StatelessWidget {
                     text,
                     style: TextStyle(
                       fontSize: 12, // Reduced from 14
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       color: value
                           ? const Color(0xFF2E7D32)
                           : const Color(0xFF388E3C),

@@ -247,12 +247,11 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                     ),
 
                     const SizedBox(height: 10),
-                    _buildSectionTitle("Kat yükseklikleri nedir?"),
-                    TechnicalDrawingButton(
-                      assetPath: AppAssets.section3KatYuksekligi,
-                      title: "Kat Yüksekliği Nasıl Ölçülür?",
+                    QuestionHeaderWithImage(
+                      questionText: "Kat yükseklikleri nedir?",
+                      imageAssetPath: AppAssets.section3KatYuksekligi,
+                      imageTitle: "Kat Yüksekliği Nasıl Ölçülür?",
                     ),
-                    const SizedBox(height: 8),
                     SelectableCard(
                       choice: Bolum3Content.biliniyor,
                       isSelected: !_isUnknown,

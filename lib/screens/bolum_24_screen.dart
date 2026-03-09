@@ -78,35 +78,25 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Option A: Kapalı Koridor
                 SelectableCard(
                   choice: Bolum24Content.tipOptionA,
                   isSelected:
                       _model.tip?.label == Bolum24Content.tipOptionA.label,
                   onTap: () =>
                       _handleSelection('tip', Bolum24Content.tipOptionA),
-                ),
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section24KapaliKoridor,
-                  title: "Kapalı Koridor Örneği",
+                  imageAssetPath: AppAssets.section24KapaliKoridor,
+                  imageTitle: "Kapalı Koridor Örneği",
                 ),
                 const SizedBox(height: 8),
 
-                // Option B: Dış Kaçış Geçidi
                 SelectableCard(
                   choice: Bolum24Content.tipOptionB,
                   isSelected:
                       _model.tip?.label == Bolum24Content.tipOptionB.label,
                   onTap: () =>
                       _handleSelection('tip', Bolum24Content.tipOptionB),
-                ),
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section24DisGecit,
-                  title: "Dış Kaçış Geçidi Örneği 1",
-                ),
-                TechnicalDrawingButton(
-                  assetPath: AppAssets.section24DisGecit2,
-                  title: "Dış Kaçış Geçidi Örneği 2",
+                  imageAssetPath: AppAssets.section24DisGecit,
+                  imageTitle: "Dış Kaçış Geçidi Örneği",
                 ),
                 const SizedBox(height: 8),
 
@@ -171,14 +161,14 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle),
-
-          if (assetPath != null) ...[
-            const SizedBox(height: 12),
-            TechnicalDrawingButton(
-              assetPath: assetPath,
-              title: assetTitle ?? "Teknik Detay",
-            ),
+          if (assetPath != null)
+            QuestionHeaderWithImage(
+              questionText: title,
+              imageAssetPath: assetPath,
+              imageTitle: assetTitle ?? "Teknik Detay",
+            )
+          else ...[
+            Text(title, style: AppStyles.questionTitle),
           ],
 
           const SizedBox(height: 12),

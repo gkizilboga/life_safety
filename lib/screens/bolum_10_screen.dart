@@ -145,10 +145,13 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTicariGuidance(),
-          _buildSectionTitle("Zemin Katın Kullanım Amacı"),
-          TechnicalDrawingButton(
-            assetPath: 'assets/images/sections/farkli_katlar_1.webp',
-            title: "Kat Kullanım Örnekleri",
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: QuestionHeaderWithImage(
+              questionText: "Zemin Katın Kullanım Amacı",
+              imageAssetPath: 'assets/images/sections/farkli_katlar_1.webp',
+              imageTitle: "Kat Kullanım Örnekleri",
+            ),
           ),
           _buildChoiceGrid('zemin', null, _model.zemin),
 

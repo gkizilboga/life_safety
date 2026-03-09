@@ -46,7 +46,7 @@ class AppStyles {
   static const TextStyle answerTitle = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w700,
-    color: Color(0xFF263238), // Koyu Gri - Yanıtlar için
+    color: Color(0xFF263238),
     height: 1.3,
   );
 

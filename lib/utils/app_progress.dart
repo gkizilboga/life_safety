@@ -35,6 +35,13 @@ import '../screens/bolum_34_screen.dart';
 import '../screens/bolum_35_screen.dart';
 import '../screens/bolum_36_screen.dart';
 import '../logic/report_engine.dart';
+import '../data/bina_store.dart';
+
+class ProgressResult {
+  final int percentage;
+  final String stepString;
+  ProgressResult(this.percentage, this.stepString);
+}
 
 class AppProgress {
   static final List<Type> _order = [
@@ -81,6 +88,47 @@ class AppProgress {
 
   static bool isEndOfModule(int sectionId) {
     return [10, 15, 20, 25, 30, 36].contains(sectionId);
+  }
+
+  static bool isSectionActive(int i, BinaStore store) {
+    if (i == 22 || i == 23) return store.bolum7?.hasAsansor != false;
+    if (i == 25) return (store.bolum20?.donerMerdivenSayisi ?? 0) > 0;
+    if (i == 30) return store.bolum7?.hasKazan != false;
+    if (i == 31) return store.bolum7?.hasTrafo != false;
+    if (i == 32) return store.bolum7?.hasJenerator != false;
+    if (i == 34) return store.bolum6?.hasTicari != false;
+    return true;
+  }
+
+  static ProgressResult getAnalysisProgress(BinaStore store,
+      [Type? currentScreen]) {
+    int totalActive = 0;
+    int filledActive = 0;
+
+    for (int i = 1; i <= 36; i++) {
+      if (isSectionActive(i, store)) {
+        totalActive++;
+        if (store.getResultForSection(i) != null) {
+          filledActive++;
+        }
+      }
+    }
+
+    int percentage =
+        totalActive == 0
+            ? 0
+            : (filledActive / totalActive * 100).toInt().clamp(0, 100);
+
+    // Special case: if Section 36 is filled, it's 100%
+    if (store.bolum36 != null) percentage = 100;
+
+    String stepStr = "";
+    if (currentScreen != null) {
+      int rawStep = currentStep(currentScreen);
+      stepStr = "Bölüm $rawStep";
+    }
+
+    return ProgressResult(percentage, stepStr);
   }
 
   static ReportModule getModuleForSection(int sectionId) {

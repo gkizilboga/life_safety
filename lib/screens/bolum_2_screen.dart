@@ -73,11 +73,8 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
             choice: Bolum2Content.celik,
             isSelected: _model.secim?.label == Bolum2Content.celik.label,
             onTap: () => _handleSelection(Bolum2Content.celik),
-          ),
-          // Çelik seçildiğinde veya her zaman görünecek standart buton
-          TechnicalDrawingButton(
-            assetPath: AppAssets.section2Celik,
-            title: "Çelik Taşıyıcı Sistem Detayı",
+            imageAssetPath: AppAssets.section2Celik,
+            imageTitle: "Çelik Taşıyıcı Sistem Detayı",
           ),
           const SizedBox(height: 8),
 
