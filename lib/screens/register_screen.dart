@@ -103,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const Text(
                       "YASAL ONAYLAR",
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                         color: Colors.grey,
                         letterSpacing: 1.2,
@@ -257,7 +257,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         subtitle: Text(
           content,
-          style: const TextStyle(fontSize: 11, height: 1.3),
+          style: const TextStyle(fontSize: 13, height: 1.3),
         ),
         controlAffinity: ListTileControlAffinity.leading,
       ),

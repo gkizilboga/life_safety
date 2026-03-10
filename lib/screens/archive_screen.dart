@@ -21,17 +21,17 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppBar(
-        title: const Text(
-          "Analiz Arşivi",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color(0xFF1A237E),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
+      body: Column(
+        children: [
+          const ModernHeader(
+            title: "Analiz Arşivi",
+            screenType: ArchiveScreen,
+          ),
+          Expanded(
+            child: archive.isEmpty ? _buildEmptyState() : _buildArchiveList(archive),
+          ),
+        ],
       ),
-      body: archive.isEmpty ? _buildEmptyState() : _buildArchiveList(archive),
     );
   }
 
@@ -103,7 +103,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
               ),
             ),
             title: Text(
-              item['name'] ?? "İsimsiz Bina",
+              item['name'] ?? "",
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
@@ -121,7 +121,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                 const SizedBox(height: 2),
                 Text(
                   "Tarih: $dateStr",
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  style: const TextStyle(fontSize: 13, color: Colors.grey),
                 ),
               ],
             ),

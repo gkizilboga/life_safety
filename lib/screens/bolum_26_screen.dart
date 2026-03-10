@@ -181,6 +181,10 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return CustomInfoNote(text: text, icon: Icons.arrow_downward);
+    return CustomInfoNote(
+      type: InfoNoteType.info,
+      text: text,
+      icon: Icons.arrow_downward,
+    );
   }
 }

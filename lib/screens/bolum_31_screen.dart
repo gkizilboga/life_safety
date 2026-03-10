@@ -128,7 +128,7 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
                     _buildInfoNote(
                       "Yağlı tip trafolar için sızıntı ve söndürme detayları doldurulmalıdır.",
                     ),
-                    _buildSoru(
+                    _buildSubQuestion(
                       "Trafonun altında yağ toplama çukuru ve ızgara var mı?",
                       'cukur',
                       [
@@ -138,7 +138,7 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
                       ],
                       _model.cukur,
                     ),
-                    _buildSoru(
+                    _buildSubQuestion(
                       "Trafo odasında otomatik yangın algılama veya söndürme sistemi var mı?",
                       'sondurme',
                       [
@@ -174,30 +174,10 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFFE65100),
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return CustomInfoNote(
+      type: InfoNoteType.info,
+      text: text,
+      icon: Icons.arrow_downward,
     );
   }
 
@@ -239,6 +219,29 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
         children: [
           Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 10),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubQuestion(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SubQuestionTitle(title),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,

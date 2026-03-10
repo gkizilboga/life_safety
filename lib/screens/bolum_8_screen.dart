@@ -76,6 +76,7 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
           // Warning banner if locked due to Ortak Duvar selection
           if (_isLocked)
             CustomInfoNote(
+              type: InfoNoteType.warning,
               icon: Icons.lock_person_rounded,
               richText: TextSpan(
                 children: [
@@ -86,7 +87,11 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                   const TextSpan(
                     text:
                         "Değişiklik yapmak istiyorsanız lütfen Bölüm-7'ye giderek 'Ortak Duvar' seçeneğini güncelleyin.",
-                    style: TextStyle(fontStyle: FontStyle.italic),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.white70,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ],
               ),

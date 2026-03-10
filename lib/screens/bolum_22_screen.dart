@@ -203,11 +203,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
 
   Widget _buildHeightInfoCard() {
     return CustomInfoNote(
-      icon: _isMandatory ? Icons.warning_amber_rounded : Icons.info_outline,
-      backgroundColor: _isMandatory ? null : Colors.blue.shade50,
-      borderColor: _isMandatory ? null : Colors.blue.shade200,
-      iconColor: _isMandatory ? null : Colors.blue.shade900,
-      textColor: _isMandatory ? null : Colors.blue.shade900,
+      type: _isMandatory ? InfoNoteType.warning : InfoNoteType.info,
       text: _isMandatory
           ? "Yapı yüksekliğiniz $_currentHeight m olduğu için İtfaiye Asansörü ZORUNLUDUR."
           : "Yapı yüksekliğiniz $_currentHeight m (51.50 m altı) olduğu için İtfaiye Asansörü zorunlu değildir. Ancak asansör varlığı denetlenmektedir.",
@@ -241,7 +237,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             Text(
               description,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 14,
                 color: Colors.blue.shade800,
                 fontWeight: FontWeight.w500,
                 height: 1.3,

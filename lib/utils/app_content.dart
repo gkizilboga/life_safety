@@ -1477,7 +1477,7 @@ class Bolum16Content {
   // En uzun cephe uzunluğu — sayısal değer girildiğinde (≤ 75m): bilgi notu
   static final cepheUzunluguOlumlu = ChoiceResult(
     label: "16-4-A (Cephe)",
-    uiTitle: "Cephe uzunluğu 75m ve altında",
+    uiTitle: "75m ve altı",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -1486,7 +1486,7 @@ class Bolum16Content {
   // En uzun cephe uzunluğu — sayısal değer girildiğinde (> 75m): bilgi notu
   static final cepheUzunluguKritik = ChoiceResult(
     label: "16-4-B (Cephe)",
-    uiTitle: "Cephe uzunluğu 75m üzerinde",
+    uiTitle: "75m üzeri",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -1495,7 +1495,7 @@ class Bolum16Content {
   // En uzun cephe uzunluğu — "Bilmiyorum" seçildiğinde kullanılır
   static final cepheUzunluguBilinmiyor = ChoiceResult(
     label: "16-4-C (Cephe)",
-    uiTitle: "Cephe uzunluğu bilinmiyor",
+    uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: En uzun cephe bilgisi beyan edilmemiştir. Cephe uzunluğu 75 metreyi aşıyor ise İtfaiye Su Verme Bağlantısı (Siyam İkizi) zorunlu hale gelmektedir. Bu belirsizliğin giderilmesi için cephe ölçüsünün tespit edilmesi önerilir.",

@@ -39,11 +39,11 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("• ", style: TextStyle(fontSize: 14, height: 1.4)),
+                Text("• ", style: TextStyle(fontSize: 13, height: 1.4)),
                 Expanded(
                   child: Text(
                     "Analiz süresi yaklaşık 15-20 dakikadır.",
-                    style: TextStyle(fontSize: 14, height: 1.4),
+                    style: TextStyle(fontSize: 13, height: 1.4),
                   ),
                 ),
               ],
@@ -52,12 +52,12 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("• ", style: TextStyle(fontSize: 14, height: 1.4)),
+                const Text("• ", style: TextStyle(fontSize: 13, height: 1.4)),
                 Expanded(
                   child: RichText(
                     text: const TextSpan(
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         height: 1.4,
                         color: Colors.black87,
                       ),
@@ -83,12 +83,12 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("• ", style: TextStyle(fontSize: 14, height: 1.4)),
+                const Text("• ", style: TextStyle(fontSize: 13, height: 1.4)),
                 Expanded(
                   child: RichText(
                     text: const TextSpan(
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         height: 1.4,
                         color: Colors.black87,
                       ),
@@ -174,7 +174,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Expanded(
                       child: QuestionTitle(

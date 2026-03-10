@@ -26,8 +26,6 @@ class Bolum20Provider extends ChangeNotifier {
   final donerCtrl = TextEditingController();
   final sahanliksizCtrl = TextEditingController();
   final dengelenmisCtrl = TextEditingController();
-  final kovaGenisligiCtrl = TextEditingController(); // NEW
-
   // Basement Independent Stair Controllers
   final bodNormalCtrl = TextEditingController();
   final bodIcKapaliCtrl = TextEditingController();
@@ -118,11 +116,6 @@ class Bolum20Provider extends ChangeNotifier {
         sahanliksizCtrl.text = saved.sahanliksizMerdivenSayisi.toString();
       if (saved.dengelenmisMerdivenSayisi > 0)
         dengelenmisCtrl.text = saved.dengelenmisMerdivenSayisi.toString();
-      if (saved.daireselMerdivenKovaGenisligi != null &&
-          saved.daireselMerdivenKovaGenisligi! > 0) {
-        kovaGenisligiCtrl.text = saved.daireselMerdivenKovaGenisligi.toString();
-      }
-
       if (saved.toplamDisariAcilanMerdivenSayisi > 0)
         toplamDirectCtrl.text = saved.toplamDisariAcilanMerdivenSayisi
             .toString();
@@ -205,9 +198,6 @@ class Bolum20Provider extends ChangeNotifier {
       case 'dengelenmis':
         dengelenmisErr = error;
         _model = _model.copyWith(dengelenmisMerdivenSayisi: numericVal);
-        break;
-      case 'kovaGenisligi':
-        _model = _model.copyWith(daireselMerdivenKovaGenisligi: numericVal);
         break;
       case 'bodNormal':
         bodNormalErr = error;
@@ -561,7 +551,6 @@ class Bolum20Provider extends ChangeNotifier {
         donerMerdivenSayisi: int.tryParse(donerCtrl.text) ?? 0,
         sahanliksizMerdivenSayisi: int.tryParse(sahanliksizCtrl.text) ?? 0,
         dengelenmisMerdivenSayisi: int.tryParse(dengelenmisCtrl.text) ?? 0,
-        daireselMerdivenKovaGenisligi: int.tryParse(kovaGenisligiCtrl.text),
         toplamDisariAcilanMerdivenSayisi: totalDirect,
         lobiTahliyeMesafeDurumu: _lobiMesafeDurumu,
         isBodrumIndependent: _isBodrumIndependent,
@@ -601,8 +590,6 @@ class Bolum20Provider extends ChangeNotifier {
     donerCtrl.dispose();
     sahanliksizCtrl.dispose();
     dengelenmisCtrl.dispose();
-    kovaGenisligiCtrl.dispose();
-
     bodNormalCtrl.dispose();
     bodIcKapaliCtrl.dispose();
     bodDisKapaliCtrl.dispose();

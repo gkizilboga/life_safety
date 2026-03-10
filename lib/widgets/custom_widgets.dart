@@ -21,6 +21,8 @@ class ModernHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isAnalysisScreen = screenType.toString().contains('Bolum');
+    
     final progressResult = AppProgress.getAnalysisProgress(
       BinaStore.instance,
       screenType,
@@ -30,9 +32,12 @@ class ModernHeader extends StatelessWidget {
     final bool canPop = Navigator.canPop(context);
 
     final double topPadding = MediaQuery.of(context).padding.top;
+    
+    // Sabit yükseklik - Tüm sayfalarda aynı durması için. Tasarruflu ama dengeli.
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(20, topPadding + 8, 20, 10),
+      height: topPadding + 105.0, // Her ekranda birebir aynı yükseklik
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 15),
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.only(
@@ -41,174 +46,152 @@ class ModernHeader extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top row: Back | [spacer] | KAYDET
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (canPop)
                 GestureDetector(
                   onTap: onBack ?? () => Navigator.pop(context),
                   behavior: HitTestBehavior.opaque,
                   child: Container(
-                    width: 40,
-                    height: 40,
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 14,
-                      ),
+                    margin: const EdgeInsets.only(right: 12, bottom: 2),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.white,
+                      size: 18,
                     ),
                   ),
-                )
-              else
-                const SizedBox(width: 28),
-              const Spacer(),
-              // Only show KAYDET button on Bolum screens (test sections 1-36)
-              if (screenType.toString().contains('Bolum'))
-                GestureDetector(
-                  onTap: () {
-                    if (onSave != null) {
-                      onSave!();
-                    } else {
-                      BinaStore.instance.saveToDisk(immediate: true);
-                    }
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          "Analiz kaydedildi ve ana menüye dönüldü.",
+                ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isAnalysisScreen)
+                      Text(
+                        stepLabel,
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
-                        duration: Duration(seconds: 2),
-                        backgroundColor: AppColors.successGreen,
                       ),
-                    );
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    height: 40,
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF059669),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                        border: Border.all(color: Colors.white24, width: 1),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Icon(
-                            Icons.save_as_rounded,
-                            color: Colors.white,
-                            size: 14,
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            "KAYDET",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.3,
+                    const SizedBox(height: 2),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: FormattedText(
+                              title,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 19,
+                                fontWeight: FontWeight.bold,
+                                height: 1.1,
+                              ),
                             ),
                           ),
+                        ),
+                        if (isAnalysisScreen) ...[
+                           const SizedBox(width: 8),
+                           Row(
+                             mainAxisSize: MainAxisSize.min,
+                             crossAxisAlignment: CrossAxisAlignment.center,
+                             children: [
+                               const Text(
+                                 "İlerleme: ",
+                                 style: TextStyle(
+                                   color: Colors.white54,
+                                   fontSize: 12,
+                                   fontWeight: FontWeight.w500,
+                                 ),
+                               ),
+                               AnimatedPercentageText(
+                                 percentage: (progress * 100).toInt(),
+                                 style: const TextStyle(
+                                   color: Colors.white,
+                                   fontSize: 12,
+                                   fontWeight: FontWeight.bold,
+                                 ),
+                               ),
+                             ],
+                           ),
+                           const SizedBox(width: 8),
+                           GestureDetector(
+                             onTap: () {
+                               if (onSave != null) {
+                                 onSave!();
+                               } else {
+                                 BinaStore.instance.saveToDisk(immediate: true);
+                               }
+                               Navigator.of(context).popUntil((route) => route.isFirst);
+                               ScaffoldMessenger.of(context).showSnackBar(
+                                 const SnackBar(
+                                   content: Text("Analiz kaydedildi ve ana menüye dönüldü."),
+                                   duration: Duration(seconds: 2),
+                                   backgroundColor: AppColors.successGreen,
+                                 ),
+                               );
+                             },
+                             behavior: HitTestBehavior.opaque,
+                             child: Container(
+                               padding: const EdgeInsets.symmetric(
+                                 horizontal: 8,
+                                 vertical: 4,
+                               ),
+                               decoration: BoxDecoration(
+                                 color: const Color(0xFF059669),
+                                 borderRadius: BorderRadius.circular(10),
+                                 border: Border.all(color: Colors.white24, width: 1),
+                               ),
+                               child: const Text(
+                                 "KAYDET",
+                                 style: TextStyle(
+                                   color: Colors.white,
+                                   fontSize: 11,
+                                   fontWeight: FontWeight.bold,
+                                   letterSpacing: 0.2,
+                                 ),
+                               ),
+                             ),
+                           ),
                         ],
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          // Integrated Title, Section and Progress Row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Main Title (Ufaltılmış font)
-              Expanded(
-                child: FormattedText(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    height: 1.1,
-                  ),
-                ),
-              ),
-              if (progress > 0) ...[
-                const SizedBox(width: 12),
-                // Bölüm X (Ortada gibi konumlanmış)
-                Text(
-                  stepLabel,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                // İlerleme (Sağda)
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      "İlerleme: ",
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    AnimatedPercentageText(
-                      percentage: (progress * 100).toInt(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ],
           ),
-          if (progress > 0) ...[
-            const SizedBox(height: 10),
-            // Progress Bar
+          if (isAnalysisScreen) ...[
+            const SizedBox(height: 12),
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: LinearProgressIndicator(
                 value: progress,
-                minHeight: 3,
+                minHeight: 4,
                 backgroundColor: Colors.white.withValues(alpha: 0.1),
                 valueColor: const AlwaysStoppedAnimation<Color>(
                   AppColors.successGreen,
                 ),
               ),
             ),
-          ] else
-            const SizedBox(height: 5),
+          ] else ...[
+             // Analiz içermeyen ekranlarda progress barın kapladığı alanı dengele
+             const SizedBox(height: 16),
+          ]
         ],
       ),
     );
@@ -241,8 +224,21 @@ class QuestionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12),
+      padding: const EdgeInsets.only(left: 4, bottom: 14, top: 4),
       child: FormattedText(title, style: AppStyles.questionTitle),
+    );
+  }
+}
+
+class SubQuestionTitle extends StatelessWidget {
+  final String title;
+  const SubQuestionTitle(this.title, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 12, top: 2),
+      child: FormattedText(title, style: AppStyles.subQuestionTitle),
     );
   }
 }
@@ -360,7 +356,7 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
             widget.style ??
             const TextStyle(
               color: Colors.white,
-              fontSize: 14,
+              fontSize: 18,
               fontWeight: FontWeight.w900,
             ),
       ),
@@ -374,7 +370,10 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
     super.initState();
     // Auto-track current section
     // Moved to initState to prevent overwriting when background screens rebuild
-    final progressRes = AppProgress.getAnalysisProgress(BinaStore.instance, widget.screenType);
+    final progressRes = AppProgress.getAnalysisProgress(
+      BinaStore.instance,
+      widget.screenType,
+    );
     final step = AppProgress.currentStep(widget.screenType);
     if (progressRes.percentage > 0) {
       // Use addPostFrameCallback to ensure build is safely started/done
@@ -520,7 +519,7 @@ class DefinitionButton extends StatelessWidget {
               Text(
                 definition,
                 style: const TextStyle(
-                  fontSize: 15,
+                  fontSize: 14,
                   height: 1.5,
                   color: Colors.black87,
                 ),
@@ -627,7 +626,11 @@ class _ImageModal extends StatelessWidget {
                   errorBuilder: (c, o, s) => Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                      const Icon(
+                        Icons.broken_image,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                       const SizedBox(height: 8),
                       Text("Görsel yüklenemedi: $assetPath"),
                     ],
@@ -654,7 +657,7 @@ class _ImageModal extends StatelessWidget {
                 children: [
                   Text(
                     "Yakınlaştırmak için görseli iki parmağınızla büyütebilirsiniz.",
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
@@ -711,19 +714,9 @@ class QuestionHeaderWithImage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 12, top: 4),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(
-            child: Text(
-              questionText,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF1A237E),
-                height: 1.35,
-              ),
-            ),
-          ),
+          Expanded(child: Text(questionText, style: AppStyles.questionTitle)),
           const SizedBox(width: 10),
           GestureDetector(
             onTap: () => ImageModalHelper.show(
@@ -734,7 +727,7 @@ class QuestionHeaderWithImage extends StatelessWidget {
             child: Tooltip(
               message: 'Görseli İncele',
               child: Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: const Color(0xFF43A047).withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
@@ -742,7 +735,7 @@ class QuestionHeaderWithImage extends StatelessWidget {
                 child: const Icon(
                   Icons.photo_camera,
                   color: Color(0xFF2E7D32),
-                  size: 32,
+                  size: 24,
                 ),
               ),
             ),
@@ -752,8 +745,6 @@ class QuestionHeaderWithImage extends StatelessWidget {
     );
   }
 }
-
-
 
 /// Standart onay kutusu widget'ı - tüm ekranlarda tutarlı görünüm sağlar
 /// Açık yeşil arka plan ile dikkat çekici tasarım
@@ -843,7 +834,7 @@ class ConfirmationCheckbox extends StatelessWidget {
                   child: Text(
                     text,
                     style: TextStyle(
-                      fontSize: 12, // Reduced from 14
+                      fontSize: 14, // Increased for readability
                       fontWeight: FontWeight.w700,
                       color: value
                           ? const Color(0xFF2E7D32)
@@ -861,26 +852,22 @@ class ConfirmationCheckbox extends StatelessWidget {
   }
 }
 
+enum InfoNoteType { info, warning }
+
 /// Standart bilgi ve uyarı notu widget'ı - Bölüm 8'deki tasarımı temel alır
 class CustomInfoNote extends StatelessWidget {
   final String? text;
   final InlineSpan? richText;
-  final IconData icon;
-  final Color? backgroundColor;
-  final Color? borderColor;
-  final Color? iconColor;
-  final Color? textColor;
+  final IconData? icon;
+  final InfoNoteType type;
   final EdgeInsetsGeometry? margin;
 
   const CustomInfoNote({
     super.key,
     this.text,
     this.richText,
-    this.icon = Icons.info_outline,
-    this.backgroundColor,
-    this.borderColor,
-    this.iconColor,
-    this.textColor,
+    this.icon,
+    this.type = InfoNoteType.warning,
     this.margin,
   }) : assert(
          text != null || richText != null,
@@ -889,10 +876,28 @@ class CustomInfoNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = backgroundColor ?? const Color(0xFFFFF3E0);
-    final bc = borderColor ?? const Color(0xFFFF9800);
-    final ic = iconColor ?? const Color(0xFFE65100);
-    final tc = textColor ?? Colors.orange.shade900;
+    // Standardize colors based on type
+    final Color bg;
+    final Color bc;
+    final Color ic;
+    final Color tc;
+    final IconData displayIcon;
+
+    if (type == InfoNoteType.info) {
+      // Info: Blue spectrum
+      bg = const Color(0xFFE3F2FD); // Light Blue 50
+      bc = const Color(0xFF90CAF9); // Light Blue 200
+      ic = const Color(0xFF1976D2); // Blue 700
+      tc = const Color(0xFF0D47A1); // Blue 900
+      displayIcon = icon ?? Icons.info_outline;
+    } else {
+      // Warning: Orange/Amber spectrum
+      bg = const Color(0xFFFFF3E0); // Orange 50
+      bc = const Color(0xFFFFB74D); // Orange 300
+      ic = const Color(0xFFF57C00); // Orange 700
+      tc = const Color(0xFFE65100); // Orange 900
+      displayIcon = icon ?? Icons.warning_amber_rounded;
+    }
 
     return Container(
       margin: margin ?? const EdgeInsets.only(bottom: 16),
@@ -900,12 +905,12 @@ class CustomInfoNote extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: bc),
+        border: Border.all(color: bc, width: 1.2),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: ic, size: 24),
+          Icon(displayIcon, color: ic, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: richText != null
@@ -915,6 +920,7 @@ class CustomInfoNote extends StatelessWidget {
                         color: tc,
                         fontSize: 12,
                         fontFamily: 'Roboto',
+                        height: 1.4,
                       ),
                       children: [richText!],
                     ),
@@ -925,7 +931,8 @@ class CustomInfoNote extends StatelessWidget {
                       color: tc,
                       fontSize: 12,
                       fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.normal,
+                      height: 1.4,
                     ),
                   ),
           ),
@@ -1031,7 +1038,7 @@ class CustomAlertDialog extends StatelessWidget {
                   Text(
                     content!,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       height: 1.5,
                       color: AppColors.textBody,
                     ),
@@ -1085,6 +1092,33 @@ class CustomAlertDialog extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MultiSelectHint extends StatelessWidget {
+  final String text;
+  final EdgeInsetsGeometry padding;
+
+  const MultiSelectHint({
+    super.key,
+    this.text = "Birden fazla seçenek işaretleyebilirsiniz.",
+    this.padding = const EdgeInsets.only(left: 4, bottom: 8),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.blueGrey.shade600,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

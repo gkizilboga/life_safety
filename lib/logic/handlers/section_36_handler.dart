@@ -232,18 +232,14 @@ class Section36Handler {
         bool heightFail = yukseklikLabel == "25-Dairesel-B";
         bool heightUnknown = yukseklikLabel == "25-Dairesel-C";
         bool loadOk = maxYuk <= 25;
-        // Kova genişliği kontrolü (Min 100cm)
-        int kovaG = b20.daireselMerdivenKovaGenisligi ?? 0;
 
-        if (heightFail || !loadOk || (kovaG > 0 && kovaG < 100)) {
+        if (heightFail || !loadOk) {
           List<String> reasons = [];
           if (heightFail) reasons.add("Yükseklik 9.50m limitini aşmaktadır");
           if (!loadOk)
             reasons.add("Kullanıcı yükü 25 kişiyi aşmaktadır ($maxYuk kişi)");
-          if (kovaG > 0 && kovaG < 100)
-            reasons.add(
-              "Kova genişliği yetersiz (Min. 100cm, Mevcut: $kovaG cm)",
-            );
+          if (!loadOk)
+            reasons.add("Kullanıcı yükü 25 kişiyi aşmaktadır ($maxYuk kişi)");
 
           analysisParts.add(
             "KRİTİK RİSK: Dairesel (döner) merdiven Yangın Yönetmeliği kriterlerini sağlamamaktadır. (${reasons.join(", ")}) Bu merdiven kaçış yolu olarak değerlendirilemez. Merdivenin hizmet verdiği yükün 25 kişiden fazla olmadığı mahal bazlı teyit edilmelidir.",

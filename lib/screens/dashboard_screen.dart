@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/text_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:life_safety/screens/settings_screen.dart';
 import 'bolum_1_screen.dart';
@@ -126,17 +127,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.fromLTRB(
-        24,
-        MediaQuery.of(context).padding.top + 16,
-        24,
-        24,
-      ),
+      height: MediaQuery.of(context).padding.top + 105.0,
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 15),
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
-        borderRadius: BorderRadius.only(bottomRight: Radius.circular(40)),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -144,20 +145,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
             style: TextStyle(
               color: Colors.white54,
               fontSize: 10,
-              letterSpacing: 1.8,
+              letterSpacing: 1.6,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           const Text(
             "HOŞ GELDİNİZ",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
             ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );
@@ -168,7 +170,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Map<String, dynamic> building, {
     required bool isCompleted,
   }) {
-    final String name = building['name'] ?? "İsimsiz Analiz";
+    final String name = building['name'] ?? "";
     final String dateStr = building['date'].toString().split('T')[0];
 
     // We need to calculate completion for THIS building
@@ -178,8 +180,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final int storedCompletion = building['completion'] ?? 0;
     final int lastSection = building['lastActiveSection'] ?? 1;
     // Fallback if completion isn't stored:
-    final double completion = storedCompletion > 0 
-        ? storedCompletion.toDouble() 
+    final double completion = storedCompletion > 0
+        ? storedCompletion.toDouble()
         : (lastSection / 36.0 * 100);
 
     return Container(
@@ -205,7 +207,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               _buildStatusChip(isCompleted),
               Text(
                 dateStr,
-                style: const TextStyle(color: Colors.grey, fontSize: 11),
+                style: const TextStyle(color: Colors.grey, fontSize: 13),
               ),
             ],
           ),
@@ -213,12 +215,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             name,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 15, // Was 16
               fontWeight: FontWeight.bold,
               color: Color(0xFF2C3E50),
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 12),
           if (!isCompleted) ...[
             _buildProgressBar(completion.toInt()),
             const SizedBox(height: 15),
@@ -268,10 +270,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
                   },
                   child: Text(
-                    isCompleted ? "ÖN RAPORU GÖR" : "DEVAM ET",
+                    isCompleted ? "ANALİZLERİ GÖR" : "DEVAM ET",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                      fontSize: 14,
                     ),
                   ),
                 ),
@@ -322,7 +324,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 11,
+                    fontSize: 13,
                   ),
                 ),
               ),
@@ -346,7 +348,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         isCompleted ? "TAMAMLANDI" : "DEVAM EDİYOR",
         style: TextStyle(
           color: isCompleted ? Colors.green.shade700 : Colors.orange.shade700,
-          fontSize: 10,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -386,15 +388,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Text(
               "İlerleme Durumu",
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 13,
                 color: Colors.grey,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            Text(
+            NumericEmphasis(
               "%$percent",
               style: const TextStyle(
-                fontSize: 10,
+                fontSize: 13,
                 color: AppColors.primaryBlue,
                 fontWeight: FontWeight.bold,
               ),
@@ -485,14 +487,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
+                fontSize: 13, // Was 14
                 color: AppColors.textDark,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               sub,
-              style: const TextStyle(color: AppColors.textLight, fontSize: 10),
+              style: const TextStyle(color: AppColors.textLight, fontSize: 12),
             ),
           ],
         ),
@@ -564,17 +566,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
           title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 13, // Was 14
             color: AppColors.textDark,
           ),
         ),
         subtitle: Text(
           sub,
-          style: const TextStyle(fontSize: 11, color: AppColors.textLight),
+          style: const TextStyle(
+            fontSize: 12,
+            color: AppColors.textLight,
+          ), // Was 13
         ),
         trailing: const Icon(
           Icons.arrow_forward_ios,
-          size: 12,
+          size: 9, // Was 10
           color: Colors.grey,
         ),
         onTap: onTap,
@@ -588,10 +593,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 10,
+          fontSize: 12, // Was 13
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,
-          letterSpacing: 1.2,
+          letterSpacing: 1.1,
         ),
       ),
     );
@@ -656,7 +661,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     SizedBox(height: 4),
                     Text(
                       "Yangın güvenliği uzmanımızla görüşün",
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
+                      style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                   ],
                 ),
@@ -824,7 +829,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 13,
+                fontSize: 15,
                 color: AppColors.textDark,
               ),
             ),

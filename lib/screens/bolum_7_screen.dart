@@ -118,7 +118,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             imagePath: AppAssets.section7Kazan,
             imageTitle: "Kazan Dairesi Teknik Detayı",
           ),
-          const SizedBox(height: 8),
 
           _buildOption(
             Bolum7Content.asansor,
@@ -128,18 +127,11 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             imageTitle: "Asansör Kuyusu ve Makine Dairesi",
           ),
           if (_isAutoSelected && _model.hasAsansor)
-            Padding(
-              padding: const EdgeInsets.only(left: 8, bottom: 8),
-              child: Text(
-                "ⓘ Asansör, Uygulama tarafından işaretlenmiştir. Binanızda asansör yoksa işareti kaldırabilirsiniz.",
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.blueGrey.shade600,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
+            const CustomInfoNote(
+              type: InfoNoteType.info,
+              text:
+                  "Asansör, Uygulama tarafından işaretlenmiştir. Binanızda asansör yoksa işareti kaldırabilirsiniz.",
             ),
-          const SizedBox(height: 8),
 
           _buildOption(
             Bolum7Content.cati,
@@ -154,7 +146,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             imagePath: AppAssets.section7Jenerator,
             imageTitle: "Jeneratör Odası Yerleşimi",
           ),
-          const SizedBox(height: 8),
 
           _buildOption(
             Bolum7Content.elektrik,
@@ -163,7 +154,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             imagePath: AppAssets.section7ElektrikOdasi,
             imageTitle: "Elektrik Tesisat Odası",
           ),
-          const SizedBox(height: 8),
 
           _buildOption(
             Bolum7Content.trafo,
@@ -172,7 +162,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             imagePath: AppAssets.section7Trafo,
             imageTitle: "Trafo Odası ve Yağ Çukuru",
           ),
-          const SizedBox(height: 8),
 
           _buildOption(
             Bolum7Content.cop,
@@ -195,7 +184,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
 
           if (BinaStore.instance.bolum6?.buyukRestoran?.label ==
               Bolum6Content.buyukRestoranVar.label) ...[
-            const SizedBox(height: 8),
             _buildOption(
               Bolum7Content.endustriyelMutfak,
               true, // Otomatik seçili gelsin çünkü Bölüm 6'da var dedi
@@ -227,15 +215,12 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
     String? imagePath,
     String? imageTitle,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: SelectableCard(
-        choice: choice,
-        isSelected: isSelected,
-        onTap: onTap,
-        imageAssetPath: imagePath,
-        imageTitle: imageTitle,
-      ),
+    return SelectableCard(
+      choice: choice,
+      isSelected: isSelected,
+      onTap: onTap,
+      imageAssetPath: imagePath,
+      imageTitle: imageTitle,
     );
   }
 }

@@ -36,10 +36,18 @@ class AppStyles {
   // SORU metinleri için özel stil - Dikkat çekici renk
   static const TextStyle questionTitle = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.w900,
+    fontWeight: FontWeight.w800,
     color: Color(0xFF4A148C), // Koyu Mor - Sorular için dikkat çekici
     height: 1.4,
-    letterSpacing: 0.0, // Harfler arası boşluk normal (yanıtlarla aynı)
+    letterSpacing: 0.0,
+  );
+
+  // ALT SORU metinleri için stil - Ana sorulardan farklı, daha az baskın
+  static const TextStyle subQuestionTitle = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w700,
+    color: AppColors.primaryBlue, // Ana mavi - Purple 16px'den ayrılmak için
+    height: 1.3,
   );
 
   // YANIT metinleri için stil - Daha nötr

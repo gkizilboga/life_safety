@@ -1,4 +1,5 @@
 import 'dart:ui';
+import '../utils/text_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../widgets/custom_widgets.dart';
@@ -68,7 +69,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                       child: Text(
                         "YANGIN RİSK ANALİZİ",
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: Colors.grey,
                           letterSpacing: 1.2,
@@ -145,7 +146,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     "Binanızdaki risklerin çözüm yollarını ve ön raporun tamamını görmek için devam edin.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 16,
                       color: Colors.black54,
                       height: 1.4,
                     ),
@@ -178,7 +179,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             "YANGIN RİSK ANALİZİ",
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 13,
+              fontSize: 15,
               color: Color(0xFF1A237E),
               letterSpacing: 1,
             ),
@@ -266,13 +267,13 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     "YANGIN GÜVENLİK SKORU",
                     style: TextStyle(
                       color: Colors.white70,
-                      fontSize: 11,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(
+                  NumericEmphasis(
                     "${m['score']} / 100",
                     style: const TextStyle(
                       color: Colors.white,
@@ -345,18 +346,18 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   Widget _buildStatItem(String label, String val, Color color) {
     return Column(
       children: [
-        Text(
+        NumericEmphasis(
           val,
           style: TextStyle(
             color: color,
-            fontSize: 20,
+            fontSize: 22, // Increased slightly
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 2),
         Text(
           label,
-          style: const TextStyle(color: Colors.white60, fontSize: 10),
+          style: const TextStyle(color: Colors.white60, fontSize: 13),
         ),
       ],
     );
@@ -398,7 +399,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Color(0xFF1A237E),
-              fontSize: 14,
+              fontSize: 16,
             ),
           ),
           children: visibleSections,
@@ -415,21 +416,13 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       return ListTile(
         onTap: () =>
             _showDetailSheet(context, id, summary, fullReport, riskColor),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
         title: Text(
           "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
           style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 11,
-            color: Colors.grey,
-          ),
-        ),
-        subtitle: Text(
-          summary,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color(0xFF2C3E50),
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
+            fontSize: 14.5,
+            color: Color(0xFF34495E),
           ),
         ),
         trailing: Container(
@@ -450,14 +443,10 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       );
     } catch (e) {
       return ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
         title: Text(
-          "Bölüm $id",
-          style: const TextStyle(fontSize: 11, color: Colors.grey),
-        ),
-        subtitle: const Text(
-          "Veri yüklenemedi",
-          style: TextStyle(fontSize: 14, color: Colors.red),
+          "Bölüm $id: Veri yüklenemedi",
+          style: const TextStyle(fontSize: 14, color: Colors.redAccent),
         ),
       );
     }
@@ -518,7 +507,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     child: Text(
                       report,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         color: Color(0xFF2C3E50),
                         height: 1.5,
                         fontWeight: FontWeight.w600,
@@ -580,7 +569,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                 Text(
                   "RAPORLAR HAKKINDA",
                   style: TextStyle(
-                    fontSize: 11,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1A237E),
                     letterSpacing: 0.8,
@@ -661,7 +650,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
-                fontSize: 12,
+                fontSize: 15,
               ),
             ),
           ),
@@ -688,7 +677,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             child: Text(
               text,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 15,
                 color: Color(0xFF1A237E),
                 height: 1.4,
               ),

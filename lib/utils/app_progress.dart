@@ -125,7 +125,7 @@ class AppProgress {
     String stepStr = "";
     if (currentScreen != null) {
       int rawStep = currentStep(currentScreen);
-      stepStr = "Bölüm $rawStep";
+      stepStr = "Bölüm-$rawStep";
     }
 
     return ProgressResult(percentage, stepStr);

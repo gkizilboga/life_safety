@@ -291,15 +291,16 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
                               ),
                               label: const Text(
                                 "TOPLAM BRÜT ALANI HESAPLA",
-                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFF57C00), // Soft orange (Orange 700-800 mix)
+                                backgroundColor: AppColors.warningOrange,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                minimumSize: const Size(double.infinity, 54),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
+                                elevation: 0,
                               ),
                             ),
                           ),
@@ -340,35 +341,17 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
             ),
           ),
           if (isLocked)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.shade200),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.lock_outline, color: Colors.red),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        "Temel veriler kilitlenmiştir. İleriki bölümlerdeki hesaplamaların bozulmaması için bu aşamadan sonra alan bilgisi değiştirilemez. Değiştirmek isterseniz yeni bir analiz başlatmalısınız.",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.red.shade900,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: CustomInfoNote(
+              type: InfoNoteType.warning,
+              text:
+                  "Temel veriler kilitlenmiştir. İleriki bölümlerdeki hesaplamaların bozulmaması için bu aşamadan sonra alan bilgisi değiştirilemez. Değiştirmek isterseniz yeni bir analiz başlatmalısınız.",
+              icon: Icons.lock_outline,
             ),
+          ),
         ],
       ),
     );
@@ -380,12 +363,12 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
       children: [
         Text(
           content.uiTitle,
-          style: AppStyles.questionTitle.copyWith(fontSize: 14),
+          style: AppStyles.questionTitle,
         ),
         if (content.uiSubtitle.isNotEmpty)
           Text(
             content.uiSubtitle,
-            style: const TextStyle(fontSize: 11, color: Colors.grey),
+            style: const TextStyle(fontSize: 13, color: Colors.grey),
           ),
         const SizedBox(height: 6),
       ],
@@ -406,7 +389,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
       inputFormatters: [InputValidator.flexDecimal],
       style: TextStyle(
         fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-        fontSize: 14,
+        fontSize: 15,
       ),
       decoration: InputDecoration(
         hintText: hint,
@@ -435,7 +418,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
         children: [
           Text(
             "HESAPLAMA DETAYI",
-            style: AppStyles.questionTitle.copyWith(fontSize: 13),
+            style: AppStyles.questionTitle,
           ),
           const SizedBox(height: 12),
           // Toplam Kat Adedi (Bölüm 3'ten gelen veri)
@@ -445,7 +428,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
               const Text(
                 "Toplam Kat Adedi:",
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF2E7D32), // Dark green
                 ),
@@ -453,7 +436,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
               Text(
                 "${_nKat + _bKat + 1} Kat",
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF2E7D32),
                 ),
@@ -495,14 +478,14 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
           Text(
             label,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 15,
               fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
             ),
           ),
           Text(
             value,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 15,
               fontWeight: isTotal ? FontWeight.bold : FontWeight.w600,
             ),
           ),

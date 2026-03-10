@@ -288,7 +288,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askTicari)
             _buildSoru(
-              "Ticari alanlardan konut merdivenine geçiş nasıl?",
+              "Ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
               'ticari',
               [
                 Bolum13Content.ticariOptionA,
@@ -329,7 +329,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: AppStyles.questionTitle),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,
@@ -360,7 +360,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               DefinitionButton(term: term, definition: def),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,

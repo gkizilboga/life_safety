@@ -17,9 +17,6 @@ class Bolum21Screen extends StatefulWidget {
 
 class _Bolum21ScreenState extends State<Bolum21Screen> {
   Bolum21Model _model = Bolum21Model();
-  bool _isMandatory = false;
-  String _mandatoryReason = "";
-  double _hYapi = 0.0;
 
   @override
   void initState() {
@@ -27,42 +24,8 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     if (BinaStore.instance.bolum21 != null) {
       _model = BinaStore.instance.bolum21!;
     }
-    _hYapi = BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? 0.0;
-    _checkMandatory();
   }
 
-  void _checkMandatory() {
-    bool heightRisk = _hYapi >= 30.50;
-    bool basementRisk =
-        BinaStore.instance.bolum10?.bodrumlar.any(
-          (e) =>
-              e != null &&
-              (e.label.contains("10-B") ||
-                  e.label.contains("10-C") ||
-                  e.label.contains("10-D") ||
-                  e.label.contains("10-E")),
-        ) ??
-        false;
-
-    if (heightRisk) {
-      setState(() {
-        _isMandatory = true;
-        _mandatoryReason =
-            "Yapı yüksekliği 30.50m üzerinde olduğu için YGH zorunludur.";
-      });
-    } else if (basementRisk) {
-      setState(() {
-        _isMandatory = true;
-        _mandatoryReason =
-            "Bodrum katlardaki farklı kullanım amacı nedeniyle YGH zorunludur.";
-      });
-    } else {
-      setState(() {
-        _isMandatory = false;
-        _mandatoryReason = "Mevcut verilere göre YGH zorunlu değildir.";
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,13 +43,12 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       },
       child: Column(
         children: [
-          _buildInfoCard(),
-          const SizedBox(height: 16),
           _buildSoru(
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(
                       child: Text(
@@ -136,7 +98,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
           ),
 
           if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) ...[
-            _buildSoru(
+            _buildSubQuestion(
               "YGH (Hol) içindeki kaplama malzemeleri yanmaz özellikte mi?",
               'malzeme',
               [
@@ -146,7 +108,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               ],
               _model.malzeme,
             ),
-            _buildSoru(
+            _buildSubQuestion(
               "YGH (Hol) kapıları yangına dayanıklı, duman sızdırmaz, kendiliğinden kapanan özellikte mi?",
               'kapi',
               [
@@ -156,34 +118,45 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
               ],
               _model.kapi,
             ),
-            _buildSoru("YGH (Hol) içinde gereksiz eşyalar var mı?", 'esya', [
-              Bolum21Content.esyaOptionA,
-              Bolum21Content.esyaOptionB,
-              Bolum21Content.esyaOptionC,
-              Bolum21Content.esyaOptionD,
-            ], _model.esya),
+            _buildSubQuestion(
+              "YGH (Hol) içinde gereksiz eşyalar var mı?",
+              'esya',
+              [
+                Bolum21Content.esyaOptionA,
+                Bolum21Content.esyaOptionB,
+                Bolum21Content.esyaOptionC,
+                Bolum21Content.esyaOptionD,
+              ],
+              _model.esya,
+            ),
           ],
         ],
       ),
     );
   }
 
-  Widget _buildInfoCard() {
-    return CustomInfoNote(
-      icon: _isMandatory ? Icons.warning_amber : Icons.info_outline,
-      backgroundColor: _isMandatory ? null : Colors.blue.shade50,
-      borderColor: _isMandatory ? null : Colors.blue.shade200,
-      iconColor: _isMandatory ? null : Colors.blue.shade900,
-      textColor: _isMandatory ? null : Colors.blue.shade900,
-      richText: TextSpan(
+  Widget _buildSubQuestion(
+    String title,
+    String keyParam,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextSpan(
-            text: _isMandatory ? "YGH ZORUNLUDUR\n" : "YGH ZORUNLU DEĞİLDİR\n",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          TextSpan(
-            text: _mandatoryReason,
-            style: const TextStyle(fontWeight: FontWeight.normal),
+          SubQuestionTitle(title),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => setState(() {
+                if (keyParam == 'malzeme')
+                  _model = _model.copyWith(malzeme: opt);
+                if (keyParam == 'kapi') _model = _model.copyWith(kapi: opt);
+                if (keyParam == 'esya') _model = _model.copyWith(esya: opt);
+              }),
+            ),
           ),
         ],
       ),
@@ -218,7 +191,6 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
                   _model = _model.copyWith(malzeme: opt);
                 if (keyParam == 'kapi') _model = _model.copyWith(kapi: opt);
                 if (keyParam == 'esya') _model = _model.copyWith(esya: opt);
-                _checkMandatory();
               }),
             ),
           ),

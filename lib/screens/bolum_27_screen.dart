@@ -176,7 +176,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
             child: Text(
               "Birden fazla seçenek işaretleyebilirsiniz.",
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 13,
                 color: Colors.grey,
                 fontStyle: FontStyle.italic,
               ),
@@ -203,7 +203,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
             child: Text(
               "Birden fazla seçenek işaretleyebilirsiniz.",
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 13,
                 color: Colors.grey,
                 fontStyle: FontStyle.italic,
               ),
@@ -284,6 +284,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
 
   Widget _buildEnZayifHalkaUyarisi() {
     return const CustomInfoNote(
+      type: InfoNoteType.warning,
       text:
           "Lütfen kaçış yolunuz üzerinde EN KÖTÜ durumdaki kapıyı baz alarak cevap veriniz. (daire kapısı hariç)",
       icon: Icons.warning_amber_rounded,
@@ -291,30 +292,11 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return Container(
+    return CustomInfoNote(
+      type: InfoNoteType.info,
+      text: text,
+      icon: Icons.info_outline,
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.withOpacity(0.2)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.info_outline, color: Colors.blue, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFF1565C0),
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

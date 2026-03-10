@@ -60,10 +60,12 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
   }
 
   bool _isReady() {
-    if (_model.engeller.isEmpty ||
-        _model.levha == null ||
-        _model.yanilticiKapi == null)
-      return false;
+    final bool engellerReady = _model.engeller.isNotEmpty;
+    final bool levhaReady = _model.levha != null;
+    final bool yanilticiReady = _model.yanilticiKapi != null;
+
+    if (!engellerReady || !levhaReady || !yanilticiReady) return false;
+
     if (_model.yanilticiKapi?.label == Bolum19Content.yanilticiOptionB.label &&
         _model.yanilticiEtiket == null)
       return false;
@@ -72,16 +74,42 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
 
   @override
   Widget build(BuildContext context) {
+    // Refresh model if BinaStore changed (e.g. archive load)
+    if (BinaStore.instance.bolum19 != null &&
+        BinaStore.instance.bolum19 != _model) {
+      _model = BinaStore.instance.bolum19!;
+    }
+
     return AnalysisPageLayout(
       title: "Acil Durum Yönlendirme",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onNext: () {
-        BinaStore.instance.bolum19 = _model;
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Bolum20Screen()),
-        );
+        try {
+          BinaStore.instance.bolum19 = _model;
+          BinaStore.instance.saveToDisk();
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Bolum20Screen()),
+          );
+        } catch (e) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text("Hata: Bölüm 20'ye Geçilemedi"),
+              content: Text(
+                "Geçiş sırasında bir hata oluştu. Lütfen bu mesajı geliştiriciye bildirin:\n\n$e",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text("Tamam"),
+                ),
+              ],
+            ),
+          );
+        }
       },
       child: Column(
         children: [
@@ -97,14 +125,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
                   style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  "Birden fazla seçenek işaretleyebilirsiniz.",
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
+                const MultiSelectHint(),
                 const SizedBox(height: 12),
                 ...[
                   Bolum19Content.engelOptionA,
@@ -172,12 +193,8 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
 
   Widget _buildTopInfoNote(String text) {
     return CustomInfoNote(
+      type: InfoNoteType.info,
       text: text,
-      icon: Icons.info_outline,
-      backgroundColor: Colors.blue.shade50,
-      borderColor: Colors.blue.shade200,
-      iconColor: const Color(0xFF1A237E),
-      textColor: const Color(0xFF1A237E),
       margin: const EdgeInsets.only(bottom: 20),
     );
   }
@@ -217,6 +234,10 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return CustomInfoNote(text: text, icon: Icons.arrow_downward);
+    return CustomInfoNote(
+      type: InfoNoteType.info,
+      text: text,
+      icon: Icons.arrow_downward,
+    );
   }
 }

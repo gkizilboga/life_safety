@@ -646,7 +646,7 @@ class PdfService {
             );
             final riskColor = _getRiskColor(fullReportForColor);
             final effectiveSectionRiskColor = id <= 10
-                ? const PdfColor.fromInt(0x00000000)
+                ? PdfColors.blue700 // Info sections are blue
                 : riskColor;
 
             // Each section emits its header + items as individual top-level
@@ -665,8 +665,8 @@ class PdfService {
                     ttf,
                     ttfBold,
                     riskColor: id <= 10
-                        ? const PdfColor.fromInt(0x00000000)
-                        : _getRiskColor(_cleanEmojis(item['report'] ?? '')),
+                        ? PdfColors.blue700
+                        : _getRiskColor(item['report'] ?? ''), // Use raw text for color detection
                     isLast: item == details.last,
                   ),
                 );
@@ -688,7 +688,9 @@ class PdfService {
                         tableGroup,
                         ttf,
                         ttfBold,
-                        effectiveSectionRiskColor,
+                        id <= 10 
+                            ? const PdfColor.fromInt(0x00000000) 
+                            : effectiveSectionRiskColor,
                       ),
                     );
                     itemsWidgets.add(pw.SizedBox(height: 10));
@@ -700,8 +702,8 @@ class PdfService {
                       ttf,
                       ttfBold,
                       riskColor: id <= 10
-                          ? const PdfColor.fromInt(0x00000000)
-                          : _getRiskColor(_cleanEmojis(item['report'] ?? '')),
+                          ? PdfColors.blue700
+                          : _getRiskColor(item['report'] ?? ''), // Use raw text for color detection
                       isLast: isLast,
                     ),
                   );
@@ -713,7 +715,9 @@ class PdfService {
                     tableGroup,
                     ttf,
                     ttfBold,
-                    effectiveSectionRiskColor,
+                    id <= 10 
+                        ? const PdfColor.fromInt(0x00000000) 
+                        : effectiveSectionRiskColor,
                   ),
                 );
               }
@@ -980,78 +984,94 @@ class PdfService {
     pw.Font fontBold,
     PdfColor sectionColor,
   ) {
-    return pw.Container(
-      decoration: pw.BoxDecoration(
-        border: pw.Border(left: pw.BorderSide(color: sectionColor, width: 4)),
-      ),
-      child: pw.Table(
-        border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-        columnWidths: {
-          0: const pw.FlexColumnWidth(3),
-          1: const pw.FlexColumnWidth(2),
-        },
-        children: [
-          pw.TableRow(
-            decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
+    // If transparent, don't wrap in a border Container
+    final table = pw.Table(
+      border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+      columnWidths: {
+        0: const pw.IntrinsicColumnWidth(),
+        1: const pw.IntrinsicColumnWidth(),
+      },
+      children: [
+        pw.TableRow(
+          decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
+          children: [
+            pw.Padding(
+              padding: const pw.EdgeInsets.all(5),
+              child: pw.Text(
+                "Konu",
+                style: pw.TextStyle(
+                  font: fontBold,
+                  fontSize: 9,
+                  color: PdfColors.indigo900,
+                ),
+              ),
+            ),
+            pw.Padding(
+              padding: const pw.EdgeInsets.all(5),
+              child: pw.Text(
+                "Yanıt / Durum",
+                style: pw.TextStyle(
+                  font: fontBold,
+                  fontSize: 9,
+                  color: PdfColors.indigo900,
+                ),
+              ),
+            ),
+          ],
+        ),
+        ...items.asMap().entries.map((entry) {
+          final i = entry.key;
+          final item = entry.value;
+          final isBold = item['isBold'] == true;
+          return pw.TableRow(
+            decoration: i % 2 == 1
+                ? const pw.BoxDecoration(color: PdfColors.grey50)
+                : const pw.BoxDecoration(color: PdfColors.white),
             children: [
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
                 child: pw.Text(
-                  "Konu",
+                  item['label'] ?? '',
                   style: pw.TextStyle(
-                    font: fontBold,
-                    fontSize: 9,
-                    color: PdfColors.indigo900,
+                    font: isBold ? fontBold : font,
+                    fontSize: 8,
                   ),
                 ),
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
                 child: pw.Text(
-                  "Yanıt / Durum",
+                  item['value'] ?? '',
                   style: pw.TextStyle(
-                    font: fontBold,
-                    fontSize: 9,
-                    color: PdfColors.indigo900,
+                    font: isBold ? fontBold : font,
+                    fontSize: 8,
                   ),
                 ),
               ),
             ],
-          ),
-          ...items.asMap().entries.map((entry) {
-            final i = entry.key;
-            final item = entry.value;
-            final isBold = item['isBold'] == true;
-            return pw.TableRow(
-              decoration: i % 2 == 1
-                  ? const pw.BoxDecoration(color: PdfColors.grey50)
-                  : const pw.BoxDecoration(color: PdfColors.white),
-              children: [
-                pw.Padding(
-                  padding: const pw.EdgeInsets.all(5),
-                  child: pw.Text(
-                    item['label'] ?? '',
-                    style: pw.TextStyle(
-                      font: isBold ? fontBold : font,
-                      fontSize: 8,
-                    ),
-                  ),
-                ),
-                pw.Padding(
-                  padding: const pw.EdgeInsets.all(5),
-                  child: pw.Text(
-                    item['value'] ?? '',
-                    style: pw.TextStyle(
-                      font: isBold ? fontBold : font,
-                      fontSize: 8,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }),
-        ],
+          );
+        }),
+      ],
+    );
+
+    final tableWithAlign = pw.Align(
+      alignment: pw.Alignment.centerLeft,
+      child: pw.ConstrainedBox(
+        constraints: const pw.BoxConstraints(maxWidth: 450), // Don't force full width
+        child: table,
       ),
+    );
+
+    if (sectionColor.alpha == 0) {
+      return tableWithAlign;
+    }
+
+    return pw.Container(
+      decoration: pw.BoxDecoration(
+        border: pw.Border(left: pw.BorderSide(color: sectionColor, width: 3)),
+      ),
+      padding: const pw.EdgeInsets.only(left: 8),
+      child: tableWithAlign,
     );
   }
 
@@ -1066,94 +1086,104 @@ class PdfService {
     final value = item['value'] ?? '';
     final report = _cleanEmojis(item['report'] ?? '');
 
+    final content = pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.SizedBox(height: 5.5),
+        if (label.isNotEmpty) ...[
+          pw.Text(
+            "Konu:",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              fontStyle: pw.FontStyle.italic,
+              color: PdfColors.blue900,
+            ),
+          ),
+          pw.Text(
+            label,
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: font,
+              color: PdfColors.black,
+              lineSpacing: 2.2,
+            ),
+          ),
+          pw.SizedBox(height: 2.5),
+        ],
+        if (value.isNotEmpty && value != 'Seçilmedi') ...[
+          pw.Text(
+            "Kullanıcı Yanıtı:",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              fontStyle: pw.FontStyle.italic,
+              color: PdfColors.blue900,
+            ),
+          ),
+          pw.Text(
+            value,
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: font,
+              color: PdfColors.black,
+              lineSpacing: 2.2,
+            ),
+          ),
+          pw.SizedBox(height: 2.5),
+        ],
+        if (report.isNotEmpty) ...[
+          pw.Text(
+            "Değerlendirme:",
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              fontStyle: pw.FontStyle.italic,
+              color: PdfColors.blue900,
+            ),
+          ),
+          _buildRichText(report, font, fontBold),
+        ],
+        if (item['advice'] != null && item['advice']!.isNotEmpty) ...[
+          pw.SizedBox(height: 2),
+          pw.Text(
+            "Öneri:",
+            style: pw.TextStyle(
+              fontSize: 9, // Match Değerlendirme
+              fontWeight: pw.FontWeight.bold,
+              fontStyle: pw.FontStyle.italic,
+              color: PdfColors.blue900,
+            ),
+          ),
+          pw.Text(
+            _cleanEmojis(item['advice']!),
+            style: pw.TextStyle(
+              fontSize: 9,
+              font: font,
+              color: PdfColors.black,
+              fontStyle: pw.FontStyle.italic,
+              lineSpacing: 2.2,
+            ),
+          ),
+        ],
+        pw.SizedBox(height: 5.5),
+        if (!isLast) pw.Divider(thickness: 0.1, color: PdfColors.grey300),
+      ],
+    );
+
+    if (riskColor.alpha == 0) {
+      return pw.Padding(
+        padding: const pw.EdgeInsets.only(left: 0),
+        child: content,
+      );
+    }
+
     return pw.Container(
       decoration: pw.BoxDecoration(
         border: pw.Border(left: pw.BorderSide(color: riskColor, width: 4)),
       ),
       padding: const pw.EdgeInsets.only(left: 8),
-      child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.SizedBox(height: 5.5),
-          if (label.isNotEmpty) ...[
-            pw.Text(
-              "Konu:",
-              style: pw.TextStyle(
-                fontSize: 9,
-                fontWeight: pw.FontWeight.bold,
-                fontStyle: pw.FontStyle.italic,
-                color: PdfColors.blue900,
-              ),
-            ),
-            pw.Text(
-              label,
-              style: pw.TextStyle(
-                fontSize: 9,
-                font: font,
-                color: PdfColors.black,
-                lineSpacing: 2.2,
-              ),
-            ),
-            pw.SizedBox(height: 2.5),
-          ],
-          if (value.isNotEmpty && value != 'Seçilmedi') ...[
-            pw.Text(
-              "Kullanıcı Yanıtı:",
-              style: pw.TextStyle(
-                fontSize: 9,
-                fontWeight: pw.FontWeight.bold,
-                fontStyle: pw.FontStyle.italic,
-                color: PdfColors.blue900,
-              ),
-            ),
-            pw.Text(
-              value,
-              style: pw.TextStyle(
-                fontSize: 9,
-                font: font,
-                color: PdfColors.black,
-                lineSpacing: 2.2,
-              ),
-            ),
-            pw.SizedBox(height: 2.5),
-          ],
-          if (report.isNotEmpty) ...[
-            pw.Text(
-              "Değerlendirme:",
-              style: pw.TextStyle(
-                fontSize: 9,
-                fontWeight: pw.FontWeight.bold,
-                fontStyle: pw.FontStyle.italic,
-                color: PdfColors.blue900,
-              ),
-            ),
-            _buildRichText(report, font, fontBold),
-          ],
-          if (item['advice'] != null && item['advice']!.isNotEmpty) ...[
-            pw.SizedBox(height: 2),
-            pw.Text(
-              "Öneri:",
-              style: pw.TextStyle(
-                fontWeight: pw.FontWeight.bold,
-                fontStyle: pw.FontStyle.italic,
-                color: PdfColors.blue900,
-              ),
-            ),
-            pw.Text(
-              _cleanEmojis(item['advice']!),
-              style: pw.TextStyle(
-                fontSize: 9,
-                font: font,
-                color: PdfColors.black,
-                fontStyle: pw.FontStyle.italic,
-                lineSpacing: 2.2,
-              ),
-            ),
-          ],
-          pw.SizedBox(height: 5.5),
-          if (!isLast) pw.Divider(thickness: 0.1, color: PdfColors.grey300),
-        ],
-      ),
+      child: content,
     );
   }
 }

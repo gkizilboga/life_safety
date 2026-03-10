@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/app_theme.dart';
 import 'package:life_safety/models/choice_result.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
@@ -52,7 +53,7 @@ class _Bolum4ScreenState extends State<Bolum4Screen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: CircularProgressIndicator(color: Color(0xFF1A237E))),
+      body: Center(child: CircularProgressIndicator(color: AppColors.primaryBlue)),
     );
   }
 }

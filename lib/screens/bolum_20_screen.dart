@@ -232,6 +232,7 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                 ),
               ),
               CustomInfoNote(
+                type: InfoNoteType.info,
                 text:
                     "Bağımsız olduğunu belirttiğiniz bodrum kat merdivenlerinin türlerini ve sayılarını aşağıya giriniz.",
                 icon: Icons.info_outline,
@@ -345,10 +346,10 @@ class _TotalDirectInputWidget extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isBasement ? Colors.orange.shade50 : Colors.blue.shade50,
+            color: isBasement ? const Color(0xFFFFF8E1) : const Color(0xFFE3F2FD),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isBasement ? Colors.orange.shade200 : Colors.blue.shade200,
+              color: isBasement ? const Color(0xFFFFCC80) : const Color(0xFFBBDEFB),
             ),
           ),
           child: Column(
@@ -389,7 +390,7 @@ class _TotalDirectInputWidget extends StatelessWidget {
                     child: Text(
                       err,
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 13,
                         color: Colors.red,
                         fontWeight: FontWeight.w500,
                       ),
@@ -434,10 +435,10 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isBasement ? Colors.orange.shade50 : Colors.blue.shade50,
+            color: isBasement ? const Color(0xFFFFF8E1) : const Color(0xFFE3F2FD),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isBasement ? Colors.orange.shade200 : Colors.blue.shade200,
+              color: isBasement ? const Color(0xFFFFCC80) : const Color(0xFFBBDEFB),
             ),
           ),
           child: Column(
@@ -445,8 +446,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
             children: [
               Text(title, style: AppStyles.questionTitle),
               const SizedBox(height: 8),
-              Text(question, style: const TextStyle(fontSize: 14)),
-              const SizedBox(height: 12),
+              SubQuestionTitle(question),
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeAltinda.copyWith(
                   uiTitle: "$limit metre veya altında",
@@ -568,26 +568,6 @@ class StairInputGroupCard extends StatelessWidget {
             assetPath: AppAssets.section20Dengelenmis,
             onChange: (val) => provider.updateController('dengelenmis', val),
           ),
-          Selector<Bolum20Provider, bool>(
-            selector: (_, p) =>
-                (int.tryParse(p.donerCtrl.text) ?? 0) > 0 ||
-                (int.tryParse(p.bodDonerCtrl.text) ?? 0) > 0,
-            builder: (context, show, _) {
-              if (!show) return const SizedBox.shrink();
-              return Column(
-                children: [
-                  const Divider(height: 16),
-                  _StairInputRow(
-                    key: const ValueKey('kova_genisligi'),
-                    label: "Döner Merdiven Kova (Kuyu) Genişliği (cm)",
-                    ctrl: provider.kovaGenisligiCtrl,
-                    onChange: (val) =>
-                        provider.updateController('kovaGenisligi', val),
-                  ),
-                ],
-              );
-            },
-          ),
         ],
       ),
     );
@@ -689,15 +669,10 @@ class _StairInputRow extends StatelessWidget {
       children: [
         // 8: Hata mesajını input'un altında değil, labelın altında göster
         Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
+              child: SubQuestionTitle(label),
             ),
             if (assetPath != null) ...[
               const SizedBox(width: 6),
@@ -740,7 +715,7 @@ class _StairInputRow extends StatelessWidget {
             child: Text(
               error!,
               style: const TextStyle(
-                fontSize: 11,
+                fontSize: 13,
                 color: Colors.red,
                 fontWeight: FontWeight.w500,
               ),
@@ -800,14 +775,12 @@ class StairQuestion extends StatelessWidget {
         children: [
           if (definition != null && term != null)
             Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
+                    style: AppStyles.questionTitle,
                   ),
                 ),
                 DefinitionButton(term: term!, definition: definition!),
@@ -904,8 +877,8 @@ class _ClassificationRow extends StatelessWidget {
         Text(
           '$label:',
           style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
             color: color,
           ),
         ),

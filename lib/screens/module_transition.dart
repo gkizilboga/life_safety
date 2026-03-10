@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../logic/report_engine.dart';
 import '../widgets/confetti_particles.dart';
 import '../utils/app_progress.dart';
+import '../utils/text_formatter.dart';
 import '../data/bina_store.dart';
 
 class ModuleTransitionScreen extends StatelessWidget {
@@ -94,36 +95,13 @@ class ModuleTransitionScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      RichText(
+                      NumericEmphasis(
+                        "Şu ana kadar $criticalCount adet Kritik Risk tespit ettik.\nAnalizin %$completion kısmını başarıyla tamamladın.",
                         textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 13,
-                            height: 1.4,
-                          ),
-                          children: [
-                            const TextSpan(text: "Şu ana kadar "),
-                            TextSpan(
-                              text: "$criticalCount adet Kritik Risk",
-                              style: const TextStyle(
-                                color: Color(0xFFFF5252),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const TextSpan(text: " tespit ettik.\n"),
-                            const TextSpan(text: "Analizin "),
-                            TextSpan(
-                              text: "%$completion",
-                              style: const TextStyle(
-                                color: Color(0xFF4CAF50),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const TextSpan(
-                              text: " kısmını başarıyla tamamladın.",
-                            ),
-                          ],
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 15, // Slightly larger base for clarity
+                          height: 1.4,
                         ),
                       ),
                     ],

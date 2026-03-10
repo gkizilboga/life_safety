@@ -268,19 +268,8 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
               top: false,
               child: ElevatedButton(
                 onPressed: isButtonEnabled ? _onNextPressed : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1A237E),
-                  disabledBackgroundColor: Colors.grey.shade300,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 54),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  "DEVAM ET",
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
+                style: AppStyles.mainButton,
+                child: const Text("DEVAM ET"),
               ),
             ),
           ),

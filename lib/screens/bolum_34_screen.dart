@@ -220,30 +220,10 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFFE65100),
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return CustomInfoNote(
+      type: InfoNoteType.info,
+      text: text,
+      icon: Icons.arrow_downward,
     );
   }
 

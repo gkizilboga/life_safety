@@ -73,3 +73,66 @@ class FormattedText extends StatelessWidget {
     );
   }
 }
+
+/// A widget that automatically emphasizes numbers and percentages in a text.
+class NumericEmphasis extends StatelessWidget {
+  final String text;
+  final TextStyle? style;
+  final double scaleFactor;
+  final TextAlign? textAlign;
+
+  const NumericEmphasis(
+    this.text, {
+    super.key,
+    this.style,
+    this.scaleFactor = 1.25,
+    this.textAlign,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final baseStyle = style ?? DefaultTextStyle.of(context).style;
+    final List<InlineSpan> spans = [];
+
+    // Regex to find numbers (optionally with decimals) and percentages
+    final RegExp regExp = RegExp(r'(\d+[\.,]?\d*\s?%?|%?\s?\d+[\.,]?\d*)');
+    final matches = regExp.allMatches(text);
+
+    int lastMatchEnd = 0;
+    for (final match in matches) {
+      // Non-numeric text before the match
+      if (match.start > lastMatchEnd) {
+        spans.add(
+          TextSpan(
+            text: text.substring(lastMatchEnd, match.start),
+            style: baseStyle,
+          ),
+        );
+      }
+
+      // The numeric part - emphasized
+      spans.add(
+        TextSpan(
+          text: match.group(0),
+          style: baseStyle.copyWith(
+            fontSize: (baseStyle.fontSize ?? 14) * scaleFactor,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -0.5,
+          ),
+        ),
+      );
+
+      lastMatchEnd = match.end;
+    }
+
+    // Remaining text
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(text: text.substring(lastMatchEnd), style: baseStyle));
+    }
+
+    return RichText(
+      textAlign: textAlign ?? TextAlign.start,
+      text: TextSpan(children: spans, style: baseStyle),
+    );
+  }
+}

@@ -160,7 +160,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             _buildInfoNote(
               "Sıvı yakıtlı kazanlar için drenaj and sızıntı kontrolü gereklidir.",
             ),
-            _buildSoru(
+            _buildSubQuestion(
               "Zeminde dökülen yakıtı toplayacak kanallar ve pis su çukuru var mı?",
               'drenaj',
               [
@@ -189,30 +189,10 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 15),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.orange.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.arrow_downward, color: Colors.orange, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFFE65100),
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return CustomInfoNote(
+      type: InfoNoteType.info,
+      text: text,
+      icon: Icons.arrow_downward,
     );
   }
 
@@ -228,6 +208,29 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
         children: [
           Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubQuestion(
+    String title,
+    String key,
+    List<ChoiceResult> options,
+    ChoiceResult? selected,
+  ) {
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SubQuestionTitle(title),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,

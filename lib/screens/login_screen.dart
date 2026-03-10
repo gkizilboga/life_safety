@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.textHeader,
-                    fontSize: 28,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
                   ),
@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       "DEVAM ET",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14,
                         letterSpacing: 1.0,
                       ),
                     ),
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(width: 12),
             const Text(
               "Google Hesabı ile Devam Et",
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
           ],
         ),
@@ -238,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
           : TextInputType.name,
       decoration: InputDecoration(
         hintText: label,
-        hintStyle: const TextStyle(color: AppColors.textHint, fontSize: 15),
+        hintStyle: const TextStyle(color: AppColors.textHint, fontSize: 14),
         prefixIcon: Icon(icon, color: AppColors.primaryBlue, size: 22),
         filled: true,
         fillColor: Colors.white,

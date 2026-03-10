@@ -310,29 +310,11 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
               top: 0,
               left: 0,
               right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.shade200),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.lock_outline, color: Colors.red),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        "Temel veriler kilitlenmiştir. İleriki bölümlerdeki hesaplamaların (kapasite, sistem vb.) bozulmaması için bu aşamadan sonra yükseklik bilgisi değiştirilemez. Değiştirmek isterseniz yeni bir analiz başlatmalısınız.",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.red.shade900,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              child: CustomInfoNote(
+                type: InfoNoteType.warning,
+                text:
+                    "Temel veriler kilitlenmiştir. İleriki bölümlerdeki hesaplamaların (kapasite, sistem vb.) bozulmaması için bu aşamadan sonra yükseklik bilgisi değiştirilemez. Değiştirmek isterseniz yeni bir analiz başlatmalısınız.",
+                icon: Icons.lock_outline,
               ),
             ),
         ],
@@ -346,11 +328,9 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A237E).withValues(alpha: 0.05),
+        color: AppColors.primaryBlue.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF1A237E).withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: AppColors.primaryBlue.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -358,11 +338,13 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildMetric(
-                "Bina Yüksekliği (Bodrum Hariç)",
+                "Bina Yüksekliği",
+                "(Bodrum katlar hariç)",
                 "${vals['hBina'].toStringAsFixed(2)}m",
               ),
               _buildMetric(
-                "Yapı Yüksekliği (Bodrum Dahil)",
+                "Yapı Yüksekliği",
+                "(Bodrum katlar dahil)",
                 "${vals['hYapi'].toStringAsFixed(2)}m",
               ),
             ],
@@ -373,7 +355,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A237E).withOpacity(0.1),
+              color: AppColors.primaryBlue.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -382,15 +364,15 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                 const Icon(
                   Icons.layers_outlined,
                   size: 16,
-                  color: Color(0xFF1A237E),
+                  color: AppColors.primaryBlue,
                 ),
                 const SizedBox(width: 8),
                 Text(
                   "Toplam Kat Sayısı: ${(vals['n'] + vals['b'] + 1)} Kat",
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A237E),
+                    color: AppColors.primaryBlue,
                   ),
                 ),
               ],
@@ -401,17 +383,15 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A237E).withOpacity(0.05),
+              color: AppColors.primaryBlue.withOpacity(0.05),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: const Color(0xFF1A237E).withOpacity(0.1),
-              ),
+              border: Border.all(color: AppColors.primaryBlue.withOpacity(0.1)),
             ),
             child: Text(
               isYuksek ? "YÜKSEK BİNA" : "YÜKSEK OLMAYAN BİNA",
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: Color(0xFF1A237E),
+                color: AppColors.primaryBlue,
                 fontSize: 16,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 0.5,
@@ -423,26 +403,41 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     );
   }
 
-  Widget _buildMetric(String label, String value) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 11,
-            color: Colors.grey,
-            fontWeight: FontWeight.bold,
+  Widget _buildMetric(String label, String subtitle, String value) {
+    return Expanded(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textDark,
+              fontWeight: FontWeight.bold,
+              height: 1.1,
+            ),
           ),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w900,
-            color: Color(0xFF1A237E),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 10,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
+              height: 1.1,
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w900,
+              color: AppColors.primaryBlue,
+              height: 1.1,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -472,13 +467,14 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
+          hintStyle: const TextStyle(fontSize: 11, color: Colors.grey),
           errorText: error,
           filled: true,
           fillColor: Colors.white,
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,
-            vertical: 8, // Reduced from 12 for compactness
+            vertical: 12, // Increased for better height
           ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
@@ -486,4 +482,3 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     );
   }
 }
-

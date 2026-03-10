@@ -141,7 +141,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
                       child: Text(
                         _model.raporMesaji ?? "",
                         style: const TextStyle(
-                          fontSize: 13,
+                          fontSize: 15,
                           height: 1.5,
                           fontWeight: FontWeight.w500,
                           color: Color(0xFF455A64),
@@ -173,7 +173,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
           Text(
             label,
             style: const TextStyle(
-              fontSize: 11,
+              fontSize: 13,
               color: Colors.grey,
               fontWeight: FontWeight.w600,
               letterSpacing: 0.5,
@@ -191,7 +191,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
           Text(
             unit,
             style: const TextStyle(
-              fontSize: 10,
+              fontSize: 12,
               color: Colors.grey,
               fontWeight: FontWeight.w500,
             ),
@@ -202,29 +202,11 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
   }
 
   Widget _buildWarningNote() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE3F2FD),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Row(
-        children: [
-          Icon(Icons.info_outline, size: 18, color: Color(0xFF1565C0)),
-          SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              "Bu değerler binanızın mimari verilerine göre otomatik hesaplanmıştır.",
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                color: Color(0xFF1565C0),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return const CustomInfoNote(
+      type: InfoNoteType.info,
+      text:
+          "Bu değerler binanızın mimari verilerine göre otomatik hesaplanmıştır.",
+      icon: Icons.info_outline,
     );
   }
 }
-

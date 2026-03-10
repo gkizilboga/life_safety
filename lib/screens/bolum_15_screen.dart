@@ -219,7 +219,11 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
   }
 
   Widget _buildInfoNote(String text) {
-    return CustomInfoNote(text: text, icon: Icons.arrow_downward);
+    return CustomInfoNote(
+      type: InfoNoteType.info,
+      text: text,
+      icon: Icons.arrow_downward,
+    );
   }
 }
 

@@ -36,7 +36,6 @@ class Bolum20Model {
 
   final ChoiceResult? bodrumMerdivenDevami;
   final ChoiceResult? basinclandirma;
-  final int? daireselMerdivenKovaGenisligi; // NEW
   final ChoiceResult? havalandirma; // NEW - Madde 45
 
   // --- Computed Properties (Single Source of Truth) ---
@@ -73,7 +72,6 @@ class Bolum20Model {
     this.bodrumToplamDisariAcilanMerdivenSayisi = 0, // NEW
     this.bodrumLobiTahliyeMesafeDurumu,
 
-    this.daireselMerdivenKovaGenisligi, // NEW
     this.basinclandirma,
     this.havalandirma, // NEW - Madde 45
   });
@@ -105,7 +103,6 @@ class Bolum20Model {
     int? bodrumDengelenmisMerdivenSayisi,
     int? bodrumToplamDisariAcilanMerdivenSayisi, // NEW
     ChoiceResult? bodrumLobiTahliyeMesafeDurumu,
-    int? daireselMerdivenKovaGenisligi, // NEW
     ChoiceResult? basinclandirma,
     ChoiceResult? havalandirma, // NEW - Madde 45
   }) {
@@ -159,8 +156,6 @@ class Bolum20Model {
           this.bodrumToplamDisariAcilanMerdivenSayisi,
       bodrumLobiTahliyeMesafeDurumu:
           bodrumLobiTahliyeMesafeDurumu ?? this.bodrumLobiTahliyeMesafeDurumu,
-      daireselMerdivenKovaGenisligi:
-          daireselMerdivenKovaGenisligi ?? this.daireselMerdivenKovaGenisligi,
       basinclandirma: basinclandirma ?? this.basinclandirma,
       havalandirma: havalandirma ?? this.havalandirma,
     );
@@ -200,13 +195,27 @@ class Bolum20Model {
 
       'bodrumLobiTahliyeMesafeDurumu_label':
           bodrumLobiTahliyeMesafeDurumu?.label,
-      'daireselMerdivenKovaGenisligi': daireselMerdivenKovaGenisligi,
       'basinclandirma_label': basinclandirma?.label,
       'havalandirma_label': havalandirma?.label,
     };
   }
 
   factory Bolum20Model.fromMap(Map<String, dynamic> map) {
+    int toInt(dynamic val) {
+      if (val == null) return 0;
+      if (val is int) return val;
+      if (val is String) return int.tryParse(val) ?? 0;
+      if (val is num) return val.toInt();
+      return 0;
+    }
+
+    bool toBool(dynamic val) {
+      if (val == null) return false;
+      if (val is bool) return val;
+      if (val is String) return val.toLowerCase() == 'true';
+      return false;
+    }
+
     ChoiceResult? find(String? l, List<ChoiceResult> opts) {
       if (l == null) return null;
       try {
@@ -216,77 +225,74 @@ class Bolum20Model {
       }
     }
 
-    // Better strategy: Use the lists we know.
-
     return Bolum20Model(
-      tekKatCikis: find(map['tekKatCikis_label'], [
+      tekKatCikis: find(map['tekKatCikis_label']?.toString(), [
         Bolum20Content.tekKatOptionA,
       ]),
-      tekKatRampa: find(map['tekKatRampa_label'], [
+      tekKatRampa: find(map['tekKatRampa_label']?.toString(), [
         Bolum20Content.rampaOptionB,
         Bolum20Content.rampaOptionC,
       ]),
-      normalMerdivenSayisi: (map['normalMerdivenSayisi'] as num?)?.toInt() ?? 0,
-      binaIciYanginMerdiveniSayisi:
-          (map['binaIciYanginMerdiveniSayisi'] as num?)?.toInt() ?? 0,
+      normalMerdivenSayisi: toInt(map['normalMerdivenSayisi']),
+      binaIciYanginMerdiveniSayisi: toInt(map['binaIciYanginMerdiveniSayisi']),
       binaDisiKapaliYanginMerdiveniSayisi:
-          (map['binaDisiKapaliYanginMerdiveniSayisi'] as num?)?.toInt() ?? 0,
+          toInt(map['binaDisiKapaliYanginMerdiveniSayisi']),
       binaDisiAcikYanginMerdiveniSayisi:
-          (map['binaDisiAcikYanginMerdiveniSayisi'] as num?)?.toInt() ?? 0,
-      donerMerdivenSayisi: (map['donerMerdivenSayisi'] as num?)?.toInt() ?? 0,
-      sahanliksizMerdivenSayisi:
-          (map['sahanliksizMerdivenSayisi'] as num?)?.toInt() ?? 0,
-      dengelenmisMerdivenSayisi:
-          (map['dengelenmisMerdivenSayisi'] as num?)?.toInt() ?? 0,
+          toInt(map['binaDisiAcikYanginMerdiveniSayisi']),
+      donerMerdivenSayisi: toInt(map['donerMerdivenSayisi']),
+      sahanliksizMerdivenSayisi: toInt(map['sahanliksizMerdivenSayisi']),
+      dengelenmisMerdivenSayisi: toInt(map['dengelenmisMerdivenSayisi']),
 
-      toplamDisariAcilanMerdivenSayisi:
-          (map['toplamDisariAcilanMerdivenSayisi'] as num?)?.toInt() ??
-          0, // NEW
+      toplamDisariAcilanMerdivenSayisi: toInt(
+        map['toplamDisariAcilanMerdivenSayisi'],
+      ),
 
-      lobiTahliyeMesafeDurumu: find(map['lobiTahliyeMesafeDurumu_label'], [
+      lobiTahliyeMesafeDurumu: find(map['lobiTahliyeMesafeDurumu_label']?.toString(), [
         Bolum20Content.madde41MesafeAltinda,
         Bolum20Content.madde41MesafeUstunde,
         Bolum20Content.madde41MesafeBilmiyorum,
       ]),
-      isBodrumIndependent: map['isBodrumIndependent'] ?? false,
-      bodrumMerdivenDevami: find(map['bodrumMerdivenDevami_label'], [
+      isBodrumIndependent: toBool(map['isBodrumIndependent']),
+      bodrumMerdivenDevami: find(map['bodrumMerdivenDevami_label']?.toString(), [
         Bolum20Content.bodrumOptionA,
         Bolum20Content.bodrumOptionB,
       ]),
-      bodrumNormalMerdivenSayisi:
-          (map['bodrumNormalMerdivenSayisi'] as num?)?.toInt() ?? 0,
-      bodrumBinaIciYanginMerdiveniSayisi:
-          (map['bodrumBinaIciYanginMerdiveniSayisi'] as num?)?.toInt() ?? 0,
-      bodrumBinaDisiKapaliYanginMerdiveniSayisi:
-          (map['bodrumBinaDisiKapaliYanginMerdiveniSayisi'] as num?)?.toInt() ??
-          0,
-      bodrumBinaDisiAcikYanginMerdiveniSayisi:
-          (map['bodrumBinaDisiAcikYanginMerdiveniSayisi'] as num?)?.toInt() ??
-          0,
-      bodrumDonerMerdivenSayisi:
-          (map['bodrumDonerMerdivenSayisi'] as num?)?.toInt() ?? 0,
-      bodrumSahanliksizMerdivenSayisi:
-          (map['bodrumSahanliksizMerdivenSayisi'] as num?)?.toInt() ?? 0,
-      bodrumDengelenmisMerdivenSayisi:
-          (map['bodrumDengelenmisMerdivenSayisi'] as num?)?.toInt() ?? 0,
+      bodrumNormalMerdivenSayisi: toInt(map['bodrumNormalMerdivenSayisi']),
+      bodrumBinaIciYanginMerdiveniSayisi: toInt(
+        map['bodrumBinaIciYanginMerdiveniSayisi'],
+      ),
+      bodrumBinaDisiKapaliYanginMerdiveniSayisi: toInt(
+        map['bodrumBinaDisiKapaliYanginMerdiveniSayisi'],
+      ),
+      bodrumBinaDisiAcikYanginMerdiveniSayisi: toInt(
+        map['bodrumBinaDisiAcikYanginMerdiveniSayisi'],
+      ),
+      bodrumDonerMerdivenSayisi: toInt(map['bodrumDonerMerdivenSayisi']),
+      bodrumSahanliksizMerdivenSayisi: toInt(
+        map['bodrumSahanliksizMerdivenSayisi'],
+      ),
+      bodrumDengelenmisMerdivenSayisi: toInt(
+        map['bodrumDengelenmisMerdivenSayisi'],
+      ),
 
-      bodrumToplamDisariAcilanMerdivenSayisi:
-          (map['bodrumToplamDisariAcilanMerdivenSayisi'] as num?)?.toInt() ??
-          0, // NEW
+      bodrumToplamDisariAcilanMerdivenSayisi: toInt(
+        map['bodrumToplamDisariAcilanMerdivenSayisi'],
+      ),
 
-      bodrumLobiTahliyeMesafeDurumu:
-          find(map['bodrumLobiTahliyeMesafeDurumu_label'], [
-            Bolum20Content.madde41MesafeAltinda,
-            Bolum20Content.madde41MesafeUstunde,
-            Bolum20Content.madde41MesafeBilmiyorum,
-          ]),
-      daireselMerdivenKovaGenisligi: map['daireselMerdivenKovaGenisligi'],
-      basinclandirma: find(map['basinclandirma_label'], [
+      bodrumLobiTahliyeMesafeDurumu: find(
+        map['bodrumLobiTahliyeMesafeDurumu_label']?.toString(),
+        [
+          Bolum20Content.madde41MesafeAltinda,
+          Bolum20Content.madde41MesafeUstunde,
+          Bolum20Content.madde41MesafeBilmiyorum,
+        ],
+      ),
+      basinclandirma: find(map['basinclandirma_label']?.toString(), [
         Bolum20Content.basYghOptionA,
         Bolum20Content.basYghOptionB,
         Bolum20Content.basYghOptionC,
       ]),
-      havalandirma: find(map['havalandirma_label'], [
+      havalandirma: find(map['havalandirma_label']?.toString(), [
         Bolum20Content.havalandirmaOptionA,
         Bolum20Content.havalandirmaOptionB,
         Bolum20Content.havalandirmaOptionC,

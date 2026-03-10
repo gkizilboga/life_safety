@@ -41,10 +41,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset("assets/intro_video.mp4")
-      ..initialize().then((_) {
+    _controller = VideoPlayerController.asset(
+      "assets/intro_video.mp4",
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+    )..initialize().then((_) {
         _controller.setLooping(true);
-        _controller.setVolume(0);
+        _controller.setVolume(0); // Ensure silence
         _controller.play();
         setState(() {});
       });

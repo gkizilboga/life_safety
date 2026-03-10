@@ -186,30 +186,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             if (_model.mantolama?.label ==
                     Bolum16Content.mantolamaOptionA.label &&
                 _hBina <= 28.50) ...[
-              Container(
-                margin: const EdgeInsets.only(top: 10, bottom: 10),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.blue.shade200),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.info, color: Colors.blue),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        "Seçtiğiniz \"Klasik Mantolama (EPS/XPS)\" yanıcı özellikte olduğu için, yönetmelik gereği aşağıdaki yangın bariyeri önlemlerinin alınıp alınmadığı kontrol edilmelidir.",
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              const CustomInfoNote(
+                type: InfoNoteType.info,
+                text:
+                    "Seçtiğiniz \"Klasik Mantolama (EPS/XPS)\" yanıcı özellikte olduğu için, yönetmelik gereği aşağıdaki yangın bariyeri önlemlerinin alınıp alınmadığı kontrol edilmelidir.",
               ),
               _buildSubQuestion(
                 null,
@@ -235,6 +215,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             if (_model.mantolama?.label ==
                 Bolum16Content.giydirmeOptionC.label) ...[
               CustomInfoNote(
+                type: InfoNoteType.info,
                 text: "Lütfen alttaki soruyu yanıtlayınız.",
                 icon: Icons.arrow_downward,
               ),
@@ -263,6 +244,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             if (_model.sagirYuzey?.label ==
                 Bolum16Content.sagirYuzeyOptionB.label) ...[
               CustomInfoNote(
+                type: InfoNoteType.info,
                 text: "Lütfen alttaki soruyu yanıtlayınız.",
                 icon: Icons.arrow_downward,
               ),
@@ -405,8 +387,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle.copyWith(fontSize: 14)),
-          const SizedBox(height: 8),
+          SubQuestionTitle(title),
           Row(
             children: [
               Radio<int>(
@@ -415,21 +396,21 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 activeColor: const Color(0xFF1A237E),
                 onChanged: onChanged,
               ),
-              const Text("Evet", style: TextStyle(fontSize: 12)),
+              const Text("Evet", style: TextStyle(fontSize: 14)),
               Radio<int>(
                 value: 0,
                 groupValue: groupValue,
                 activeColor: const Color(0xFF1A237E),
                 onChanged: onChanged,
               ),
-              const Text("Hayır", style: TextStyle(fontSize: 12)),
+              const Text("Hayır", style: TextStyle(fontSize: 14)),
               Radio<int>(
                 value: 2,
                 groupValue: groupValue,
                 activeColor: const Color(0xFF1A237E),
                 onChanged: onChanged,
               ),
-              const Text("Bilmiyorum", style: TextStyle(fontSize: 12)),
+              const Text("Bilmiyorum", style: TextStyle(fontSize: 14)),
             ],
           ),
         ],
@@ -453,8 +434,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle.copyWith(fontSize: 14)),
-          const SizedBox(height: 4),
+          SubQuestionTitle(title),
           Row(
             children: [
               Radio<bool>(
@@ -463,7 +443,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 activeColor: const Color(0xFF1A237E),
                 onChanged: onChanged,
               ),
-              const Text("Evet", style: TextStyle(fontSize: 13)),
+              const Text("Evet", style: TextStyle(fontSize: 15)),
               const SizedBox(width: 15),
               Radio<bool>(
                 value: false,
@@ -471,7 +451,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 activeColor: const Color(0xFF1A237E),
                 onChanged: onChanged,
               ),
-              const Text("Hayır", style: TextStyle(fontSize: 13)),
+              const Text("Hayır", style: TextStyle(fontSize: 15)),
             ],
           ),
         ],

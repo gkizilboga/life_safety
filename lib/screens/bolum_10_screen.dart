@@ -181,7 +181,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                       ),
                       child: Text(
                         "${i + 1}. Bodrum Katların Kullanım Amacı",
-                        style: AppStyles.questionTitle.copyWith(fontSize: 14),
+                        style: AppStyles.questionTitle,
                       ),
                     ),
                     _buildChoiceGrid('bodrum', i, _model.bodrumlar[i]),
@@ -216,7 +216,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                       ),
                       child: Text(
                         "${i + 1}. Normal Katın Kullanım Amacı",
-                        style: AppStyles.questionTitle.copyWith(fontSize: 14),
+                        style: AppStyles.questionTitle,
                       ),
                     ),
                     _buildChoiceGrid('normal', i, _model.normaller[i]),
@@ -240,6 +240,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     if (hasTicari) return const SizedBox.shrink();
 
     return CustomInfoNote(
+      type: InfoNoteType.info,
       icon: Icons.storefront_outlined,
       text:
           "Binanızda ticari alanlar (dükkan, işyeri, vb.) mevcutsa, lütfen Bölüm-6'ya dönerek 'Ticari Alan' seçeneğini işaretlemeniz gereklidir.",
@@ -298,7 +299,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           Text(
             label,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 15,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),

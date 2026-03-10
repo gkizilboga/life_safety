@@ -1111,14 +1111,6 @@ class ReportEngine {
           }
         }
 
-        if (b20.daireselMerdivenKovaGenisligi != null)
-          details.add({
-            'label': 'Dairesel Merdiven Kova Genişliği',
-            'value': '${b20.daireselMerdivenKovaGenisligi} cm',
-            'report':
-                'BİLGİ: Dairesel merdiven kova genişliği ${b20.daireselMerdivenKovaGenisligi} cm olarak beyan edilmiştir.',
-          });
-
         handled = true;
       }
     }
@@ -3672,6 +3664,14 @@ class ReportEngine {
         if (b35.ciftYon != null)
           return replaceLimit(b35.ciftYon!.uiTitle, limitCiftYon);
       }
+    }
+
+    // Bölüm 21 için dinamik özet (Zorunluluk durumu)
+    if (id == 21) {
+      final yghReasons = evaluateYghRequirement(store: s);
+      final bool isMandatory = yghReasons.isNotEmpty;
+      final String mandatoryText = isMandatory ? " (Zorunlu)" : " (Zorunlu Değil)";
+      return "${res.label}$mandatoryText";
     }
 
     // Bölüm 36 için dinamik özet (Uyarılar ve Kritik Riskler)

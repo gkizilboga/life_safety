@@ -118,7 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 11,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
           color: Colors.grey,
           letterSpacing: 1,
@@ -148,7 +148,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
         subtitle: subtitle != null
-            ? Text(subtitle, style: const TextStyle(fontSize: 11))
+            ? Text(subtitle, style: const TextStyle(fontSize: 13))
             : null,
         trailing:
             trailing ??

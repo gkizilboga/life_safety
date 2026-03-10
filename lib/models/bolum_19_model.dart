@@ -50,8 +50,10 @@ class Bolum19Model {
         Bolum19Content.levhaOptionA,
         Bolum19Content.levhaOptionB,
         Bolum19Content.levhaOptionC,
+        Bolum19Content.levhaOptionD,
         Bolum19Content.yanilticiOptionA,
         Bolum19Content.yanilticiOptionB,
+        Bolum19Content.yanilticiOptionC,
         Bolum19Content.etiketOptionA,
         Bolum19Content.etiketOptionB,
         Bolum19Content.etiketOptionC,
@@ -64,9 +66,10 @@ class Bolum19Model {
     }
 
     List<ChoiceResult> eList = [];
-    if (map['engeller_labels'] != null) {
-      eList = (map['engeller_labels'] as List)
-          .map((l) => find(l.toString()))
+    final dynamic rawEngeller = map['engeller_labels'];
+    if (rawEngeller is List) {
+      eList = rawEngeller
+          .map((l) => find(l?.toString()))
           .where((e) => e != null)
           .cast<ChoiceResult>()
           .toList();
@@ -74,9 +77,9 @@ class Bolum19Model {
 
     return Bolum19Model(
       engeller: eList,
-      levha: find(map['levha_label']),
-      yanilticiKapi: find(map['yanilticiKapi_label']),
-      yanilticiEtiket: find(map['yanilticiEtiket_label']),
+      levha: find(map['levha_label']?.toString()),
+      yanilticiKapi: find(map['yanilticiKapi_label']?.toString()),
+      yanilticiEtiket: find(map['yanilticiEtiket_label']?.toString()),
     );
   }
 }

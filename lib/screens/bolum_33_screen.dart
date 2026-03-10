@@ -214,30 +214,10 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
             ),
 
           if (_specialWarning.isNotEmpty)
-            Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.amber.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.amber.shade200),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.warning_amber_rounded, color: Colors.orange),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      _specialWarning,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            CustomInfoNote(
+              type: InfoNoteType.warning,
+              text: _specialWarning,
+              icon: Icons.warning_amber_rounded,
             ),
 
           ConfirmationCheckbox(
@@ -290,11 +270,11 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 13, color: Colors.black54),
+            style: const TextStyle(fontSize: 15, color: Colors.black54),
           ),
           Text(
             value,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
         ],
       ),

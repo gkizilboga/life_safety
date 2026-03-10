@@ -93,16 +93,10 @@ class _Bolum18ScreenState extends State<Bolum18Screen> {
           // 2. Tesisat Borusu (Sadece Yüksek Binalarda)
           if (_askBoru) ...[
             const Divider(height: 30),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.red.shade50,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Text(
-                " Binanız 'Yüksek Bina' sınıfında olduğu için aşağıdaki soru açılmıştır.",
-                style: TextStyle(color: Colors.red, fontSize: 12),
-              ),
+            const CustomInfoNote(
+              type: InfoNoteType.warning,
+              text:
+                  "Binanız 'Yüksek Bina' sınıfında olduğu için aşağıdaki soru açılmıştır.",
             ),
             const SizedBox(height: 10),
             SizedBox(key: _boruKey, height: 1),

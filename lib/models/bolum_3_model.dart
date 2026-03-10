@@ -39,9 +39,17 @@ class Bolum3Model {
   }
 
   factory Bolum3Model.fromMap(Map<String, dynamic> map) {
+    int? toInt(dynamic val) {
+      if (val == null) return null;
+      if (val is int) return val;
+      if (val is String) return int.tryParse(val);
+      if (val is num) return val.toInt();
+      return null;
+    }
+
     return Bolum3Model(
-      normalKatSayisi: map['normalKatSayisi'],
-      bodrumKatSayisi: map['bodrumKatSayisi'],
+      normalKatSayisi: toInt(map['normalKatSayisi']),
+      bodrumKatSayisi: toInt(map['bodrumKatSayisi']),
       zeminYuksekligi: (map['zeminYuksekligi'] as num?)?.toDouble(),
       normalYuksekligi: (map['normalYuksekligi'] as num?)?.toDouble(),
       bodrumYuksekligi: (map['bodrumYuksekligi'] as num?)?.toDouble(),

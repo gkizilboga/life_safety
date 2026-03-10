@@ -99,7 +99,7 @@ class SelectableCard extends StatelessWidget {
                                   ? const Color(0xFF1A237E).withOpacity(0.8)
                                   : Colors.grey.shade700),
                         height: 1.4,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.normal,
                         fontStyle: FontStyle.normal,
                       ),
                     ),
