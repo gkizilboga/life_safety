@@ -72,58 +72,72 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
       (Bolum20Provider p) => p.showBasinclandirma,
     );
 
+    bool _isProcessing = false;
+
     return AnalysisPageLayout(
       title: "Kaçış Merdivenleri",
       screenType: Bolum20Screen,
       isNextEnabled: isLimitValid,
       onNext: () async {
-        if (provider.validateAndSave(context)) {
-          final navigator = Navigator.of(context);
+        if (_isProcessing) return;
+        _isProcessing = true;
 
-          if (provider.isBodrumIndependent) {
-            bool confirmed =
-                await showCustomDialog<bool>(
-                  context: context,
-                  title: "Dikkat:",
-                  content:
-                      "Bodrum kat merdivenlerinin, üst kat merdivenlerinden FARKLI bir konumda olduğunu belirttiniz.\n\nBu durum, kaçış yollarının sürekliliği açısından kritik bir bilgidir.\n\nOnaylıyor musunuz?",
-                  confirmText: "Evet",
-                  cancelText: "Hayır",
-                  icon: Icons.warning_amber_rounded,
-                  iconColor: Colors.orange,
-                  barrierDismissible: false,
-                ) ??
-                false;
+        try {
+          if (provider.validateAndSave(context)) {
+            final navigator = Navigator.of(context);
 
-            if (!confirmed) return;
-          }
+            if (provider.isBodrumIndependent) {
+              bool confirmed =
+                  await showCustomDialog<bool>(
+                    context: context,
+                    title: "Dikkat:",
+                    content:
+                        "Bodrum kat merdivenlerinin, üst kat merdivenlerinden FARKLI bir konumda olduğunu belirttiniz.\n\nBu durum, kaçış yollarının sürekliliği açısından kritik bir bilgidir.\n\nOnaylıyor musunuz?",
+                    confirmText: "Evet",
+                    cancelText: "Hayır",
+                    icon: Icons.warning_amber_rounded,
+                    iconColor: Colors.orange,
+                    barrierDismissible: false,
+                  ) ??
+                  false;
 
-          if (!mounted) return;
-          navigator.push(
-            MaterialPageRoute(
-              builder: (context) => ModuleTransitionScreen(
-                module: ReportModule.modul2,
-                onContinue: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Bolum21Screen(),
-                    ),
-                  );
-                },
-              ),
-            ),
-          );
-        } else {
-          if (isLimitValid) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  "Lütfen gerekli alanları doğru şekilde doldurunuz.",
+              if (!confirmed) {
+                _isProcessing = false;
+                return;
+              }
+            }
+
+            if (!mounted) return;
+            navigator.push(
+              MaterialPageRoute(
+                builder: (context) => ModuleTransitionScreen(
+                  module: ReportModule.modul2,
+                  onContinue: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Bolum21Screen(),
+                      ),
+                    );
+                  },
                 ),
               ),
             );
+          } else {
+            _isProcessing = false;
+            if (isLimitValid) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "Lütfen gerekli alanları doğru şekilde doldurunuz.",
+                  ),
+                ),
+              );
+            }
           }
+        } catch (e) {
+          _isProcessing = false;
+          debugPrint("Bolum 20 Navigation Error: $e");
         }
       },
       child: GestureDetector(

@@ -224,7 +224,7 @@ class ReportEngine {
         // Otopark tipi (eğer seçildiyse)
         if (b6.otoparkTipi != null)
           details.add({
-            'label': 'Otoparkınızın tipi nedir?',
+            'label': 'Otopark tipi nedir?',
             'value': b6.otoparkTipi!.uiTitle,
             'report': b6.otoparkTipi!.reportText,
             'advice': b6.otoparkTipi!.adviceText,
@@ -247,7 +247,7 @@ class ReportEngine {
         // Zemin kat
         if (b10.zemin != null) {
           details.add({
-            'label': 'Zemin Katın Baskın Kullanım Amacı',
+            'label': 'Zemin Katın Kullanım Amacı',
             'value': "${b10.zemin!.uiTitle} ${b10.zemin!.reportText}",
             'report': '',
             'advice': '',
@@ -257,7 +257,7 @@ class ReportEngine {
         if (b10.bodrumlar.isNotEmpty) {
           if (b10.bodrumlarAyni && b10.bodrumlar[0] != null) {
             details.add({
-              'label': 'Bodrum Katların Kullanım Amacı (Tümü Aynı)',
+              'label': 'Bodrum Kat Kullanım Amacı (Tümü Aynı)',
               'value':
                   "${b10.bodrumlar[0]!.uiTitle} ${b10.bodrumlar[0]!.reportText}",
               'report': '',
@@ -281,7 +281,7 @@ class ReportEngine {
         if (b10.normaller.isNotEmpty) {
           if (b10.normallerAyni && b10.normaller[0] != null) {
             details.add({
-              'label': 'Normal Katların Kullanım Amacı (Tümü Aynı)',
+              'label': 'Normal Kat Kullanım Amacı (Tümü Aynı)',
               'value':
                   "${b10.normaller[0]!.uiTitle} ${b10.normaller[0]!.reportText}",
               'report': '',
@@ -343,7 +343,7 @@ class ReportEngine {
       if (b9 != null) {
         if (b9.secim != null) {
           details.add({
-            'label': 'Binada otomatik yağmurlama (sprinkler) sistemi var mı?',
+            'label': 'Binada sprinkler sistemi var mı?',
             'value': b9.secim!.uiTitle,
             'report': b9.secim!.reportText,
             'advice': b9.secim!.adviceText,
@@ -450,7 +450,7 @@ class ReportEngine {
         if (b17.bitisikDuvar != null)
           _addDetail(
             details,
-            label: 'Çatılar arasında yangını kesecek bir duvar var mı?',
+            label: 'Çatılar arasında yangın kesici duvar',
             value: b17.bitisikDuvar!.uiTitle,
             report: b17.bitisikDuvar!.reportText,
             advice: b17.bitisikDuvar!.adviceText,
@@ -522,7 +522,7 @@ class ReportEngine {
       if (b22 != null) {
         if (b22.varlik != null)
           details.add({
-            'label': 'Binanızda İtfaiye (yük) Asansörü var mı?',
+            'label': 'Binada İtfaiye Asansörü var mı?',
             'value': b22.varlik!.uiTitle,
             'report': b22.varlik!.reportText,
             'advice': b22.varlik!.adviceText,
@@ -861,8 +861,7 @@ class ReportEngine {
         // Ana Soru - Sadece bir kez ekle
         if (b16.mantolama != null) {
           details.add({
-            'label':
-                'Binanızdaki dış cephe kaplama veya ısı yalıtım sistemi nedir?',
+            'label': 'Dış cephe kaplama veya ısı yalıtım sistemi nedir?',
             'value': b16.mantolama!.uiTitle,
             'report': b16.mantolama!.reportText,
             'advice': b16.mantolama!.adviceText,
@@ -1151,8 +1150,7 @@ class ReportEngine {
         if (b26.otopark != null)
           _addDetail(
             details,
-            label:
-                'Otopark araç rampasını acil durumda kaçış yolu olarak kullanabilir misiniz?',
+            label: 'Otopark tipi nedir?',
             value: b26.otopark!.uiTitle,
             report: b26.otopark!.reportText,
             advice: b26.otopark!.adviceText,
@@ -1166,27 +1164,10 @@ class ReportEngine {
     if (id == 27) {
       final b27 = s.bolum27;
       if (b27 != null) {
-        // Kullanıcı yükü hesabı (Bölüm 33'ten)
-        int maxYuk = 0;
-        final b33 = s.bolum33;
-        final b34 = s.bolum34;
-        if (b33 != null) {
-          bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
-          int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
-          int yukNormal = b33.yukNormal ?? 0;
-          int yukBodrum = b33.yukBodrum ?? 0;
-          maxYuk = [
-            yukZemin,
-            yukNormal,
-            yukBodrum,
-          ].reduce((curr, next) => curr > next ? curr : next);
-        }
-
         if (b27.boyut != null) {
           _addDetail(
             details,
-            label:
-                'Kaçış kapılarının genişliği ve zemini ne durumdadır? (daire kapısı hariç)',
+            label: Bolum27Content.questionBoyut,
             value: b27.boyut!.uiTitle,
             report: b27.boyut!.reportText,
             advice: b27.boyut!.adviceText,
@@ -1194,19 +1175,30 @@ class ReportEngine {
           );
         }
 
+        final bool zeminIndependent = s.bolum34?.zemin?.label.contains("34-1-A") ?? false;
+        final int yukZemin = zeminIndependent ? 0 : (s.bolum33?.yukZemin ?? 0);
+        final int yukNormal = s.bolum33?.yukNormal ?? 0;
+        final int yukBodrum = s.bolum33?.yukBodrum ?? 0;
+
+
         if (b27.yon.isNotEmpty) {
+          List<String> exceed50List = [];
+          if (yukZemin > 50) exceed50List.add("Zemin Kat ($yukZemin kişi)");
+          if (yukNormal > 50) exceed50List.add("Normal Kat ($yukNormal kişi)");
+          if (yukBodrum > 50) exceed50List.add("Bodrum Kat ($yukBodrum kişi)");
+
           List<String> reports = [];
           List<RiskLevel> levels = [];
           for (var e in b27.yon) {
             if (e.label == "27-2-B") {
-              if (maxYuk <= 50) {
+              if (exceed50List.isEmpty) {
                 reports.add(
-                  "OLUMLU: Kaçış yolu üzerindeki kapıların içeriye doğru açılması, kullanıcı yükü hiçbir katta 50 kişiyi aşmadığı için uygundur.",
+                  "OLUMLU: Kaçış yolu üzerindeki kapıların içeriye doğru açılması, kullanıcı yükü hiçbir katta 50 kişiyi aşmadığı için uygun gözükmektedir.",
                 );
                 levels.add(RiskLevel.positive);
               } else {
                 reports.add(
-                  "KRİTİK RİSK: Herhangi bir katta kullanıcı yükü 50 kişiyi aştığı ($maxYuk kişi) için kapıların içeriye doğru açılması uygun değildir. Kapıların kaçış yönüne (dışarıya) doğru açılması zorunludur.",
+                  "KRİTİK RİSK: ${exceed50List.join(", ")} gibi katlarınızda kullanıcı yükü 50 kişiyi aştığı için kapıların içeriye doğru açılması uygun değildir. Kapıların kaçış yönüne (dışarıya) doğru açılması zorunludur.",
                 );
                 levels.add(RiskLevel.critical);
               }
@@ -1218,7 +1210,7 @@ class ReportEngine {
 
           _addDetail(
             details,
-            label: 'Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)',
+            label: Bolum27Content.questionYon,
             value: b27.yon.map((e) => e.uiTitle).join(' | '),
             report: reports.join('\n\n'),
             advice: b27.yon.map((e) => e.adviceText ?? "").join('\n\n'),
@@ -1227,18 +1219,25 @@ class ReportEngine {
         }
 
         if (b27.kilit.isNotEmpty) {
+          List<String> exceed100List = [];
+          if (yukZemin > 100) exceed100List.add("Zemin Kat ($yukZemin kişi)");
+          if (yukNormal > 100)
+            exceed100List.add("Normal Kat ($yukNormal kişi)");
+          if (yukBodrum > 100)
+            exceed100List.add("Bodrum Kat ($yukBodrum kişi)");
+
           List<String> reports = [];
           List<RiskLevel> levels = [];
           for (var e in b27.kilit) {
             if (e.label == "27-3-B") {
-              if (maxYuk <= 100) {
+              if (exceed100List.isEmpty) {
                 reports.add(
-                  "OLUMLU: Kaçış yolu üzerindeki kapılarda normal kapı kolu kullanımı, kullanıcı yükü 100 kişiyi aşmadığı için uygundur.",
+                  "OLUMLU: Kaçış yolu üzerindeki kapılarda normal kapı kolu kullanımı, kullanıcı yükü 100 kişiyi aşmadığı için uygun gözükmektedir.",
                 );
                 levels.add(RiskLevel.positive);
               } else {
                 reports.add(
-                  "KRİTİK RİSK: Herhangi bir katta kullanıcı yükü 100 kişiyi aştığı ($maxYuk kişi) için kapılarda Panik Bar mekanizması kullanımı zorunludur. Mevcut kapı kolu sistemi uygun değildir.",
+                  "KRİTİK RİSK: ${exceed100List.join(", ")} gibi katlarınızda kullanıcı yükü 100 kişiyi aştığı için kapılarda Panik Bar mekanizması kullanımı zorunludur. Mevcut kapılardaki kol mekanizması uygun değildir.",
                 );
                 levels.add(RiskLevel.critical);
               }
@@ -1250,24 +1249,25 @@ class ReportEngine {
 
           _addDetail(
             details,
-            label:
-                'Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)',
+            label: Bolum27Content.questionKilit,
             value: b27.kilit.map((e) => e.uiTitle).join(' | '),
             report: reports.join('\n\n'),
             advice: b27.kilit.map((e) => e.adviceText ?? "").join('\n\n'),
             level: _maxLevel(levels),
           );
         }
+
         if (b27.dayanim != null) {
           _addDetail(
             details,
-            label: 'Kapalı yangın merdiveni kapısının malzemesi nedir?',
+            label: Bolum27Content.questionDayanim,
             value: b27.dayanim!.uiTitle,
             report: b27.dayanim!.reportText,
             advice: b27.dayanim!.adviceText,
             level: b27.dayanim!.level,
           );
         }
+
         // Override metnini de ekle (Risk uyarısı varsa)
         String overridden = getSectionFullReport(id, store: store);
         if (overridden.contains("UYARI") &&
@@ -1275,8 +1275,8 @@ class ReportEngine {
           // Eğer generic bir uyarı eklendiyse onu da göster
           _addDetail(
             details,
-            label: 'Kullanıcı Yükü Analizi',
-            value: 'Detaylı Kontrol',
+            label: 'Kullanıcı Yükü Değerlendirmesi',
+            value: "",
             report: overridden,
             status: ReportStatus.warning,
           );
@@ -1292,8 +1292,7 @@ class ReportEngine {
         if (b29.otopark != null)
           _addDetail(
             details,
-            label:
-                'Otoparkta yanıcı türden eşyalar (lastik, boya, eşya vb.) bulunuyor mu?',
+            label: Bolum29Content.questionOtopark,
             value: b29.otopark!.uiTitle,
             report: b29.otopark!.reportText,
             advice: b29.otopark!.adviceText,
@@ -1302,8 +1301,7 @@ class ReportEngine {
         if (b29.kazan != null)
           _addDetail(
             details,
-            label:
-                'Kazan dairesinde eski eşya, mobilya, karton vb. bulunuyor mu?',
+            label: Bolum29Content.questionKazan,
             value: b29.kazan!.uiTitle,
             report: b29.kazan!.reportText,
             advice: b29.kazan!.adviceText,
@@ -1312,7 +1310,7 @@ class ReportEngine {
         if (b29.cati != null)
           _addDetail(
             details,
-            label: 'Çatı arasında yanıcı malzemeler bulunuyor mu?',
+            label: Bolum29Content.questionCati,
             value: b29.cati!.uiTitle,
             report: b29.cati!.reportText,
             advice: b29.cati!.adviceText,
@@ -1321,7 +1319,7 @@ class ReportEngine {
         if (b29.asansor != null)
           _addDetail(
             details,
-            label: 'Asansör makine dairesinde yanıcı malzemeler bulunuyor mu?',
+            label: Bolum29Content.questionAsansor,
             value: b29.asansor!.uiTitle,
             report: b29.asansor!.reportText,
             advice: b29.asansor!.adviceText,
@@ -1330,8 +1328,7 @@ class ReportEngine {
         if (b29.jenerator != null)
           _addDetail(
             details,
-            label:
-                'Jeneratör odasında ilgisiz malzemeler (yakıt bidonu, eşya vb.) bulunuyor mu?',
+            label: Bolum29Content.questionJenerator,
             value: b29.jenerator!.uiTitle,
             report: b29.jenerator!.reportText,
             advice: b29.jenerator!.adviceText,
@@ -1340,8 +1337,7 @@ class ReportEngine {
         if (b29.pano != null)
           _addDetail(
             details,
-            label:
-                'Elektrik pano odasında veya panoların önünde istiflenmiş eşya var mı?',
+            label: Bolum29Content.questionPano,
             value: b29.pano!.uiTitle,
             report: b29.pano!.reportText,
             advice: b29.pano!.adviceText,
@@ -1350,7 +1346,7 @@ class ReportEngine {
         if (b29.trafo != null)
           _addDetail(
             details,
-            label: 'Trafo odası temiz mi, depo olarak kullanılıyor mu?',
+            label: Bolum29Content.questionTrafo,
             value: b29.trafo!.uiTitle,
             report: b29.trafo!.reportText,
             advice: b29.trafo!.adviceText,
@@ -1359,8 +1355,7 @@ class ReportEngine {
         if (b29.depo != null)
           _addDetail(
             details,
-            label:
-                'Depolarda parlayıcı/patlayıcı maddeler (tiner, boya, akaryakıt vb.) var mı?',
+            label: Bolum29Content.questionDepo,
             value: b29.depo!.uiTitle,
             report: b29.depo!.reportText,
             advice: b29.depo!.adviceText,
@@ -1369,7 +1364,7 @@ class ReportEngine {
         if (b29.cop != null)
           _addDetail(
             details,
-            label: 'Çöp odası düzenli mi? Karton, kağıt vb. birikmiş mi?',
+            label: Bolum29Content.questionCop,
             value: b29.cop!.uiTitle,
             report: b29.cop!.reportText,
             advice: b29.cop!.adviceText,
@@ -1378,7 +1373,7 @@ class ReportEngine {
         if (b29.siginak != null)
           _addDetail(
             details,
-            label: 'Sığınakta yanıcı malzeme veya eşya yığılması var mı?',
+            label: Bolum29Content.questionSiginak,
             value: b29.siginak!.uiTitle,
             report: b29.siginak!.reportText,
             advice: b29.siginak!.adviceText,
@@ -1395,7 +1390,7 @@ class ReportEngine {
         if (b30.konum != null)
           _addDetail(
             details,
-            label: 'Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?',
+            label: Bolum30Content.questionKonum,
             value: b30.konum!.uiTitle,
             report: b30.konum!.reportText,
             advice: b30.konum!.adviceText,
@@ -1405,7 +1400,7 @@ class ReportEngine {
           // Kapı sayısı değerlendirmesi - kapasite veya alana göre
           _addDetail(
             details,
-            label: 'Kazan dairesinin kaç adet çıkış kapısı var?',
+            label: Bolum30Content.questionKapi,
             value: b30.kapi!.uiTitle,
             report: b30.kapi!.reportText,
             advice: b30.kapi!.adviceText,
@@ -1424,8 +1419,7 @@ class ReportEngine {
         if (b30.hava != null)
           _addDetail(
             details,
-            label:
-                'İçeriye temiz hava girmesini ve kirli havanın çıkmasını sağlayan menfezler var mı?',
+            label: Bolum30Content.questionHava,
             value: b30.hava!.uiTitle,
             report: b30.hava!.reportText,
             advice: b30.hava!.adviceText,
@@ -1434,8 +1428,7 @@ class ReportEngine {
         if (b30.drenaj != null)
           _addDetail(
             details,
-            label:
-                'Zeminde dökülen yakıtı toplayacak kanallar ve bir pis su çukuru var mı?',
+            label: Bolum30Content.questionDrenaj,
             value: b30.drenaj!.uiTitle,
             report: b30.drenaj!.reportText,
             advice: b30.drenaj!.adviceText,
@@ -1444,8 +1437,7 @@ class ReportEngine {
         if (b30.tup != null)
           _addDetail(
             details,
-            label:
-                'Kazan dairesinde yangın söndürme tüpü ve yangın dolabı var mı?',
+            label: Bolum30Content.questionTup,
             value: b30.tup!.uiTitle,
             report: b30.tup!.reportText,
             advice: b30.tup!.adviceText,
@@ -1686,7 +1678,7 @@ class ReportEngine {
         if (b36.cikisKati != null)
           _addDetail(
             details,
-            label: 'Binadan dış havaya çıktığınız kat hangisidir?',
+            label: Bolum36Content.questionCikisKati,
             value: b36.cikisKati!.uiTitle,
             report:
                 'BİLGİ: Çıkış katı olarak ${b36.cikisKati!.uiTitle} belirlenmiştir.',
@@ -1696,7 +1688,7 @@ class ReportEngine {
         if (b36.disMerd != null)
           _addDetail(
             details,
-            label: 'Dışarıdaki yangın merdivenine 3m mesafede açıklık var mı?',
+            label: Bolum36Content.questionDisMerd,
             value: b36.disMerd!.uiTitle,
             report: b36.disMerd!.label.contains("-A")
                 ? "OLUMLU: Dış kaçış merdivenine 3 metre mesafede korunmasız kapı veya pencere açıklığı bulunmamaktadır."
@@ -1707,7 +1699,7 @@ class ReportEngine {
         if (b36.konum != null)
           _addDetail(
             details,
-            label: 'Kaçış merdivenleri birbirine göre nasıl konumlanmış?',
+            label: Bolum36Content.questionKonum,
             value: b36.konum!.uiTitle,
             report: b36.konum!.label.contains("-A")
                 ? "OLUMLU: Merdivenler birbirinden bağımsız ve alternatifli konumlandırılmıştır."
@@ -1718,33 +1710,18 @@ class ReportEngine {
         if (b36.kapiTipi != null)
           _addDetail(
             details,
-            label: 'Katınızdaki çıkış kapılarının tipi nedir?',
+            label: Bolum36Content.questionKapiTipi,
             value: b36.kapiTipi!.uiTitle,
             report: b36.kapiTipi!.reportText,
             advice: b36.kapiTipi!.adviceText,
             level: b36.kapiTipi!.level,
           );
 
-        // Genişlik ölçüleri VE Değerlendirmeleri
         final b4 = s.bolum4;
-        final b33 = s.bolum33;
-        final b34 = s.bolum34;
-        double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
-        double hYapi = b4?.hesaplananYapiYuksekligi ?? 0.0;
-        bool isYuksekBina = (hBina >= 21.50 || hYapi >= 30.50);
-
-        int yukBodrum = b33?.yukBodrum ?? 0;
-        int effectiveLoad = 0;
-        if (b33 != null) {
-          bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
-          int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
-          int yukNormal = b33.yukNormal ?? 0;
-          effectiveLoad = [
-            yukZemin,
-            yukNormal,
-            yukBodrum,
-          ].reduce((a, b) => a > b ? a : b);
-        }
+        final double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
+        final double hYapi = b4?.hesaplananYapiYuksekligi ?? 0.0;
+        final bool isYuksekBina = (hBina >= 21.50 || hYapi >= 30.50);
+        final int effectiveLoad = calculateMaxYuk(s);
 
         int reqMerdiven = 120;
         int reqKoridor = 110;
@@ -1965,11 +1942,11 @@ class ReportEngine {
                 b20.toplamDisariAcilanMerdivenSayisi >= (totalStairs / 2.0);
             _addDetail(
               details,
-              label: 'Dışarıya Doğrudan Çıkış Oranı (Madde 41)',
+              label: 'Dışarıya Doğrudan Çıkış İmkanı (%50 Kuralı)',
               value: '${b20.toplamDisariAcilanMerdivenSayisi} / $totalStairs',
               report: ratioOk
                   ? "OLUMLU: Kaçış merdivenlerinin en az yarısı doğrudan dışarıya açılmaktadır."
-                  : "KRİTİK RİSK: Binadaki kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut durumda bu oran sağlanamamaktadır.",
+                  : "KRİTİK RİSK: Binadaki kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut binada bu imkanın sağlanmadığı tespit edilmiştir.",
               status: ratioOk ? ReportStatus.compliant : ReportStatus.risk,
             );
           }
@@ -1991,12 +1968,12 @@ class ReportEngine {
                   (totalBodrumStairs / 2.0);
               _addDetail(
                 details,
-                label: 'Bodrum Kat Dışarıya Doğrudan Çıkış Oranı (Madde 41)',
+                label: 'Bodrum Kat Dışarıya Doğrudan Çıkış Oranı (%50 Kuralı)',
                 value:
                     '${b20.bodrumToplamDisariAcilanMerdivenSayisi} / $totalBodrumStairs',
                 report: ratioOk
-                    ? "OLUMLU: Bodrum kat kaçış merdivenlerinin en az yarısı doğrudan dışarıya açılmaktadır."
-                    : "KRİTİK RİSK: Madde 41 gereği, bodrum kat merdivenlerinin de en az yarısının doğrudan dışarıya açılması zorunludur.",
+                    ? "OLUMLU: Bağımsız bodrum kat kaçış merdivenlerinin en az yarısı doğrudan dışarıya açılmaktadır."
+                    : "KRİTİK RİSK: Binadaki bağımsız bodrum kat kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut binada bu imkanın sağlanmadığı tespit edilmiştir.",
                 status: ratioOk ? ReportStatus.compliant : ReportStatus.risk,
               );
             }
@@ -2006,8 +1983,8 @@ class ReportEngine {
         // Ana değerlendirme metni
         _addDetail(
           details,
-          label: 'Genel Kaçış Güvenliği Analizi',
-          value: 'Detaylı Değerlendirme',
+          label: 'Genel Tespitler',
+          value: "",
           report: b36.merdivenDegerlendirme ?? '',
           status: (b36.merdivenDegerlendirme ?? "").contains("KRİTİK RİSK")
               ? ReportStatus.risk
@@ -2233,9 +2210,8 @@ class ReportEngine {
         ]);
       case 27:
         final b = s.bolum27;
-        final maxYuk = _calculateMaxYuk(s);
-        final yonLevels =
-            b?.yon.map((e) => _getDynamicLevel(e, maxYuk)) ?? [];
+        final maxYuk = calculateMaxYuk(s);
+        final yonLevels = b?.yon.map((e) => _getDynamicLevel(e, maxYuk)) ?? [];
         final kilitLevels =
             b?.kilit.map((e) => _getDynamicLevel(e, maxYuk)) ?? [];
         return _maxLevel([
@@ -2551,7 +2527,7 @@ class ReportEngine {
     // --- BÖLÜM 27 (Kapılar) ---
     final b27 = s.bolum27;
     if (b27 != null) {
-      final maxYuk = _calculateMaxYuk(s);
+      final maxYuk = calculateMaxYuk(s);
       add(b27.boyut);
       for (var e in b27.yon) {
         addLevel(_getDynamicLevel(e, maxYuk));
@@ -2773,13 +2749,13 @@ class ReportEngine {
               b16.bariyerUst == 0 ||
               b16.bariyerZemin == 0) {
             parts.add(
-              "KRİTİK RİSK: Binada yanıcı mantolama kullanılmasına rağmen pencere kenarlarında veya kat aralarında yangın bariyerleri bulunmamaktadır.",
+              "KRİTİK RİSK: Binada YANICI tipte mantolama imal edilmiş olmasına rağmen pencere kenarlarında, kat aralarında vs. gerekli olan yangına dayanıklı bariyer görevi görecek yalıtım malzemeleri kullanılmamıştır.",
             );
           } else if (b16.bariyerYan == 2 ||
               b16.bariyerUst == 2 ||
               b16.bariyerZemin == 2) {
             parts.add(
-              "UYARI: Binada yanıcı mantolama mevcut olup yangın bariyerlerinin eksik veya standart dışı olduğu tespit edilmiştir.",
+              "UYARI: Binada YANICI tipte mantolama mevcut olup, yangına dayanıklı bariyer görevi görecek yalıtım malzemelerinin kısmen eksik olduğu tespit edilmiştir. Yönetmelik Madde 27'de belirtilen yangın yalıtım uygulamalarının tamamının binada uygulanması gereklidir.",
             );
           }
         }
@@ -2875,7 +2851,7 @@ class ReportEngine {
         );
       } else {
         parts.add(
-          "DEĞERLENDİRME: YGH ZORUNLU DEĞİLDİR\nMevcut yapı verilerine göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
+          "DEĞERLENDİRME: YGH ZORUNLU DEĞİLDİR\nMevcut yapı ile ilgili beyanlara göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
         );
       }
 
@@ -2888,7 +2864,7 @@ class ReportEngine {
       } else if (noYgh) {
         if (isMandatory) {
           parts.add(
-            "KRİTİK RİSK: Binada YGH zorunlu olmasına rağmen, mevcut olmadığı beyan edilmiştir.",
+            "KRİTİK RİSK: Binada YGH zorunlu olmasına rağmen, binada mevcut olmadığı beyan edilmiştir.",
           );
         } else {
           parts.add(
@@ -2946,27 +2922,48 @@ class ReportEngine {
         if (b27.dayanim != null) reportParts.add(b27.dayanim!.reportText);
 
         // 3. Genel Kural Hatırlatması ve Dinamik Uyarılar
-        final maxLoad = [
-          b33.yukZemin ?? 0,
-          b33.yukNormal ?? 0,
-          b33.yukBodrum ?? 0,
-        ].reduce((a, b) => a > b ? a : b);
+        final yukZemin = b33.yukZemin ?? 0;
+        final yukNormal = b33.yukNormal ?? 0;
+        final yukBodrum = b33.yukBodrum ?? 0;
+
+        List<String> exceed50 = [];
+        if (yukZemin > 50) exceed50.add("Zemin Kat ($yukZemin kişi)");
+        if (yukNormal > 50) exceed50.add("Normal Kat ($yukNormal kişi)");
+        if (yukBodrum > 50) exceed50.add("Bodrum Kat ($yukBodrum kişi)");
+
+        List<String> exceed100 = [];
+        if (yukZemin > 100) exceed100.add("Zemin Kat ($yukZemin kişi)");
+        if (yukNormal > 100) exceed100.add("Normal Kat ($yukNormal kişi)");
+        if (yukBodrum > 100) exceed100.add("Bodrum Kat ($yukBodrum kişi)");
 
         // Riskli durum tespiti
         bool yonRiski =
             b27.yon.any(
               (e) => e.label.contains("27-2-B") || e.label.contains("27-2-D"),
             ) &&
-            maxLoad > 50;
+            exceed50.isNotEmpty;
+
         bool kilitRiski =
             b27.kilit.any(
               (e) => e.label.contains("27-3-B") || e.label.contains("27-3-D"),
             ) &&
-            maxLoad > 100;
+            exceed100.isNotEmpty;
 
         if (yonRiski || kilitRiski) {
+          String context = "";
+          if (yonRiski && kilitRiski) {
+            context =
+                "${exceed50.join(", ")} gibi katlarınızda kullanıcı yükü 50 ve 100 kişi sınırlarını aşmaktadır.";
+          } else if (yonRiski) {
+            context =
+                "${exceed50.join(", ")} gibi katlarınızda kullanıcı yükü 50 kişi sınırını aşmaktadır.";
+          } else {
+            context =
+                "${exceed100.join(", ")} gibi katlarınızda kullanıcı yükü 100 kişi sınırını aşmaktadır.";
+          }
+
           reportParts.add(
-            "UYARI: Yönetmelik gereği; kullanıcı yükü 50 kişiyi aşan mekanlarda kapıların kaçış yönüne (dışarıya) doğru açılması zorunludur. Kullanıcı yükü 100 kişiyi aşan mekanlarda ise kapıların hem panik bar ile donatılması hem de kaçış yönüne açılması şarttır. Binanızdaki en yüksek kullanıcı yükü $maxLoad kişidir. Bu doğrultuda kapı özelliklerinin (yön ve kilit) ilgili katlardaki kişi sayılarına göre mevzuata uygun hale getirilmesi gerekmektedir.",
+            "UYARI: $context Bu doğrultuda kapı özelliklerinin (yön ve kilit) ilgili katlardaki kişi sayılarına göre Yönetmeliğe uygun hale getirilmesi gerekmektedir. Kullanıcı yükünün aşıldığı ticari alan, otopark vb. gibi yerlerin kendilerine ait, binadan bağımsız başka çıkışları var ise, kişi adedine bağlı olan kuralların binanın tamamında sağlanması gerekmez, yalnızca o katta uygulanması yeterli olur.",
           );
         }
 
@@ -3226,7 +3223,7 @@ class ReportEngine {
         }
         if (b35.manuelMesafe != null) {
           parts.add(
-            "BİLGİ: Manuel girilen kaçış mesafesi: ${b35.manuelMesafe} m",
+            "BİLGİ: Elle girilen kaçış mesafesi: ${b35.manuelMesafe} m",
           );
         }
         if (parts.isNotEmpty) return parts.join("\n\n");
@@ -3239,7 +3236,7 @@ class ReportEngine {
       if (s.bolum20 != null) {
         return Section36Handler(s).getFullReport();
       }
-      return "OLUMLU: Merdivenler ve tahliye güzergahları Madde 41 kriterlerine uygundur.";
+      return "OLUMLU: Merdivenler ve tahliye güzergahları Yönetmelik Madde 41 kriterlerine uygun gözükmektedir.";
     }
 
     // Varsayılan: AppContent içindeki metni olduğu gibi döndür.
@@ -3543,11 +3540,8 @@ class ReportEngine {
         "Bodrum Bina Dışı Açık Yangın Merdiveni",
         b.bodrumBinaDisiAcikYanginMerdiveniSayisi,
       );
-      add("Bodrum Döner Merdiven", b.bodrumDonerMerdivenSayisi);
-      add(
-        "Bodrum Sahanlıksız (Düz) Merdiven",
-        b.bodrumSahanliksizMerdivenSayisi,
-      );
+      add("Bodrum Dairesel Merdiven", b.bodrumDonerMerdivenSayisi);
+      add("Bodrum Sahanlıksız Merdiven", b.bodrumSahanliksizMerdivenSayisi);
       add("Bodrum Dengelenmiş Merdiven", b.bodrumDengelenmisMerdivenSayisi);
       add(
         "Bodrum Doğrudan Dışarı Açılan Merdiven",
@@ -3571,7 +3565,7 @@ class ReportEngine {
       if (b20 != null && b20.basinclandirma?.label.contains("-B") == true) {
         // 20-BAS-B: Hayır
         reasons.add(
-          "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve en az bir merdivende Basınçlandırma yok ise YGH zorunludur.",
+          "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve en az bir merdivende basınçlandırma sistemi yok ise YGH (Yangın Güvenlik Holü) zorunludur.",
         );
       }
     }
@@ -3586,7 +3580,7 @@ class ReportEngine {
     if (b10 != null &&
         b10.bodrumlar.any((c) => c?.label.contains("10-C") == true)) {
       reasons.add(
-        "KRİTİK RİSK: Bodrum katlarda, konuttan farklı fonksiyon mevcut olduğundan merdivenlerin önünde YGH zorunludur.",
+        "KRİTİK RİSK: Bodrum katlarda, konuttan farklı bir kullanım amacı olduğundan tüm merdivenlerin önünde YGH (Yangın Güvenlik Holü) zorunludur.",
       );
     }
 
@@ -3602,14 +3596,14 @@ class ReportEngine {
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "KRİTİK RİSK: Bodrum katlarda asansörün önünde YGH gereklidir.",
+        "KRİTİK RİSK: Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı sağlanmadığında tüm asansörlerin önünde YGH (Yangın Güvenlik Holü) gereklidir.",
       );
     }
 
     // 7. Bodrum kat sayısı > 4
     if ((s.bolum3?.bodrumKatSayisi ?? 0) > 4) {
       reasons.add(
-        "KRİTİK RİSK: Bodrum kat sayısı > 4 olduğu için bodrum katlardaki merdiven önlerinde YGH zorunludur.",
+        "KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodrum katlardaki tüm merdivenlerin önlerinde YGH zorunludur.",
       );
     }
 
@@ -3625,14 +3619,14 @@ class ReportEngine {
   static String _getBariyerReport(int val, String subject) {
     if (val == 1) return "OLUMLU: $subject mevcuttur.";
     if (val == 0)
-      return "KRİTİK RİSK: $subject bulunmamaktadır. Yangının cepheden yayılma riski vardır.";
-    return "UYARI: $subject durumu bilinmemektedir. Kontrol edilmelidir.";
+      return "KRİTİK RİSK: $subject bulunmamaktadır. Yangının cepheden yayılma riski bulunmaktadır.";
+    return "UYARI: $subject durumu bilinmemektedir. Yerinde kontrol edilmelidir.";
   }
 
   static String getSectionSummary(int id) {
     final s = BinaStore.instance;
     final res = s.getResultForSection(id);
-    if (res == null) return "Değerlendirilmedi";
+    if (res == null) return "Değerlendirilmedi.";
 
     // Bölüm 3: ÖZET sayfasında maddeler halinde alt alta gösterim
     if (id == 3) {
@@ -3670,7 +3664,9 @@ class ReportEngine {
     if (id == 21) {
       final yghReasons = evaluateYghRequirement(store: s);
       final bool isMandatory = yghReasons.isNotEmpty;
-      final String mandatoryText = isMandatory ? " (Zorunlu)" : " (Zorunlu Değil)";
+      final String mandatoryText = isMandatory
+          ? " (Zorunlu)"
+          : " (Zorunlu Değil)";
       return "${res.label}$mandatoryText";
     }
 
@@ -3756,7 +3752,7 @@ class ReportEngine {
     return result.trim();
   }
 
-  static int _calculateMaxYuk(BinaStore s) {
+  static int calculateMaxYuk(BinaStore s) {
     int maxYuk = 0;
     final b33 = s.bolum33;
     final b34 = s.bolum34;
@@ -3765,11 +3761,7 @@ class ReportEngine {
       int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
       int yukNormal = b33.yukNormal ?? 0;
       int yukBodrum = b33.yukBodrum ?? 0;
-      maxYuk = [
-        yukZemin,
-        yukNormal,
-        yukBodrum,
-      ].reduce((a, b) => a > b ? a : b);
+      maxYuk = [yukZemin, yukNormal, yukBodrum].reduce((a, b) => a > b ? a : b);
     }
     return maxYuk;
   }

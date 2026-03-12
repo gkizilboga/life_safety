@@ -43,11 +43,11 @@ class Section36Handler {
       if (b20.dengelenmisMerdivenSayisi > 0) {
         if (hBina > (15.50 - 0.001) || maxYuk > 100) {
           analysisParts.add(
-            "KRİTİK RİSK: Binadaki Dengelenmiş Merdiven, yapı yüksekliği ($hBina m) veya kullanıcı yükü ($maxYuk kişi) sınırları aşıldığı için yönetmeliğe uygun DEĞİLDİR.",
+            "KRİTİK RİSK: Binadaki Dengelenmiş Merdiven, bina yüksekliği ($hBina m) veya kullanıcı yükü ($maxYuk kişi) sınırı aşıldığı için Yönetmeliğe göre kaçış yolu olarak kullanılamaz.",
           );
         } else {
           analysisParts.add(
-            "OLUMLU: Dengelenmiş Merdiven kullanımı, bina yüksekliği ve kişi yükü sınırları içerisinde olduğu için uygundur.",
+            "OLUMLU: Dengelenmiş Merdiven, bina yüksekliği ve kullanıcı yükü sınırları aşılmadığı için Yönetmeliğe göre kaçış yolu olarak kullanılabilir.",
           );
         }
       }
@@ -62,11 +62,11 @@ class Section36Handler {
         if (b20.bodrumDengelenmisMerdivenSayisi > 0) {
           if (hBina > (15.50 - 0.001) || maxYuk > 100) {
             analysisParts.add(
-              "KRİTİK RİSK: Bodrum katlardaki Dengelenmiş Merdiven sınırları aştığı için uygun DEĞİLDİR.",
+              "KRİTİK RİSK: Bodrum katlardaki Dengelenmiş Merdiven, sınırları aştığı için Yönetmeliğe göre uygun DEĞİLDİR.",
             );
           } else {
             analysisParts.add(
-              "OLUMLU: Bodrum katlardaki Dengelenmiş Merdiven kullanımı uygundur.",
+              "OLUMLU: Bodrum katlardaki Dengelenmiş Merdiven kaçış yolu olarak kullanılabilir.",
             );
           }
         }
@@ -115,7 +115,7 @@ class Section36Handler {
       // Kombine Raporlama (Madde 41 - Dışa Açılan Merdiven)
       if (mainDirectFail && bodrumDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Hem normal hem de bodrum katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı İHLAL EDİLMİŞTİR. (Normal: $directMain/$reqDirectMain, Bodrum: $directBod/$reqDirectBod sağlanıyor)",
+          "KRİTİK RİSK: Hem normal katlara hem de bodrum katlara hitap eden kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı İHLAL EDİLMİŞTİR. (Normal: $directMain/$reqDirectMain, Bodrum: $directBod/$reqDirectBod sağlanıyor.)",
         );
       } else if (mainDirectFail) {
         analysisParts.add(
@@ -127,7 +127,7 @@ class Section36Handler {
         );
       } else if (totalMain > 0 || totalBod > 0) {
         analysisParts.add(
-          "OLUMLU: Merdivenlerin en az %50'sinin doğrudan dışarıya açılması kuralı tüm katlarda başarıyla sağlanmaktadır.",
+          "OLUMLU: Merdivenlerin en az %50'sinin doğrudan dışarıya açılması kuralı tüm katlarda sağlanmaktadır.",
         );
       }
 
@@ -167,7 +167,7 @@ class Section36Handler {
         analysisParts.add(msg);
       } else if (mainMesafeUnknown || bodrumMesafeUnknown) {
         analysisParts.add(
-          "UYARI: BİLİNMİYOR - Tahliye (lobi) mesafesi beyan edilmediği için Madde 41 analizi tamamlanamamıştır.",
+          "UYARI: BİLİNMİYOR - Tahliye (lobi) mesafesi beyan edilmediği için %50 kriterine göre değerlendirme yapılamamıştır.",
         );
       } else if ((totalMain > 0 &&
               b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-A") ||
@@ -235,14 +235,14 @@ class Section36Handler {
 
         if (heightFail || !loadOk) {
           List<String> reasons = [];
-          if (heightFail) reasons.add("Yükseklik 9.50m limitini aşmaktadır");
+          if (heightFail) reasons.add("Yükseklik 9.50m limitini aşmaktadır.");
           if (!loadOk)
-            reasons.add("Kullanıcı yükü 25 kişiyi aşmaktadır ($maxYuk kişi)");
+            reasons.add("Kullanıcı yükü 25 kişiyi aşmaktadır ($maxYuk kişi).");
           if (!loadOk)
-            reasons.add("Kullanıcı yükü 25 kişiyi aşmaktadır ($maxYuk kişi)");
+            reasons.add("Kullanıcı yükü 25 kişiyi aşmaktadır ($maxYuk kişi). ");
 
           analysisParts.add(
-            "KRİTİK RİSK: Dairesel (döner) merdiven Yangın Yönetmeliği kriterlerini sağlamamaktadır. (${reasons.join(", ")}) Bu merdiven kaçış yolu olarak değerlendirilemez. Merdivenin hizmet verdiği yükün 25 kişiden fazla olmadığı mahal bazlı teyit edilmelidir.",
+            "KRİTİK RİSK: Dairesel (döner) merdiven Yönetmelik kriterlerini sağlamamaktadır. (${reasons.join(", ")}) Bu merdiven kaçış yolu olarak değerlendirilemez. Merdivenin hizmet verdiği yükün 25 kişiden fazla olmadığı mahal bazlı teyit edilmelidir.",
           );
         } else if (heightUnknown) {
           analysisParts.add(
@@ -250,7 +250,7 @@ class Section36Handler {
           );
         } else if (heightOk && loadOk) {
           analysisParts.add(
-            "OLUMLU: Dairesel merdivenler yönetmelik koşullarını (≤9.50m and ≤25 kişi) sağlamaktadır.",
+            "OLUMLU: Dairesel merdiven, yükseklik ve kullanıcı yükü kriter sınırları aşılmadığından (≤9.50m and ≤25 kişi) kaçış yolu olarak kullanılabilir. Aynı zamanda dairesel merdivenin tasarımsal olarak da Yönetmelik şartlarını sağlaması gereklidir.",
           );
         }
       }
@@ -329,13 +329,13 @@ class Section36Handler {
           }
           if (kapiChoice != null && kapiChoice.label == "36-Kapi-A") {
             violations.add(
-              "Kapı temiz geçiş genişliği yetersiz (En az 80 cm olmalıdır)",
+              "Kapı temiz geçiş genişliği yetersiz (Gereken: En Az 80 cm, Mevcut: ${kapiChoice.uiTitle})",
             );
           }
 
           if (violations.isNotEmpty) {
             analysisParts.add(
-              "KRİTİK RİSK: $prefix alanlarda genişlik ihlali: ${violations.join(", ")}",
+              "KRİTİK RİSK: $prefix kaçış yollarına ait genişlik ihlalleri tespit edildi:\n- ${violations.join("\n- ")}",
             );
           }
         }
@@ -390,7 +390,7 @@ class Section36Handler {
     if (parts.isNotEmpty) {
       return parts.join("\n\n");
     }
-    return "OLUMLU: Merdivenler ve tahliye güzergahları Madde 41 kriterlerine uygundur.";
+    return "OLUMLU: Merdivenler ve tahliye güzergahları Yönetmelik kriterlerine göre yeterlidir.";
   }
 
   String getSummaryReport() {
@@ -399,8 +399,7 @@ class Section36Handler {
 
     // Sadece KRİTİK RİSK ve UYARI mesajlarını özet ekrana taşıyalım (daha sade).
     for (String part in parts) {
-      if (part.startsWith("KRİTİK RİSK:") ||
-          part.startsWith("UYARI:")) {
+      if (part.startsWith("KRİTİK RİSK:") || part.startsWith("UYARI:")) {
         // Önekleri kaldıralım, UI liste tasarımı daha temiz olsun.
         String cleanText = part
             .replaceAll("KRİTİK RİSK: ", "")
@@ -415,6 +414,6 @@ class Section36Handler {
     if (summaryBullets.isNotEmpty) {
       return summaryBullets.join("\n");
     }
-    return "Tüm kaçış merdivenleri yönetmelik kriterlerine (Korunumlu Merdiven adetleri, kapı yönleri ve %50 tahliye kuralları) uygundur.";
+    return "Tüm kaçış merdivenleri Yönetmelik kriterlerine (Korunumlu Merdiven adetleri, kapı yönleri ve %50 tahliye kuralları) göre yeterlidir.";
   }
 }

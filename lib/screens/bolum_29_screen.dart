@@ -143,7 +143,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
         children: [
           if (_askOtopark)
             _buildSoru(
-              "Otoparkta yanıcı türden eşyalar (lastik, boya, eşya vb.) bulunuyor mu?",
+              Bolum29Content.questionOtopark,
               'otopark',
               [
                 Bolum29Content.otoparkOptionA,
@@ -155,7 +155,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
 
           if (_askKazan)
             _buildSoru(
-              "Kazan dairesinde eski eşya, mobilya, karton vb. bulunuyor mu?",
+              Bolum29Content.questionKazan,
               'kazan',
               [
                 Bolum29Content.kazanOptionA,
@@ -167,7 +167,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
 
           if (_askCati)
             _buildSoru(
-              "Çatı arasında yanıcı malzemeler bulunuyor mu?",
+              Bolum29Content.questionCati,
               'cati',
               [
                 Bolum29Content.catiOptionA,
@@ -179,7 +179,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
 
           if (_askAsansor)
             _buildSoru(
-              "Asansör makine dairesinde yanıcı malzemeler bulunuyor mu?",
+              Bolum29Content.questionAsansor,
               'asansor',
               [
                 Bolum29Content.asansorOptionA,
@@ -191,7 +191,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
 
           if (_askJenerator)
             _buildSoru(
-              "Jeneratör odasında ilgisiz malzemeler bulunuyor mu?",
+              Bolum29Content.questionJenerator,
               'jenerator',
               [
                 Bolum29Content.jeneratorOptionA,
@@ -203,7 +203,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
 
           if (_askPano)
             _buildSoru(
-              "Elektrik pano odasında temizlik malzemesi, kağıt, eşya vb. bulunuyor mu?",
+              Bolum29Content.questionPano,
               'pano',
               [
                 Bolum29Content.panoOptionA,
@@ -214,7 +214,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
             ),
 
           if (_askTrafo)
-            _buildSoru("Trafo odası temiz mi ve menfezler açık mı?", 'trafo', [
+            _buildSoru(Bolum29Content.questionTrafo, 'trafo', [
               Bolum29Content.trafoOptionA,
               Bolum29Content.trafoOptionB,
               Bolum29Content.trafoOptionC,
@@ -222,7 +222,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
 
           if (_askDepo)
             _buildSoru(
-              "Depolarda parlayıcı maddeler (tiner, tüp, boya vb.) saklanıyor mu?",
+              Bolum29Content.questionDepo,
               'depo',
               [
                 Bolum29Content.depoOptionA,
@@ -233,7 +233,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
             ),
 
           if (_askCop)
-            _buildSoru("Çöp odası düzenli temizleniyor mu?", 'cop', [
+            _buildSoru(Bolum29Content.questionCop, 'cop', [
               Bolum29Content.copOptionA,
               Bolum29Content.copOptionB,
               Bolum29Content.copOptionC,
@@ -241,7 +241,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
 
           if (_askSiginak)
             _buildSoru(
-              "Sığınak yanıcı/patlayıcı maddeler depolanıyor mu?",
+              Bolum29Content.questionSiginak,
               'siginak',
               [
                 Bolum29Content.siginakOptionA,

@@ -273,14 +273,14 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  NumericEmphasis(
-                    "${m['score']} / 100",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 42,
-                      fontWeight: FontWeight.w900,
+                    NumericEmphasis(
+                      "${m['score']} / 100",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 34,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  ),
                 ],
               ),
               _buildCircularProgress(m['score']),
@@ -350,7 +350,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
           val,
           style: TextStyle(
             color: color,
-            fontSize: 22, // Increased slightly
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -399,7 +399,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Color(0xFF1A237E),
-              fontSize: 16,
+              fontSize: 15,
             ),
           ),
           children: visibleSections,
@@ -421,7 +421,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
           "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
           style: const TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 14.5,
+            fontSize: 14,
             color: Color(0xFF34495E),
           ),
         ),
@@ -507,7 +507,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     child: Text(
                       report,
                       style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 15,
                         color: Color(0xFF2C3E50),
                         height: 1.5,
                         fontWeight: FontWeight.w600,

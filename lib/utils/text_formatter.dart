@@ -65,6 +65,18 @@ class FormattedText extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseStyle = style ?? DefaultTextStyle.of(context).style;
 
+    // <b> etiketi içermeyen düz metinler için standart Text widget'ı kullanıyoruz.
+    // Bu hem performans için daha iyi hem de widget testlerinde find.text() ile bulunabilmesini sağlar.
+    if (!text.contains("<b>")) {
+      return Text(
+        text,
+        style: baseStyle,
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+      );
+    }
+
     return RichText(
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines,
@@ -85,7 +97,7 @@ class NumericEmphasis extends StatelessWidget {
     this.text, {
     super.key,
     this.style,
-    this.scaleFactor = 1.25,
+    this.scaleFactor = 1.1,
     this.textAlign,
   });
 

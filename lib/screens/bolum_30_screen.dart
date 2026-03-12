@@ -111,7 +111,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       child: Column(
         children: [
           _buildSoru(
-            "Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?",
+            Bolum30Content.questionKonum,
             'konum',
             [
               Bolum30Content.konumOptionA,
@@ -123,7 +123,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
           ),
 
           _buildSoru(
-            "Kazanların toplam ısıl kapasitesi hangi aralıktadır?",
+            Bolum30Content.questionKapasite,
             'kapasite',
             [
               Bolum30Content.kapasiteAlt,
@@ -133,14 +133,14 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             _model.kapasiteChoice,
           ),
 
-          _buildSoru("Kazan dairesinin kaç adet ÇIKIŞ kapısı var?", 'kapi', [
+          _buildSoru(Bolum30Content.questionKapi, 'kapi', [
             Bolum30Content.kapiOptionA,
             Bolum30Content.kapiOptionB,
             Bolum30Content.kapiOptionC,
           ], _model.kapi),
 
           _buildSoru(
-            "İçeride hava sirkülasyonu sağlayan menfezler var mı?",
+            Bolum30Content.questionHava,
             'hava',
             [
               Bolum30Content.havaOptionA,
@@ -150,7 +150,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
             _model.hava,
           ),
 
-          _buildSoru("Kazanların yakıt tipi nedir?", 'yakit', [
+          _buildSoru(Bolum30Content.questionYakit, 'yakit', [
             Bolum30Content.yakitOptionA,
             Bolum30Content.yakitOptionB,
             Bolum30Content.yakitOptionC,
@@ -161,7 +161,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
               "Sıvı yakıtlı kazanlar için drenaj and sızıntı kontrolü gereklidir.",
             ),
             _buildSubQuestion(
-              "Zeminde dökülen yakıtı toplayacak kanallar ve pis su çukuru var mı?",
+              Bolum30Content.questionDrenaj,
               'drenaj',
               [
                 Bolum30Content.drenajOptionA,
@@ -173,7 +173,7 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
           ],
 
           _buildSoru(
-            "Kazan dairesinde yangın söndürme TÜPÜ ve yangın DOLABI var mı?",
+            Bolum30Content.questionTup,
             'tup',
             [
               Bolum30Content.tupOptionA,

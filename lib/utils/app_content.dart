@@ -6,7 +6,7 @@ class Bolum1Content {
     uiTitle: "19.12.2007 ve sonrası.",
     uiSubtitle: "Yeni Bina",
     reportText:
-        "BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 veya sonrasında alındığı için analiz, \"Binaların Yangından Korunması Hakkında Yönetmelik\"(BYKHY) kapsamındaki \"YENİ BİNA\"hükümlerine göre yapılmıştır.",
+        "BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 veya sonrası olduğundan \"Binaların Yangından Korunması Hakkında Yönetmelik\" (BYKHY) kapsamındaki \"YENİ BİNA\" hükümlerine göre yapılmıştır.",
     level: RiskLevel.info,
   );
 
@@ -2892,6 +2892,15 @@ class Bolum26Content {
 }
 
 class Bolum27Content {
+  static const String questionBoyut =
+      "Kaçış kapılarının genişliği ve zemini ne durumdadır? (daire kapısı hariç)";
+  static const String questionYon =
+      "Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)";
+  static const String questionKilit =
+      "Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)";
+  static const String questionDayanim =
+      "Kapalı yangın merdiveninin kapısı nasıl?";
+
   // 1. BOYUT VE EŞİK
   static final boyutOptionA = ChoiceResult(
     label: "27-1-A",
@@ -3165,6 +3174,26 @@ class Bolum28Content {
 }
 
 class Bolum29Content {
+  static const String questionOtopark =
+      'Otoparkta yanabilir eşyalar (lastik, boya vb.) bulunuyor mu?';
+  static const String questionKazan =
+      'Kazan dairesinde gereksiz eşya, mobilya, karton vb. bulunuyor mu?';
+  static const String questionCati =
+      'Çatı arasında yanıcı malzemeler bulunuyor mu?';
+  static const String questionAsansor =
+      'Asansör makine dairesinde yanıcı malzemeler bulunuyor mu?';
+  static const String questionJenerator =
+      'Jeneratör odasında ilgisiz malzemeler bulunuyor mu?';
+  static const String questionPano =
+      'Elektrik pano odasında temizlik malzemesi, kağıt, eşya vb. bulunuyor mu?';
+  static const String questionTrafo =
+      'Trafo odası temiz mi ve menfezler açık mı?';
+  static const String questionDepo =
+      'Depolarda parlayıcı maddeler (tiner, tüp, boya vb.) saklanıyor mu?';
+  static const String questionCop = 'Çöp odası düzenli temizleniyor mu?';
+  static const String questionSiginak =
+      'Sığınak yanıcı/patlayıcı maddeler depolanıyor mu?';
+
   // 1. OTOPARK
   static final otoparkOptionA = ChoiceResult(
     label: "29-1-A",
@@ -3424,6 +3453,20 @@ class Bolum29Content {
 }
 
 class Bolum30Content {
+  static const String questionKonum =
+      'Kazan dairesinin konumu ve kapısının açıldığı yer nasıl?';
+  static const String questionKapasite =
+      'Kazanların toplam ısıl kapasitesi hangi aralıktadır?';
+  static const String questionKapi =
+      'Kazan dairesinin kaç adet ÇIKIŞ kapısı var?';
+  static const String questionHava =
+      'İçeride hava sirkülasyonu sağlayan menfezler var mı?';
+  static const String questionYakit = 'Kazanların yakıt tipi nedir?';
+  static const String questionDrenaj =
+      'Zeminde dökülen yakıtı toplayacak kanallar ve pis su çukuru var mı?';
+  static const String questionTup =
+      'Kazan dairesinde yangın söndürme TÜPÜ ve yangın DOLABI var mı?';
+
   // --- 1. KONUM ---
   static final konumOptionA = ChoiceResult(
     label: "30-1-A",
@@ -4131,7 +4174,7 @@ class Bolum35Content {
     uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
     uiSubtitle: "Mesafe uzak.",
     reportText:
-        "KRİTİK RİSK: En yakın çıkışa mesafe sınırın üzerindedir. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir. bunun için yerinde Uzman kontrolü gereklidir.",
+        "KRİTİK RİSK: En yakın çıkışa mesafe sınırın üzerindedir. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir.",
     level: RiskLevel.critical,
   );
   static final ciftYonOptionD = ChoiceResult(
@@ -4202,6 +4245,19 @@ class Bolum35Content {
 }
 
 class Bolum36Content {
+  static const String questionCikisKati =
+      "Binadan dış havaya (atmosfere) çıktığınız kat hangisidir?";
+  static const String questionDisMerd =
+      "Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?";
+  static const String questionKonum =
+      "Kaçış merdivenleri birbirine göre nasıl konumlanmış?";
+  static const String questionKapiTipi =
+      "Katınızdaki çıkış kapılarının tipi nedir?";
+
+  static const String questionMerdGenislik = "Merdiven Genişliği";
+  static const String questionKoridorGenislik = "Kaçış Koridoru Genişliği";
+  static const String questionKapiGenislik = "Temiz Geçiş Kapı Genişliği";
+
   static final cikisKatiOptionA = ChoiceResult(
     label: "36-0-A",
     uiTitle: "Zemin kattan çıkabiliyorum.",

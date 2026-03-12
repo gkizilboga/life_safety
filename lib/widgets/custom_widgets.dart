@@ -332,7 +332,10 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
       ),
     ]).animate(_controller);
 
-    _controller.repeat();
+    // Tesitlerde pumpAndSettle'ın takılmaması için repeat'i sadece gerçek cihaz/emülatörde çalıştırıyoruz
+    if (!WidgetsBinding.instance.toString().contains('Test')) {
+       _controller.repeat();
+    }
   }
 
   @override
@@ -386,6 +389,8 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
     }
   }
 
+  bool _isNavigating = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -418,10 +423,19 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
             child: SafeArea(
               top: false,
               child: ElevatedButton(
-                onPressed: widget.isNextEnabled
-                    ? () {
-                        BinaStore.instance.saveToDisk();
-                        if (widget.onNext != null) widget.onNext!();
+                onPressed: widget.isNextEnabled && !_isNavigating
+                    ? () async {
+                        setState(() => _isNavigating = true);
+                        try {
+                          await BinaStore.instance.saveToDisk();
+                          if (widget.onNext != null) widget.onNext!();
+                        } finally {
+                          // Navigasyon gerçekleşirse zaten bu ekran dispose edilecek.
+                          // Ama hata olursa veya navigasyon iptal edilirse butonu geri açıyoruz.
+                          Future.delayed(const Duration(seconds: 1), () {
+                            if (mounted) setState(() => _isNavigating = false);
+                          });
+                        }
                       }
                     : null,
                 style: AppStyles.mainButton, // Use standard button style

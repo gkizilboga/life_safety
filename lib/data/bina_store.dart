@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_getters_setters
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/bolum_1_model.dart';
 import '../models/bolum_2_model.dart';
@@ -407,7 +408,7 @@ class BinaStore {
 
     final currentData = {
       'id': currentBinaId,
-      'name': currentBinaName ?? "İsimsiz Bina",
+      'name': currentBinaName ?? "",
       'city': currentBinaCity ?? "",
       'district': currentBinaDistrict ?? "",
       'date': DateTime.now().toIso8601String(),
@@ -460,16 +461,20 @@ class BinaStore {
     else
       archive.add(currentData);
 
-    // JSON encode işlemi asenkron yapılamasa da, en azından Future içinde
-    // main thread'i bloklamaması için basit bir await microtask eklenebilir
-    // veya bu fonksiyon zaten timer callback içinde çalıştığı için UI render döngüsünü
-    // doğrudan kilitler. Ancak 1 saniyede bir olacağı için hissedilmez.
-    await _prefs?.setString('bina_archive', json.encode(archive));
+    try {
+      // JSON encode işlemi asenkron yapılamasa da, compute ile arka plana atarak
+      // main thread'i bloklamasını önlüyoruz.
+      // Özellikle archive listesi büyüdüğünde bu işlem saniyeler sürebilir.
+      final String encodedData = await compute(jsonEncode, archive);
+      await _prefs?.setString('bina_archive', encodedData);
 
-    if (currentBinaId != null)
-      await _prefs?.setString('active_bina_id', currentBinaId!);
+      if (currentBinaId != null)
+        await _prefs?.setString('active_bina_id', currentBinaId!);
 
-    _isDirty = false;
+      _isDirty = false;
+    } catch (e) {
+      debugPrint("BinaStore Save Error: $e");
+    }
   }
 
   void markAsCompleted() {
@@ -599,14 +604,15 @@ class BinaStore {
   Future<void> importBuilding(Map<String, dynamic> data) async {
     // Add to archive
     archive.add(data);
-    // Save archive to disk
-    await _prefs?.setString('bina_archive', json.encode(archive));
+    _isDirty = true;
+    await saveToDisk(immediate: true);
   }
 
   void deleteFromArchive(String id) {
     archive.removeWhere((element) => element['id'] == id);
     if (currentBinaId == id) reset();
-    _prefs?.setString('bina_archive', json.encode(archive));
+    _isDirty = true;
+    saveToDisk(immediate: true);
     _prefs?.remove('active_bina_id');
   }
 

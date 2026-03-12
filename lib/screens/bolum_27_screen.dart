@@ -154,7 +154,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           _buildEnZayifHalkaUyarisi(),
 
           _buildSoruHeader(
-            "Kaçış kapılarının genişliği ve zemini ne durumdadır? (daire kapısı hariç)",
+            Bolum27Content.questionBoyut,
             imagePath: AppAssets.section27YanginKapisi,
             imageTitle: "Kapı Genişliği ve Eşik",
           ),
@@ -166,7 +166,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
 
           SizedBox(key: _yonKey, height: 1),
           _buildSoruHeader(
-            "Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)",
+            Bolum27Content.questionYon,
             imagePath: AppAssets.section27KacisYonu,
             imageTitle: "Kapı Açılış Yönü Kriterleri",
           ),
@@ -193,7 +193,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
 
           SizedBox(key: _kilitKey, height: 1),
           _buildSoruHeader(
-            "Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)",
+            Bolum27Content.questionKilit,
             imagePath: AppAssets.section27KilitTipi,
             imageTitle: "Kilit ve Panik Bar Tipleri",
           ),
@@ -227,7 +227,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
               "Binada korunumlu yangın merdiveni tespit edildiği için dayanım sorusu açılmıştır.",
             ),
             SizedBox(key: _dayanimKey, height: 1),
-            _buildSoruHeader("Kapalı yangın merdiveninin kapısı nasıl?"),
+            _buildSoruHeader(Bolum27Content.questionDayanim),
             _buildSoruCard('dayanim', [
               Bolum27Content.dayanimOptionA,
               Bolum27Content.dayanimOptionB,

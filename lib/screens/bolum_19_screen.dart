@@ -72,43 +72,47 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     return true;
   }
 
+  bool _isProcessing = false;
+
   @override
   Widget build(BuildContext context) {
-    // Refresh model if BinaStore changed (e.g. archive load)
-    if (BinaStore.instance.bolum19 != null &&
-        BinaStore.instance.bolum19 != _model) {
-      _model = BinaStore.instance.bolum19!;
-    }
-
     return AnalysisPageLayout(
       title: "Acil Durum Yönlendirme",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
-      onNext: () {
+      onNext: () async {
+        if (_isProcessing) return;
+        setState(() => _isProcessing = true);
+
         try {
           BinaStore.instance.bolum19 = _model;
-          BinaStore.instance.saveToDisk();
+          await BinaStore.instance.saveToDisk(immediate: true);
 
+          if (!mounted) return;
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const Bolum20Screen()),
           );
         } catch (e) {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: const Text("Hata: Bölüm 20'ye Geçilemedi"),
-              content: Text(
-                "Geçiş sırasında bir hata oluştu. Lütfen bu mesajı geliştiriciye bildirin:\n\n$e",
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: const Text("Tamam"),
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text("Hata: Bölüm 20'ye Geçilemedi"),
+                content: Text(
+                  "Geçiş sırasında bir hata oluştu. Lütfen bu mesajı geliştiriciye bildirin:\n\n$e",
                 ),
-              ],
-            ),
-          );
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: const Text("Tamam"),
+                  ),
+                ],
+              ),
+            );
+          }
+        } finally {
+          if (mounted) setState(() => _isProcessing = false);
         }
       },
       child: Column(

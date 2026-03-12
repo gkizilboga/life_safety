@@ -208,7 +208,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         int comparisonValue = hasSpiral ? sRange[1] : sRange[0];
         if (comparisonValue < minMerdiven) {
           violations.add(
-            "Merdiven genişliği yetersiz (Gereken: en az $minMerdiven cm, Seçim: ${sChoice!.uiTitle})",
+            "Merdiven genişliği yetersiz (Gereken: En Az $minMerdiven cm, Mevcut: ${sChoice!.uiTitle})",
           );
         }
       }
@@ -218,7 +218,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
         // Safe logic for corridors as well
         if (cRange[0] < minKoridor) {
           violations.add(
-            "Koridor genişliği yetersiz (Gereken: en az $minKoridor cm, Seçim: ${cChoice!.uiTitle})",
+            "Koridor genişliği yetersiz (Gereken: En Az $minKoridor cm, Mevcut: ${cChoice!.uiTitle})",
           );
         }
       }
@@ -226,14 +226,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       if (kapiChoice != null) {
         if (kapiChoice.label == "36-Kapi-A") {
           violations.add(
-            "Kapı temiz geçiş genişliği yetersiz (En az 80 cm olmalıdır)",
+            "Kapı temiz geçiş genişliği yetersiz (Gereken: En Az 80 cm, Mevcut: ${kapiChoice.uiTitle})",
           );
         }
       }
 
       if (violations.isNotEmpty) {
         notes.add(
-          "KRİTİK RİSK: $prefix alanlara ait genişlik ihlalleri tespit edildi:\n- ${violations.join("\n- ")}",
+          "KRİTİK RİSK: $prefix kaçış yollarına ait genişlik ihlalleri tespit edildi:\n- ${violations.join("\n- ")}",
         );
       } else {
         bool hasUnknown =
@@ -249,7 +249,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             cChoice != null &&
             kapiChoice != null) {
           notes.add(
-            "OLUMLU: $prefix alanlara ait merdiven ve koridor genişlikleri yönetmelik kriterlerine uygundur.",
+            "OLUMLU: $prefix kaçış yollarına ait merdiven ve koridor genişlikleri Yönetmelik kriterlerine göre yeterlidir.",
           );
         }
       }
@@ -282,7 +282,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     }
 
     if (notes.isEmpty) {
-      return "OLUMLU: Merdiven özellikleri genel olarak uygun gözükmektedir.";
+      return "OLUMLU: Merdiven özellikleri yeterli gözükmektedir.";
     } else {
       return notes.join("\n\n");
     }
@@ -347,18 +347,14 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSoruHeader(
-            "Binadan dış havaya (atmosfere) çıktığınız kat hangisidir?",
-          ),
+          _buildSoruHeader(Bolum36Content.questionCikisKati),
           _buildSoruCard(
             'cikisKati',
             _getFilteredCikisKatiOptions(),
             _model.cikisKati,
           ),
           if (_cntDisCelik > 0) ...[
-            _buildSoruHeader(
-              "Dışarıdaki yangın merdivenine 3 metre mesafede açıklık var mı?",
-            ),
+            _buildSoruHeader(Bolum36Content.questionDisMerd),
             _buildSoruCard('disMerd', [
               Bolum36Content.disMerdOptionA,
               Bolum36Content.disMerdOptionB,
@@ -367,12 +363,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           ],
           SizedBox(key: _konumKey, height: 1),
           if (_totalValidCikisSayisi > 1) ...[
-            _buildInfoNote(
-              "Binada birden fazla çıkış tespit edildiği için konumlarının hususi olarak değerlendirilmesi gereklidir.",
-            ),
-            _buildSoruHeader(
-              "Kaçış merdivenleri birbirine göre nasıl konumlanmış?",
-            ),
+            _buildSoruHeader(Bolum36Content.questionKonum),
             _buildSoruCard('konum', [
               Bolum36Content.konumOptionA,
               Bolum36Content.konumOptionB,
@@ -435,7 +426,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
           const SizedBox(height: 20),
 
           if (_model.areWidthsSame) ...[
-            _buildSoruHeader("Merdiven Genişliği (Tümü)"),
+            _buildSoruHeader("${Bolum36Content.questionMerdGenislik} (Tümü)"),
             _buildSoruCard('genislikUnified', [
               Bolum36WidthContent.merdGenislikA,
               Bolum36WidthContent.merdGenislikB,
@@ -443,7 +434,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               Bolum36WidthContent.merdGenislikD,
               Bolum36WidthContent.merdGenislikBilinmiyor,
             ], _model.genislikKorunumlu),
-            _buildSoruHeader("Kaçış Koridoru Genişliği (Tümü)"),
+            _buildSoruHeader(
+              "${Bolum36Content.questionKoridorGenislik} (Tümü)",
+            ),
             _buildSoruCard('koridorGenislikUnified', [
               Bolum36WidthContent.koridorGenislikA,
               Bolum36WidthContent.koridorGenislikB,
@@ -452,7 +445,7 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               Bolum36WidthContent.koridorGenislikE,
               Bolum36WidthContent.koridorGenislikBilinmiyor,
             ], _model.koridorGenislikKorunumlu),
-            _buildSoruHeader("Temiz Geçiş Kapı Genişliği (Tümü)"),
+            _buildSoruHeader("${Bolum36Content.questionKapiGenislik} (Tümü)"),
             _buildSoruCard('kapiGenislikUnified', [
               Bolum36WidthContent.kapiGenislikKritik,
               Bolum36WidthContent.kapiGenislikOlumlu,
@@ -460,7 +453,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             ], _model.kapiGenislikKorunumlu),
           ] else ...[
             if (_hasKorunumlu) ...[
-              _buildSoruHeader("Korunumlu Merdiven Genişliği"),
+              _buildSoruHeader(
+                "Korunumlu ${Bolum36Content.questionMerdGenislik}",
+              ),
               _buildSoruCard('genislikKorunumlu', [
                 Bolum36WidthContent.merdGenislikA,
                 Bolum36WidthContent.merdGenislikB,
@@ -468,7 +463,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                 Bolum36WidthContent.merdGenislikD,
                 Bolum36WidthContent.merdGenislikBilinmiyor,
               ], _model.genislikKorunumlu),
-              _buildSoruHeader("Korunumlu Merdivene Giden Koridor Genişliği"),
+              _buildSoruHeader(
+                "Korunumlu Merdivene Giden ${Bolum36Content.questionKoridorGenislik}",
+              ),
               _buildSoruCard('koridorGenislikKorunumlu', [
                 Bolum36WidthContent.koridorGenislikA,
                 Bolum36WidthContent.koridorGenislikB,
@@ -477,7 +474,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                 Bolum36WidthContent.koridorGenislikE,
                 Bolum36WidthContent.koridorGenislikBilinmiyor,
               ], _model.koridorGenislikKorunumlu),
-              _buildSoruHeader("Korunumlu Merdiven Kapı Genişliği"),
+              _buildSoruHeader(
+                "Korunumlu Merdiven ${Bolum36Content.questionKapiGenislik}",
+              ),
               _buildSoruCard('kapiGenislikKorunumlu', [
                 Bolum36WidthContent.kapiGenislikKritik,
                 Bolum36WidthContent.kapiGenislikOlumlu,
@@ -485,7 +484,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               ], _model.kapiGenislikKorunumlu),
             ],
             if (_hasKorunumsuz) ...[
-              _buildSoruHeader("Korunumsuz Merdiven Genişliği"),
+              _buildSoruHeader(
+                "Korunumsuz ${Bolum36Content.questionMerdGenislik}",
+              ),
               _buildSoruCard('genislikKorunumsuz', [
                 Bolum36WidthContent.merdGenislikA,
                 Bolum36WidthContent.merdGenislikB,
@@ -493,7 +494,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                 Bolum36WidthContent.merdGenislikD,
                 Bolum36WidthContent.merdGenislikBilinmiyor,
               ], _model.genislikKorunumsuz),
-              _buildSoruHeader("Korunumsuz Merdivene Giden Koridor Genişliği"),
+              _buildSoruHeader(
+                "Korunumsuz Merdivene Giden ${Bolum36Content.questionKoridorGenislik}",
+              ),
               _buildSoruCard('koridorGenislikKorunumsuz', [
                 Bolum36WidthContent.koridorGenislikA,
                 Bolum36WidthContent.koridorGenislikB,
@@ -502,7 +505,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
                 Bolum36WidthContent.koridorGenislikE,
                 Bolum36WidthContent.koridorGenislikBilinmiyor,
               ], _model.koridorGenislikKorunumsuz),
-              _buildSoruHeader("Korunumsuz Merdiven Kapı Genişliği"),
+              _buildSoruHeader(
+                "Korunumsuz Merdiven ${Bolum36Content.questionKapiGenislik}",
+              ),
               _buildSoruCard('kapiGenislikKorunumsuz', [
                 Bolum36WidthContent.kapiGenislikKritik,
                 Bolum36WidthContent.kapiGenislikOlumlu,
@@ -515,11 +520,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             CustomInfoNote(
               type: InfoNoteType.info,
               text:
-                  "Bodrum kat merdivenleri üst katlardan bağımsız olduğu için, aşağıdaki genişlik beyanlarınızın hem Zemin-Üst katlar hem de Bodrum katlarını kapsadığını veya en dezavantajlı (en dar) kısmı referans aldığınızı unutmayınız.",
+                  "Bodrum kat merdivenleri üst katlardan bağımsız olduğu için, aşağıdaki genişlik beyanlarınızın hem Zemin + Normal katlar hem de Bodrum katlarını kapsadığını veya en dezavantajlı (en dar) kısmı referans aldığınızı unutmayınız.",
               icon: Icons.info_outline,
               margin: const EdgeInsets.only(top: 8, bottom: 20),
             ),
-          _buildSoruHeader("Katınızdaki çıkış kapılarının tipi nedir?"),
+          _buildSoruHeader(Bolum36Content.questionKapiTipi),
           _buildSoruCard('kapiTipi', [
             Bolum36Content.kapiTipiOptionA,
             Bolum36Content.kapiTipiOptionB,
@@ -557,14 +562,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
             )
             .toList(),
       ),
-    );
-  }
-
-  Widget _buildInfoNote(String text) {
-    return CustomInfoNote(
-      type: InfoNoteType.info,
-      text: text,
-      icon: Icons.arrow_downward,
     );
   }
 }

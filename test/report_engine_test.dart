@@ -150,7 +150,7 @@ void main() {
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
         expect(report.contains("OLUMLU"), true);
-        expect(report.contains("Dairesel merdivenler"), true);
+        expect(report.contains("Dairesel merdiven"), true);
       },
     );
 
@@ -236,7 +236,7 @@ void main() {
       final report = ReportEngine.getSectionFullReport(36, store: store);
       // Ticari zemin bağımsız, sadece normal kat (20 kişi) sayılır
       expect(report.contains("OLUMLU"), true);
-      expect(report.contains("Dairesel merdivenler"), true);
+      expect(report.contains("Dairesel merdiven"), true);
     });
 
     test('Senaryo 6: HER İKİ ŞART DA sağlanmıyor - Çoklu sebep', () {
@@ -346,7 +346,7 @@ void main() {
       final details = ReportEngine.getSectionDetailedReport(36, store: store);
 
       expect(
-        details.any((d) => d['label'].contains('dış havaya çıktığınız kat')),
+        details.any((d) => d['label'].contains('dış havaya')),
         true,
       );
       expect(

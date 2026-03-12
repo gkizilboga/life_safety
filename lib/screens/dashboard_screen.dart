@@ -68,8 +68,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final ongoingActions = archive
         .where((b) => !(b['isCompleted'] ?? false))
         .where(
-          (b) => (b['name'] != "İsimsiz Bina"),
-        ) // Filter out default unnamed
+          (b) => (b['name'] != null && b['name'].toString().trim().isNotEmpty),
+        ) // Filter out unnamed analyses
         .toList();
     final completedActions = archive
         .where((b) => (b['isCompleted'] ?? false))
