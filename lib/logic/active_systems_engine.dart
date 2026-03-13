@@ -16,8 +16,8 @@ class ActiveSystemsEngine {
         b16?.cepheUzunlugu?.label ==
         Bolum16Content.cepheUzunluguBilinmiyor.label;
 
-    final hYapi = store.bolum3?.hYapi ?? 0;
-    final hBina = store.bolum3?.hBina ?? 0;
+    final hYapi = store.bolum4?.hesaplananYapiYuksekligi ?? store.bolum3?.hYapi ?? 0;
+    final hBina = store.bolum4?.hesaplananBinaYuksekligi ?? store.bolum3?.hBina ?? 0;
     final tabanAlani = store.bolum5?.tabanAlani ?? 0;
     final toplamInsaat = store.bolum5?.toplamInsaatAlani ?? 0;
 

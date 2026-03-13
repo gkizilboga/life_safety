@@ -60,8 +60,16 @@ enum ReportModule {
 
 class ReportEngine {
   static BinaStore _getStore(BinaStore? store) => store ?? BinaStore.instance;
-  static double _getHYapi(BinaStore? store) =>
-      _getStore(store).bolum3?.hYapi ?? 0.0;
+
+  static double _getHYapi(BinaStore? store) {
+    final s = _getStore(store);
+    return s.bolum4?.hesaplananYapiYuksekligi ?? s.bolum3?.hYapi ?? 0.0;
+  }
+
+  static double _getHBina(BinaStore? store) {
+    final s = _getStore(store);
+    return s.bolum4?.hesaplananBinaYuksekligi ?? s.bolum3?.hBina ?? 0.0;
+  }
   static Map<String, dynamic> calculateRiskMetrics({BinaStore? store}) {
     final s = _getStore(store);
     return RiskCalculator(s).calculateMetrics();
@@ -378,7 +386,6 @@ class ReportEngine {
         );
 
         if (b21.varlik?.label.contains("21-1-A") == true) {
-
           _addDetail(
             details,
             label:
@@ -414,15 +421,17 @@ class ReportEngine {
             details,
             label: 'YGH Teknik Değerlendirmesi',
             value: 'ZORUNLU',
-            report: 'Binadaki teknik verilere göre Yangın Güvenlik Holü (YGH) zorunluluğu bulunmaktadır:\n${yghReasons.join('\n')}',
+            report:
+                'Binadaki teknik verilere göre Yangın Güvenlik Holü (YGH) zorunluluğu bulunmaktadır:\n${yghReasons.join('\n')}',
             level: RiskLevel.critical,
           );
         } else {
-           _addDetail(
+          _addDetail(
             details,
             label: 'YGH Teknik Değerlendirmesi',
             value: 'UYGUN/GEREKLİ DEĞİL',
-            report: 'Mevcut verilere göre binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.',
+            report:
+                'Mevcut verilere göre binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.',
             level: RiskLevel.info,
           );
         }
@@ -430,10 +439,223 @@ class ReportEngine {
       }
     }
 
-    // Bölüm 11: İtfaiyenin Bina Yaklaşım Mesafesi
     if (id == 11) {
       _buildSection11Details(details, s);
       handled = true;
+    }
+
+    // Bölüm 12: Yapısal Yangın Dayanımı
+    if (id == 12) {
+      final b12 = s.bolum12;
+      if (b12 != null) {
+        // Betonarme soruları
+        if (b12.betonPaspayi != null)
+          details.add({
+            'label':
+                'Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?',
+            'value': b12.betonPaspayi!.uiTitle,
+            'report': b12.betonPaspayi!.reportText,
+            'advice': b12.betonPaspayi!.adviceText,
+          });
+        // Paspayı değerleri (ölçü girilmişse)
+        if (b12.kolonPaspayi != null)
+          details.add({
+            'label': 'Kolon Paspayı',
+            'value': '${b12.kolonPaspayi} mm',
+            'report': '',
+          });
+        if (b12.kirisPaspayi != null)
+          details.add({
+            'label': 'Kiriş Paspayı',
+            'value': '${b12.kirisPaspayi} mm',
+            'report': '',
+          });
+        if (b12.dosemePaspayi != null)
+          details.add({
+            'label': 'Döşeme Paspayı',
+            'value': '${b12.dosemePaspayi} mm',
+            'report': '',
+          });
+        // Çelik sorusu
+        if (b12.celikKoruma != null)
+          details.add({
+            'label':
+                'Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?',
+            'value': b12.celikKoruma!.uiTitle,
+            'report': b12.celikKoruma!.reportText,
+            'advice': b12.celikKoruma!.adviceText,
+          });
+        // Ahşap sorusu
+        if (b12.ahsapKesit != null)
+          details.add({
+            'label':
+                'Ahşap taşıyıcılarınızın kesiti yapı kullanımına göre yeterli mi?',
+            'value': b12.ahsapKesit!.uiTitle,
+            'report': b12.ahsapKesit!.reportText,
+            'advice': b12.ahsapKesit!.adviceText,
+          });
+        // Yığma sorusu
+        if (b12.yigmaDuvar != null)
+          details.add({
+            'label': 'Yığma duvarlarınızın kalınlığı ne durumda?',
+            'value': b12.yigmaDuvar!.uiTitle,
+            'report': b12.yigmaDuvar!.reportText,
+            'advice': b12.yigmaDuvar!.adviceText,
+          });
+        handled = true;
+      }
+    }
+
+    // Bölüm 13: Yangın Kompartımanları
+    if (id == 13) {
+      _buildSection13Details(details, s);
+      handled = true;
+    }
+
+    // Bölüm 15: İç Kaplamalar
+    if (id == 15) {
+      final b15 = s.bolum15;
+      if (b15 != null) {
+        if (b15.kaplama != null)
+          _addDetail(
+            details,
+            label: 'Zemin kaplama malzemesi nedir?',
+            value: b15.kaplama!.uiTitle,
+            report: b15.kaplama!.reportText,
+            advice: b15.kaplama!.adviceText,
+            level: b15.kaplama!.level,
+          );
+        if (b15.yalitim != null)
+          _addDetail(
+            details,
+            label: 'Döşeme üzerinde ısı yalıtım malzemesi var mı?',
+            value: b15.yalitim!.uiTitle,
+            report: b15.yalitim!.reportText,
+            advice: b15.yalitim!.adviceText,
+            level: b15.yalitim!.level,
+          );
+        if (b15.yalitimSap != null)
+          _addDetail(
+            details,
+            label: 'Yalıtım üzerinde en az 2 cm şap var mı?',
+            value: b15.yalitimSap!.uiTitle,
+            report: b15.yalitimSap!.reportText,
+            advice: b15.yalitimSap!.adviceText,
+            level: b15.yalitimSap!.level,
+          );
+        if (b15.tavan != null)
+          _addDetail(
+            details,
+            label: 'Asma Tavan var mı?',
+            value: b15.tavan!.uiTitle,
+            report: b15.tavan!.reportText,
+            advice: b15.tavan!.adviceText,
+            level: b15.tavan!.level,
+          );
+        if (b15.tavanMalzeme != null)
+          _addDetail(
+            details,
+            label: 'Asma tavan malzemesi nedir?',
+            value: b15.tavanMalzeme!.uiTitle,
+            report: b15.tavanMalzeme!.reportText,
+            advice: b15.tavanMalzeme!.adviceText,
+            level: b15.tavanMalzeme!.level,
+          );
+        if (b15.tesisat != null)
+          _addDetail(
+            details,
+            label: 'Tesisat geçişleri nasıl kapatılmış?',
+            value: b15.tesisat!.uiTitle,
+            report: b15.tesisat!.reportText,
+            advice: b15.tesisat!.adviceText,
+            level: b15.tesisat!.level,
+          );
+        handled = true;
+      }
+    }
+
+    // Bölüm 16: Dış Cephe
+    if (id == 16) {
+      final b16 = s.bolum16;
+      if (b16 != null) {
+        // Ana Soru
+        if (b16.mantolama != null) {
+          _addDetail(
+            details,
+            label: 'Dış cephe kaplama veya ısı yalıtım sistemi nedir?',
+            value: b16.mantolama!.uiTitle,
+            report: b16.mantolama!.reportText,
+            advice: b16.mantolama!.adviceText,
+            level: b16.mantolama!.level,
+          );
+        }
+
+        if (b16.mantolama?.label.contains("16-1-A") == true) {
+          double hBina = s.bolum3?.hBina ?? 0;
+          if (hBina <= 28.50) {
+            if (b16.bariyerYan != null) {
+              details.add({
+                'label': 'Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?',
+                'value': _getYesNoUnknown(b16.bariyerYan),
+                'report': _getBariyerReport(b16.bariyerYan!, "Pencerelerin yanlarında yangın bariyeri"),
+                'advice': b16.bariyerYan != 1 ? "Yönetmelik gereği pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer yapılmalıdır." : "",
+              });
+            }
+            if (b16.bariyerUst != null) {
+              details.add({
+                'label': 'Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?',
+                'value': _getYesNoUnknown(b16.bariyerUst),
+                'report': _getBariyerReport(b16.bariyerUst!, "Pencerelerin üstünde yangın bariyeri"),
+                'advice': b16.bariyerUst != 1 ? "Yönetmelik gereği pencerelerin üstünde en az 30 cm eninde yanmaz bariyer yapılmalıdır." : "",
+              });
+            }
+            if (b16.bariyerZemin != null) {
+              details.add({
+                'label': 'Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?',
+                'value': _getYesNoUnknown(b16.bariyerZemin),
+                'report': _getBariyerReport(b16.bariyerZemin!, "Zemin seviyesinde 1.5m yanmaz kaplama"),
+                'advice': b16.bariyerZemin != 1 ? "Zemin seviyesinden en az 1.5 metre yüksekliğe kadar olan cephe yüzeyi hiç yanmaz malzemelerle kaplanmalıdır." : "",
+              });
+            }
+          }
+        }
+
+        if (b16.mantolama?.label == Bolum16Content.giydirmeOptionC.label) {
+          if (b16.giydirmeBoslukYalitim != null) {
+            details.add({
+              'label': 'Cephe ile döşeme arasındaki boşluklar yalıtılmış mı?',
+              'value': b16.giydirmeBoslukYalitim == true ? "Evet" : "Hayır",
+              'report': b16.giydirmeBoslukYalitim == true
+                  ? "OLUMLU: Cephe kaplaması ile döşeme arasındaki boşluklar uygun malzemelerle yalıtılmıştır."
+                  : "KRİTİK RİSK: Cephe kaplaması ile bina döşemesi arasındaki boşluklar yalıtılmamıştır.",
+              'advice': b16.giydirmeBoslukYalitim == false ? "Cephe ile döşeme arasındaki boşluklar taşyünü gibi yanmaz malzemelerle sıkıca kapatılmalıdır." : "",
+            });
+          }
+        }
+
+        if (b16.sagirYuzey != null) {
+          _addDetail(
+            details,
+            label: 'Katlar arasında sağır (yanmaz) yüzey var mı?',
+            value: b16.sagirYuzey!.uiTitle,
+            report: b16.sagirYuzey!.reportText,
+            advice: b16.sagirYuzey!.adviceText,
+            level: b16.sagirYuzey!.level,
+          );
+        }
+
+        if (b16.bitisikNizam != null) {
+          _addDetail(
+            details,
+            label: 'Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?',
+            value: b16.bitisikNizam!.uiTitle,
+            report: b16.bitisikNizam!.reportText,
+            advice: b16.bitisikNizam!.adviceText,
+            level: b16.bitisikNizam!.level,
+          );
+        }
+        handled = true;
+      }
     }
 
     // Bölüm 17: Çatı
@@ -534,6 +756,14 @@ class ReportEngine {
             'advice': duvar.adviceText,
           });
         }
+        if (b18.boruTipi != null)
+          details.add({
+            'label':
+                'Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?',
+            'value': b18.boruTipi!.uiTitle,
+            'report': b18.boruTipi!.reportText,
+            'advice': b18.boruTipi!.adviceText,
+          });
         handled = true;
       }
     }
@@ -596,43 +826,53 @@ class ReportEngine {
       final b23 = s.bolum23;
       if (b23 != null) {
         if (b23.bodrum != null)
-          details.add({
-            'label': 'Asansörünüz bodrum katlara da iniyor mu?',
-            'value': b23.bodrum!.uiTitle,
-            'report': b23.bodrum!.reportText,
-            'advice': b23.bodrum!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Asansörünüz bodrum katlara da iniyor mu?',
+            value: b23.bodrum!.uiTitle,
+            report: b23.bodrum!.reportText,
+            advice: b23.bodrum!.adviceText,
+            level: b23.bodrum!.level,
+          );
         if (b23.yanginModu != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Yangın anında asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?',
-            'value': b23.yanginModu!.uiTitle,
-            'report': b23.yanginModu!.reportText,
-            'advice': b23.yanginModu!.adviceText,
-          });
+            value: b23.yanginModu!.uiTitle,
+            report: b23.yanginModu!.reportText,
+            advice: b23.yanginModu!.adviceText,
+            level: b23.yanginModu!.level,
+          );
         if (b23.konum != null)
-          details.add({
-            'label': 'Asansör kapıları normal katlarda nereye açılıyor?',
-            'value': b23.konum!.uiTitle,
-            'report': b23.konum!.reportText,
-            'advice': b23.konum!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Asansör kapıları normal katlarda nereye açılıyor?',
+            value: b23.konum!.uiTitle,
+            report: b23.konum!.reportText,
+            advice: b23.konum!.adviceText,
+            level: b23.konum!.level,
+          );
         if (b23.levha != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Asansör kapılarında \'YANGIN ANINDA KULLANMAYINIZ\' uyarısı var mı?',
-            'value': b23.levha!.uiTitle,
-            'report': b23.levha!.reportText,
-            'advice': b23.levha!.adviceText,
-          });
+            value: b23.levha!.uiTitle,
+            report: b23.levha!.reportText,
+            advice: b23.levha!.adviceText,
+            level: b23.levha!.level,
+          );
         if (b23.havalandirma != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Asansör kuyusunun tepesinde havalandırma penceresi var mı?',
-            'value': b23.havalandirma!.uiTitle,
-            'report': b23.havalandirma!.reportText,
-            'advice': b23.havalandirma!.adviceText,
-          });
+            value: b23.havalandirma!.uiTitle,
+            report: b23.havalandirma!.reportText,
+            advice: b23.havalandirma!.adviceText,
+            level: b23.havalandirma!.level,
+          );
         handled = true;
       }
     }
@@ -642,26 +882,32 @@ class ReportEngine {
       final b24 = s.bolum24;
       if (b24 != null) {
         if (b24.tip != null)
-          details.add({
-            'label': 'Dairenizden itibaren bina dışına çıkış nasıl?',
-            'value': b24.tip!.uiTitle,
-            'report': b24.tip!.reportText,
-            'advice': b24.tip!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Dairenizden itibaren bina dışına çıkış nasıl?',
+            value: b24.tip!.uiTitle,
+            report: b24.tip!.reportText,
+            advice: b24.tip!.adviceText,
+            level: b24.tip!.level,
+          );
         if (b24.pencere != null)
-          details.add({
-            'label': 'Açık kaçış yoluna bakan dairelere ait pencereler var mı?',
-            'value': b24.pencere!.uiTitle,
-            'report': b24.pencere!.reportText,
-            'advice': b24.pencere!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Açık kaçış yoluna bakan dairelere ait pencereler var mı?',
+            value: b24.pencere!.uiTitle,
+            report: b24.pencere!.reportText,
+            advice: b24.pencere!.adviceText,
+            level: b24.pencere!.level,
+          );
         if (b24.kapi != null)
-          details.add({
-            'label': 'Açık kaçış yoluna bakan dış kapılar var mı?',
-            'value': b24.kapi!.uiTitle,
-            'report': b24.kapi!.reportText,
-            'advice': b24.kapi!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Açık kaçış yoluna bakan dış kapılar var mı?',
+            value: b24.kapi!.uiTitle,
+            report: b24.kapi!.reportText,
+            advice: b24.kapi!.adviceText,
+            level: b24.kapi!.level,
+          );
         handled = true;
       }
     }
@@ -671,379 +917,41 @@ class ReportEngine {
       final b25 = s.bolum25;
       if (b25 != null) {
         if (b25.genislik != null)
-          details.add({
-            'label': 'Merdiven kol genişliği yeterli mi?',
-            'value': b25.genislik!.uiTitle,
-            'report': b25.genislik!.reportText,
-            'advice': b25.genislik!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Merdiven kol genişliği yeterli mi?',
+            value: b25.genislik!.uiTitle,
+            report: b25.genislik!.reportText,
+            advice: b25.genislik!.adviceText,
+            level: b25.genislik!.level,
+          );
         if (b25.basamak != null)
-          details.add({
-            'label': 'Basamak genişliği yeterli mi?',
-            'value': b25.basamak!.uiTitle,
-            'report': b25.basamak!.reportText,
-            'advice': b25.basamak!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Basamak genişliği yeterli mi?',
+            value: b25.basamak!.uiTitle,
+            report: b25.basamak!.reportText,
+            advice: b25.basamak!.adviceText,
+            level: b25.basamak!.level,
+          );
         if (b25.basKurtarma != null)
-          details.add({
-            'label': 'Baş kurtarma yüksekliği yeterli mi?',
-            'value': b25.basKurtarma!.uiTitle,
-            'report': b25.basKurtarma!.reportText,
-            'advice': b25.basKurtarma!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Baş kurtarma yüksekliği yeterli mi?',
+            value: b25.basKurtarma!.uiTitle,
+            report: b25.basKurtarma!.reportText,
+            advice: b25.basKurtarma!.adviceText,
+            level: b25.basKurtarma!.level,
+          );
         if (b25.yukseklik != null)
-          details.add({
-            'label': 'Dairesel merdiven yükseklik sınırı (9.5m) uygun mu?',
-            'value': b25.yukseklik!.uiTitle,
-            'report': b25.yukseklik!.reportText,
-            'advice': b25.yukseklik!.adviceText,
-          });
-        handled = true;
-      }
-    }
-
-    // Bölüm 12: Yapısal Yangın Dayanımı
-    if (id == 12) {
-      final b12 = s.bolum12;
-      if (b12 != null) {
-        // Betonarme soruları
-        if (b12.betonPaspayi != null)
-          details.add({
-            'label':
-                'Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?',
-            'value': b12.betonPaspayi!.uiTitle,
-            'report': b12.betonPaspayi!.reportText,
-            'advice': b12.betonPaspayi!.adviceText,
-          });
-        // Paspayı değerleri (ölçü girilmişse)
-        if (b12.kolonPaspayi != null)
-          details.add({
-            'label': 'Kolon Paspayı',
-            'value': '${b12.kolonPaspayi} mm',
-            'report': '',
-          });
-        if (b12.kirisPaspayi != null)
-          details.add({
-            'label': 'Kiriş Paspayı',
-            'value': '${b12.kirisPaspayi} mm',
-            'report': '',
-          });
-        if (b12.dosemePaspayi != null)
-          details.add({
-            'label': 'Döşeme Paspayı',
-            'value': '${b12.dosemePaspayi} mm',
-            'report': '',
-          });
-        // Çelik sorusu
-        if (b12.celikKoruma != null)
-          details.add({
-            'label':
-                'Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?',
-            'value': b12.celikKoruma!.uiTitle,
-            'report': b12.celikKoruma!.reportText,
-            'advice': b12.celikKoruma!.adviceText,
-          });
-        // Ahşap sorusu
-        if (b12.ahsapKesit != null)
-          details.add({
-            'label':
-                'Ahşap taşıyıcılarınızın kesiti yapı kullanımına göre yeterli mi?',
-            'value': b12.ahsapKesit!.uiTitle,
-            'report': b12.ahsapKesit!.reportText,
-            'advice': b12.ahsapKesit!.adviceText,
-          });
-        // Yığma sorusu
-        if (b12.yigmaDuvar != null)
-          details.add({
-            'label': 'Yığma duvarlarınızın kalınlığı ne durumda?',
-            'value': b12.yigmaDuvar!.uiTitle,
-            'report': b12.yigmaDuvar!.reportText,
-            'advice': b12.yigmaDuvar!.adviceText,
-          });
-        handled = true;
-      }
-    }
-
-    // Bölüm 28: Daire İçi Mesafeler
-    if (id == 28) {
-      final b28 = s.bolum28;
-      if (b28 != null) {
-        final hasSprinkler = s.bolum9?.secim?.label == "9-1-A";
-        final limitTekYon = hasSprinkler ? 30 : 20;
-
-        if (b28.mesafe != null)
-          details.add({
-            'label':
-                'Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?',
-            'value': b28.mesafe!.uiTitle,
-            'report': _filterSprinklerText(
-              b28.mesafe!.reportText,
-              hasSprinkler,
-              limit: limitTekYon.toString(),
-            ),
-            'advice': b28.mesafe!.adviceText,
-          });
-        if (b28.dubleks != null)
-          details.add({
-            'label': 'Daireniz Dubleks (İki katlı) mi?',
-            'value': b28.dubleks!.uiTitle,
-            'report': b28.dubleks!.reportText,
-            'advice': b28.dubleks!.adviceText,
-          });
-        if (b28.alan != null)
-          details.add({
-            'label': 'Üst katınızın alanı 70 m²\'den büyük mü?',
-            'value': b28.alan!.uiTitle,
-            'report': b28.alan!.reportText,
-            'advice': b28.alan!.adviceText,
-          });
-        if (b28.cikis != null)
-          details.add({
-            'label':
-                'Üst kattan apartman koridoruna açılan ikinci bir çelik kapı (çıkış) var mı?',
-            'value': b28.cikis!.uiTitle,
-            'report': b28.cikis!.reportText,
-            'advice': b28.cikis!.adviceText,
-          });
-        if (b28.muafiyet != null)
-          details.add({
-            'label': 'Daire içi mesafe muafiyeti',
-            'value': b28.muafiyet!.uiTitle,
-            'report': _filterSprinklerText(
-              b28.muafiyet!.reportText,
-              hasSprinkler,
-            ),
-            'advice': b28.muafiyet!.adviceText,
-          });
-        handled = true;
-      }
-    }
-
-    // Bölüm 13: Yangın Kompartımanları
-    if (id == 13) {
-      _buildSection13Details(details, s);
-      handled = true;
-    }
-
-    // Bölüm 15: İç Kaplamalar
-    if (id == 15) {
-      final b15 = s.bolum15;
-      if (b15 != null) {
-        if (b15.kaplama != null)
           _addDetail(
             details,
-            label: 'Zemin kaplama malzemesi nedir?',
-            value: b15.kaplama!.uiTitle,
-            report: b15.kaplama!.reportText,
-            advice: b15.kaplama!.adviceText,
-            level: b15.kaplama!.level,
+            label: 'Kaçış yolu olarak kullanılacak döner merdiven yüksekliği nedir?',
+            value: b25.yukseklik!.uiTitle,
+            report: b25.yukseklik!.reportText,
+            advice: b25.yukseklik!.adviceText,
+            level: b25.yukseklik!.level,
           );
-        if (b15.yalitim != null)
-          _addDetail(
-            details,
-            label: 'Döşeme üzerinde ısı yalıtım malzemesi var mı?',
-            value: b15.yalitim!.uiTitle,
-            report: b15.yalitim!.reportText,
-            advice: b15.yalitim!.adviceText,
-            level: b15.yalitim!.level,
-          );
-        if (b15.yalitimSap != null)
-          _addDetail(
-            details,
-            label: 'Yalıtım üzerinde en az 2 cm şap var mı?',
-            value: b15.yalitimSap!.uiTitle,
-            report: b15.yalitimSap!.reportText,
-            advice: b15.yalitimSap!.adviceText,
-            level: b15.yalitimSap!.level,
-          );
-        if (b15.tavan != null)
-          _addDetail(
-            details,
-            label: 'Asma Tavan var mı?',
-            value: b15.tavan!.uiTitle,
-            report: b15.tavan!.reportText,
-            advice: b15.tavan!.adviceText,
-            level: b15.tavan!.level,
-          );
-        if (b15.tavanMalzeme != null)
-          _addDetail(
-            details,
-            label: 'Asma tavan malzemesi nedir?',
-            value: b15.tavanMalzeme!.uiTitle,
-            report: b15.tavanMalzeme!.reportText,
-            advice: b15.tavanMalzeme!.adviceText,
-            level: b15.tavanMalzeme!.level,
-          );
-        if (b15.tesisat != null)
-          _addDetail(
-            details,
-            label: 'Tesisat geçişleri nasıl kapatılmış?',
-            value: b15.tesisat!.uiTitle,
-            report: b15.tesisat!.reportText,
-            advice: b15.tesisat!.adviceText,
-            level: b15.tesisat!.level,
-          );
-        handled = true;
-      }
-    }
-
-    // Bölüm 16: Dış Cephe
-    // Bölüm 16: Dış Cephe
-    if (id == 16) {
-      final b16 = s.bolum16;
-      if (b16 != null) {
-        // Ana Soru - Sadece bir kez ekle
-        if (b16.mantolama != null) {
-          _addDetail(
-            details,
-            label: 'Dış cephe kaplama veya ısı yalıtım sistemi nedir?',
-            value: b16.mantolama!.uiTitle,
-            report: b16.mantolama!.reportText,
-            advice: b16.mantolama!.adviceText,
-            level: b16.mantolama!.level,
-          );
-        }
-
-        if (b16.mantolama?.label.contains("16-1-A") == true) {
-          double hBina = s.bolum3?.hBina ?? 0;
-
-          if (hBina <= 28.50) {
-            // Alçak Bina Kontrolleri
-            if (b16.bariyerYan != null) {
-              details.add({
-                'label':
-                    'Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?',
-                'value': _getYesNoUnknown(b16.bariyerYan),
-                'report': _getBariyerReport(
-                  b16.bariyerYan!,
-                  "Pencerelerin yanlarında yangın bariyeri",
-                ),
-                'advice': b16.bariyerYan != 1
-                    ? "Yönetmelik gereği pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer (taşyünü vb.) yapılmalıdır."
-                    : "",
-              });
-            }
-            if (b16.bariyerUst != null) {
-              details.add({
-                'label':
-                    'Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?',
-                'value': _getYesNoUnknown(b16.bariyerUst),
-                'report': _getBariyerReport(
-                  b16.bariyerUst!,
-                  "Pencerelerin üstünde yangın bariyeri",
-                ),
-                'advice': b16.bariyerUst != 1
-                    ? "Yönetmelik gereği pencerelerin üstünde en az 30 cm eninde yanmaz bariyer yapılmalıdır."
-                    : "",
-              });
-            }
-            if (b16.bariyerZemin != null) {
-              details.add({
-                'label':
-                    'Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?',
-                'value': _getYesNoUnknown(b16.bariyerZemin),
-                'report': _getBariyerReport(
-                  b16.bariyerZemin!,
-                  "Zemin seviyesinde (su basman) 1.5m yanmaz kaplama",
-                ),
-                'advice': b16.bariyerZemin != 1
-                    ? "Zemin seviyesinden en az 1.5 metre yüksekliğe kadar olan cephe yüzeyi hiç yanmaz malzemelerle kaplanmalıdır."
-                    : "",
-              });
-            }
-          }
-        }
-
-        if (b16.mantolama?.label == Bolum16Content.giydirmeOptionC.label) {
-          if (b16.giydirmeBoslukYalitim != null) {
-            details.add({
-              'label': 'Cephe ile döşeme arasındaki boşluklar yalıtılmış mı?',
-              'value': b16.giydirmeBoslukYalitim == true ? "Evet" : "Hayır",
-              'report': b16.giydirmeBoslukYalitim == true
-                  ? "OLUMLU: Cephe kaplaması ile döşeme arasındaki boşluklar uygun malzemelerle yalıtılmıştır."
-                  : "KRİTİK RİSK: Cephe kaplaması ile bina döşemesi arasındaki boşluklar yalıtılmamıştır. Bu durum dumanın ve alevlerin üst katlara hızlıca geçişine sebep olur.",
-              'advice': b16.giydirmeBoslukYalitim == false
-                  ? "Cephe ile döşeme arasındaki boşluklar taşyünü gibi yanmaz malzemelerle sıkıca kapatılmalıdır."
-                  : "",
-            });
-          }
-        }
-
-        if (b16.sagirYuzey != null) {
-          _addDetail(
-            details,
-            label: 'Katlar arasında sağır (yanmaz) yüzey var mı?',
-            value: b16.sagirYuzey!.uiTitle,
-            report: b16.sagirYuzey!.reportText,
-            advice: b16.sagirYuzey!.adviceText,
-            level: b16.sagirYuzey!.level,
-          );
-
-          if (b16.sagirYuzey!.label == Bolum16Content.sagirYuzeyOptionB.label) {
-            if (b16.sagirYuzeySprinkler != null) {
-              details.add({
-                'label':
-                    'Cepheye doğru bakan özel sprinkler başlıkları var mı?',
-                'value': b16.sagirYuzeySprinkler == true ? "Evet" : "Hayır",
-                'report': b16.sagirYuzeySprinkler == true
-                    ? "OLUMLU: Cam cephe önünde otomatik sprinkler sistemi koruması mevcuttur."
-                    : "UYARI: Cam cephe kullanılmasına rağmen içeriden cepheye bakan sprinkler koruması yoktur.",
-                'advice': b16.sagirYuzeySprinkler == false
-                    ? "Cam cephe sistemlerinde, yangının içeriden cama ulaşmasını engellemek için cepheye 1.5m mesafede sıkılaştırılmış sprinkler başlıkları kullanılmalıdır."
-                    : "",
-              });
-            }
-          }
-        }
-
-        if (b16.bitisikNizam != null) {
-          _addDetail(
-            details,
-            label:
-                'Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?',
-            value: b16.bitisikNizam!.uiTitle,
-            report: b16.bitisikNizam!.reportText,
-            advice: b16.bitisikNizam!.adviceText,
-            level: b16.bitisikNizam!.level,
-          );
-        }
-
-        // En uzun cephe uzunluğu
-        if (b16.cepheUzunlugu != null) {
-          _addDetail(
-            details,
-            label: 'En uzun cephenin uzunluğu:',
-            value: b16.cepheUzunlugu!.uiTitle,
-            report: b16.cepheUzunlugu!.reportText,
-            advice: b16.cepheUzunlugu!.adviceText,
-            level: b16.cepheUzunlugu!.level,
-          );
-        }
-
-        handled = true;
-      }
-    }
-
-    // Bölüm 18: Koridor
-    if (id == 18) {
-      final b18 = s.bolum18;
-      if (b18 != null) {
-        if (b18.duvarKaplama != null)
-          details.add({
-            'label':
-                'Daire içlerinde veya koridor duvarlarında; kağıt, ahşap, plastik veya köpük (içten yalıtım) gibi bir kaplama var mı?',
-            'value': b18.duvarKaplama!.uiTitle,
-            'report': b18.duvarKaplama!.reportText,
-            'advice': b18.duvarKaplama!.adviceText,
-          });
-        if (b18.boruTipi != null)
-          details.add({
-            'label':
-                'Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?',
-            'value': b18.boruTipi!.uiTitle,
-            'report': b18.boruTipi!.reportText,
-            'advice': b18.boruTipi!.adviceText,
-          });
         handled = true;
       }
     }
@@ -1121,7 +1029,7 @@ class ReportEngine {
             advice: b20.bodrumMerdivenDevami!.adviceText,
             level: b20.bodrumMerdivenDevami!.level,
           );
-        // YGH Basınçlandırma
+        // YGH Basınçlandırma (Kullanıcıdan alınan bilgi)
         if (b20.basinclandirma != null)
           _addDetail(
             details,
@@ -1137,17 +1045,19 @@ class ReportEngine {
         if (basincReasons.isNotEmpty) {
           _addDetail(
             details,
-            label: 'Basınçlandırma Teknik Değerlendirmesi',
+            label: 'Basınçlandırma Sistemi',
             value: 'ZORUNLU',
-            report: 'Binadaki teknik verilere göre basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join('\n')}',
+            report:
+                'BİLGİ: Bina verilerine göre basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join('\n')}',
             level: RiskLevel.critical,
           );
         } else {
-           _addDetail(
+          _addDetail(
             details,
-            label: 'Basınçlandırma Teknik Değerlendirmesi',
-            value: 'UYGUN/GEREKLİ DEĞİL',
-            report: 'Mevcut verilere göre binada basınçlandırma sistemi zorunluluğu tespit edilmemiştir.',
+            label: 'Basınçlandırma Sistemi',
+            value: 'ŞART DEĞİL',
+            report:
+                'BİLGİ: Bina verilerine göre basınçlandırma sistemi şart değildir.',
             level: RiskLevel.info,
           );
         }
@@ -1352,6 +1262,61 @@ class ReportEngine {
             status: ReportStatus.warning,
           );
         }
+        handled = true;
+      }
+    }
+
+    // Bölüm 28: Daire İçi Mesafeler
+    if (id == 28) {
+      final b28 = s.bolum28;
+      if (b28 != null) {
+        final hasSprinkler = s.bolum9?.secim?.label == "9-1-A";
+        final limitTekYon = hasSprinkler ? 30 : 20;
+
+        if (b28.mesafe != null)
+          details.add({
+            'label':
+                'Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?',
+            'value': b28.mesafe!.uiTitle,
+            'report': _filterSprinklerText(
+              b28.mesafe!.reportText,
+              hasSprinkler,
+              limit: limitTekYon.toString(),
+            ),
+            'advice': b28.mesafe!.adviceText,
+          });
+        if (b28.dubleks != null)
+          details.add({
+            'label': 'Daireniz Dubleks (İki katlı) mi?',
+            'value': b28.dubleks!.uiTitle,
+            'report': b28.dubleks!.reportText,
+            'advice': b28.dubleks!.adviceText,
+          });
+        if (b28.alan != null)
+          details.add({
+            'label': 'Üst katınızın alanı 70 m²\'den büyük mü?',
+            'value': b28.alan!.uiTitle,
+            'report': b28.alan!.reportText,
+            'advice': b28.alan!.adviceText,
+          });
+        if (b28.cikis != null)
+          details.add({
+            'label':
+                'Üst kattan apartman koridoruna açılan ikinci bir chilik kapı (çıkış) var mı?',
+            'value': b28.cikis!.uiTitle,
+            'report': b28.cikis!.reportText,
+            'advice': b28.cikis!.adviceText,
+          });
+        if (b28.muafiyet != null)
+          details.add({
+            'label': 'Daire içi mesafe muafiyeti',
+            'value': b28.muafiyet!.uiTitle,
+            'report': _filterSprinklerText(
+              b28.muafiyet!.reportText,
+              hasSprinkler,
+            ),
+            'advice': b28.muafiyet!.adviceText,
+          });
         handled = true;
       }
     }
@@ -2224,7 +2189,13 @@ class ReportEngine {
         ]);
       case 20:
         final b = s.bolum20;
-        // Sayısal kontroller (sahanlıksız/dengelenmiş merdiven) calculateRiskMetrics'te yönetiliyor
+        final List<RiskLevel> extraLevels = [];
+        final basincReasons = evaluateBasincRequirement(store: s);
+        for (var reason in basincReasons) {
+          if (reason.startsWith("KRİTİK RİSK")) extraLevels.add(RiskLevel.critical);
+          else if (reason.startsWith("UYARI")) extraLevels.add(RiskLevel.warning);
+        }
+
         return _maxLevel([
           b?.tekKatCikis?.level,
           b?.tekKatRampa?.level,
@@ -2233,14 +2204,23 @@ class ReportEngine {
           b?.havalandirma?.level,
           b?.lobiTahliyeMesafeDurumu?.level,
           b?.bodrumLobiTahliyeMesafeDurumu?.level,
+          ...extraLevels,
         ]);
       case 21:
         final b = s.bolum21;
+        final List<RiskLevel> extraLevels = [];
+        final yghReasons = evaluateYghRequirement(store: s);
+        for (var reason in yghReasons) {
+          if (reason.startsWith("KRİTİK RİSK")) extraLevels.add(RiskLevel.critical);
+          else if (reason.startsWith("UYARI")) extraLevels.add(RiskLevel.warning);
+        }
+
         return _maxLevel([
           b?.varlik?.level,
           b?.malzeme?.level,
           b?.kapi?.level,
           b?.esya?.level,
+          ...extraLevels,
         ]);
       case 22:
         final b = s.bolum22;
@@ -2535,6 +2515,14 @@ class ReportEngine {
       add(b20.havalandirma);
       add(b20.lobiTahliyeMesafeDurumu);
       add(b20.bodrumLobiTahliyeMesafeDurumu);
+
+      // Dinamik Basınçlandırma Analizi (Puanlamaya dahil et)
+      final basincReasons = evaluateBasincRequirement(store: s);
+      for (var reason in basincReasons) {
+        if (reason.startsWith("KRİTİK RİSK")) addLevel(RiskLevel.critical);
+        else if (reason.startsWith("UYARI")) addLevel(RiskLevel.warning);
+      }
+
       // Hidden Risks (Numerical)
       if (b20.sahanliksizMerdivenSayisi > 0) addLevel(RiskLevel.critical);
     }
@@ -2546,6 +2534,13 @@ class ReportEngine {
       add(b21.malzeme);
       add(b21.kapi);
       add(b21.esya);
+
+      // Dinamik YGH Analizi (Puanlamaya dahil et)
+      final yghReasons = evaluateYghRequirement(store: s);
+      for (var reason in yghReasons) {
+        if (reason.startsWith("KRİTİK RİSK")) addLevel(RiskLevel.critical);
+        else if (reason.startsWith("UYARI")) addLevel(RiskLevel.warning);
+      }
     }
 
     // --- BÖLÜM 22 (İtfaiye Asansörü) ---
@@ -2918,11 +2913,11 @@ class ReportEngine {
       // 1. Değerlendirme Özeti
       if (isMandatory) {
         parts.add(
-          "DEĞERLENDİRME: YGH ZORUNLUDUR\nBinada aşağıdaki teknik gerekçelerden dolayı Yangın Güvenlik Holü (YGH) bulunması zorunludur:\n${yghReasons.join('\n')}",
+          "BİLGİ: YGH ZORUNLUDUR\nBinada aşağıdaki teknik gerekçelerden dolayı Yangın Güvenlik Holü (YGH) bulunması zorunludur:\n${yghReasons.join('\n')}",
         );
       } else {
         parts.add(
-          "DEĞERLENDİRME: YGH ZORUNLU DEĞİLDİR\nMevcut yapı ile ilgili beyanlara göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
+          "BİLGİ: YGH ZORUNLU DEĞİLDİR\nMevcut yapı ile ilgili beyanlara göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
         );
       }
 
@@ -3632,7 +3627,7 @@ class ReportEngine {
     // 1. Yapı Yüksekliği >= 51.50m
     if (hYapi >= (51.50 - 0.001)) {
       reasons.add(
-        "KRİTİK RİSK: Yapı Yüksekliği ≥ 51.50m olduğu için en az 2 merdivende (genelde merdiven ve itfaiye asansörü holü veya iki merdiven) basınçlandırma zorunludur.",
+        "KRİTİK RİSK: Yapı Yüksekliği ≥ 51.50m olduğu için en az 2 merdivend basınçlandırma sistemi tesis edilmesi gerekmektedir.",
       );
     }
     // 2. Yapı Yüksekliği >= 30.50m ve YGH yoksa
@@ -3640,24 +3635,30 @@ class ReportEngine {
       final bool hasYgh = b21?.varlik?.label.contains("21-1-A") ?? false;
       if (!hasYgh) {
         reasons.add(
-          "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve merdiven önünde YGH (Yangın Güvenlik Holü) bulunmadığı durumlarda en az bir merdivende basınçlandırma zorunludur.",
+          "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve merdiven önünde YGH (Yangın Güvenlik Holü) bulunmadığı durumlarda en az bir merdivende basınçlandırma sistemi tesis edilmesi gerekmektedir.",
         );
       }
     }
 
     // 3. İtfaiye Asansörü (Bölüm 22) zorunluluğu veya varlığı
     if (b22 != null && b22.varlik?.label.contains("22-6-A") == true) {
-      reasons.add("KRİTİK RİSK: İtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.");
+      reasons.add(
+        "KRİTİK RİSK: İtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.",
+      );
     }
 
     // 4. Normal Asansör (Bölüm 23) Havalandırma Belirsizliği veya Eksikliği
     if (b23 != null && b23.havalandirma?.label.contains("23-5-B") == true) {
-      reasons.add("UYARI: Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden basınçlandırma yapılması zorunlu hale gelebilir.");
+      reasons.add(
+        "UYARI: Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden basınçlandırma yapılması gereklidir.",
+      );
     }
 
     // 5. Bodrum Kat Sayısı > 4
     if ((s.bolum3?.bodrumKatSayisi ?? 0) > 4) {
-      reasons.add("KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodruma hizmet veren tüm merdivenlerde basınçlandırma zorunludur.");
+      reasons.add(
+        "KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodruma hizmet veren tüm merdivenlerde basınçlandırma zorunludur.",
+      );
     }
 
     return reasons;
@@ -3683,7 +3684,7 @@ class ReportEngine {
       }
     }
     // 3. Bina Yüksekliği > 21.50m (Varsa ek kurallar buraya eklenebilir)
-    else if ((s.bolum3?.hBina ?? 0) > (21.50 - 0.001)) {
+    else if (_getHBina(s) > (21.50 - 0.001)) {
       // Şu an için 21.50m üstü için YGH'yi doğrudan zorunlu kılan genel bir kural ekli değil
       // Ancak hiyerarşi bozulmasın diye bu blok ayrıldı.
     }

@@ -1985,7 +1985,7 @@ class Bolum20Content {
     uiTitle: "Hayır, yok.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Kapalı yangın merdivenlerinde basınçlandırma sistemi bulunmamaktadır. Yönetmeliğe göre binadaki yangın merdiveninde basınçlandırma sistemi ihtiyacı yoksa uygundur, ihtiyaç varsa durum, mimari proje üzerinden veya sahada Uzman tarafından değerlendirilmelidir.",
+        "BİLGİ: Kapalı yangın merdivenlerinde basınçlandırma sistemi bulunmamaktadır. Binaya özgü olarak YGH ihtiyacı bu analiz dokümanında ayrıca belirtilmiştir.",
     level: RiskLevel.warning,
   );
 

@@ -131,6 +131,39 @@ void main() {
     );
   });
 
+  group('Basınçlandırma Zorunluluk Kriterleri Testleri', () {
+    test('Kriter 1: hYapi >= 51.50m ise basınçlandırma zorunlu olmalı', () {
+      store.bolum3 = Bolum3Model(hYapi: 55.0, bodrumKatSayisi: 0);
+      final reasons = ReportEngine.evaluateBasincRequirement(store: store);
+      expect(reasons.any((r) => r.contains("51.50m")), true);
+      expect(reasons.any((r) => r.contains("KRİTİK RİSK")), true);
+    });
+
+    test('Kriter 2: 30.50m <= hYapi < 51.50m ve YGH yoksa basınçlandırma zorunlu olmalı', () {
+      store.bolum3 = Bolum3Model(hYapi: 35.0, bodrumKatSayisi: 0);
+      store.bolum21 = Bolum21Model(
+        varlik: ChoiceResult(label: "21-1-B", uiTitle: "Yok", uiSubtitle: "", reportText: ""),
+      );
+      final reasons = ReportEngine.evaluateBasincRequirement(store: store);
+      expect(reasons.any((r) => r.contains("30.50m üzeri")), true);
+      expect(reasons.any((r) => r.contains("YGH")), true);
+    });
+
+    test('Kriter 3: İtfaiye asansörü (22-6-A) varsa basınçlandırma zorunlu olmalı', () {
+      store.bolum22 = Bolum22Model(
+        varlik: ChoiceResult(label: "22-6-A", uiTitle: "", uiSubtitle: "", reportText: ""),
+      );
+      final reasons = ReportEngine.evaluateBasincRequirement(store: store);
+      expect(reasons.any((r) => r.contains("İtfaiye asansörü")), true);
+    });
+
+    test('Kriter 4: Bodrum kat sayısı > 4 ise basınçlandırma zorunlu olmalı', () {
+      store.bolum3 = Bolum3Model(bodrumKatSayisi: 5, hYapi: 10.0);
+      final reasons = ReportEngine.evaluateBasincRequirement(store: store);
+      expect(reasons.any((r) => r.contains("Bodrum kat sayısı 4'ten fazla")), true);
+    });
+  });
+
   group('Dairesel Merdiven Değerlendirmesi Testleri', () {
     test(
       'Senaryo 1: Dairesel merdiven yüksekliği <= 9.50m VE kullanıcı yükü <= 25 - GEÇERLİ',
@@ -328,6 +361,22 @@ void main() {
       );
       expect(
         details.any((d) => d['label'].contains('kaplama malzemeleri')),
+        true,
+      );
+
+      expect(
+        details.any((d) => d['label'] == 'YGH Teknik Değerlendirmesi'),
+        true,
+      );
+    });
+
+    test('Bölüm 20 Basınçlandırma Dinamik Bloğu Listelenmeli', () {
+      store.bolum20 = Bolum20Model(
+        basinclandirma: ChoiceResult(label: "20-BAS-B", uiTitle: "Yok", uiSubtitle: "", reportText: ""),
+      );
+      final details = ReportEngine.getSectionDetailedReport(20, store: store);
+      expect(
+        details.any((d) => d['label'] == 'Basınçlandırma Sistemi'),
         true,
       );
     });

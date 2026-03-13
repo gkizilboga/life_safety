@@ -86,31 +86,30 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
 
         try {
           BinaStore.instance.bolum19 = _model;
+          final navigator = Navigator.of(context);
           await BinaStore.instance.saveToDisk(immediate: true);
 
           if (!mounted) return;
-          Navigator.push(
-            context,
+          navigator.push(
             MaterialPageRoute(builder: (context) => const Bolum20Screen()),
           );
         } catch (e) {
-          if (mounted) {
-            showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text("Hata: Bölüm 20'ye Geçilemedi"),
-                content: Text(
-                  "Geçiş sırasında bir hata oluştu. Lütfen bu mesajı geliştiriciye bildirin:\n\n$e",
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx),
-                    child: const Text("Tamam"),
-                  ),
-                ],
+          if (!context.mounted) return;
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Text("Hata: Bölüm 20'ye Geçilemedi"),
+              content: Text(
+                "Geçiş sırasında bir hata oluştu. Lütfen bu mesajı geliştiriciye bildirin:\n\n$e",
               ),
-            );
-          }
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx),
+                  child: const Text("Tamam"),
+                ),
+              ],
+            ),
+          );
         } finally {
           if (mounted) setState(() => _isProcessing = false);
         }

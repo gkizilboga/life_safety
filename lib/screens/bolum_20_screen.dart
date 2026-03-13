@@ -56,6 +56,8 @@ class _Bolum20ScreenContent extends StatefulWidget {
 }
 
 class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
+  bool _isProcessing = false;
+
   @override
   Widget build(BuildContext context) {
     // Read the provider once, use Selectors or context.select for reactive parts
@@ -72,15 +74,13 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
       (Bolum20Provider p) => p.showBasinclandirma,
     );
 
-    bool _isProcessing = false;
-
     return AnalysisPageLayout(
       title: "Kaçış Merdivenleri",
       screenType: Bolum20Screen,
       isNextEnabled: isLimitValid,
       onNext: () async {
         if (_isProcessing) return;
-        _isProcessing = true;
+        setState(() => _isProcessing = true);
 
         try {
           if (provider.validateAndSave(context)) {
@@ -102,7 +102,7 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                   false;
 
               if (!confirmed) {
-                _isProcessing = false;
+                if (mounted) setState(() => _isProcessing = false);
                 return;
               }
             }
@@ -124,7 +124,7 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
               ),
             );
           } else {
-            _isProcessing = false;
+            if (mounted) setState(() => _isProcessing = false);
             if (isLimitValid) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -136,8 +136,11 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
             }
           }
         } catch (e) {
-          _isProcessing = false;
+          if (mounted) setState(() => _isProcessing = false);
           debugPrint("Bolum 20 Navigation Error: $e");
+        } finally {
+          // Note: if navigation happened, setState might not be needed or could error if unmounted
+          if (mounted) setState(() => _isProcessing = false);
         }
       },
       child: GestureDetector(
