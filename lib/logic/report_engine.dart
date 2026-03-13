@@ -372,7 +372,7 @@ class ReportEngine {
           details,
           label: 'Merdiven önünde Yangın Güvenlik Holü var mı?',
           value: b21.varlik?.uiTitle ?? '-',
-          report: '',
+          report: b21.varlik?.reportText ?? '',
           advice: b21.varlik?.adviceText,
           level: b21.varlik?.level,
         );
@@ -382,7 +382,7 @@ class ReportEngine {
             label:
                 'YGH (Hol) içindeki kaplama malzemeleri yanmaz özellikte mi?',
             value: b21.malzeme?.uiTitle ?? '-',
-            report: '',
+            report: b21.malzeme?.reportText ?? '',
             advice: b21.malzeme?.adviceText,
             level: b21.malzeme?.level,
           );
@@ -391,7 +391,7 @@ class ReportEngine {
             label:
                 'YGH (Hol) kapıları duman sızdırmaz ve yangına dayanıklı mı?',
             value: b21.kapi?.uiTitle ?? '-',
-            report: '',
+            report: b21.kapi?.reportText ?? '',
             advice: b21.kapi?.adviceText,
             level: b21.kapi?.level,
           );
@@ -399,7 +399,7 @@ class ReportEngine {
             details,
             label: 'YGH (Hol) içinde eşya (bisiklet, dolap vb.) var mı?',
             value: b21.esya?.uiTitle ?? '-',
-            report: '',
+            report: b21.esya?.reportText ?? '',
             advice: b21.esya?.adviceText,
             level: b21.esya?.level,
           );
