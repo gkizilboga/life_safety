@@ -2003,7 +2003,7 @@ class Bolum20Content {
     uiSubtitle: "",
     reportText:
         "Binadaki merdivenler tüm katlara aynı anda hizmet verebilmektedir. Bodrum katlar için bağımsız merdiven(ler) bulunmamaktadır.",
-    level: RiskLevel.positive,
+    level: RiskLevel.info,
   );
 
   static final bodrumOptionB = ChoiceResult(
@@ -2075,7 +2075,7 @@ class Bolum20Content {
     uiTitle: "Kaçış merdivenlerinin en az yarısı doğrudan dışarı AÇILMIYOR.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Madde 41/1 gereği, binadaki kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut durumda bu oran sağlanamamaktadır.",
+        "KRİTİK RİSK: Binadaki kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut durumda bu oran sağlanamamaktadır.",
     level: RiskLevel.critical,
   );
 
@@ -2085,7 +2085,7 @@ class Bolum20Content {
         "Kaçış merdivenlerinin doğrudan dışarı tahliye mesafesi limiti AŞILIYOR.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Madde 41/2 gereği, doğrudan dışarı açılmayan merdivenlerin koridor içindeki tahliye mesafesi yönetmelik limitlerini (sprinklersiz binalarda 10m, sprinklerli binalarda 15m) aşmamalıdır. Mevcut durumda bu mesafe sınır değerlerin dışındadır.",
+        "KRİTİK RİSK: Doğrudan dışarı açılmayan merdivenlerin koridor içindeki tahliye mesafesi yönetmelik limitlerini (sprinklersiz binalarda 10m, sprinklerli binalarda 15m) aşmamalıdır. Mevcut durumda bu mesafe sınır değerlerin dışındadır.",
     level: RiskLevel.critical,
   );
 
@@ -2113,7 +2113,7 @@ class Bolum20Content {
     uiTitle: "Hayır, limitin üstünde",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Madde 41/2 gereği, bina içi tahliye mesafesi Yönetmelik limit değerlerini (sprinklersiz 10m / sprinklerli 15m) aşmaktadır.",
+        "KRİTİK RİSK: Bina içi tahliye mesafesi Yönetmelik limit değerlerini (sprinklersiz 10m / sprinklerli 15m) aşmaktadır.",
     level: RiskLevel.critical,
   );
 
@@ -2144,7 +2144,7 @@ class Bolum21Content {
     reportText:
         "BİLGİ: Binada YGH bulunmamaktadır. Binada YGH zorunluluğu bulunup bulunmadığı testin sonunda kontrol edilmelidir. Detaylı bilgi için Yangın Güvenlik Uzmanı 'nın görüşüne başvurulması önerilir.",
     adviceText:
-        "Bu raporda YGH zorunluluğu belirtildiyse ve binada YGH oluşturulamıyorsa, Madde 89 uyarınca kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilebilir. Kesin değerlendirme için Yangın Güvenlik Uzmanı 'ndan bilgi alınmalıdır.",
+        "Bu raporda YGH zorunluluğu belirtildiyse ve binada YGH oluşturulamıyorsa, Kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilebilir. Kesin değerlendirme için Yangın Güvenlik Uzmanı 'ndan bilgi alınmalıdır.",
     level: RiskLevel.warning,
   );
 

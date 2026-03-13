@@ -808,47 +808,59 @@ class ReportEngine {
       final b15 = s.bolum15;
       if (b15 != null) {
         if (b15.kaplama != null)
-          details.add({
-            'label': 'Zemin kaplama malzemesi nedir?',
-            'value': b15.kaplama!.uiTitle,
-            'report': b15.kaplama!.reportText,
-            'advice': b15.kaplama!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Zemin kaplama malzemesi nedir?',
+            value: b15.kaplama!.uiTitle,
+            report: b15.kaplama!.reportText,
+            advice: b15.kaplama!.adviceText,
+            level: b15.kaplama!.level,
+          );
         if (b15.yalitim != null)
-          details.add({
-            'label': 'Döşeme üzerinde ısı yalıtım malzemesi var mı?',
-            'value': b15.yalitim!.uiTitle,
-            'report': b15.yalitim!.reportText,
-            'advice': b15.yalitim!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Döşeme üzerinde ısı yalıtım malzemesi var mı?',
+            value: b15.yalitim!.uiTitle,
+            report: b15.yalitim!.reportText,
+            advice: b15.yalitim!.adviceText,
+            level: b15.yalitim!.level,
+          );
         if (b15.yalitimSap != null)
-          details.add({
-            'label': 'Yalıtım üzerinde en az 2 cm şap var mı?',
-            'value': b15.yalitimSap!.uiTitle,
-            'report': b15.yalitimSap!.reportText,
-            'advice': b15.yalitimSap!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Yalıtım üzerinde en az 2 cm şap var mı?',
+            value: b15.yalitimSap!.uiTitle,
+            report: b15.yalitimSap!.reportText,
+            advice: b15.yalitimSap!.adviceText,
+            level: b15.yalitimSap!.level,
+          );
         if (b15.tavan != null)
-          details.add({
-            'label': 'Asma Tavan var mı?',
-            'value': b15.tavan!.uiTitle,
-            'report': b15.tavan!.reportText,
-            'advice': b15.tavan!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Asma Tavan var mı?',
+            value: b15.tavan!.uiTitle,
+            report: b15.tavan!.reportText,
+            advice: b15.tavan!.adviceText,
+            level: b15.tavan!.level,
+          );
         if (b15.tavanMalzeme != null)
-          details.add({
-            'label': 'Asma tavan malzemesi nedir?',
-            'value': b15.tavanMalzeme!.uiTitle,
-            'report': b15.tavanMalzeme!.reportText,
-            'advice': b15.tavanMalzeme!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Asma tavan malzemesi nedir?',
+            value: b15.tavanMalzeme!.uiTitle,
+            report: b15.tavanMalzeme!.reportText,
+            advice: b15.tavanMalzeme!.adviceText,
+            level: b15.tavanMalzeme!.level,
+          );
         if (b15.tesisat != null)
-          details.add({
-            'label': 'Tesisat geçişleri nasıl kapatılmış?',
-            'value': b15.tesisat!.uiTitle,
-            'report': b15.tesisat!.reportText,
-            'advice': b15.tesisat!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Tesisat geçişleri nasıl kapatılmış?',
+            value: b15.tesisat!.uiTitle,
+            report: b15.tesisat!.reportText,
+            advice: b15.tesisat!.adviceText,
+            level: b15.tesisat!.level,
+          );
         handled = true;
       }
     }
@@ -860,12 +872,14 @@ class ReportEngine {
       if (b16 != null) {
         // Ana Soru - Sadece bir kez ekle
         if (b16.mantolama != null) {
-          details.add({
-            'label': 'Dış cephe kaplama veya ısı yalıtım sistemi nedir?',
-            'value': b16.mantolama!.uiTitle,
-            'report': b16.mantolama!.reportText,
-            'advice': b16.mantolama!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Dış cephe kaplama veya ısı yalıtım sistemi nedir?',
+            value: b16.mantolama!.uiTitle,
+            report: b16.mantolama!.reportText,
+            advice: b16.mantolama!.adviceText,
+            level: b16.mantolama!.level,
+          );
         }
 
         if (b16.mantolama?.label.contains("16-1-A") == true) {
@@ -934,12 +948,14 @@ class ReportEngine {
         }
 
         if (b16.sagirYuzey != null) {
-          details.add({
-            'label': 'Katlar arasında sağır (yanmaz) yüzey var mı?',
-            'value': b16.sagirYuzey!.uiTitle,
-            'report': b16.sagirYuzey!.reportText,
-            'advice': b16.sagirYuzey!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Katlar arasında sağır (yanmaz) yüzey var mı?',
+            value: b16.sagirYuzey!.uiTitle,
+            report: b16.sagirYuzey!.reportText,
+            advice: b16.sagirYuzey!.adviceText,
+            level: b16.sagirYuzey!.level,
+          );
 
           if (b16.sagirYuzey!.label == Bolum16Content.sagirYuzeyOptionB.label) {
             if (b16.sagirYuzeySprinkler != null) {
@@ -959,23 +975,27 @@ class ReportEngine {
         }
 
         if (b16.bitisikNizam != null) {
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?',
-            'value': b16.bitisikNizam!.uiTitle,
-            'report': b16.bitisikNizam!.reportText,
-            'advice': b16.bitisikNizam!.adviceText,
-          });
+            value: b16.bitisikNizam!.uiTitle,
+            report: b16.bitisikNizam!.reportText,
+            advice: b16.bitisikNizam!.adviceText,
+            level: b16.bitisikNizam!.level,
+          );
         }
 
         // En uzun cephe uzunluğu
         if (b16.cepheUzunlugu != null) {
-          details.add({
-            'label': 'En uzun cephenin uzunluğu:',
-            'value': b16.cepheUzunlugu!.uiTitle,
-            'report': b16.cepheUzunlugu!.reportText,
-            'advice': b16.cepheUzunlugu!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'En uzun cephenin uzunluğu:',
+            value: b16.cepheUzunlugu!.uiTitle,
+            report: b16.cepheUzunlugu!.reportText,
+            advice: b16.cepheUzunlugu!.adviceText,
+            level: b16.cepheUzunlugu!.level,
+          );
         }
 
         handled = true;
@@ -1050,46 +1070,54 @@ class ReportEngine {
       if (b20 != null) {
         // Tek katlı bina soruları
         if (b20.tekKatCikis != null)
-          details.add({
-            'label':
-                'Tek katlı binada merdivensiz bina dışına çıkış mümkün mu?',
-            'value': b20.tekKatCikis!.uiTitle,
-            'report': b20.tekKatCikis!.reportText,
-            'advice': b20.tekKatCikis!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Tek katlı binada merdivensiz bina dışına çıkış mümkün mu?',
+            value: b20.tekKatCikis!.uiTitle,
+            report: b20.tekKatCikis!.reportText,
+            advice: b20.tekKatCikis!.adviceText,
+            level: b20.tekKatCikis!.level,
+          );
         if (b20.tekKatRampa != null)
-          details.add({
-            'label':
-                'Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?',
-            'value': b20.tekKatRampa!.uiTitle,
-            'report': b20.tekKatRampa!.reportText,
-            'advice': b20.tekKatRampa!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?',
+            value: b20.tekKatRampa!.uiTitle,
+            report: b20.tekKatRampa!.reportText,
+            advice: b20.tekKatRampa!.adviceText,
+            level: b20.tekKatRampa!.level,
+          );
         // Bodrum merdiven devamı
         if (b20.bodrumMerdivenDevami != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Bodrum kat merdivenleri normal kat merdivenleriyle devam ediyor mu?',
-            'value': b20.bodrumMerdivenDevami!.uiTitle,
-            'report': b20.bodrumMerdivenDevami!.reportText,
-            'advice': b20.bodrumMerdivenDevami!.adviceText,
-          });
+            value: b20.bodrumMerdivenDevami!.uiTitle,
+            report: b20.bodrumMerdivenDevami!.reportText,
+            advice: b20.bodrumMerdivenDevami!.adviceText,
+            level: b20.bodrumMerdivenDevami!.level,
+          );
         // YGH Basınçlandırma
         if (b20.basinclandirma != null)
-          details.add({
-            'label': 'Merdivenlerde basınçlandırma sistemi var mı?',
-            'value': b20.basinclandirma!.uiTitle,
-            'report': b20.basinclandirma!.reportText,
-            'advice': b20.basinclandirma!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Merdivenlerde basınçlandırma sistemi var mı?',
+            value: b20.basinclandirma!.uiTitle,
+            report: b20.basinclandirma!.reportText,
+            advice: b20.basinclandirma!.adviceText,
+            level: b20.basinclandirma!.level,
+          );
         // Madde 45: Doğal Havalandırma
         if (b20.havalandirma != null)
-          details.add({
-            'label': 'Merdivenlerde doğal havalandırma var mı? (Madde 45)',
-            'value': b20.havalandirma!.uiTitle,
-            'report': b20.havalandirma!.reportText,
-            'advice': b20.havalandirma!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Merdivenlerde doğal havalandırma var mı? (Madde 45)',
+            value: b20.havalandirma!.uiTitle,
+            report: b20.havalandirma!.reportText,
+            advice: b20.havalandirma!.adviceText,
+            level: b20.havalandirma!.level,
+          );
 
         // Madde 41 Tahliye Mesafesi (Lobi)
         if (b20.lobiTahliyeMesafeDurumu != null) {
