@@ -2142,7 +2142,7 @@ class Bolum21Content {
     uiTitle: "Hayır, yok.",
     uiSubtitle: "Holden geçmeden direkt merdivene çıkılıyor.",
     reportText:
-        "UYARI: Binada YGH bulunmamaktadır. Binada YGH zorunluluğu bulunup bulunmadığı testin sonunda kontrol edilmelidir. Detaylı bilgi için Yangın Güvenlik Uzmanı 'nın görüşüne başvurulması önerilir.",
+        "BİLGİ: Binada YGH bulunmamaktadır. Binada YGH zorunluluğu bulunup bulunmadığı testin sonunda kontrol edilmelidir. Detaylı bilgi için Yangın Güvenlik Uzmanı 'nın görüşüne başvurulması önerilir.",
     adviceText:
         "Bu raporda YGH zorunluluğu belirtildiyse ve binada YGH oluşturulamıyorsa, Kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilebilir. Kesin değerlendirme için Yangın Güvenlik Uzmanı 'ndan bilgi alınmalıdır.",
     level: RiskLevel.warning,

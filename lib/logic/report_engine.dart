@@ -372,17 +372,19 @@ class ReportEngine {
           details,
           label: 'Merdiven önünde Yangın Güvenlik Holü var mı?',
           value: b21.varlik?.uiTitle ?? '-',
-          report: b21.varlik?.reportText ?? '',
+          report: '',
           advice: b21.varlik?.adviceText,
           level: b21.varlik?.level,
         );
+
         if (b21.varlik?.label.contains("21-1-A") == true) {
+
           _addDetail(
             details,
             label:
                 'YGH (Hol) içindeki kaplama malzemeleri yanmaz özellikte mi?',
             value: b21.malzeme?.uiTitle ?? '-',
-            report: b21.malzeme?.reportText ?? '',
+            report: '',
             advice: b21.malzeme?.adviceText,
             level: b21.malzeme?.level,
           );
@@ -391,7 +393,7 @@ class ReportEngine {
             label:
                 'YGH (Hol) kapıları duman sızdırmaz ve yangına dayanıklı mı?',
             value: b21.kapi?.uiTitle ?? '-',
-            report: b21.kapi?.reportText ?? '',
+            report: '',
             advice: b21.kapi?.adviceText,
             level: b21.kapi?.level,
           );
@@ -399,9 +401,29 @@ class ReportEngine {
             details,
             label: 'YGH (Hol) içinde eşya (bisiklet, dolap vb.) var mı?',
             value: b21.esya?.uiTitle ?? '-',
-            report: b21.esya?.reportText ?? '',
+            report: '',
             advice: b21.esya?.adviceText,
             level: b21.esya?.level,
+          );
+        }
+
+        // Dinamik YGH Analizi (Sadece PDF/Detaylı için)
+        final yghReasons = evaluateYghRequirement(store: s);
+        if (yghReasons.isNotEmpty) {
+          _addDetail(
+            details,
+            label: 'YGH Teknik Değerlendirmesi',
+            value: 'ZORUNLU',
+            report: 'Binadaki teknik verilere göre Yangın Güvenlik Holü (YGH) zorunluluğu bulunmaktadır:\n${yghReasons.join('\n')}',
+            level: RiskLevel.critical,
+          );
+        } else {
+           _addDetail(
+            details,
+            label: 'YGH Teknik Değerlendirmesi',
+            value: 'UYGUN/GEREKLİ DEĞİL',
+            report: 'Mevcut verilere göre binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.',
+            level: RiskLevel.info,
           );
         }
         handled = true;
@@ -1081,7 +1103,8 @@ class ReportEngine {
         if (b20.tekKatRampa != null)
           _addDetail(
             details,
-            label: 'Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?',
+            label:
+                'Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?',
             value: b20.tekKatRampa!.uiTitle,
             report: b20.tekKatRampa!.reportText,
             advice: b20.tekKatRampa!.adviceText,
@@ -1108,6 +1131,26 @@ class ReportEngine {
             advice: b20.basinclandirma!.adviceText,
             level: b20.basinclandirma!.level,
           );
+
+        // Dinamik Basınçlandırma Analizi (Sadece PDF/Detaylı için)
+        final basincReasons = evaluateBasincRequirement(store: s);
+        if (basincReasons.isNotEmpty) {
+          _addDetail(
+            details,
+            label: 'Basınçlandırma Teknik Değerlendirmesi',
+            value: 'ZORUNLU',
+            report: 'Binadaki teknik verilere göre basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join('\n')}',
+            level: RiskLevel.critical,
+          );
+        } else {
+           _addDetail(
+            details,
+            label: 'Basınçlandırma Teknik Değerlendirmesi',
+            value: 'UYGUN/GEREKLİ DEĞİL',
+            report: 'Mevcut verilere göre binada basınçlandırma sistemi zorunluluğu tespit edilmemiştir.',
+            level: RiskLevel.info,
+          );
+        }
         // Madde 45: Doğal Havalandırma
         if (b20.havalandirma != null)
           _addDetail(
@@ -1203,11 +1246,11 @@ class ReportEngine {
           );
         }
 
-        final bool zeminIndependent = s.bolum34?.zemin?.label.contains("34-1-A") ?? false;
+        final bool zeminIndependent =
+            s.bolum34?.zemin?.label.contains("34-1-A") ?? false;
         final int yukZemin = zeminIndependent ? 0 : (s.bolum33?.yukZemin ?? 0);
         final int yukNormal = s.bolum33?.yukNormal ?? 0;
         final int yukBodrum = s.bolum33?.yukBodrum ?? 0;
-
 
         if (b27.yon.isNotEmpty) {
           List<String> exceed50List = [];
@@ -3576,6 +3619,48 @@ class ReportEngine {
         b.bodrumToplamDisariAcilanMerdivenSayisi,
       );
     }
+  }
+
+  static List<String> evaluateBasincRequirement({BinaStore? store}) {
+    final s = _getStore(store);
+    List<String> reasons = [];
+    final hYapi = _getHYapi(s);
+    final b21 = s.bolum21;
+    final b22 = s.bolum22;
+    final b23 = s.bolum23;
+
+    // 1. Yapı Yüksekliği >= 51.50m
+    if (hYapi >= (51.50 - 0.001)) {
+      reasons.add(
+        "KRİTİK RİSK: Yapı Yüksekliği ≥ 51.50m olduğu için en az 2 merdivende (genelde merdiven ve itfaiye asansörü holü veya iki merdiven) basınçlandırma zorunludur.",
+      );
+    }
+    // 2. Yapı Yüksekliği >= 30.50m ve YGH yoksa
+    else if (hYapi >= (30.50 - 0.001)) {
+      final bool hasYgh = b21?.varlik?.label.contains("21-1-A") ?? false;
+      if (!hasYgh) {
+        reasons.add(
+          "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve merdiven önünde YGH (Yangın Güvenlik Holü) bulunmadığı durumlarda en az bir merdivende basınçlandırma zorunludur.",
+        );
+      }
+    }
+
+    // 3. İtfaiye Asansörü (Bölüm 22) zorunluluğu veya varlığı
+    if (b22 != null && b22.varlik?.label.contains("22-6-A") == true) {
+      reasons.add("KRİTİK RİSK: İtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.");
+    }
+
+    // 4. Normal Asansör (Bölüm 23) Havalandırma Belirsizliği veya Eksikliği
+    if (b23 != null && b23.havalandirma?.label.contains("23-5-B") == true) {
+      reasons.add("UYARI: Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden basınçlandırma yapılması zorunlu hale gelebilir.");
+    }
+
+    // 5. Bodrum Kat Sayısı > 4
+    if ((s.bolum3?.bodrumKatSayisi ?? 0) > 4) {
+      reasons.add("KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodruma hizmet veren tüm merdivenlerde basınçlandırma zorunludur.");
+    }
+
+    return reasons;
   }
 
   static List<String> evaluateYghRequirement({BinaStore? store}) {
