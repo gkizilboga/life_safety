@@ -35,7 +35,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     super.initState();
     if (BinaStore.instance.bolum12 != null) {
       _model = BinaStore.instance.bolum12!;
-      if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
+      if (_model.betonPaspayi?.label == Bolum12Content.betonOptionC.label) {
         if (_model.kolonPaspayi != null)
           _kolonPaspayiCtrl.text = _model.kolonPaspayi.toString();
         if (_model.kirisPaspayi != null)
@@ -104,7 +104,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
     if (_tasiyiciSistemLabel == "2-D") return _model.yigmaDuvar != null;
 
     if (_model.betonPaspayi == null) return false;
-    if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
+    if (_model.betonPaspayi?.label == Bolum12Content.betonOptionC.label) {
       bool filled =
           _kolonPaspayiCtrl.text.isNotEmpty &&
           _kirisPaspayiCtrl.text.isNotEmpty &&
@@ -124,7 +124,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       screenType: widget.runtimeType,
       isNextEnabled: _isReady(),
       onSave: () {
-        if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
+        if (_model.betonPaspayi?.label == Bolum12Content.betonOptionC.label) {
           _model = _model.copyWith(
             kolonPaspayi: InputValidator.parseFlex(_kolonPaspayiCtrl.text),
             kirisPaspayi: InputValidator.parseFlex(_kirisPaspayiCtrl.text),
@@ -135,7 +135,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
         BinaStore.instance.saveToDisk();
       },
       onNext: () {
-        if (_model.betonPaspayi?.label == Bolum12Content.betonOptionB.label) {
+        if (_model.betonPaspayi?.label == Bolum12Content.betonOptionC.label) {
           _model = _model.copyWith(
             kolonPaspayi: InputValidator.parseFlex(_kolonPaspayiCtrl.text),
             kirisPaspayi: InputValidator.parseFlex(_kirisPaspayiCtrl.text),
@@ -192,8 +192,16 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
                 onTap: () =>
                     _handleSelection('beton', Bolum12Content.betonOptionB),
               ),
+              SelectableCard(
+                choice: Bolum12Content.betonOptionC,
+                isSelected:
+                    _model.betonPaspayi?.label ==
+                    Bolum12Content.betonOptionC.label,
+                onTap: () =>
+                    _handleSelection('beton', Bolum12Content.betonOptionC),
+              ),
               if (_model.betonPaspayi?.label ==
-                  Bolum12Content.betonOptionB.label) ...[
+                  Bolum12Content.betonOptionC.label) ...[
                 const SizedBox(height: 12),
                 _buildManualInput(
                   "Kolon Paspayı (mm)",
@@ -214,14 +222,6 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
                 ),
                 const SizedBox(height: 12),
               ],
-              SelectableCard(
-                choice: Bolum12Content.betonOptionC,
-                isSelected:
-                    _model.betonPaspayi?.label ==
-                    Bolum12Content.betonOptionC.label,
-                onTap: () =>
-                    _handleSelection('beton', Bolum12Content.betonOptionC),
-              ),
             ],
           ),
         ),

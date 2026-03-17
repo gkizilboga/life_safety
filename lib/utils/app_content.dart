@@ -627,22 +627,21 @@ class Bolum12Content {
 
   static final betonOptionB = ChoiceResult(
     label: "12-B (Beton)",
-    uiTitle: "Binadaki paspayı ölçülerini biliyorum, kendim gireceğim.",
-    uiSubtitle:
-        "Betonun içindeki demiri örten tabaka kalınlıklarını manuel gireceğim.",
-    reportText: "(Girilen değerlere göre otomatik analiz edilir)",
-    level: RiskLevel.positive,
-  );
-
-  // YENİ EKLENEN C ŞIKKI
-  static final betonOptionC = ChoiceResult(
-    label: "12-C (Beton)",
     uiTitle: "Bina yapım tarihimiz 2000 yılı öncesi.",
     uiSubtitle:
         "Eski standartlara göre inşa edilen yapılarda paspayı koruması zayıf olabilir.",
     reportText:
         "UYARI: Bina yapım tarihi 2000 yılı öncesi olduğu için paspayı ölçülerinin (demir üzerindeki beton tabakası) güncel TS 500 standartlarını karşılamama ihtimali yüksektir. Yangın anında taşıyıcı sistemin korunması için detaylı inceleme yapılmalıdır.",
     level: RiskLevel.warning,
+  );
+
+  static final betonOptionC = ChoiceResult(
+    label: "12-C (Beton)",
+    uiTitle: "Binadaki paspayı ölçülerini biliyorum, kendim gireceğim.",
+    uiSubtitle:
+        "Betonun içindeki demiri örten tabaka kalınlıklarını manuel gireceğim.",
+    reportText: "(Girilen değerlere göre otomatik analiz edilir)",
+    level: RiskLevel.positive,
   );
 
   static final ahsapOptionA = ChoiceResult(
