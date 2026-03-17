@@ -395,6 +395,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             NumericEmphasis(
               "%$percent",
+              emphasisColor: AppColors.accentGold,
               style: const TextStyle(
                 fontSize: 13,
                 color: AppColors.primaryBlue,

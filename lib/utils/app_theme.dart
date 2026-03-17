@@ -23,6 +23,8 @@ class AppColors {
 
   static const Color inputFill = Colors.white;
   static const Color inputBorder = Color(0xFFCFD8DC);
+
+  static const Color accentGold = Color(0xFFFFD700);
 }
 
 class AppStyles {

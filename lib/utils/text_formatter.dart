@@ -92,6 +92,7 @@ class NumericEmphasis extends StatelessWidget {
   final TextStyle? style;
   final double scaleFactor;
   final TextAlign? textAlign;
+  final Color? emphasisColor;
 
   const NumericEmphasis(
     this.text, {
@@ -99,6 +100,7 @@ class NumericEmphasis extends StatelessWidget {
     this.style,
     this.scaleFactor = 1.1,
     this.textAlign,
+    this.emphasisColor,
   });
 
   @override
@@ -130,6 +132,7 @@ class NumericEmphasis extends StatelessWidget {
             fontSize: (baseStyle.fontSize ?? 14) * scaleFactor,
             fontWeight: FontWeight.w900,
             letterSpacing: -0.5,
+            color: emphasisColor ?? baseStyle.color,
           ),
         ),
       );

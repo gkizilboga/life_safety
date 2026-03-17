@@ -363,10 +363,14 @@ class _TotalDirectInputWidget extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isBasement ? const Color(0xFFFFF8E1) : const Color(0xFFE3F2FD),
+            color: isBasement
+                ? const Color(0xFFFFF8E1)
+                : const Color(0xFFE3F2FD),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isBasement ? const Color(0xFFFFCC80) : const Color(0xFFBBDEFB),
+              color: isBasement
+                  ? const Color(0xFFFFCC80)
+                  : const Color(0xFFBBDEFB),
             ),
           ),
           child: Column(
@@ -440,10 +444,10 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
     final limit = hasSprinkler ? 15 : 10;
 
     final title = isBasement
-        ? "Bodrum Kat: Lobi/Koridor Tahliye Mesafesi"
-        : "Lobi/Koridor Tahliye Mesafesi";
+        ? "Bodrum Kat: Çıkış Katı Tahliye Mesafesi"
+        : "Çıkış Katı Tahliye Mesafesi";
     final question =
-        "Dışarıya açılmayan merdivenlerin bina içi tahliye mesafesi $limit metrenin altında mı?";
+        "Dışarıya açılmayan merdivenlerin çıkış katındaki tahliye mesafesi $limit metrenin altında mı?";
 
     return Selector<Bolum20Provider, ChoiceResult?>(
       selector: (_, p) =>
@@ -452,10 +456,14 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isBasement ? const Color(0xFFFFF8E1) : const Color(0xFFE3F2FD),
+            color: isBasement
+                ? const Color(0xFFFFF8E1)
+                : const Color(0xFFE3F2FD),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isBasement ? const Color(0xFFFFCC80) : const Color(0xFFBBDEFB),
+              color: isBasement
+                  ? const Color(0xFFFFCC80)
+                  : const Color(0xFFBBDEFB),
             ),
           ),
           child: Column(
@@ -688,9 +696,7 @@ class _StairInputRow extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Expanded(
-              child: SubQuestionTitle(label),
-            ),
+            Expanded(child: SubQuestionTitle(label)),
             if (assetPath != null) ...[
               const SizedBox(width: 6),
               _buildCameraIcon(context, assetPath!, label),
@@ -699,7 +705,7 @@ class _StairInputRow extends StatelessWidget {
               for (var path in assetPaths!) ...[
                 const SizedBox(width: 6),
                 _buildCameraIcon(context, path, label),
-              ]
+              ],
             ],
             const SizedBox(width: 6),
             SizedBox(
@@ -744,7 +750,8 @@ class _StairInputRow extends StatelessWidget {
 
   Widget _buildCameraIcon(BuildContext context, String path, String title) {
     return GestureDetector(
-      onTap: () => ImageModalHelper.show(context, assetPath: path, title: title),
+      onTap: () =>
+          ImageModalHelper.show(context, assetPath: path, title: title),
       child: Tooltip(
         message: 'Görseli İncele',
         child: Container(
@@ -794,12 +801,7 @@ class StairQuestion extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: AppStyles.questionTitle,
-                  ),
-                ),
+                Expanded(child: Text(title, style: AppStyles.questionTitle)),
                 DefinitionButton(term: term!, definition: definition!),
               ],
             )

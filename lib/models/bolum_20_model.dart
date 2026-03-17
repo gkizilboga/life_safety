@@ -16,7 +16,7 @@ class Bolum20Model {
   final int toplamDisariAcilanMerdivenSayisi; // NEW simplified field
 
   final ChoiceResult?
-  lobiTahliyeMesafeDurumu; // Upper floors: above/below/unknown limit
+  lobiTahliyeMesafeDurumu; // Upper floors: Exit-level distance (above/below/unknown limit)
 
   // Independent Basement Stairs
   final bool isBodrumIndependent;
@@ -32,7 +32,7 @@ class Bolum20Model {
   final int bodrumToplamDisariAcilanMerdivenSayisi; // NEW simplified field
 
   final ChoiceResult?
-  bodrumLobiTahliyeMesafeDurumu; // Basement: above/below/unknown limit
+  bodrumLobiTahliyeMesafeDurumu; // Basement: Exit-level distance (above/below/unknown limit)
 
   final ChoiceResult? bodrumMerdivenDevami;
   final ChoiceResult? basinclandirma;

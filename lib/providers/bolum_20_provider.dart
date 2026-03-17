@@ -516,7 +516,7 @@ class Bolum20Provider extends ChangeNotifier {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              "Lütfen merdiven-dış kapı arası tahliye mesafesini belirtiniz.",
+              "Lütfen katta bina çıkışına kadar olan tahliye mesafesini belirtiniz.",
             ),
           ),
         );
@@ -527,7 +527,9 @@ class Bolum20Provider extends ChangeNotifier {
           _bodLobiMesafeDurumu == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Lütfen bodrum kat tahliye mesafesini belirtiniz."),
+            content: Text(
+              "Lütfen bodrum katta bina çıkışına kadar olan tahliye mesafesini belirtiniz.",
+            ),
           ),
         );
         return false;

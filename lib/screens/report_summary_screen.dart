@@ -8,6 +8,7 @@ import '../data/bina_store.dart';
 import 'dashboard_screen.dart';
 import 'paywall_screen.dart';
 import '../utils/app_content.dart';
+import '../utils/app_theme.dart';
 
 class ReportSummaryScreen extends StatefulWidget {
   const ReportSummaryScreen({super.key});
@@ -275,6 +276,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                   const SizedBox(height: 4),
                     NumericEmphasis(
                       "${m['score']} / 100",
+                      emphasisColor: AppColors.accentGold,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 34,
@@ -348,6 +350,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       children: [
         NumericEmphasis(
           val,
+          emphasisColor: label == "Kritik Risk" || label == "Tamamlanma" ? AppColors.accentGold : null,
           style: TextStyle(
             color: color,
             fontSize: 18,

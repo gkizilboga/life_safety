@@ -89,8 +89,6 @@ class RiskCalculator {
       if (hBina > (15.50 - 0.001) || maxYuk > 100) {
         if (!criticalTitles.contains("Bölüm 20")) {
           criticalTitles.add("Bölüm 20");
-          // Add extra penalty for this numeric check
-          criticalRisks++;
         }
       }
     }
@@ -102,7 +100,6 @@ class RiskCalculator {
     if (yghReasons.isNotEmpty && !hasYgh) {
       if (!criticalTitles.contains("Bölüm 21")) {
         criticalTitles.add("Bölüm 21");
-        criticalRisks++;
       }
     }
 

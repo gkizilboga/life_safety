@@ -1075,7 +1075,7 @@ class ReportEngine {
         // Madde 41 Tahliye Mesafesi (Lobi)
         if (b20.lobiTahliyeMesafeDurumu != null) {
           details.add({
-            'label': 'Lobi/Koridor Tahliye Mesafesi Durumu',
+            'label': 'Çıkış Katı Tahliye Mesafesi Durumu',
             'value': b20.lobiTahliyeMesafeDurumu!.uiTitle,
             'report': b20.lobiTahliyeMesafeDurumu!.reportText,
           });
@@ -1084,7 +1084,7 @@ class ReportEngine {
         if (b20.isBodrumIndependent) {
           if (b20.bodrumLobiTahliyeMesafeDurumu != null) {
             details.add({
-              'label': 'Bodrum Kat Lobi/Koridor Tahliye Mesafesi Durumu',
+              'label': 'Bodrum Kat: Çıkış Katı Tahliye Mesafesi Durumu',
               'value': b20.bodrumLobiTahliyeMesafeDurumu!.uiTitle,
               'report': b20.bodrumLobiTahliyeMesafeDurumu!.reportText,
             });
@@ -3566,7 +3566,7 @@ class ReportEngine {
           value: '$count adet',
           report: '',
           status: ReportStatus.info, // Counting is info
-          isBold: true,
+          isBold: count > 0,
         );
       }
     }

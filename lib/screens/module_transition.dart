@@ -4,6 +4,7 @@ import '../widgets/confetti_particles.dart';
 import '../utils/app_progress.dart';
 import '../utils/text_formatter.dart';
 import '../data/bina_store.dart';
+import '../utils/app_theme.dart';
 
 class ModuleTransitionScreen extends StatelessWidget {
   final ReportModule module;
@@ -98,6 +99,7 @@ class ModuleTransitionScreen extends StatelessWidget {
                       NumericEmphasis(
                         "Şu ana kadar $criticalCount adet Kritik Risk tespit ettik.\nAnalizin %$completion kısmını başarıyla tamamladın.",
                         textAlign: TextAlign.center,
+                        emphasisColor: AppColors.accentGold,
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 15, // Slightly larger base for clarity

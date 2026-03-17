@@ -102,7 +102,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
             ),
 
           _buildSoru(
-            "Yangın anında asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?",
+            "YANGIN ANINDA asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?",
             'yanginModu',
             [
               Bolum23Content.yanginModuOptionA,

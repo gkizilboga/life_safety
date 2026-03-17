@@ -131,7 +131,7 @@ class Section36Handler {
         );
       }
 
-      // 3. Madde 41/2: Tahliye Koridoru/Lobi Mesafesi (BİRLEŞTİRİLMİŞ MANTIK)
+      // 3. Madde 41/2: Çıkış Katı Tahliye Mesafesi (BİRLEŞTİRİLMİŞ MANTIK)
       int limit = hasSprinkler ? 15 : 10;
       String sprinklerNote = hasSprinkler
           ? "(Sprinkler mevcut: Limit 15m)"
@@ -167,14 +167,14 @@ class Section36Handler {
         analysisParts.add(msg);
       } else if (mainMesafeUnknown || bodrumMesafeUnknown) {
         analysisParts.add(
-          "UYARI: BİLİNMİYOR - Tahliye (lobi) mesafesi beyan edilmediği için %50 kriterine göre değerlendirme yapılamamıştır.",
+          "UYARI: BİLİNMİYOR - Çıkış katı tahliye mesafesi beyan edilmediği için %50 kriterine göre değerlendirme yapılamamıştır.",
         );
       } else if ((totalMain > 0 &&
               b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-A") ||
           (totalBod > 0 &&
               b20.bodrumLobiTahliyeMesafeDurumu?.label == "41-MESAFE-A")) {
         analysisParts.add(
-          "OLUMLU: Tahliye (lobi) mesafeleri yönetmelik limitleri ($limit m) içerisindedir.",
+          "OLUMLU: Çıkış katı tahliye mesafeleri yönetmelik limitleri ($limit m) içerisindedir.",
         );
       }
 

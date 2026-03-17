@@ -75,9 +75,9 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
 
   bool _isReadyToProceed() {
     bool showManualInput =
-        (_model.tekYon?.label == "35-1-A" ||
-        _model.ciftYon?.label == "35-2-A" ||
-        _model.cikmazMesafe?.label == "35-3-C");
+        (_model.tekYon?.label == "35-1-C" ||
+        _model.ciftYon?.label == "35-2-C" ||
+        _model.cikmazMesafe?.label == "35-3-E");
     if (showManualInput) {
       if (_mesafeCtrl.text.isEmpty || _mesafeErr != null) return false;
     }
@@ -86,7 +86,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     } else {
       if (_model.ciftYon == null) return false;
       if (_model.cikmaz == null) return false;
-      if (_model.cikmaz?.label == Bolum35Content.cikmazOptionB.label &&
+      if (_model.cikmaz?.label == Bolum35Content.cikmazOptionA.label &&
           _model.cikmazMesafe == null)
         return false;
     }
@@ -97,7 +97,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     setState(() {
       if (type == 'tekYon') {
         _model = _model.copyWith(tekYon: choice);
-        if (choice.label == "35-1-A") {
+        if (choice.label == "35-1-C") {
           // Scroll removed
         }
       }
@@ -106,7 +106,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
       }
       if (type == 'cikmaz') {
         _model = _model.copyWith(cikmaz: choice);
-        if (choice.label != Bolum35Content.cikmazOptionB.label) {
+        if (choice.label != Bolum35Content.cikmazOptionA.label) {
           _model = _model.copyWith(cikmazMesafe: null);
         } else {
           // Scroll removed
@@ -114,7 +114,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
       }
       if (type == 'cikmazMesafe') {
         _model = _model.copyWith(cikmazMesafe: choice);
-        if (choice.label == "35-3-C") {
+        if (choice.label == "35-3-E") {
           // Scroll removed
         }
       }
@@ -175,7 +175,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               _getDynamicChoice(Bolum35Content.tekYonOptionC, _limitTekYon),
               Bolum35Content.tekYonOptionD,
             ], _model.tekYon),
-            if (_model.tekYon?.label == "35-1-A") ...[
+            if (_model.tekYon?.label == "35-1-C") ...[
               const SizedBox(height: 12),
               _buildInfoNote(
                 "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
@@ -211,7 +211,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               _getDynamicChoice(Bolum35Content.ciftYonOptionC, _limitCiftYon),
               Bolum35Content.ciftYonOptionD,
             ], _model.ciftYon),
-            if (_model.ciftYon?.label == "35-2-A") ...[
+            if (_model.ciftYon?.label == "35-2-C") ...[
               const SizedBox(height: 12),
               _buildInfoNote(
                 "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
@@ -244,7 +244,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               Bolum35Content.cikmazOptionB,
               Bolum35Content.cikmazOptionC,
             ], _model.cikmaz),
-            if (_model.cikmaz?.label == Bolum35Content.cikmazOptionB.label) ...[
+            if (_model.cikmaz?.label == Bolum35Content.cikmazOptionA.label) ...[
               _buildInfoNote(
                 "Çıkmaz koridor tespiti yapıldı. Lütfen yol ayrımına kadar olan mesafeyi belirtiniz.",
               ),
@@ -260,7 +260,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
                 ),
                 Bolum35Content.cikmazMesafeOptionD,
               ], _model.cikmazMesafe),
-              if (_model.cikmazMesafe?.label == "35-3-C") ...[
+              if (_model.cikmazMesafe?.label == "35-3-E") ...[
                 const SizedBox(height: 12),
                 _buildInfoNote(
                   "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",

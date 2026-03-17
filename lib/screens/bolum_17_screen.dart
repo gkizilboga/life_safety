@@ -142,18 +142,21 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                       () => _model = _model.copyWith(isiklikMalzemesi: "cam"),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.all(12),
-                      margin: const EdgeInsets.only(bottom: 0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      margin: const EdgeInsets.only(bottom: 6),
                       decoration: BoxDecoration(
                         color: _model.isiklikMalzemesi == "cam"
-                            ? const Color(0xFF1A237E).withOpacity(0.1)
-                            : Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(10),
+                            ? const Color(0xFF1A237E).withOpacity(0.06)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: _model.isiklikMalzemesi == "cam"
                               ? const Color(0xFF1A237E)
-                              : Colors.grey.shade300,
-                          width: _model.isiklikMalzemesi == "cam" ? 2 : 1,
+                              : const Color(0xFFCFD8DC),
+                          width: _model.isiklikMalzemesi == "cam" ? 2.5 : 1.5,
                         ),
                       ),
                       child: Row(
@@ -170,7 +173,10 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           const Expanded(
                             child: Text(
                               "Temperli ve yangına dayanıklı cam ışıklık",
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -184,18 +190,23 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           _model = _model.copyWith(isiklikMalzemesi: "plastik"),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.all(12),
-                      margin: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      margin: const EdgeInsets.only(bottom: 6),
                       decoration: BoxDecoration(
                         color: _model.isiklikMalzemesi == "plastik"
-                            ? const Color(0xFF1A237E).withOpacity(0.1)
-                            : Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(10),
+                            ? const Color(0xFF1A237E).withOpacity(0.06)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: _model.isiklikMalzemesi == "plastik"
                               ? const Color(0xFF1A237E)
-                              : Colors.grey.shade300,
-                          width: _model.isiklikMalzemesi == "plastik" ? 2 : 1,
+                              : const Color(0xFFCFD8DC),
+                          width: _model.isiklikMalzemesi == "plastik"
+                              ? 2.5
+                              : 1.5,
                         ),
                       ),
                       child: Row(
@@ -212,7 +223,10 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           const Expanded(
                             child: Text(
                               "Plastik, Pleksi veya Polikarbon ışıklık",
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -227,19 +241,22 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                       ),
                     ),
                     child: Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: _model.isiklikMalzemesi == "bilinmiyor"
-                            ? const Color(0xFF1A237E).withOpacity(0.1)
-                            : Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(10),
+                            ? const Color(0xFF1A237E).withOpacity(0.06)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: _model.isiklikMalzemesi == "bilinmiyor"
                               ? const Color(0xFF1A237E)
-                              : Colors.grey.shade300,
+                              : const Color(0xFFCFD8DC),
                           width: _model.isiklikMalzemesi == "bilinmiyor"
-                              ? 2
-                              : 1,
+                              ? 2.5
+                              : 1.5,
                         ),
                       ),
                       child: Row(
@@ -256,7 +273,10 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                           const Expanded(
                             child: Text(
                               "Bilmiyorum.",
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
