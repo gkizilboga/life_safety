@@ -324,39 +324,71 @@ class PdfService {
   }
 
   static pw.Page _buildLegalPage(pw.PageTheme pageTheme) {
-    return pw.MultiPage(
-      maxPages: 500,
+    // Split the content manually for the two-column layout
+    final disclaimerParts = AppStrings.legalDisclaimerContent.split('\n\n');
+    // Part 1: İŞBU METİN + 1 + 2 + 3
+    final leftColumnText = disclaimerParts.sublist(0, 4).join('\n\n');
+    // Part 2: 4 + 5 + KVKK
+    final rightColumnText = disclaimerParts.sublist(4).join('\n\n');
+
+    return pw.Page(
       pageTheme: pageTheme,
-      footer: _buildFooter,
-      build: (context) => [
-        pw.Text(
-          "YASAL DAYANAKLAR VE SORUMLULUK REDDİ",
-          style: pw.TextStyle(
-            fontSize: 16,
-            fontWeight: pw.FontWeight.bold,
-            color: PdfColors.blue900,
+      build: (context) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            "YASAL DAYANAKLAR VE SORUMLULUK REDDİ",
+            style: pw.TextStyle(
+              fontSize: 12.5,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.blue900,
+            ),
           ),
-        ),
-        pw.SizedBox(height: 15), // Slightly reduced spacing
-        pw.Text(
-          AppStrings.legalDisclaimerContent,
-          style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
-        ),
-        pw.SizedBox(height: 15),
-        pw.Text(
-          AppStrings.kvkkTitle,
-          style: pw.TextStyle(
-            fontSize: 12, // Added title for KVKK for better visual hierarchy
-            fontWeight: pw.FontWeight.bold,
-            color: PdfColors.blue900,
+          pw.SizedBox(height: 10),
+          pw.Row(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Expanded(
+                child: pw.Text(
+                  leftColumnText,
+                  style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
+                  textAlign: pw.TextAlign.justify,
+                ),
+              ),
+              pw.SizedBox(width: 20),
+              pw.Expanded(
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      rightColumnText,
+                      style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
+                      textAlign: pw.TextAlign.justify,
+                    ),
+                    pw.SizedBox(height: 15),
+                    pw.Text(
+                      AppStrings.kvkkTitle,
+                      style: pw.TextStyle(
+                        fontSize: 10,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.blue900,
+                      ),
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Text(
+                      AppStrings.kvkkContent,
+                      style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
+                      textAlign: pw.TextAlign.justify,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ),
-        pw.SizedBox(height: 5),
-        pw.Text(
-          AppStrings.kvkkContent,
-          style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
-        ),
-      ],
+          pw.Spacer(),
+          _buildFooter(context),
+        ],
+      ),
     );
   }
 
@@ -1022,7 +1054,10 @@ class PdfService {
         ...items.asMap().entries.map((entry) {
           final i = entry.key;
           final item = entry.value;
-          final isBold = item['isBold'] == true;
+          final String value = (item['value'] ?? '').toString();
+          // "Mevcut" içeren satırları veya isBold flag'i true olanları bold yap
+          final bool shouldBold = item['isBold'] == true || value.contains('Mevcut');
+          
           return pw.TableRow(
             decoration: i % 2 == 1
                 ? const pw.BoxDecoration(color: PdfColors.grey50)
@@ -1033,7 +1068,7 @@ class PdfService {
                 child: pw.Text(
                   item['label'] ?? '',
                   style: pw.TextStyle(
-                    font: isBold ? fontBold : font,
+                    font: shouldBold ? fontBold : font,
                     fontSize: 8,
                   ),
                 ),
@@ -1041,9 +1076,9 @@ class PdfService {
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
                 child: pw.Text(
-                  item['value'] ?? '',
+                  value,
                   style: pw.TextStyle(
-                    font: isBold ? fontBold : font,
+                    font: shouldBold ? fontBold : font,
                     fontSize: 8,
                   ),
                 ),

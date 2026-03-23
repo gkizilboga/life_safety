@@ -91,18 +91,15 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      appBar: AppBar(
-        title: const Text(
-          "Bina Bilgileri",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color(0xFF1A237E),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+      body: Column(
+        children: [
+          const ModernHeader(
+            title: "Bina Bilgileri",
+            screenType: BuildingSetupScreen,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -135,7 +132,6 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
                   : (val) => setState(() => _selectedDistrict = val),
               icon: Icons.location_city,
             ),
-
             const SizedBox(height: 30),
 
             _buildKvkkBox(),
@@ -145,8 +141,11 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  ],
+),
+);
+}
 
   void _showContentDialog(String title, String content) {
     showCustomDialog(

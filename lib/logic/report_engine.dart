@@ -1072,24 +1072,7 @@ class ReportEngine {
             level: b20.havalandirma!.level,
           );
 
-        // Madde 41 Tahliye Mesafesi (Lobi)
-        if (b20.lobiTahliyeMesafeDurumu != null) {
-          details.add({
-            'label': 'Çıkış Katı Tahliye Mesafesi Durumu',
-            'value': b20.lobiTahliyeMesafeDurumu!.uiTitle,
-            'report': b20.lobiTahliyeMesafeDurumu!.reportText,
-          });
-        }
-
-        if (b20.isBodrumIndependent) {
-          if (b20.bodrumLobiTahliyeMesafeDurumu != null) {
-            details.add({
-              'label': 'Bodrum Kat: Çıkış Katı Tahliye Mesafesi Durumu',
-              'value': b20.bodrumLobiTahliyeMesafeDurumu!.uiTitle,
-              'report': b20.bodrumLobiTahliyeMesafeDurumu!.reportText,
-            });
-          }
-        }
+        // Madde 41 Tahliye Mesafesi (Lobi) - Bölüm 36 analiz notunda merkezileştirildiği için buradan kaldırıldı.
 
         handled = true;
       }
@@ -1835,8 +1818,7 @@ class ReportEngine {
               details,
               label: label,
               value: choice.uiTitle,
-              report:
-                  "KRİTİK RİSK: Genişlik yetersiz. Gereken: En az $requiredVal cm ($reqReason).",
+              report: "Gereken: En az $requiredVal cm ($reqReason).",
               status: ReportStatus.risk,
             );
           } else {
@@ -1844,8 +1826,7 @@ class ReportEngine {
               details,
               label: label,
               value: choice.uiTitle,
-              report:
-                  "OLUMLU: Genişliği uygun. Asgari sınır olan $requiredVal cm sağlanmaktadır.",
+              report: "Asgari sınır olan $requiredVal cm sağlanmaktadır.",
               status: ReportStatus.compliant,
             );
           }
@@ -1871,10 +1852,10 @@ class ReportEngine {
               label: 'Kaçış Kapısı Temiz Geçiş Genişliği',
               value: b36.kapiGenislikKorunumlu!.uiTitle,
               report: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                  ? "KRİTİK RİSK: Kapı temiz geçiş genişliği yönetmelik sınırı olan 80 cm altındadır."
+                  ? "Sınır: 80 cm."
                   : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                        ? "OLUMLU: Kapı genişliği yönetmeliğe uygun olarak 80 cm ve üzerindedir."
-                        : "BİLİNMİYOR: Kapı genişliği bilinmemektedir."),
+                        ? "80 cm ve üzerindedir."
+                        : "Bilinmiyor."),
               status: b36.kapiGenislikKorunumlu!.label.contains("-A")
                   ? ReportStatus.risk
                   : (b36.kapiGenislikKorunumlu!.label.contains("-B")
@@ -1903,10 +1884,10 @@ class ReportEngine {
               label: 'Korunumlu Alan Kapı Genişliği',
               value: b36.kapiGenislikKorunumlu!.uiTitle,
               report: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                  ? "KRİTİK RİSK: Kapı temiz geçiş genişliği yönetmelik sınırı olan 80 cm altındadır."
+                  ? "Sınır: 80 cm."
                   : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                        ? "OLUMLU: Kapı genişliği yönetmeliğe uygun olarak 80 cm ve üzerindedir."
-                        : "BİLİNMİYOR: Kapı genişliği bilinmemektedir."),
+                        ? "80 cm ve üzerindedir."
+                        : "Bilinmiyor."),
               status: b36.kapiGenislikKorunumlu!.label.contains("-A")
                   ? ReportStatus.risk
                   : (b36.kapiGenislikKorunumlu!.label.contains("-B")
@@ -1934,10 +1915,10 @@ class ReportEngine {
               label: 'Korunumsuz Alan Kapı Genişliği',
               value: b36.kapiGenislikKorunumsuz!.uiTitle,
               report: b36.kapiGenislikKorunumsuz!.label.contains("-A")
-                  ? "KRİTİK RİSK: Kapı temiz geçiş genişliği yönetmelik sınırı olan 80 cm altındadır."
+                  ? "Sınır: 80 cm."
                   : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
-                        ? "OLUMLU: Kapı genişliği yönetmeliğe uygun olarak 80 cm ve üzerindedir."
-                        : "BİLİNMİYOR: Kapı genişliği bilinmemektedir."),
+                        ? "80 cm ve üzerindedir."
+                        : "Bilinmiyor."),
               status: b36.kapiGenislikKorunumsuz!.label.contains("-A")
                   ? ReportStatus.risk
                   : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
@@ -1961,58 +1942,6 @@ class ReportEngine {
           _addStaircaseRows(details, b20);
           if (b20.isBodrumIndependent) {
             _addStaircaseRows(details, b20, isBasement: true);
-          }
-
-          // Madde 41: Oran Kontrolü (Merdivenlerin en az yarısı doğrudan dışarı açılmalı)
-          int totalStairs =
-              b20.normalMerdivenSayisi +
-              b20.binaIciYanginMerdiveniSayisi +
-              b20.binaDisiKapaliYanginMerdiveniSayisi +
-              b20.binaDisiAcikYanginMerdiveniSayisi +
-              b20.donerMerdivenSayisi +
-              b20.sahanliksizMerdivenSayisi +
-              b20.dengelenmisMerdivenSayisi;
-
-          if (totalStairs > 0) {
-            final ratioOk =
-                b20.toplamDisariAcilanMerdivenSayisi >= (totalStairs / 2.0);
-            _addDetail(
-              details,
-              label: 'Dışarıya Doğrudan Çıkış İmkanı (%50 Kuralı)',
-              value: '${b20.toplamDisariAcilanMerdivenSayisi} / $totalStairs',
-              report: ratioOk
-                  ? "OLUMLU: Kaçış merdivenlerinin en az yarısı doğrudan dışarıya açılmaktadır."
-                  : "KRİTİK RİSK: Binadaki kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut binada bu imkanın sağlanmadığı tespit edilmiştir.",
-              status: ratioOk ? ReportStatus.compliant : ReportStatus.risk,
-            );
-          }
-
-          // Bodrum Oran Kontrolü
-          if (b20.isBodrumIndependent) {
-            int totalBodrumStairs =
-                b20.bodrumNormalMerdivenSayisi +
-                b20.bodrumBinaIciYanginMerdiveniSayisi +
-                b20.bodrumBinaDisiKapaliYanginMerdiveniSayisi +
-                b20.bodrumBinaDisiAcikYanginMerdiveniSayisi +
-                b20.bodrumDonerMerdivenSayisi +
-                b20.bodrumSahanliksizMerdivenSayisi +
-                b20.bodrumDengelenmisMerdivenSayisi;
-
-            if (totalBodrumStairs > 0) {
-              final ratioOk =
-                  b20.bodrumToplamDisariAcilanMerdivenSayisi >=
-                  (totalBodrumStairs / 2.0);
-              _addDetail(
-                details,
-                label: 'Bodrum Kat Dışarıya Doğrudan Çıkış Oranı (%50 Kuralı)',
-                value:
-                    '${b20.bodrumToplamDisariAcilanMerdivenSayisi} / $totalBodrumStairs',
-                report: ratioOk
-                    ? "OLUMLU: Bağımsız bodrum kat kaçış merdivenlerinin en az yarısı doğrudan dışarıya açılmaktadır."
-                    : "KRİTİK RİSK: Binadaki bağımsız bodrum kat kaçış merdivenlerinin en az yarısının doğrudan dışarıya açılması zorunludur. Mevcut binada bu imkanın sağlanmadığı tespit edilmiştir.",
-                status: ratioOk ? ReportStatus.compliant : ReportStatus.risk,
-              );
-            }
           }
         }
 

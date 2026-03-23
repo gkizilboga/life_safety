@@ -57,7 +57,7 @@ class Section3Handler {
     });
     if (normalKat > 0) {
       details.add({
-        'label': 'Normal Kat Yüksekliği',
+        'label': 'Normal Kat Yüksekliği (1 kat için)',
         'value': '${b3.normalYuksekligi?.toStringAsFixed(2) ?? "-"} m',
         'report': '',
         'status': ReportStatus.info,
@@ -65,7 +65,7 @@ class Section3Handler {
     }
     if (bodrumKat > 0) {
       details.add({
-        'label': 'Bodrum Kat Yüksekliği',
+        'label': 'Bodrum Kat Yüksekliği (1 kat için)',
         'value': '${b3.bodrumYuksekligi?.toStringAsFixed(2) ?? "-"} m',
         'report': '',
         'status': ReportStatus.info,
@@ -74,13 +74,13 @@ class Section3Handler {
 
     // Bina ve yapı yükseklikleri
     details.add({
-      'label': 'Bina Yüksekliği (hBina)',
+      'label': 'Bina Yüksekliği',
       'value': '${b3.hBina?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
       'status': ReportStatus.info,
     });
     details.add({
-      'label': 'Yapı Yüksekliği (hYapı)',
+      'label': 'Yapı Yüksekliği',
       'value': '${b3.hYapi?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
       'status': ReportStatus.info,
@@ -89,7 +89,7 @@ class Section3Handler {
     // Yüksek bina sınıflandırması
     final bool isYuksek = b3.isYuksekBina;
     details.add({
-      'label': 'Yüksek Bina Sınıflandırması',
+      'label': 'Yüksek Bina Statüsü',
       'value': isYuksek ? 'YÜKSEK BİNA' : 'Yüksek Olmayan Bina',
       'report': '',
       'status': ReportStatus.info,
@@ -98,10 +98,10 @@ class Section3Handler {
     // Varsayılan değer uyarısı
     if (b3.yukseklikBilinmiyor == true) {
       details.add({
-        'label': 'Yükseklik Bilgisi Notu',
-        'value': 'Varsayılan Değerler',
+        'label': 'Kat Yükseklikleri',
+        'value': 'Uygulama tarafından varsayılan değerler kullanılsın.',
         'report':
-            'NOT: Kat yükseklikleri kullanıcı tarafından bilinmediğinden uygulama varsayılan değerler (Zemin: 3.50m, Normal: 3.00m, Bodrum: 3.50m) kullanarak hesaplama yapmıştır.',
+            'NOT: Kat yükseklikleri kullanıcı tarafından bilinmediğinden Uygulama tarafından varsayılan değerler (Zemin: 3.50 m, Normal: 3.00 m, Bodrum: 3.50 m) kullanılarak hesaplamalar yapılmıştır.',
         'status': ReportStatus.info,
       });
     }

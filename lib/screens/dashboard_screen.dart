@@ -113,6 +113,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 _buildSectionLabel("PAYLAŞIM VE TRANSFER"),
                 _buildFileActionSection(context, completedActions),
                 const SizedBox(height: 25),
+                _buildSectionLabel("PROMO KOD İŞLEMLERİ"),
+                _buildPromoCodeSection(context),
+                const SizedBox(height: 25),
                 _buildSectionLabel("DESTEK VE İLETİŞİM"),
                 _buildSupportCard(context),
                 const SizedBox(height: 30),
@@ -128,7 +131,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       width: double.infinity,
       height: MediaQuery.of(context).padding.top + 105.0,
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 15),
+      padding: const EdgeInsets.fromLTRB(25, 0, 25, 20),
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.only(
@@ -154,12 +157,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             "HOŞ GELDİNİZ",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 19,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 16.5),
         ],
       ),
     );
@@ -205,17 +208,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStatusChip(isCompleted),
-              Text(
-                dateStr,
-                style: const TextStyle(color: Colors.grey, fontSize: 13),
-              ),
-            ],
-          ),
+                Text(
+                  dateStr,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
+            ),
           const SizedBox(height: 12),
           Text(
             name,
             style: const TextStyle(
-              fontSize: 15, // Was 16
+              fontSize: 13, // Standard dashboard title size
               fontWeight: FontWeight.bold,
               color: Color(0xFF2C3E50),
             ),
@@ -273,7 +276,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     isCompleted ? "ANALİZLERİ GÖR" : "DEVAM ET",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 13,
                     ),
                   ),
                 ),
@@ -324,7 +327,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   textStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 13,
+                    fontSize: 12,
                   ),
                 ),
               ),
@@ -348,7 +351,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         isCompleted ? "TAMAMLANDI" : "DEVAM EDİYOR",
         style: TextStyle(
           color: isCompleted ? Colors.green.shade700 : Colors.orange.shade700,
-          fontSize: 13,
+          fontSize: 12,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -388,7 +391,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Text(
               "İlerleme Durumu",
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 color: Colors.grey,
                 fontWeight: FontWeight.w600,
               ),
@@ -397,7 +400,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               "%$percent",
               emphasisColor: AppColors.accentGold,
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 color: AppColors.primaryBlue,
                 fontWeight: FontWeight.bold,
               ),
@@ -800,6 +803,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPromoCodeSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.grey.shade100),
+      ),
+      child: Column(
+        children: [
+          _buildFileActionButton(
+            context,
+            icon: Icons.confirmation_num_outlined,
+            title: "Promo Kod Al",
+            color: AppColors.primaryBlue,
+            onTap: () {
+              // Gelecekteki satın alma akışı
+            },
+          ),
+          const Divider(height: 24, thickness: 0.5),
+          _buildFileActionButton(
+            context,
+            icon: Icons.send_outlined,
+            title: "Promo Kod Gönder",
+            color: AppColors.primaryBlue,
+            onTap: () {
+              // Gelecekteki paylaşım akışı
+            },
+          ),
         ],
       ),
     );

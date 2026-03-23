@@ -224,36 +224,7 @@ class Section36Handler {
         }
       }
 
-      // 5. Dairesel Merdiven Değerlendirmesi
-      final b25 = _store.bolum25;
-      if (b20.hasDaireselMerdiven && b25 != null) {
-        final yukseklikLabel = b25.yukseklik?.label ?? "";
-        bool heightOk = yukseklikLabel == "25-Dairesel-A";
-        bool heightFail = yukseklikLabel == "25-Dairesel-B";
-        bool heightUnknown = yukseklikLabel == "25-Dairesel-C";
-        bool loadOk = maxYuk <= 25;
-
-        if (heightFail || !loadOk) {
-          List<String> reasons = [];
-          if (heightFail) reasons.add("Yükseklik 9.50m limitini aşmaktadır.");
-          if (!loadOk)
-            reasons.add("Kullanıcı yükü 25 kişiyi aşmaktadır ($maxYuk kişi).");
-          if (!loadOk)
-            reasons.add("Kullanıcı yükü 25 kişiyi aşmaktadır ($maxYuk kişi). ");
-
-          analysisParts.add(
-            "KRİTİK RİSK: Dairesel (döner) merdiven Yönetmelik kriterlerini sağlamamaktadır. (${reasons.join(", ")}) Bu merdiven kaçış yolu olarak değerlendirilemez. Merdivenin hizmet verdiği yükün 25 kişiden fazla olmadığı mahal bazlı teyit edilmelidir.",
-          );
-        } else if (heightUnknown) {
-          analysisParts.add(
-            "UYARI: BİLİNMİYOR - Dairesel merdiven yüksekliği bilinmediği için değerlendirme yapılamamıştır.",
-          );
-        } else if (heightOk && loadOk) {
-          analysisParts.add(
-            "OLUMLU: Dairesel merdiven, yükseklik ve kullanıcı yükü kriter sınırları aşılmadığından (≤9.50m and ≤25 kişi) kaçış yolu olarak kullanılabilir. Aynı zamanda dairesel merdivenin tasarımsal olarak da Yönetmelik şartlarını sağlaması gereklidir.",
-          );
-        }
-      }
+      // 5. Dairesel Merdiven (Madde 25) analizi Bölüm 25 detaylarında yapıldığı için buradan kaldırıldı.
 
       // 6. Genişlik Analizi (Merkezileştirilmiş)
       final b36 = _store.bolum36;

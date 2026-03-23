@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/bina_store.dart';
 import 'active_systems_report_screen.dart';
+import '../widgets/custom_widgets.dart';
 
 class PaywallScreen extends StatelessWidget {
   const PaywallScreen({super.key});
@@ -24,8 +25,14 @@ class PaywallScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Premium Modül")),
-      body: Padding(
+      body: Column(
+        children: [
+          const ModernHeader(
+            title: "Premium Modül",
+            screenType: PaywallScreen,
+          ),
+          Expanded(
+            child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -67,8 +74,11 @@ class PaywallScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  ],
+),
+);
+}
 }
 
 // Wrapper class to handle navigation logic

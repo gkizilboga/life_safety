@@ -3,6 +3,7 @@ import '../data/bina_store.dart';
 import '../logic/active_systems_engine.dart';
 import '../models/active_system_requirement.dart';
 import '../widgets/custom_widgets.dart';
+import '../services/pdf_service.dart';
 
 class ActiveSystemsReportScreen extends StatelessWidget {
   const ActiveSystemsReportScreen({super.key});
@@ -15,21 +16,14 @@ class ActiveSystemsReportScreen extends StatelessWidget {
     final requirements = ActiveSystemsEngine.calculateRequirements(store);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Aktif Sistem Gereksinimleri"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.picture_as_pdf),
-            onPressed: () {
+      body: Column(
+        children: [
+          ModernHeader(
+            title: "Aktif Sistem Gereksinimleri",
+            screenType: ActiveSystemsReportScreen,
+            onSave: () async {
               if (store.isPremium) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "PDF Raporu başarıyla oluşturuldu ve indirildi: Aktif_Sistemler_Raporu.pdf",
-                    ),
-                    backgroundColor: Colors.green,
-                  ),
-                );
+                await PdfService.generateActiveSystemsPdf();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -41,9 +35,8 @@ class ActiveSystemsReportScreen extends StatelessWidget {
               }
             },
           ),
-        ],
-      ),
-      body: ListView.builder(
+          Expanded(
+            child: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: requirements.length,
         itemBuilder: (context, index) {
@@ -143,8 +136,11 @@ class ActiveSystemsReportScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
+    ),
+  ],
+),
+);
+}
 
   /// Cleans reason text by removing extra whitespaces if any
   static String _cleanReasonText(String text) {

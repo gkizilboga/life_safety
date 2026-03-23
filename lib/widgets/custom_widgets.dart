@@ -37,7 +37,7 @@ class ModernHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: topPadding + 105.0, // Her ekranda birebir aynı yükseklik
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 15),
+      padding: const EdgeInsets.fromLTRB(25, 0, 25, 20), // Dashboard ile senkronize edildi
       decoration: const BoxDecoration(
         color: AppColors.primaryBlue,
         borderRadius: BorderRadius.only(
@@ -75,16 +75,63 @@ class ModernHeader extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (isAnalysisScreen)
-                      Text(
-                        stepLabel,
-                        style: const TextStyle(
-                          color: Colors.white54,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    const SizedBox(height: 2),
+                    // Üst Satır: Bölüm Etiketi (Sol) ve KAYDET (Sağ)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (isAnalysisScreen)
+                          Text(
+                            stepLabel,
+                            style: const TextStyle(
+                              color: Colors.white54,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        if (isAnalysisScreen)
+                          GestureDetector(
+                            onTap: () {
+                              if (onSave != null) {
+                                onSave!();
+                              } else {
+                                BinaStore.instance.saveToDisk(immediate: true);
+                              }
+                              Navigator.of(context).popUntil((route) => route.isFirst);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Analiz kaydedildi ve ana menüye dönüldü."),
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: AppColors.successGreen,
+                                ),
+                              );
+                            },
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF059669),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.white24, width: 1),
+                              ),
+                              child: const Text(
+                                "KAYDET",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.2,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    // Alt Satır: Başlık (Sol) ve İlerleme Yüzdesi (Sağ)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,68 +152,29 @@ class ModernHeader extends StatelessWidget {
                           ),
                         ),
                         if (isAnalysisScreen) ...[
-                           const SizedBox(width: 8),
-                           Row(
-                             mainAxisSize: MainAxisSize.min,
-                             crossAxisAlignment: CrossAxisAlignment.center,
-                             children: [
-                               const Text(
-                                 "İlerleme: ",
-                                 style: TextStyle(
-                                   color: Colors.white54,
-                                   fontSize: 12,
-                                   fontWeight: FontWeight.w500,
-                                 ),
-                               ),
-                               AnimatedPercentageText(
-                                 percentage: (progress * 100).toInt(),
-                                 style: const TextStyle(
-                                   color: Colors.white,
-                                   fontSize: 12,
-                                   fontWeight: FontWeight.bold,
-                                 ),
-                               ),
-                             ],
-                           ),
-                           const SizedBox(width: 8),
-                           GestureDetector(
-                             onTap: () {
-                               if (onSave != null) {
-                                 onSave!();
-                               } else {
-                                 BinaStore.instance.saveToDisk(immediate: true);
-                               }
-                               Navigator.of(context).popUntil((route) => route.isFirst);
-                               ScaffoldMessenger.of(context).showSnackBar(
-                                 const SnackBar(
-                                   content: Text("Analiz kaydedildi ve ana menüye dönüldü."),
-                                   duration: Duration(seconds: 2),
-                                   backgroundColor: AppColors.successGreen,
-                                 ),
-                               );
-                             },
-                             behavior: HitTestBehavior.opaque,
-                             child: Container(
-                               padding: const EdgeInsets.symmetric(
-                                 horizontal: 8,
-                                 vertical: 4,
-                               ),
-                               decoration: BoxDecoration(
-                                 color: const Color(0xFF059669),
-                                 borderRadius: BorderRadius.circular(10),
-                                 border: Border.all(color: Colors.white24, width: 1),
-                               ),
-                               child: const Text(
-                                 "KAYDET",
-                                 style: TextStyle(
-                                   color: Colors.white,
-                                   fontSize: 11,
-                                   fontWeight: FontWeight.bold,
-                                   letterSpacing: 0.2,
-                                 ),
-                               ),
-                             ),
-                           ),
+                          const SizedBox(width: 8),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "İlerleme: ",
+                                style: TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              AnimatedPercentageText(
+                                percentage: (progress * 100).toInt(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ],
                     ),
@@ -176,21 +184,11 @@ class ModernHeader extends StatelessWidget {
             ],
           ),
           if (isAnalysisScreen) ...[
-            const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 4,
-                backgroundColor: Colors.white.withValues(alpha: 0.1),
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  AppColors.successGreen,
-                ),
-              ),
-            ),
+            const SizedBox(height: 8),
+            AnimatedHeaderProgressBar(value: progress),
           ] else ...[
-             // Analiz içermeyen ekranlarda progress barın kapladığı alanı dengele
-             const SizedBox(height: 16),
+             // Diğer ekranlarda (Dashboard, Arşiv vb.) başlık altı boşluğu dengele
+             const SizedBox(height: 16.5),
           ]
         ],
       ),
@@ -363,6 +361,83 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
               fontWeight: FontWeight.w900,
             ),
       ),
+    );
+  }
+}
+
+class AnimatedHeaderProgressBar extends StatefulWidget {
+  final double value;
+  const AnimatedHeaderProgressBar({super.key, required this.value});
+
+  @override
+  State<AnimatedHeaderProgressBar> createState() =>
+      _AnimatedHeaderProgressBarState();
+}
+
+class _AnimatedHeaderProgressBarState extends State<AnimatedHeaderProgressBar>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+
+    _pulseAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    if (!WidgetsBinding.instance.toString().contains('Test')) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _pulseAnimation,
+      builder: (context, child) {
+        final double glowAlpha = 0.05 + (_pulseAnimation.value * 0.15);
+        final double dynamicHeight = 7.0 + (_pulseAnimation.value * 1.5);
+
+        return Container(
+          height: 8.5, // Max height container to prevent layout jumping
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.successGreen.withOpacity(glowAlpha),
+                blurRadius: 10,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: SizedBox(
+              height: dynamicHeight,
+              child: LinearProgressIndicator(
+                value: widget.value,
+                backgroundColor: Colors.white.withValues(alpha: 0.12),
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  AppColors.successGreen,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -653,54 +728,7 @@ class _ImageModal extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: SafeArea(
-              top: false,
-              child: Column(
-                children: [
-                  Text(
-                    "Yakınlaştırmak için görseli iki parmağınızla büyütebilirsiniz.",
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryBlue,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        "ANLADIM",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ),
+          const SizedBox(height: 16),
         ],
       ),
     );

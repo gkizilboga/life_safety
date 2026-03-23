@@ -6,7 +6,7 @@ class Bolum1Content {
     uiTitle: "19.12.2007 ve sonrası.",
     uiSubtitle: "Yeni Bina",
     reportText:
-        "BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 veya sonrası olduğundan \"Binaların Yangından Korunması Hakkında Yönetmelik\" (BYKHY) kapsamındaki \"YENİ BİNA\" hükümlerine göre yapılmıştır.",
+        "BİLGİ: Binanın yapı ruhsat tarihi 19.12.2007 veya sonrası olduğundan değerlendirme, \"Binaların Yangından Korunması Hakkında Yönetmelik\" (BYKHY) kapsamındaki \"YENİ BİNA\" hükümlerine göre yapılmıştır.",
     level: RiskLevel.info,
   );
 
@@ -27,7 +27,7 @@ class Bolum2Content {
     uiSubtitle:
         "Konut sektöründeki yapıların tamamına yakını betonarmedir. Binada kolon, kiriş, perde beton bulunur.",
     reportText:
-        "BİLGİ: Binanın taşıyıcı sistemi BETONARME olarak beyan edilmiştir. Yangın performansı (paspayı vb.) betonarme yapı gereksinimlerine göre değerlendirilmiştir.",
+        "BİLGİ: Binanın taşıyıcı sistemi betonarme olarak beyan edilmiştir. Sistem tipine dair gereksinimler buna göre belirlenmiştir.",
     level: RiskLevel.info,
   );
 
@@ -1142,13 +1142,13 @@ class Bolum13Content {
 class Bolum14Content {
   static const String title = "Tesisat Şaftları";
   static const String msgHigh =
-      "Binanız 30.50 metreden yüksek olduğundan tüm tesisat şaft duvarları en az 120 dk, şaft kapakları ise en az 90 dk yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.";
+      "Bina yüksekliğiniz 30.50 metreden fazla olduğundan tüm tesisat şaft duvarları en az 120 dk, şaft kapakları ise en az 90 dk yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.";
   static const String msgMid =
-      "Binanız 21.50m - 30.50m aralığında olup tesisat şaftı ve yangın duvarlarınızın en az 90 dk, şaft kapaklarınızın ise en az 60 dk dayanıklı, duman sızdırmaz özellikte olmaları gerekmektedir.";
+      "Bina yüksekliğiniz 21.50m - 30.50m aralığında olduğundan tesisat şaftı ve yangın duvarlarınızın en az 90 dk, şaft kapaklarınızın ise en az 60 dk dayanıklı, duman sızdırmaz özellikte olmaları gerekmektedir.";
   static const String msgDeepBasement =
       "Binanız Yüksek Bina olmasa da, bodrum kat derinliğiniz 10 metreyi aştığı için bodrum katlarınız risk taşımaktadır. Bodrumdaki şaft duvarları en az 90 dk ve şaft kapakların dayanımları en az 60dk, zemin üst normal katlarda ise duvarları en az 60dk, kapakları en az 30dk olmalıdır.";
   static const String msgStandard =
-      "Binanızın yüksekliği ve bodrum derinliği yüksek olmayan bina sınırları içindedir. Tesisat şaft duvarları en az 60 dk, şaft kapakları ise en az 30 dk dayanıklı olması yeterlidir.";
+      "Binanızın yüksekliği ve bodrum derinliği 'yüksek olmayan bina' sınırları içindedir. Tesisat şaft duvarları en az 60 dk, şaft kapakları ise en az 30 dk dayanıklı olması yeterlidir.";
 }
 
 class Bolum15Content {
