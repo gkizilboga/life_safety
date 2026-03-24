@@ -728,6 +728,15 @@ class _ImageModal extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 8),
+          Text(
+            "Görseli iki parmağınızla büyütebilirsiniz",
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey.shade600,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
           const SizedBox(height: 16),
         ],
       ),
