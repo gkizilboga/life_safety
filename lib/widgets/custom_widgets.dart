@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../utils/app_progress.dart';
 import '../utils/app_theme.dart';
 import '../data/bina_store.dart';
@@ -78,15 +79,18 @@ class ModernHeader extends StatelessWidget {
                     // Üst Satır: Bölüm Etiketi (Sol) ve KAYDET (Sağ)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center, // Align label and button center-vertically
                       children: [
                         if (isAnalysisScreen)
-                          Text(
-                            stepLabel,
-                            style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2), // Move label slightly down
+                            child: Text(
+                              stepLabel,
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         if (isAnalysisScreen)
@@ -109,8 +113,8 @@ class ModernHeader extends StatelessWidget {
                             behavior: HitTestBehavior.opaque,
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
+                                horizontal: 10,
+                                vertical: 5,
                               ),
                               decoration: BoxDecoration(
                                 color: const Color(0xFF059669),
@@ -118,36 +122,34 @@ class ModernHeader extends StatelessWidget {
                                 border: Border.all(color: Colors.white24, width: 1),
                               ),
                               child: const Text(
-                                "KAYDET",
+                                "KAYDET & ÇIK",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 11,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.2,
+                                  letterSpacing: 0.1,
                                 ),
                               ),
                             ),
                           ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     // Alt Satır: Başlık (Sol) ve İlerleme Yüzdesi (Sağ)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            alignment: Alignment.centerLeft,
-                            child: FormattedText(
-                              title,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
-                                height: 1.1,
-                              ),
+                          child: FormattedText(
+                            title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 19,
+                              fontWeight: FontWeight.bold,
+                              height: 1.1,
                             ),
                           ),
                         ),
@@ -310,35 +312,30 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 400),
     );
 
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 1.0,
-          end: 1.2,
-        ).chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 50,
+        tween: Tween<double>(begin: 1.0, end: 1.3).chain(CurveTween(curve: Curves.easeOut)),
+        weight: 40,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(
-          begin: 1.2,
-          end: 1.0,
-        ).chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 50,
+        tween: Tween<double>(begin: 1.3, end: 1.0).chain(CurveTween(curve: Curves.easeIn)),
+        weight: 60,
       ),
     ]).animate(_controller);
-
-    // Tesitlerde pumpAndSettle'ın takılmaması için repeat'i sadece gerçek cihaz/emülatörde çalıştırıyoruz
-    if (!WidgetsBinding.instance.toString().contains('Test')) {
-       _controller.repeat();
-    }
   }
 
   @override
   void didUpdateWidget(covariant AnimatedPercentageText oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.percentage != widget.percentage) {
+      _controller.forward(from: 0.0);
+      if (!WidgetsBinding.instance.toString().contains('Test')) {
+         HapticFeedback.selectionClick();
+      }
+    }
   }
 
   @override
@@ -378,21 +375,33 @@ class _AnimatedHeaderProgressBarState extends State<AnimatedHeaderProgressBar>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _pulseAnimation;
+  late Animation<double> _shimmerAnimation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
     );
 
-    _pulseAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    _pulseAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 50,
+      ),
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeInOut)),
+        weight: 50,
+      ),
+    ]).animate(_controller);
+
+    _shimmerAnimation = Tween<double>(begin: -1.0, end: 2.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.linear),
     );
 
     if (!WidgetsBinding.instance.toString().contains('Test')) {
-      _controller.repeat(reverse: true);
+      _controller.repeat();
     }
   }
 
@@ -405,34 +414,85 @@ class _AnimatedHeaderProgressBarState extends State<AnimatedHeaderProgressBar>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _pulseAnimation,
+      animation: _controller,
       builder: (context, child) {
-        final double glowAlpha = 0.05 + (_pulseAnimation.value * 0.15);
-        final double dynamicHeight = 7.0 + (_pulseAnimation.value * 1.5);
+        final double glowAlpha = 0.1 + (_pulseAnimation.value * 0.2);
+        final double dynamicHeight = 9.0 + (_pulseAnimation.value * 1.5);
 
         return Container(
-          height: 8.5, // Max height container to prevent layout jumping
+          height: 12,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: AppColors.successGreen.withOpacity(glowAlpha),
-                blurRadius: 10,
-                spreadRadius: 2,
+                blurRadius: 12,
+                spreadRadius: 1,
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: SizedBox(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
               height: dynamicHeight,
-              child: LinearProgressIndicator(
-                value: widget.value,
-                backgroundColor: Colors.white.withValues(alpha: 0.12),
-                valueColor: const AlwaysStoppedAnimation<Color>(
-                  AppColors.successGreen,
-                ),
+              color: Colors.white.withValues(alpha: 0.15),
+              child: Stack(
+                children: [
+                  // Smooth Value Transition
+                  TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeOutCubic,
+                    tween: Tween<double>(begin: 0, end: widget.value),
+                    builder: (context, value, _) {
+                      return FractionallySizedBox(
+                        widthFactor: value.clamp(0.0, 1.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xFF66BB6A),
+                                AppColors.successGreen,
+                                Color(0xFF2E7D32),
+                              ],
+                              stops: [0.0, 0.5, 1.0],
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  // Shimmer Effect
+                  Positioned.fill(
+                    child: FractionallySizedBox(
+                      widthFactor: 1.0,
+                      child: AnimatedBuilder(
+                        animation: _shimmerAnimation,
+                        builder: (context, _) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                stops: [
+                                  _shimmerAnimation.value - 0.2,
+                                  _shimmerAnimation.value,
+                                  _shimmerAnimation.value + 0.2,
+                                ],
+                                colors: [
+                                  Colors.white.withValues(alpha: 0.0),
+                                  Colors.white.withValues(alpha: 0.4),
+                                  Colors.white.withValues(alpha: 0.0),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -712,6 +772,7 @@ class _ImageModal extends StatelessWidget {
                 child: Image.asset(
                   assetPath,
                   fit: BoxFit.contain,
+                  cacheWidth: 1000, // Optimize memory: Limit decode resolution to 1000px width
                   errorBuilder: (c, o, s) => Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

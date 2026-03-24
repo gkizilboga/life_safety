@@ -124,9 +124,9 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
   ChoiceResult _getDynamicChoice(ChoiceResult original, int limit) {
     return ChoiceResult(
       label: original.label,
-      uiTitle: original.uiTitle.replaceAll("[LİMİT]", limit.toString()),
-      uiSubtitle: original.uiSubtitle.replaceAll("[LİMİT]", limit.toString()),
-      reportText: original.reportText.replaceAll("[LİMİT]", limit.toString()),
+      uiTitle: original.uiTitle.replaceAll("[LIMIT]", limit.toString()),
+      uiSubtitle: original.uiSubtitle.replaceAll("[LIMIT]", limit.toString()),
+      reportText: original.reportText.replaceAll("[LIMIT]", limit.toString()),
     );
   }
 
@@ -170,7 +170,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               imageTitle: "Tek Yön Kaçış Mesafesi Ölçüm Detayı",
             ),
             _buildSoruCard('tekYon', [
-              Bolum35Content.tekYonOptionA,
+              _getDynamicChoice(Bolum35Content.tekYonOptionA, _limitTekYon),
               _getDynamicChoice(Bolum35Content.tekYonOptionB, _limitTekYon),
               _getDynamicChoice(Bolum35Content.tekYonOptionC, _limitTekYon),
               Bolum35Content.tekYonOptionD,
@@ -206,7 +206,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               imageTitle: "Çift Yön Kaçış Mesafesi Ölçüm Detayı",
             ),
             _buildSoruCard('ciftYon', [
-              Bolum35Content.ciftYonOptionA,
+              _getDynamicChoice(Bolum35Content.ciftYonOptionA, _limitCiftYon),
               _getDynamicChoice(Bolum35Content.ciftYonOptionB, _limitCiftYon),
               _getDynamicChoice(Bolum35Content.ciftYonOptionC, _limitCiftYon),
               Bolum35Content.ciftYonOptionD,
@@ -235,7 +235,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
             ],
             const SizedBox(height: 12),
             _buildSoruHeaderWithDef(
-              "Daireniz, koridorun sonunda 'Çıkmaz' bir noktada mı?",
+              "Daireniz, 'Çıkmaz' bir koridorun ucunda mı?",
               "Çıkmaz Koridor",
               AppDefinitions.cikmazKoridor,
             ),
@@ -246,10 +246,18 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
             ], _model.cikmaz),
             if (_model.cikmaz?.label == Bolum35Content.cikmazOptionA.label) ...[
               _buildInfoNote(
-                "Çıkmaz koridor tespiti yapıldı. Lütfen yol ayrımına kadar olan mesafeyi belirtiniz.",
+                "Çıkmaz koridor tespiti yapıldı. Lütfen koridor uzunluğunu belirtiniz.",
+              ),
+              _buildSoruHeaderWithDef(
+                "Çıkmaz koridor kaç metre uzunluğundadır?",
+                "Çıkmaz Koridor Mesafesi",
+                AppDefinitions.cikmazKoridor,
               ),
               _buildSoruCard('cikmazMesafe', [
-                Bolum35Content.cikmazMesafeOptionA,
+                _getDynamicChoice(
+                  Bolum35Content.cikmazMesafeOptionA,
+                  _limitTekYon,
+                ),
                 _getDynamicChoice(
                   Bolum35Content.cikmazMesafeOptionB,
                   _limitTekYon,
@@ -289,7 +297,13 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     );
   }
 
-  Widget _buildSoruHeaderWithDef(String title, String term, String def, {String? imagePath, String? imageTitle}) {
+  Widget _buildSoruHeaderWithDef(
+    String title,
+    String term,
+    String def, {
+    String? imagePath,
+    String? imageTitle,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
       child: Row(

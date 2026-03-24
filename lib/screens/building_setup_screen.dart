@@ -18,7 +18,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   final _nameCtrl = TextEditingController();
   String? _selectedCity;
   String? _selectedDistrict;
-  bool _isAgreed = false;
+  bool _isAgreed = true;
 
   @override
   void initState() {
@@ -43,6 +43,10 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   List<String> get _cities {
     final cities = TurkiyeData.ilIlceMap.keys.toList();
     cities.sort((a, b) => TurkishUtils.compare(a, b));
+    if (cities.contains("İstanbul")) {
+      cities.remove("İstanbul");
+      cities.insert(0, "İstanbul");
+    }
     return cities;
   }
 
@@ -432,6 +436,8 @@ class ListSelector extends StatelessWidget {
                   Divider(height: 1, color: Colors.grey.shade200),
               itemBuilder: (context, index) {
                 final item = items[index];
+                final isHighlight = item == "İstanbul";
+
                 return ListTile(
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -439,10 +445,11 @@ class ListSelector extends StatelessWidget {
                   ),
                   title: Text(
                     item,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF263238),
+                      fontWeight:
+                          isHighlight ? FontWeight.w900 : FontWeight.w500,
+                      color: const Color(0xFF263238),
                     ),
                   ),
                   trailing: const Icon(

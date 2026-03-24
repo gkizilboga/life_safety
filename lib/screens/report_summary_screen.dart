@@ -619,43 +619,29 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             ),
           ],
         ),
-        child: SizedBox(
-          width: double.infinity,
-          height: 54,
-          child: ElevatedButton(
-            onPressed: () {
-              BinaStore.instance.saveToDisk();
-              if (isPremium) {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => const DashboardScreen(),
-                  ),
-                  (r) => false,
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const PaywallScreen(),
-                  ),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1A237E),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-            child: Text(
-              isPremium ? "ANALİZİ TAMAMLA VE ANA SAYFAYA DÖN" : "ANALİZİ AL",
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 15,
-              ),
-            ),
+        child: ElevatedButton(
+          onPressed: () {
+            BinaStore.instance.saveToDisk();
+            if (isPremium) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const DashboardScreen(),
+                ),
+                (r) => false,
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PaywallScreen(),
+                ),
+              );
+            }
+          },
+          style: AppStyles.mainButton, // Standard app style
+          child: Text(
+            isPremium ? "ANALİZİ TAMAMLA" : "ANALİZİ AL",
+            textAlign: TextAlign.center,
           ),
         ),
       ),

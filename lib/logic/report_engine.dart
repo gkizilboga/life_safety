@@ -70,6 +70,7 @@ class ReportEngine {
     final s = _getStore(store);
     return s.bolum4?.hesaplananBinaYuksekligi ?? s.bolum3?.hBina ?? 0.0;
   }
+
   static Map<String, dynamic> calculateRiskMetrics({BinaStore? store}) {
     final s = _getStore(store);
     return RiskCalculator(s).calculateMetrics();
@@ -595,26 +596,44 @@ class ReportEngine {
           if (hBina <= 28.50) {
             if (b16.bariyerYan != null) {
               details.add({
-                'label': 'Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?',
+                'label':
+                    'Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?',
                 'value': _getYesNoUnknown(b16.bariyerYan),
-                'report': _getBariyerReport(b16.bariyerYan!, "Pencerelerin yanlarında yangın bariyeri"),
-                'advice': b16.bariyerYan != 1 ? "Yönetmelik gereği pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer yapılmalıdır." : "",
+                'report': _getBariyerReport(
+                  b16.bariyerYan!,
+                  "Pencerelerin yanlarında yangın bariyeri",
+                ),
+                'advice': b16.bariyerYan != 1
+                    ? "Yönetmelik gereği pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer yapılmalıdır."
+                    : "",
               });
             }
             if (b16.bariyerUst != null) {
               details.add({
-                'label': 'Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?',
+                'label':
+                    'Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?',
                 'value': _getYesNoUnknown(b16.bariyerUst),
-                'report': _getBariyerReport(b16.bariyerUst!, "Pencerelerin üstünde yangın bariyeri"),
-                'advice': b16.bariyerUst != 1 ? "Yönetmelik gereği pencerelerin üstünde en az 30 cm eninde yanmaz bariyer yapılmalıdır." : "",
+                'report': _getBariyerReport(
+                  b16.bariyerUst!,
+                  "Pencerelerin üstünde yangın bariyeri",
+                ),
+                'advice': b16.bariyerUst != 1
+                    ? "Yönetmelik gereği pencerelerin üstünde en az 30 cm eninde yanmaz bariyer yapılmalıdır."
+                    : "",
               });
             }
             if (b16.bariyerZemin != null) {
               details.add({
-                'label': 'Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?',
+                'label':
+                    'Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?',
                 'value': _getYesNoUnknown(b16.bariyerZemin),
-                'report': _getBariyerReport(b16.bariyerZemin!, "Zemin seviyesinde 1.5m yanmaz kaplama"),
-                'advice': b16.bariyerZemin != 1 ? "Zemin seviyesinden en az 1.5 metre yüksekliğe kadar olan cephe yüzeyi hiç yanmaz malzemelerle kaplanmalıdır." : "",
+                'report': _getBariyerReport(
+                  b16.bariyerZemin!,
+                  "Zemin seviyesinde 1.5m yanmaz kaplama",
+                ),
+                'advice': b16.bariyerZemin != 1
+                    ? "Zemin seviyesinden en az 1.5 metre yüksekliğe kadar olan cephe yüzeyi hiç yanmaz malzemelerle kaplanmalıdır."
+                    : "",
               });
             }
           }
@@ -628,7 +647,9 @@ class ReportEngine {
               'report': b16.giydirmeBoslukYalitim == true
                   ? "OLUMLU: Cephe kaplaması ile döşeme arasındaki boşluklar uygun malzemelerle yalıtılmıştır."
                   : "KRİTİK RİSK: Cephe kaplaması ile bina döşemesi arasındaki boşluklar yalıtılmamıştır.",
-              'advice': b16.giydirmeBoslukYalitim == false ? "Cephe ile döşeme arasındaki boşluklar taşyünü gibi yanmaz malzemelerle sıkıca kapatılmalıdır." : "",
+              'advice': b16.giydirmeBoslukYalitim == false
+                  ? "Cephe ile döşeme arasındaki boşluklar taşyünü gibi yanmaz malzemelerle sıkıca kapatılmalıdır."
+                  : "",
             });
           }
         }
@@ -647,7 +668,8 @@ class ReportEngine {
         if (b16.bitisikNizam != null) {
           _addDetail(
             details,
-            label: 'Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?',
+            label:
+                'Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?',
             value: b16.bitisikNizam!.uiTitle,
             report: b16.bitisikNizam!.reportText,
             advice: b16.bitisikNizam!.adviceText,
@@ -866,8 +888,7 @@ class ReportEngine {
         if (b23.havalandirma != null)
           _addDetail(
             details,
-            label:
-                'Asansör kuyusunun tepesinde havalandırma penceresi var mı?',
+            label: 'Asansör kuyusunun tepesinde havalandırma penceresi var mı?',
             value: b23.havalandirma!.uiTitle,
             report: b23.havalandirma!.reportText,
             advice: b23.havalandirma!.adviceText,
@@ -946,7 +967,8 @@ class ReportEngine {
         if (b25.yukseklik != null)
           _addDetail(
             details,
-            label: 'Kaçış yolu olarak kullanılacak döner merdiven yüksekliği nedir?',
+            label:
+                'Kaçış yolu olarak kullanılacak döner merdiven yüksekliği nedir?',
             value: b25.yukseklik!.uiTitle,
             report: b25.yukseklik!.reportText,
             advice: b25.yukseklik!.adviceText,
@@ -1141,9 +1163,14 @@ class ReportEngine {
 
         final bool zeminIndependent =
             s.bolum34?.zemin?.label.contains("34-1-A") ?? false;
+        final bool bodrumIndependent =
+            s.bolum34?.bodrum?.label.contains("34-2-A") ?? false;
+        final bool normalIndependent =
+            s.bolum34?.normal?.label.contains("34-3-A") ?? false;
+
         final int yukZemin = zeminIndependent ? 0 : (s.bolum33?.yukZemin ?? 0);
-        final int yukNormal = s.bolum33?.yukNormal ?? 0;
-        final int yukBodrum = s.bolum33?.yukBodrum ?? 0;
+        final int yukNormal = normalIndependent ? 0 : (s.bolum33?.yukNormal ?? 0);
+        final int yukBodrum = bodrumIndependent ? 0 : (s.bolum33?.yukBodrum ?? 0);
 
         if (b27.yon.isNotEmpty) {
           List<String> exceed50List = [];
@@ -1637,7 +1664,7 @@ class ReportEngine {
 
         String replaceLimit(String? text, int limit) {
           if (text == null) return "";
-          return text.replaceAll("[LİMİT]", limit.toString());
+          return text.replaceAll("[LIMIT]", limit.toString());
         }
 
         if (b35.tekYon != null)
@@ -1678,7 +1705,7 @@ class ReportEngine {
             advice: replaceLimit(b35.cikmazMesafe!.adviceText, limitTekYon),
             level: b35.cikmazMesafe!.level,
           );
-        if (b35.manuelMesafe != null)
+        if (b35.manuelMesafe != null && b35.manuelMesafe! > 0)
           _addDetail(
             details,
             label: 'Manuel Girilen Kaçış Mesafesi',
@@ -1786,31 +1813,8 @@ class ReportEngine {
           bool isMerdiven,
         ) {
           if (choice == null) return;
-          if (choice.label.endsWith("-E") && isMerdiven) {
-            _addDetail(
-              details,
-              label: label,
-              value: choice.uiTitle,
-              report:
-                  "BİLİNMİYOR: Genişlik belli değil. Asgari gereksinim: $requiredVal cm ($reqReason).",
-              status: ReportStatus.warning,
-            );
-            return;
-          }
-          if (choice.label.endsWith("-F") && !isMerdiven) {
-            _addDetail(
-              details,
-              label: label,
-              value: choice.uiTitle,
-              report:
-                  "BİLİNMİYOR: Genişlik belli değil. Asgari gereksinim: $requiredVal cm ($reqReason).",
-              status: ReportStatus.warning,
-            );
-            return;
-          }
-
           var range = isMerdiven ? getMerdRange(choice) : getKoriRange(choice);
-          if (range == null) return; // for kapi or other weird cases
+          if (range == null) return;
           int wMax = range[1];
 
           if (wMax < requiredVal) {
@@ -1833,7 +1837,6 @@ class ReportEngine {
         }
 
         if (b36.areWidthsSame) {
-          // Birleşik Raporlama
           evaluateWidth(
             'Merdiven Genişliği (Genel)',
             b36.genislikKorunumlu,
@@ -1864,8 +1867,7 @@ class ReportEngine {
             );
           }
         } else {
-          // Ayrı Raporlama (Eski Sistem)
-          // Korunumlu
+          // Ayrı Giriş
           evaluateWidth(
             'Korunumlu Merdiven Genişliği',
             b36.genislikKorunumlu,
@@ -1895,8 +1897,6 @@ class ReportEngine {
                         : ReportStatus.warning),
             );
           }
-
-          // Korunumsuz
           evaluateWidth(
             'Korunumsuz Merdiven Genişliği',
             b36.genislikKorunumsuz,
@@ -1928,10 +1928,9 @@ class ReportEngine {
           }
         }
 
-        // Madde 41 Detayları (Merdiven dökümü Bölüm 20 ile ortak metot üzerinden yapılır)
+        // Madde 41 Detayları
         final b20 = s.bolum20;
         if (b20 != null) {
-          // Önce merdiven dökümünü ekle
           _addDetail(
             details,
             label: 'Merdiven Tipleri ve Kaçış Genişlikleri',
@@ -1945,18 +1944,17 @@ class ReportEngine {
           }
         }
 
-        // Ana değerlendirme metni
-        _addDetail(
-          details,
-          label: 'Genel Tespitler',
-          value: "",
-          report: b36.merdivenDegerlendirme ?? '',
-          status: (b36.merdivenDegerlendirme ?? "").contains("KRİTİK RİSK")
-              ? ReportStatus.risk
-              : ((b36.merdivenDegerlendirme ?? "").contains("UYARI")
-                    ? ReportStatus.warning
-                    : ReportStatus.compliant),
-        );
+        // Mühendis Notu
+        if (b36.merdivenDegerlendirme != null &&
+            b36.merdivenDegerlendirme!.isNotEmpty) {
+          _addDetail(
+            details,
+            label: "",
+            value: "",
+            report: b36.merdivenDegerlendirme!,
+            status: ReportStatus.info,
+          );
+        }
 
         handled = true;
       }
@@ -2121,8 +2119,10 @@ class ReportEngine {
         final List<RiskLevel> extraLevels = [];
         final basincReasons = evaluateBasincRequirement(store: s);
         for (var reason in basincReasons) {
-          if (reason.startsWith("KRİTİK RİSK")) extraLevels.add(RiskLevel.critical);
-          else if (reason.startsWith("UYARI")) extraLevels.add(RiskLevel.warning);
+          if (reason.startsWith("KRİTİK RİSK"))
+            extraLevels.add(RiskLevel.critical);
+          else if (reason.startsWith("UYARI"))
+            extraLevels.add(RiskLevel.warning);
         }
 
         return _maxLevel([
@@ -2140,8 +2140,10 @@ class ReportEngine {
         final List<RiskLevel> extraLevels = [];
         final yghReasons = evaluateYghRequirement(store: s);
         for (var reason in yghReasons) {
-          if (reason.startsWith("KRİTİK RİSK")) extraLevels.add(RiskLevel.critical);
-          else if (reason.startsWith("UYARI")) extraLevels.add(RiskLevel.warning);
+          if (reason.startsWith("KRİTİK RİSK"))
+            extraLevels.add(RiskLevel.critical);
+          else if (reason.startsWith("UYARI"))
+            extraLevels.add(RiskLevel.warning);
         }
 
         return _maxLevel([
@@ -2448,8 +2450,10 @@ class ReportEngine {
       // Dinamik Basınçlandırma Analizi (Puanlamaya dahil et)
       final basincReasons = evaluateBasincRequirement(store: s);
       for (var reason in basincReasons) {
-        if (reason.startsWith("KRİTİK RİSK")) addLevel(RiskLevel.critical);
-        else if (reason.startsWith("UYARI")) addLevel(RiskLevel.warning);
+        if (reason.startsWith("KRİTİK RİSK"))
+          addLevel(RiskLevel.critical);
+        else if (reason.startsWith("UYARI"))
+          addLevel(RiskLevel.warning);
       }
 
       // Hidden Risks (Numerical)
@@ -2467,8 +2471,10 @@ class ReportEngine {
       // Dinamik YGH Analizi (Puanlamaya dahil et)
       final yghReasons = evaluateYghRequirement(store: s);
       for (var reason in yghReasons) {
-        if (reason.startsWith("KRİTİK RİSK")) addLevel(RiskLevel.critical);
-        else if (reason.startsWith("UYARI")) addLevel(RiskLevel.warning);
+        if (reason.startsWith("KRİTİK RİSK"))
+          addLevel(RiskLevel.critical);
+        else if (reason.startsWith("UYARI"))
+          addLevel(RiskLevel.warning);
       }
     }
 
@@ -3800,10 +3806,15 @@ class ReportEngine {
     final b33 = s.bolum33;
     final b34 = s.bolum34;
     if (b33 != null) {
+      // Sadece 34-X-A (Evet, var) seçilirse bağımsız sayıyoruz. (C - Bilmiyorum seçilirse yük dahil edilir).
       bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
+      bool bodrumIndependent = b34?.bodrum?.label.contains("34-2-A") ?? false;
+      bool normalIndependent = b34?.normal?.label.contains("34-3-A") ?? false;
+
       int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
-      int yukNormal = b33.yukNormal ?? 0;
-      int yukBodrum = b33.yukBodrum ?? 0;
+      int yukBodrum = bodrumIndependent ? 0 : (b33.yukBodrum ?? 0);
+      int yukNormal = normalIndependent ? 0 : (b33.yukNormal ?? 0);
+      
       maxYuk = [yukZemin, yukNormal, yukBodrum].reduce((a, b) => a > b ? a : b);
     }
     return maxYuk;

@@ -1474,7 +1474,7 @@ class Bolum16Content {
   // En uzun cephe uzunluğu — sayısal değer girildiğinde (≤ 75m): bilgi notu
   static final cepheUzunluguOlumlu = ChoiceResult(
     label: "16-4-A (Cephe)",
-    uiTitle: "75m ve altı",
+    uiTitle: "75 m. ve altı",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -1483,7 +1483,7 @@ class Bolum16Content {
   // En uzun cephe uzunluğu — sayısal değer girildiğinde (> 75m): bilgi notu
   static final cepheUzunluguKritik = ChoiceResult(
     label: "16-4-B (Cephe)",
-    uiTitle: "75m üzeri",
+    uiTitle: "75 m. üzeri",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -1870,7 +1870,7 @@ class Bolum19Content {
 
   static final etiketOptionA = ChoiceResult(
     label: "19-3-ALT-A",
-    uiTitle: "Var.",
+    uiTitle: "Evet.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Yanıltıcı kapılar üzerinde gerekli uyarı levhaları mevcuttur. Bu durum uygundur.",
@@ -1879,12 +1879,12 @@ class Bolum19Content {
 
   static final etiketOptionB = ChoiceResult(
     label: "19-3-ALT-B",
-    uiTitle: "Yok.",
+    uiTitle: "Hayır.",
     uiSubtitle: "",
     reportText:
         "UYARI: Yanıltıcı kapılar üzerinde uyarı levhası bulunmamaktadır.",
     adviceText:
-        "Yanıltıcı kapıların üzerinde mahalin adı veya 'Çıkış Değildir' etiketleri bulunmalıdır.",
+        "Yanıltıcı kapıların üzerinde mahalin adı yazmalı veya 'ÇIKIŞ DEĞİLDİR' etiketi bulunmalıdır.",
     level: RiskLevel.warning,
   );
 
@@ -2098,7 +2098,7 @@ class Bolum20Content {
 
   static final madde41MesafeAltinda = ChoiceResult(
     label: "41-MESAFE-A",
-    uiTitle: "Evet, limitin altında",
+    uiTitle: "Evet.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerlerinin (sprinklersiz 10m / sprinklerli 15m) altındadır.",
@@ -2107,7 +2107,7 @@ class Bolum20Content {
 
   static final madde41MesafeUstunde = ChoiceResult(
     label: "41-MESAFE-B",
-    uiTitle: "Hayır, limitin üstünde",
+    uiTitle: "Hayır.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerlerini (sprinklersiz 10m / sprinklerli 15m) aşmaktadır.",
@@ -2116,7 +2116,7 @@ class Bolum20Content {
 
   static final madde41MesafeBilmiyorum = ChoiceResult(
     label: "41-MESAFE-C",
-    uiTitle: "Bilmiyorum",
+    uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Çıkış katındaki tahliye mesafesi ölçülmemiş veya bilinmemektedir. (Limit Değerler: Sprinklersiz 10m / Sprinklerli 15m)",
@@ -2751,7 +2751,7 @@ class Bolum25Content {
 
   static final daireselYukseklikOptionA = ChoiceResult(
     label: daireselYukseklikLabelA,
-    uiTitle: "9.50 metre veya altında.",
+    uiTitle: "9.50 metre veya altı.",
     uiSubtitle: "",
     reportText:
         "BİLGİ: Dairesel merdiven yüksekliği 9.50m sınırının altındadır. Dairesel merdiven kaçış yolu olarak kullanılabilir.",
@@ -2760,7 +2760,7 @@ class Bolum25Content {
 
   static final daireselYukseklikOptionB = ChoiceResult(
     label: daireselYukseklikLabelB,
-    uiTitle: "9.50 metrenin üzerinde.",
+    uiTitle: "9.50 metre üzeri.",
     uiSubtitle: "",
     reportText:
         "UYARI: Dairesel merdiven yüksekliği 9.50m sınırını aşmaktadır. Bu durumda dairesel merdiven kaçış yolu olarak kullanılamaz.",
@@ -4120,25 +4120,25 @@ class Bolum35Content {
   // --- SENARYO 1: TEK YÖN ---
   static final tekYonOptionA = ChoiceResult(
     label: "35-1-A",
-    uiTitle: "[LİMİT] metreden KISA.",
+    uiTitle: "[LIMIT] metreden KISA.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Tek yön kaçış mesafesi Yönetmelik sınırları içerisindedir.",
+        "OLUMLU: Tek yön kaçış mesafesi, Yönetmelik sınırları içerisindedir.",
     level: RiskLevel.positive,
   );
   static final tekYonOptionB = ChoiceResult(
     label: "35-1-B",
-    uiTitle: "[LİMİT] metreden UZUN.",
+    uiTitle: "[LIMIT] metreden UZUN.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Tek yön kaçış mesafesi Yönetmelik sınırının üzerindedir. ",
+        "KRİTİK RİSK: Tek yön kaçış mesafesi, Yönetmelik sınırının üzerindedir. ",
     level: RiskLevel.critical,
   );
   static final tekYonOptionC = ChoiceResult(
     label: "35-1-C",
     uiTitle: "Tam olarak ölçüyü biliyorum.",
     uiSubtitle: "",
-    reportText: "(Girilen değere göre otomatik hesaplanır)",
+    reportText: "Girilen değere göre otomatik hesaplandı.",
     level: RiskLevel.positive,
   );
   static final tekYonOptionD = ChoiceResult(
@@ -4153,7 +4153,7 @@ class Bolum35Content {
   // --- SENARYO 2: ÇİFT YÖN (EN YAKIN) ---
   static final ciftYonOptionA = ChoiceResult(
     label: "35-2-A",
-    uiTitle: "Tahminen [LİMİT] metreden KISADIR.",
+    uiTitle: "Tahminen [LIMIT] metreden KISADIR.",
     uiSubtitle: "Mesafe yakın.",
     reportText:
         "OLUMLU: En yakın çıkışa kaçış mesafesi yönetmelik sınırları içerisindedir.",
@@ -4161,7 +4161,7 @@ class Bolum35Content {
   );
   static final ciftYonOptionB = ChoiceResult(
     label: "35-2-B",
-    uiTitle: "Tahminen [LİMİT] metreden UZUNDUR.",
+    uiTitle: "Tahminen [LIMIT] metreden UZUNDUR.",
     uiSubtitle: "Mesafe uzak.",
     reportText:
         "KRİTİK RİSK: En yakın çıkışa mesafe sınırın üzerindedir. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir.",
@@ -4185,7 +4185,7 @@ class Bolum35Content {
 
   static final cikmazOptionA = ChoiceResult(
     label: "35-3-A",
-    uiTitle: "Evet, dairem çıkmaz bir koridorun ucundayım.",
+    uiTitle: "Evet.",
     uiSubtitle: "Sadece tek yöne gidebiliyorum.",
     reportText: "Çıkmaz koridor mesafesi alt soruya göre değerlendirilecektir.",
     level: RiskLevel.positive,
@@ -4210,7 +4210,7 @@ class Bolum35Content {
 
   static final cikmazMesafeOptionA = ChoiceResult(
     label: "35-3-C",
-    uiTitle: "Tahminen [LİMİT] metreden KISA.",
+    uiTitle: "Tahminen [LIMIT] metreden KISA.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Çıkmaz koridor mesafesi yönetmelik sınırları içerisindedir.",
@@ -4218,7 +4218,7 @@ class Bolum35Content {
   );
   static final cikmazMesafeOptionB = ChoiceResult(
     label: "35-3-D",
-    uiTitle: "Tahminen [LİMİT] metreden UZUN.",
+    uiTitle: "Tahminen [LIMIT] metreden UZUN.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Çıkmaz koridor mesafesi sınırın üzerindedir. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir. bunun için yerinde Uzman kontrolü gereklidir.",
@@ -4227,7 +4227,7 @@ class Bolum35Content {
   static final cikmazMesafeOptionC = ChoiceResult(
     label: "35-3-E",
     uiTitle: "Tam ölçüyü biliyorum.",
-    uiSubtitle: "Yol ayrımına kadar olan mesafeyi gireceğim.",
+    uiSubtitle: "",
     reportText: "Girilen değere göre otomatik hesaplanmıştır.",
     level: RiskLevel.positive,
   );

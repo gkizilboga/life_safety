@@ -136,16 +136,11 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
             ],
             _model.basKurtarma,
           ),
-          _buildSoru(
-            "Dairesel merdiven yüksekliği ne kadardır?",
-            'yukseklik',
-            [
-              Bolum25Content.daireselYukseklikOptionA,
-              Bolum25Content.daireselYukseklikOptionB,
-              Bolum25Content.daireselYukseklikOptionC,
-            ],
-            _model.yukseklik,
-          ),
+          _buildSoru("Dairesel merdivenin yüksekliği nedir?", 'yukseklik', [
+            Bolum25Content.daireselYukseklikOptionA,
+            Bolum25Content.daireselYukseklikOptionB,
+            Bolum25Content.daireselYukseklikOptionC,
+          ], _model.yukseklik),
         ],
       ),
     );
@@ -189,4 +184,3 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
     );
   }
 }
-

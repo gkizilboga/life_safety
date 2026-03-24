@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_3_model.dart';
 import '../../models/bolum_4_model.dart';
@@ -17,7 +18,8 @@ class Bolum5Screen extends StatefulWidget {
   State<Bolum5Screen> createState() => _Bolum5ScreenState();
 }
 
-class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderStateMixin {
+class _Bolum5ScreenState extends State<Bolum5Screen>
+    with SingleTickerProviderStateMixin {
   Bolum5Model _model = Bolum5Model();
   late AnimationController _pulseController;
   late Animation<double> _scaleAnimation;
@@ -247,7 +249,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildInputLabel(Bolum5Content.oturumAlani),
+                        _buildInputLabel(
+                          Bolum5Content.oturumAlani,
+                          onCalculatorTap: () =>
+                              _showCalculatorPopup(_tabanCtrl, "Zemin Kat"),
+                        ),
                         _buildNumberInput(
                           _tabanCtrl,
                           "Örn: 500",
@@ -256,7 +262,13 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
 
                         if (_nKat > 0) ...[
                           const SizedBox(height: 16),
-                          _buildInputLabel(Bolum5Content.normalKatAlani),
+                          _buildInputLabel(
+                            Bolum5Content.normalKatAlani,
+                            onCalculatorTap: () => _showCalculatorPopup(
+                              _normalCtrl,
+                              "Normal Katlar",
+                            ),
+                          ),
                           _buildNumberInput(
                             _normalCtrl,
                             "Örn: 500",
@@ -266,7 +278,13 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
 
                         if (_bKat > 0) ...[
                           const SizedBox(height: 16),
-                          _buildInputLabel(Bolum5Content.bodrumKatAlani),
+                          _buildInputLabel(
+                            Bolum5Content.bodrumKatAlani,
+                            onCalculatorTap: () => _showCalculatorPopup(
+                              _bodrumCtrl,
+                              "Bodrum Katlar",
+                            ),
+                          ),
                           _buildNumberInput(
                             _bodrumCtrl,
                             "Örn: 500",
@@ -276,7 +294,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
 
                         const SizedBox(height: 12),
                         ScaleTransition(
-                          scale: (!_isCalculated &&
+                          scale:
+                              (!_isCalculated &&
                                   _tabanCtrl.text.isNotEmpty &&
                                   (_nKat == 0 || _normalCtrl.text.isNotEmpty))
                               ? _scaleAnimation
@@ -291,7 +310,10 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
                               ),
                               label: const Text(
                                 "TOPLAM BRÜT ALANI HESAPLA",
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.warningOrange,
@@ -341,38 +363,207 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
             ),
           ),
           if (isLocked)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: CustomInfoNote(
-              type: InfoNoteType.warning,
-              text:
-                  "Temel veriler kilitlenmiştir. İleriki bölümlerdeki hesaplamaların bozulmaması için bu aşamadan sonra alan bilgisi değiştirilemez. Değiştirmek isterseniz yeni bir analiz başlatmalısınız.",
-              icon: Icons.lock_outline,
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: CustomInfoNote(
+                type: InfoNoteType.warning,
+                text:
+                    "Temel veriler kilitlenmiştir. İleriki bölümlerdeki hesaplamaların bozulmaması için bu aşamadan sonra alan bilgisi değiştirilemez. Değiştirmek isterseniz yeni bir analiz başlatmalısınız.",
+                icon: Icons.lock_outline,
+              ),
             ),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildInputLabel(ChoiceResult content) {
+  Widget _buildInputLabel(
+    ChoiceResult content, {
+    VoidCallback? onCalculatorTap,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          content.uiTitle,
-          style: AppStyles.questionTitle,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(content.uiTitle, style: AppStyles.questionTitle),
+            ),
+            if (onCalculatorTap != null)
+              GestureDetector(
+                onTap: onCalculatorTap,
+                child: Container(
+                  margin: const EdgeInsets.only(left: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryBlue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: AppColors.primaryBlue.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.calculate,
+                        size: 16,
+                        color: AppColors.primaryBlue,
+                      ),
+                      const SizedBox(width: 4),
+                      const Text(
+                        "Hesapla",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryBlue,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
         ),
         if (content.uiSubtitle.isNotEmpty)
-          Text(
-            content.uiSubtitle,
-            style: const TextStyle(fontSize: 13, color: Colors.grey),
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              content.uiSubtitle,
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
+            ),
           ),
         const SizedBox(height: 6),
       ],
     );
+  }
+
+  void _showCalculatorPopup(
+    TextEditingController targetController,
+    String title,
+  ) {
+    if (FocusScope.of(context).hasFocus) {
+      FocusScope.of(context).unfocus();
+    }
+
+    final daireSayisiCtrl = TextEditingController();
+    final daireAlaniCtrl = TextEditingController();
+
+    showCustomDialog<bool>(
+      context: context,
+      title: "$title Hesaplayıcı",
+      contentWidget: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Toplam alanı bulmak için aşağıdaki bilgileri doldurunuz (kattaki daire sayısı x brüt alan = toplam).",
+            style: TextStyle(color: Colors.black54, fontSize: 13),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: daireSayisiCtrl,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: InputDecoration(
+              labelText: "1 Kattaki Daire/Bölüm Sayısı",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              prefixIcon: const Icon(
+                Icons.numbers,
+                color: AppColors.primaryBlue,
+              ),
+              isDense: true,
+            ),
+          ),
+          const SizedBox(height: 12),
+          TextField(
+            controller: daireAlaniCtrl,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [InputValidator.flexDecimal],
+            decoration: InputDecoration(
+              labelText: "1 Dairenin Ort. Brüt Alanı (m²)",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              prefixIcon: const Icon(
+                Icons.square_foot,
+                color: AppColors.primaryBlue,
+              ),
+              isDense: true,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppColors.primaryBlue.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 16,
+                  color: AppColors.primaryBlue,
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    "Ortak kullanım alanlarını (merdiven, asansör, şaft vb.) daire alanına veya hesaba dahil ettiğinizden emin olunuz.",
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppColors.primaryBlue,
+                      height: 1.3,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      confirmText: "HESAPLA",
+      cancelText: "İPTAL",
+      icon: Icons.calculate_outlined,
+      iconColor: AppColors.primaryBlue,
+    ).then((result) {
+      if (result == true) {
+        double sayi = double.tryParse(daireSayisiCtrl.text) ?? 0;
+        double alan = InputValidator.parseFlex(daireAlaniCtrl.text) ?? 0;
+
+        if (sayi > 0 && alan > 0) {
+          double toplam = sayi * alan;
+          setState(() {
+            // Tam sayi ise .00 gosterme, değilse ondalık goster
+            if (toplam == toplam.truncateToDouble()) {
+              targetController.text = toplam.toInt().toString();
+            } else {
+              targetController.text = toplam
+                  .toStringAsFixed(2)
+                  .replaceAll('.', ',');
+            }
+          });
+          _validate();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Lütfen geçerli sayılar giriniz."),
+              backgroundColor: AppColors.warningOrange,
+            ),
+          );
+        }
+      }
+    });
   }
 
   Widget _buildNumberInput(
@@ -393,6 +584,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
       ),
       decoration: InputDecoration(
         hintText: hint,
+        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 12),
         errorText: error,
         suffixText: "m²",
         filled: true,
@@ -416,10 +608,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen> with SingleTickerProviderSt
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "HESAPLAMA DETAYI",
-            style: AppStyles.questionTitle,
-          ),
+          Text("HESAPLAMA DETAYI", style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           // Toplam Kat Adedi (Bölüm 3'ten gelen veri)
           Row(

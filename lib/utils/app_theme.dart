@@ -46,10 +46,10 @@ class AppStyles {
 
   // ALT SORU metinleri için stil - Ana sorulardan farklı, daha az baskın
   static const TextStyle subQuestionTitle = TextStyle(
-    fontSize: 15,
-    fontWeight: FontWeight.w700,
-    color: AppColors.primaryBlue, // Ana mavi - Purple 16px'den ayrılmak için
-    height: 1.3,
+    fontSize: 16,
+    fontWeight: FontWeight.w800,
+    color: Color(0xFF4A148C), // Koyu Mor - Sorular için dikkat çekici
+    height: 1.4,
   );
 
   // YANIT metinleri için stil - Daha nötr

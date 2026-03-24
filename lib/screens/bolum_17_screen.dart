@@ -136,150 +136,45 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
                     style: AppStyles.questionTitle,
                   ),
                   const SizedBox(height: 12),
-                  // Temperli Cam seçeneği
-                  InkWell(
+                  SelectableCard(
+                    choice: ChoiceResult(
+                      label: "cam",
+                      uiTitle: "Temperli ve yangına dayanıklı cam ışıklık",
+                      uiSubtitle: "",
+                      reportText: "",
+                      level: RiskLevel.info,
+                    ),
+                    isSelected: _model.isiklikMalzemesi == "cam",
                     onTap: () => setState(
                       () => _model = _model.copyWith(isiklikMalzemesi: "cam"),
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      margin: const EdgeInsets.only(bottom: 6),
-                      decoration: BoxDecoration(
-                        color: _model.isiklikMalzemesi == "cam"
-                            ? const Color(0xFF1A237E).withOpacity(0.06)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: _model.isiklikMalzemesi == "cam"
-                              ? const Color(0xFF1A237E)
-                              : const Color(0xFFCFD8DC),
-                          width: _model.isiklikMalzemesi == "cam" ? 2.5 : 1.5,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Radio<String>(
-                            value: "cam",
-                            groupValue: _model.isiklikMalzemesi,
-                            activeColor: const Color(0xFF1A237E),
-                            onChanged: (v) => setState(
-                              () =>
-                                  _model = _model.copyWith(isiklikMalzemesi: v),
-                            ),
-                          ),
-                          const Expanded(
-                            child: Text(
-                              "Temperli ve yangına dayanıklı cam ışıklık",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
-                  // Plastik seçeneği
-                  InkWell(
+                  SelectableCard(
+                    choice: ChoiceResult(
+                      label: "plastik",
+                      uiTitle: "Plastik, pleksi, polikarbon ışıklık",
+                      uiSubtitle: "",
+                      reportText: "",
+                      level: RiskLevel.info,
+                    ),
+                    isSelected: _model.isiklikMalzemesi == "plastik",
                     onTap: () => setState(
                       () =>
                           _model = _model.copyWith(isiklikMalzemesi: "plastik"),
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      margin: const EdgeInsets.only(bottom: 6),
-                      decoration: BoxDecoration(
-                        color: _model.isiklikMalzemesi == "plastik"
-                            ? const Color(0xFF1A237E).withOpacity(0.06)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: _model.isiklikMalzemesi == "plastik"
-                              ? const Color(0xFF1A237E)
-                              : const Color(0xFFCFD8DC),
-                          width: _model.isiklikMalzemesi == "plastik"
-                              ? 2.5
-                              : 1.5,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Radio<String>(
-                            value: "plastik",
-                            groupValue: _model.isiklikMalzemesi,
-                            activeColor: const Color(0xFF1A237E),
-                            onChanged: (v) => setState(
-                              () =>
-                                  _model = _model.copyWith(isiklikMalzemesi: v),
-                            ),
-                          ),
-                          const Expanded(
-                            child: Text(
-                              "Plastik, Pleksi veya Polikarbon ışıklık",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                   ),
-                  // Bilmiyorum seçeneği
-                  InkWell(
+                  SelectableCard(
+                    choice: ChoiceResult(
+                      label: "bilinmiyor",
+                      uiTitle: "Bilmiyorum.",
+                      uiSubtitle: "",
+                      reportText: "",
+                      level: RiskLevel.info,
+                    ),
+                    isSelected: _model.isiklikMalzemesi == "bilinmiyor",
                     onTap: () => setState(
                       () => _model = _model.copyWith(
                         isiklikMalzemesi: "bilinmiyor",
-                      ),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _model.isiklikMalzemesi == "bilinmiyor"
-                            ? const Color(0xFF1A237E).withOpacity(0.06)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: _model.isiklikMalzemesi == "bilinmiyor"
-                              ? const Color(0xFF1A237E)
-                              : const Color(0xFFCFD8DC),
-                          width: _model.isiklikMalzemesi == "bilinmiyor"
-                              ? 2.5
-                              : 1.5,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Radio<String>(
-                            value: "bilinmiyor",
-                            groupValue: _model.isiklikMalzemesi,
-                            activeColor: const Color(0xFF1A237E),
-                            onChanged: (v) => setState(
-                              () =>
-                                  _model = _model.copyWith(isiklikMalzemesi: v),
-                            ),
-                          ),
-                          const Expanded(
-                            child: Text(
-                              "Bilmiyorum.",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),

@@ -208,17 +208,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildStatusChip(isCompleted),
-                Text(
-                  dateStr,
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ],
-            ),
+              Text(
+                dateStr,
+                style: const TextStyle(color: Colors.grey, fontSize: 12),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
           Text(
             name,
             style: const TextStyle(
-              fontSize: 13, // Standard dashboard title size
+              fontSize: 16, // Enhancing visibility of building name
               fontWeight: FontWeight.bold,
               color: Color(0xFF2C3E50),
             ),
@@ -276,7 +276,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     isCompleted ? "ANALİZLERİ GÖR" : "DEVAM ET",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 13,
+                      fontSize: 14,
                     ),
                   ),
                 ),
@@ -430,7 +430,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: _buildActionCard(
             context,
             "Yeni Analiz",
-            "Sıfırdan Başlat",
             Icons.add_moderator_outlined,
             AppColors.successGreen,
             () => _startNewAnalysis(context),
@@ -441,7 +440,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: _buildActionCard(
             context,
             "Arşiv",
-            "Geçmiş Kayıtlar",
             Icons.inventory_2_outlined,
             AppColors.primaryBlue,
             () async {
@@ -460,7 +458,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildActionCard(
     BuildContext context,
     String title,
-    String sub,
     IconData icon,
     Color color,
     VoidCallback onTap,
@@ -491,15 +488,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 13, // Was 14
+                fontSize: 15,
                 color: AppColors.textDark,
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              sub,
-              style: const TextStyle(color: AppColors.textLight, fontSize: 12),
-            ),
+            const SizedBox(height: 2), // Minor bottom padding
           ],
         ),
       ),
@@ -570,20 +563,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 13, // Was 14
+            fontSize: 15,
             color: AppColors.textDark,
           ),
         ),
         subtitle: Text(
           sub,
-          style: const TextStyle(
-            fontSize: 12,
-            color: AppColors.textLight,
-          ), // Was 13
+          style: const TextStyle(fontSize: 13, color: AppColors.textLight),
         ),
         trailing: const Icon(
           Icons.arrow_forward_ios,
-          size: 9, // Was 10
+          size: 14,
           color: Colors.grey,
         ),
         onTap: onTap,
@@ -597,10 +587,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 12, // Was 13
+          fontSize: 13,
           fontWeight: FontWeight.bold,
           color: AppColors.textLight,
-          letterSpacing: 1.1,
+          letterSpacing: 0.5,
         ),
       ),
     );

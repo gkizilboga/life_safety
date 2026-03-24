@@ -447,7 +447,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
         ? "Bodrum Kat: Çıkış Katı Tahliye Mesafesi"
         : "Çıkış Katı Tahliye Mesafesi";
     final question =
-        "Dışarıya açılmayan merdivenlerin çıkış katındaki tahliye mesafesi $limit metrenin altında mı?";
+        "Direkt dışarıya açılmayan merdivenlerin çıkış katındaki tahliye mesafesi $limit metrenin altında mı?";
 
     return Selector<Bolum20Provider, ChoiceResult?>(
       selector: (_, p) =>

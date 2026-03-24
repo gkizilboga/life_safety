@@ -81,7 +81,7 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
               richText: TextSpan(
                 children: [
                   TextSpan(
-                    text: "$_lockReason\n\n",
+                    text: "$_lockReason\n",
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const TextSpan(
@@ -89,7 +89,6 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                         "Değişiklik yapmak istiyorsanız lütfen Bölüm-7'ye giderek 'Ortak Duvar' seçeneğini güncelleyin.",
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.white70,
                       fontStyle: FontStyle.italic,
                     ),
                   ),

@@ -37,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Image.asset(
                   'assets/images/ui/logo3.webp',
                   height: 120,
+                  cacheHeight: 120,
                   errorBuilder: (context, error, stackTrace) => const Icon(
                     Icons.security_rounded,
                     size: 80,
