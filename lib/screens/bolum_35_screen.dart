@@ -162,19 +162,21 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_tekCikis) ...[
-            _buildSoruHeaderWithDef(
+            _buildIntegratedQuestionCard(
+              "tekYon",
               "Daire kapınızdan çıktığınızda kattaki merdiven kapısına kadar olan mesafe kaç metredir?",
-              "Kaçış Mesafesi",
-              AppDefinitions.kacisMesafesi,
+              [
+                _getDynamicChoice(Bolum35Content.tekYonOptionA, _limitTekYon),
+                _getDynamicChoice(Bolum35Content.tekYonOptionB, _limitTekYon),
+                _getDynamicChoice(Bolum35Content.tekYonOptionC, _limitTekYon),
+                Bolum35Content.tekYonOptionD,
+              ],
+              _model.tekYon,
+              term: "Kaçış Mesafesi",
+              definition: AppDefinitions.kacisMesafesi,
               imagePath: AppAssets.section35DairedenOlcum,
               imageTitle: "Tek Yön Kaçış Mesafesi Ölçüm Detayı",
             ),
-            _buildSoruCard('tekYon', [
-              _getDynamicChoice(Bolum35Content.tekYonOptionA, _limitTekYon),
-              _getDynamicChoice(Bolum35Content.tekYonOptionB, _limitTekYon),
-              _getDynamicChoice(Bolum35Content.tekYonOptionC, _limitTekYon),
-              Bolum35Content.tekYonOptionD,
-            ], _model.tekYon),
             if (_model.tekYon?.label == "35-1-C") ...[
               const SizedBox(height: 12),
               _buildInfoNote(
@@ -198,19 +200,21 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               ),
             ],
           ] else ...[
-            _buildSoruHeaderWithDef(
+            _buildIntegratedQuestionCard(
+              "ciftYon",
               "Daire kapınızdan çıktığınızda, size EN YAKIN merdivene olan mesafe kaç metredir?",
-              "Kaçış Mesafesi",
-              AppDefinitions.kacisMesafesi,
+              [
+                _getDynamicChoice(Bolum35Content.ciftYonOptionA, _limitCiftYon),
+                _getDynamicChoice(Bolum35Content.ciftYonOptionB, _limitCiftYon),
+                _getDynamicChoice(Bolum35Content.ciftYonOptionC, _limitCiftYon),
+                Bolum35Content.ciftYonOptionD,
+              ],
+              _model.ciftYon,
+              term: "Kaçış Mesafesi",
+              definition: AppDefinitions.kacisMesafesi,
               imagePath: AppAssets.section35KacisGosterim,
               imageTitle: "Çift Yön Kaçış Mesafesi Ölçüm Detayı",
             ),
-            _buildSoruCard('ciftYon', [
-              _getDynamicChoice(Bolum35Content.ciftYonOptionA, _limitCiftYon),
-              _getDynamicChoice(Bolum35Content.ciftYonOptionB, _limitCiftYon),
-              _getDynamicChoice(Bolum35Content.ciftYonOptionC, _limitCiftYon),
-              Bolum35Content.ciftYonOptionD,
-            ], _model.ciftYon),
             if (_model.ciftYon?.label == "35-2-C") ...[
               const SizedBox(height: 12),
               _buildInfoNote(
@@ -234,40 +238,44 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               ),
             ],
             const SizedBox(height: 12),
-            _buildSoruHeaderWithDef(
+            _buildIntegratedQuestionCard(
+              "cikmaz",
               "Daireniz, 'Çıkmaz' bir koridorun ucunda mı?",
-              "Çıkmaz Koridor",
-              AppDefinitions.cikmazKoridor,
+              [
+                Bolum35Content.cikmazOptionA,
+                Bolum35Content.cikmazOptionB,
+                Bolum35Content.cikmazOptionC,
+              ],
+              _model.cikmaz,
+              term: "Çıkmaz Koridor",
+              definition: AppDefinitions.cikmazKoridor,
             ),
-            _buildSoruCard('cikmaz', [
-              Bolum35Content.cikmazOptionA,
-              Bolum35Content.cikmazOptionB,
-              Bolum35Content.cikmazOptionC,
-            ], _model.cikmaz),
             if (_model.cikmaz?.label == Bolum35Content.cikmazOptionA.label) ...[
               _buildInfoNote(
                 "Çıkmaz koridor tespiti yapıldı. Lütfen koridor uzunluğunu belirtiniz.",
               ),
-              _buildSoruHeaderWithDef(
+              _buildIntegratedQuestionCard(
+                "cikmazMesafe",
                 "Çıkmaz koridor kaç metre uzunluğundadır?",
-                "Çıkmaz Koridor Mesafesi",
-                AppDefinitions.cikmazKoridor,
+                [
+                  _getDynamicChoice(
+                    Bolum35Content.cikmazMesafeOptionA,
+                    _limitTekYon,
+                  ),
+                  _getDynamicChoice(
+                    Bolum35Content.cikmazMesafeOptionB,
+                    _limitTekYon,
+                  ),
+                  _getDynamicChoice(
+                    Bolum35Content.cikmazMesafeOptionC,
+                    _limitTekYon,
+                  ),
+                  Bolum35Content.cikmazMesafeOptionD,
+                ],
+                _model.cikmazMesafe,
+                term: "Çıkmaz Koridor Mesafesi",
+                definition: AppDefinitions.cikmazKoridor,
               ),
-              _buildSoruCard('cikmazMesafe', [
-                _getDynamicChoice(
-                  Bolum35Content.cikmazMesafeOptionA,
-                  _limitTekYon,
-                ),
-                _getDynamicChoice(
-                  Bolum35Content.cikmazMesafeOptionB,
-                  _limitTekYon,
-                ),
-                _getDynamicChoice(
-                  Bolum35Content.cikmazMesafeOptionC,
-                  _limitTekYon,
-                ),
-                Bolum35Content.cikmazMesafeOptionD,
-              ], _model.cikmazMesafe),
               if (_model.cikmazMesafe?.label == "35-3-E") ...[
                 const SizedBox(height: 12),
                 _buildInfoNote(
@@ -297,67 +305,68 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
     );
   }
 
-  Widget _buildSoruHeaderWithDef(
+  Widget _buildIntegratedQuestionCard(
+    String key,
     String title,
-    String term,
-    String def, {
+    List<ChoiceResult> options,
+    ChoiceResult? selected, {
+    String? term,
+    String? definition,
     String? imagePath,
     String? imageTitle,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
-      child: Row(
+    return QuestionCard(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(title, style: AppStyles.questionTitle)),
-          const SizedBox(width: 8),
-          if (imagePath != null) ...[
-            GestureDetector(
-              onTap: () => ImageModalHelper.show(
-                context,
-                assetPath: imagePath,
-                title: imageTitle ?? 'Görseli İncele',
-              ),
-              child: Tooltip(
-                message: 'Görseli İncele',
-                child: Container(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF43A047).withOpacity(0.12),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.photo_camera,
-                    color: Color(0xFF2E7D32),
-                    size: 26,
-                  ),
-                ),
-              ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(child: Text(title, style: AppStyles.questionTitle)),
+              if (imagePath != null) ...[
+                const SizedBox(width: 8),
+                _buildCameraIcon(imagePath, imageTitle),
+              ],
+              if (term != null && definition != null) ...[
+                const SizedBox(width: 8),
+                DefinitionButton(term: term, definition: definition),
+              ],
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...options.map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: selected?.label == opt.label,
+              onTap: () => _handleSelection(key, opt),
             ),
-            const SizedBox(width: 10),
-          ],
-          DefinitionButton(term: term, definition: def),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSoruCard(
-    String key,
-    List<ChoiceResult> options,
-    ChoiceResult? selected,
-  ) {
-    return QuestionCard(
-      child: Column(
-        children: options
-            .map(
-              (opt) => SelectableCard(
-                choice: opt,
-                isSelected: selected?.label == opt.label,
-                onTap: () => _handleSelection(key, opt),
-              ),
-            )
-            .toList(),
+  Widget _buildCameraIcon(String imagePath, String? imageTitle) {
+    return GestureDetector(
+      onTap: () => ImageModalHelper.show(
+        context,
+        assetPath: imagePath,
+        title: imageTitle ?? 'Görseli İncele',
+      ),
+      child: Tooltip(
+        message: 'Görseli İncele',
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: const Color(0xFF43A047).withOpacity(0.12),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(
+            Icons.photo_camera,
+            color: Color(0xFF2E7D32),
+            size: 24,
+          ),
+        ),
       ),
     );
   }

@@ -648,7 +648,7 @@ class PdfService {
             mainAxisAlignment: pw.MainAxisAlignment.start,
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", "(-5 Puan)"),
+              _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", "(-4 Puan)"),
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.yellow700, "UYARI", "(-2 Puan)"),
               pw.SizedBox(width: 20),

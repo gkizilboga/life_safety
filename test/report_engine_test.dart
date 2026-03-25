@@ -400,7 +400,7 @@ void main() {
       );
       expect(
         details.any(
-          (d) => d['label'] == 'Merdiven Tipleri ve Kaçış Genişlikleri',
+          (d) => d['label'] == 'Merdiven Tipleri ve Adetleri',
         ),
         true,
       );

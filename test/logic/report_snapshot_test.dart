@@ -77,7 +77,7 @@ void main() {
       // print('DEBUG CRITICALS: $criticals'); // For manual run if needed
 
       expect(metrics['criticalCount'], greaterThanOrEqualTo(2));
-      expect(metrics['score'], lessThan(95));
+      expect(metrics['score'], lessThan(96));
       expect(criticals.contains('Bölüm 33 (VERİ UYUMSUZLUĞU)'), isTrue);
     });
   });

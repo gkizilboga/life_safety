@@ -6,6 +6,8 @@ import '../models/report_status.dart';
 import '../utils/app_content.dart';
 import 'handlers/section_3_handler.dart';
 import 'handlers/section_36_handler.dart';
+import 'handlers/section_21_handler.dart';
+import 'handlers/section_27_handler.dart';
 import 'handlers/risk_calculator.dart';
 
 enum ReportModule {
@@ -76,38 +78,15 @@ class ReportEngine {
     return RiskCalculator(s).calculateMetrics();
   }
 
-  /// Calculates the overall status of a section based on its detailed items.
   static ReportStatus getSectionStatus(int id, {BinaStore? store}) {
     final items = getSectionDetailedReport(id, store: store);
     if (items.isEmpty) return ReportStatus.unknown;
 
-    // Weight: risk > warning > unknown > compliant > info
-    int maxPriority = -1;
-    ReportStatus topStatus = ReportStatus.unknown;
+    ReportStatus topStatus = ReportStatus.info;
 
     for (var item in items) {
       final status = item['status'] as ReportStatus? ?? ReportStatus.info;
-      int priority = 0;
-      switch (status) {
-        case ReportStatus.risk:
-          priority = 4;
-          break;
-        case ReportStatus.warning:
-          priority = 3;
-          break;
-        case ReportStatus.unknown:
-          priority = 2;
-          break;
-        case ReportStatus.compliant:
-          priority = 1;
-          break;
-        case ReportStatus.info:
-          priority = 0;
-          break;
-      }
-
-      if (priority > maxPriority) {
-        maxPriority = priority;
+      if (status.priority > topStatus.priority) {
         topStatus = status;
       }
     }
@@ -375,67 +354,8 @@ class ReportEngine {
     // Bölüm 21: Yangın Güvenlik Holü
     // Bölüm 21: Yangın Güvenlik Holü
     if (id == 21) {
-      final b21 = s.bolum21;
-      if (b21 != null) {
-        _addDetail(
-          details,
-          label: 'Merdiven önünde Yangın Güvenlik Holü var mı?',
-          value: b21.varlik?.uiTitle ?? '-',
-          report: '',
-          advice: b21.varlik?.adviceText,
-          level: b21.varlik?.level,
-        );
-
-        if (b21.varlik?.label.contains("21-1-A") == true) {
-          _addDetail(
-            details,
-            label:
-                'YGH (Hol) içindeki kaplama malzemeleri yanmaz özellikte mi?',
-            value: b21.malzeme?.uiTitle ?? '-',
-            report: '',
-            advice: b21.malzeme?.adviceText,
-            level: b21.malzeme?.level,
-          );
-          _addDetail(
-            details,
-            label:
-                'YGH (Hol) kapıları duman sızdırmaz ve yangına dayanıklı mı?',
-            value: b21.kapi?.uiTitle ?? '-',
-            report: '',
-            advice: b21.kapi?.adviceText,
-            level: b21.kapi?.level,
-          );
-          _addDetail(
-            details,
-            label: 'YGH (Hol) içinde eşya (bisiklet, dolap vb.) var mı?',
-            value: b21.esya?.uiTitle ?? '-',
-            report: '',
-            advice: b21.esya?.adviceText,
-            level: b21.esya?.level,
-          );
-        }
-
-        // Dinamik YGH Analizi (Sadece PDF/Detaylı için)
-        final yghReasons = evaluateYghRequirement(store: s);
-        if (yghReasons.isNotEmpty) {
-          _addDetail(
-            details,
-            label: 'YGH Teknik Değerlendirmesi',
-            value: 'ZORUNLU',
-            report:
-                'Binadaki teknik verilere göre Yangın Güvenlik Holü (YGH) zorunluluğu bulunmaktadır:\n${yghReasons.join('\n')}',
-            level: RiskLevel.critical,
-          );
-        } else {
-          _addDetail(
-            details,
-            label: 'YGH Teknik Değerlendirmesi',
-            value: 'UYGUN/GEREKLİ DEĞİL',
-            report:
-                'Mevcut verilere göre binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.',
-            level: RiskLevel.info,
-          );
-        }
+      if (s.bolum21 != null) {
+        details.addAll(Section21Handler(s).getDetailedReport());
         handled = true;
       }
     }
@@ -1148,130 +1068,8 @@ class ReportEngine {
 
     // Bölüm 27: Kapılar
     if (id == 27) {
-      final b27 = s.bolum27;
-      if (b27 != null) {
-        if (b27.boyut != null) {
-          _addDetail(
-            details,
-            label: Bolum27Content.questionBoyut,
-            value: b27.boyut!.uiTitle,
-            report: b27.boyut!.reportText,
-            advice: b27.boyut!.adviceText,
-            level: b27.boyut!.level,
-          );
-        }
-
-        final bool zeminIndependent =
-            s.bolum34?.zemin?.label.contains("34-1-A") ?? false;
-        final bool bodrumIndependent =
-            s.bolum34?.bodrum?.label.contains("34-2-A") ?? false;
-        final bool normalIndependent =
-            s.bolum34?.normal?.label.contains("34-3-A") ?? false;
-
-        final int yukZemin = zeminIndependent ? 0 : (s.bolum33?.yukZemin ?? 0);
-        final int yukNormal = normalIndependent ? 0 : (s.bolum33?.yukNormal ?? 0);
-        final int yukBodrum = bodrumIndependent ? 0 : (s.bolum33?.yukBodrum ?? 0);
-
-        if (b27.yon.isNotEmpty) {
-          List<String> exceed50List = [];
-          if (yukZemin > 50) exceed50List.add("Zemin Kat ($yukZemin kişi)");
-          if (yukNormal > 50) exceed50List.add("Normal Kat ($yukNormal kişi)");
-          if (yukBodrum > 50) exceed50List.add("Bodrum Kat ($yukBodrum kişi)");
-
-          List<String> reports = [];
-          List<RiskLevel> levels = [];
-          for (var e in b27.yon) {
-            if (e.label == "27-2-B") {
-              if (exceed50List.isEmpty) {
-                reports.add(
-                  "OLUMLU: Kaçış yolu üzerindeki kapıların içeriye doğru açılması, kullanıcı yükü hiçbir katta 50 kişiyi aşmadığı için uygun gözükmektedir.",
-                );
-                levels.add(RiskLevel.positive);
-              } else {
-                reports.add(
-                  "KRİTİK RİSK: ${exceed50List.join(", ")} gibi katlarınızda kullanıcı yükü 50 kişiyi aştığı için kapıların içeriye doğru açılması uygun değildir. Kapıların kaçış yönüne (dışarıya) doğru açılması zorunludur.",
-                );
-                levels.add(RiskLevel.critical);
-              }
-            } else {
-              reports.add(e.reportText);
-              levels.add(e.level);
-            }
-          }
-
-          _addDetail(
-            details,
-            label: Bolum27Content.questionYon,
-            value: b27.yon.map((e) => e.uiTitle).join(' | '),
-            report: reports.join('\n\n'),
-            advice: b27.yon.map((e) => e.adviceText ?? "").join('\n\n'),
-            level: _maxLevel(levels),
-          );
-        }
-
-        if (b27.kilit.isNotEmpty) {
-          List<String> exceed100List = [];
-          if (yukZemin > 100) exceed100List.add("Zemin Kat ($yukZemin kişi)");
-          if (yukNormal > 100)
-            exceed100List.add("Normal Kat ($yukNormal kişi)");
-          if (yukBodrum > 100)
-            exceed100List.add("Bodrum Kat ($yukBodrum kişi)");
-
-          List<String> reports = [];
-          List<RiskLevel> levels = [];
-          for (var e in b27.kilit) {
-            if (e.label == "27-3-B") {
-              if (exceed100List.isEmpty) {
-                reports.add(
-                  "OLUMLU: Kaçış yolu üzerindeki kapılarda normal kapı kolu kullanımı, kullanıcı yükü 100 kişiyi aşmadığı için uygun gözükmektedir.",
-                );
-                levels.add(RiskLevel.positive);
-              } else {
-                reports.add(
-                  "KRİTİK RİSK: ${exceed100List.join(", ")} gibi katlarınızda kullanıcı yükü 100 kişiyi aştığı için kapılarda Panik Bar mekanizması kullanımı zorunludur. Mevcut kapılardaki kol mekanizması uygun değildir.",
-                );
-                levels.add(RiskLevel.critical);
-              }
-            } else {
-              reports.add(e.reportText);
-              levels.add(e.level);
-            }
-          }
-
-          _addDetail(
-            details,
-            label: Bolum27Content.questionKilit,
-            value: b27.kilit.map((e) => e.uiTitle).join(' | '),
-            report: reports.join('\n\n'),
-            advice: b27.kilit.map((e) => e.adviceText ?? "").join('\n\n'),
-            level: _maxLevel(levels),
-          );
-        }
-
-        if (b27.dayanim != null) {
-          _addDetail(
-            details,
-            label: Bolum27Content.questionDayanim,
-            value: b27.dayanim!.uiTitle,
-            report: b27.dayanim!.reportText,
-            advice: b27.dayanim!.adviceText,
-            level: b27.dayanim!.level,
-          );
-        }
-
-        // Override metnini de ekle (Risk uyarısı varsa)
-        String overridden = getSectionFullReport(id, store: store);
-        if (overridden.contains("UYARI") &&
-            !b27.yon.any((e) => overridden.contains(e.reportText))) {
-          // Eğer generic bir uyarı eklendiyse onu da göster
-          _addDetail(
-            details,
-            label: 'Kullanıcı Yükü Değerlendirmesi',
-            value: "",
-            report: overridden,
-            status: ReportStatus.warning,
-          );
-        }
+      if (s.bolum27 != null) {
+        details.addAll(Section27Handler(s).getDetailedReport());
         handled = true;
       }
     }
@@ -1708,7 +1506,7 @@ class ReportEngine {
         if (b35.manuelMesafe != null && b35.manuelMesafe! > 0)
           _addDetail(
             details,
-            label: 'Manuel Girilen Kaçış Mesafesi',
+            label: 'Elle Girilen Kaçış Mesafesi',
             value: '${b35.manuelMesafe} m',
             report: '',
             status: ReportStatus.info,
@@ -1719,243 +1517,8 @@ class ReportEngine {
 
     // Bölüm 36: Merdiven Değerlendirmesi
     if (id == 36) {
-      final b36 = s.bolum36;
-      if (b36 != null) {
-        if (b36.cikisKati != null)
-          _addDetail(
-            details,
-            label: Bolum36Content.questionCikisKati,
-            value: b36.cikisKati!.uiTitle,
-            report:
-                'BİLGİ: Çıkış katı olarak ${b36.cikisKati!.uiTitle} belirlenmiştir.',
-            advice: b36.cikisKati!.adviceText,
-            level: b36.cikisKati!.level,
-          );
-        if (b36.disMerd != null)
-          _addDetail(
-            details,
-            label: Bolum36Content.questionDisMerd,
-            value: b36.disMerd!.uiTitle,
-            report: b36.disMerd!.label.contains("-A")
-                ? "OLUMLU: Dış kaçış merdivenine 3 metre mesafede korunmasız kapı veya pencere açıklığı bulunmamaktadır."
-                : "UYARI: Dış kaçış merdivenine 3 metre mesafede korunmasız açıklıklar mevcuttur. Yangın anında merdivenin kullanılamaz hale gelme riski vardır.",
-            advice: b36.disMerd!.adviceText,
-            level: b36.disMerd!.level,
-          );
-        if (b36.konum != null)
-          _addDetail(
-            details,
-            label: Bolum36Content.questionKonum,
-            value: b36.konum!.uiTitle,
-            report: b36.konum!.label.contains("-A")
-                ? "OLUMLU: Merdivenler birbirinden bağımsız ve alternatifli konumlandırılmıştır."
-                : "KRİTİK RİSK: Merdivenler birbirine çok yakın veya iç içe (fissür tarzı) konumlandırılmıştır. Yangın anında her ikisinin de aynı anda duman altında kalma riski yüksektir.",
-            advice: b36.konum!.adviceText,
-            level: b36.konum!.level,
-          );
-        if (b36.kapiTipi != null)
-          _addDetail(
-            details,
-            label: Bolum36Content.questionKapiTipi,
-            value: b36.kapiTipi!.uiTitle,
-            report: b36.kapiTipi!.reportText,
-            advice: b36.kapiTipi!.adviceText,
-            level: b36.kapiTipi!.level,
-          );
-
-        final b4 = s.bolum4;
-        final double hBina = b4?.hesaplananBinaYuksekligi ?? 0.0;
-        final double hYapi = b4?.hesaplananYapiYuksekligi ?? 0.0;
-        final bool isYuksekBina = (hBina >= 21.50 || hYapi >= 30.50);
-        final int effectiveLoad = calculateMaxYuk(s);
-
-        int reqMerdiven = 120;
-        int reqKoridor = 110;
-        String reqReason = "Genel asgari sınır";
-
-        if (effectiveLoad >= 2001) {
-          reqMerdiven = 200;
-          reqKoridor = 200;
-          reqReason = "Kullanıcı yükü > 2000 ($effectiveLoad kişi)";
-        } else if (effectiveLoad >= 501) {
-          reqMerdiven = 150;
-          reqKoridor = 150;
-          reqReason = "Kullanıcı yükü > 500 ($effectiveLoad kişi)";
-        } else if (isYuksekBina) {
-          reqMerdiven = 120;
-          reqKoridor = 120;
-          reqReason = "Yüksek Bina Kriteri";
-        }
-
-        List<int>? getMerdRange(ChoiceResult? c) {
-          if (c == null) return null;
-          if (c.label == "36-Merd-A") return [0, 119];
-          if (c.label == "36-Merd-B") return [120, 150];
-          if (c.label == "36-Merd-C") return [151, 200];
-          if (c.label == "36-Merd-D") return [201, 9999];
-          return null;
-        }
-
-        List<int>? getKoriRange(ChoiceResult? c) {
-          if (c == null) return null;
-          if (c.label == "36-Koridor-A") return [0, 99];
-          if (c.label == "36-Koridor-B") return [100, 120];
-          if (c.label == "36-Koridor-C") return [121, 150];
-          if (c.label == "36-Koridor-D") return [151, 200];
-          if (c.label == "36-Koridor-E") return [201, 9999];
-          return null;
-        }
-
-        void evaluateWidth(
-          String label,
-          ChoiceResult? choice,
-          int requiredVal,
-          bool isMerdiven,
-        ) {
-          if (choice == null) return;
-          var range = isMerdiven ? getMerdRange(choice) : getKoriRange(choice);
-          if (range == null) return;
-          int wMax = range[1];
-
-          if (wMax < requiredVal) {
-            _addDetail(
-              details,
-              label: label,
-              value: choice.uiTitle,
-              report: "Gereken: En az $requiredVal cm ($reqReason).",
-              status: ReportStatus.risk,
-            );
-          } else {
-            _addDetail(
-              details,
-              label: label,
-              value: choice.uiTitle,
-              report: "Asgari sınır olan $requiredVal cm sağlanmaktadır.",
-              status: ReportStatus.compliant,
-            );
-          }
-        }
-
-        if (b36.areWidthsSame) {
-          evaluateWidth(
-            'Merdiven Genişliği (Genel)',
-            b36.genislikKorunumlu,
-            reqMerdiven,
-            true,
-          );
-          evaluateWidth(
-            'Kaçış Koridoru Genişliği (Genel)',
-            b36.koridorGenislikKorunumlu,
-            reqKoridor,
-            false,
-          );
-          if (b36.kapiGenislikKorunumlu != null) {
-            _addDetail(
-              details,
-              label: 'Kaçış Kapısı Temiz Geçiş Genişliği',
-              value: b36.kapiGenislikKorunumlu!.uiTitle,
-              report: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                  ? "Sınır: 80 cm."
-                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                        ? "80 cm ve üzerindedir."
-                        : "Bilinmiyor."),
-              status: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                  ? ReportStatus.risk
-                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                        ? ReportStatus.compliant
-                        : ReportStatus.warning),
-            );
-          }
-        } else {
-          // Ayrı Giriş
-          evaluateWidth(
-            'Korunumlu Merdiven Genişliği',
-            b36.genislikKorunumlu,
-            reqMerdiven,
-            true,
-          );
-          evaluateWidth(
-            'Korunumlu Koridor Genişliği',
-            b36.koridorGenislikKorunumlu,
-            reqKoridor,
-            false,
-          );
-          if (b36.kapiGenislikKorunumlu != null) {
-            _addDetail(
-              details,
-              label: 'Korunumlu Alan Kapı Genişliği',
-              value: b36.kapiGenislikKorunumlu!.uiTitle,
-              report: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                  ? "Sınır: 80 cm."
-                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                        ? "80 cm ve üzerindedir."
-                        : "Bilinmiyor."),
-              status: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                  ? ReportStatus.risk
-                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                        ? ReportStatus.compliant
-                        : ReportStatus.warning),
-            );
-          }
-          evaluateWidth(
-            'Korunumsuz Merdiven Genişliği',
-            b36.genislikKorunumsuz,
-            reqMerdiven,
-            true,
-          );
-          evaluateWidth(
-            'Korunumsuz Koridor Genişliği',
-            b36.koridorGenislikKorunumsuz,
-            reqKoridor,
-            false,
-          );
-          if (b36.kapiGenislikKorunumsuz != null) {
-            _addDetail(
-              details,
-              label: 'Korunumsuz Alan Kapı Genişliği',
-              value: b36.kapiGenislikKorunumsuz!.uiTitle,
-              report: b36.kapiGenislikKorunumsuz!.label.contains("-A")
-                  ? "Sınır: 80 cm."
-                  : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
-                        ? "80 cm ve üzerindedir."
-                        : "Bilinmiyor."),
-              status: b36.kapiGenislikKorunumsuz!.label.contains("-A")
-                  ? ReportStatus.risk
-                  : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
-                        ? ReportStatus.compliant
-                        : ReportStatus.warning),
-            );
-          }
-        }
-
-        // Madde 41 Detayları
-        final b20 = s.bolum20;
-        if (b20 != null) {
-          _addDetail(
-            details,
-            label: 'Merdiven Tipleri ve Kaçış Genişlikleri',
-            value: '',
-            report: '',
-            status: ReportStatus.info,
-          );
-          _addStaircaseRows(details, b20);
-          if (b20.isBodrumIndependent) {
-            _addStaircaseRows(details, b20, isBasement: true);
-          }
-        }
-
-        // Mühendis Notu
-        if (b36.merdivenDegerlendirme != null &&
-            b36.merdivenDegerlendirme!.isNotEmpty) {
-          _addDetail(
-            details,
-            label: "",
-            value: "",
-            report: b36.merdivenDegerlendirme!,
-            status: ReportStatus.info,
-          );
-        }
-
+      if (s.bolum36 != null) {
+        details.addAll(Section36Handler(s).getDetailedReport());
         handled = true;
       }
     }
@@ -2837,44 +2400,9 @@ class ReportEngine {
 
     // Bölüm 21: YGH Zorunluluğu
     if (id == 21) {
-      final b21 = s.bolum21;
-      final yghReasons = evaluateYghRequirement(store: s);
-      final bool hasYgh = b21?.varlik?.label.contains("21-1-A") ?? false;
-      final bool noYgh = b21?.varlik?.label.contains("21-1-B") ?? false;
-      final bool isMandatory = yghReasons.isNotEmpty;
-
-      List<String> parts = [];
-
-      // 1. Değerlendirme Özeti
-      if (isMandatory) {
-        parts.add(
-          "BİLGİ: YGH ZORUNLUDUR\nBinada aşağıdaki teknik gerekçelerden dolayı Yangın Güvenlik Holü (YGH) bulunması zorunludur:\n${yghReasons.join('\n')}",
-        );
-      } else {
-        parts.add(
-          "BİLGİ: YGH ZORUNLU DEĞİLDİR\nMevcut yapı ile ilgili beyanlara göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
-        );
+      if (s.bolum21 != null) {
+        return Section21Handler(s).getSectionFullReport();
       }
-
-      // 2. Mevcut Durum Raporu
-      if (hasYgh) {
-        parts.add("DURUM: Binada Yangın Güvenlik Holü (YGH) mevcuttur.");
-        if (b21?.malzeme != null) parts.add(b21!.malzeme!.reportText);
-        if (b21?.kapi != null) parts.add(b21!.kapi!.reportText);
-        if (b21?.esya != null) parts.add(b21!.esya!.reportText);
-      } else if (noYgh) {
-        if (isMandatory) {
-          parts.add(
-            "KRİTİK RİSK: Binada YGH zorunlu olmasına rağmen, binada mevcut olmadığı beyan edilmiştir.",
-          );
-        } else {
-          parts.add(
-            "DURUM: Binada Yangın Güvenlik Holü (YGH) bulunmamaktadır.",
-          );
-        }
-      }
-
-      return parts.join("\n\n");
     }
 
     // Bölüm 26: Rampalar
@@ -2892,85 +2420,8 @@ class ReportEngine {
 
     // Bölüm 27: Kapı yönü ve kilit mekanizması için S33 kullanıcı yükü kontrolü
     if (id == 27) {
-      final b27 = s.bolum27;
-      final b33 = s.bolum33;
-
-      if (b27 != null && b33 != null) {
-        List<String> reportParts = [];
-
-        // 1. Kullanıcı Yüklerini Detaylandır
-        List<String> loadDetails = [];
-        if ((b33.yukZemin ?? 0) > 0)
-          loadDetails.add("- Zemin Kat: ${b33.yukZemin} kişi");
-        if ((b33.yukNormal ?? 0) > 0)
-          loadDetails.add("- Normal Kat: ${b33.yukNormal} kişi");
-        if ((b33.yukBodrum ?? 0) > 0)
-          loadDetails.add("- Bodrum Kat: ${b33.yukBodrum} kişi");
-
-        if (loadDetails.isNotEmpty) {
-          reportParts.add(
-            "BİLGİ: Hesaplanan Kullanıcı Yükleri:\n${loadDetails.join('\n')}",
-          );
-        }
-
-        // 2. Seçilen Özellikleri Ekle
-        for (var y in b27.yon) {
-          reportParts.add(y.reportText);
-        }
-        for (var k in b27.kilit) {
-          reportParts.add(k.reportText);
-        }
-        if (b27.dayanim != null) reportParts.add(b27.dayanim!.reportText);
-
-        // 3. Genel Kural Hatırlatması ve Dinamik Uyarılar
-        final yukZemin = b33.yukZemin ?? 0;
-        final yukNormal = b33.yukNormal ?? 0;
-        final yukBodrum = b33.yukBodrum ?? 0;
-
-        List<String> exceed50 = [];
-        if (yukZemin > 50) exceed50.add("Zemin Kat ($yukZemin kişi)");
-        if (yukNormal > 50) exceed50.add("Normal Kat ($yukNormal kişi)");
-        if (yukBodrum > 50) exceed50.add("Bodrum Kat ($yukBodrum kişi)");
-
-        List<String> exceed100 = [];
-        if (yukZemin > 100) exceed100.add("Zemin Kat ($yukZemin kişi)");
-        if (yukNormal > 100) exceed100.add("Normal Kat ($yukNormal kişi)");
-        if (yukBodrum > 100) exceed100.add("Bodrum Kat ($yukBodrum kişi)");
-
-        // Riskli durum tespiti
-        bool yonRiski =
-            b27.yon.any(
-              (e) => e.label.contains("27-2-B") || e.label.contains("27-2-D"),
-            ) &&
-            exceed50.isNotEmpty;
-
-        bool kilitRiski =
-            b27.kilit.any(
-              (e) => e.label.contains("27-3-B") || e.label.contains("27-3-D"),
-            ) &&
-            exceed100.isNotEmpty;
-
-        if (yonRiski || kilitRiski) {
-          String context = "";
-          if (yonRiski && kilitRiski) {
-            context =
-                "${exceed50.join(", ")} gibi katlarınızda kullanıcı yükü 50 ve 100 kişi sınırlarını aşmaktadır.";
-          } else if (yonRiski) {
-            context =
-                "${exceed50.join(", ")} gibi katlarınızda kullanıcı yükü 50 kişi sınırını aşmaktadır.";
-          } else {
-            context =
-                "${exceed100.join(", ")} gibi katlarınızda kullanıcı yükü 100 kişi sınırını aşmaktadır.";
-          }
-
-          reportParts.add(
-            "UYARI: $context Bu doğrultuda kapı özelliklerinin (yön ve kilit) ilgili katlardaki kişi sayılarına göre Yönetmeliğe uygun hale getirilmesi gerekmektedir. Kullanıcı yükünün aşıldığı ticari alan, otopark vb. gibi yerlerin kendilerine ait, binadan bağımsız başka çıkışları var ise, kişi adedine bağlı olan kuralların binanın tamamında sağlanması gerekmez, yalnızca o katta uygulanması yeterli olur.",
-          );
-        }
-
-        if (reportParts.isNotEmpty) {
-          return reportParts.join("\n\n");
-        }
+      if (s.bolum27 != null) {
+        return Section27Handler(s).getSectionFullReport();
       }
     }
 
@@ -3115,7 +2566,7 @@ class ReportEngine {
               );
             } else {
               reportParts.add(
-                "KRİTİK RİSK ($title): Hesaplanan kullanıcı yükü ($yuk kişi) için $gerekli adet çıkış gerekmektedir ancak binada $mevcut adet uygun çıkış tespit edilmiştir. Kapasite yetersizdir.",
+                "KRİTİK RİSK ($title): Hesaplanan kullanıcı yükü ($yuk kişi) için $gerekli adet çıkış gerekmektedir ancak binada $mevcut adet uygun çıkış tespit edilmiştir. Çıkış kapasitesi yetersizdir.",
               );
             }
           }
@@ -3234,7 +2685,7 @@ class ReportEngine {
 
     // Bölüm 36: Merdiven Değerlendirmesi
     if (id == 36) {
-      if (s.bolum20 != null) {
+      if (s.bolum36 != null) {
         return Section36Handler(s).getFullReport();
       }
       return "OLUMLU: Merdivenler ve tahliye güzergahları Yönetmelik Madde 41 kriterlerine uygun gözükmektedir.";
@@ -3486,71 +2937,6 @@ class ReportEngine {
     return null;
   }
 
-  static void _addStaircaseRows(
-    List<Map<String, dynamic>> details,
-    Bolum20Model b, {
-    bool isBasement = false,
-  }) {
-    final prefix = isBasement ? "Bodrum Kat " : "";
-
-    void add(String label, int count) {
-      if (count >= 0) {
-        _addDetail(
-          details,
-          label: '$prefix$label (Adet)',
-          value: '$count adet',
-          report: '',
-          status: ReportStatus.info, // Counting is info
-          isBold: count > 0,
-        );
-      }
-    }
-
-    if (!isBasement) {
-      add("Normal (Standart) Merdiven", b.normalMerdivenSayisi);
-      add(
-        "Bina İçi Korunumlu (Yangın) Merdiven",
-        b.binaIciYanginMerdiveniSayisi,
-      );
-      add(
-        "Bina Dışı Kapalı (Yangın) Merdiven",
-        b.binaDisiKapaliYanginMerdiveniSayisi,
-      );
-      add(
-        "Bina Dışı Açık (Yangın) Merdiven",
-        b.binaDisiAcikYanginMerdiveniSayisi,
-      );
-      add("Döner (Spiral) Merdiven", b.donerMerdivenSayisi);
-      add("Sahanlıksız (Düz) Merdiven", b.sahanliksizMerdivenSayisi);
-      add("Dengelenmiş Merdiven", b.dengelenmisMerdivenSayisi);
-      add(
-        "Doğrudan Dışarı Açılan Merdiven",
-        b.toplamDisariAcilanMerdivenSayisi,
-      );
-    } else {
-      add("Bodrum Normal Merdiven", b.bodrumNormalMerdivenSayisi);
-      add(
-        "Bodrum Bina İçi Yangın Merdiveni",
-        b.bodrumBinaIciYanginMerdiveniSayisi,
-      );
-      add(
-        "Bodrum Bina Dışı Kapalı Yangın Merdiveni",
-        b.bodrumBinaDisiKapaliYanginMerdiveniSayisi,
-      );
-      add(
-        "Bodrum Bina Dışı Açık Yangın Merdiveni",
-        b.bodrumBinaDisiAcikYanginMerdiveniSayisi,
-      );
-      add("Bodrum Dairesel Merdiven", b.bodrumDonerMerdivenSayisi);
-      add("Bodrum Sahanlıksız Merdiven", b.bodrumSahanliksizMerdivenSayisi);
-      add("Bodrum Dengelenmiş Merdiven", b.bodrumDengelenmisMerdivenSayisi);
-      add(
-        "Bodrum Doğrudan Dışarı Açılan Merdiven",
-        b.bodrumToplamDisariAcilanMerdivenSayisi,
-      );
-    }
-  }
-
   static List<String> evaluateBasincRequirement({BinaStore? store}) {
     final s = _getStore(store);
     List<String> reasons = [];
@@ -3711,17 +3097,14 @@ class ReportEngine {
 
     // Bölüm 21 için dinamik özet (Zorunluluk durumu)
     if (id == 21) {
-      final yghReasons = evaluateYghRequirement(store: s);
-      final bool isMandatory = yghReasons.isNotEmpty;
-      final String mandatoryText = isMandatory
-          ? " (Zorunlu)"
-          : " (Zorunlu Değil)";
-      return "${res.label}$mandatoryText";
+      if (s.bolum21 != null) {
+        return Section21Handler(s).getSummaryReport(res.label);
+      }
     }
 
     // Bölüm 36 için dinamik özet (Uyarılar ve Kritik Riskler)
     if (id == 36) {
-      if (s.bolum20 != null) {
+      if (s.bolum36 != null) {
         return Section36Handler(s).getSummaryReport();
       }
     }
@@ -3814,7 +3197,7 @@ class ReportEngine {
       int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
       int yukBodrum = bodrumIndependent ? 0 : (b33.yukBodrum ?? 0);
       int yukNormal = normalIndependent ? 0 : (b33.yukNormal ?? 0);
-      
+
       maxYuk = [yukZemin, yukNormal, yukBodrum].reduce((a, b) => a > b ? a : b);
     }
     return maxYuk;

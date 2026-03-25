@@ -168,7 +168,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
       isNextEnabled: _isConfirmed,
       onNext: () {
         BinaStore.instance.bolum33 = _model;
-        BinaStore.instance.saveToDisk(immediate: true);
+        BinaStore.instance.saveToDisk();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Bolum34Screen()),
@@ -180,7 +180,10 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Kullanıcı Yükü Nedir?", style: AppStyles.questionTitle),
+              Text(
+                "Farklı katlardaki yaklaşık kullanıcı yükleri aşağıdaki gibidir.",
+                style: AppStyles.questionTitle,
+              ),
               const SizedBox(width: 8),
               DefinitionButton(
                 term: "Kullanıcı Yükü",

@@ -378,7 +378,14 @@ class _TotalDirectInputWidget extends StatelessWidget {
             children: [
               Text(title, style: AppStyles.questionTitle),
               const SizedBox(height: 8),
-              Text(desc, style: const TextStyle(fontSize: 14)),
+              Text(
+                desc,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textBody,
+                ),
+              ),
               const SizedBox(height: 12),
               SizedBox(
                 width: 120,
@@ -447,7 +454,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
         ? "Bodrum Kat: Çıkış Katı Tahliye Mesafesi"
         : "Çıkış Katı Tahliye Mesafesi";
     final question =
-        "Direkt dışarıya açılmayan merdivenlerin çıkış katındaki tahliye mesafesi $limit metrenin altında mı?";
+        "Direkt dışarıya açılmayan merdivenlerin, son çıkış katındaki çıkış kapısına kadar olan mesafe $limit metrenin altında mı?";
 
     return Selector<Bolum20Provider, ChoiceResult?>(
       selector: (_, p) =>
@@ -471,10 +478,17 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
             children: [
               Text(title, style: AppStyles.questionTitle),
               const SizedBox(height: 8),
-              SubQuestionTitle(question),
+              Text(
+                question,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textBody,
+                ),
+              ),
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeAltinda.copyWith(
-                  uiTitle: "$limit metre veya altında",
+                  uiTitle: "Evet, altında veya eşit.",
                 ),
                 isSelected:
                     currentSelection?.label ==
@@ -488,7 +502,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
               ),
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeUstunde.copyWith(
-                  uiTitle: "$limit metrenin üzerinde",
+                  uiTitle: "Hayır, üzerinde.",
                 ),
                 isSelected:
                     currentSelection?.label ==

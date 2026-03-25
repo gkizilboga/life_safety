@@ -1474,7 +1474,7 @@ class Bolum16Content {
   // En uzun cephe uzunluğu — sayısal değer girildiğinde (≤ 75m): bilgi notu
   static final cepheUzunluguOlumlu = ChoiceResult(
     label: "16-4-A (Cephe)",
-    uiTitle: "75 m. ve altı",
+    uiTitle: "75 metre veya daha kısa",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -1483,7 +1483,7 @@ class Bolum16Content {
   // En uzun cephe uzunluğu — sayısal değer girildiğinde (> 75m): bilgi notu
   static final cepheUzunluguKritik = ChoiceResult(
     label: "16-4-B (Cephe)",
-    uiTitle: "75 m. üzeri",
+    uiTitle: "75 metreden uzun",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -4170,7 +4170,7 @@ class Bolum35Content {
   static final ciftYonOptionC = ChoiceResult(
     label: "35-2-C",
     uiTitle: "Tam ölçüyü biliyorum.",
-    uiSubtitle: "En yakın çıkışa olan mesafeyi gireceğim.",
+    uiSubtitle: "En yakın çıkışa olan mesafeyi kendim gireceğim.",
     reportText: "(Girilen değere göre otomatik hesaplanır)",
     level: RiskLevel.positive,
   );
@@ -4192,20 +4192,20 @@ class Bolum35Content {
   );
   static final cikmazOptionB = ChoiceResult(
     label: "35-3-B",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Dairenin çıkmaz koridor üzerinde olup olmadığı bilinmiyor. Çıkmaz koridorlar tahliye güvenliğini doğrudan etkiler.",
-    level: RiskLevel.unknown,
-  );
-
-  static final cikmazOptionC = ChoiceResult(
-    label: "35-3-G",
     uiTitle:
         "Hayır, daireden çıkınca sağa veya sola (iki farklı yöne) gidebiliyorum.",
     uiSubtitle: "",
     reportText: "OLUMLU: Daire çıkmaz koridor üzerinde değildir.",
     level: RiskLevel.positive,
+  );
+
+  static final cikmazOptionC = ChoiceResult(
+    label: "35-3-G",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: Dairenin çıkmaz koridor üzerinde olup olmadığı bilinmiyor. Çıkmaz koridorlar tahliye güvenliğini doğrudan etkiler.",
+    level: RiskLevel.unknown,
   );
 
   static final cikmazMesafeOptionA = ChoiceResult(
@@ -4260,7 +4260,7 @@ class Bolum36Content {
     uiTitle: "Zemin kattan çıkabiliyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Binadan dış havaya (atmosfere) çıkış Zemin Kattan sağlanmaktadır.",
+        "BİLGİ: Binadan dış havaya (atmosfere) çıkış zemin kattan sağlanmaktadır.",
     level: RiskLevel.info,
   );
 
@@ -4268,7 +4268,8 @@ class Bolum36Content {
     label: "36-0-B",
     uiTitle: "Yalnızca normal kattan çıkabiliyorum.",
     uiSubtitle: "",
-    reportText: "BİLGİ: Binadan dış havaya çıkış Normal Kattan sağlanmaktadır.",
+    reportText:
+        "BİLGİ: Binadan dış havaya (atmosfere) çıkış normal kattan sağlanmaktadır.",
     level: RiskLevel.info,
   );
 
@@ -4276,7 +4277,8 @@ class Bolum36Content {
     label: "36-0-C",
     uiTitle: "Yalnızca bodrum kattan çıkabiliyorum.",
     uiSubtitle: "",
-    reportText: "BİLGİ: Binadan dış havaya çıkış Bodrum Kattan sağlanmaktadır.",
+    reportText:
+        "BİLGİ: Binadan dış havaya (atmosfere) çıkış bodrum kattan sağlanmaktadır.",
     level: RiskLevel.info,
   );
 
@@ -4345,7 +4347,8 @@ class Bolum36Content {
     label: "36-4-A",
     uiTitle: "Tek Kanatlı Kapı.",
     uiSubtitle: "",
-    reportText: "BİLGİ: Çıkış kapısı tek kanatlıdır.",
+    reportText:
+        "BİLGİ: Çıkış kapısı tek kanatlıdır. Temiz kapı genişlikleri minimum 80 cm olacak şekilde, mahalin veya katın kullanıcı yüküne göre daha fazla temiz genişlik gerekebilir.",
     level: RiskLevel.info,
   );
   static final kapiTipiOptionB = ChoiceResult(

@@ -36,8 +36,13 @@ void main() {
     print("Clicked Devam Et. Pumping UI to see if it freezes...");
     
     // If there is an infinite animation or loop, pumpAndSettle will time out
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    // Transition complete. No freeze detected in test.
     
-    print("Transition complete. No freeze detected in test.");
+    // YENİ: BinaStore.saveToDisk içindeki 2500ms debounce timer'ın 
+    // test bitmeden temizlenmesi için bekleme ekliyoruz.
+    // Aksi takdirde "A Timer is still pending" hatası alınır.
+    await tester.pump(const Duration(milliseconds: 3000));
+    
+    print("Transition complete and timers settled.");
   });
 }

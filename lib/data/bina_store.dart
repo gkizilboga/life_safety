@@ -138,222 +138,233 @@ class BinaStore {
   Bolum34Model? _bolum34;
   Bolum35Model? _bolum35;
   Bolum36Model? _bolum36;
+  
+  // Phase 48: High-performance progress caching
+  int _cachedPercentage = 0;
+  int get progressPercentage => _cachedPercentage;
+
+  /// Recalculates and caches the overall analysis progress.
+  /// This prevents redundant heavy calculations during rapid navigation (build cycles).
+  void _refreshProgress() {
+    _cachedPercentage = AppProgress.getAnalysisProgress(this).percentage;
+    _isDirty = true;
+  }
 
   // Public Erişimciler
   Bolum1Model? get bolum1 => _bolum1;
   set bolum1(Bolum1Model? v) {
     _bolum1 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum2Model? get bolum2 => _bolum2;
   set bolum2(Bolum2Model? v) {
     _bolum2 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum3Model? get bolum3 => _bolum3;
   set bolum3(Bolum3Model? v) {
     _bolum3 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum4Model? get bolum4 => _bolum4;
   set bolum4(Bolum4Model? v) {
     _bolum4 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum5Model? get bolum5 => _bolum5;
   set bolum5(Bolum5Model? v) {
     _bolum5 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum6Model? get bolum6 => _bolum6;
   set bolum6(Bolum6Model? v) {
     _bolum6 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum7Model? get bolum7 => _bolum7;
   set bolum7(Bolum7Model? v) {
     _bolum7 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum8Model? get bolum8 => _bolum8;
   set bolum8(Bolum8Model? v) {
     _bolum8 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum9Model? get bolum9 => _bolum9;
   set bolum9(Bolum9Model? v) {
     _bolum9 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum10Model? get bolum10 => _bolum10;
   set bolum10(Bolum10Model? v) {
     _bolum10 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum11Model? get bolum11 => _bolum11;
   set bolum11(Bolum11Model? v) {
     _bolum11 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum12Model? get bolum12 => _bolum12;
   set bolum12(Bolum12Model? v) {
     _bolum12 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum13Model? get bolum13 => _bolum13;
   set bolum13(Bolum13Model? v) {
     _bolum13 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum14Model? get bolum14 => _bolum14;
   set bolum14(Bolum14Model? v) {
     _bolum14 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum15Model? get bolum15 => _bolum15;
   set bolum15(Bolum15Model? v) {
     _bolum15 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum16Model? get bolum16 => _bolum16;
   set bolum16(Bolum16Model? v) {
     _bolum16 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum17Model? get bolum17 => _bolum17;
   set bolum17(Bolum17Model? v) {
     _bolum17 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum18Model? get bolum18 => _bolum18;
   set bolum18(Bolum18Model? v) {
     _bolum18 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum19Model? get bolum19 => _bolum19;
   set bolum19(Bolum19Model? v) {
     _bolum19 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum20Model? get bolum20 => _bolum20;
   set bolum20(Bolum20Model? v) {
     _bolum20 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum21Model? get bolum21 => _bolum21;
   set bolum21(Bolum21Model? v) {
     _bolum21 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum22Model? get bolum22 => _bolum22;
   set bolum22(Bolum22Model? v) {
     _bolum22 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum23Model? get bolum23 => _bolum23;
   set bolum23(Bolum23Model? v) {
     _bolum23 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum24Model? get bolum24 => _bolum24;
   set bolum24(Bolum24Model? v) {
     _bolum24 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum25Model? get bolum25 => _bolum25;
   set bolum25(Bolum25Model? v) {
     _bolum25 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum26Model? get bolum26 => _bolum26;
   set bolum26(Bolum26Model? v) {
     _bolum26 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum27Model? get bolum27 => _bolum27;
   set bolum27(Bolum27Model? v) {
     _bolum27 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum28Model? get bolum28 => _bolum28;
   set bolum28(Bolum28Model? v) {
     _bolum28 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum29Model? get bolum29 => _bolum29;
   set bolum29(Bolum29Model? v) {
     _bolum29 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum30Model? get bolum30 => _bolum30;
   set bolum30(Bolum30Model? v) {
     _bolum30 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum31Model? get bolum31 => _bolum31;
   set bolum31(Bolum31Model? v) {
     _bolum31 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum32Model? get bolum32 => _bolum32;
   set bolum32(Bolum32Model? v) {
     _bolum32 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum33Model? get bolum33 => _bolum33;
   set bolum33(Bolum33Model? v) {
     _bolum33 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum34Model? get bolum34 => _bolum34;
   set bolum34(Bolum34Model? v) {
     _bolum34 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum35Model? get bolum35 => _bolum35;
   set bolum35(Bolum35Model? v) {
     _bolum35 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   Bolum36Model? get bolum36 => _bolum36;
   set bolum36(Bolum36Model? v) {
     _bolum36 = v;
-    _isDirty = true;
+    _refreshProgress();
   }
 
   bool isTestCompleted() => _isCompleted;
@@ -395,7 +406,7 @@ class BinaStore {
       await _performSave();
     } else {
       if (_saveTimer?.isActive ?? false) _saveTimer!.cancel();
-      _saveTimer = Timer(const Duration(milliseconds: 1000), () async {
+      _saveTimer = Timer(const Duration(milliseconds: 2500), () async {
         await _performSave();
       });
     }
@@ -414,7 +425,7 @@ class BinaStore {
       'date': DateTime.now().toIso8601String(),
       'lastActiveSection': _lastActiveSection,
       'isCompleted': _isCompleted,
-      'completion': AppProgress.getAnalysisProgress(this).percentage,
+      'completion': _cachedPercentage,
       'isPremium': isPremium,
       'sections': {
         'bolum1': _bolum1?.toMap(),
@@ -462,10 +473,9 @@ class BinaStore {
       archive.add(currentData);
 
     try {
-      // JSON encode işlemi asenkron yapılamasa da, compute ile arka plana atarak
-      // main thread'i bloklamasını önlüyoruz.
-      // Özellikle archive listesi büyüdüğünde bu işlem saniyeler sürebilir.
-      final String encodedData = await compute(jsonEncode, archive);
+      // jsonEncode for this payload takes ~1-2ms on main thread,
+      // creating an Isolate via compute takes >15ms. So we do it synchronously.
+      final String encodedData = jsonEncode(archive);
       await _prefs?.setString('bina_archive', encodedData);
 
       if (currentBinaId != null)
@@ -527,6 +537,8 @@ class BinaStore {
     if (s['bolum34'] != null) _bolum34 = Bolum34Model.fromMap(s['bolum34']);
     if (s['bolum35'] != null) _bolum35 = Bolum35Model.fromMap(s['bolum35']);
     if (s['bolum36'] != null) _bolum36 = Bolum36Model.fromMap(s['bolum36']);
+    
+    _refreshProgress();
   }
 
   void createNewBuilding({
@@ -539,6 +551,7 @@ class BinaStore {
     currentBinaName = name;
     currentBinaCity = city;
     currentBinaDistrict = district;
+    _refreshProgress();
     saveToDisk(immediate: true);
   }
 
@@ -548,6 +561,7 @@ class BinaStore {
   }
 
   void reset() {
+    _saveTimer?.cancel();
     currentBinaId = null;
     currentBinaName = null;
     currentBinaCity = null;
@@ -590,6 +604,8 @@ class BinaStore {
     _bolum35 = null;
     _bolum36 = null;
     _isCompleted = false;
+    _cachedPercentage = 0;
+    _isDirty = true;
   }
 
   void loadBuildingFromArchive(String id) {

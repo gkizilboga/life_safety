@@ -87,7 +87,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
         try {
           BinaStore.instance.bolum19 = _model;
           final navigator = Navigator.of(context);
-          await BinaStore.instance.saveToDisk(immediate: true);
+          await BinaStore.instance.saveToDisk();
 
           if (!mounted) return;
           navigator.push(

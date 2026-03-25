@@ -24,12 +24,9 @@ class ModernHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isAnalysisScreen = screenType.toString().contains('Bolum');
     
-    final progressResult = AppProgress.getAnalysisProgress(
-      BinaStore.instance,
-      screenType,
-    );
-    double progress = progressResult.percentage / 100.0;
-    String stepLabel = progressResult.stepString;
+    final progressPercentage = BinaStore.instance.progressPercentage;
+    double progress = progressPercentage / 100.0;
+    String stepLabel = "Bölüm-${AppProgress.currentStep(screenType)}";
     final bool canPop = Navigator.canPop(context);
 
     final double topPadding = MediaQuery.of(context).padding.top;
@@ -312,19 +309,31 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 600),
     );
 
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.3).chain(CurveTween(curve: Curves.easeOut)),
+        tween: Tween<double>(begin: 1.0, end: 1.35)
+            .chain(CurveTween(curve: Curves.easeOutBack)),
         weight: 40,
       ),
       TweenSequenceItem(
-        tween: Tween<double>(begin: 1.3, end: 1.0).chain(CurveTween(curve: Curves.easeIn)),
+        tween: Tween<double>(begin: 1.35, end: 1.0)
+            .chain(CurveTween(curve: Curves.bounceIn)),
         weight: 60,
       ),
     ]).animate(_controller);
+
+    // Pulse on entry
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _controller.forward(from: 0.0);
+        if (!WidgetsBinding.instance.toString().contains('Test')) {
+          HapticFeedback.mediumImpact();
+        }
+      }
+    });
   }
 
   @override
@@ -333,7 +342,7 @@ class _AnimatedPercentageTextState extends State<AnimatedPercentageText>
     if (oldWidget.percentage != widget.percentage) {
       _controller.forward(from: 0.0);
       if (!WidgetsBinding.instance.toString().contains('Test')) {
-         HapticFeedback.selectionClick();
+        HapticFeedback.lightImpact();
       }
     }
   }
@@ -557,24 +566,40 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
             ),
             child: SafeArea(
               top: false,
-              child: ElevatedButton(
-                onPressed: widget.isNextEnabled && !_isNavigating
-                    ? () async {
-                        setState(() => _isNavigating = true);
-                        try {
-                          await BinaStore.instance.saveToDisk();
-                          if (widget.onNext != null) widget.onNext!();
-                        } finally {
-                          // Navigasyon gerçekleşirse zaten bu ekran dispose edilecek.
-                          // Ama hata olursa veya navigasyon iptal edilirse butonu geri açıyoruz.
-                          Future.delayed(const Duration(seconds: 1), () {
-                            if (mounted) setState(() => _isNavigating = false);
-                          });
-                        }
-                      }
-                    : null,
-                style: AppStyles.mainButton, // Use standard button style
-                child: const Text("DEVAM ET"),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (!widget.isNextEnabled && !_isNavigating) ...[
+                    const Text(
+                      "Devam etmek için lütfen tüm soruları yanıtlayınız",
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.black45,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                  ElevatedButton(
+                    onPressed: widget.isNextEnabled && !_isNavigating
+                        ? () async {
+                            setState(() => _isNavigating = true);
+                            try {
+                              await BinaStore.instance.saveToDisk();
+                              if (widget.onNext != null) widget.onNext!();
+                            } finally {
+                              // Navigasyon gerçekleşirse zaten bu ekran dispose edilecek.
+                              // Ama hata olursa veya navigasyon iptal edilirse butonu geri açıyoruz.
+                              Future.delayed(const Duration(milliseconds: 400), () {
+                                if (mounted) setState(() => _isNavigating = false);
+                              });
+                            }
+                          }
+                        : null,
+                    style: AppStyles.mainButton, // Use standard button style
+                    child: const Text("DEVAM ET"),
+                  ),
+                ],
               ),
             ),
           ),

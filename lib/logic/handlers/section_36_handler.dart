@@ -1,7 +1,28 @@
 import 'package:life_safety/data/bina_store.dart';
+import '../../models/choice_result.dart';
+import '../../models/bolum_20_model.dart';
+import '../../models/report_status.dart';
+import '../../utils/app_content.dart';
+import '../report_engine.dart';
 
 class Section36Handler {
   final BinaStore _store;
+
+  static const Map<String, List<int>> _widthRanges = {
+    "36-Merd-A": [0, 119],
+    "36-Merd-B": [120, 150],
+    "36-Merd-C": [151, 200],
+    "36-Merd-D": [201, 500],
+    "36-Koridor-A": [0, 99],
+    "36-Koridor-B": [100, 120],
+    "36-Koridor-C": [121, 150],
+    "36-Koridor-D": [151, 200],
+    "36-Koridor-E": [201, 500],
+  };
+
+  static List<int>? _getRangeForLabel(String label) {
+    return _widthRanges[label];
+  }
 
   Section36Handler(this._store);
 
@@ -25,20 +46,9 @@ class Section36Handler {
         );
       }
 
-      int maxYuk = 0;
       final b33 = _store.bolum33;
       final b34 = _store.bolum34;
-      if (b33 != null) {
-        bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
-        int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
-        int yukNormal = b33.yukNormal ?? 0;
-        int yukBodrum = b33.yukBodrum ?? 0;
-        maxYuk = [
-          yukZemin,
-          yukNormal,
-          yukBodrum,
-        ].reduce((curr, next) => curr > next ? curr : next);
-      }
+      final int maxYuk = ReportEngine.calculateMaxYuk(_store);
 
       if (b20.dengelenmisMerdivenSayisi > 0) {
         if (hBina > (15.50 - 0.001) || maxYuk > 100) {
@@ -224,7 +234,36 @@ class Section36Handler {
         }
       }
 
-      // 5. Dairesel Merdiven (Madde 25) analizi Bölüm 25 detaylarında yapıldığı için buradan kaldırıldı.
+      // 5. Dairesel Merdiven (Madde 25) Analizi
+      if (b20.donerMerdivenSayisi > 0 || b20.bodrumDonerMerdivenSayisi > 0) {
+        final b25 = _store.bolum25;
+        // b34 ve b33 yukarıda tanımlandı
+        bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
+        int loadForSpiral = zeminIndependent ? (b33?.yukNormal ?? 0) : maxYuk;
+
+        if (b25 != null) {
+          bool heightOk = b25.yukseklik?.label == "25-Dairesel-A";
+          bool loadOk = loadForSpiral <= 25;
+          bool isUnknown = b25.yukseklik?.label == "25-Dairesel-C";
+
+          if (isUnknown) {
+            analysisParts.add(
+              "UYARI: BİLİNMİYOR - Dairesel merdiven yüksekliği beyan edilmediği için Yönetmelik (Madde 25) uygunluğu değerlendirilememiştir.",
+            );
+          } else if (heightOk && loadOk) {
+            analysisParts.add(
+              "OLUMLU: Dairesel merdiven, yükseklik (${b25.yukseklik?.uiTitle}) ve kullanıcı yükü ($loadForSpiral kişi) sınırları içerisinde olduğu için kaçış yolu olarak kabul edilebilir.",
+            );
+          } else {
+            List<String> reasons = [];
+            if (!heightOk) reasons.add("yükseklik 9.50m limitini aşmaktadır");
+            if (!loadOk) reasons.add("kullanıcı yükü 25 kişiyi aşmaktadır");
+            analysisParts.add(
+              "KRİTİK RİSK: Dairesel merdiven, ${reasons.join(" ve ")} sebebiyle Yönetmelik Madde 25 kriterlerini sağlamamaktadır. Kaçış yolu olarak kullanılamaz.",
+            );
+          }
+        }
+      }
 
       // 6. Genişlik Analizi (Merkezileştirilmiş)
       final b36 = _store.bolum36;
@@ -263,25 +302,9 @@ class Section36Handler {
         }) {
           List<String> violations = [];
 
-          List<int>? getRange(String label) {
-            if (label.contains("90 cm'den az")) return [0, 89];
-            if (label.contains("90-120 cm")) return [90, 119];
-            if (label.contains("120-150 cm")) return [120, 149];
-            if (label.contains("150 cm ve üzeri")) return [150, 500];
-
-            if (label.contains("100 cm'den az")) return [0, 99];
-            if (label.contains("100-120 cm")) return [100, 119];
-            // Koridor ranges...
-            if (label.contains("150-200 cm")) return [150, 199];
-            if (label.contains("200 cm ve üzeri")) return [200, 500];
-            return null;
-          }
-
           if (sChoice != null) {
-            final range = getRange(sChoice.uiTitle);
+            final range = _getRangeForLabel(sChoice.label);
             if (range != null) {
-              // User instruction: For spiral-related checks, use upper bound (range[1]).
-              // Otherwise use safe logic (range[0]).
               int comparisonValue = isSpiralPossible ? range[1] : range[0];
               if (comparisonValue < minMerd) {
                 violations.add(
@@ -291,7 +314,7 @@ class Section36Handler {
             }
           }
           if (cChoice != null) {
-            final range = getRange(cChoice.uiTitle);
+            final range = _getRangeForLabel(cChoice.label);
             if (range != null && range[0] < minKori) {
               violations.add(
                 "Koridor genişliği yetersiz (Gereken: $minKori cm, Seçim: ${cChoice.uiTitle})",
@@ -386,5 +409,377 @@ class Section36Handler {
       return summaryBullets.join("\n");
     }
     return "Tüm kaçış merdivenleri Yönetmelik kriterlerine (Korunumlu Merdiven adetleri, kapı yönleri ve %50 tahliye kuralları) göre yeterlidir.";
+  }
+
+  void _addDetail(
+    List<Map<String, dynamic>> details, {
+    required String label,
+    required String value,
+    required String report,
+    String? advice,
+    RiskLevel? level,
+    ReportStatus? status,
+    bool isBold = false,
+  }) {
+    details.add({
+      'label': label,
+      'value': value,
+      'report': report,
+      'advice': advice ?? '',
+      'status':
+          status ??
+          (level != null
+              ? ReportStatus.fromRiskLevel(level)
+              : ReportStatus.info),
+      'isBold': isBold,
+    });
+  }
+
+  void _addStaircaseRows(
+    List<Map<String, dynamic>> details,
+    Bolum20Model b, {
+    bool isBasement = false,
+  }) {
+    final prefix = isBasement ? "Bodrum Kat " : "";
+
+    void add(String label, int count) {
+      if (count >= 0) {
+        _addDetail(
+          details,
+          label: '$prefix$label (Adet)',
+          value: '$count adet',
+          report: '',
+          status: ReportStatus.info, // Counting is info
+          isBold: count > 0,
+        );
+      }
+    }
+
+    if (!isBasement) {
+      add("Normal (Standart) Merdiven", b.normalMerdivenSayisi);
+      add(
+        "Bina İçi Korunumlu (Yangın) Merdiven",
+        b.binaIciYanginMerdiveniSayisi,
+      );
+      add(
+        "Bina Dışı Kapalı (Yangın) Merdiven",
+        b.binaDisiKapaliYanginMerdiveniSayisi,
+      );
+      add(
+        "Bina Dışı Açık (Yangın) Merdiven",
+        b.binaDisiAcikYanginMerdiveniSayisi,
+      );
+      add("Döner (Spiral) Merdiven", b.donerMerdivenSayisi);
+      add("Sahanlıksız (Düz) Merdiven", b.sahanliksizMerdivenSayisi);
+      add("Dengelenmiş Merdiven", b.dengelenmisMerdivenSayisi);
+      add(
+        "Doğrudan Dışarı Açılan Merdiven",
+        b.toplamDisariAcilanMerdivenSayisi,
+      );
+    } else {
+      add("Bodrum Normal Merdiven", b.bodrumNormalMerdivenSayisi);
+      add(
+        "Bodrum Bina İçi Yangın Merdiveni",
+        b.bodrumBinaIciYanginMerdiveniSayisi,
+      );
+      add(
+        "Bodrum Bina Dışı Kapalı Yangın Merdiveni",
+        b.bodrumBinaDisiKapaliYanginMerdiveniSayisi,
+      );
+      add(
+        "Bodrum Bina Dışı Açık Yangın Merdiveni",
+        b.bodrumBinaDisiAcikYanginMerdiveniSayisi,
+      );
+      add("Bodrum Dairesel Merdiven", b.bodrumDonerMerdivenSayisi);
+      add("Bodrum Sahanlıksız Merdiven", b.bodrumSahanliksizMerdivenSayisi);
+      add("Bodrum Dengelenmiş Merdiven", b.bodrumDengelenmisMerdivenSayisi);
+      add(
+        "Bodrum Doğrudan Dışarı Açılan Merdiven",
+        b.bodrumToplamDisariAcilanMerdivenSayisi,
+      );
+    }
+  }
+
+  List<Map<String, dynamic>> getDetailedReport() {
+    List<Map<String, dynamic>> details = [];
+    final b36 = _store.bolum36;
+    if (b36 != null) {
+      if (b36.cikisKati != null)
+        _addDetail(
+          details,
+          label: Bolum36Content.questionCikisKati,
+          value: b36.cikisKati!.uiTitle,
+          report: b36.cikisKati!.reportText,
+          advice: b36.cikisKati!.adviceText,
+          level: b36.cikisKati!.level,
+        );
+      if (b36.disMerd != null)
+        _addDetail(
+          details,
+          label: Bolum36Content.questionDisMerd,
+          value: b36.disMerd!.uiTitle,
+          report: b36.disMerd!.reportText,
+          advice: b36.disMerd!.adviceText,
+          level: b36.disMerd!.level,
+        );
+      if (b36.konum != null)
+        _addDetail(
+          details,
+          label: Bolum36Content.questionKonum,
+          value: b36.konum!.uiTitle,
+          report: b36.konum!.reportText,
+          advice: b36.konum!.adviceText,
+          level: b36.konum!.level,
+        );
+      if (b36.kapiTipi != null)
+        _addDetail(
+          details,
+          label: Bolum36Content.questionKapiTipi,
+          value: b36.kapiTipi!.uiTitle,
+          report: b36.kapiTipi!.reportText,
+          advice: b36.kapiTipi!.adviceText,
+          level: b36.kapiTipi!.level,
+        );
+
+      final b4 = _store.bolum4;
+      final b3 = _store.bolum3;
+      final double hBina = b4?.hesaplananBinaYuksekligi ?? b3?.hBina ?? 0.0;
+      final double hYapi = b4?.hesaplananYapiYuksekligi ?? b3?.hYapi ?? 0.0;
+      final bool isYuksekBina = (hBina >= 21.50 || hYapi >= 30.50);
+      final int effectiveLoad = ReportEngine.calculateMaxYuk(_store);
+
+      int reqMerdiven = 120;
+      int reqKoridor = 110;
+      String reqReason = "Genel en alt limit";
+
+      if (effectiveLoad >= 2001) {
+        reqMerdiven = 200;
+        reqKoridor = 200;
+        reqReason = "Kullanıcı yükü > 2000 ($effectiveLoad kişi)";
+      } else if (effectiveLoad >= 501) {
+        reqMerdiven = 150;
+        reqKoridor = 150;
+        reqReason = "Kullanıcı yükü > 500 ($effectiveLoad kişi)";
+      } else if (isYuksekBina) {
+        reqMerdiven = 120;
+        reqKoridor = 120;
+        reqReason = "Yüksek Bina Kriteri";
+      }
+
+      List<int>? getMerdRange(ChoiceResult? c) {
+        if (c == null) return null;
+        if (c.label == "36-Merd-A") return [0, 119];
+        if (c.label == "36-Merd-B") return [120, 150];
+        if (c.label == "36-Merd-C") return [151, 200];
+        if (c.label == "36-Merd-D") return [201, 9999];
+        return null;
+      }
+
+      List<int>? getKoriRange(ChoiceResult? c) {
+        if (c == null) return null;
+        if (c.label == "36-Koridor-A") return [0, 99];
+        if (c.label == "36-Koridor-B") return [100, 120];
+        if (c.label == "36-Koridor-C") return [121, 150];
+        if (c.label == "36-Koridor-D") return [151, 200];
+        if (c.label == "36-Koridor-E") return [201, 9999];
+        return null;
+      }
+
+      void evaluateWidth(
+        String label,
+        ChoiceResult? choice,
+        int requiredVal,
+        bool isMerdiven,
+      ) {
+        if (choice == null) return;
+        var range = isMerdiven ? getMerdRange(choice) : getKoriRange(choice);
+        if (range == null) {
+          _addDetail(
+            details,
+            label: label,
+            value: choice.uiTitle,
+            report:
+                "UYARI: BİLİNMİYOR - Genişlik beyan edilmediği için yeterlilik değerlendirmesi yapılamamıştır.",
+            status: ReportStatus.warning,
+          );
+          return;
+        }
+        int wMax = range[1];
+
+        if (wMax < requiredVal) {
+          _addDetail(
+            details,
+            label: label,
+            value: choice.uiTitle,
+            report: "KRİTİK RİSK: Gereken: En az $requiredVal cm ($reqReason).",
+            status: ReportStatus.risk,
+          );
+        } else {
+          _addDetail(
+            details,
+            label: label,
+            value: choice.uiTitle,
+            report: "OLUMLU: En alt limit olan $requiredVal cm sağlanmaktadır.",
+            status: ReportStatus.compliant,
+          );
+        }
+      }
+
+      if (b36.areWidthsSame) {
+        evaluateWidth(
+          'Merdiven Genişliği (Genel)',
+          b36.genislikKorunumlu,
+          reqMerdiven,
+          true,
+        );
+        evaluateWidth(
+          'Kaçış Koridoru Genişliği (Genel)',
+          b36.koridorGenislikKorunumlu,
+          reqKoridor,
+          false,
+        );
+        if (b36.kapiGenislikKorunumlu != null) {
+          _addDetail(
+            details,
+            label: 'Kaçış Kapısı Temiz Geçiş Genişliği',
+            value: b36.kapiGenislikKorunumlu!.uiTitle,
+            report: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                ? "KRİTİK RİSK: En Az: 80 cm."
+                : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                      ? "OLUMLU: 80 cm ve üzerindedir."
+                      : "BİLİNMİYOR."),
+            status: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                ? ReportStatus.risk
+                : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                      ? ReportStatus.compliant
+                      : ReportStatus.warning),
+          );
+        }
+      } else {
+        // Ayrı Giriş
+        evaluateWidth(
+          'Korunumlu Merdiven Genişliği',
+          b36.genislikKorunumlu,
+          reqMerdiven,
+          true,
+        );
+        evaluateWidth(
+          'Korunumlu Koridor Genişliği',
+          b36.koridorGenislikKorunumlu,
+          reqKoridor,
+          false,
+        );
+        if (b36.kapiGenislikKorunumlu != null) {
+          _addDetail(
+            details,
+            label: 'Korunumlu Alan Kapı Genişliği',
+            value: b36.kapiGenislikKorunumlu!.uiTitle,
+            report: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                ? "KRİTİK RİSK: En Az: 80 cm."
+                : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                      ? "OLUMLU: 80 cm ve üzerindedir."
+                      : "BİLİNMİYOR."),
+            status: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                ? ReportStatus.risk
+                : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                      ? ReportStatus.compliant
+                      : ReportStatus.warning),
+          );
+        }
+        evaluateWidth(
+          'Korunumsuz Merdiven Genişliği',
+          b36.genislikKorunumsuz,
+          reqMerdiven,
+          true,
+        );
+        evaluateWidth(
+          'Korunumsuz Koridor Genişliği',
+          b36.koridorGenislikKorunumsuz,
+          reqKoridor,
+          false,
+        );
+        if (b36.kapiGenislikKorunumsuz != null) {
+          _addDetail(
+            details,
+            label: 'Korunumsuz Alan Kapı Genişliği',
+            value: b36.kapiGenislikKorunumsuz!.uiTitle,
+            report: b36.kapiGenislikKorunumsuz!.label.contains("-A")
+                ? "KRİTİK RİSK: En Az: 80 cm."
+                : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
+                      ? "OLUMLU: 80 cm ve üzerindedir."
+                      : "BİLİNMİYOR."),
+            status: b36.kapiGenislikKorunumsuz!.label.contains("-A")
+                ? ReportStatus.risk
+                : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
+                      ? ReportStatus.compliant
+                      : ReportStatus.warning),
+          );
+        }
+      }
+
+      // Madde 41 Detayları
+      final b20 = _store.bolum20;
+      if (b20 != null) {
+        _addDetail(
+          details,
+          label: 'Merdiven Tipleri ve Adetleri',
+          value: '',
+          report: '',
+          status: ReportStatus.info,
+        );
+        _addStaircaseRows(details, b20);
+        if (b20.isBodrumIndependent) {
+          _addStaircaseRows(details, b20, isBasement: true);
+        }
+
+        // Dairesel Merdiven (Madde 25) Bilgisi
+        if (b20.donerMerdivenSayisi > 0 || b20.bodrumDonerMerdivenSayisi > 0) {
+          final b25 = _store.bolum25;
+          final bool hExceed = b25?.yukseklik?.label == "25-Dairesel-B";
+          final bool loadExceed = effectiveLoad > 25;
+
+          String spiralReport =
+              "NOT: Dairesel merdivenlerin (Madde 25) analizi yukarıdaki özet raporda sunulmuştur.";
+          ReportStatus spiralStatus = ReportStatus.info;
+
+          if (hExceed || loadExceed) {
+            List<String> reasons = [];
+            if (hExceed) reasons.add("9.50m limitini aşmaktadır");
+            if (loadExceed)
+              reasons.add(
+                "kullanıcı yükü 25 kişiyi aşmaktadır ($effectiveLoad)",
+              );
+            spiralReport =
+                "KRİTİK RİSK: Dairesel merdiven ${reasons.join(" VE ")} için kaçış yolu olarak kullanılamaz.";
+            spiralStatus = ReportStatus.risk;
+          } else if (b25?.yukseklik?.label == "25-Dairesel-A") {
+            spiralReport =
+                "OLUMLU: Dairesel merdiven, yükseklik ve kullanıcı yükü sınırları içerisinde olduğu için uygundur.";
+            spiralStatus = ReportStatus.compliant;
+          }
+
+          _addDetail(
+            details,
+            label: 'Dairesel Merdiven Değerlendirmesi',
+            value: 'Ayrı Bölüm',
+            report: spiralReport,
+            status: spiralStatus,
+          );
+        }
+      }
+
+      // Mühendis Notu
+      if (b36.merdivenDegerlendirme != null &&
+          b36.merdivenDegerlendirme!.isNotEmpty) {
+        _addDetail(
+          details,
+          label: "",
+          value: "",
+          report: b36.merdivenDegerlendirme!,
+          status: ReportStatus.info,
+        );
+      }
+    }
+    return details;
   }
 }

@@ -192,7 +192,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
       toplamInsaatAlani: InputValidator.parseFlex(_toplamCtrl.text),
     );
     BinaStore.instance.bolum5 = _model;
-    BinaStore.instance.saveToDisk(immediate: true);
+    BinaStore.instance.saveToDisk();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum6Screen()),
@@ -387,46 +387,29 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
+            Flexible(
               child: Text(content.uiTitle, style: AppStyles.questionTitle),
             ),
             if (onCalculatorTap != null)
               GestureDetector(
                 onTap: onCalculatorTap,
-                child: Container(
-                  margin: const EdgeInsets.only(left: 8),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryBlue.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: AppColors.primaryBlue.withOpacity(0.3),
+                child: Tooltip(
+                  message: 'Hesapla',
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.calculate,
-                        size: 16,
-                        color: AppColors.primaryBlue,
-                      ),
-                      const SizedBox(width: 4),
-                      const Text(
-                        "Hesapla",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryBlue,
-                        ),
-                      ),
-                    ],
+                    child: const Icon(
+                      Icons.calculate_outlined,
+                      size: 24,
+                      color: AppColors.primaryBlue,
+                    ),
                   ),
                 ),
               ),
@@ -459,84 +442,56 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
     showCustomDialog<bool>(
       context: context,
       title: "$title Hesaplayıcı",
-      contentWidget: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Toplam alanı bulmak için aşağıdaki bilgileri doldurunuz (kattaki daire sayısı x brüt alan = toplam).",
-            style: TextStyle(color: Colors.black54, fontSize: 13),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: daireSayisiCtrl,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: InputDecoration(
-              labelText: "1 Kattaki Daire/Bölüm Sayısı",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              prefixIcon: const Icon(
-                Icons.numbers,
-                color: AppColors.primaryBlue,
-              ),
-              isDense: true,
-            ),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: daireAlaniCtrl,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [InputValidator.flexDecimal],
-            decoration: InputDecoration(
-              labelText: "1 Dairenin Ort. Brüt Alanı (m²)",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              prefixIcon: const Icon(
-                Icons.square_foot,
-                color: AppColors.primaryBlue,
-              ),
-              isDense: true,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.primaryBlue.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 16,
+      contentWidget: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: daireSayisiCtrl,
+              autofocus: true,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: InputDecoration(
+                labelText: "1 Kattaki Daire/Bölüm Sayısı",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                prefixIcon: const Icon(
+                  Icons.numbers,
                   color: AppColors.primaryBlue,
+                  size: 20,
                 ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    "Ortak kullanım alanlarını (merdiven, asansör, şaft vb.) daire alanına veya hesaba dahil ettiğinizden emin olunuz.",
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: AppColors.primaryBlue,
-                      height: 1.3,
-                    ),
-                  ),
-                ),
-              ],
+                isDense: true,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            TextField(
+              controller: daireAlaniCtrl,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [InputValidator.flexDecimal],
+              decoration: InputDecoration(
+                labelText: "1 Dairenin Ort. Brüt Alanı (m²)",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                prefixIcon: const Icon(
+                  Icons.square_foot,
+                  color: AppColors.primaryBlue,
+                  size: 20,
+                ),
+                isDense: true,
+              ),
+            ),
+          ],
+        ),
       ),
       confirmText: "HESAPLA",
       cancelText: "İPTAL",
       icon: Icons.calculate_outlined,
       iconColor: AppColors.primaryBlue,
     ).then((result) {
+      if (!mounted) return;
       if (result == true) {
         double sayi = double.tryParse(daireSayisiCtrl.text) ?? 0;
         double alan = InputValidator.parseFlex(daireAlaniCtrl.text) ?? 0;

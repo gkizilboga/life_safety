@@ -22,6 +22,10 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   late Map<ReportModule, double> _moduleScores;
   late bool _isPremium;
 
+  final Map<int, String> _sectionSummaries = {};
+  final Map<int, String> _sectionFullReports = {};
+  final Map<int, Color> _sectionRiskColors = {};
+
   Color _getUiRiskColor(String text) {
     if (text.contains('KRİTİK RİSK')) return const Color(0xFFEF5350); // Red
     if (text.contains('UYARI')) return const Color(0xFFFFD600); // Yellow (A700)
@@ -40,6 +44,13 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
     _metrics = ReportEngine.calculateRiskMetrics();
     _moduleScores = ReportEngine.calculateModuleScores();
     _isPremium = BinaStore.instance.isPremium;
+
+    // Cache section reports to prevent frame drops during animation/scrolling
+    for (int i = 1; i <= 36; i++) {
+        _sectionSummaries[i] = ReportEngine.getSectionSummary(i);
+        _sectionFullReports[i] = ReportEngine.getSectionFullReport(i);
+        _sectionRiskColors[i] = _getUiRiskColor(_sectionFullReports[i] ?? "");
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BinaStore.instance.markAsCompleted();
@@ -274,15 +285,15 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                    NumericEmphasis(
-                      "${m['score']} / 100",
-                      emphasisColor: AppColors.accentGold,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 34,
-                        fontWeight: FontWeight.w900,
-                      ),
+                  NumericEmphasis(
+                    "${m['score']} / 100",
+                    emphasisColor: AppColors.accentGold,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 34,
+                      fontWeight: FontWeight.w900,
                     ),
+                  ),
                 ],
               ),
               _buildCircularProgress(m['score']),
@@ -350,7 +361,9 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       children: [
         NumericEmphasis(
           val,
-          emphasisColor: label == "Kritik Risk" || label == "Tamamlanma" ? AppColors.accentGold : null,
+          emphasisColor: label == "Kritik Risk" || label == "Tamamlanma"
+              ? AppColors.accentGold
+              : null,
           style: TextStyle(
             color: color,
             fontSize: 18,
@@ -413,9 +426,9 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
 
   Widget _buildSectionTile(BuildContext context, int id) {
     try {
-      final summary = ReportEngine.getSectionSummary(id);
-      final fullReport = ReportEngine.getSectionFullReport(id);
-      final riskColor = _getUiRiskColor(fullReport);
+      final summary = _sectionSummaries[id] ?? "Değerlendirilmedi.";
+      final fullReport = _sectionFullReports[id] ?? "Veri yok.";
+      final riskColor = _sectionRiskColors[id] ?? Colors.grey;
       return ListTile(
         onTap: () =>
             _showDetailSheet(context, id, summary, fullReport, riskColor),
@@ -583,11 +596,10 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildBulletItem(
-                      "Binanıza ait 2 adet PDF raporu hazırlanmıştır.",
+                      "Binanıza ait 2 adet PDF dokümanı hazırlanmıştır:",
                     ),
-                    _buildBulletItem(
-                      "\"Yangın Risk Analizi\" ve \"Aktif Sistem Gereksinimleri\" raporu.",
-                    ),
+                    _buildSubBulletItem("Yangın Risk Analizi"),
+                    _buildSubBulletItem("Aktif Sistem Gereksinimleri"),
                     _buildBulletItem(
                       "PDF oluşturma işlemi 10–20 saniye sürebilir.",
                     ),
@@ -632,9 +644,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             } else {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => const PaywallScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const PaywallScreen()),
               );
             }
           },
@@ -669,6 +679,37 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                 fontSize: 15,
                 color: Color(0xFF1A237E),
                 height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubBulletItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, bottom: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "○ ",
+            style: TextStyle(
+              fontSize: 11,
+              color: Color(0xFF1A237E),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color(0xFF1A237E),
+                height: 1.4,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
               ),
             ),
           ),

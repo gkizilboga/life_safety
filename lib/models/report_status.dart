@@ -12,6 +12,22 @@ enum ReportStatus {
   final String label;
   const ReportStatus(this.color, this.label);
 
+  int get priority {
+    switch (this) {
+      case ReportStatus.risk:
+        return 4;
+      case ReportStatus.warning:
+        return 3;
+      case ReportStatus.unknown:
+        return 2;
+      case ReportStatus.compliant:
+        return 1;
+      case ReportStatus.info:
+        return 0;
+    }
+  }
+
+
   static ReportStatus fromRiskLevel(RiskLevel level) {
     switch (level) {
       case RiskLevel.critical:

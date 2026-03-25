@@ -116,7 +116,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasKazan,
             () => _toggleOption('kazan'),
             imagePath: AppAssets.section7Kazan,
-            imageTitle: "Kazan Dairesi Teknik Detayı",
+            imageTitle: "Kazan Dairesi",
           ),
 
           _buildOption(
@@ -124,7 +124,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasAsansor,
             () => _toggleOption('asansor'),
             imagePath: AppAssets.section7Asansor,
-            imageTitle: "Asansör Kuyusu ve Makine Dairesi",
+            imageTitle: "Asansör",
           ),
           if (_isAutoSelected && _model.hasAsansor)
             const CustomInfoNote(
@@ -144,7 +144,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasJenerator,
             () => _toggleOption('jenerator'),
             imagePath: AppAssets.section7Jenerator,
-            imageTitle: "Jeneratör Odası Yerleşimi",
+            imageTitle: "Jeneratör Odası",
           ),
 
           _buildOption(
@@ -160,7 +160,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasTrafo,
             () => _toggleOption('trafo'),
             imagePath: AppAssets.section7Trafo,
-            imageTitle: "Trafo Odası ve Yağ Çukuru",
+            imageTitle: "Trafo Odası",
           ),
 
           _buildOption(
@@ -179,7 +179,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasDuvar,
             () => _toggleOption('duvar'),
             imagePath: AppAssets.section7OrtakDuvar,
-            imageTitle: "Bitişik Nizam Ortak Duvar Detayı",
+            imageTitle: "Bitişik Nizam",
           ),
 
           if (BinaStore.instance.bolum6?.buyukRestoran?.label ==
@@ -224,4 +224,3 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
     );
   }
 }
-

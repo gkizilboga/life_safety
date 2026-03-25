@@ -74,13 +74,13 @@ class Section3Handler {
 
     // Bina ve yapı yükseklikleri
     details.add({
-      'label': 'Bina Yüksekliği',
+      'label': 'Bina Yüksekliği (hBina)',
       'value': '${b3.hBina?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
       'status': ReportStatus.info,
     });
     details.add({
-      'label': 'Yapı Yüksekliği',
+      'label': 'Yapı Yüksekliği (hYapı)',
       'value': '${b3.hYapi?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
       'status': ReportStatus.info,
