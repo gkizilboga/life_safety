@@ -85,7 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               children: [
                 if (ongoingActions.isNotEmpty) ...[
-                  _buildSectionLabel("DEVAM EDEN ANALİZLER"),
+                  _buildSectionLabel("Devam Eden Analizler"),
                   ...ongoingActions.reversed
                       .take(3)
                       .map(
@@ -95,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(height: 20),
                 ],
                 if (completedActions.isNotEmpty) ...[
-                  _buildSectionLabel("TAMAMLANAN ANALİZLER"),
+                  _buildSectionLabel("Tamamlanan Analizler"),
                   ...completedActions.reversed
                       .take(3)
                       .map(
@@ -104,19 +104,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                   const SizedBox(height: 20),
                 ],
-                _buildSectionLabel("HIZLI ERİŞİM"),
+                _buildSectionLabel("Hızlı Erişim"),
                 _buildMainActions(context),
                 const SizedBox(height: 25),
-                _buildSectionLabel("BİLGİLER VE AYARLAR"),
+                _buildSectionLabel("Bilgiler ve Ayarlar"),
                 _buildSecondaryMenu(context),
                 const SizedBox(height: 25),
-                _buildSectionLabel("PAYLAŞIM VE TRANSFER"),
+                _buildSectionLabel("Paylaşım ve Transfer"),
                 _buildFileActionSection(context, completedActions),
                 const SizedBox(height: 25),
-                _buildSectionLabel("PROMO KOD İŞLEMLERİ"),
+                _buildSectionLabel("Promosyon İşlemleri"),
                 _buildPromoCodeSection(context),
                 const SizedBox(height: 25),
-                _buildSectionLabel("DESTEK VE İLETİŞİM"),
+                _buildSectionLabel("Destek ve İletişim"),
                 _buildSupportCard(context),
                 const SizedBox(height: 30),
               ],
@@ -144,17 +144,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "YANGIN RİSK ANALİZİ",
-            style: TextStyle(
-              color: Colors.white54,
-              fontSize: 10,
-              letterSpacing: 1.6,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            "HOŞ GELDİNİZ",
+            "Hoş Geldiniz",
             style: TextStyle(
               color: Colors.white,
               fontSize: 19,
@@ -273,7 +263,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
                   },
                   child: Text(
-                    isCompleted ? "ANALİZLERİ GÖR" : "DEVAM ET",
+                    isCompleted ? "Analizleri Gör" : "Devam Et",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -315,7 +305,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Icons.settings_system_daydream_outlined,
                   size: 18,
                 ),
-                label: const Text("AKTİF SİSTEM GEREKSİNİMLERİ"),
+                label: const Text("Aktif Sistem Gereksinimleri"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: AppColors.primaryBlue,
@@ -348,7 +338,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        isCompleted ? "TAMAMLANDI" : "DEVAM EDİYOR",
+        isCompleted ? "Tamamlandı" : "Devam Ediyor",
         style: TextStyle(
           color: isCompleted ? Colors.green.shade700 : Colors.orange.shade700,
           fontSize: 12,

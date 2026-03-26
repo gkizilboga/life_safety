@@ -32,7 +32,7 @@ class _TerminologyScreenState extends State<TerminologyScreen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "TERİMLER SÖZLÜĞÜ",
+            title: "Terimler Sözlüğü",
             screenType: TerminologyScreen,
           ),
           Padding(

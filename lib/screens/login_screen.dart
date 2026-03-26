@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 30),
                 const Text(
-                  "GİRİŞ YAPIN",
+                  "Giriş Yapın",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.textHeader,
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        "VEYA",
+                        "Veya",
                         style: TextStyle(
                           color: AppColors.textHint,
                           fontSize: 12,
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     onPressed: _isLoading ? null : _handleEmailLogin,
                     child: const Text(
-                      "DEVAM ET",
+                      "Devam Et",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,

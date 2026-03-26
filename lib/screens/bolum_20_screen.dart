@@ -486,6 +486,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
                   color: AppColors.textBody,
                 ),
               ),
+              const SizedBox(height: 12),
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeAltinda.copyWith(
                   uiTitle: "Evet, altında veya eşit.",
@@ -708,7 +709,7 @@ class _StairInputRow extends StatelessWidget {
       children: [
         // 8: Hata mesajını input'un altında değil, labelın altında göster
         Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(child: SubQuestionTitle(label)),
             if (assetPath != null) ...[
@@ -763,22 +764,20 @@ class _StairInputRow extends StatelessWidget {
   }
 
   Widget _buildCameraIcon(BuildContext context, String path, String title) {
-    return GestureDetector(
+    return ActionIconWrapper(
       onTap: () =>
           ImageModalHelper.show(context, assetPath: path, title: title),
-      child: Tooltip(
-        message: 'Görseli İncele',
-        child: Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: const Color(0xFF43A047).withOpacity(0.12),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(
-            Icons.photo_camera,
-            color: Color(0xFF2E7D32),
-            size: 24,
-          ),
+      tooltip: 'Görseli İncele',
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: const Color(0xFF43A047).withOpacity(0.12),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(
+          Icons.photo_camera,
+          color: Color(0xFF2E7D32),
+          size: 24,
         ),
       ),
     );

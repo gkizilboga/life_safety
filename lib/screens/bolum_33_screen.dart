@@ -180,9 +180,11 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                "Farklı katlardaki yaklaşık kullanıcı yükleri aşağıdaki gibidir.",
-                style: AppStyles.questionTitle,
+              Expanded(
+                child: Text(
+                  "Farklı katlardaki yaklaşık kullanıcı yükleri aşağıdaki gibidir.",
+                  style: AppStyles.questionTitle,
+                ),
               ),
               const SizedBox(width: 8),
               DefinitionButton(

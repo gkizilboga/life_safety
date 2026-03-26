@@ -19,7 +19,7 @@ class AppStrings {
 3. HAKLAR VE İMHA: Uygulama silindiğinde, oluşturulan tüm yerel veritabanı geri döndürülemez şekilde silinir. Geliştirici, erişimi olmayan bir veriyi silemeyeceği veya anonimleştiremeyeceği için, KVKK m.11 kapsamındaki talepleriniz "veri tutulmadığı" gerekçesiyle işleme alınamayabilir.""";
 
   static const String legalDisclaimerTitle =
-      "YASAL BİLDİRİM VE SORUMLULUK SINIRLANDIRMASI";
+      "Yasal Bildirim ve Sorumluluk Sınırlandırması";
   static const String legalDisclaimerContent =
       """İŞBU METİN, KULLANICI İLE YANGIN RİSK ANALİZİ UYGULAMASI ARASINDAKİ NİHAİ YASAL ÇERÇEVEDİR. KÖTÜ NİYETLİ KULLANIMLARA KARŞI TÜRK CEZA KANUNU HÜKÜMLERİ SAKLIDIR.
 

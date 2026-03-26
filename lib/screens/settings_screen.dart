@@ -30,7 +30,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 _buildProfileCard(store),
                 const SizedBox(height: 25),
-                _buildSectionLabel("UYGULAMA TERCİHLERİ"),
+                _buildSectionLabel("Uygulama Tercihleri"),
                 _buildSettingTile(
                   icon: Icons.vibration,
                   title: "Dokunsal Geri Bildirim",
@@ -43,7 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                _buildSectionLabel("VERİ VE GÜVENLİK"),
+                _buildSectionLabel("Veri ve Güvenlik"),
                 _buildSettingTile(
                   icon: Icons.delete_forever_outlined,
                   title: "Tüm Arşivi Temizle",
@@ -164,8 +164,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       title: "Arşivi Temizle",
       content:
           "Tüm geçmiş analizleriniz kalıcı olarak silinecektir. Bu işlem geri alınamaz.",
-      confirmText: "SİL",
-      cancelText: "VAZGEÇ",
+      confirmText: "Sil",
+      cancelText: "Vazgeç",
       icon: Icons.delete_sweep_rounded,
       iconColor: Colors.red,
     );
@@ -187,8 +187,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       title: "Kaydı Sıfırla",
       content:
           "Profil bilgileriniz silinecek ve kayıt ekranına yönlendirileceksiniz. Emin misiniz?",
-      confirmText: "SIFIRLA",
-      cancelText: "VAZGEÇ",
+      confirmText: "Sıfırla",
+      cancelText: "Vazgeç",
       icon: Icons.person_remove_rounded,
       iconColor: Colors.red,
     );

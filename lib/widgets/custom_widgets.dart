@@ -48,14 +48,14 @@ class ModernHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               if (canPop)
                 GestureDetector(
                   onTap: onBack ?? () => Navigator.pop(context),
                   behavior: HitTestBehavior.opaque,
                   child: Container(
-                    margin: const EdgeInsets.only(right: 12, bottom: 2),
+                    margin: const EdgeInsets.only(right: 12),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.1),
@@ -534,6 +534,16 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
   }
 
   bool _isNavigating = false;
+  bool _showWarning = false;
+
+  @override
+  void didUpdateWidget(covariant AnalysisPageLayout oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Sorular yanıtlandığında uyarıyı sıfırla ki kullanıcı her sayfada taze başlasın
+    if (widget.isNextEnabled && !oldWidget.isNextEnabled) {
+      _showWarning = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -569,7 +579,7 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (!widget.isNextEnabled && !_isNavigating) ...[
+                  if (!widget.isNextEnabled && !_isNavigating && _showWarning) ...[
                     const Text(
                       "Devam etmek için lütfen tüm soruları yanıtlayınız",
                       style: TextStyle(
@@ -580,30 +590,91 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
                     ),
                     const SizedBox(height: 8),
                   ],
-                  ElevatedButton(
-                    onPressed: widget.isNextEnabled && !_isNavigating
-                        ? () async {
-                            setState(() => _isNavigating = true);
-                            try {
-                              await BinaStore.instance.saveToDisk();
-                              if (widget.onNext != null) widget.onNext!();
-                            } finally {
-                              // Navigasyon gerçekleşirse zaten bu ekran dispose edilecek.
-                              // Ama hata olursa veya navigasyon iptal edilirse butonu geri açıyoruz.
-                              Future.delayed(const Duration(milliseconds: 400), () {
-                                if (mounted) setState(() => _isNavigating = false);
-                              });
-                            }
-                          }
-                        : null,
-                    style: AppStyles.mainButton, // Use standard button style
-                    child: const Text("DEVAM ET"),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: widget.isNextEnabled && !_isNavigating
+                              ? () async {
+                                  setState(() => _isNavigating = true);
+                                  try {
+                                    await BinaStore.instance.saveToDisk();
+                                    if (widget.onNext != null) widget.onNext!();
+                                  } finally {
+                                    Future.delayed(
+                                      const Duration(milliseconds: 400),
+                                      () {
+                                        if (mounted) {
+                                          setState(() => _isNavigating = false);
+                                        }
+                                      },
+                                    );
+                                  }
+                                }
+                              : null,
+                          style: AppStyles.mainButton,
+                          child: const Text("DEVAM ET"),
+                        ),
+                      ),
+                      // Buton pasifken tıklamayı algılamak için şeffaf katman
+                      if (!widget.isNextEnabled && !_isNavigating)
+                        Positioned.fill(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (!mounted) return;
+                              setState(() => _showWarning = true);
+
+                              // Haptic geri bildirimle 'tıklanamaz' hissini pekiştir
+                              if (!WidgetsBinding.instance
+                                  .toString()
+                                  .contains('Test')) {
+                                HapticFeedback.heavyImpact();
+                              }
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ActionIconWrapper extends StatelessWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  final String tooltip;
+
+  const ActionIconWrapper({
+    super.key,
+    required this.child,
+    required this.onTap,
+    required this.tooltip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Tooltip(
+        message: tooltip,
+        child: Container(
+          width: 40, // Standard size for all action icons
+          height: 40,
+          alignment: Alignment.center,
+          child: child,
+        ),
       ),
     );
   }
@@ -621,25 +692,20 @@ class DefinitionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ActionIconWrapper(
       onTap: () => _showDefinition(context),
-      behavior: HitTestBehavior.opaque,
+      tooltip: 'Tanımı Gör',
       child: Container(
-        width: 48,
-        height: 48,
-        alignment: Alignment.centerRight,
-        child: Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: Colors.orange.shade100,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.orange.shade400, width: 1.5),
-          ),
-          child: Icon(
-            Icons.help_outline_rounded,
-            size: 18,
-            color: Colors.orange.shade800,
-          ),
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: Colors.orange.shade100,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.orange.shade400, width: 1.5),
+        ),
+        child: Icon(
+          Icons.help_outline_rounded,
+          size: 18,
+          color: Colors.orange.shade800,
         ),
       ),
     );

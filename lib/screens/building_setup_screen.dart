@@ -156,7 +156,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
       context: context,
       title: title,
       content: content,
-      confirmText: "KAPAT",
+      confirmText: "Kapat",
     );
   }
 
@@ -352,7 +352,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
             ? _start
             : null,
         child: const Text(
-          "ANALİZİ BAŞLAT",
+          "Analizi Başlat",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

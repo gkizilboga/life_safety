@@ -171,7 +171,7 @@ class LegislationLibraryScreen extends StatelessWidget {
                 onPressed: () => _launchURL(url),
                 icon: const Icon(Icons.open_in_new, size: 18),
                 label: const Text(
-                  "RESMİ DOKÜMANI AÇ",
+                  "Resmi Dokümanı Aç",
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(

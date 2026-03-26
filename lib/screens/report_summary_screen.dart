@@ -20,7 +20,8 @@ class ReportSummaryScreen extends StatefulWidget {
 class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   late Map<String, dynamic> _metrics;
   late Map<ReportModule, double> _moduleScores;
-  late bool _isPremium;
+  bool _isPremium = false;
+  bool _isLoading = true;
 
   final Map<int, String> _sectionSummaries = {};
   final Map<int, String> _sectionFullReports = {};
@@ -40,16 +41,34 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   @override
   void initState() {
     super.initState();
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    // Let the route transition finish smoothly before blocking the thread
+    await Future.delayed(const Duration(milliseconds: 300));
+
     // Perform heavy calculations once
     _metrics = ReportEngine.calculateRiskMetrics();
     _moduleScores = ReportEngine.calculateModuleScores();
     _isPremium = BinaStore.instance.isPremium;
 
-    // Cache section reports to prevent frame drops during animation/scrolling
+    // Cache section reports, yielding to prevent frame drops
     for (int i = 1; i <= 36; i++) {
-        _sectionSummaries[i] = ReportEngine.getSectionSummary(i);
-        _sectionFullReports[i] = ReportEngine.getSectionFullReport(i);
-        _sectionRiskColors[i] = _getUiRiskColor(_sectionFullReports[i] ?? "");
+      _sectionSummaries[i] = ReportEngine.getSectionSummary(i);
+      _sectionFullReports[i] = ReportEngine.getSectionFullReport(i);
+      _sectionRiskColors[i] = _getUiRiskColor(_sectionFullReports[i] ?? "");
+
+      // Yield to let UI render 60fps
+      if (i % 4 == 0) {
+        await Future.delayed(Duration.zero);
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -64,40 +83,59 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       backgroundColor: const Color(0xFFF5F7FA),
       body: Column(
         children: [
-          const ModernHeader(title: "ÖZET", screenType: ReportSummaryScreen),
+          const ModernHeader(title: "Özet", screenType: ReportSummaryScreen),
           Expanded(
             child: Stack(
               children: [
                 ListView(
                   padding: const EdgeInsets.all(16),
-                  children: [
-                    _buildRiskPanel(_metrics),
-                    const SizedBox(height: 20),
-                    _buildVisualAnalysis(_moduleScores),
-                    // 9: YGH DEĞERLENDİRMESİ kaldırıldı
-                    const SizedBox(height: 25),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8, bottom: 12),
-                      child: Text(
-                        "YANGIN RİSK ANALİZİ",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                    ...ReportModule.values.map(
-                      (ReportModule module) =>
-                          _buildModuleCard(context, module),
-                    ),
-                    // 10: PDF uyarı notu son modülün altına taşındı
-                    _buildPdfInfoNote(),
-                    const SizedBox(height: 32),
-                  ],
+                  children: _isLoading
+                      ? [
+                          const SizedBox(height: 150),
+                          const Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xFF1A237E),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          const Center(
+                            child: Text(
+                              "Özet Hazırlanıyor...",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF1A237E),
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                          ),
+                        ]
+                      : [
+                          _buildRiskPanel(_metrics),
+                          const SizedBox(height: 20),
+                          _buildVisualAnalysis(_moduleScores),
+                          const SizedBox(height: 25),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 8, bottom: 12),
+                            child: Text(
+                              "YANGIN RİSK ANALİZİ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ),
+                          ...ReportModule.values.map(
+                            (ReportModule module) =>
+                                _buildModuleCard(context, module),
+                          ),
+                          _buildPdfInfoNote(),
+                          const SizedBox(height: 32),
+                        ],
                 ),
-                if (!_isPremium) _buildBlurredOverlay(context),
+                if (!_isLoading && !_isPremium) _buildBlurredOverlay(context),
               ],
             ),
           ),

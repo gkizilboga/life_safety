@@ -320,7 +320,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(child: Text(title, style: AppStyles.questionTitle)),
               if (imagePath != null) ...[
@@ -347,25 +347,23 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
   }
 
   Widget _buildCameraIcon(String imagePath, String? imageTitle) {
-    return GestureDetector(
+    return ActionIconWrapper(
       onTap: () => ImageModalHelper.show(
         context,
         assetPath: imagePath,
         title: imageTitle ?? 'Görseli İncele',
       ),
-      child: Tooltip(
-        message: 'Görseli İncele',
-        child: Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: const Color(0xFF43A047).withOpacity(0.12),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(
-            Icons.photo_camera,
-            color: Color(0xFF2E7D32),
-            size: 24,
-          ),
+      tooltip: 'Görseli İncele',
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: const Color(0xFF43A047).withOpacity(0.12),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(
+          Icons.photo_camera,
+          color: Color(0xFF2E7D32),
+          size: 24,
         ),
       ),
     );

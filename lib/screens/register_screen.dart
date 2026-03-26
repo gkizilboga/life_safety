@@ -101,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _buildDropdownField("Meslek / Unvan", Icons.work_outline),
                     const SizedBox(height: 30),
                     const Text(
-                      "YASAL ONAYLAR",
+                      "Yasal Onaylar",
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
@@ -293,7 +293,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
             ),
             child: const Text(
-              "KAYDI TAMAMLA VE BAŞLA",
+              "Kaydı Tamamla ve Başla",
               style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.5),
             ),
           ),

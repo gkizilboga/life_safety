@@ -178,7 +178,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Lütfen katlara ait alan bilgilerini giriniz."),
+          content: Text("Lütfen alan bilgilerini girdikten sonra tıklayınız."),
+          backgroundColor: AppColors.warningOrange,
         ),
       );
     }
@@ -254,11 +255,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                           onCalculatorTap: () =>
                               _showCalculatorPopup(_tabanCtrl, "Zemin Kat"),
                         ),
-                        _buildNumberInput(
-                          _tabanCtrl,
-                          "Örn: 500",
-                          error: _tabanError,
-                        ),
+                        _buildNumberInput(_tabanCtrl, "0", error: _tabanError),
 
                         if (_nKat > 0) ...[
                           const SizedBox(height: 16),
@@ -271,7 +268,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                           ),
                           _buildNumberInput(
                             _normalCtrl,
-                            "Örn: 500",
+                            "0",
                             error: _normalError,
                           ),
                         ],
@@ -287,7 +284,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                           ),
                           _buildNumberInput(
                             _bodrumCtrl,
-                            "Örn: 500",
+                            "0",
                             error: _bodrumError,
                           ),
                         ],
@@ -309,7 +306,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                                 size: 20,
                               ),
                               label: const Text(
-                                "TOPLAM BRÜT ALANI HESAPLA",
+                                "Otomatik Hesapla",
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -441,7 +438,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
 
     showCustomDialog<bool>(
       context: context,
-      title: "$title Hesaplayıcı",
+      title: "Alan hesaplayıcı",
       contentWidget: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -453,7 +450,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(
-                labelText: "1 Kattaki Daire/Bölüm Sayısı",
+                labelText: "Kattaki daire adedi",
+                labelStyle: const TextStyle(fontSize: 10),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -468,10 +466,13 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
             const SizedBox(height: 10),
             TextField(
               controller: daireAlaniCtrl,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               inputFormatters: [InputValidator.flexDecimal],
               decoration: InputDecoration(
-                labelText: "1 Dairenin Ort. Brüt Alanı (m²)",
+                labelText: "Kattaki bir dairenin alanı (m²)",
+                labelStyle: const TextStyle(fontSize: 10),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
