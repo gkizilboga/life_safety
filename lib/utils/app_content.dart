@@ -392,7 +392,7 @@ class Bolum8Content {
     uiTitle: "Bitişik Nizam",
     uiSubtitle: "Binanın en az bir cephesi yan binaya yapışık veya bitişiktir.",
     reportText:
-        "BİLGİ: Bina BİTİŞİK NİZAM olarak beyan edilmiştir. Bitişik nizam yapılarda, komşu bina ile ortak kullanılan duvarların yangın dayanım özelliği ve çatı birleşim detayları kritik öneme sahiptir.",
+        "BİLGİ: Bitişik nizam yapılarda, komşu bina ile ortak kullanılan duvarların yangın dayanım özelliği ve çatı birleşim detayları kritik öneme sahiptir.",
     level: RiskLevel.info,
   );
 }
@@ -917,7 +917,7 @@ class Bolum13Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Kapının özellikleri bilinmiyor. Özellikle yanıcı madde depolanan mahallerin duvarları ve kapıları yangın dayanım özellikli olmalıdır. Depo kapısının yangın dayanımtest raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.",
+        "BİLİNMİYOR: Kapının özellikleri bilinmiyor. Özellikle yanıcı madde depolanan mahallerin duvarları ve kapıları yangın dayanım özellikli olmalıdır. Depo kapısının yangın dayanım test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilmesi önerilir.",
     level: RiskLevel.unknown,
   );
 
@@ -973,7 +973,7 @@ class Bolum13Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Bitişik nizam bina ile aradaki duvarın kalınlığı bilinmiyor. Duvarın 90 dk dayanım gösterecek özellikte olması şarttır. Uzman Görüşü alınması tavsiye edilir.",
+        "BİLİNMİYOR: Bitişik nizam bina ile aradaki duvarın kalınlığı bilinmiyor. Duvarın 90 dk dayanım gösterecek özellikte olması şarttır. Uzman görüşü alınması tavsiye edilir.",
     level: RiskLevel.unknown,
   );
 
@@ -1141,14 +1141,10 @@ class Bolum13Content {
 
 class Bolum14Content {
   static const String title = "Tesisat Şaftları";
-  static const String msgHigh =
-      "Bina yüksekliğiniz 30.50 metreden fazla olduğundan tüm tesisat şaft duvarları en az 120 dk, şaft kapakları ise en az 90 dk yangına dayanıklı ve duman sızdırmaz özellikte olmalıdır.";
-  static const String msgMid =
-      "Bina yüksekliğiniz 21.50m - 30.50m aralığında olduğundan tesisat şaftı ve yangın duvarlarınızın en az 90 dk, şaft kapaklarınızın ise en az 60 dk dayanıklı, duman sızdırmaz özellikte olmaları gerekmektedir.";
-  static const String msgDeepBasement =
-      "Binanız Yüksek Bina olmasa da, bodrum kat derinliğiniz 10 metreyi aştığı için bodrum katlarınız risk taşımaktadır. Bodrumdaki şaft duvarları en az 90 dk ve şaft kapakların dayanımları en az 60dk, zemin üst normal katlarda ise duvarları en az 60dk, kapakları en az 30dk olmalıdır.";
-  static const String msgStandard =
-      "Binanızın yüksekliği ve bodrum derinliği 'yüksek olmayan bina' sınırları içindedir. Tesisat şaft duvarları en az 60 dk, şaft kapakları ise en az 30 dk dayanıklı olması yeterlidir.";
+  static const String msgHigh = "";
+  static const String msgMid = "";
+  static const String msgDeepBasement = "";
+  static const String msgStandard = "";
 }
 
 class Bolum15Content {
@@ -1362,17 +1358,20 @@ class Bolum15Content {
 class Bolum16Content {
   static final mantolamaOptionA = ChoiceResult(
     label: "16-1-A (Mantolama)",
-    uiTitle: "Klasik Mantolama (EPS, XPS, Strafor vb.)",
-    uiSubtitle: "",
+    uiTitle: "Klasik Mantolama",
+    uiSubtitle: "EPS, XPS, Strafor vb. yanıcı malzeme ile.",
     reportText:
-        "UYARI: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliği (bodrum katlar hariç) 28.50m 'nin üzerindeki binalarda bu uygulama yasaktır. Daha alçak binalarda ise pencerelerin etrafında ve zemin seviyesinde taşyünü yangın bariyerleri bulunması zorunludur.",
+        "UYARI: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliği (bodrum katlar hariç) 28.50m 'nin üzerindeki binalarda bu uygulama yasaktır.",
     level: RiskLevel.warning,
   );
 
+  static const String mantolamaOptionALowReport =
+      "UYARI: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bu binalarda pencerelerin etrafında ve zemin seviyesinde taşyünü vb. yanmaz malzeme ile cephede yalıtım yapılması zorunludur.";
+
   static final mantolamaOptionB = ChoiceResult(
     label: "16-1-B (Mantolama)",
-    uiTitle: "A1, A2 sınıf taşyünü mantolama",
-    uiSubtitle: "",
+    uiTitle: "A1, A2 sınıfı mantolama",
+    uiSubtitle: "Taşyünü vb. yanmaz malzeme ile.",
     reportText:
         "OLUMLU: Dış cephe yalıtımında yanmaz (A1 veya A2 sınıfı) taşyünü malzeme kullanılmıştır. Bu tercih, cephe yangınlarının yayılmasını engelleyebilir. Cephe sisteminin veya malzemelerinin yangına tepki test raporları incelendikten sonra yönetmeliğe göre uygunluk kontrolü yapılmış olur.",
     level: RiskLevel.positive,
@@ -1380,8 +1379,8 @@ class Bolum16Content {
 
   static final giydirmeOptionC = ChoiceResult(
     label: "16-1-C (Giydirme)",
-    uiTitle: "Giydirme cephe (cam, kompozit vb.)",
-    uiSubtitle: "",
+    uiTitle: "Giydirme cephe",
+    uiSubtitle: "Cam, kompozit vb. ile.",
     reportText:
         "UYARI: Binada giydirme cephe sistemi mevcuttur. Cephe ile döşeme arasındaki boşlukların yalıtım durumu yangın sıçrama riski açısından kritiktir. Cephe sisteminin yangına tepki test raporları incelenmelidir.",
     level: RiskLevel.warning,
@@ -1389,8 +1388,8 @@ class Bolum16Content {
 
   static final mantolamaOptionD = ChoiceResult(
     label: "16-1-D (Sıva/Boya)",
-    uiTitle: "Cephede sadece sıva, boya var (ısı yalıtımı yok)",
-    uiSubtitle: "",
+    uiTitle: "Cephede sadece sıva, boya var.",
+    uiSubtitle: "Isı yalıtımı yok.",
     reportText:
         "OLUMLU: Dış cephede yanıcı bir yalıtım malzemesi bulunmamaktadır. Yangın yükü oluşturmaz.",
     level: RiskLevel.positive,
@@ -1407,22 +1406,22 @@ class Bolum16Content {
 
   static final sagirYuzeyOptionA = ChoiceResult(
     label: "16-2-A (Sağır Yüzey)",
-    uiTitle: "EVET, var.",
+    uiTitle: "Evet, var.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Katlar arasındaki yangın dayanıklı yüzey (veya sistem) yüksekliği 100 cm şartını sağlamaktadır. Bu mesafe, alevin bir kattan diğerine sıçramasını zorlaştırır. Yönetmelik şartlarını sağlayıp sağlamadığına yanmaz yüzeyin yerinde kontrol edilmesi ile karar verilir.",
+        "OLUMLU: Katlar arasındaki yangın dayanıklı yüzey (veya sistem) yüksekliği 100 cm şartını sağlamaktadır. Bu mesafe, alevin bir kattan diğerine sıçramasını zorlaştırır. Yönetmelik şartlarını sağlayıp sağlamadığına yanmaz yüzeyin yerinde kontrol edilmesi ile karar verilmesi önerilir.",
     level: RiskLevel.positive,
   );
 
   static final sagirYuzeyOptionB = ChoiceResult(
     label: "16-2-B (Sağır Yüzey)",
-    uiTitle: "HAYIR, yok.",
+    uiTitle: "Hayır, yok.",
     uiSubtitle:
         "Pencereler dikeyde birbirine çok yakın, aradaki duvar mesafesi 100 cm 'den az.",
     reportText:
         "KRİTİK RİSK: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den azdır. Yangın bir kattan diğerine kolayca sıçrayabilir.",
     adviceText:
-        "Dumanın ve alevlerin üst katlara sıçramasını önlemek için cephe ile döşeme arasındaki boşluklar yangın durdurucu harç ile kapatılmalı ve kat aralarında en az 100 cm yüksekliğinde yanmaz bant (fire barrier) oluşturulmalıdır.",
+        "Dumanın ve alevlerin üst katlara sıçramasını önlemek için cephe ile döşeme arasındaki boşluklar yangın durdurucu harç ile kapatılmalı ve kat aralarında en az 100 cm yüksekliğinde yanmaz yüzey oluşturulmalıdır.",
     level: RiskLevel.critical,
   );
 
@@ -4605,7 +4604,7 @@ class AppDefinitions {
       case 6:
         return "Konut Harici Alanlar";
       case 7:
-        return "Özel Riskli Alanlar";
+        return "Özel Riskli Alanların Varlığı";
       case 8:
         return "Nizam Durumu";
       case 9:
@@ -4617,7 +4616,7 @@ class AppDefinitions {
       case 12:
         return "Yapısal Yangın Dayanımı";
       case 13:
-        return "Teknik Hacimler";
+        return "Özel Riskli Alanlar";
       case 14:
         return "Tesisat Şaftları";
       case 15:

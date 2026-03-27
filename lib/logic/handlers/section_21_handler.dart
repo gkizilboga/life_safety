@@ -13,15 +13,19 @@ class Section21Handler {
     required String label,
     required String value,
     required String report,
+    String? subtitle,
     String? advice,
     RiskLevel? level,
   }) {
     details.add({
       'label': label,
       'value': value,
+      'subtitle': subtitle ?? '',
       'report': report,
       'advice': advice ?? '',
-      'status': level != null ? ReportStatus.fromRiskLevel(level) : ReportStatus.info,
+      'status': level != null
+          ? ReportStatus.fromRiskLevel(level)
+          : ReportStatus.info,
     });
   }
 
@@ -29,20 +33,45 @@ class Section21Handler {
     List<Map<String, dynamic>> details = [];
     final b21 = _store.bolum21;
     if (b21 != null) {
+      final yghReasons = ReportEngine.evaluateYghRequirement(store: _store);
+      final bool isMandatory = yghReasons.isNotEmpty;
+      final bool hasYgh = b21.varlik?.label.contains("21-1-A") == true;
+
+      String evaluationMessage = "";
+      RiskLevel finalLevel = b21.varlik?.level ?? RiskLevel.info;
+
+      if (isMandatory) {
+        if (hasYgh) {
+          evaluationMessage =
+              "OLUMLU: Binadaki aşağıdaki teknik veriler nedeniyle YGH zorunluluğu bulunmakta olup, kullanıcı tarafından binada MEVCUT olduğu beyan edilmiştir:\n- ${yghReasons.join('\n- ')}";
+          finalLevel = RiskLevel.positive;
+        } else {
+          evaluationMessage =
+              "KRİTİK RİSK: Bina teknik verilerine göre Yangın Güvenlik Holü (YGH) ZORUNLU olmasına rağmen binada MEVCUT OLMADIĞI beyan edilmiştir. Bu durum tahliye güvenliği adına yüksek risk oluşturmaktadır.\n\nBinadaki YGH zorunluluğu gerekçeleri:\n- ${yghReasons.join('\n- ')}";
+          finalLevel = RiskLevel.critical;
+        }
+      } else {
+        evaluationMessage =
+            "Mevcut bina verilerine göre (yükseklik, kullanım amacı vb.) bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.";
+        finalLevel = hasYgh ? RiskLevel.positive : RiskLevel.info;
+      }
+
       _addDetail(
         details,
         label: 'Merdiven önünde Yangın Güvenlik Holü var mı?',
         value: b21.varlik?.uiTitle ?? '-',
-        report: '',
+        subtitle: b21.varlik?.uiSubtitle,
+        report: evaluationMessage,
         advice: b21.varlik?.adviceText,
-        level: b21.varlik?.level,
+        level: finalLevel,
       );
 
-      if (b21.varlik?.label.contains("21-1-A") == true) {
+      if (hasYgh) {
         _addDetail(
           details,
           label: 'YGH (Hol) içindeki kaplama malzemeleri yanmaz özellikte mi?',
           value: b21.malzeme?.uiTitle ?? '-',
+          subtitle: b21.malzeme?.uiSubtitle,
           report: '',
           advice: b21.malzeme?.adviceText,
           level: b21.malzeme?.level,
@@ -51,6 +80,7 @@ class Section21Handler {
           details,
           label: 'YGH (Hol) kapıları duman sızdırmaz ve yangına dayanıklı mı?',
           value: b21.kapi?.uiTitle ?? '-',
+          subtitle: b21.kapi?.uiSubtitle,
           report: '',
           advice: b21.kapi?.adviceText,
           level: b21.kapi?.level,
@@ -59,30 +89,10 @@ class Section21Handler {
           details,
           label: 'YGH (Hol) içinde eşya (bisiklet, dolap vb.) var mı?',
           value: b21.esya?.uiTitle ?? '-',
+          subtitle: b21.esya?.uiSubtitle,
           report: '',
           advice: b21.esya?.adviceText,
           level: b21.esya?.level,
-        );
-      }
-
-      final yghReasons = ReportEngine.evaluateYghRequirement(store: _store);
-      if (yghReasons.isNotEmpty) {
-        _addDetail(
-          details,
-          label: 'YGH Teknik Değerlendirmesi',
-          value: 'ZORUNLU',
-          report:
-              'Binadaki teknik verilere göre Yangın Güvenlik Holü (YGH) zorunluluğu bulunmaktadır:\n${yghReasons.join('\n')}',
-          level: RiskLevel.critical,
-        );
-      } else {
-        _addDetail(
-          details,
-          label: 'YGH Teknik Değerlendirmesi',
-          value: 'UYGUN/GEREKLİ DEĞİL',
-          report:
-              'Mevcut verilere göre binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.',
-          level: RiskLevel.info,
         );
       }
     }
@@ -121,9 +131,7 @@ class Section21Handler {
           "KRİTİK RİSK: Binada YGH zorunlu olmasına rağmen, binada mevcut olmadığı beyan edilmiştir.",
         );
       } else {
-        parts.add(
-          "DURUM: Binada Yangın Güvenlik Holü (YGH) bulunmamaktadır.",
-        );
+        parts.add("DURUM: Binada Yangın Güvenlik Holü (YGH) bulunmamaktadır.");
       }
     }
 
@@ -133,7 +141,9 @@ class Section21Handler {
   String getSummaryReport(String baseLabel) {
     final yghReasons = ReportEngine.evaluateYghRequirement(store: _store);
     final bool isMandatory = yghReasons.isNotEmpty;
-    final String mandatoryText = isMandatory ? " (Zorunlu)" : " (Zorunlu Değil)";
+    final String mandatoryText = isMandatory
+        ? " (Zorunlu)"
+        : " (Zorunlu Değil)";
     return "$baseLabel$mandatoryText";
   }
 }

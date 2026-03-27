@@ -11,16 +11,37 @@ import '../logic/active_systems_engine.dart';
 
 // Helper function for Turkish locale-aware uppercase conversion
 // Dart's standard toUpperCase() doesn't handle Turkish characters correctly (İ→I, ı→i)
-String _toUpperCaseTR(String text) {
-  return text
-      .replaceAll('i', 'İ')
-      .replaceAll('ı', 'I')
-      .replaceAll('ö', 'Ö')
-      .replaceAll('ü', 'Ü')
-      .replaceAll('ç', 'Ç')
-      .replaceAll('ş', 'Ş')
-      .replaceAll('ğ', 'Ğ')
-      .toUpperCase();
+String _toTitleCaseTR(String text) {
+  if (text.isEmpty) return text;
+  return text.split(' ').map((word) {
+    if (word.isEmpty) return word;
+    String first = word.substring(0, 1);
+    String rest = word.substring(1);
+
+    // Convert first letter to TR uppercase
+    first = first
+        .replaceAll('i', 'İ')
+        .replaceAll('ı', 'I')
+        .replaceAll('ö', 'Ö')
+        .replaceAll('ü', 'Ü')
+        .replaceAll('ç', 'Ç')
+        .replaceAll('ş', 'Ş')
+        .replaceAll('ğ', 'Ğ')
+        .toUpperCase();
+
+    // Convert rest to TR lowercase
+    rest = rest
+        .replaceAll('İ', 'i')
+        .replaceAll('I', 'ı')
+        .replaceAll('Ö', 'ö')
+        .replaceAll('Ü', 'ü')
+        .replaceAll('Ç', 'ç')
+        .replaceAll('Ş', 'ş')
+        .replaceAll('Ğ', 'ğ')
+        .toLowerCase();
+
+    return first + rest;
+  }).join(' ');
 }
 
 class PdfService {
@@ -28,7 +49,7 @@ class PdfService {
   // Defined once here and used by both _buildHighlightedText and _buildRichText.
   static const _highlightKeywords = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
 
-  // Badge system removed - plain text only
+
 
   static pw.Widget _buildLegendItem(PdfColor color, String label, String desc) {
     return pw.Row(
@@ -91,15 +112,13 @@ class PdfService {
     return cleaned;
   }
 
-  // All text now rendered in black (no color coding)
   static PdfColor _getRiskColor(String text) {
     if (text.contains('KRİTİK RİSK')) return PdfColors.red700;
     if (text.contains('UYARI')) return PdfColors.amber700;
-    if (text.contains('OLUMLU') || text.contains('Olumlu'))
+    if (text.contains('OLUMLU') || text.contains('Olumlu')) {
       return PdfColors.green700;
+    }
     if (text.contains('BİLGİ')) return PdfColors.blue700;
-    if (text.contains('BİLİNMİYOR') || text.contains('Bilinmiyor'))
-      return PdfColors.grey500;
     return PdfColors.grey500;
   }
 
@@ -362,7 +381,10 @@ class PdfService {
                   children: [
                     pw.Text(
                       rightColumnText,
-                      style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
+                      style: const pw.TextStyle(
+                        fontSize: 6.5,
+                        lineSpacing: 2.2,
+                      ),
                       textAlign: pw.TextAlign.justify,
                     ),
                     pw.SizedBox(height: 15),
@@ -377,7 +399,10 @@ class PdfService {
                     pw.SizedBox(height: 5),
                     pw.Text(
                       AppStrings.kvkkContent,
-                      style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
+                      style: const pw.TextStyle(
+                        fontSize: 6.5,
+                        lineSpacing: 2.2,
+                      ),
                       textAlign: pw.TextAlign.justify,
                     ),
                   ],
@@ -678,7 +703,8 @@ class PdfService {
             );
             final riskColor = _getRiskColor(fullReportForColor);
             final effectiveSectionRiskColor = id <= 10
-                ? PdfColors.blue700 // Info sections are blue
+                ? PdfColors
+                      .blue700 // Info sections are blue
                 : riskColor;
 
             // Each section emits its header + items as individual top-level
@@ -686,7 +712,7 @@ class PdfService {
             // Wrapping everything in a single Container caused TooManyPagesException
             // when a section's notes didn't fit on one page.
             // 1. Determine which sections use table format
-            final bool useTable = [3, 5, 7, 10, 12, 21, 36].contains(id);
+            final bool useTable = [3, 5, 6, 7, 10, 12, 21, 36].contains(id);
             final List<pw.Widget> itemsWidgets = [];
 
             if (!useTable) {
@@ -698,8 +724,11 @@ class PdfService {
                     ttfBold,
                     riskColor: id <= 10
                         ? PdfColors.blue700
-                        : _getRiskColor(item['report'] ?? ''), // Use raw text for color detection
+                        : _getRiskColor(
+                            item['report'] ?? '',
+                          ), // Use raw text for color detection
                     isLast: item == details.last,
+                    sectionId: id,
                   ),
                 );
               }
@@ -720,8 +749,8 @@ class PdfService {
                         tableGroup,
                         ttf,
                         ttfBold,
-                        id <= 10 
-                            ? const PdfColor.fromInt(0x00000000) 
+                        id <= 10
+                            ? const PdfColor.fromInt(0x00000000)
                             : effectiveSectionRiskColor,
                       ),
                     );
@@ -735,8 +764,11 @@ class PdfService {
                       ttfBold,
                       riskColor: id <= 10
                           ? PdfColors.blue700
-                          : _getRiskColor(item['report'] ?? ''), // Use raw text for color detection
+                          : _getRiskColor(
+                              item['report'] ?? '',
+                            ), // Use raw text for color detection
                       isLast: isLast,
+                      sectionId: id,
                     ),
                   );
                 }
@@ -747,8 +779,8 @@ class PdfService {
                     tableGroup,
                     ttf,
                     ttfBold,
-                    id <= 10 
-                        ? const PdfColor.fromInt(0x00000000) 
+                    id <= 10
+                        ? const PdfColor.fromInt(0x00000000)
                         : effectiveSectionRiskColor,
                   ),
                 );
@@ -773,12 +805,12 @@ class PdfService {
                 children: [
                   pw.Expanded(
                     child: pw.Text(
-                      "BÖLÜM $id: ${_toUpperCaseTR(AppDefinitions.getSectionTitle(id))}",
+                      "Bölüm $id: ${_toTitleCaseTR(AppDefinitions.getSectionTitle(id))}",
                       style: pw.TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         fontWeight: pw.FontWeight.bold,
                         color: PdfColors.white,
-                        letterSpacing: 0.5,
+                        letterSpacing: 0.4,
                       ),
                     ),
                   ),
@@ -1056,8 +1088,9 @@ class PdfService {
           final item = entry.value;
           final String value = (item['value'] ?? '').toString();
           // "Mevcut" içeren satırları veya isBold flag'i true olanları bold yap
-          final bool shouldBold = item['isBold'] == true || value.contains('Mevcut');
-          
+          final bool shouldBold =
+              item['isBold'] == true || value.contains('Mevcut');
+
           return pw.TableRow(
             decoration: i % 2 == 1
                 ? const pw.BoxDecoration(color: PdfColors.grey50)
@@ -1075,12 +1108,28 @@ class PdfService {
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child: pw.Text(
-                  value,
-                  style: pw.TextStyle(
-                    font: shouldBold ? fontBold : font,
-                    fontSize: 8,
-                  ),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      value,
+                      style: pw.TextStyle(
+                        font: shouldBold ? fontBold : font,
+                        fontSize: 8,
+                      ),
+                    ),
+                    if (item['subtitle'] != null &&
+                        item['subtitle'].toString().isNotEmpty)
+                      pw.Text(
+                        item['subtitle'].toString(),
+                        style: pw.TextStyle(
+                          font: font,
+                          fontSize: 7,
+                          fontStyle: pw.FontStyle.italic,
+                          color: PdfColors.grey700,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],
@@ -1092,7 +1141,9 @@ class PdfService {
     final tableWithAlign = pw.Align(
       alignment: pw.Alignment.centerLeft,
       child: pw.ConstrainedBox(
-        constraints: const pw.BoxConstraints(maxWidth: 450), // Don't force full width
+        constraints: const pw.BoxConstraints(
+          maxWidth: 450,
+        ), // Don't force full width
         child: table,
       ),
     );
@@ -1116,6 +1167,7 @@ class PdfService {
     pw.Font fontBold, {
     required PdfColor riskColor,
     bool isLast = false,
+    int? sectionId,
   }) {
     final label = item['label'] ?? '';
     final value = item['value'] ?? '';
@@ -1146,7 +1198,10 @@ class PdfService {
           ),
           pw.SizedBox(height: 2.5),
         ],
-        if (value.isNotEmpty && value != 'Seçilmedi') ...[
+        if (value.isNotEmpty &&
+            value != 'Seçilmedi' &&
+            sectionId != 4 &&
+            sectionId != 14) ...[
           pw.Text(
             "Kullanıcı Yanıtı:",
             style: pw.TextStyle(
@@ -1165,6 +1220,19 @@ class PdfService {
               lineSpacing: 2.2,
             ),
           ),
+          if (item['subtitle'] != null && item['subtitle'].isNotEmpty) ...[
+            pw.SizedBox(height: 1),
+            pw.Text(
+              item['subtitle'],
+              style: pw.TextStyle(
+                fontSize: 8,
+                font: font,
+                fontStyle: pw.FontStyle.italic,
+                color: PdfColors.grey700,
+                lineSpacing: 1.5,
+              ),
+            ),
+          ],
           pw.SizedBox(height: 2.5),
         ],
         if (report.isNotEmpty) ...[

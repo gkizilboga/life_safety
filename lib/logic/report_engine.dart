@@ -98,6 +98,7 @@ class ReportEngine {
     required String label,
     required String value,
     required String report,
+    String? subtitle,
     String? advice,
     RiskLevel? level,
     ReportStatus? status,
@@ -106,6 +107,7 @@ class ReportEngine {
     details.add({
       'label': label,
       'value': value,
+      'subtitle': subtitle ?? '',
       'report': report,
       'advice': advice ?? '',
       'status':
@@ -181,49 +183,57 @@ class ReportEngine {
       final b6 = s.bolum6;
       if (b6 != null) {
         // Ana kullanım tipleri
-        details.add({
-          'label':
-              'Binanızda konut haricinde aşağıdakilerden hangileri mevcut?',
-          'value': '',
-          'report': '',
-        });
+        _addDetail(
+          details,
+          label: 'Binanızda konut haricinde aşağıdakilerden hangileri mevcut?',
+          value: '',
+          report: '',
+        );
         if (b6.hasOtopark)
-          details.add({'label': 'Otopark', 'value': 'Mevcut', 'report': ''});
+          _addDetail(details, label: 'Otopark', value: 'Mevcut', report: '');
         if (b6.hasTicari)
-          details.add({
-            'label': 'Ticari Alan',
-            'value': 'Mevcut',
-            'report': '',
-          });
+          _addDetail(
+            details,
+            label: 'Ticari Alan',
+            value: 'Mevcut',
+            report: '',
+          );
         if (b6.hasDepo)
-          details.add({'label': 'Depo', 'value': 'Mevcut', 'report': ''});
+          _addDetail(details, label: 'Depo', value: 'Mevcut', report: '');
         if (b6.isSadeceKonut)
-          details.add({'label': 'Sadece Konut', 'value': 'Evet', 'report': ''});
+          _addDetail(details, label: 'Sadece Konut', value: 'Evet', report: '');
 
         if (b6.hasTicari && b6.buyukRestoran != null) {
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Ticari alan içerisinde büyük restoran (endüstriyel mutfak) var mı?',
-            'value': b6.buyukRestoran!.uiTitle,
-            'report': b6.buyukRestoran!.reportText,
-            'advice': b6.buyukRestoran!.adviceText,
-          });
+            value: b6.buyukRestoran!.uiTitle,
+            subtitle: b6.buyukRestoran!.uiSubtitle,
+            report: b6.buyukRestoran!.reportText,
+            advice: b6.buyukRestoran!.adviceText,
+            level: b6.buyukRestoran!.level,
+          );
         }
         // Otopark tipi (eğer seçildiyse)
         if (b6.otoparkTipi != null)
-          details.add({
-            'label': 'Otopark tipi nedir?',
-            'value': b6.otoparkTipi!.uiTitle,
-            'report': b6.otoparkTipi!.reportText,
-            'advice': b6.otoparkTipi!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Otopark tipi nedir?',
+            value: b6.otoparkTipi!.uiTitle,
+            subtitle: b6.otoparkTipi!.uiSubtitle,
+            report: b6.otoparkTipi!.reportText,
+            advice: b6.otoparkTipi!.adviceText,
+            level: b6.otoparkTipi!.level,
+          );
         // Kapalı otopark alanı (eğer girilmişse)
         if (b6.kapaliOtoparkAlani != null)
-          details.add({
-            'label': 'Kapalı Otopark Alanı',
-            'value': '${b6.kapaliOtoparkAlani} m²',
-            'report': '',
-          });
+          _addDetail(
+            details,
+            label: 'Kapalı Otopark Alanı',
+            value: '${b6.kapaliOtoparkAlani} m²',
+            report: '',
+          );
         handled = true;
       }
     }
@@ -234,33 +244,39 @@ class ReportEngine {
       if (b10 != null) {
         // Zemin kat
         if (b10.zemin != null) {
-          details.add({
-            'label': 'Zemin Katın Kullanım Amacı',
-            'value': "${b10.zemin!.uiTitle} ${b10.zemin!.reportText}",
-            'report': '',
-            'advice': '',
-          });
+          _addDetail(
+            details,
+            label: 'Zemin Katın Kullanım Amacı',
+            value: "${b10.zemin!.uiTitle} ${b10.zemin!.reportText}",
+            subtitle: b10.zemin!.uiSubtitle,
+            report: '',
+            advice: '',
+          );
         }
         // Bodrum katlar
         if (b10.bodrumlar.isNotEmpty) {
           if (b10.bodrumlarAyni && b10.bodrumlar[0] != null) {
-            details.add({
-              'label': 'Bodrum Kat Kullanım Amacı (Tümü Aynı)',
-              'value':
+            _addDetail(
+              details,
+              label: 'Bodrum Kat Kullanım Amacı (Tümü Aynı)',
+              value:
                   "${b10.bodrumlar[0]!.uiTitle} ${b10.bodrumlar[0]!.reportText}",
-              'report': '',
-              'advice': '',
-            });
+              subtitle: b10.bodrumlar[0]!.uiSubtitle,
+              report: '',
+              advice: '',
+            );
           } else {
             for (int i = 0; i < b10.bodrumlar.length; i++) {
               if (b10.bodrumlar[i] != null) {
-                details.add({
-                  'label': '${i + 1}. Bodrum Kat Kullanım Amacı',
-                  'value':
+                _addDetail(
+                  details,
+                  label: '${i + 1}. Bodrum Kat Kullanım Amacı',
+                  value:
                       "${b10.bodrumlar[i]!.uiTitle} ${b10.bodrumlar[i]!.reportText}",
-                  'report': '',
-                  'advice': '',
-                });
+                  subtitle: b10.bodrumlar[i]!.uiSubtitle,
+                  report: '',
+                  advice: '',
+                );
               }
             }
           }
@@ -268,23 +284,27 @@ class ReportEngine {
         // Normal katlar
         if (b10.normaller.isNotEmpty) {
           if (b10.normallerAyni && b10.normaller[0] != null) {
-            details.add({
-              'label': 'Normal Kat Kullanım Amacı (Tümü Aynı)',
-              'value':
+            _addDetail(
+              details,
+              label: 'Normal Kat Kullanım Amacı (Tümü Aynı)',
+              value:
                   "${b10.normaller[0]!.uiTitle} ${b10.normaller[0]!.reportText}",
-              'report': '',
-              'advice': '',
-            });
+              subtitle: b10.normaller[0]!.uiSubtitle,
+              report: '',
+              advice: '',
+            );
           } else {
             for (int i = 0; i < b10.normaller.length; i++) {
               if (b10.normaller[i] != null) {
-                details.add({
-                  'label': '${i + 1}. Normal Kat Kullanım Amacı',
-                  'value':
+                _addDetail(
+                  details,
+                  label: '${i + 1}. Normal Kat Kullanım Amacı',
+                  value:
                       "${b10.normaller[i]!.uiTitle} ${b10.normaller[i]!.reportText}",
-                  'report': '',
-                  'advice': '',
-                });
+                  subtitle: b10.normaller[i]!.uiSubtitle,
+                  report: '',
+                  advice: '',
+                );
               }
             }
           }
@@ -293,7 +313,7 @@ class ReportEngine {
       }
     }
 
-    // Bölüm 7: Teknik Hacimler
+    // Bölüm 7: Özel Riskli Alanların Varlığı
     if (id == 7) {
       final b7 = s.bolum7;
       if (b7 != null) {
@@ -330,22 +350,26 @@ class ReportEngine {
       final b9 = s.bolum9;
       if (b9 != null) {
         if (b9.secim != null) {
-          details.add({
-            'label': 'Binada sprinkler sistemi var mı?',
-            'value': b9.secim!.uiTitle,
-            'report': b9.secim!.reportText,
-            'advice': b9.secim!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Binada sprinkler sistemi var mı?',
+            value: b9.secim!.uiTitle,
+            subtitle: b9.secim!.uiSubtitle,
+            report: b9.secim!.reportText,
+            advice: b9.secim!.adviceText,
+          );
         }
         if (s.bolum6?.buyukRestoran?.label == "6-3-A (Büyük Restoran)" &&
             b9.davlumbaz != null) {
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Büyük restoran davlumbazında otomatik söndürme sistemi var mı?',
-            'value': b9.davlumbaz!.uiTitle,
-            'report': b9.davlumbaz!.reportText,
-            'advice': b9.davlumbaz!.adviceText,
-          });
+            value: b9.davlumbaz!.uiTitle,
+            subtitle: b9.davlumbaz!.uiSubtitle,
+            report: b9.davlumbaz!.reportText,
+            advice: b9.davlumbaz!.adviceText,
+          );
         }
         handled = true;
       }
@@ -371,58 +395,70 @@ class ReportEngine {
       if (b12 != null) {
         // Betonarme soruları
         if (b12.betonPaspayi != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?',
-            'value': b12.betonPaspayi!.uiTitle,
-            'report': b12.betonPaspayi!.reportText,
-            'advice': b12.betonPaspayi!.adviceText,
-          });
+            value: b12.betonPaspayi!.uiTitle,
+            subtitle: b12.betonPaspayi!.uiSubtitle,
+            report: b12.betonPaspayi!.reportText,
+            advice: b12.betonPaspayi!.adviceText,
+            level: b12.betonPaspayi!.level,
+          );
         // Paspayı değerleri (ölçü girilmişse)
         if (b12.kolonPaspayi != null)
-          details.add({
-            'label': 'Kolon Paspayı',
-            'value': '${b12.kolonPaspayi} mm',
-            'report': '',
-          });
+          _addDetail(
+            details,
+            label: 'Kolon Paspayı',
+            value: '${b12.kolonPaspayi} mm',
+            report: '',
+          );
         if (b12.kirisPaspayi != null)
-          details.add({
-            'label': 'Kiriş Paspayı',
-            'value': '${b12.kirisPaspayi} mm',
-            'report': '',
-          });
+          _addDetail(
+            details,
+            label: 'Kiriş Paspayı',
+            value: '${b12.kirisPaspayi} mm',
+            report: '',
+          );
         if (b12.dosemePaspayi != null)
-          details.add({
-            'label': 'Döşeme Paspayı',
-            'value': '${b12.dosemePaspayi} mm',
-            'report': '',
-          });
+          _addDetail(
+            details,
+            label: 'Döşeme Paspayı',
+            value: '${b12.dosemePaspayi} mm',
+            report: '',
+          );
         // Çelik sorusu
         if (b12.celikKoruma != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Çelik taşıyıcılarınızda yangına karşı bir koruma veya yalıtım var mı?',
-            'value': b12.celikKoruma!.uiTitle,
-            'report': b12.celikKoruma!.reportText,
-            'advice': b12.celikKoruma!.adviceText,
-          });
+            value: b12.celikKoruma!.uiTitle,
+            subtitle: b12.celikKoruma!.uiSubtitle,
+            report: b12.celikKoruma!.reportText,
+            advice: b12.celikKoruma!.adviceText,
+          );
         // Ahşap sorusu
         if (b12.ahsapKesit != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Ahşap taşıyıcılarınızın kesiti yapı kullanımına göre yeterli mi?',
-            'value': b12.ahsapKesit!.uiTitle,
-            'report': b12.ahsapKesit!.reportText,
-            'advice': b12.ahsapKesit!.adviceText,
-          });
+            value: b12.ahsapKesit!.uiTitle,
+            subtitle: b12.ahsapKesit!.uiSubtitle,
+            report: b12.ahsapKesit!.reportText,
+            advice: b12.ahsapKesit!.adviceText,
+          );
         // Yığma sorusu
         if (b12.yigmaDuvar != null)
-          details.add({
-            'label': 'Yığma duvarlarınızın kalınlığı ne durumda?',
-            'value': b12.yigmaDuvar!.uiTitle,
-            'report': b12.yigmaDuvar!.reportText,
-            'advice': b12.yigmaDuvar!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Yığma duvarlarınızın kalınlığı ne durumda?',
+            value: b12.yigmaDuvar!.uiTitle,
+            subtitle: b12.yigmaDuvar!.uiSubtitle,
+            report: b12.yigmaDuvar!.reportText,
+            advice: b12.yigmaDuvar!.adviceText,
+          );
         handled = true;
       }
     }
@@ -442,6 +478,7 @@ class ReportEngine {
             details,
             label: 'Zemin kaplama malzemesi nedir?',
             value: b15.kaplama!.uiTitle,
+            subtitle: b15.kaplama!.uiSubtitle,
             report: b15.kaplama!.reportText,
             advice: b15.kaplama!.adviceText,
             level: b15.kaplama!.level,
@@ -451,6 +488,7 @@ class ReportEngine {
             details,
             label: 'Döşeme üzerinde ısı yalıtım malzemesi var mı?',
             value: b15.yalitim!.uiTitle,
+            subtitle: b15.yalitim!.uiSubtitle,
             report: b15.yalitim!.reportText,
             advice: b15.yalitim!.adviceText,
             level: b15.yalitim!.level,
@@ -460,6 +498,7 @@ class ReportEngine {
             details,
             label: 'Yalıtım üzerinde en az 2 cm şap var mı?',
             value: b15.yalitimSap!.uiTitle,
+            subtitle: b15.yalitimSap!.uiSubtitle,
             report: b15.yalitimSap!.reportText,
             advice: b15.yalitimSap!.adviceText,
             level: b15.yalitimSap!.level,
@@ -501,13 +540,32 @@ class ReportEngine {
       if (b16 != null) {
         // Ana Soru
         if (b16.mantolama != null) {
+          String report = b16.mantolama!.reportText;
+          RiskLevel level = b16.mantolama!.level;
+
+          if (b16.mantolama!.label.contains("16-1-A")) {
+            final hBina = _getHBina(store);
+            if (hBina < 28.50) {
+              report = Bolum16Content.mantolamaOptionALowReport;
+
+              // Eğer h < 28.5 ve tüm bariyer/yalıtım soruları EVET (1) ise OLUMLU yap
+              if (b16.bariyerYan == 1 &&
+                  b16.bariyerUst == 1 &&
+                  b16.bariyerZemin == 1) {
+                level = RiskLevel.positive;
+                report = report.replaceFirst("UYARI:", "OLUMLU:");
+              }
+            }
+          }
+
           _addDetail(
             details,
             label: 'Dış cephe kaplama veya ısı yalıtım sistemi nedir?',
             value: b16.mantolama!.uiTitle,
-            report: b16.mantolama!.reportText,
+            subtitle: b16.mantolama!.uiSubtitle,
+            report: report,
             advice: b16.mantolama!.adviceText,
-            level: b16.mantolama!.level,
+            level: level,
           );
         }
 
@@ -517,42 +575,41 @@ class ReportEngine {
             if (b16.bariyerYan != null) {
               details.add({
                 'label':
-                    'Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?',
+                    'Pencerelerin yanlarında en az 15 cm eninde yalıtım var mı?',
                 'value': _getYesNoUnknown(b16.bariyerYan),
                 'report': _getBariyerReport(
                   b16.bariyerYan!,
-                  "Pencerelerin yanlarında yangın bariyeri",
+                  "Pencerelerin yanlarında yalıtım",
                 ),
                 'advice': b16.bariyerYan != 1
-                    ? "Yönetmelik gereği pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer yapılmalıdır."
+                    ? "Yönetmelik gereği pencerelerin yanlarında en az 15 cm eninde yalıtım yapılmalıdır."
                     : "",
               });
             }
             if (b16.bariyerUst != null) {
               details.add({
-                'label':
-                    'Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?',
+                'label': 'Pencerelerin üstünde 30 cm eninde yalıtım var mı?',
                 'value': _getYesNoUnknown(b16.bariyerUst),
                 'report': _getBariyerReport(
                   b16.bariyerUst!,
-                  "Pencerelerin üstünde yangın bariyeri",
+                  "Pencerelerin üstünde yalıtım",
                 ),
                 'advice': b16.bariyerUst != 1
-                    ? "Yönetmelik gereği pencerelerin üstünde en az 30 cm eninde yanmaz bariyer yapılmalıdır."
+                    ? "Yönetmelik gereği pencerelerin üstünde en az 30 cm eninde yalıtım yapılmalıdır."
                     : "",
               });
             }
             if (b16.bariyerZemin != null) {
               details.add({
                 'label':
-                    'Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?',
+                    'Zemin seviyesinden 150 cm yüksekliğinde yalıtım var mı?',
                 'value': _getYesNoUnknown(b16.bariyerZemin),
                 'report': _getBariyerReport(
                   b16.bariyerZemin!,
-                  "Zemin seviyesinde 1.5m yanmaz kaplama",
+                  "Zemin seviyesinde 1.5m yalıtım",
                 ),
                 'advice': b16.bariyerZemin != 1
-                    ? "Zemin seviyesinden en az 1.5 metre yüksekliğe kadar olan cephe yüzeyi hiç yanmaz malzemelerle kaplanmalıdır."
+                    ? "Zemin seviyesinden en az 1.5 metre yüksekliğinde yalıtım yapılmalıdır."
                     : "",
               });
             }
@@ -579,6 +636,7 @@ class ReportEngine {
             details,
             label: 'Katlar arasında sağır (yanmaz) yüzey var mı?',
             value: b16.sagirYuzey!.uiTitle,
+            subtitle: b16.sagirYuzey!.uiSubtitle,
             report: b16.sagirYuzey!.reportText,
             advice: b16.sagirYuzey!.adviceText,
             level: b16.sagirYuzey!.level,
@@ -591,6 +649,7 @@ class ReportEngine {
             label:
                 'Binanız bitişik nizamda bulunan yan bina ile karşılaştırıldığında yükseklik durumu nedir?',
             value: b16.bitisikNizam!.uiTitle,
+            subtitle: b16.bitisikNizam!.uiSubtitle,
             report: b16.bitisikNizam!.reportText,
             advice: b16.bitisikNizam!.adviceText,
             level: b16.bitisikNizam!.level,
@@ -624,13 +683,15 @@ class ReportEngine {
                     ? Bolum17Content.iskeletOptionBYuksekReport
                     : Bolum17Content.iskeletOptionBNormalReport)
               : b17.iskelet!.reportText;
-          details.add({
-            'label': 'Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?',
-            'value': b17.iskelet!.uiTitle,
-            'report': iskeletReport,
-            'advice': b17.iskelet!.adviceText,
-            'status': ReportStatus.fromRiskLevel(b17.iskelet!.level),
-          });
+          _addDetail(
+            details,
+            label: 'Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?',
+            value: b17.iskelet!.uiTitle,
+            subtitle: b17.iskelet!.uiSubtitle,
+            report: iskeletReport,
+            advice: b17.iskelet!.adviceText,
+            level: b17.iskelet!.level,
+          );
         }
 
         if (b17.bitisikDuvar != null)
@@ -638,6 +699,7 @@ class ReportEngine {
             details,
             label: 'Çatılar arasında yangın kesici duvar',
             value: b17.bitisikDuvar!.uiTitle,
+            subtitle: b17.bitisikDuvar!.uiSubtitle,
             report: b17.bitisikDuvar!.reportText,
             advice: b17.bitisikDuvar!.adviceText,
             level: b17.bitisikDuvar!.level,
@@ -645,14 +707,15 @@ class ReportEngine {
 
         // Işıklık sorusu
         if (b17.isiklik != null) {
-          details.add({
-            'label':
-                'Çatınızda ışıklık (cam kubbe, aydınlatma açıklığı) var mı?',
-            'value': b17.isiklik!.uiTitle,
-            'report': b17.isiklik!.reportText,
-            'advice': b17.isiklik!.adviceText,
-            'status': ReportStatus.fromRiskLevel(b17.isiklik!.level),
-          });
+          _addDetail(
+            details,
+            label: 'Çatınızda ışıklık (cam kubbe, aydınlatma açıklığı) var mı?',
+            value: b17.isiklik!.uiTitle,
+            subtitle: b17.isiklik!.uiSubtitle,
+            report: b17.isiklik!.reportText,
+            advice: b17.isiklik!.adviceText,
+            level: b17.isiklik!.level,
+          );
           // Alt soru: Malzeme tipi (sadece OptionB seçildiyse)
           if (b17.isiklik!.label == Bolum17Content.isiklikOptionB.label &&
               b17.isiklikMalzemesi != null) {
@@ -664,13 +727,15 @@ class ReportEngine {
             } else {
               malzemeChoice = Bolum17Content.isiklikPlastik;
             }
-            details.add({
-              'label': 'Işıklık malzeme tipi nedir?',
-              'value': malzemeChoice.uiTitle,
-              'report': malzemeChoice.reportText,
-              'advice': malzemeChoice.adviceText,
-              'status': ReportStatus.fromRiskLevel(malzemeChoice.level),
-            });
+            _addDetail(
+              details,
+              label: 'Işıklık malzeme tipi nedir?',
+              value: malzemeChoice.uiTitle,
+              subtitle: malzemeChoice.uiSubtitle,
+              report: malzemeChoice.reportText,
+              advice: malzemeChoice.adviceText,
+              level: malzemeChoice.level,
+            );
           }
         }
         handled = true;
@@ -691,21 +756,27 @@ class ReportEngine {
                     ? Bolum18Content.duvarOptionBYuksekReport
                     : Bolum18Content.duvarOptionBNormalReport)
               : duvar.reportText;
-          details.add({
-            'label': 'Bina içindeki duvar yüzeylerinde ne tür malzeme var?',
-            'value': duvar.uiTitle,
-            'report': reportText,
-            'advice': duvar.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Bina içindeki duvar yüzeylerinde ne tür malzeme var?',
+            value: duvar.uiTitle,
+            subtitle: duvar.uiSubtitle,
+            report: reportText,
+            advice: duvar.adviceText,
+            level: duvar.level,
+          );
         }
         if (b18.boruTipi != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Binanız yüksek katlı olduğu için tesisat şaftlarından geçen plastik su borularında önlem alınmış mı?',
-            'value': b18.boruTipi!.uiTitle,
-            'report': b18.boruTipi!.reportText,
-            'advice': b18.boruTipi!.adviceText,
-          });
+            value: b18.boruTipi!.uiTitle,
+            subtitle: b18.boruTipi!.uiSubtitle,
+            report: b18.boruTipi!.reportText,
+            advice: b18.boruTipi!.adviceText,
+            level: b18.boruTipi!.level,
+          );
         handled = true;
       }
     }
@@ -715,50 +786,68 @@ class ReportEngine {
       final b22 = s.bolum22;
       if (b22 != null) {
         if (b22.varlik != null)
-          details.add({
-            'label': 'Binada İtfaiye Asansörü var mı?',
-            'value': b22.varlik!.uiTitle,
-            'report': b22.varlik!.reportText,
-            'advice': b22.varlik!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Binada İtfaiye Asansörü var mı?',
+            value: b22.varlik!.uiTitle,
+            subtitle: b22.varlik!.uiSubtitle,
+            report: b22.varlik!.reportText,
+            advice: b22.varlik!.adviceText,
+            level: b22.varlik!.level,
+          );
         if (b22.konum != null)
-          details.add({
-            'label': 'Bu İtfaiye Asansörünün kapısı nereye açılıyor?',
-            'value': b22.konum!.uiTitle,
-            'report': b22.konum!.reportText,
-            'advice': b22.konum!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Bu İtfaiye Asansörünün kapısı nereye açılıyor?',
+            value: b22.konum!.uiTitle,
+            subtitle: b22.konum!.uiSubtitle,
+            report: b22.konum!.reportText,
+            advice: b22.konum!.adviceText,
+            level: b22.konum!.level,
+          );
         if (b22.boyut != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'İtfaiye Asansörünün açıldığı yangın güvenlik holünün taban alanı kaç metrekaredir?',
-            'value': b22.boyut!.uiTitle,
-            'report': b22.boyut!.reportText,
-            'advice': b22.boyut!.adviceText,
-          });
+            value: b22.boyut!.uiTitle,
+            subtitle: b22.boyut!.uiSubtitle,
+            report: b22.boyut!.reportText,
+            advice: b22.boyut!.adviceText,
+            level: b22.boyut!.level,
+          );
         if (b22.kabin != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Kabin genişliği en az 1.8 m² ve en alt kattan en üst kata 1 dakika içerisinde çıkabiliyor mu?',
-            'value': b22.kabin!.uiTitle,
-            'report': b22.kabin!.reportText,
-            'advice': b22.kabin!.adviceText,
-          });
+            value: b22.kabin!.uiTitle,
+            subtitle: b22.kabin!.uiSubtitle,
+            report: b22.kabin!.reportText,
+            advice: b22.kabin!.adviceText,
+            level: b22.kabin!.level,
+          );
         if (b22.enerji != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Bu asansör, elektrik kesildiğinde en az 60 dakika çalışabilen bir jeneratöre bağlı mı?',
-            'value': b22.enerji!.uiTitle,
-            'report': b22.enerji!.reportText,
-            'advice': b22.enerji!.adviceText,
-          });
+            value: b22.enerji!.uiTitle,
+            subtitle: b22.enerji!.uiSubtitle,
+            report: b22.enerji!.reportText,
+            advice: b22.enerji!.adviceText,
+            level: b22.enerji!.level,
+          );
         if (b22.basinc != null)
-          details.add({
-            'label': 'İtfaiye Asansörünün kuyusu basınçlandırılmış mı?',
-            'value': b22.basinc!.uiTitle,
-            'report': b22.basinc!.reportText,
-            'advice': b22.basinc!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'İtfaiye Asansörünün kuyusu basınçlandırılmış mı?',
+            value: b22.basinc!.uiTitle,
+            subtitle: b22.basinc!.uiSubtitle,
+            report: b22.basinc!.reportText,
+            advice: b22.basinc!.adviceText,
+            level: b22.basinc!.level,
+          );
         handled = true;
       }
     }
@@ -772,6 +861,7 @@ class ReportEngine {
             details,
             label: 'Asansörünüz bodrum katlara da iniyor mu?',
             value: b23.bodrum!.uiTitle,
+            subtitle: b23.bodrum!.uiSubtitle,
             report: b23.bodrum!.reportText,
             advice: b23.bodrum!.adviceText,
             level: b23.bodrum!.level,
@@ -782,6 +872,7 @@ class ReportEngine {
             label:
                 'Yangın anında asansörler otomatik olarak zemin kata (veya binadan çıkış katına) iniyor mu?',
             value: b23.yanginModu!.uiTitle,
+            subtitle: b23.yanginModu!.uiSubtitle,
             report: b23.yanginModu!.reportText,
             advice: b23.yanginModu!.adviceText,
             level: b23.yanginModu!.level,
@@ -791,6 +882,7 @@ class ReportEngine {
             details,
             label: 'Asansör kapıları normal katlarda nereye açılıyor?',
             value: b23.konum!.uiTitle,
+            subtitle: b23.konum!.uiSubtitle,
             report: b23.konum!.reportText,
             advice: b23.konum!.adviceText,
             level: b23.konum!.level,
@@ -801,6 +893,7 @@ class ReportEngine {
             label:
                 'Asansör kapılarında \'YANGIN ANINDA KULLANMAYINIZ\' uyarısı var mı?',
             value: b23.levha!.uiTitle,
+            subtitle: b23.levha!.uiSubtitle,
             report: b23.levha!.reportText,
             advice: b23.levha!.adviceText,
             level: b23.levha!.level,
@@ -810,6 +903,7 @@ class ReportEngine {
             details,
             label: 'Asansör kuyusunun tepesinde havalandırma penceresi var mı?',
             value: b23.havalandirma!.uiTitle,
+            subtitle: b23.havalandirma!.uiSubtitle,
             report: b23.havalandirma!.reportText,
             advice: b23.havalandirma!.adviceText,
             level: b23.havalandirma!.level,
@@ -827,6 +921,7 @@ class ReportEngine {
             details,
             label: 'Dairenizden itibaren bina dışına çıkış nasıl?',
             value: b24.tip!.uiTitle,
+            subtitle: b24.tip!.uiSubtitle,
             report: b24.tip!.reportText,
             advice: b24.tip!.adviceText,
             level: b24.tip!.level,
@@ -836,6 +931,7 @@ class ReportEngine {
             details,
             label: 'Açık kaçış yoluna bakan dairelere ait pencereler var mı?',
             value: b24.pencere!.uiTitle,
+            subtitle: b24.pencere!.uiSubtitle,
             report: b24.pencere!.reportText,
             advice: b24.pencere!.adviceText,
             level: b24.pencere!.level,
@@ -845,6 +941,7 @@ class ReportEngine {
             details,
             label: 'Açık kaçış yoluna bakan dış kapılar var mı?',
             value: b24.kapi!.uiTitle,
+            subtitle: b24.kapi!.uiSubtitle,
             report: b24.kapi!.reportText,
             advice: b24.kapi!.adviceText,
             level: b24.kapi!.level,
@@ -862,6 +959,7 @@ class ReportEngine {
             details,
             label: 'Merdiven kol genişliği yeterli mi?',
             value: b25.genislik!.uiTitle,
+            subtitle: b25.genislik!.uiSubtitle,
             report: b25.genislik!.reportText,
             advice: b25.genislik!.adviceText,
             level: b25.genislik!.level,
@@ -871,6 +969,7 @@ class ReportEngine {
             details,
             label: 'Basamak genişliği yeterli mi?',
             value: b25.basamak!.uiTitle,
+            subtitle: b25.basamak!.uiSubtitle,
             report: b25.basamak!.reportText,
             advice: b25.basamak!.adviceText,
             level: b25.basamak!.level,
@@ -880,6 +979,7 @@ class ReportEngine {
             details,
             label: 'Baş kurtarma yüksekliği yeterli mi?',
             value: b25.basKurtarma!.uiTitle,
+            subtitle: b25.basKurtarma!.uiSubtitle,
             report: b25.basKurtarma!.reportText,
             advice: b25.basKurtarma!.adviceText,
             level: b25.basKurtarma!.level,
@@ -890,6 +990,7 @@ class ReportEngine {
             label:
                 'Kaçış yolu olarak kullanılacak döner merdiven yüksekliği nedir?',
             value: b25.yukseklik!.uiTitle,
+            subtitle: b25.yukseklik!.uiSubtitle,
             report: b25.yukseklik!.reportText,
             advice: b25.yukseklik!.adviceText,
             level: b25.yukseklik!.level,
@@ -903,35 +1004,47 @@ class ReportEngine {
       final b19 = s.bolum19;
       if (b19 != null) {
         for (var e in b19.engeller) {
-          details.add({
-            'label': 'Kaçış yollarında aşağıdakilerden hangisi var?',
-            'value': e.uiTitle,
-            'report': e.reportText,
-            'advice': e.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Kaçış yollarında aşağıdakiler mevcut mu?',
+            value: e.uiTitle,
+            subtitle: e.uiSubtitle,
+            report: e.reportText,
+            advice: e.adviceText,
+            level: e.level,
+          );
         }
         if (b19.levha != null)
-          details.add({
-            'label': 'Yönlendirme levhaları asılı mı?',
-            'value': b19.levha!.uiTitle,
-            'report': b19.levha!.reportText,
-            'advice': b19.levha!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Yönlendirme levhaları asılı mı?',
+            value: b19.levha!.uiTitle,
+            subtitle: b19.levha!.uiSubtitle,
+            report: b19.levha!.reportText,
+            advice: b19.levha!.adviceText,
+            level: b19.levha!.level,
+          );
         if (b19.yanilticiKapi != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Yanıltıcı kapılar var mı? (Çıkış ulaşırken kafanızı karıştırabilecek türden kapılar)',
-            'value': b19.yanilticiKapi!.uiTitle,
-            'report': b19.yanilticiKapi!.reportText,
-            'advice': b19.yanilticiKapi!.adviceText,
-          });
+            value: b19.yanilticiKapi!.uiTitle,
+            subtitle: b19.yanilticiKapi!.uiSubtitle,
+            report: b19.yanilticiKapi!.reportText,
+            advice: b19.yanilticiKapi!.adviceText,
+            level: b19.yanilticiKapi!.level,
+          );
         if (b19.yanilticiEtiket != null)
-          details.add({
-            'label': 'Bu kapıların üzerinde yazı var mı?',
-            'value': b19.yanilticiEtiket!.uiTitle,
-            'report': b19.yanilticiEtiket!.reportText,
-            'advice': b19.yanilticiEtiket!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Bu kapıların üzerinde yazı var mı?',
+            value: b19.yanilticiEtiket!.uiTitle,
+            subtitle: b19.yanilticiEtiket!.uiSubtitle,
+            report: b19.yanilticiEtiket!.reportText,
+            advice: b19.yanilticiEtiket!.adviceText,
+            level: b19.yanilticiEtiket!.level,
+          );
         handled = true;
       }
     }
@@ -946,6 +1059,7 @@ class ReportEngine {
             details,
             label: 'Tek katlı binada merdivensiz bina dışına çıkış mümkün mu?',
             value: b20.tekKatCikis!.uiTitle,
+            subtitle: b20.tekKatCikis!.uiSubtitle,
             report: b20.tekKatCikis!.reportText,
             advice: b20.tekKatCikis!.adviceText,
             level: b20.tekKatCikis!.level,
@@ -956,6 +1070,7 @@ class ReportEngine {
             label:
                 'Binadan dışarıya çıkarken rampa kullanmak zorunda kalıyor musunuz?',
             value: b20.tekKatRampa!.uiTitle,
+            subtitle: b20.tekKatRampa!.uiSubtitle,
             report: b20.tekKatRampa!.reportText,
             advice: b20.tekKatRampa!.adviceText,
             level: b20.tekKatRampa!.level,
@@ -967,6 +1082,7 @@ class ReportEngine {
             label:
                 'Bodrum kat merdivenleri normal kat merdivenleriyle devam ediyor mu?',
             value: b20.bodrumMerdivenDevami!.uiTitle,
+            subtitle: b20.bodrumMerdivenDevami!.uiSubtitle,
             report: b20.bodrumMerdivenDevami!.reportText,
             advice: b20.bodrumMerdivenDevami!.adviceText,
             level: b20.bodrumMerdivenDevami!.level,
@@ -977,6 +1093,7 @@ class ReportEngine {
             details,
             label: 'Merdivenlerde basınçlandırma sistemi var mı?',
             value: b20.basinclandirma!.uiTitle,
+            subtitle: b20.basinclandirma!.uiSubtitle,
             report: b20.basinclandirma!.reportText,
             advice: b20.basinclandirma!.adviceText,
             level: b20.basinclandirma!.level,
@@ -993,13 +1110,14 @@ class ReportEngine {
                 'BİLGİ: Bina verilerine göre basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join('\n')}',
             level: RiskLevel.critical,
           );
-        } else {
+        } else if (b20.basinclandirma != null) {
+          // Sadece kullanıcıya sorulduysa (kapalı merdiven varsa) "Şart Değil" bilgisini ekle
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi',
-            value: 'ŞART DEĞİL',
+            value: '', // Don't show as a user response
             report:
-                'BİLGİ: Bina verilerine göre basınçlandırma sistemi şart değildir.',
+                'BİLGİ: Bina verilerine göre merdivenlerde basınçlandırma sistemi tesis edilmesi mecburi değildir.',
             level: RiskLevel.info,
           );
         }
@@ -1007,7 +1125,7 @@ class ReportEngine {
         if (b20.havalandirma != null)
           _addDetail(
             details,
-            label: 'Merdivenlerde doğal havalandırma var mı? (Madde 45)',
+            label: 'Merdivenlerde doğal havalandırma var mı?',
             value: b20.havalandirma!.uiTitle,
             report: b20.havalandirma!.reportText,
             advice: b20.havalandirma!.adviceText,
@@ -1030,6 +1148,7 @@ class ReportEngine {
             label:
                 'Binada kullanmak zorunda kaldığınız eğimli bir rampa var mı?',
             value: b26.varlik!.uiTitle,
+            subtitle: b26.varlik!.uiSubtitle,
             report: b26.varlik!.reportText,
             advice: b26.varlik!.adviceText,
             level: b26.varlik!.level,
@@ -1039,6 +1158,7 @@ class ReportEngine {
             details,
             label: 'Bu rampanın eğimi ve zemin kaplaması nasıl?',
             value: b26.egim!.uiTitle,
+            subtitle: b26.egim!.uiSubtitle,
             report: b26.egim!.reportText,
             advice: b26.egim!.adviceText,
             level: b26.egim!.level,
@@ -1049,6 +1169,7 @@ class ReportEngine {
             label:
                 'Rampanın başlangıcında ve bitişinde sahanlık (düzlük) var mı?',
             value: b26.sahanlik!.uiTitle,
+            subtitle: b26.sahanlik!.uiSubtitle,
             report: b26.sahanlik!.reportText,
             advice: b26.sahanlik!.adviceText,
             level: b26.sahanlik!.level,
@@ -1058,6 +1179,7 @@ class ReportEngine {
             details,
             label: 'Otopark tipi nedir?',
             value: b26.otopark!.uiTitle,
+            subtitle: b26.otopark!.uiSubtitle,
             report: b26.otopark!.reportText,
             advice: b26.otopark!.adviceText,
             level: b26.otopark!.level,
@@ -1082,49 +1204,64 @@ class ReportEngine {
         final limitTekYon = hasSprinkler ? 30 : 20;
 
         if (b28.mesafe != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?',
-            'value': b28.mesafe!.uiTitle,
-            'report': _filterSprinklerText(
+            value: b28.mesafe!.uiTitle,
+            subtitle: b28.mesafe!.uiSubtitle,
+            report: _filterSprinklerText(
               b28.mesafe!.reportText,
               hasSprinkler,
               limit: limitTekYon.toString(),
             ),
-            'advice': b28.mesafe!.adviceText,
-          });
+            advice: b28.mesafe!.adviceText,
+            level: b28.mesafe!.level,
+          );
         if (b28.dubleks != null)
-          details.add({
-            'label': 'Daireniz Dubleks (İki katlı) mi?',
-            'value': b28.dubleks!.uiTitle,
-            'report': b28.dubleks!.reportText,
-            'advice': b28.dubleks!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Daireniz Dubleks (İki katlı) mi?',
+            value: b28.dubleks!.uiTitle,
+            subtitle: b28.dubleks!.uiSubtitle,
+            report: b28.dubleks!.reportText,
+            advice: b28.dubleks!.adviceText,
+            level: b28.dubleks!.level,
+          );
         if (b28.alan != null)
-          details.add({
-            'label': 'Üst katınızın alanı 70 m²\'den büyük mü?',
-            'value': b28.alan!.uiTitle,
-            'report': b28.alan!.reportText,
-            'advice': b28.alan!.adviceText,
-          });
+          _addDetail(
+            details,
+            label: 'Üst katınızın alanı 70 m²\'den büyük mü?',
+            value: b28.alan!.uiTitle,
+            subtitle: b28.alan!.uiSubtitle,
+            report: b28.alan!.reportText,
+            advice: b28.alan!.adviceText,
+            level: b28.alan!.level,
+          );
         if (b28.cikis != null)
-          details.add({
-            'label':
+          _addDetail(
+            details,
+            label:
                 'Üst kattan apartman koridoruna açılan ikinci bir chilik kapı (çıkış) var mı?',
-            'value': b28.cikis!.uiTitle,
-            'report': b28.cikis!.reportText,
-            'advice': b28.cikis!.adviceText,
-          });
+            value: b28.cikis!.uiTitle,
+            subtitle: b28.cikis!.uiSubtitle,
+            report: b28.cikis!.reportText,
+            advice: b28.cikis!.adviceText,
+            level: b28.cikis!.level,
+          );
         if (b28.muafiyet != null)
-          details.add({
-            'label': 'Daire içi mesafe muafiyeti',
-            'value': b28.muafiyet!.uiTitle,
-            'report': _filterSprinklerText(
+          _addDetail(
+            details,
+            label: 'Daire içi mesafe muafiyeti',
+            value: b28.muafiyet!.uiTitle,
+            subtitle: b28.muafiyet!.uiSubtitle,
+            report: _filterSprinklerText(
               b28.muafiyet!.reportText,
               hasSprinkler,
             ),
-            'advice': b28.muafiyet!.adviceText,
-          });
+            advice: b28.muafiyet!.adviceText,
+            level: b28.muafiyet!.level,
+          );
         handled = true;
       }
     }
@@ -1138,6 +1275,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionOtopark,
             value: b29.otopark!.uiTitle,
+            subtitle: b29.otopark!.uiSubtitle,
             report: b29.otopark!.reportText,
             advice: b29.otopark!.adviceText,
             level: b29.otopark!.level,
@@ -1147,6 +1285,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionKazan,
             value: b29.kazan!.uiTitle,
+            subtitle: b29.kazan!.uiSubtitle,
             report: b29.kazan!.reportText,
             advice: b29.kazan!.adviceText,
             level: b29.kazan!.level,
@@ -1156,6 +1295,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionCati,
             value: b29.cati!.uiTitle,
+            subtitle: b29.cati!.uiSubtitle,
             report: b29.cati!.reportText,
             advice: b29.cati!.adviceText,
             level: b29.cati!.level,
@@ -1165,6 +1305,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionAsansor,
             value: b29.asansor!.uiTitle,
+            subtitle: b29.asansor!.uiSubtitle,
             report: b29.asansor!.reportText,
             advice: b29.asansor!.adviceText,
             level: b29.asansor!.level,
@@ -1174,6 +1315,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionJenerator,
             value: b29.jenerator!.uiTitle,
+            subtitle: b29.jenerator!.uiSubtitle,
             report: b29.jenerator!.reportText,
             advice: b29.jenerator!.adviceText,
             level: b29.jenerator!.level,
@@ -1183,6 +1325,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionPano,
             value: b29.pano!.uiTitle,
+            subtitle: b29.pano!.uiSubtitle,
             report: b29.pano!.reportText,
             advice: b29.pano!.adviceText,
             level: b29.pano!.level,
@@ -1192,6 +1335,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionTrafo,
             value: b29.trafo!.uiTitle,
+            subtitle: b29.trafo!.uiSubtitle,
             report: b29.trafo!.reportText,
             advice: b29.trafo!.adviceText,
             level: b29.trafo!.level,
@@ -1201,6 +1345,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionDepo,
             value: b29.depo!.uiTitle,
+            subtitle: b29.depo!.uiSubtitle,
             report: b29.depo!.reportText,
             advice: b29.depo!.adviceText,
             level: b29.depo!.level,
@@ -1210,6 +1355,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionCop,
             value: b29.cop!.uiTitle,
+            subtitle: b29.cop!.uiSubtitle,
             report: b29.cop!.reportText,
             advice: b29.cop!.adviceText,
             level: b29.cop!.level,
@@ -1219,6 +1365,7 @@ class ReportEngine {
             details,
             label: Bolum29Content.questionSiginak,
             value: b29.siginak!.uiTitle,
+            subtitle: b29.siginak!.uiSubtitle,
             report: b29.siginak!.reportText,
             advice: b29.siginak!.adviceText,
             level: b29.siginak!.level,
@@ -1236,6 +1383,7 @@ class ReportEngine {
             details,
             label: Bolum30Content.questionKonum,
             value: b30.konum!.uiTitle,
+            subtitle: b30.konum!.uiSubtitle,
             report: b30.konum!.reportText,
             advice: b30.konum!.adviceText,
             level: b30.konum!.level,
@@ -1246,6 +1394,7 @@ class ReportEngine {
             details,
             label: Bolum30Content.questionKapi,
             value: b30.kapi!.uiTitle,
+            subtitle: b30.kapi!.uiSubtitle,
             report: b30.kapi!.reportText,
             advice: b30.kapi!.adviceText,
             level: b30.kapi!.level,
@@ -1256,6 +1405,7 @@ class ReportEngine {
             details,
             label: 'Kazanınız sıvı yakıtlı (Mazot/Fuel-oil) mı?',
             value: b30.yakit!.uiTitle,
+            subtitle: b30.yakit!.uiSubtitle,
             report: b30.yakit!.reportText,
             advice: b30.yakit!.adviceText,
             level: b30.yakit!.level,
@@ -1265,6 +1415,7 @@ class ReportEngine {
             details,
             label: Bolum30Content.questionHava,
             value: b30.hava!.uiTitle,
+            subtitle: b30.hava!.uiSubtitle,
             report: b30.hava!.reportText,
             advice: b30.hava!.adviceText,
             level: b30.hava!.level,
@@ -1274,6 +1425,7 @@ class ReportEngine {
             details,
             label: Bolum30Content.questionDrenaj,
             value: b30.drenaj!.uiTitle,
+            subtitle: b30.drenaj!.uiSubtitle,
             report: b30.drenaj!.reportText,
             advice: b30.drenaj!.adviceText,
             level: b30.drenaj!.level,
@@ -1283,6 +1435,7 @@ class ReportEngine {
             details,
             label: Bolum30Content.questionTup,
             value: b30.tup!.uiTitle,
+            subtitle: b30.tup!.uiSubtitle,
             report: b30.tup!.reportText,
             advice: b30.tup!.adviceText,
             level: b30.tup!.level,
@@ -1300,6 +1453,7 @@ class ReportEngine {
             details,
             label: 'Trafo odasının duvarları ve kapısı yangına dayanıklı mı?',
             value: b31.yapi!.uiTitle,
+            subtitle: b31.yapi!.uiSubtitle,
             report: b31.yapi!.reportText,
             advice: b31.yapi!.adviceText,
             level: b31.yapi!.level,
@@ -1309,6 +1463,7 @@ class ReportEngine {
             details,
             label: "Binanızdaki trafo 'Yağlı Tip' mi yoksa 'Kuru Tip' mi?",
             value: b31.tip!.uiTitle,
+            subtitle: b31.tip!.uiSubtitle,
             report: b31.tip!.reportText,
             advice: b31.tip!.adviceText,
             level: b31.tip!.level,
@@ -1318,6 +1473,7 @@ class ReportEngine {
             details,
             label: 'Trafonun altında yağ toplama çukuru ve ızgara var mı?',
             value: b31.cukur!.uiTitle,
+            subtitle: b31.cukur!.uiSubtitle,
             report: b31.cukur!.reportText,
             advice: b31.cukur!.adviceText,
             level: b31.cukur!.level,
@@ -1328,6 +1484,7 @@ class ReportEngine {
             label:
                 'Trafo odasında otomatik yangın algılama veya söndürme sistemi var mı?',
             value: b31.sondurme!.uiTitle,
+            subtitle: b31.sondurme!.uiSubtitle,
             report: b31.sondurme!.reportText,
             advice: b31.sondurme!.adviceText,
             level: b31.sondurme!.level,
@@ -1338,6 +1495,7 @@ class ReportEngine {
             label:
                 'Trafo odasının içerisinden su borusu geçiyor mu veya üst katında ıslak zemin var mı?',
             value: b31.cevre!.uiTitle,
+            subtitle: b31.cevre!.uiSubtitle,
             report: b31.cevre!.reportText,
             advice: b31.cevre!.adviceText,
             level: b31.cevre!.level,
@@ -1356,6 +1514,7 @@ class ReportEngine {
             label:
                 'Jeneratör odasının duvarları yangına dayanıklı mı ve kapısı nereye açılıyor?',
             value: b32.yapi!.uiTitle,
+            subtitle: b32.yapi!.uiSubtitle,
             report: b32.yapi!.reportText,
             advice: b32.yapi!.adviceText,
             level: b32.yapi!.level,
@@ -1365,6 +1524,7 @@ class ReportEngine {
             details,
             label: 'Jeneratörün yakıtı nerede ve nasıl depolanıyor?',
             value: b32.yakit!.uiTitle,
+            subtitle: b32.yakit!.uiSubtitle,
             report: b32.yakit!.reportText,
             advice: b32.yakit!.adviceText,
             level: b32.yakit!.level,
@@ -1375,6 +1535,7 @@ class ReportEngine {
             label:
                 'Jeneratör odasının içinden su borusu geçiyor mu veya üst katında ıslak zemin var mı?',
             value: b32.cevre!.uiTitle,
+            subtitle: b32.cevre!.uiSubtitle,
             report: b32.cevre!.reportText,
             advice: b32.cevre!.adviceText,
             level: b32.cevre!.level,
@@ -1385,6 +1546,7 @@ class ReportEngine {
             label:
                 'Jeneratörün egzoz borusu nereye veriliyor ve oda havalandırılıyor mu?',
             value: b32.egzoz!.uiTitle,
+            subtitle: b32.egzoz!.uiSubtitle,
             report: b32.egzoz!.reportText,
             advice: b32.egzoz!.adviceText,
             level: b32.egzoz!.level,
@@ -1422,6 +1584,7 @@ class ReportEngine {
             label:
                 'Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?',
             value: b34.zemin!.uiTitle,
+            subtitle: b34.zemin!.uiSubtitle,
             report: b34.zemin!.reportText,
             advice: b34.zemin!.adviceText,
             level: b34.zemin!.level,
@@ -1432,6 +1595,7 @@ class ReportEngine {
             label:
                 'Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?',
             value: b34.bodrum!.uiTitle,
+            subtitle: b34.bodrum!.uiSubtitle,
             report: b34.bodrum!.reportText,
             advice: b34.bodrum!.adviceText,
             level: b34.bodrum!.level,
@@ -1442,6 +1606,7 @@ class ReportEngine {
             label:
                 'Normal katlardaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?',
             value: b34.normal!.uiTitle,
+            subtitle: b34.normal!.uiSubtitle,
             report: b34.normal!.reportText,
             advice: b34.normal!.adviceText,
             level: b34.normal!.level,
@@ -1471,6 +1636,7 @@ class ReportEngine {
             label:
                 'Daire kapınızdan çıktığınızda bina merdiven kapısına kadar olan mesafe kaç metredir?',
             value: replaceLimit(b35.tekYon!.uiTitle, limitTekYon),
+            subtitle: b35.tekYon!.uiSubtitle,
             report: replaceLimit(b35.tekYon!.reportText, limitTekYon),
             advice: replaceLimit(b35.tekYon!.adviceText, limitTekYon),
             level: b35.tekYon!.level,
@@ -1481,6 +1647,7 @@ class ReportEngine {
             label:
                 'Daire kapınızdan çıktığınızda, size EN YAKIN yangın merdivenine olan mesafe kaç metredir?',
             value: replaceLimit(b35.ciftYon!.uiTitle, limitCiftYon),
+            subtitle: b35.ciftYon!.uiSubtitle,
             report: replaceLimit(b35.ciftYon!.reportText, limitCiftYon),
             advice: replaceLimit(b35.ciftYon!.adviceText, limitCiftYon),
             level: b35.ciftYon!.level,
@@ -1490,6 +1657,7 @@ class ReportEngine {
             details,
             label: "Daireniz koridorun sonunda, 'Çıkmaz' bir noktada mı?",
             value: b35.cikmaz!.uiTitle,
+            subtitle: b35.cikmaz!.uiSubtitle,
             report: b35.cikmaz!.reportText,
             advice: b35.cikmaz!.adviceText,
             level: b35.cikmaz!.level,
@@ -1499,6 +1667,7 @@ class ReportEngine {
             details,
             label: 'Çıkmaz koridor mesafesi ne kadar?',
             value: replaceLimit(b35.cikmazMesafe!.uiTitle, limitTekYon),
+            subtitle: b35.cikmazMesafe!.uiSubtitle,
             report: replaceLimit(b35.cikmazMesafe!.reportText, limitTekYon),
             advice: replaceLimit(b35.cikmazMesafe!.adviceText, limitTekYon),
             level: b35.cikmazMesafe!.level,
@@ -1533,6 +1702,7 @@ class ReportEngine {
         details,
         label: questionLabel,
         value: res.uiTitle,
+        subtitle: res.uiSubtitle,
         report: getSectionFullReport(id, store: store),
         advice: res.adviceText,
         level: res.level,
@@ -1551,7 +1721,7 @@ class ReportEngine {
       3: 'Kat bilgilerinizi giriniz',
       4: 'Bina Yükseklik Bilgisi',
       5: 'Brüt Alan Girişi (m²)',
-      6: 'Binanızda konut haricinde aşağıdakilerden hangileri mevcut?',
+      6: 'Binanızda konut haricinde aşağıdakiler mevcut mu?',
       8: 'Binanızın yerleşim düzeni nedir?',
       9: 'Binada otomatik yağmurlama (sprinkler) sistemi var mı?',
       10: 'Katların baskın kullanım amaçları',
@@ -2740,6 +2910,7 @@ class ReportEngine {
           label:
               'İtfaiye aracının binaya yaklaşım mesafesi 45 metreyi aşıyor mu?',
           value: b11.mesafe!.uiTitle,
+          subtitle: b11.mesafe!.uiSubtitle,
           report: b11.mesafe!.reportText,
           advice: b11.mesafe!.adviceText,
           level: b11.mesafe!.level,
@@ -2751,6 +2922,7 @@ class ReportEngine {
           label:
               'İtfaiye aracının binaya yanaşmasını engelleyen bir bahçe duvarı veya kilitli kapılar var mı?',
           value: b11.engel!.uiTitle,
+          subtitle: b11.engel!.uiSubtitle,
           report: b11.engel!.reportText,
           advice: b11.engel!.adviceText,
           level: b11.engel!.level,
@@ -2762,6 +2934,7 @@ class ReportEngine {
           label:
               'Bu duvarda itfaiyenin kolayca yıkıp geçebileceği zayıf bir bölüm var mı?',
           value: b11.zayifNokta!.uiTitle,
+          subtitle: b11.zayifNokta!.uiSubtitle,
           report: b11.zayifNokta!.reportText,
           advice: b11.zayifNokta!.adviceText,
           level: b11.zayifNokta!.level,
@@ -2781,6 +2954,7 @@ class ReportEngine {
           details,
           label: 'Otoparktan bina içine açılan kapının özelliği nedir?',
           value: b13.otoparkKapi!.uiTitle,
+          subtitle: b13.otoparkKapi!.uiSubtitle,
           report: b13.otoparkKapi!.reportText,
           advice: b13.otoparkKapi!.adviceText,
           level: b13.otoparkKapi!.level,
@@ -2791,6 +2965,7 @@ class ReportEngine {
           details,
           label: 'Kazan dairesinin duvarları ve kapısı nasıl?',
           value: b13.kazanKapi!.uiTitle,
+          subtitle: b13.kazanKapi!.uiSubtitle,
           report: b13.kazanKapi!.reportText,
           advice: b13.kazanKapi!.adviceText,
           level: b13.kazanKapi!.level,
@@ -2801,6 +2976,7 @@ class ReportEngine {
           details,
           label: 'Asansör kapısı nasıldır?',
           value: b13.asansorKapi!.uiTitle,
+          subtitle: b13.asansorKapi!.uiSubtitle,
           report: b13.asansorKapi!.reportText,
           advice: b13.asansorKapi!.adviceText,
           level: b13.asansorKapi!.level,
@@ -2811,6 +2987,7 @@ class ReportEngine {
           details,
           label: 'Jeneratör odasının duvar ve kapısı nasıl?',
           value: b13.jeneratorKapi!.uiTitle,
+          subtitle: b13.jeneratorKapi!.uiSubtitle,
           report: b13.jeneratorKapi!.reportText,
           advice: b13.jeneratorKapi!.adviceText,
           level: b13.jeneratorKapi!.level,
@@ -2821,6 +2998,7 @@ class ReportEngine {
           details,
           label: 'Elektrik odasının duvarı ve kapısı nasıl?',
           value: b13.elektrikKapi!.uiTitle,
+          subtitle: b13.elektrikKapi!.uiSubtitle,
           report: b13.elektrikKapi!.reportText,
           advice: b13.elektrikKapi!.adviceText,
           level: b13.elektrikKapi!.level,
@@ -2831,6 +3009,7 @@ class ReportEngine {
           details,
           label: 'Trafo odasının kapısı nasıl?',
           value: b13.trafoKapi!.uiTitle,
+          subtitle: b13.trafoKapi!.uiSubtitle,
           report: b13.trafoKapi!.reportText,
           advice: b13.trafoKapi!.adviceText,
           level: b13.trafoKapi!.level,
@@ -2841,6 +3020,7 @@ class ReportEngine {
           details,
           label: 'Eşya deposunun kapısı nasıl?',
           value: b13.depoKapi!.uiTitle,
+          subtitle: b13.depoKapi!.uiSubtitle,
           report: b13.depoKapi!.reportText,
           advice: b13.depoKapi!.adviceText,
           level: b13.depoKapi!.level,
@@ -2851,6 +3031,7 @@ class ReportEngine {
           details,
           label: 'Çöp toplama odasının kapısı nasıl?',
           value: b13.copKapi!.uiTitle,
+          subtitle: b13.copKapi!.uiSubtitle,
           report: b13.copKapi!.reportText,
           advice: b13.copKapi!.adviceText,
           level: b13.copKapi!.level,
@@ -2861,6 +3042,7 @@ class ReportEngine {
           details,
           label: 'Yan bina ile ortak kullandığınız duvarın özelliği nedir?',
           value: b13.ortakDuvar!.uiTitle,
+          subtitle: b13.ortakDuvar!.uiSubtitle,
           report: b13.ortakDuvar!.reportText,
           advice: b13.ortakDuvar!.adviceText,
           level: b13.ortakDuvar!.level,
@@ -2871,6 +3053,7 @@ class ReportEngine {
           details,
           label: 'Ticari alanlardan konut merdivenine geçiş nasıl?',
           value: b13.ticariKapi!.uiTitle,
+          subtitle: b13.ticariKapi!.uiSubtitle,
           report: b13.ticariKapi!.reportText,
           advice: b13.ticariKapi!.adviceText,
           level: b13.ticariKapi!.level,
@@ -2932,7 +3115,7 @@ class ReportEngine {
   static String? _getSection14FullReport(BinaStore s) {
     final b14 = s.bolum14;
     if (b14 != null && b14.raporMesaji != null && b14.raporMesaji!.isNotEmpty) {
-      return "BİLGİ: Şaft Duvarı: ${b14.gerekenDuvarDk} dk, Şaft Kapağı: ${b14.gerekenKapakDk} dk yangın dayanımı gereklidir. ${b14.raporMesaji}";
+      return "BİLGİ: Binanızdaki şaft duvarlarının en az ${b14.gerekenDuvarDk} dk, şaft kapaklarının ise en az ${b14.gerekenKapakDk} dk yangın dayanımına sahip olmaları gereklidir. ${b14.raporMesaji}";
     }
     return null;
   }
@@ -2953,7 +3136,8 @@ class ReportEngine {
     }
     // 2. Yapı Yüksekliği >= 30.50m ve YGH yoksa
     else if (hYapi >= (30.50 - 0.001)) {
-      final bool hasYgh = b21?.varlik?.label?.contains("21-1-A") ?? false;
+      final vLabel = b21?.varlik?.label;
+      final bool hasYgh = vLabel != null && vLabel.contains("21-1-A");
       if (!hasYgh) {
         reasons.add(
           "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve merdiven önünde YGH (Yangın Güvenlik Holü) bulunmadığı durumlarda en az bir merdivende basınçlandırma sistemi tesis edilmesi gerekmektedir.",
@@ -2962,14 +3146,14 @@ class ReportEngine {
     }
 
     // 3. İtfaiye Asansörü (Bölüm 22) zorunluluğu veya varlığı
-    if (b22 != null && b22.varlik?.label?.contains("22-6-A") == true) {
+    if (b22?.varlik?.label.contains("22-6-A") == true) {
       reasons.add(
         "KRİTİK RİSK: İtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.",
       );
     }
 
     // 4. Normal Asansör (Bölüm 23) Havalandırma Belirsizliği veya Eksikliği
-    if (b23 != null && b23.havalandirma?.label?.contains("23-5-B") == true) {
+    if (b23?.havalandirma?.label.contains("23-5-B") == true) {
       reasons.add(
         "UYARI: Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden basınçlandırma yapılması gereklidir.",
       );
@@ -2997,33 +3181,44 @@ class ReportEngine {
     // 2. Yapı Yüksekliği > 30.50m (Basınçlandırma yoksa zorunlu)
     else if (hYapi > (30.50 - 0.001)) {
       final b20 = s.bolum20;
-      if (b20 != null && b20.basinclandirma?.label?.contains("-B") == true) {
+      if (b20?.basinclandirma?.label.contains("-B") == true) {
         // 20-BAS-B: Hayır
         reasons.add(
           "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve en az bir merdivende basınçlandırma sistemi yok ise YGH (Yangın Güvenlik Holü) zorunludur.",
         );
       }
     }
-    // 3. Bina Yüksekliği > 21.50m (Varsa ek kurallar buraya eklenebilir)
-    else if (_getHBina(s) > (21.50 - 0.001)) {
-      // Şu an için 21.50m üstü için YGH'yi doğrudan zorunlu kılan genel bir kural ekli değil
-      // Ancak hiyerarşi bozulmasın diye bu blok ayrıldı.
+    // 3. Bina Yüksekliği > 21.50m ve Konut Harici Kullanım
+    final bool isSadeceKonut = s.bolum6?.isSadeceKonut ?? false;
+    if (!isSadeceKonut && hYapi > (21.50 - 0.001)) {
+      reasons.add(
+        "KRİTİK RİSK: Konut harici (veya karma kullanımlı) binalarda Yapı Yüksekliği 21.50 metreyi aştığında kaçış merdivenleri önünde YGH zorunludur.",
+      );
     }
 
     // 4. Bodrum katlarda ticari/teknik kullanım (Bölüm 10)
     final b10 = s.bolum10;
-    if (b10 != null &&
-        b10.bodrumlar.any((c) => c?.label?.contains("10-C") == true)) {
-      reasons.add(
-        "KRİTİK RİSK: Bodrum katlarda, konuttan farklı bir kullanım amacı olduğundan tüm merdivenlerin önünde YGH (Yangın Güvenlik Holü) zorunludur.",
+    if (b10 != null) {
+      final hasNonResInBasement = b10.bodrumlar.any(
+        (c) =>
+            c != null &&
+            (c.label.contains("10-B") || // Az yoğun ticari
+                c.label.contains("10-C") || // Orta yoğun ticari
+                c.label.contains("10-D") || // Yüksek yoğun ticari
+                c.label.contains("10-E")), // Teknik/Depo
       );
+      if (hasNonResInBasement) {
+        reasons.add(
+          "KRİTİK RİSK: Bodrum katlarda, konuttan farklı bir kullanım amacı olduğundan tüm merdivenlerin önünde YGH (Yangın Güvenlik Holü) zorunludur.",
+        );
+      }
     }
 
     // 5. İtfaiye Asansörü zorunluluğu (Bölüm 22)
     final b22 = s.bolum22;
-    if (b22 != null && b22.varlik?.label?.contains("22-1-B") == true) {
+    if (b22?.varlik?.label.contains("22-1-B") == true) {
       reasons.add(
-        "KRİTİK RİSK: Binada İtfaiye Asansörü bulunması zorunludur. İtfaiye asansörü normal (insan taşıma) asansöründen farklı özelliklere sahip olmalıdır.",
+        "KRİTİK RİSK: Binada İtfaiye Asansörü bulunması zorunludur. İtfaiye asansörüne ulaşım mutlaka bir YGH üzerinden sağlanmalıdır.",
       );
     }
 
@@ -3031,14 +3226,14 @@ class ReportEngine {
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "KRİTİK RİSK: Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı sağlanmadığında tüm asansörlerin önünde YGH (Yangın Güvenlik Holü) gereklidir.",
+        "KRİTİK RİSK: Bodrum katlarda asansör kuyu önü duman sızdırmazlığı sağlanmadığında tüm asansörlerin önünde YGH gereklidir.",
       );
     }
 
     // 7. Bodrum kat sayısı > 4
     if ((s.bolum3?.bodrumKatSayisi ?? 0) > 4) {
       reasons.add(
-        "KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodrum katlardaki tüm merdivenlerin önlerinde YGH zorunludur.",
+        "KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren tüm merdivenlerin önünde YGH zorunludur.",
       );
     }
 

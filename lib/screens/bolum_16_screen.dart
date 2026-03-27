@@ -189,23 +189,23 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               const CustomInfoNote(
                 type: InfoNoteType.info,
                 text:
-                    "Seçtiğiniz \"Klasik Mantolama (EPS/XPS)\" yanıcı özellikte olduğu için, yönetmelik gereği aşağıdaki yangın bariyeri önlemlerinin alınıp alınmadığı kontrol edilmelidir.",
+                    "Seçtiğiniz \"Klasik Mantolama (EPS/XPS)\" yanıcı özellikte olduğu için, Yönetmelik gereği aşağıdaki cephede yangın yalıtım önlemlerinin alınıp alınmadığı kontrol edilmelidir.",
               ),
               _buildSubQuestion(
                 null,
-                "Pencerelerin yanlarında en az 15 cm eninde yanmaz bariyer var mı?",
+                "Pencerelerin yanlarında en az 15 cm eninde yalıtım var mı?",
                 _model.bariyerYan,
                 (v) => setState(() => _model = _model.copyWith(bariyerYan: v)),
               ),
               _buildSubQuestion(
                 null,
-                "Pencerelerin üstünde 30 cm eninde yanmaz bariyer var mı?",
+                "Pencerelerin üstünde 30 cm eninde yalıtım var mı?",
                 _model.bariyerUst,
                 (v) => setState(() => _model = _model.copyWith(bariyerUst: v)),
               ),
               _buildSubQuestion(
                 null,
-                "Zemin seviyesinden 150 cm yüksekliğe kadar yanmaz malzemeyle kaplama var mı?",
+                "Zemin seviyesinden 150 cm yüksekliğinde yalıtım var mı?",
                 _model.bariyerZemin,
                 (v) =>
                     setState(() => _model = _model.copyWith(bariyerZemin: v)),

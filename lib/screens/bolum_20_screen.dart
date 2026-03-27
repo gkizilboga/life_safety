@@ -313,7 +313,7 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                       "Basınçlandırma olmayan merdivenlerde doğal havalandırma var mı?",
                   definition: AppDefinitions
                       .havalandirma, // In AppDefinitions (inside app_content)
-                  term: "Havalandırma (Madde 45)",
+                  term: "Havalandırma",
                   keyParam: 'havalandirma',
                   options: [
                     Bolum20Content.havalandirmaOptionA,

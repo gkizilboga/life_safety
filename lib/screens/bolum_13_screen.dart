@@ -144,7 +144,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     }
 
     return AnalysisPageLayout(
-      title: "Teknik Hacimler",
+      title: "Özel Riskli Alanlar",
       screenType: widget.runtimeType,
       isNextEnabled: true,
       onNext: _onNextPressed,

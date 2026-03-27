@@ -88,7 +88,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Özel Riskli Alanlar",
+      title: "Özel Riskli Alanların Varlığı",
       screenType: widget.runtimeType,
       isNextEnabled: _isConfirmed,
       onNext: () async {

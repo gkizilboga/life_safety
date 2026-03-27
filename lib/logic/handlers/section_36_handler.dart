@@ -238,7 +238,8 @@ class Section36Handler {
       if (b20.donerMerdivenSayisi > 0 || b20.bodrumDonerMerdivenSayisi > 0) {
         final b25 = _store.bolum25;
         // b34 ve b33 yukarıda tanımlandı
-        bool zeminIndependent = b34?.zemin?.label?.contains("34-1-A") ?? false;
+        final zLabel = b34?.zemin?.label;
+        bool zeminIndependent = zLabel != null && zLabel.contains("34-1-A");
         int loadForSpiral = zeminIndependent ? (b33?.yukNormal ?? 0) : maxYuk;
 
         if (b25 != null) {
@@ -302,7 +303,7 @@ class Section36Handler {
         }) {
           List<String> violations = [];
 
-          if (sChoice != null && sChoice is ChoiceResult) {
+          if (sChoice is ChoiceResult) {
             final range = _getRangeForLabel(sChoice.label);
             if (range != null) {
               int comparisonValue = isSpiralPossible ? range[1] : range[0];
@@ -321,7 +322,9 @@ class Section36Handler {
               );
             }
           }
-          if (kapiChoice != null && kapiChoice is ChoiceResult && kapiChoice.label == "36-Kapi-A") {
+          if (kapiChoice != null &&
+              kapiChoice is ChoiceResult &&
+              kapiChoice.label == "36-Kapi-A") {
             violations.add(
               "Kapı temiz geçiş genişliği yetersiz (Gereken: En Az 80 cm, Mevcut: ${kapiChoice.uiTitle})",
             );
@@ -416,6 +419,7 @@ class Section36Handler {
     required String label,
     required String value,
     required String report,
+    String? subtitle,
     String? advice,
     RiskLevel? level,
     ReportStatus? status,
@@ -424,6 +428,7 @@ class Section36Handler {
     details.add({
       'label': label,
       'value': value,
+      'subtitle': subtitle ?? '',
       'report': report,
       'advice': advice ?? '',
       'status':
@@ -509,6 +514,7 @@ class Section36Handler {
           details,
           label: Bolum36Content.questionCikisKati,
           value: b36.cikisKati!.uiTitle,
+          subtitle: b36.cikisKati!.uiSubtitle,
           report: b36.cikisKati!.reportText,
           advice: b36.cikisKati!.adviceText,
           level: b36.cikisKati!.level,
@@ -518,6 +524,7 @@ class Section36Handler {
           details,
           label: Bolum36Content.questionDisMerd,
           value: b36.disMerd!.uiTitle,
+          subtitle: b36.disMerd!.uiSubtitle,
           report: b36.disMerd!.reportText,
           advice: b36.disMerd!.adviceText,
           level: b36.disMerd!.level,
@@ -527,6 +534,7 @@ class Section36Handler {
           details,
           label: Bolum36Content.questionKonum,
           value: b36.konum!.uiTitle,
+          subtitle: b36.konum!.uiSubtitle,
           report: b36.konum!.reportText,
           advice: b36.konum!.adviceText,
           level: b36.konum!.level,
@@ -536,6 +544,7 @@ class Section36Handler {
           details,
           label: Bolum36Content.questionKapiTipi,
           value: b36.kapiTipi!.uiTitle,
+          subtitle: b36.kapiTipi!.uiSubtitle,
           report: b36.kapiTipi!.reportText,
           advice: b36.kapiTipi!.adviceText,
           level: b36.kapiTipi!.level,
@@ -598,6 +607,7 @@ class Section36Handler {
             details,
             label: label,
             value: choice.uiTitle,
+            subtitle: choice.uiSubtitle,
             report:
                 "UYARI: BİLİNMİYOR - Genişlik beyan edilmediği için yeterlilik değerlendirmesi yapılamamıştır.",
             status: ReportStatus.warning,
@@ -611,6 +621,7 @@ class Section36Handler {
             details,
             label: label,
             value: choice.uiTitle,
+            subtitle: choice.uiSubtitle,
             report: "KRİTİK RİSK: Gereken: En az $requiredVal cm ($reqReason).",
             status: ReportStatus.risk,
           );
@@ -619,6 +630,7 @@ class Section36Handler {
             details,
             label: label,
             value: choice.uiTitle,
+            subtitle: choice.uiSubtitle,
             report: "OLUMLU: En alt limit olan $requiredVal cm sağlanmaktadır.",
             status: ReportStatus.compliant,
           );
@@ -643,6 +655,7 @@ class Section36Handler {
             details,
             label: 'Kaçış Kapısı Temiz Geçiş Genişliği',
             value: b36.kapiGenislikKorunumlu!.uiTitle,
+            subtitle: b36.kapiGenislikKorunumlu!.uiSubtitle,
             report: b36.kapiGenislikKorunumlu!.label.contains("-A")
                 ? "KRİTİK RİSK: En Az: 80 cm."
                 : (b36.kapiGenislikKorunumlu!.label.contains("-B")
@@ -674,6 +687,7 @@ class Section36Handler {
             details,
             label: 'Korunumlu Alan Kapı Genişliği',
             value: b36.kapiGenislikKorunumlu!.uiTitle,
+            subtitle: b36.kapiGenislikKorunumlu!.uiSubtitle,
             report: b36.kapiGenislikKorunumlu!.label.contains("-A")
                 ? "KRİTİK RİSK: En Az: 80 cm."
                 : (b36.kapiGenislikKorunumlu!.label.contains("-B")
@@ -703,6 +717,7 @@ class Section36Handler {
             details,
             label: 'Korunumsuz Alan Kapı Genişliği',
             value: b36.kapiGenislikKorunumsuz!.uiTitle,
+            subtitle: b36.kapiGenislikKorunumsuz!.uiSubtitle,
             report: b36.kapiGenislikKorunumsuz!.label.contains("-A")
                 ? "KRİTİK RİSK: En Az: 80 cm."
                 : (b36.kapiGenislikKorunumsuz!.label.contains("-B")

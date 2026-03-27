@@ -100,6 +100,13 @@ class Bolum36Model {
       }
     }
 
+    bool toBool(dynamic val) {
+      if (val == null) return true;
+      if (val is bool) return val;
+      if (val is String) return val.toLowerCase() == 'true';
+      return true;
+    }
+
     final kapiOptions = [
       Bolum36WidthContent.kapiGenislikKritik,
       Bolum36WidthContent.kapiGenislikOlumlu,
@@ -177,7 +184,7 @@ class Bolum36Model {
         kapiOptions,
       ),
       merdivenDegerlendirme: map['merdivenDegerlendirme'],
-      areWidthsSame: map['areWidthsSame'] ?? true,
+      areWidthsSame: toBool(map['areWidthsSame']),
     );
   }
 }

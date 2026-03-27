@@ -14,6 +14,7 @@ class Section27Handler {
     required String label,
     required String value,
     required String report,
+    String? subtitle,
     String? advice,
     RiskLevel? level,
     ReportStatus? status,
@@ -21,6 +22,7 @@ class Section27Handler {
     details.add({
       'label': label,
       'value': value,
+      'subtitle': subtitle ?? '',
       'report': report,
       'advice': advice ?? '',
       'status':
@@ -51,6 +53,7 @@ class Section27Handler {
           details,
           label: Bolum27Content.questionBoyut,
           value: b27.boyut!.uiTitle,
+          subtitle: b27.boyut!.uiSubtitle,
           report: b27.boyut!.reportText,
           advice: b27.boyut!.adviceText,
           level: b27.boyut!.level,
@@ -105,6 +108,10 @@ class Section27Handler {
           details,
           label: Bolum27Content.questionYon,
           value: b27.yon.map((e) => e.uiTitle).join(' | '),
+          subtitle: b27.yon
+              .map((e) => e.uiSubtitle)
+              .where((s) => s.isNotEmpty)
+              .join(' | '),
           report: reports.join('\n\n'),
           advice: b27.yon.map((e) => e.adviceText ?? "").join('\n\n'),
           level: _maxLevel(levels),
@@ -142,6 +149,10 @@ class Section27Handler {
           details,
           label: Bolum27Content.questionKilit,
           value: b27.kilit.map((e) => e.uiTitle).join(' | '),
+          subtitle: b27.kilit
+              .map((e) => e.uiSubtitle)
+              .where((s) => s.isNotEmpty)
+              .join(' | '),
           report: reports.join('\n\n'),
           advice: b27.kilit.map((e) => e.adviceText ?? "").join('\n\n'),
           level: _maxLevel(levels),
@@ -153,6 +164,7 @@ class Section27Handler {
           details,
           label: Bolum27Content.questionDayanim,
           value: b27.dayanim!.uiTitle,
+          subtitle: b27.dayanim!.uiSubtitle,
           report: b27.dayanim!.reportText,
           advice: b27.dayanim!.adviceText,
           level: b27.dayanim!.level,
