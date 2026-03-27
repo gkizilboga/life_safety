@@ -238,7 +238,7 @@ class Section36Handler {
       if (b20.donerMerdivenSayisi > 0 || b20.bodrumDonerMerdivenSayisi > 0) {
         final b25 = _store.bolum25;
         // b34 ve b33 yukarıda tanımlandı
-        bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
+        bool zeminIndependent = b34?.zemin?.label?.contains("34-1-A") ?? false;
         int loadForSpiral = zeminIndependent ? (b33?.yukNormal ?? 0) : maxYuk;
 
         if (b25 != null) {
@@ -302,7 +302,7 @@ class Section36Handler {
         }) {
           List<String> violations = [];
 
-          if (sChoice != null) {
+          if (sChoice != null && sChoice is ChoiceResult) {
             final range = _getRangeForLabel(sChoice.label);
             if (range != null) {
               int comparisonValue = isSpiralPossible ? range[1] : range[0];
@@ -313,7 +313,7 @@ class Section36Handler {
               }
             }
           }
-          if (cChoice != null) {
+          if (cChoice != null && cChoice is ChoiceResult) {
             final range = _getRangeForLabel(cChoice.label);
             if (range != null && range[0] < minKori) {
               violations.add(
@@ -321,7 +321,7 @@ class Section36Handler {
               );
             }
           }
-          if (kapiChoice != null && kapiChoice.label == "36-Kapi-A") {
+          if (kapiChoice != null && kapiChoice is ChoiceResult && kapiChoice.label == "36-Kapi-A") {
             violations.add(
               "Kapı temiz geçiş genişliği yetersiz (Gereken: En Az 80 cm, Mevcut: ${kapiChoice.uiTitle})",
             );

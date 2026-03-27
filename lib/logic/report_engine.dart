@@ -2953,7 +2953,7 @@ class ReportEngine {
     }
     // 2. Yapı Yüksekliği >= 30.50m ve YGH yoksa
     else if (hYapi >= (30.50 - 0.001)) {
-      final bool hasYgh = b21?.varlik?.label.contains("21-1-A") ?? false;
+      final bool hasYgh = b21?.varlik?.label?.contains("21-1-A") ?? false;
       if (!hasYgh) {
         reasons.add(
           "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve merdiven önünde YGH (Yangın Güvenlik Holü) bulunmadığı durumlarda en az bir merdivende basınçlandırma sistemi tesis edilmesi gerekmektedir.",
@@ -2962,14 +2962,14 @@ class ReportEngine {
     }
 
     // 3. İtfaiye Asansörü (Bölüm 22) zorunluluğu veya varlığı
-    if (b22 != null && b22.varlik?.label.contains("22-6-A") == true) {
+    if (b22 != null && b22.varlik?.label?.contains("22-6-A") == true) {
       reasons.add(
         "KRİTİK RİSK: İtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.",
       );
     }
 
     // 4. Normal Asansör (Bölüm 23) Havalandırma Belirsizliği veya Eksikliği
-    if (b23 != null && b23.havalandirma?.label.contains("23-5-B") == true) {
+    if (b23 != null && b23.havalandirma?.label?.contains("23-5-B") == true) {
       reasons.add(
         "UYARI: Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden basınçlandırma yapılması gereklidir.",
       );
@@ -2997,7 +2997,7 @@ class ReportEngine {
     // 2. Yapı Yüksekliği > 30.50m (Basınçlandırma yoksa zorunlu)
     else if (hYapi > (30.50 - 0.001)) {
       final b20 = s.bolum20;
-      if (b20 != null && b20.basinclandirma?.label.contains("-B") == true) {
+      if (b20 != null && b20.basinclandirma?.label?.contains("-B") == true) {
         // 20-BAS-B: Hayır
         reasons.add(
           "KRİTİK RİSK: Yapı Yüksekliği 30.50m üzeri ve en az bir merdivende basınçlandırma sistemi yok ise YGH (Yangın Güvenlik Holü) zorunludur.",
@@ -3013,7 +3013,7 @@ class ReportEngine {
     // 4. Bodrum katlarda ticari/teknik kullanım (Bölüm 10)
     final b10 = s.bolum10;
     if (b10 != null &&
-        b10.bodrumlar.any((c) => c?.label.contains("10-C") == true)) {
+        b10.bodrumlar.any((c) => c?.label?.contains("10-C") == true)) {
       reasons.add(
         "KRİTİK RİSK: Bodrum katlarda, konuttan farklı bir kullanım amacı olduğundan tüm merdivenlerin önünde YGH (Yangın Güvenlik Holü) zorunludur.",
       );
@@ -3021,7 +3021,7 @@ class ReportEngine {
 
     // 5. İtfaiye Asansörü zorunluluğu (Bölüm 22)
     final b22 = s.bolum22;
-    if (b22 != null && b22.varlik?.label.contains("22-1-B") == true) {
+    if (b22 != null && b22.varlik?.label?.contains("22-1-B") == true) {
       reasons.add(
         "KRİTİK RİSK: Binada İtfaiye Asansörü bulunması zorunludur. İtfaiye asansörü normal (insan taşıma) asansöründen farklı özelliklere sahip olmalıdır.",
       );
