@@ -12,7 +12,7 @@ class Bolum20Model {
   final int sahanliksizMerdivenSayisi;
   final int dengelenmisMerdivenSayisi;
 
-  // Madde 41: Toplam kaç tanesi direkt dışarı açılıyor?
+  // Madde 41: Toplam kaç tanesi doğrudan dışarı açılıyor?
   final int toplamDisariAcilanMerdivenSayisi; // NEW simplified field
 
   final ChoiceResult?
@@ -28,7 +28,7 @@ class Bolum20Model {
   final int bodrumSahanliksizMerdivenSayisi;
   final int bodrumDengelenmisMerdivenSayisi;
 
-  // Madde 41 (Bodrum): Toplam kaç tanesi direkt dışarı açılıyor?
+  // Madde 41 (Bodrum): Toplam kaç tanesi doğrudan dışarı açılıyor?
   final int bodrumToplamDisariAcilanMerdivenSayisi; // NEW simplified field
 
   final ChoiceResult?

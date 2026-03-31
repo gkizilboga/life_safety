@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:life_safety/data/bina_store.dart';
 import '../../models/choice_result.dart';
 import '../../models/bolum_20_model.dart';
@@ -260,7 +261,7 @@ class Section36Handler {
             if (!heightOk) reasons.add("yükseklik 9.50m limitini aşmaktadır");
             if (!loadOk) reasons.add("kullanıcı yükü 25 kişiyi aşmaktadır");
             analysisParts.add(
-              "KRİTİK RİSK: Dairesel merdiven, ${reasons.join(" ve ")} sebebiyle Yönetmelik Madde 25 kriterlerini sağlamamaktadır. Kaçış yolu olarak kullanılamaz.",
+              "KRİTİK RİSK: Dairesel merdiven, ${reasons.join(" ve ")} sebebiyle Yönetmelik Madde 25 kriterlerini sağlamamaktadır. Dairesel merdiven binada kaçış yolu olarak kullanılamaz.",
             );
           }
         }
@@ -294,82 +295,50 @@ class Section36Handler {
           }
         }
 
-        void check(
-          String prefix,
-          dynamic sChoice,
-          dynamic cChoice,
-          dynamic kapiChoice, {
-          bool isSpiralPossible = false,
-        }) {
-          List<String> violations = [];
-
-          if (sChoice is ChoiceResult) {
-            final range = _getRangeForLabel(sChoice.label);
-            if (range != null) {
-              int comparisonValue = isSpiralPossible ? range[1] : range[0];
-              if (comparisonValue < minMerd) {
-                violations.add(
-                  "Merdiven genişliği yetersiz (Gereken: $minMerd cm, Seçim: ${sChoice.uiTitle})",
-                );
-              }
-            }
-          }
-          if (cChoice != null && cChoice is ChoiceResult) {
-            final range = _getRangeForLabel(cChoice.label);
-            if (range != null && range[0] < minKori) {
-              violations.add(
-                "Koridor genişliği yetersiz (Gereken: $minKori cm, Seçim: ${cChoice.uiTitle})",
-              );
-            }
-          }
-          if (kapiChoice != null &&
-              kapiChoice is ChoiceResult &&
-              kapiChoice.label == "36-Kapi-A") {
-            violations.add(
-              "Kapı temiz geçiş genişliği yetersiz (Gereken: En Az 80 cm, Mevcut: ${kapiChoice.uiTitle})",
-            );
-          }
-
-          if (violations.isNotEmpty) {
-            analysisParts.add(
-              "KRİTİK RİSK: $prefix kaçış yollarına ait genişlik ihlalleri tespit edildi:\n- ${violations.join("\n- ")}",
-            );
-          }
-        }
-
         bool globalHasSpiral =
             (b20.donerMerdivenSayisi > 0 || b20.bodrumDonerMerdivenSayisi > 0);
 
         if (b36.areWidthsSame) {
-          check(
+          _checkWidth(
             "GENEL",
             b36.genislikKorunumlu,
             b36.koridorGenislikKorunumlu,
             b36.kapiGenislikKorunumlu,
+            minMerd: minMerd,
+            minKori: minKori,
+            analysisParts: analysisParts,
             isSpiralPossible: globalHasSpiral,
           );
         } else {
-          if (currentProtected > 0)
-            check(
+          if (currentProtected > 0) {
+            _checkWidth(
               "KORUNUMLU",
               b36.genislikKorunumlu,
               b36.koridorGenislikKorunumlu,
               b36.kapiGenislikKorunumlu,
+              minMerd: minMerd,
+              minKori: minKori,
+              analysisParts: analysisParts,
               isSpiralPossible: globalHasSpiral,
             );
+          }
           int korunumsuzCount =
               b20.normalMerdivenSayisi +
               b20.binaDisiAcikYanginMerdiveniSayisi +
               b20.donerMerdivenSayisi +
               b20.dengelenmisMerdivenSayisi;
-          if (korunumsuzCount > 0)
-            check(
+          if (korunumsuzCount > 0) {
+            _checkWidth(
               "KORUNUMSUZ",
               b36.genislikKorunumsuz,
               b36.koridorGenislikKorunumsuz,
               b36.kapiGenislikKorunumsuz,
+              minMerd: minMerd,
+              minKori: minKori,
+              analysisParts: analysisParts,
               isSpiralPossible: globalHasSpiral,
             );
+          }
         }
       }
     }
@@ -509,6 +478,21 @@ class Section36Handler {
     List<Map<String, dynamic>> details = [];
     final b36 = _store.bolum36;
     if (b36 != null) {
+      // 1. Kapsamlı Uygunluk Değerlendirmesi
+      String fullEval = getFullReport();
+      _addDetail(
+        details,
+        label: 'Genel Değerlendirme',
+        value: '',
+        report: fullEval,
+        status: fullEval.contains("KRİTİK RİSK")
+            ? ReportStatus.risk
+            : (fullEval.contains("UYARI")
+                  ? ReportStatus.warning
+                  : ReportStatus.compliant),
+      );
+
+      // 2. Özel Durumlar ve Beyanlar
       if (b36.cikisKati != null)
         _addDetail(
           details,
@@ -765,7 +749,7 @@ class Section36Handler {
                 "kullanıcı yükü 25 kişiyi aşmaktadır ($effectiveLoad)",
               );
             spiralReport =
-                "KRİTİK RİSK: Dairesel merdiven ${reasons.join(" VE ")} için kaçış yolu olarak kullanılamaz.";
+                "KRİTİK RİSK: Dairesel merdiven ${reasons.join(" VE ")} kaçış yolu olarak kullanılamaz.";
             spiralStatus = ReportStatus.risk;
           } else if (b25?.yukseklik?.label == "25-Dairesel-A") {
             spiralReport =
@@ -776,7 +760,7 @@ class Section36Handler {
           _addDetail(
             details,
             label: 'Dairesel Merdiven Değerlendirmesi',
-            value: 'Ayrı Bölüm',
+            value: 'Binada dairesel merdiven mevcut.',
             report: spiralReport,
             status: spiralStatus,
           );
@@ -796,5 +780,68 @@ class Section36Handler {
       }
     }
     return details;
+  }
+
+  void _checkWidth(
+    String prefix,
+    dynamic sChoice,
+    dynamic cChoice,
+    dynamic kapiChoice, {
+    required double minMerd,
+    required double minKori,
+    required List<String> analysisParts,
+    bool isSpiralPossible = false,
+  }) {
+    // DIAGNOSTIC START
+    debugPrint("[BÖLÜM 36] Genişlik analizi başladı: $prefix");
+
+    try {
+      List<String> violations = [];
+
+      if (sChoice is ChoiceResult) {
+        final String label = sChoice.label;
+        final range = _getRangeForLabel(label);
+        if (range != null && range.length >= 2) {
+          int comparisonValue = isSpiralPossible ? range[1] : range[0];
+          if (comparisonValue < minMerd) {
+            violations.add(
+              "Merdiven genişliği yetersiz (Gereken: $minMerd cm, Seçim: ${sChoice.uiTitle})",
+            );
+          }
+        }
+      }
+
+      if (cChoice is ChoiceResult) {
+        final String label = cChoice.label;
+        final range = _getRangeForLabel(label);
+        if (range != null && range.isNotEmpty) {
+          if (range[0] < minKori) {
+            violations.add(
+              "Koridor genişliği yetersiz (Gereken: $minKori cm, Seçim: ${cChoice.uiTitle})",
+            );
+          }
+        }
+      }
+
+      if (kapiChoice is ChoiceResult && kapiChoice.label == "36-Kapi-A") {
+        violations.add(
+          "Kapı temiz geçiş genişliği yetersiz (Gereken: En Az 80 cm, Mevcut: ${kapiChoice.uiTitle})",
+        );
+      }
+
+      if (violations.isNotEmpty) {
+        analysisParts.add(
+          "KRİTİK RİSK: $prefix kaçış yollarına ait genişlik ihlalleri tespit edildi:\n- ${violations.join("\n- ")}",
+        );
+      }
+    } catch (e) {
+      debugPrint("[BÖLÜM 36] HATA ($prefix): $e");
+      analysisParts.add(
+        "UYARI: $prefix genişlik analizinde teknik bir sorun oluştu.",
+      );
+    }
+
+    // DIAGNOSTIC END
+    debugPrint("[BÖLÜM 36] Genişlik analizi bitti: $prefix");
   }
 }

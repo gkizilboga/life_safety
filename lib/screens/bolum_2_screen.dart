@@ -74,7 +74,7 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
             isSelected: _model.secim?.label == Bolum2Content.celik.label,
             onTap: () => _handleSelection(Bolum2Content.celik),
             imageAssetPath: AppAssets.section2Celik,
-            imageTitle: "Çelik Taşıyıcı Sistem Detayı",
+            imageTitle: "Çelik Yapı Örneği",
           ),
           const SizedBox(height: 8),
 
@@ -99,4 +99,3 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
     );
   }
 }
-

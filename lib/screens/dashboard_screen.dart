@@ -84,6 +84,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               children: [
+                _buildSectionLabel("Hızlı Erişim"),
+                _buildMainActions(context),
+                const SizedBox(height: 25),
                 if (ongoingActions.isNotEmpty) ...[
                   _buildSectionLabel("Devam Eden Analizler"),
                   ...ongoingActions.reversed
@@ -104,20 +107,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                   const SizedBox(height: 20),
                 ],
-                _buildSectionLabel("Hızlı Erişim"),
-                _buildMainActions(context),
-                const SizedBox(height: 25),
                 _buildSectionLabel("Bilgiler ve Ayarlar"),
                 _buildSecondaryMenu(context),
+                const SizedBox(height: 25),
+                _buildSectionLabel("Destek ve İletişim"),
+                _buildSupportCard(context),
                 const SizedBox(height: 25),
                 _buildSectionLabel("Paylaşım ve Transfer"),
                 _buildFileActionSection(context, completedActions),
                 const SizedBox(height: 25),
                 _buildSectionLabel("Promosyon İşlemleri"),
                 _buildPromoCodeSection(context),
-                const SizedBox(height: 25),
-                _buildSectionLabel("Destek ve İletişim"),
-                _buildSupportCard(context),
                 const SizedBox(height: 30),
               ],
             ),
@@ -144,12 +144,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Hoş Geldiniz",
+            "HOŞ GELDİNİZ",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 19,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+              fontSize: 21,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.8,
             ),
           ),
           const SizedBox(height: 16.5),
@@ -208,8 +208,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             name,
             style: const TextStyle(
-              fontSize: 16, // Enhancing visibility of building name
-              fontWeight: FontWeight.bold,
+              fontSize: 15.5, // Zarif hierarchy
+              fontWeight: FontWeight.w700,
               color: Color(0xFF2C3E50),
             ),
           ),
@@ -263,7 +263,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
                   },
                   child: Text(
-                    isCompleted ? "Analizleri Gör" : "Devam Et",
+                    isCompleted ? "Yangın Risk Analizi" : "Devam Et",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -338,11 +338,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        isCompleted ? "Tamamlandı" : "Devam Ediyor",
+        isCompleted ? "TAMAMLANDI" : "DEVAM EDİYOR",
         style: TextStyle(
           color: isCompleted ? Colors.green.shade700 : Colors.orange.shade700,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 0.5,
         ),
       ),
     );
@@ -477,8 +478,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Text(
               title,
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                fontSize: 14.5,
                 color: AppColors.textDark,
               ),
             ),
@@ -495,7 +496,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _buildMenuTile(
           Icons.collections_bookmark_outlined,
           "Terimler Sözlüğü",
-          "Teknik Tanımlar ve Kavramlar",
+          "",
           () => Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const TerminologyScreen()),
@@ -504,7 +505,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _buildMenuTile(
           Icons.menu_book_outlined,
           "Mevzuatlar",
-          "Yönetmelik Hükümleri",
+          "",
           () => Navigator.push(
             context,
             MaterialPageRoute(
@@ -514,8 +515,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         _buildMenuTile(
           Icons.gavel_outlined,
-          "Yasal Bilgilendirme",
-          "KVKK ve Kullanım Şartları",
+          "Yasal Bilgiler",
+          "",
           () => Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const LegalTextScreen()),
@@ -523,8 +524,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         _buildMenuTile(
           Icons.settings_outlined,
-          "Uygulama Ayarları",
-          "Profil ve Tercihler",
+          "Profil ve Ayarlar",
+          "",
           () => Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SettingsScreen()),
@@ -552,14 +553,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Text(
           title,
           style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            fontSize: 14.5,
             color: AppColors.textDark,
           ),
-        ),
-        subtitle: Text(
-          sub,
-          style: const TextStyle(fontSize: 13, color: AppColors.textLight),
         ),
         trailing: const Icon(
           Icons.arrow_forward_ios,
@@ -573,14 +570,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildSectionLabel(String label) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 15),
+      padding: const EdgeInsets.only(left: 4, bottom: 12, top: 8),
       child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textLight,
-          letterSpacing: 0.5,
+        label.toUpperCase(),
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+          color: Colors.blueGrey.shade600,
+          letterSpacing: 1.3,
         ),
       ),
     );
@@ -596,21 +593,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildSupportCard(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.green.shade600, Colors.green.shade800],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: const Color(0xFFF1F8E9), // Softer Mint Green
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.green.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        border: Border.all(color: Colors.green.shade100, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -620,32 +607,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.green.shade100.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.support_agent_rounded,
-                  color: Colors.white,
+                  color: Colors.green.shade800,
                   size: 28,
                 ),
               ),
               const SizedBox(width: 15),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Uzman Desteği Alın",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.green.shade900,
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "Yangın güvenliği uzmanımızla görüşün",
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                   ],
                 ),
@@ -658,33 +640,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Expanded(
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.green.shade800,
+                    backgroundColor: Colors.green.shade700,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 12),
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   onPressed: _launchWhatsApp,
-                  icon: const Icon(Icons.chat_bubble_outline_rounded, size: 20),
-                  label: const Text("WhatsApp"),
+                  icon: const Icon(Icons.chat_bubble_outline_rounded, size: 18),
+                  label: const Text(
+                    "WhatsApp",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.2),
-                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.green.shade700,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     elevation: 0,
+                    side: BorderSide(color: Colors.green.shade200),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
                   onPressed: _launchEmail,
-                  icon: const Icon(Icons.email_outlined, size: 20),
-                  label: const Text("E-Posta"),
+                  icon: const Icon(Icons.email_outlined, size: 18),
+                  label: const Text(
+                    "E-Posta",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],

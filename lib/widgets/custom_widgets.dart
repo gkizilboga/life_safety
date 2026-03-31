@@ -271,6 +271,7 @@ class AnalysisPageLayout extends StatefulWidget {
   final VoidCallback? onNext;
   final VoidCallback? onSave;
   final bool isNextEnabled;
+  final String? customWarningText;
 
   const AnalysisPageLayout({
     super.key,
@@ -280,6 +281,7 @@ class AnalysisPageLayout extends StatefulWidget {
     this.onNext,
     this.onSave,
     this.isNextEnabled = true,
+    this.customWarningText,
   });
 
   @override
@@ -580,9 +582,11 @@ class _AnalysisPageLayoutState extends State<AnalysisPageLayout> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (!widget.isNextEnabled && !_isNavigating && _showWarning) ...[
-                    const Text(
-                      "Devam etmek için lütfen tüm soruları yanıtlayınız",
-                      style: TextStyle(
+                    Text(
+                      widget.customWarningText ??
+                          "Devam etmek için lütfen tüm soruları yanıtlayınız",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
                         fontSize: 11,
                         color: Colors.black45,
                         fontWeight: FontWeight.w500,
@@ -803,6 +807,7 @@ class ImageModalHelper {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => _ImageModal(assetPath: assetPath, title: title),
     );
@@ -817,80 +822,99 @@ class _ImageModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.60,
+      height: MediaQuery.of(context).size.height * 0.65, // Slightly increased height for better view
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      child: Column(
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            margin: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.symmetric(vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textHeader,
+                      ),
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Divider(),
-          Expanded(
-            child: InteractiveViewer(
-              minScale: 0.5,
-              maxScale: 4.0,
-              child: Center(
-                child: Image.asset(
-                  assetPath,
-                  fit: BoxFit.contain,
-                  cacheWidth: 1000, // Optimize memory: Limit decode resolution to 1000px width
-                  errorBuilder: (c, o, s) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.broken_image,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(height: 8),
-                      Text("Görsel yüklenemedi: $assetPath"),
-                    ],
+            const Divider(),
+            Expanded(
+              child: InteractiveViewer(
+                minScale: 1.0,
+                maxScale: 5.0,
+                child: Center(
+                  child: Image.asset(
+                    assetPath,
+                    fit: BoxFit.contain,
+                    cacheWidth: 1200, // Reduced from 1000 for slightly better quality on larger screens
+                    errorBuilder: (c, o, s) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.broken_image,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
+                        const SizedBox(height: 8),
+                        Text("Görsel yüklenemedi: $assetPath"),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            "Görseli iki parmağınızla büyütebilirsiniz",
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade600,
-              fontStyle: FontStyle.italic,
+            // Info Note directly below the image area
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                border: Border(top: BorderSide(color: Colors.grey.shade100)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.zoom_in, size: 16, color: Colors.blueGrey.shade600),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Görseli iki parmağınızla büyütebilirsiniz",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.blueGrey.shade700,
+                      fontWeight: FontWeight.w600,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-        ],
+          ],
+        ),
       ),
     );
   }

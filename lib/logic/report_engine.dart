@@ -469,6 +469,23 @@ class ReportEngine {
       handled = true;
     }
 
+    // Bölüm 14: Tesisat Şaftları
+    if (id == 14) {
+      final b14 = s.bolum14;
+      if (b14 != null) {
+        if (b14.raporMesaji != null && b14.raporMesaji!.isNotEmpty) {
+          _addDetail(
+            details,
+            label: 'Değerlendirme',
+            value: '',
+            report: b14.raporMesaji!,
+            level: RiskLevel.info,
+          );
+        }
+        handled = true;
+      }
+    }
+
     // Bölüm 15: İç Kaplamalar
     if (id == 15) {
       final b15 = s.bolum15;
@@ -3226,7 +3243,7 @@ class ReportEngine {
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "KRİTİK RİSK: Bodrum katlarda asansör kuyu önü duman sızdırmazlığı sağlanmadığında tüm asansörlerin önünde YGH gereklidir.",
+        "KRİTİK RİSK: Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı sağlanmadığında tüm asansörlerin önünde YGH gereklidir.",
       );
     }
 

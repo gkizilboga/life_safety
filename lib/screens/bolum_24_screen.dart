@@ -100,7 +100,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
                 ),
                 const SizedBox(height: 8),
 
-                // Option C: Direkt Çıkış
+                // Option C: Doğrudan Çıkış
                 SelectableCard(
                   choice: Bolum24Content.tipOptionC,
                   isSelected:

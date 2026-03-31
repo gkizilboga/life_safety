@@ -182,7 +182,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
             children: [
               Expanded(
                 child: Text(
-                  "Farklı katlardaki yaklaşık kullanıcı yükleri aşağıdaki gibidir.",
+                  "Katlardaki kullanıcı yükleri (tahmini).",
                   style: AppStyles.questionTitle,
                 ),
               ),

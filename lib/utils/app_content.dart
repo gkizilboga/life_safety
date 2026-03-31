@@ -412,7 +412,7 @@ class Bolum9Content {
     uiTitle: "Hiçbir yerde yok.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Binanın hiçbir yerinde otomatik yağmurlama (sprinkler) sistemi bulunmamaktadır. Bu durumda kaçış mesafesi limitleri minimum değerler üzerinden değerlendirilmektedir. Sprinkler sistemi olmaması kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır. Yangın Yönetmeliği-Madde 96 'ya göre belli özelliklerdeki konutlarda, otoparklarda, işyerlerinde otomatik söndürme sistemi mecburiyeti doğabilmektedir. Bu Uygulama içerisinde yer alan Aktif Sistem Gereksinimleri çıktısında binanın sprinkler sistemi ihtiyacı belirtilmekteidir. Bu çıktıda sprinkler sistemi zorunlu olmadığı belirtilse bile proje üzerinde kat ve mahal bazında hususi çalışma yapılması mutlaka önerilir. ",
+        "BİLGİ: Binanın hiçbir yerinde otomatik yağmurlama (sprinkler) sistemi bulunmamaktadır. Bu durumda kaçış mesafesi limitleri minimum değerler üzerinden değerlendirilmektedir. Sprinkler sistemi olmaması kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır. Yangın Yönetmeliği-Madde 96 'ya göre belli özelliklerdeki konutlarda, otoparklarda, işyerlerinde otomatik söndürme sistemi mecburiyeti doğabilmektedir. Bu Uygulama içerisinde yer alan 'AKTİF SİSTEM GEREKSİNİMLERİ' çıktısında binanın sprinkler sistemi ihtiyacı belirtilmekteidir.  Bahsedilen çıktıda sprinkler sistemi zorunlu olmadığı belirtilmiş olsa bile proje üzerinde kat ve mahal bazında hususi olarak ihtiyaç analizi yapılması mutlaka önerilir. ",
     level: RiskLevel.info,
   );
 
@@ -721,7 +721,7 @@ class Bolum13Content {
 
   static final otoparkOptionC = ChoiceResult(
     label: "13-1-C (Otopark)",
-    uiTitle: "Arada kapı yok, direkt serbest geçiş var.",
+    uiTitle: "Arada kapı yok, doğrudan serbest geçiş var.",
     uiSubtitle:
         "Otopark ile merdiven arasında herhangi bir yangın kapısı bulunmuyor.",
     reportText:
@@ -1141,10 +1141,14 @@ class Bolum13Content {
 
 class Bolum14Content {
   static const String title = "Tesisat Şaftları";
-  static const String msgHigh = "";
-  static const String msgMid = "";
-  static const String msgDeepBasement = "";
-  static const String msgStandard = "";
+  static const String msgHigh =
+      "Bina yüksekliği 30.50 m ve üzerinde olduğu için tesisat şaft duvarlarının en az 120 dakika, şaft kapaklarının ise en az 90 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanır özellikte olmaları gereklidir.";
+  static const String msgMid =
+      "Bina yüksekliği 21.50 m ile 30.50 m arasında olduğu için tesisat şaft duvarlarının en az 90 dakika, şaft kapaklarının ise en az 60 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanır özellikte olmaları gereklidir.";
+  static const String msgDeepBasement =
+      "Binada 10 m 'den fazla bodrum kat derinliği (yapı yüksekliği bakımından) olduğu için tesisat şaft duvarlarının en az 90 dakika, şaft kapaklarının ise en az 60 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanır özellikte olmaları gereklidir.";
+  static const String msgStandard =
+      "Mevcut bina verilerine göre tesisat şaft duvarlarının en az 60 dakika, şaft kapaklarının ise en az 30 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanır özellikte olmaları gereklidir.";
 }
 
 class Bolum15Content {
@@ -1251,7 +1255,7 @@ class Bolum15Content {
   static final tavanOptionA = ChoiceResult(
     label: "15-3-A",
     uiTitle: "Hayır, yok.",
-    uiSubtitle: "Tavanlar direkt beton üzeri sıva + boya.",
+    uiSubtitle: "Tavanlar doğrudan beton üzeri sıva + boya.",
     reportText: "OLUMLU: Tavanlarda asma tavan bulunmamaktadır.",
     level: RiskLevel.positive,
   );
@@ -1561,7 +1565,7 @@ class Bolum17Content {
   static final iskeletOptionA = ChoiceResult(
     label: "17-2-A (İskelet)",
     uiTitle:
-        "Taşıyıcılar beton veya çeliktir. Isı yalıtım olarak taşyünü vb. malzeme kullanılmıştır.",
+        "Taşıyıcılar beton veya çelik. Isı yalıtımda ise taşyünü vb. malzeme kullanılmıştır.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Çatı taşıyıcı sisteminin ve yalıtımının yanmaz malzemeden olması yangın güvenliği için en ideal durumdur.",
@@ -1571,7 +1575,7 @@ class Bolum17Content {
   static final iskeletOptionB = ChoiceResult(
     label: "17-2-B (İskelet)",
     uiTitle:
-        "Taşıyıcılar ve altındaki ısı yalıtım malzemesi yanıcı ürünlerdir.",
+        "Taşıyıcılar ve altındaki ısı yalıtım malzemesi YANICI ürünlerdir.",
     uiSubtitle: "Ahşap, XPS, EPS, Strafor vb. malzemeler.",
     reportText: "",
     level: RiskLevel.positive,
@@ -1969,7 +1973,7 @@ class Bolum20Content {
 
   static final basYghOptionA = ChoiceResult(
     label: "20-BAS-A",
-    uiTitle: "Evet, var.",
+    uiTitle: "Var.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Kapalı yangın merdivenlerinde basınçlandırma sistemi olduğu beyan edilmiştir.",
@@ -1978,7 +1982,7 @@ class Bolum20Content {
 
   static final basYghOptionB = ChoiceResult(
     label: "20-BAS-B",
-    uiTitle: "Hayır, yok.",
+    uiTitle: "Yok.",
     uiSubtitle: "",
     reportText:
         "BİLGİ: Kapalı yangın merdivenlerinde basınçlandırma sistemi bulunmamaktadır. Binaya özgü olarak YGH ihtiyacı bu analiz dokümanında ayrıca belirtilmiştir.",
@@ -2035,7 +2039,7 @@ class Bolum20Content {
     uiTitle: "Yok.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Basınçlandırma olmayan merdivenlerde doğal havalandırma da bulunmamaktadır. Bu durumda merdivene duman dolması halinde duman tahliye edilemeyebilir ve kaçış güvenliği tehlike altına girer. Yönetmelik Madde 45 gereği tüm korunmuş kaçış merdivenleri doğal yolla veya mekanik yolla havalandırılmalı ya da basınçlandırılmalıdır. Acil olarak mekanik havalandırma veya basınçlandırma sistemi tesis edilmesi zorunludur.",
+        "KRİTİK RİSK: Basınçlandırma olmayan merdivenlerde doğal havalandırma da bulunmadığı beyan edilmiştir. Bu durumda merdivene duman dolması halinde duman tahliye edilemeyebilir ve kaçış güvenliği tehlike altına girer. Yönetmelik Madde 45 gereği tüm korunmuş kaçış merdivenleri doğal yolla veya mekanik yolla havalandırılmalı ya da basınçlandırılmalıdır. Acil olarak mekanik havalandırma veya basınçlandırma sistemi tesis edilmesi zorunludur.",
     level: RiskLevel.critical,
   );
 
@@ -2053,7 +2057,7 @@ class Bolum20Content {
     uiTitle: "Evet.",
     uiSubtitle: "Eğimli yol ile çıkış sağlanıyor.",
     reportText:
-        "(Rampa modülünde detaylandırılacak) Rampa ile çıkış sağlanmaktadır.",
+        "Rampa ile çıkış sağlanmaktadır. Rampanın eğimi %10 'u aşmamalıdır. Ayrıca rampa genişliği en az 120 cm olmalıdır.",
     level: RiskLevel.positive,
   );
 
@@ -2136,7 +2140,7 @@ class Bolum21Content {
   static final varlikOptionB = ChoiceResult(
     label: "21-1-B",
     uiTitle: "Hayır, yok.",
-    uiSubtitle: "Holden geçmeden direkt merdivene çıkılıyor.",
+    uiSubtitle: "Holden geçmeden doğrudan merdivene çıkılıyor.",
     reportText:
         "BİLGİ: Binada YGH bulunmamaktadır. Binada YGH zorunluluğu bulunup bulunmadığı testin sonunda kontrol edilmelidir. Detaylı bilgi için Yangın Güvenlik Uzmanı 'nın görüşüne başvurulması önerilir.",
     adviceText:
@@ -2445,7 +2449,7 @@ class Bolum23Content {
         "İniyor ancak HOLSÜZ biçimde DİREKT otoparka, depoya veya ticari alanlara açılıyor.",
     uiSubtitle: "Asansörün bodrum kata çıktığı noktada bir YGH yok.",
     reportText:
-        "KRİTİK RİSK: Asansör kuyuları binanın bacası gibidir. Bodrumdaki otoparkta veya kazan dairesinde çıkacak bir yangının dumanı, direkt asansör kapısından kuyuya girer ve saniyeler içinde tüm üst katlara yayılır.",
+        "KRİTİK RİSK: Asansör kuyuları binanın bacası gibidir. Bodrumdaki otoparkta veya kazan dairesinde çıkacak bir yangının dumanı, doğrudan asansör kapısından kuyuya girer ve saniyeler içinde tüm üst katlara yayılır.",
     level: RiskLevel.critical,
   );
 
@@ -2753,7 +2757,7 @@ class Bolum25Content {
     uiTitle: "9.50 metre veya altı.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Dairesel merdiven yüksekliği 9.50m sınırının altındadır. Dairesel merdiven kaçış yolu olarak kullanılabilir.",
+        "BİLGİ: Dairesel merdiven yüksekliği 9.50m 'nin altındadır. Dairesel merdiven kaçış yolu olarak kullanılabilir.",
     level: RiskLevel.info,
   );
 
@@ -2762,7 +2766,7 @@ class Bolum25Content {
     uiTitle: "9.50 metre üzeri.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Dairesel merdiven yüksekliği 9.50m sınırını aşmaktadır. Bu durumda dairesel merdiven kaçış yolu olarak kullanılamaz.",
+        "UYARI: Dairesel merdiven yüksekliği 9.50m 'nin üzerindedir. Bu durumda dairesel merdiven kaçış yolu olarak kullanılamaz.",
     level: RiskLevel.warning,
   );
 
@@ -2844,7 +2848,7 @@ class Bolum26Content {
   static final sahanlikOptionB = ChoiceResult(
     label: "26-3-B",
     uiTitle: "Hayır, rampadan önce veya sonra eğim var.",
-    uiSubtitle: "Kapıyı açınca direkt eğimli yüzeye basılıyor.",
+    uiSubtitle: "Kapıyı açınca doğrudan eğimli yüzeye basılıyor.",
     reportText:
         "UYARI: Rampa giriş ve çıkışlarında, kapı önlerinde mutlaka düz sahanlık bulunmalıdır.",
     level: RiskLevel.warning,
@@ -3474,7 +3478,7 @@ class Bolum30Content {
   );
   static final konumOptionB = ChoiceResult(
     label: "30-1-B",
-    uiTitle: "Direkt merdiven kovasına açılıyor.",
+    uiTitle: "Doğrudan merdiven kovasına açılıyor.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Kazan dairesi kapısı ASLA doğrudan merdiven kovasına açılamaz. Olası bir patlama veya gaz sızıntısında merdiven kullanılamaz hale gelir.",
@@ -3672,10 +3676,10 @@ class Bolum31Content {
 
   static final yapiOptionB = ChoiceResult(
     label: "31-1-B",
-    uiTitle: "Kapısı direkt apartman koridoruna açılıyor.",
+    uiTitle: "Kapısı doğrudan apartman koridoruna açılıyor.",
     uiSubtitle: "Kapı açılınca bina içine duman dolabilir.",
     reportText:
-        "KRİTİK RİSK: Trafo odasından çıkacak yoğun duman ve ısı, kaçış yollarını (merdivenleri) kullanılamaz hale getirir. Kapı asla direkt kaçış yoluna açılmamalıdır.",
+        "KRİTİK RİSK: Trafo odasından çıkacak yoğun duman ve ısı, kaçış yollarını (merdivenleri) kullanılamaz hale getirir. Kapı asla doğrudan kaçış yoluna açılmamalıdır.",
     level: RiskLevel.critical,
   );
 
@@ -3848,10 +3852,10 @@ class Bolum32Content {
   );
   static final yapiOptionB = ChoiceResult(
     label: "32-1-B",
-    uiTitle: "Kapısı direkt apartman koridoruna ve hole açılıyor.",
+    uiTitle: "Kapısı doğrudan apartman koridoruna ve hole açılıyor.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Jeneratör odasından çıkacak zehirli egzoz gazı ve duman, kaçış yollarını kullanılamaz hale getirir. Kapı asla direkt kaçış yoluna açılmamalıdır.",
+        "KRİTİK RİSK: Jeneratör odasından çıkacak zehirli egzoz gazı ve duman, kaçış yollarını kullanılamaz hale getirir. Kapı asla doğrudan kaçış yoluna açılmamalıdır.",
     level: RiskLevel.critical,
   );
   static final yapiOptionC = ChoiceResult(
@@ -4020,12 +4024,24 @@ class Bolum33Content {
     level: RiskLevel.critical,
   );
 
-  static final bos = ChoiceResult(
-    label: "",
-    uiTitle: "",
+  static final allKatlarYeterli = ChoiceResult(
+    label: "33-ALL-OK",
+    uiTitle: "Yeterli",
     uiSubtitle: "",
-    reportText: "",
+    reportText:
+        "Bina geneli (Zemin, Normal ve Bodrum katlar) için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü kapasitesi için yeterlidir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
     level: RiskLevel.positive,
+  );
+
+  static final allKatlarYetersiz = ChoiceResult(
+    label: "33-ALL-FAIL",
+    uiTitle: "Yetersiz",
+    uiSubtitle: "",
+    reportText:
+        "KRİTİK RİSK: Bina genelinde (Zemin, Normal ve Bodrum katlar) mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış veya kapasite artırımı gereklidir.",
+    adviceText:
+        "Kullanıcı yükü kapasiteyi aştığı için binaya yönetmelik limitleri çerçevesinde ilave kaçış merdiveni eklenmesi, yatay tahliye koridoru oluşturulması veya kat alanlarının yangın kompartımanlarına bölünerek her bölge için ayrı çıkış tasarlanması yöntemlerinden biri veya birkaçı uygulanarak sorunun çözülmesi gerekmektedir.",
+    level: RiskLevel.critical,
   );
 }
 
@@ -4033,7 +4049,7 @@ class Bolum34Content {
   static final zeminOptionA = ChoiceResult(
     label: "34-1-A (Zemin)",
     uiTitle: "Evet, var.",
-    uiSubtitle: "Müşteriler direkt dükkan kapısından çıkabiliyor.",
+    uiSubtitle: "Müşteriler doğrudan dükkan kapısından çıkabiliyor.",
     reportText:
         "OLUMLU: Zemin kattaki ticari alanların kendi bağımsız çıkışları olduğu için, bina ana girişine ve merdivenlerine ek yük getirmezler.",
     level: RiskLevel.positive,

@@ -22,6 +22,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   late Map<ReportModule, double> _moduleScores;
   bool _isPremium = false;
   bool _isLoading = true;
+  int _loadingProgress = 0;
 
   final Map<int, String> _sectionSummaries = {};
   final Map<int, String> _sectionFullReports = {};
@@ -49,20 +50,52 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
     await Future.delayed(const Duration(milliseconds: 300));
 
     // Perform heavy calculations once
-    _metrics = ReportEngine.calculateRiskMetrics();
-    _moduleScores = ReportEngine.calculateModuleScores();
+    try {
+      _metrics = ReportEngine.calculateRiskMetrics();
+      await Future.delayed(Duration.zero);
+    } catch (e, stack) {
+      debugPrint('Error calculating metrics: $e\n$stack');
+      _metrics = {
+        'score': 0,
+        'criticalCount': 0,
+        'warningCount': 0,
+        'unknownCount': 0,
+        'completion': 0,
+        'criticals': [],
+      };
+    }
+
+    try {
+      _moduleScores = ReportEngine.calculateModuleScores();
+      await Future.delayed(Duration.zero);
+    } catch (e, stack) {
+      debugPrint('Error calculating module scores: $e\n$stack');
+      _moduleScores = {};
+    }
+    
     _isPremium = BinaStore.instance.isPremium;
 
     // Cache section reports, yielding to prevent frame drops
     for (int i = 1; i <= 36; i++) {
-      _sectionSummaries[i] = ReportEngine.getSectionSummary(i);
-      _sectionFullReports[i] = ReportEngine.getSectionFullReport(i);
-      _sectionRiskColors[i] = _getUiRiskColor(_sectionFullReports[i] ?? "");
-
-      // Yield to let UI render 60fps
-      if (i % 4 == 0) {
-        await Future.delayed(Duration.zero);
+      try {
+        _sectionSummaries[i] = ReportEngine.getSectionSummary(i);
+        _sectionFullReports[i] = ReportEngine.getSectionFullReport(i);
+        _sectionRiskColors[i] = _getUiRiskColor(_sectionFullReports[i] ?? "");
+      } catch (e, stack) {
+        debugPrint('Error generating report for section $i: $e\n$stack');
+        _sectionSummaries[i] = "Rapor oluşturulurken bir hata oluştu (Bölüm $i).";
+        _sectionFullReports[i] = "Bölüm yüklenirken istisnai bir durumla karşılaşıldı: $e";
+        _sectionRiskColors[i] = Colors.red;
       }
+
+      if (mounted) {
+        setState(() {
+          _loadingProgress = i;
+        });
+      }
+
+      // Yield to let UI render 60fps - now every step for maximum responsiveness
+      await Future.delayed(Duration.zero);
     }
 
     if (mounted) {
@@ -98,10 +131,10 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          const Center(
+                          Center(
                             child: Text(
-                              "Özet Hazırlanıyor...",
-                              style: TextStyle(
+                              "Özet Hazırlanıyor... ($_loadingProgress/36)",
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF1A237E),

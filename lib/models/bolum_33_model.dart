@@ -50,24 +50,46 @@ class Bolum33Model {
   }
 
   String get combinedReportText {
-    List<String> parts = [];
+    final resZemin = zeminKatSonuc;
+    final resNormal = normalKatSonuc;
+    final resBodrum = bodrumKatSonuc;
 
+    List<ChoiceResult> currentResults = [];
+    if (resZemin != null) currentResults.add(resZemin);
+    if (resNormal != null) currentResults.add(resNormal);
+    if (resBodrum != null) currentResults.add(resBodrum);
+
+    if (currentResults.isEmpty) return "Bölüm 33 hesaplaması yapılmamış.";
+
+    // Check if everything is sufficient
+    bool allOk = currentResults.every((r) => r.label.contains("-OK"));
+    // Check if everything is insufficient
+    bool allFail = currentResults.every((r) => r.label.contains("-FAIL"));
+
+    // Consolidate if everything matches and there is more than 1 floor type
+    if (allOk && currentResults.length > 1) {
+      return Bolum33Content.allKatlarYeterli.reportText;
+    }
+    if (allFail && currentResults.length > 1) {
+      return Bolum33Content.allKatlarYetersiz.reportText;
+    }
+
+    List<String> parts = [];
     // Zemin Kat
-    if (zeminKatSonuc != null) {
-      parts.add("ZEMİN KAT: ${zeminKatSonuc!.reportText}");
+    if (resZemin != null) {
+      parts.add("ZEMİN KAT: ${resZemin.reportText}");
     }
 
     // Normal Kat
-    if (normalKatSonuc != null) {
-      parts.add("NORMAL KATLAR: ${normalKatSonuc!.reportText}");
+    if (resNormal != null) {
+      parts.add("NORMAL KATLAR: ${resNormal.reportText}");
     }
 
     // Bodrum Kat
-    if (bodrumKatSonuc != null) {
-      parts.add("BODRUM KATLAR: ${bodrumKatSonuc!.reportText}");
+    if (resBodrum != null) {
+      parts.add("BODRUM KATLAR: ${resBodrum.reportText}");
     }
 
-    if (parts.isEmpty) return "Bölüm 33 hesaplaması yapılmamış.";
     return parts.join("\n\n");
   }
 

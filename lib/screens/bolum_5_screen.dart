@@ -169,18 +169,26 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
     double nAlani = InputValidator.parseFlex(_normalCtrl.text) ?? 0.0;
     double bAlani = InputValidator.parseFlex(_bodrumCtrl.text) ?? 0.0;
 
-    if (tAlani > 0 && (nAlani > 0 || _nKat == 0)) {
+    if (tAlani > 0 &&
+        (_nKat == 0 || nAlani > 0) &&
+        (_bKat == 0 || bAlani > 0)) {
       double toplam = tAlani + (_nKat * nAlani) + (_bKat * bAlani);
       setState(() {
-        _toplamCtrl.text = toplam.toStringAsFixed(2);
+        _toplamCtrl.text = toplam.toStringAsFixed(2).replaceAll('.', ',');
         _isCalculated = true;
       });
     } else {
+      String msg =
+          "Lütfen tüm kat alan bilgilerini girdikten sonra tıklayınız.";
+      if (tAlani <= 0)
+        msg = "Lütfen zemin kat alanını giriniz.";
+      else if (_nKat > 0 && nAlani <= 0)
+        msg = "Lütfen normal kat alanını giriniz.";
+      else if (_bKat > 0 && bAlani <= 0)
+        msg = "Lütfen bodrum kat alanını giriniz.";
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Lütfen alan bilgilerini girdikten sonra tıklayınız."),
-          backgroundColor: AppColors.warningOrange,
-        ),
+        SnackBar(content: Text(msg), backgroundColor: AppColors.warningOrange),
       );
     }
   }
@@ -205,6 +213,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
     if (!_isCalculated) return false;
     if (_tabanCtrl.text.isEmpty) return false;
     if (_nKat > 0 && _normalCtrl.text.isEmpty) return false;
+    if (_bKat > 0 && _bodrumCtrl.text.isEmpty) return false;
     if (_toplamCtrl.text.isEmpty) return false;
     return _tabanError == null &&
         _normalError == null &&
@@ -220,6 +229,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
       title: "Kat Alan Bilgileri",
       screenType: widget.runtimeType,
       isNextEnabled: _isFormValid() || isLocked,
+      customWarningText:
+          "Lütfen kat alanlarını giriniz ve 'Toplam Alanı Hesaplayınız' butonuna basarak onaylayınız.",
       onNext: () {
         if (!isLocked)
           _onNextPressed();
@@ -250,41 +261,34 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildInputLabel(
+                        _buildNumberInput(
+                          _tabanCtrl,
                           Bolum5Content.oturumAlani,
                           onCalculatorTap: () =>
                               _showCalculatorPopup(_tabanCtrl, "Zemin Kat"),
+                          error: _tabanError,
                         ),
-                        _buildNumberInput(_tabanCtrl, "0", error: _tabanError),
 
                         if (_nKat > 0) ...[
-                          const SizedBox(height: 16),
-                          _buildInputLabel(
+                          _buildNumberInput(
+                            _normalCtrl,
                             Bolum5Content.normalKatAlani,
                             onCalculatorTap: () => _showCalculatorPopup(
                               _normalCtrl,
                               "Normal Katlar",
                             ),
-                          ),
-                          _buildNumberInput(
-                            _normalCtrl,
-                            "0",
                             error: _normalError,
                           ),
                         ],
 
                         if (_bKat > 0) ...[
-                          const SizedBox(height: 16),
-                          _buildInputLabel(
+                          _buildNumberInput(
+                            _bodrumCtrl,
                             Bolum5Content.bodrumKatAlani,
                             onCalculatorTap: () => _showCalculatorPopup(
                               _bodrumCtrl,
                               "Bodrum Katlar",
                             ),
-                          ),
-                          _buildNumberInput(
-                            _bodrumCtrl,
-                            "0",
                             error: _bodrumError,
                           ),
                         ],
@@ -306,7 +310,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                                 size: 20,
                               ),
                               label: const Text(
-                                "Otomatik Hesapla",
+                                "Toplam Alanı Hesaplayınız. ",
                                 style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
@@ -333,10 +337,9 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                           ),
                         ),
 
-                        _buildInputLabel(Bolum5Content.toplamInsaat),
                         _buildNumberInput(
                           _toplamCtrl,
-                          "Toplam m²",
+                          Bolum5Content.toplamInsaat,
                           isBold: true,
                           readOnly: true,
                           error: _toplamError,
@@ -376,54 +379,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
     );
   }
 
-  Widget _buildInputLabel(
-    ChoiceResult content, {
-    VoidCallback? onCalculatorTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Flexible(
-              child: Text(content.uiTitle, style: AppStyles.questionTitle),
-            ),
-            if (onCalculatorTap != null)
-              GestureDetector(
-                onTap: onCalculatorTap,
-                child: Tooltip(
-                  message: 'Hesapla',
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryBlue.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.calculate_outlined,
-                      size: 24,
-                      color: AppColors.primaryBlue,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        if (content.uiSubtitle.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              content.uiSubtitle,
-              style: const TextStyle(fontSize: 13, color: Colors.grey),
-            ),
-          ),
-        const SizedBox(height: 6),
-      ],
-    );
-  }
+
 
   void _showCalculatorPopup(
     TextEditingController targetController,
@@ -451,7 +407,10 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(
                 labelText: "Kattaki daire adedi",
-                labelStyle: const TextStyle(fontSize: 10),
+                labelStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -463,7 +422,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                 isDense: true,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
             TextField(
               controller: daireAlaniCtrl,
               keyboardType: const TextInputType.numberWithOptions(
@@ -471,8 +430,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
               ),
               inputFormatters: [InputValidator.flexDecimal],
               decoration: InputDecoration(
-                labelText: "Kattaki bir dairenin alanı (m²)",
-                labelStyle: const TextStyle(fontSize: 10),
+                labelText: "Bir dairenin alanı (m²)",
+                labelStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -524,30 +486,58 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
 
   Widget _buildNumberInput(
     TextEditingController controller,
-    String hint, {
+    ChoiceResult choice, {
+    VoidCallback? onCalculatorTap,
     bool isBold = false,
     bool readOnly = false,
     String? error,
   }) {
-    return TextFormField(
-      controller: controller,
-      readOnly: readOnly,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [InputValidator.flexDecimal],
-      style: TextStyle(
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-        fontSize: 15,
-      ),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 12),
-        errorText: error,
-        suffixText: "m²",
-        filled: true,
-        fillColor: isBold ? const Color(0xFFECEFF1) : Colors.white,
-        isDense: true,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: controller,
+        readOnly: readOnly,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [InputValidator.flexDecimal],
+        style: TextStyle(
+          fontWeight: isBold ? FontWeight.bold : FontWeight.bold,
+          fontSize: 18,
+          color: AppColors.primaryBlue,
+        ),
+        decoration: InputDecoration(
+          labelText: choice.uiTitle,
+          labelStyle: const TextStyle(fontSize: 14, color: AppColors.textLabel),
+          helperText: choice.uiSubtitle.isNotEmpty ? choice.uiSubtitle : null,
+          helperStyle: const TextStyle(fontSize: 11, color: Colors.blueGrey),
+          hintText: "0",
+          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
+          errorText: error,
+          suffixText: "m²",
+          suffixStyle: const TextStyle(fontWeight: FontWeight.bold),
+          suffixIcon: onCalculatorTap != null
+              ? IconButton(
+                  icon: const Icon(Icons.calculate_outlined, color: AppColors.primaryBlue),
+                  onPressed: onCalculatorTap,
+                  tooltip: 'Hesapla',
+                )
+              : null,
+          filled: true,
+          fillColor: isBold ? const Color(0xFFECEFF1) : Colors.white,
+          isDense: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: AppColors.primaryBlue, width: 2),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+        ),
       ),
     );
   }

@@ -95,61 +95,69 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      body: Column(
-        children: [
-          const ModernHeader(
-            title: "Bina Bilgileri",
-            screenType: BuildingSetupScreen,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.opaque,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildLabel("Bina / Apartman Adı"),
-            _buildTextField(_nameCtrl, "Apartman adı giriniz.", Icons.business),
-
-            _buildLabel("İl Seçimi"),
-            _buildSearchableDropdown(
-              hint: "İl seçiniz",
-              items: _cities,
-              value: _selectedCity,
-              onChanged: (val) {
-                setState(() {
-                  _selectedCity = val;
-                  _selectedDistrict = null;
-                });
-              },
-              icon: Icons.map_outlined,
+            const ModernHeader(
+              title: "Bina Bilgileri",
+              screenType: BuildingSetupScreen,
             ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildLabel("Bina / Apartman Adı"),
+                    _buildTextField(
+                      _nameCtrl,
+                      "Apartman adı giriniz.",
+                      Icons.business,
+                    ),
 
-            const SizedBox(height: 20),
+                    _buildSearchableDropdown(
+                      hint: "İl seçiniz",
+                      items: _cities,
+                      value: _selectedCity,
+                      onChanged: (val) {
+                        setState(() {
+                          _selectedCity = val;
+                          _selectedDistrict = null;
+                        });
+                      },
+                      icon: Icons.map_outlined,
+                    ),
 
-            _buildLabel("İlçe Seçimi"),
-            _buildSearchableDropdown(
-              hint: _selectedCity == null ? "Önce il seçiniz" : "İlçe seçiniz.",
-              items: _districts,
-              value: _selectedDistrict,
-              onChanged: _selectedCity == null
-                  ? null
-                  : (val) => setState(() => _selectedDistrict = val),
-              icon: Icons.location_city,
+                    const SizedBox(height: 20),
+
+                    _buildSearchableDropdown(
+                      hint: _selectedCity == null
+                          ? "Önce il seçiniz"
+                          : "İlçe seçiniz.",
+                      items: _districts,
+                      value: _selectedDistrict,
+                      onChanged: _selectedCity == null
+                          ? null
+                          : (val) => setState(() => _selectedDistrict = val),
+                      icon: Icons.location_city,
+                    ),
+                    const SizedBox(height: 30),
+
+                    _buildKvkkBox(),
+
+                    const SizedBox(height: 40),
+                    _buildStartButton(),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 30),
-
-            _buildKvkkBox(),
-
-            const SizedBox(height: 40),
-            _buildStartButton(),
           ],
         ),
       ),
-    ),
-  ],
-),
-);
-}
+    );
+  }
 
   void _showContentDialog(String title, String content) {
     showCustomDialog(
@@ -215,11 +223,8 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
                 backgroundColor: Colors.transparent,
                 isDismissible: true,
                 enableDrag: true,
-                builder: (context) => ListSelector(
-                  title: hint,
-                  items: items,
-                  onSelected: onChanged,
-                ),
+                builder: (context) =>
+                    ListSelector(items: items, onSelected: onChanged),
               );
             },
       child: AbsorbPointer(
@@ -365,13 +370,11 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
 }
 
 class ListSelector extends StatelessWidget {
-  final String title;
   final List<String> items;
   final Function(String) onSelected;
 
   const ListSelector({
     super.key,
-    required this.title,
     required this.items,
     required this.onSelected,
   });
@@ -395,39 +398,7 @@ class ListSelector extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF1A237E),
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      size: 20,
-                      color: Colors.black54,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 12),
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.only(left: 16, right: 16, bottom: 40),
@@ -447,8 +418,9 @@ class ListSelector extends StatelessWidget {
                     item,
                     style: TextStyle(
                       fontSize: 15,
-                      fontWeight:
-                          isHighlight ? FontWeight.w900 : FontWeight.w500,
+                      fontWeight: isHighlight
+                          ? FontWeight.w900
+                          : FontWeight.w500,
                       color: const Color(0xFF263238),
                     ),
                   ),

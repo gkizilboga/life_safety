@@ -234,13 +234,13 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                   children: [
                     _buildSectionTitle("Kat adetleri nedir?"),
                     _buildInput(
-                      "Normal Kat Sayısı (Zemin Üstü)",
+                      "Normal (zemin üstü) kat adedi giriniz.",
                       _normalCountCtrl,
                       hint: "0 - 20 arası",
                       error: _normalCountErr,
                     ),
                     _buildInput(
-                      "Bodrum Kat Sayısı (Zemin Altı)",
+                      "Bodrum (zemin altı) kat adedi giriniz.",
                       _bodrumCountCtrl,
                       hint: "0 - 10 arası",
                       error: _bodrumCountErr,
@@ -266,14 +266,14 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                     if (!_isUnknown) ...[
                       const SizedBox(height: 20),
                       _buildInput(
-                        "Zemin Kat Yüksekliği (m)",
+                        "Zemin kat yüksekliği (m)",
                         _zeminHCtrl,
                         isDecimal: true,
                         hint: "Örn: 3.50",
                         error: _zeminErr,
                       ),
                       _buildInput(
-                        "Normal Kat Yüksekliği (m)",
+                        "Normal kat yüksekliği (m)",
                         _normalHCtrl,
                         isDecimal: true,
                         hint: "Örn: 3.00",
@@ -281,7 +281,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                       ),
                       if ((int.tryParse(_bodrumCountCtrl.text) ?? 0) > 0)
                         _buildInput(
-                          "Bodrum Kat Yüksekliği (m)",
+                          "Bodrum kat yüksekliği (m)",
                           _bodrumHCtrl,
                           isDecimal: true,
                           hint: "Örn: 3.50",
@@ -368,7 +368,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  "Toplam Kat Sayısı: ${(vals['n'] + vals['b'] + 1)} Kat",
+                  "Toplam Kat Adedi: ${(vals['n'] + vals['b'] + 1)} Kat",
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -456,27 +456,43 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     String? error,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         controller: ctrl,
         keyboardType: TextInputType.numberWithOptions(decimal: isDecimal),
         inputFormatters: isDecimal
             ? [InputValidator.flexDecimal]
             : [InputValidator.positiveInteger],
-        style: const TextStyle(fontSize: 14),
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryBlue,
+        ),
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: const TextStyle(fontSize: 14, color: AppColors.textLabel),
           hintText: hint,
-          hintStyle: const TextStyle(fontSize: 11, color: Colors.grey),
+          hintStyle: const TextStyle(fontSize: 12, color: Colors.grey),
           errorText: error,
           filled: true,
           fillColor: Colors.white,
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 12, // Increased for better height
+            horizontal: 14,
+            vertical: 16,
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: AppColors.primaryBlue, width: 2),
+          ),
         ),
       ),
     );

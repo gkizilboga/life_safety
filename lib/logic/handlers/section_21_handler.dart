@@ -61,8 +61,16 @@ class Section21Handler {
         label: 'Merdiven önünde Yangın Güvenlik Holü var mı?',
         value: b21.varlik?.uiTitle ?? '-',
         subtitle: b21.varlik?.uiSubtitle,
-        report: evaluationMessage,
+        report: '',
         advice: b21.varlik?.adviceText,
+        level: hasYgh ? RiskLevel.positive : RiskLevel.info,
+      );
+
+      _addDetail(
+        details,
+        label: 'YGH Teknik Değerlendirmesi',
+        value: isMandatory ? 'ZORUNLU' : 'Gerekli Değil',
+        report: evaluationMessage,
         level: finalLevel,
       );
 

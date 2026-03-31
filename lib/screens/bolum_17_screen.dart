@@ -70,7 +70,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
-      title: "Çatı",
+      title: "Çatılar",
       screenType: widget.runtimeType,
       isNextEnabled: _isComplete,
       onNext: _onNextPressed,
@@ -91,7 +91,7 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
           ),
 
           _buildSoru(
-            "Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?",
+            "Çatıyı taşıyan iskelet ve altındaki ısı yalıtım malzemesi nedir?",
             'iskelet',
             [
               Bolum17Content.iskeletOptionA,

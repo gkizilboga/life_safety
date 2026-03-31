@@ -722,11 +722,11 @@ class PdfService {
                     item,
                     ttf,
                     ttfBold,
-                    riskColor: id <= 10
+                    riskColor: (id <= 10)
                         ? PdfColors.blue700
-                        : _getRiskColor(
-                            item['report'] ?? '',
-                          ), // Use raw text for color detection
+                        : (id == 36
+                            ? const PdfColor.fromInt(0x00000000)
+                            : _getRiskColor(item['report'] ?? '')),
                     isLast: item == details.last,
                     sectionId: id,
                   ),
@@ -749,7 +749,7 @@ class PdfService {
                         tableGroup,
                         ttf,
                         ttfBold,
-                        id <= 10
+                        (id <= 10 || id == 36)
                             ? const PdfColor.fromInt(0x00000000)
                             : effectiveSectionRiskColor,
                       ),
@@ -762,11 +762,11 @@ class PdfService {
                       item,
                       ttf,
                       ttfBold,
-                      riskColor: id <= 10
+                      riskColor: (id <= 10)
                           ? PdfColors.blue700
-                          : _getRiskColor(
-                              item['report'] ?? '',
-                            ), // Use raw text for color detection
+                          : (id == 36
+                              ? const PdfColor.fromInt(0x00000000)
+                              : _getRiskColor(item['report'] ?? '')),
                       isLast: isLast,
                       sectionId: id,
                     ),
@@ -779,7 +779,7 @@ class PdfService {
                     tableGroup,
                     ttf,
                     ttfBold,
-                    id <= 10
+                    (id <= 10 || id == 36)
                         ? const PdfColor.fromInt(0x00000000)
                         : effectiveSectionRiskColor,
                   ),

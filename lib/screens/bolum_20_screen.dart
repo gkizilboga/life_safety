@@ -309,8 +309,7 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                 builder: (context, val, _) => StairQuestion(
                   key: const ValueKey('havalandirma_q'),
                   provider: provider,
-                  title:
-                      "Basınçlandırma olmayan merdivenlerde doğal havalandırma var mı?",
+                  title: "Merdivenlerde doğal havalandırma var mı?",
                   definition: AppDefinitions
                       .havalandirma, // In AppDefinitions (inside app_content)
                   term: "Havalandırma",
@@ -355,8 +354,8 @@ class _TotalDirectInputWidget extends StatelessWidget {
             ? provider.bodToplamDirectCtrl
             : provider.toplamDirectCtrl;
         final title = isBasement
-            ? "Bodrum Kat: Dışarıya Açılan Merdivenler"
-            : "Dışarıya Açılan Merdivenler";
+            ? "Bodrum Kat: Doğrudan Dışarıya Açılan Merdivenler"
+            : "Doğrudan Dışarıya Açılan Merdivenler";
         String desc =
             "Bu $total adet merdivenden kaç tanesi doğrudan dışarı (bina dışına) açılmaktadır?";
 
@@ -454,7 +453,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
         ? "Bodrum Kat: Çıkış Katı Tahliye Mesafesi"
         : "Çıkış Katı Tahliye Mesafesi";
     final question =
-        "Direkt dışarıya açılmayan merdivenlerin, son çıkış katındaki çıkış kapısına kadar olan mesafe $limit metrenin altında mı?";
+        "Doğrudan dışarıya açılmayan merdivenlerin, son çıkış katındaki çıkış kapısına kadar olan mesafesi $limit metrenin altında mı?";
 
     return Selector<Bolum20Provider, ChoiceResult?>(
       selector: (_, p) =>
@@ -829,12 +828,60 @@ class StairQuestion extends StatelessWidget {
                 if (keyParam == 'bodrum') {
                   final bool isIndependent =
                       opt.label == Bolum20Content.bodrumOptionB.label;
-                  provider.setIsBodrumIndependent(isIndependent, opt);
+
+                  // Show warning if switching to Independent (B)
+                  if (isIndependent && selected?.label != opt.label) {
+                    _showIndependentBasementWarning(context, provider, opt);
+                  } else {
+                    provider.setIsBodrumIndependent(isIndependent, opt);
+                  }
                 } else {
                   provider.handleSelection(keyParam, opt);
                 }
               },
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showIndependentBasementWarning(
+    BuildContext context,
+    Bolum20Provider provider,
+    ChoiceResult opt,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
+            SizedBox(width: 10),
+            Text("Önemli Bilgilendirme"),
+          ],
+        ),
+        content: const Text(
+          "Bodrum kat merdivenlerinin, üst katlara çıkan ana merdivenin fiziksel bir devamı olmadığını (farklı bir konumda olduğunu) mu beyan ediyorsunuz?\n\n"
+          "Eğer bodrum merdiveni, üst kata çıkan merdiven ile aynı kovada/noktada ise diğer şıkkı işaretleyiniz. Bu seçim analiz sonucunu doğrudan etkiler.\n\n"
+          "Bağımsız olduğunu onaylıyor musunuz?",
+          style: TextStyle(fontSize: 14, height: 1.4),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Vazgeç / Geri Dön"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange.shade800,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              provider.setIsBodrumIndependent(true, opt);
+              Navigator.pop(context);
+            },
+            child: const Text("Evet, Onaylıyorum"),
           ),
         ],
       ),

@@ -243,7 +243,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
       type: InfoNoteType.info,
       icon: Icons.storefront_outlined,
       text:
-          "Binanızda ticari alanlar (dükkan, işyeri, vb.) mevcutsa, lütfen Bölüm-6'ya dönerek 'Ticari Alan' seçeneğini işaretlemeniz gereklidir.",
+          "Binanızda ticari alanlar (dükkan, işyeri, vb.) mevcutsa, lütfen Bölüm-6'ya dönerek 'Ticari Alan' seçeneğini işaretleyiniz.",
       margin: const EdgeInsets.only(bottom: 24),
     );
   }

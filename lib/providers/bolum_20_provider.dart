@@ -354,7 +354,7 @@ class Bolum20Provider extends ChangeNotifier {
     if (direct > total) {
       if (total == 0)
         return "Önce yukarıdaki merdivenlerden en az birini giriniz.";
-      return "Dışarı açılan sayı ($direct), toplam merdiven sayısından ($total) fazla olamaz.";
+      return "Doğrudan dışarıya açılan sayı ($direct), toplam merdiven sayısından ($total) fazla olamaz.";
     }
     return null;
   }

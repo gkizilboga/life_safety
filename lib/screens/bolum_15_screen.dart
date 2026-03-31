@@ -111,19 +111,19 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             Bolum15Content.kaplamaOptionC,
           ], _model.kaplama),
 
-            _buildSoru(
-              "Döşeme üzerinde ısı yalıtımı var mı?",
-              'yalitim',
-              [
-                Bolum15Content.yalitimOptionA,
-                Bolum15Content.yalitimOptionBYanmaz,
-                Bolum15Content.yalitimOptionB, // Yanıcı = 15-2-C
-                Bolum15Content.yalitimOptionC, // Bilmiyorum = 15-2-D
-              ],
-              _model.yalitim,
-              imagePath: AppAssets.section15DosemeYalitim,
-              imageTitle: "Döşeme Yalıtım Örneği",
-            ),
+          _buildSoru(
+            "Döşeme üzerinde ısı yalıtımı var mı?",
+            'yalitim',
+            [
+              Bolum15Content.yalitimOptionA,
+              Bolum15Content.yalitimOptionBYanmaz,
+              Bolum15Content.yalitimOptionB, // Yanıcı = 15-2-C
+              Bolum15Content.yalitimOptionC, // Bilmiyorum = 15-2-D
+            ],
+            _model.yalitim,
+            imagePath: AppAssets.section15DosemeYalitim,
+            imageTitle: "Döşeme Yalıtım Örneği",
+          ),
 
           if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) ...[
             _buildInfoNote(
@@ -160,19 +160,19 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ], _model.tavanMalzeme),
           ],
 
-            _buildSoru(
-              "Tesisat geçişleri nasıl kapatılmış?",
-              'tesisat',
-              [
-                Bolum15Content.tesisatOptionA,
-                Bolum15Content.tesisatOptionB,
-                Bolum15Content.tesisatOptionC,
-                Bolum15Content.tesisatOptionD,
-              ],
-              _model.tesisat,
-              imagePath: AppAssets.section15Gecis,
-              imageTitle: "Tesisat Geçiş Örneği 1",
-            ),
+          _buildSoru(
+            "Duvarlardaki tesisat geçişleri nasıl kapatılmış?",
+            'tesisat',
+            [
+              Bolum15Content.tesisatOptionA,
+              Bolum15Content.tesisatOptionB,
+              Bolum15Content.tesisatOptionC,
+              Bolum15Content.tesisatOptionD,
+            ],
+            _model.tesisat,
+            imagePath: AppAssets.section15Gecis,
+            imageTitle: "Tesisat Geçiş Örneği 1",
+          ),
         ],
       ),
     );
@@ -226,4 +226,3 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
     );
   }
 }
-
