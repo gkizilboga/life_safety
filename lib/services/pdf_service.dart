@@ -13,35 +13,38 @@ import '../logic/active_systems_engine.dart';
 // Dart's standard toUpperCase() doesn't handle Turkish characters correctly (İ→I, ı→i)
 String _toTitleCaseTR(String text) {
   if (text.isEmpty) return text;
-  return text.split(' ').map((word) {
-    if (word.isEmpty) return word;
-    String first = word.substring(0, 1);
-    String rest = word.substring(1);
+  return text
+      .split(' ')
+      .map((word) {
+        if (word.isEmpty) return word;
+        String first = word.substring(0, 1);
+        String rest = word.substring(1);
 
-    // Convert first letter to TR uppercase
-    first = first
-        .replaceAll('i', 'İ')
-        .replaceAll('ı', 'I')
-        .replaceAll('ö', 'Ö')
-        .replaceAll('ü', 'Ü')
-        .replaceAll('ç', 'Ç')
-        .replaceAll('ş', 'Ş')
-        .replaceAll('ğ', 'Ğ')
-        .toUpperCase();
+        // Convert first letter to TR uppercase
+        first = first
+            .replaceAll('i', 'İ')
+            .replaceAll('ı', 'I')
+            .replaceAll('ö', 'Ö')
+            .replaceAll('ü', 'Ü')
+            .replaceAll('ç', 'Ç')
+            .replaceAll('ş', 'Ş')
+            .replaceAll('ğ', 'Ğ')
+            .toUpperCase();
 
-    // Convert rest to TR lowercase
-    rest = rest
-        .replaceAll('İ', 'i')
-        .replaceAll('I', 'ı')
-        .replaceAll('Ö', 'ö')
-        .replaceAll('Ü', 'ü')
-        .replaceAll('Ç', 'ç')
-        .replaceAll('Ş', 'ş')
-        .replaceAll('Ğ', 'ğ')
-        .toLowerCase();
+        // Convert rest to TR lowercase
+        rest = rest
+            .replaceAll('İ', 'i')
+            .replaceAll('I', 'ı')
+            .replaceAll('Ö', 'ö')
+            .replaceAll('Ü', 'ü')
+            .replaceAll('Ç', 'ç')
+            .replaceAll('Ş', 'ş')
+            .replaceAll('Ğ', 'ğ')
+            .toLowerCase();
 
-    return first + rest;
-  }).join(' ');
+        return first + rest;
+      })
+      .join(' ');
 }
 
 class PdfService {
@@ -49,7 +52,37 @@ class PdfService {
   // Defined once here and used by both _buildHighlightedText and _buildRichText.
   static const _highlightKeywords = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
 
-
+  static pw.Widget _buildBulletPoint(String text, pw.Font font) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.only(bottom: 2),
+      child: pw.Row(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Container(
+            margin: const pw.EdgeInsets.only(top: 2, right: 6),
+            width: 3,
+            height: 3,
+            decoration: const pw.BoxDecoration(
+              color: PdfColors.blueGrey700,
+              shape: pw.BoxShape.circle,
+            ),
+          ),
+          pw.Expanded(
+            child: pw.Text(
+              text,
+              style: pw.TextStyle(
+                font: font,
+                fontSize: 9,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blueGrey700,
+                lineSpacing: 2.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   static pw.Widget _buildLegendItem(PdfColor color, String label, String desc) {
     return pw.Row(
@@ -640,24 +673,27 @@ class PdfService {
         ),
         footer: _buildFooter,
         build: (context) => [
-          pw.SizedBox(height: 20),
-          pw.Text(
-            "DEĞERLENDİRME NOTLARI",
-            style: pw.TextStyle(
-              fontSize: 14,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.blue900,
-            ),
-          ),
-          pw.SizedBox(height: 8),
-          pw.Text(
-            "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup KONUT ve KONUTLA ilgili kullanım alanlarının (otopark, teknik hacimler vb.) yangın güvenlik ihtiyaçlarına odaklanmaktadır. Bina içerisinde ticari işletmeler (işyeri) varsa, bu çalışmadaki değerlendirmeler ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir. İşyerlerinde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.blueGrey700,
-              lineSpacing: 2.2,
-            ),
+          pw.SizedBox(height: 12),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              _buildBulletPoint(
+                "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup, KONUT ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) MİMARİ yangın güvenliği ihtiyaçlarına odaklanmaktadır.",
+                ttfBold,
+              ),
+              _buildBulletPoint(
+                "Bina içerisinde ticari işletmeler (işyeri) varsa bu çalışma, ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir.",
+                ttfBold,
+              ),
+              _buildBulletPoint(
+                "Ticari işletmelerde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
+                ttfBold,
+              ),
+              _buildBulletPoint(
+                "Bu dokümanda, binanın MİMARİ özellikleri analiz edilmekte olup, ELEKTROMEKAMİK yangın güvenliği ihtiyaçlarıyla ilgili yine bu Uygulama'da sunulan 'Aktif Sistem Gereksinimleri' çalışmasını da telefonunuza indirmeniz önerilir.",
+                ttfBold,
+              ),
+            ],
           ),
           pw.SizedBox(height: 8),
           pw.Text(
@@ -725,8 +761,8 @@ class PdfService {
                     riskColor: (id <= 10)
                         ? PdfColors.blue700
                         : (id == 36
-                            ? const PdfColor.fromInt(0x00000000)
-                            : _getRiskColor(item['report'] ?? '')),
+                              ? const PdfColor.fromInt(0x00000000)
+                              : _getRiskColor(item['report'] ?? '')),
                     isLast: item == details.last,
                     sectionId: id,
                   ),
@@ -765,8 +801,8 @@ class PdfService {
                       riskColor: (id <= 10)
                           ? PdfColors.blue700
                           : (id == 36
-                              ? const PdfColor.fromInt(0x00000000)
-                              : _getRiskColor(item['report'] ?? '')),
+                                ? const PdfColor.fromInt(0x00000000)
+                                : _getRiskColor(item['report'] ?? '')),
                       isLast: isLast,
                       sectionId: id,
                     ),
@@ -916,30 +952,30 @@ class PdfService {
         ),
         footer: _buildFooter,
         build: (context) => [
-          pw.Text(
-            "AKTİF SİSTEM GEREKSİNİMLERİ",
-            style: pw.TextStyle(
-              fontSize: 16,
-              fontWeight: pw.FontWeight.bold,
-              color: const PdfColor.fromInt(0xFF1a365d),
-            ),
-          ),
-          pw.SizedBox(height: 8),
-          pw.Text(
-            "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup KONUT ve KONUTLA ilgili kullanım alanlarının (otopark, teknik hacimler vb.) yangın güvenlik ihtiyaçlarına odaklanmaktadır. Bina içerisinde ticari işletmeler (işyeri) varsa, bu çalışmadaki değerlendirmeler ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir. İşyerlerinde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.blueGrey700,
-              lineSpacing: 2.2,
-            ),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              _buildBulletPoint(
+                "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup, KONUT ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını belirlemektedir.",
+                ttfBold,
+              ),
+              _buildBulletPoint(
+                "Bina içerisinde ticari işletmeler (işyeri) varsa bu çalışma, ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir.",
+                ttfBold,
+              ),
+              _buildBulletPoint(
+                "Ticari işletmelerde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
+                ttfBold,
+              ),
+            ],
           ),
           pw.SizedBox(height: 8),
           pw.Text(
             "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
-            style: const pw.TextStyle(
-              fontSize: 10,
-              color: PdfColors.black,
+            style: pw.TextStyle(
+              fontSize: 9,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.blueGrey700,
               lineSpacing: 2.2,
             ),
           ),

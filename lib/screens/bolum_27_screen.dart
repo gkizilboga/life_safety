@@ -155,8 +155,6 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
 
           _buildSoruHeader(
             Bolum27Content.questionBoyut,
-            imagePath: AppAssets.section27YanginKapisi,
-            imageTitle: "Kapı Genişliği ve Eşik",
           ),
           _buildSoruCard('boyut', [
             Bolum27Content.boyutOptionA,

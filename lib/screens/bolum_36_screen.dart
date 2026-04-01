@@ -10,6 +10,7 @@ import 'report_summary_screen.dart';
 import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
 import '../../utils/app_theme.dart';
+import '../../utils/app_assets.dart';
 
 class Bolum36Screen extends StatefulWidget {
   const Bolum36Screen({super.key});
@@ -268,7 +269,11 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               Bolum36WidthContent.koridorGenislikE,
               Bolum36WidthContent.koridorGenislikBilinmiyor,
             ], _model.koridorGenislikKorunumlu),
-            _buildSoruHeader("${Bolum36Content.questionKapiGenislik} (Tümü)"),
+            _buildSoruHeader(
+              "${Bolum36Content.questionKapiGenislik} (Tümü)",
+              imagePath: AppAssets.section27YanginKapisi,
+              imageTitle: "Yangın Kapısı Temiz Genişlik Detayı",
+            ),
             _buildSoruCard('kapiGenislikUnified', [
               Bolum36WidthContent.kapiGenislikKritik,
               Bolum36WidthContent.kapiGenislikOlumlu,
@@ -299,6 +304,8 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               ], _model.koridorGenislikKorunumlu),
               _buildSoruHeader(
                 "Korunumlu Merdiven ${Bolum36Content.questionKapiGenislik}",
+                imagePath: AppAssets.section27YanginKapisi,
+                imageTitle: "Yangın Kapısı Temiz Genişlik Detayı",
               ),
               _buildSoruCard('kapiGenislikKorunumlu', [
                 Bolum36WidthContent.kapiGenislikKritik,
@@ -330,6 +337,8 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
               ], _model.koridorGenislikKorunumsuz),
               _buildSoruHeader(
                 "Korunumsuz Merdiven ${Bolum36Content.questionKapiGenislik}",
+                imagePath: AppAssets.section27YanginKapisi,
+                imageTitle: "Yangın Kapısı Temiz Genişlik Detayı",
               ),
               _buildSoruCard('kapiGenislikKorunumsuz', [
                 Bolum36WidthContent.kapiGenislikKritik,
@@ -361,7 +370,17 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     );
   }
 
-  Widget _buildSoruHeader(String title) {
+  Widget _buildSoruHeader(String title, {String? imagePath, String? imageTitle}) {
+    if (imagePath != null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 20, bottom: 8),
+        child: QuestionHeaderWithImage(
+          questionText: title,
+          imageAssetPath: imagePath,
+          imageTitle: imageTitle ?? "Görseli İncele",
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 12, top: 20),
       child: Text(title, style: AppStyles.questionTitle),

@@ -1712,8 +1712,8 @@ class ReportEngine {
     // Handle other sections generically if NOT handled above
     if (!handled) {
       // Kullanıcı isteği: "Genel Değerlendirme" yerine gerçek soru metnini kullan
-      // Eğer bölümün spesifik bir sorusu yoksa, "Genel Değerlendirme" kullan
-      String questionLabel = _getQuestionText(id) ?? 'Genel Değerlendirme';
+      // Eğer bölümün spesifik bir sorusu yoksa, "Bölüm Değerlendirmesi" kullan
+      String questionLabel = _getQuestionText(id) ?? 'Bölüm Değerlendirmesi';
 
       _addDetail(
         details,

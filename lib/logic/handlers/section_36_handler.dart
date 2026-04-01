@@ -482,7 +482,7 @@ class Section36Handler {
       String fullEval = getFullReport();
       _addDetail(
         details,
-        label: 'Genel Değerlendirme',
+        label: 'Merdiven Uygunluk Değerlendirmesi',
         value: '',
         report: fullEval,
         status: fullEval.contains("KRİTİK RİSK")

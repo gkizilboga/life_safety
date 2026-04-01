@@ -15,7 +15,7 @@ class Bolum1Content {
     uiTitle: "19.12.2007 öncesi.",
     uiSubtitle: "Mevcut Bina",
     reportText:
-        "BİLGİ: Bina, yapı ruhsat tarihi itibarıyla \"Mevcut Bina\"statüsünde olmasına rağmen, talebiniz üzerine güncel yönetmeliğin \"YENİ BİNA\"standartlarına göre değerlendirilecektir. MEVCUT BİNA kriterleri, Binaların Yangından Korunması Hakkında Yönetmeliği 'ndeki YENİ BİNA kriterlerine göre genellikle daha esnektir. Bu sebeple binanızın Yangın Güvenlik Uzmanı tarafından hususi olarak incelenmesi önerilir. ",
+        "BİLGİ: Bina, yapı ruhsat tarihi itibarıyla \"Mevcut Bina\"statüsünde olmasına rağmen, talebiniz üzerine güncel yönetmeliğin \"YENİ BİNA\" standartlarına göre değerlendirilecektir. MEVCUT BİNA kriterleri, Binaların Yangından Korunması Hakkında Yönetmeliği'ndeki YENİ BİNA kriterlerine göre genellikle daha esnektir. Bu sebeple binanızın Yangın Güvenlik Uzmanı tarafından hususi olarak incelenmesi önerilir. ",
     level: RiskLevel.info,
   );
 }
@@ -96,12 +96,12 @@ class Bolum4Content {
     uiTitle: "YÜKSEK OLMAYAN BİNA",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Bina yüksekliği (bodrum katlar hariç) 21.50m ve yapı yüksekliği (bodrum katlar dahil) 30.50m sınırlarının altında kaldığı için yönetmelik kapsamında YÜKSEK OLMAYAN BİNA sınıfındadır.",
+        "BİLGİ: Bina yüksekliği (bodrum katlar hariç) 21.50 m ve yapı yüksekliği (bodrum katlar dahil) 30.50 m sınırlarının altında kaldığı için yönetmelik kapsamında YÜKSEK OLMAYAN BİNA sınıfındadır.",
     level: RiskLevel.info,
   );
 
   static final yukseklikSinifiYuksek = ChoiceResult(
-    label: "Bina ≥ 21.50m",
+    label: "Bina ≥ 21.50 m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
     reportText:
@@ -110,7 +110,7 @@ class Bolum4Content {
   );
 
   static final yukseklikSinifiCokYuksek = ChoiceResult(
-    label: "Yapı ≥ 30.50m",
+    label: "Yapı ≥ 30.50 m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
     reportText:
@@ -119,7 +119,7 @@ class Bolum4Content {
   );
 
   static final yukseklikSinifiMaksimum = ChoiceResult(
-    label: "Yapı ≥ 51.50m",
+    label: "Yapı ≥ 51.50 m",
     uiTitle: "YÜKSEK BİNA",
     uiSubtitle: "",
     reportText:
@@ -177,7 +177,7 @@ class Bolum6Content {
     uiTitle: "Otopark bulunmaktadır.",
     uiSubtitle: "Zemin (ve/veya bodrum) katta kapalı otopark alanı mevcut.",
     reportText:
-        "BİLGİ: Binada kapalı veya yarı-açık (tek cephesinde açıklık olan) otopark alanı bulunmaktadır. Özellikle lpg 'li araçların, elektrik motorlu araçların park edildiği / şarj edildiği otoparklar yangın yükü bakımından konut katlarına göre yüksek olduğundan ek önlemler almak mutlaka şarttır. ",
+        "BİLGİ: Binada kapalı veya yarı-açık (tek cephesinde açıklık olan) otopark alanı bulunmaktadır. Özellikle LPG'li araçların, elektrik motorlu araçların park edildiği / şarj edildiği otoparklar yangın yükü bakımından konut katlarına göre yüksek olduğundan ek önlemler almak mutlaka şarttır. ",
     level: RiskLevel.info,
   );
 
@@ -213,7 +213,7 @@ class Bolum6Content {
     uiTitle: "Otoparkın tüm cepheleri KAPALI.",
     uiSubtitle: "Doğal havalandırma yok.",
     reportText:
-        "BİLGİ (KAPALI OTOPARK): Otoparkın doğal havalandırma imkanı olmadığı için \"Kapalı Otopark\"statüsündedir. Yönetmeliğe göre kapalı otoparklarda alınması gereken, algılama, söndürme, duman tahliye vb. gibi önlemler değerlendirilmeli, elektrik araç şarj istasyonları vs. bulunması halinde mevcut duruma göre, Yönetmelik'te henüz işlenmeyen ancak Yangın Güvenlik Uzmanı tarafından belirlenebilecek ekstra önlemler alınması önerilir. ",
+        "BİLGİ (KAPALI OTOPARK): Otoparkın doğal havalandırma imkanı olmadığı için \"Kapalı Otopark\" statüsündedir. Yönetmeliğe göre kapalı otoparklarda alınması gereken, algılama, söndürme, duman tahliye vb. gibi önlemler değerlendirilmeli, elektrik araç şarj istasyonları vs. bulunması halinde mevcut duruma göre, Yönetmelik'te henüz işlenmeyen ancak Yangın Güvenlik Uzmanı tarafından belirlenebilecek ekstra önlemler alınması önerilir. ",
     level: RiskLevel.info,
   );
 
@@ -231,7 +231,7 @@ class Bolum6Content {
     uiTitle: "Otoparkın sadece TEK cephesi açık.",
     uiSubtitle: "Diğer cepheler duvarla örülü.",
     reportText:
-        "BİLGİ: (YARI AÇIK OTOPARK): Otoparkta sadece tek cephede açıklık olması duman tahliyesi ve havalandırma için yeterli değildir. \"Kapalı Otopark\"kuralları geçerlidir.",
+        "BİLGİ: (YARI AÇIK OTOPARK): Otoparkta sadece tek cephede açıklık olması duman tahliyesi ve havalandırma için yeterli değildir. \"Kapalı Otopark\" kuralları geçerlidir.",
     level: RiskLevel.info,
   );
 
@@ -249,7 +249,7 @@ class Bolum6Content {
     uiTitle: "Hayır, yok.",
     uiSubtitle: "",
     reportText:
-        "Binanın ticari alanında büyük restoran (endüstriyel mutfak) bulunmamaktadır. Ektra önlem alınmasına gerek yoktur.",
+        "Binanın ticari alanında büyük restoran (endüstriyel mutfak) bulunmamaktadır. Ekstra önlem alınmasına gerek yoktur.",
     level: RiskLevel.info,
   );
 
@@ -412,7 +412,7 @@ class Bolum9Content {
     uiTitle: "Hiçbir yerde yok.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Binanın hiçbir yerinde otomatik yağmurlama (sprinkler) sistemi bulunmamaktadır. Bu durumda kaçış mesafesi limitleri minimum değerler üzerinden değerlendirilmektedir. Sprinkler sistemi olmaması kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır. Yangın Yönetmeliği-Madde 96 'ya göre belli özelliklerdeki konutlarda, otoparklarda, işyerlerinde otomatik söndürme sistemi mecburiyeti doğabilmektedir. Bu Uygulama içerisinde yer alan 'AKTİF SİSTEM GEREKSİNİMLERİ' çıktısında binanın sprinkler sistemi ihtiyacı belirtilmekteidir.  Bahsedilen çıktıda sprinkler sistemi zorunlu olmadığı belirtilmiş olsa bile proje üzerinde kat ve mahal bazında hususi olarak ihtiyaç analizi yapılması mutlaka önerilir. ",
+        "BİLGİ: Binanın hiçbir yerinde otomatik yağmurlama (sprinkler) sistemi bulunmamaktadır. Bu durumda kaçış mesafesi limitleri minimum değerler üzerinden değerlendirilmektedir. Sprinkler sistemi olmaması kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır. Yangın Yönetmeliği-Madde 96'ya göre belli özelliklerdeki konutlarda, otoparklarda, işyerlerinde otomatik söndürme sistemi mecburiyeti doğabilmektedir. Bu Uygulama içerisinde yer alan 'AKTİF SİSTEM GEREKSİNİMLERİ' çıktısında binanın sprinkler sistemi ihtiyacı belirtilmektedir. Bahsedilen çıktıda sprinkler sistemi zorunlu olmadığı belirtilmiş olsa bile proje üzerinde kat ve mahal bazında hususi olarak ihtiyaç analizi yapılması mutlaka önerilir. ",
     level: RiskLevel.info,
   );
 
@@ -421,7 +421,7 @@ class Bolum9Content {
     uiTitle: "Bazı yerlerde var.",
     uiSubtitle: "Sadece bazı katlarda veya bazı mahallerde var.",
     reportText:
-        "BİLGİ: Sprinkler sistemi binada kısmi olarak bulunuyor. Yönetmelik gereği, kaçış güvenliği hesaplarında sistemin \"YOK\"olduğu varsayılacaktır. Sprinkler sisteminin binada kısmi bulunması, kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır. Bu Uygulama içerisinde yer alan Aktif Sistem Gereksinimleri çıktısında binanın sprinkler sistemi ihtiyacı belirtilmekteidir. Bu çıktıda sprinkler sistemi zorunlu olmadığı belirtilse bile proje üzerinde kat ve mahal bazında hususi çalışma yapılması mutlaka önerilir. ",
+        "BİLGİ: Sprinkler sistemi binada kısmi olarak bulunuyor. Yönetmelik gereği, kaçış güvenliği hesaplarında sistemin \"YOK\" olduğu varsayılacaktır. Sprinkler sisteminin binada kısmi bulunması, kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır. Bu Uygulama içerisinde yer alan Aktif Sistem Gereksinimleri çıktısında binanın sprinkler sistemi ihtiyacı belirtilmektedir. Bu çıktıda sprinkler sistemi zorunlu olmadığı belirtilse bile proje üzerinde kat ve mahal bazında hususi çalışma yapılması mutlaka önerilir. ",
     level: RiskLevel.info,
   );
 
@@ -593,7 +593,7 @@ class Bolum12Content {
     uiSubtitle:
         "Çelik kolon ve kirişlerin üzeri yangın geciktirici boya, püskürtme sıva, alçıpanel vb. yöntem ile kaplanmıştır.",
     reportText:
-        "OLUMLU: Çelik taşıyıcı sistem üzerinde pasif yangın yalıtım uygulaması mevcuttur. Bu uygulama, yangın anında çeliğin kritik sıcaklık olan 540°C'ye ulaşmasını geciktirerek binanın çökme riskini minimize eder.",
+        "OLUMLU: Çelik taşıyıcı sistem üzerinde pasif yangın yalıtım uygulaması mevcuttur. Bu uygulama, yangın anında çeliğin kritik sıcaklık olan 540 °C'ye ulaşmasını geciktirerek binanın çökme riskini minimize eder.",
     level: RiskLevel.positive,
   );
 
@@ -619,7 +619,7 @@ class Bolum12Content {
     label: "12-A (Beton)",
     uiTitle: "Bina yapım tarihimiz 2000 yılı sonrası.",
     uiSubtitle:
-        "TS 500 standardı uyarınca, paspayı ölçülerinin (Kolon ≥ 35mm, Kiriş ≥ 25mm, Döşeme ≥ 20mm) uygun olduğu varsayılmıştır.",
+        "TS 500 standardı uyarınca, paspayı ölçülerinin (Kolon ≥ 35mm, Kiriş ≥ 25mm, Döşeme ≥ 20 mm) uygun olduğu varsayılmıştır.",
     reportText:
         "OLUMLU: TS 500 standardı uyarınca, binanızın inşa tarihi baz alınarak paspayı ölçülerinin uygun olduğu varsayılmıştır.",
     level: RiskLevel.warning,
@@ -725,7 +725,7 @@ class Bolum13Content {
     uiSubtitle:
         "Otopark ile merdiven arasında herhangi bir yangın kapısı bulunmuyor.",
     reportText:
-        "KRİTİK RİSK: Otopark ile bina arasında yangına dayanıklı ayrım (kompatımantasyon) yoktur. Bir araç yangınında duman doğrudan binanın içine dolarak tüm kaçış yollarını kullanılamaz hale getirebilir. Yangın duvarı ve kapısı ile ayrım yapılmalıdır.",
+        "KRİTİK RİSK: Otopark ile bina arasında yangına dayanıklı ayrım (kompartıman) yoktur. Bir araç yangınında duman doğrudan binanın içine dolarak tüm kaçış yollarını kullanılamaz hale getirebilir. Yangın duvarı ve kapısı ile ayrım yapılmalıdır.",
     level: RiskLevel.critical,
   );
 
@@ -744,7 +744,7 @@ class Bolum13Content {
     uiSubtitle:
         "Duvarları ve kapısı yangına dayanıklı, duman sızdırmaz, bırakınca kendiliğinden kapanıyor ve dışarıya doğru açılıyor.",
     reportText:
-        "OLUMLU: Kazan dairesi kompartımantasyonu ve kapı özellikleri uygun gözükmektedir. Kazan dairesi duvarları yangına en az 120 dk, kapıları en az 90dk. yangın dayanıma sahip olması gereklidir. Aksi halde burada olası bir yangın hızlıca bina içerisine sirayet edebilir.",
+        "OLUMLU: Kazan dairesi kompartımanı ve kapı özellikleri uygun gözükmektedir. Kazan dairesi duvarları yangına en az 120 dk, kapıları en az 90 dk yangın dayanıma sahip olması gereklidir. Aksi halde burada olası bir yangın hızlıca bina içerisine sirayet edebilir.",
     level: RiskLevel.positive,
   );
 
@@ -792,7 +792,7 @@ class Bolum13Content {
     uiTitle: "Hayır.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Asansör kat / kabin kapıları yangına dayanıklı değildir. Makine daireleri yangın riski taşır, kapısı dayanıklı olmalıdır.Ayrıca binada asansör makine dairesi varsa bu odanın duvarları ve kapısı yangın dayanımlı olmalıdır.",
+        "UYARI: Asansör kat / kabin kapıları yangına dayanıklı değildir. Makine daireleri yangın riski taşır, kapısı dayanıklı olmalıdır. Ayrıca binada asansör makine dairesi varsa bu odanın duvarları ve kapısı yangın dayanımlı olmalıdır.",
     level: RiskLevel.warning,
   );
 
@@ -821,7 +821,7 @@ class Bolum13Content {
     uiSubtitle:
         "Duvarları veya kapısı yangın dayanımsız (sac, demir, plastik, aluminyum, ahşap, cam).",
     reportText:
-        "KRİTİK RİSK: Jeneratör odasında yer alan yakıtın alev alma riski bulunur, bu mahal yangın dayanımlı duvar ve yangın kapısı ile binanında geri kalanından ayrılmalıdır.",
+        "KRİTİK RİSK: Jeneratör odasında yer alan yakıtın alev alma riski bulunur, bu mahal yangın dayanımlı duvar ve yangın kapısı ile binanın geri kalanından ayrılmalıdır.",
     level: RiskLevel.critical,
   );
 
@@ -830,7 +830,7 @@ class Bolum13Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Jeneratör odası özellikleri bilinmiyor. Jeneratör odasında bulunan yakıtın alev alma riski bulunur, bu mahal yangın dayanımlı duvar ve yangın kapısı ile binanında geri kalanından ayrılmalıdır. Oda kapısının test raporu Uzman tarafından incelenerek uygunluğuna karar verilir.",
+        "BİLİNMİYOR: Jeneratör odası özellikleri bilinmiyor. Jeneratör odasında bulunan yakıtın alev alma riski bulunur, bu mahal yangın dayanımlı duvar ve yangın kapısı ile binanın geri kalanından ayrılmalıdır. Oda kapısının test raporu Uzman tarafından incelenerek uygunluğuna karar verilir.",
     level: RiskLevel.unknown,
   );
 
@@ -869,7 +869,7 @@ class Bolum13Content {
     uiSubtitle:
         "Duvarları ve kapısı yangına dayanıklı, duman sızdırmaz, bırakınca kendiliğinden kapanıyor.",
     reportText:
-        "OLUMLU: Trafo odasının kapısı kilitli, yangına dayanıklı ve duman sızdırmaz özelliklidir.Yağlı tip trafo kullanılıyorsa oda kapısının yangın dayanım test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.",
+        "OLUMLU: Trafo odasının kapısı kilitli, yangına dayanıklı ve duman sızdırmaz özelliklidir. Yağlı tip trafo kullanılıyorsa oda kapısının yangın dayanım test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.",
     level: RiskLevel.positive,
   );
 
@@ -1050,7 +1050,7 @@ class Bolum13Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Endüstriyel mutfak/büyük restoranın duvar ve kapı dayanımı bilinmemektedir. Endüstriyel mutfaklar yüksek yangın riski taşır. Yönetmelik gereği, ticari alan içerisinde yer alan endüstriyel mutfaklar, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve kapılar ile ayrılmış biçimde konumlandırılır. Aynı anda 100’den fazla kişiye hizmet verebilen restoranların davlumbazlarına otomatik söndürme sistemi yapılması ve ocaklarında kullanılan gazın özelliklerine göre gaz algılama, gaz kesme ve uyarı tesisatının kurulması şarttır.",
+        "BİLİNMİYOR: Endüstriyel mutfak/büyük restoranın duvar ve kapı dayanımı bilinmemektedir. Endüstriyel mutfaklar yüksek yangın riski taşır. Yönetmelik gereği, ticari alan içerisinde yer alan endüstriyel mutfaklar, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve kapılar ile ayrılmış biçimde konumlandırılması gerekir. Aynı anda 100’den fazla kişiye hizmet verebilen restoranların davlumbazlarına otomatik söndürme sistemi yapılması ve ocaklarında kullanılan gazın özelliklerine göre gaz algılama, gaz kesme ve uyarı tesisatının kurulması şarttır.",
     level: RiskLevel.unknown,
   );
 
@@ -1146,7 +1146,7 @@ class Bolum14Content {
   static const String msgMid =
       "Bina yüksekliği 21.50 m ile 30.50 m arasında olduğu için tesisat şaft duvarlarının en az 90 dakika, şaft kapaklarının ise en az 60 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanır özellikte olmaları gereklidir.";
   static const String msgDeepBasement =
-      "Binada 10 m 'den fazla bodrum kat derinliği (yapı yüksekliği bakımından) olduğu için tesisat şaft duvarlarının en az 90 dakika, şaft kapaklarının ise en az 60 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanır özellikte olmaları gereklidir.";
+      "Binada 10 m'den fazla bodrum kat derinliği (yapı yüksekliği bakımından) olduğu için tesisat şaft duvarlarının en az 90 dakika, şaft kapaklarının ise en az 60 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanır özellikte olmaları gereklidir.";
   static const String msgStandard =
       "Mevcut bina verilerine göre tesisat şaft duvarlarının en az 60 dakika, şaft kapaklarının ise en az 30 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanır özellikte olmaları gereklidir.";
 }
@@ -1175,7 +1175,7 @@ class Bolum15Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor.Yönetmelik gereği yüksek binalarda döşeme kaplamalarının en az zor alevlenici olması gerekmektedir; aksi durumda yanıcı kaplamalar risk teşkil eder.",
+        "BİLİNMİYOR: Zemin kaplamasının yanıcılık sınıfı bilinmiyor. Yönetmelik gereği yüksek binalarda döşeme kaplamalarının en az zor alevlenici olması gerekmektedir; aksi durumda yanıcı kaplamalar risk teşkil eder.",
     level: RiskLevel.unknown,
   );
 
@@ -1300,7 +1300,7 @@ class Bolum15Content {
     uiTitle: "Ahşap, plastik, lambiri vb.",
     uiSubtitle: "Kolay alevlenici malzeme",
     reportText:
-        "KRİTİK RİSK: Tavan malzemeleri kuvvetle muhtemel yanıcıdır. Asma tavan malzemelerinin yangına tepki test raporları kontrol edildikten sonra Yönetmelik şartlarını karşılayıp karşılamaadığına karar verilir.",
+        "KRİTİK RİSK: Tavan malzemeleri kuvvetle muhtemel yanıcıdır. Asma tavan malzemelerinin yangına tepki test raporları kontrol edildikten sonra Yönetmelik şartlarını karşılayıp karşılamadığına karar verilir.",
     level: RiskLevel.critical,
   );
 
@@ -1365,7 +1365,7 @@ class Bolum16Content {
     uiTitle: "Klasik Mantolama",
     uiSubtitle: "EPS, XPS, Strafor vb. yanıcı malzeme ile.",
     reportText:
-        "UYARI: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliği (bodrum katlar hariç) 28.50m 'nin üzerindeki binalarda bu uygulama yasaktır.",
+        "UYARI: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliği (bodrum katlar hariç) 28.50 m'nin üzerindeki binalarda bu uygulama yasaktır.",
     level: RiskLevel.warning,
   );
 
@@ -1421,7 +1421,7 @@ class Bolum16Content {
     label: "16-2-B (Sağır Yüzey)",
     uiTitle: "Hayır, yok.",
     uiSubtitle:
-        "Pencereler dikeyde birbirine çok yakın, aradaki duvar mesafesi 100 cm 'den az.",
+        "Pencereler dikeyde birbirine çok yakın, aradaki duvar mesafesi 100 cm'den az.",
     reportText:
         "KRİTİK RİSK: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den azdır. Yangın bir kattan diğerine kolayca sıçrayabilir.",
     adviceText:
@@ -1461,7 +1461,7 @@ class Bolum16Content {
     uiTitle: "Biz daha yüksekteyiz.",
     uiSubtitle: "Bizim binamız yan binadan daha yüksek.",
     reportText:
-        "UYARI: Yan binanın çatısının bittiği hizaya denk gelen dış cephe kaplamanız 'Hiç Yanmaz'(A1 sınıfı) malzeme olmalıdır.",
+        "UYARI: Yan binanın çatısının bittiği hizaya denk gelen dış cephe kaplamanız 'Hiç Yanmaz' (A1 sınıfı) malzeme olmalıdır.",
     level: RiskLevel.warning,
   );
 
@@ -1518,7 +1518,7 @@ class Bolum17Content {
     uiTitle: "Shingle, onduline, membran vb.",
     uiSubtitle: "Bitümlü (petrol türevi) örtü.",
     reportText:
-        "UYARI: Çatıda kullanılan bitümlü örtüler (shingle, membran vb.) yanıcı özellik gösterebilir. Bu malzemelerin 'BROOF'özellikli (dış yangına karşı dayanıklı) olması gerekmektedir. Ürünün test raporu incelenmelidr.",
+        "UYARI: Çatıda kullanılan bitümlü örtüler (shingle, membran vb.) yanıcı özellik gösterebilir. Bu malzemelerin 'BROOF' özellikli (dış yangına karşı dayanıklı) olması gerekmektedir. Ürünün test raporu incelenmelidir.",
     adviceText:
         "Yanıcı çatı kaplamaları, çevre binalardan veya bacalardan sıçrayabilecek kıvılcımlarla kolayca tutuşabilir. Çatı altı arasının temiz tutulması ve mümkünse kaplamanın 'BROOF' sınıfı (dış yangına dayanıklı) malzemelerle yenilenmesi önerilir.",
     level: RiskLevel.warning,
@@ -1612,7 +1612,7 @@ class Bolum17Content {
     uiTitle: "Çatılar arasında yangın dayanımlı duvarı yok.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Bitişik nizam binalarda, çatılar arasında yangın geçişini engelleyecek, çatı seviyesinden en az 60 cm yükseltilmiş 'Yangın Duvarı'olması zorunludur.",
+        "KRİTİK RİSK: Bitişik nizam binalarda, çatılar arasında yangın geçişini engelleyecek, çatı seviyesinden en az 60 cm yükseltilmiş \"Yangın Duvarı\" olması zorunludur.",
     level: RiskLevel.critical,
   );
 
@@ -1639,7 +1639,7 @@ class Bolum17Content {
     uiTitle: "Evet, var.",
     uiSubtitle: "",
     reportText:
-        "Işıklık malzemesinin yangın performansıyla ilgili görüş, alt soruya verilen yanıta göre bildirilmşiştir.",
+        "Işıklık malzemesinin yangın performansıyla ilgili görüş, alt soruya verilen yanıta göre bildirilmiştir.",
     level: RiskLevel.positive,
   );
   static final isiklikOptionC = ChoiceResult(
@@ -1711,7 +1711,7 @@ class Bolum18Content {
     uiTitle: "Duvar kağıdı var.",
     uiSubtitle: "Duvarlarda standart duvar kağıdı kullanılmıştır.",
     reportText:
-        "UYARI:Standart duvar kağıtları genelde kabul edilir, ancak 'Kolay Alevlenen' türde olmamalıdır.",
+        "UYARI: Standart duvar kağıtları genelde kabul edilir, ancak 'Kolay Alevlenen' türde olmamalıdır.",
     level: RiskLevel.warning,
   );
 
@@ -1720,7 +1720,7 @@ class Bolum18Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Duvar kaplama malzemesi bilinmiyor. Eğer binanız 21.50m üzeri ise, yanıcı kaplama malzemesi kullanımı büyük risk taşır.",
+        "BİLİNMİYOR: Duvar kaplama malzemesi bilinmiyor. Eğer binanız 21.50 m üzeri ise, yanıcı kaplama malzemesi kullanımı büyük risk taşır.",
     level: RiskLevel.unknown,
   );
 
@@ -2057,7 +2057,7 @@ class Bolum20Content {
     uiTitle: "Evet.",
     uiSubtitle: "Eğimli yol ile çıkış sağlanıyor.",
     reportText:
-        "Rampa ile çıkış sağlanmaktadır. Rampanın eğimi %10 'u aşmamalıdır. Ayrıca rampa genişliği en az 120 cm olmalıdır.",
+        "Rampa ile çıkış sağlanmaktadır. Rampanın eğimi %10'u aşmamalıdır. Ayrıca rampa genişliği en az 120 cm olmalıdır.",
     level: RiskLevel.positive,
   );
 
@@ -2085,7 +2085,7 @@ class Bolum20Content {
         "Kaçış merdivenlerinin doğrudan dışarı tahliye mesafesi limiti AŞILIYOR.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Doğrudan dışarı açılmayan merdivenlerin çıkış katındaki tahliye mesafesi yönetmelik limitlerini (sprinklersiz binalarda 10m, sprinklerli binalarda 15m) aşmamalıdır. Mevcut durumda bu mesafe sınır değerlerin dışındadır.",
+        "KRİTİK RİSK: Doğrudan dışarı açılmayan merdivenlerin çıkış katındaki tahliye mesafesi yönetmelik limitlerini (sprinklersiz binalarda 10 m, sprinklerli binalarda 15 m) aşmamalıdır. Mevcut durumda bu mesafe sınır değerlerin dışındadır.",
     level: RiskLevel.critical,
   );
 
@@ -2104,7 +2104,7 @@ class Bolum20Content {
     uiTitle: "Evet.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerlerinin (sprinklersiz 10m / sprinklerli 15m) altındadır.",
+        "OLUMLU: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerlerinin (sprinklersiz 10 m / sprinklerli 15 m) altındadır.",
     level: RiskLevel.positive,
   );
 
@@ -2113,7 +2113,7 @@ class Bolum20Content {
     uiTitle: "Hayır.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerlerini (sprinklersiz 10m / sprinklerli 15m) aşmaktadır.",
+        "KRİTİK RİSK: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerlerini (sprinklersiz 10 m / sprinklerli 15 m) aşmaktadır.",
     level: RiskLevel.critical,
   );
 
@@ -2122,7 +2122,7 @@ class Bolum20Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Çıkış katındaki tahliye mesafesi ölçülmemiş veya bilinmemektedir. (Limit Değerler: Sprinklersiz 10m / Sprinklerli 15m)",
+        "BİLİNMİYOR: Çıkış katındaki tahliye mesafesi ölçülmemiş veya bilinmemektedir. (Limit Değerler: Sprinklersiz 10 m / Sprinklerli 15 m)",
     level: RiskLevel.unknown,
   );
 }
@@ -2142,9 +2142,9 @@ class Bolum21Content {
     uiTitle: "Hayır, yok.",
     uiSubtitle: "Holden geçmeden doğrudan merdivene çıkılıyor.",
     reportText:
-        "BİLGİ: Binada YGH bulunmamaktadır. Binada YGH zorunluluğu bulunup bulunmadığı testin sonunda kontrol edilmelidir. Detaylı bilgi için Yangın Güvenlik Uzmanı 'nın görüşüne başvurulması önerilir.",
+        "BİLGİ: Binada YGH bulunmamaktadır. Binada YGH zorunluluğu bulunup bulunmadığı testin sonunda kontrol edilmelidir. Detaylı bilgi için Yangın Güvenlik Uzmanı'nın görüşüne başvurulması önerilir.",
     adviceText:
-        "Bu raporda YGH zorunluluğu belirtildiyse ve binada YGH oluşturulamıyorsa, Kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilebilir. Kesin değerlendirme için Yangın Güvenlik Uzmanı 'ndan bilgi alınmalıdır.",
+        "Bu raporda YGH zorunluluğu belirtildiyse ve binada YGH oluşturulamıyorsa, Kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilebilir. Kesin değerlendirme için Yangın Güvenlik Uzmanı'ndan bilgi alınmalıdır.",
     level: RiskLevel.warning,
   );
 
@@ -2209,7 +2209,7 @@ class Bolum21Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: kapıların yangın dayanımı bilinmiyor. YGH kapıları en az 90 dakika yangına dayanıklı olmalıdır.",
+        "BİLİNMİYOR: Kapıların yangın dayanımı bilinmiyor. YGH kapıları en az 90 dakika yangına dayanıklı olmalıdır.",
     level: RiskLevel.unknown,
   );
 
@@ -2256,7 +2256,7 @@ class Bolum22Content {
     uiTitle: "Hayır, sadece normal (insan taşıma) asansör var.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ:Binada itfaiye asansörü bulunmamaktadır. Yönetmelik gereği yapı yüksekliği 51.50 metreyi geçen binalarda yangın anında itfaiyenin kullanabileceği, jeneratöre bağlı ve korunumlu İtfaiye Asansörü tesisi mecburidir.",
+        "BİLGİ: Binada itfaiye asansörü bulunmamaktadır. Yönetmelik gereği yapı yüksekliği 51.50 metreyi geçen binalarda yangın anında itfaiyenin kullanabileceği, jeneratöre bağlı ve korunumlu İtfaiye Asansörü tesisi mecburidir.",
     level: RiskLevel.info,
   );
 
@@ -2458,7 +2458,7 @@ class Bolum23Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Bodrum katlardaki asansörlerin hemen önünde mutlaka 'Yangın Güvenlik Holü'olmalıdır. Mevcut durum bilinmiyor.",
+        "BİLİNMİYOR: Bodrum katlardaki asansörlerin hemen önünde mutlaka \"Yangın Güvenlik Holü\" olmalıdır. Mevcut durum bilinmiyor.",
     level: RiskLevel.unknown,
   );
 
@@ -2467,7 +2467,7 @@ class Bolum23Content {
     uiTitle: "Evet, otomatik olarak iniyor ve kapısını açıyor.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Asansörlerin yangın anında nasıl hareket etmeleri gerektiğine dair senaryo mevcut ve çalışır durumda gözüküyor.",
+        "OLUMLU: Asansörlerin yangın anında nasıl hareket etmeleri gerektiğine dair senaryo mevcut ve çalışır durumda görünüyor.",
     level: RiskLevel.positive,
   );
 
@@ -2556,7 +2556,7 @@ class Bolum23Content {
     uiTitle: "Yok.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Asansör kuyusuna sızan dumanın tahliye edilmesi için en üst noktada 'Duman Tahliye Bacası'(0.1 m²'den az olmamak kaydıyla) zorunludur.",
+        "KRİTİK RİSK: Asansör kuyusuna sızan dumanın tahliye edilmesi için en üst noktada 'Duman Tahliye Bacası' (0.1 m²'den az olmamak kaydıyla) zorunludur.",
     level: RiskLevel.critical,
   );
 
@@ -2565,7 +2565,7 @@ class Bolum23Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Kuyu havalandırması bilinmiyor. Asansör kuyusuna sızan dumanın tahliye edilmesi için en üst noktada 'Duman Tahliye Bacası'(0.1 m²'den az olmamak kaydıyla) zorunludur.",
+        "BİLİNMİYOR: Kuyu havalandırması bilinmiyor. Asansör kuyusuna sızan dumanın tahliye edilmesi için en üst noktada 'Duman Tahliye Bacası' (0.1 m²'den az olmamak kaydıyla) zorunludur.",
     level: RiskLevel.unknown,
   );
 }
@@ -2714,7 +2714,7 @@ class Bolum25Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Döner merdiven basamak genişliği bilinmemektedir. Binanın tahliyesinde bu dairesel merdiven kritik bir rol oynuyorsa proje üzerindnen veya yerinde merdivenin incelenmesi gereklidir.",
+        "BİLİNMİYOR: Döner merdiven basamak genişliği bilinmemektedir. Binanın tahliyesinde bu dairesel merdiven kritik bir rol oynuyorsa proje üzerinden veya yerinde merdivenin incelenmesi gereklidir.",
     level: RiskLevel.unknown,
   );
 
@@ -2731,7 +2731,7 @@ class Bolum25Content {
     uiTitle: "Alçak (2.10 ila 2.50 metre arası).",
     uiSubtitle: "Tavan alçak, baş çarpma riski var.",
     reportText:
-        "KRİTİK RİSK: Baş kurtarma yüksekliği sınır değerlerin altındadır (2.50m altı).",
+        "KRİTİK RİSK: Baş kurtarma yüksekliği sınır değerlerin altındadır (2.50 m altı).",
     adviceText:
         "Tahliye anında yaralanmaları önlemek için tavanın alçak olduğu noktalara yumuşak koruyucu pedler ve fosforlu uyarı işaretleri yerleştirilmelidir.",
     level: RiskLevel.critical,
@@ -2742,7 +2742,7 @@ class Bolum25Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Baş kurtarma yüksekliği tespit edilememiştir, en az 2,50 metre yükseklik olmalıdır.",
+        "BİLİNMİYOR: Baş kurtarma yüksekliği tespit edilememiştir, en az 2.50 m yükseklik olmalıdır.",
     level: RiskLevel.unknown,
   );
 
@@ -2757,7 +2757,7 @@ class Bolum25Content {
     uiTitle: "9.50 metre veya altı.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Dairesel merdiven yüksekliği 9.50m 'nin altındadır. Dairesel merdiven kaçış yolu olarak kullanılabilir.",
+        "BİLGİ: Dairesel merdiven yüksekliği 9.50 m'nin altındadır. Dairesel merdiven kaçış yolu olarak kullanılabilir.",
     level: RiskLevel.info,
   );
 
@@ -2766,7 +2766,7 @@ class Bolum25Content {
     uiTitle: "9.50 metre üzeri.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Dairesel merdiven yüksekliği 9.50m 'nin üzerindedir. Bu durumda dairesel merdiven kaçış yolu olarak kullanılamaz.",
+        "UYARI: Dairesel merdiven yüksekliği 9.50 m'nin üzerindedir. Bu durumda dairesel merdiven kaçış yolu olarak kullanılamaz.",
     level: RiskLevel.warning,
   );
 
@@ -2775,7 +2775,7 @@ class Bolum25Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Dairesel merdiven yüksekliği bilinmiyor. Binanızdaki dairesel merdiven 9,5 metrenin üzerinde ise kaçış yolu olarak kullanılamaz. Mimari proje üzerinde veya sahada bu durumun kontrolü yapılmalıdır.",
+        "BİLİNMİYOR: Dairesel merdiven yüksekliği bilinmiyor. Binanızdaki dairesel merdiven 9.5 m'nin üzerinde ise kaçış yolu olarak kullanılamaz. Mimari proje üzerinde veya sahada bu durumun kontrolü yapılmalıdır.",
     level: RiskLevel.unknown,
   );
 }
@@ -2833,7 +2833,7 @@ class Bolum26Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Rampa eğimi ve zemin kaymazlık durumu bilinmiyor. Kaçış yolu üzerinde %10 'dan fazla eğimli rampa varsa bu rampa kaçış yolu olarak kullanılamaz.",
+        "BİLİNMİYOR: Rampa eğimi ve zemin kaymazlık durumu bilinmiyor. Kaçış yolu üzerinde %10'dan fazla eğimli rampa varsa bu rampa kaçış yolu olarak kullanılamaz.",
     level: RiskLevel.unknown,
   );
 
@@ -2865,7 +2865,7 @@ class Bolum26Content {
 
   static final otoparkOptionA = ChoiceResult(
     label: "26-4-A",
-    uiTitle: "Evet, eğimi uygun (%10 'un altı).",
+    uiTitle: "Evet, eğimi uygun (%10'un altı).",
     uiSubtitle: "Araç rampası yürüyerek çıkmaya müsait.",
     reportText:
         "OLUMLU: Otopark rampası, eğimi uygun olduğu için 2. kaçış yolu olarak kabul edilebilir.",
@@ -2892,8 +2892,7 @@ class Bolum26Content {
 }
 
 class Bolum27Content {
-  static const String questionBoyut =
-      "Kaçış kapılarının genişliği ve zemini ne durumdadır? (daire kapısı hariç)";
+  static const String questionBoyut = "Kaçış kapılarında engel var mı?";
   static const String questionYon =
       "Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)";
   static const String questionKilit =
@@ -2904,19 +2903,18 @@ class Bolum27Content {
   // 1. BOYUT VE EŞİK
   static final boyutOptionA = ChoiceResult(
     label: "27-1-A",
-    uiTitle: "80 cm'den geniş ve eşiksiz.",
+    uiTitle: "Zemin düz, herhangi bir eşik veya engel yok.",
     uiSubtitle: "",
-    reportText:
-        "OLUMLU: Kaçış kapısı genişliği (min. 80cm) ve zemin düzgünlüğü uygundur.",
+    reportText: "OLUMLU: Kaçış kapıları eşiksiz ve engelsizdir.",
     level: RiskLevel.positive,
   );
 
   static final boyutOptionB = ChoiceResult(
     label: "27-1-B",
-    uiTitle: "80 cm'den dar veya eşikli.",
+    uiTitle: "Eşik veya basamak mevcut.",
     uiSubtitle: "Ayağın takılma ihtimali var.",
     reportText:
-        "KRİTİK RİSK: Kaçış kapılarında temiz geçiş genişliği en az 80 cm olmalıdır. Ayrıca takılıp düşmeye sebep olacak 'Eşik'bulunması kesinlikle yasaktır.",
+        "KRİTİK RİSK: Kaçış kapılarında takılmaya sebep olacak eşik bulunması kesinlikle yasaktır.",
     level: RiskLevel.critical,
   );
 
@@ -3407,7 +3405,7 @@ class Bolum29Content {
     label: "29-9-A",
     uiTitle: "Düzenli atılıyor, temiz.",
     uiSubtitle: "Yoğun koku veya gaz birikmesi yok.",
-    reportText: "OLUMLU: Çöp odası temizliği uygun gözüküyor.",
+    reportText: "OLUMLU: Çöp odası temizliği uygun görünüyor.",
     level: RiskLevel.positive,
   );
   static final copOptionB = ChoiceResult(
@@ -3533,7 +3531,7 @@ class Bolum30Content {
     uiTitle: "1 adet.",
     uiSubtitle: "",
     reportText:
-        "(Büyük Kazan İse) KRİTİK RİSK: Girdiğiniz bilgilere göre kazan daireniz 'Büyük/Yüksek Kapasiteli'sınıfındadır. Yönetmeliğe göre en az 2 adet çıkış kapısı zorunludur.<br>(Küçük Kazan İse) OLUMLU: Kapı sayısı yeterlidir.",
+        "(Büyük Kazan İse) KRİTİK RİSK: Girdiğiniz bilgilere göre kazan daireniz 'Büyük/Yüksek Kapasiteli' sınıfındadır. Yönetmeliğe göre en az 2 adet çıkış kapısı zorunludur.<br>(Küçük Kazan İse) OLUMLU: Kapı sayısı yeterlidir.",
     level: RiskLevel.critical,
   );
   static final kapiOptionB = ChoiceResult(
@@ -3670,7 +3668,7 @@ class Bolum31Content {
     uiTitle: "Duvarları beton/tuğla, kapısı dışarıya açılıyor.",
     uiSubtitle: "Yangına dayanıklı duvar ve kapı mevcut.",
     reportText:
-        "BİLGİ:: Trafo odası yangın kompartımanı olarak tasarlanmıştır. Duvarlar ve kapı yangına dayanıklıdır.",
+        "BİLGİ: Trafo odası yangın kompartımanı olarak tasarlanmıştır. Duvarlar ve kapı yangına dayanıklıdır.",
     level: RiskLevel.info,
   );
 
@@ -3689,7 +3687,7 @@ class Bolum31Content {
     uiSubtitle:
         "Dayanıklı olmayan malzeme (alçıpanel, ahşap kapı vb.) kullanılmıştır.",
     reportText:
-        "KRİTİK RİSK: Trafo odası yangın bölmesi (kompartıman) olarak tasarlanmalıdır. Yağlı tip trafo odalarının duvarları 120dk, kapısı 90dk yangına dayanıklı olmalıdır.",
+        "KRİTİK RİSK: Trafo odası yangın bölmesi (kompartıman) olarak tasarlanmalıdır. Yağlı tip trafo odalarının duvarları 120 dk, kapısı 90 dk yangına dayanıklı olmalıdır.",
     level: RiskLevel.critical,
   );
 
@@ -3698,7 +3696,7 @@ class Bolum31Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Trafo odasının yapısal özellikleri (duvar/kapı) tespit edilememiştir. Yangın güvenliği açısından bu alanın kompartıman özelliği Uzmman tarafından incelenmelidir.",
+        "BİLİNMİYOR: Trafo odasının yapısal özellikleri (duvar/kapı) tespit edilememiştir. Yangın güvenliği açısından bu alanın kompartıman özelliği Uzman tarafından incelenmelidir.",
     level: RiskLevel.unknown,
   );
 
@@ -3880,7 +3878,7 @@ class Bolum32Content {
     label: "32-2-A",
     uiTitle: "Kendi tankında veya gömülü tankta.",
     uiSubtitle: "Güvenli depolama.",
-    reportText: "OLUMLU: Yakıt depolama yöntemi güvenli gözükmektedir.",
+    reportText: "OLUMLU: Yakıt depolama yöntemi güvenli görünmektedir.",
     level: RiskLevel.positive,
   );
   static final yakitOptionB = ChoiceResult(

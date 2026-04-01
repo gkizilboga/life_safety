@@ -96,15 +96,32 @@ class ModuleTransitionScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      NumericEmphasis(
-                        "Şu ana kadar $criticalCount adet Kritik Risk tespit ettik.\nAnalizin %$completion kısmını başarıyla tamamladın.",
-                        textAlign: TextAlign.center,
-                        emphasisColor: AppColors.accentGold,
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 15, // Slightly larger base for clarity
-                          height: 1.4,
-                        ),
+                      Column(
+                        children: [
+                          NumericEmphasis(
+                            "Şu ana kadar $criticalCount adet Kritik Risk tespit ettik.",
+                            textAlign: TextAlign.center,
+                            emphasisColor: AppColors.dangerRed,
+                            scaleFactor: 1.3,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              height: 1.4,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          NumericEmphasis(
+                            "Analizin %$completion kısmını başarıyla tamamladın.",
+                            textAlign: TextAlign.center,
+                            emphasisColor: AppColors.successGreen,
+                            scaleFactor: 1.3,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 15,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
