@@ -189,25 +189,30 @@ class ReportEngine {
           value: '',
           report: '',
         );
-        if (b6.hasOtopark)
-          _addDetail(details, label: 'Otopark', value: 'Mevcut', report: '');
-        if (b6.hasTicari)
-          _addDetail(
-            details,
-            label: 'Ticari Alan',
-            value: 'Mevcut',
-            report: '',
-          );
-        if (b6.hasDepo)
-          _addDetail(details, label: 'Depo', value: 'Mevcut', report: '');
-        if (b6.isSadeceKonut)
-          _addDetail(details, label: 'Sadece Konut', value: 'Evet', report: '');
+        _addDetail(
+          details,
+          label: 'Ticari Alan (İşyeri)',
+          value: b6.hasTicari ? 'Mevcut' : 'Mevcut değil',
+          report: '',
+        );
+        _addDetail(
+          details,
+          label: 'Kapalı Otopark',
+          value: b6.hasOtopark ? 'Mevcut' : 'Mevcut değil',
+          report: '',
+        );
+        _addDetail(
+          details,
+          label: 'Depolama Alanı',
+          value: b6.hasDepo ? 'Mevcut' : 'Mevcut değil',
+          report: '',
+        );
 
         if (b6.hasTicari && b6.buyukRestoran != null) {
           _addDetail(
             details,
             label:
-                'Ticari alan içerisinde büyük restoran (endüstriyel mutfak) var mı?',
+                'Ticari alan içerisinde büyük restoran (ve içerisinde endüstriyel mutfak) var mı?',
             value: b6.buyukRestoran!.uiTitle,
             subtitle: b6.buyukRestoran!.uiSubtitle,
             report: b6.buyukRestoran!.reportText,
@@ -247,7 +252,7 @@ class ReportEngine {
           _addDetail(
             details,
             label: 'Zemin Katın Kullanım Amacı',
-            value: "${b10.zemin!.uiTitle} ${b10.zemin!.reportText}",
+            value: "${b10.zemin!.uiTitle}\n${b10.zemin!.reportText}",
             subtitle: b10.zemin!.uiSubtitle,
             report: '',
             advice: '',
@@ -259,8 +264,7 @@ class ReportEngine {
             _addDetail(
               details,
               label: 'Bodrum Kat Kullanım Amacı (Tümü Aynı)',
-              value:
-                  "${b10.bodrumlar[0]!.uiTitle} ${b10.bodrumlar[0]!.reportText}",
+              value: "${b10.bodrumlar[0]!.uiTitle}\n${b10.bodrumlar[0]!.reportText}",
               subtitle: b10.bodrumlar[0]!.uiSubtitle,
               report: '',
               advice: '',
@@ -271,8 +275,7 @@ class ReportEngine {
                 _addDetail(
                   details,
                   label: '${i + 1}. Bodrum Kat Kullanım Amacı',
-                  value:
-                      "${b10.bodrumlar[i]!.uiTitle} ${b10.bodrumlar[i]!.reportText}",
+                  value: "${b10.bodrumlar[i]!.uiTitle}\n${b10.bodrumlar[i]!.reportText}",
                   subtitle: b10.bodrumlar[i]!.uiSubtitle,
                   report: '',
                   advice: '',
@@ -287,8 +290,7 @@ class ReportEngine {
             _addDetail(
               details,
               label: 'Normal Kat Kullanım Amacı (Tümü Aynı)',
-              value:
-                  "${b10.normaller[0]!.uiTitle} ${b10.normaller[0]!.reportText}",
+              value: "${b10.normaller[0]!.uiTitle}\n${b10.normaller[0]!.reportText}",
               subtitle: b10.normaller[0]!.uiSubtitle,
               report: '',
               advice: '',
@@ -299,8 +301,7 @@ class ReportEngine {
                 _addDetail(
                   details,
                   label: '${i + 1}. Normal Kat Kullanım Amacı',
-                  value:
-                      "${b10.normaller[i]!.uiTitle} ${b10.normaller[i]!.reportText}",
+                  value: "${b10.normaller[i]!.uiTitle}\n${b10.normaller[i]!.reportText}",
                   subtitle: b10.normaller[i]!.uiSubtitle,
                   report: '',
                   advice: '',
@@ -1579,7 +1580,7 @@ class ReportEngine {
         _addDetail(
           details,
           label: 'Kullanıcı Yükü ve Çıkış Kapasitesi Analizi',
-          value: 'Detaylı Hesaplama',
+          value: '',
           report: b33.combinedReportText,
           status: b33.combinedReportText.contains("KRİTİK RİSK")
               ? ReportStatus.risk

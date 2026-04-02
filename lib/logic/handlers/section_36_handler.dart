@@ -258,10 +258,10 @@ class Section36Handler {
             );
           } else {
             List<String> reasons = [];
-            if (!heightOk) reasons.add("yükseklik 9.50m limitini aşmaktadır");
-            if (!loadOk) reasons.add("kullanıcı yükü 25 kişiyi aşmaktadır");
+            if (!heightOk) reasons.add("9.50m limitini aşmaktadır");
+            if (!loadOk) reasons.add("kullanıcı yükü 25 kişiyi aşmaktadır ($loadForSpiral)");
             analysisParts.add(
-              "KRİTİK RİSK: Dairesel merdiven, ${reasons.join(" ve ")} sebebiyle Yönetmelik Madde 25 kriterlerini sağlamamaktadır. Dairesel merdiven binada kaçış yolu olarak kullanılamaz.",
+              "KRİTİK RİSK: Dairesel merdiven ${reasons.join(" VE ")} sebebiyle Yönetmelik Madde 25 kriterlerini sağlamadığı için kaçış yolu olarak kullanılamaz.",
             );
           }
         }
@@ -478,11 +478,20 @@ class Section36Handler {
     List<Map<String, dynamic>> details = [];
     final b36 = _store.bolum36;
     if (b36 != null) {
-      // 1. Kapsamlı Uygunluk Değerlendirmesi
+      // 1. Merdiven Tipleri (Tablo için)
+      final b20 = _store.bolum20;
+      if (b20 != null) {
+        _addStaircaseRows(details, b20);
+        if (b20.isBodrumIndependent) {
+          _addStaircaseRows(details, b20, isBasement: true);
+        }
+      }
+
+      // 2. Kapsamlı Uygunluk Değerlendirmesi
       String fullEval = getFullReport();
       _addDetail(
         details,
-        label: 'Merdiven Uygunluk Değerlendirmesi',
+        label: '',
         value: '',
         report: fullEval,
         status: fullEval.contains("KRİTİK RİSK")
@@ -716,55 +725,9 @@ class Section36Handler {
         }
       }
 
-      // Madde 41 Detayları
-      final b20 = _store.bolum20;
+      // Madde 41 Detayları (Tablo kısmı yukarı taşındı)
       if (b20 != null) {
-        _addDetail(
-          details,
-          label: 'Merdiven Tipleri ve Adetleri',
-          value: '',
-          report: '',
-          status: ReportStatus.info,
-        );
-        _addStaircaseRows(details, b20);
-        if (b20.isBodrumIndependent) {
-          _addStaircaseRows(details, b20, isBasement: true);
-        }
-
-        // Dairesel Merdiven (Madde 25) Bilgisi
-        if (b20.donerMerdivenSayisi > 0 || b20.bodrumDonerMerdivenSayisi > 0) {
-          final b25 = _store.bolum25;
-          final bool hExceed = b25?.yukseklik?.label == "25-Dairesel-B";
-          final bool loadExceed = effectiveLoad > 25;
-
-          String spiralReport =
-              "NOT: Dairesel merdivenlerin (Madde 25) analizi yukarıdaki özet raporda sunulmuştur.";
-          ReportStatus spiralStatus = ReportStatus.info;
-
-          if (hExceed || loadExceed) {
-            List<String> reasons = [];
-            if (hExceed) reasons.add("9.50m limitini aşmaktadır");
-            if (loadExceed)
-              reasons.add(
-                "kullanıcı yükü 25 kişiyi aşmaktadır ($effectiveLoad)",
-              );
-            spiralReport =
-                "KRİTİK RİSK: Dairesel merdiven ${reasons.join(" VE ")} kaçış yolu olarak kullanılamaz.";
-            spiralStatus = ReportStatus.risk;
-          } else if (b25?.yukseklik?.label == "25-Dairesel-A") {
-            spiralReport =
-                "OLUMLU: Dairesel merdiven, yükseklik ve kullanıcı yükü sınırları içerisinde olduğu için uygundur.";
-            spiralStatus = ReportStatus.compliant;
-          }
-
-          _addDetail(
-            details,
-            label: 'Dairesel Merdiven Değerlendirmesi',
-            value: 'Binada dairesel merdiven mevcut.',
-            report: spiralReport,
-            status: spiralStatus,
-          );
-        }
+        // Dairesel Merdiven (Madde 25) - Analiz artık yukarıdaki 'fullEval' içinde sunuluyor.
       }
 
       // Mühendis Notu

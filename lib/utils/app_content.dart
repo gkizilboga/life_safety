@@ -15,7 +15,7 @@ class Bolum1Content {
     uiTitle: "19.12.2007 öncesi.",
     uiSubtitle: "Mevcut Bina",
     reportText:
-        "BİLGİ: Bina, yapı ruhsat tarihi itibarıyla \"Mevcut Bina\"statüsünde olmasına rağmen, talebiniz üzerine güncel yönetmeliğin \"YENİ BİNA\" standartlarına göre değerlendirilecektir. MEVCUT BİNA kriterleri, Binaların Yangından Korunması Hakkında Yönetmeliği'ndeki YENİ BİNA kriterlerine göre genellikle daha esnektir. Bu sebeple binanızın Yangın Güvenlik Uzmanı tarafından hususi olarak incelenmesi önerilir. ",
+        "BİLGİ: Bina, yapı ruhsat tarihi itibarıyla 'Mevcut Bina' statüsünde olmasına rağmen, talebiniz üzerine güncel yönetmeliğin 'YENİ BİNA' kriterlerine göre değerlendirilecektir. 'Mevcut Bina' kriterleri, Binaların Yangından Korunması Hakkında Yönetmeliği'ndeki 'Yeni Bina' kriterlerine göre genellikle daha esnektir. Bu sebeple binanızın Yangın Güvenlik Uzmanı tarafından hususi olarak incelenmesi önerilir. ",
     level: RiskLevel.info,
   );
 }
@@ -4624,9 +4624,9 @@ class AppDefinitions {
       case 9:
         return "Sprinkler Sistemi";
       case 10:
-        return "Katların Kullanım Amacı";
+        return "Kat Kullanım Amacı";
       case 11:
-        return "İtfaiyenin Bina Yaklaşım Mesafesi";
+        return "İtfaiye Yaklaşım Mesafesi";
       case 12:
         return "Yapısal Yangın Dayanımı";
       case 13:

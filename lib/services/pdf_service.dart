@@ -178,6 +178,31 @@ class PdfService {
     );
   }
 
+  static pw.Widget _buildGaugeChart(int score) {
+    double angle = -180.0 + (score / 100.0) * 180.0;
+    
+    String svgContent = '''
+    <svg width="240" height="130" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#10b981" stroke-width="20" />
+      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f59e0b" stroke-width="20" stroke-dasharray="201.06 251.33" />
+      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ef4444" stroke-width="20" stroke-dasharray="125.66 251.33" />
+      
+      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ffffff" stroke-width="22" stroke-dasharray="3 251.33" stroke-dashoffset="-124.66" />
+      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ffffff" stroke-width="22" stroke-dasharray="3 251.33" stroke-dashoffset="-200.06" />
+
+      <polygon points="100,96 100,104 175,100" fill="#1e293b" transform="rotate($angle 100 100)" />
+      
+      <circle cx="100" cy="100" r="10" fill="#1e293b" />
+      <circle cx="100" cy="100" r="4" fill="#ffffff" />
+    </svg>
+    ''';
+    
+    return pw.Container(
+      height: 120,
+      child: pw.SvgImage(svg: svgContent),
+    );
+  }
+
   static pw.Page _buildCoverPage({
     required pw.PageTheme pageTheme,
     required pw.MemoryImage logoImage,
@@ -191,8 +216,6 @@ class PdfService {
     const navyBlue = PdfColor.fromInt(0xFF1a365d);
     const darkNavy = PdfColor.fromInt(0xFF0d2137);
     const softGray = PdfColor.fromInt(0xFF6b7280);
-    const lightGray = PdfColor.fromInt(0xFFf3f4f6);
-    const accentTeal = PdfColor.fromInt(0xFF0d9488);
 
     return pw.Page(
       pageTheme: pageTheme,
@@ -202,18 +225,18 @@ class PdfService {
           child: pw.Column(
             children: [
               // Üst Boşluk
-              pw.SizedBox(height: 60),
+              pw.SizedBox(height: 50),
 
               // Logo - Ortada
               pw.Center(
                 child: pw.Container(
-                  height: 80,
-                  width: 200,
+                  height: 100, // Daha büyük logo
+                  width: 250,
                   child: pw.Image(logoImage, fit: pw.BoxFit.contain),
                 ),
               ),
 
-              pw.SizedBox(height: 40),
+              pw.SizedBox(height: 30),
 
               // Yönetmelik Başlığı
               pw.Center(
@@ -222,90 +245,71 @@ class PdfService {
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
                     color: softGray,
-                    fontSize: 11,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-              ),
-
-              pw.SizedBox(height: 30),
-
-              // Ana Başlık
-              pw.Center(
-                child: pw.Padding(
-                  padding: const pw.EdgeInsets.symmetric(horizontal: 40),
-                  child: pw.Text(
-                    mainTitle,
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(
-                      color: navyBlue,
-                      fontSize: 24,
-                      fontWeight: pw.FontWeight.bold,
-                    ),
+                    fontSize: 10,
+                    letterSpacing: 1.2,
                   ),
                 ),
               ),
 
               pw.SizedBox(height: 15),
 
-              // KONUT Uyarısı kaldırıldı
-              pw.SizedBox(height: 20),
+              // Ana Başlık
+              pw.Center(
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.symmetric(horizontal: 20),
+                  child: pw.Text(
+                    mainTitle,
+                    textAlign: pw.TextAlign.center,
+                    style: pw.TextStyle(
+                      color: navyBlue,
+                      fontSize: 32, // Daha büyük ve ihtişamlı ana başlık
+                      fontWeight: pw.FontWeight.bold,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                ),
+              ),
 
-              // Skor Badge (sadece showScore true ise)
+              pw.SizedBox(height: 40),
+
+              // Skor Yüzdesi ve Gauge Chart (sadece showScore true ise)
               if (showScore) ...[
-                pw.SizedBox(height: 50),
+                pw.Center(
+                  child: _buildGaugeChart(metrics['score'] as int),
+                ),
+                pw.Center(
+                  child: pw.Text(
+                    "${metrics['score']} / 100",
+                    style: pw.TextStyle(
+                      fontSize: 32,
+                      fontWeight: pw.FontWeight.bold,
+                      color: _getScoreColorForPdf(metrics['score'] as int),
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 5),
                 pw.Center(
                   child: pw.Container(
                     padding: const pw.EdgeInsets.symmetric(
-                      vertical: 15,
-                      horizontal: 25,
+                      horizontal: 20,
+                      vertical: 8,
                     ),
                     decoration: pw.BoxDecoration(
-                      color: lightGray,
-                      borderRadius: pw.BorderRadius.circular(12),
-                      border: pw.Border.all(color: accentTeal, width: 2),
+                      color: _getScoreColorForPdf(metrics['score'] as int).shade(0.1),
+                      borderRadius: pw.BorderRadius.circular(20),
                     ),
-                    child: pw.Row(
-                      mainAxisSize: pw.MainAxisSize.min,
-                      children: [
-                        // Sol Kolon: Başlık ve Puan
-                        pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Text(
-                              "YANGIN GÜVENLİK PUANI",
-                              style: pw.TextStyle(color: softGray, fontSize: 8),
-                            ),
-                            pw.SizedBox(height: 2),
-                            pw.Text(
-                              "${metrics['score']} / 100",
-                              style: pw.TextStyle(
-                                color: _getScoreColorForPdf(
-                                  metrics['score'] as int,
-                                ),
-                                fontSize: 22,
-                                fontWeight: pw.FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        pw.SizedBox(width: 25), // Kolonlar arası boşluk
-                        // Sağ Kolon: Risk Durumu
-                        pw.Text(
-                          (metrics['score'] as int) > 80
-                              ? "DÜŞÜK RİSK"
-                              : (metrics['score'] as int) > 50
-                              ? "ORTA RİSK"
-                              : "YÜKSEK RİSK",
-                          style: pw.TextStyle(
-                            color: _getScoreColorForPdf(
-                              metrics['score'] as int,
-                            ),
-                            fontSize: 14, // Biraz daha belirgin
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    child: pw.Text(
+                      (metrics['score'] as int) > 80
+                          ? "DÜŞÜK RİSK"
+                          : (metrics['score'] as int) > 50
+                          ? "ORTA RİSK"
+                          : "YÜKSEK RİSK",
+                      style: pw.TextStyle(
+                        color: _getScoreColorForPdf(metrics['score'] as int),
+                        fontSize: 16,
+                        fontWeight: pw.FontWeight.bold,
+                        letterSpacing: 1.0,
+                      ),
                     ),
                   ),
                 ),
@@ -315,7 +319,11 @@ class PdfService {
                   pw.Center(
                     child: pw.Text(
                       subTitle,
-                      style: pw.TextStyle(color: softGray, fontSize: 12),
+                      style: pw.TextStyle(
+                        color: softGray,
+                        fontSize: 14,
+                        letterSpacing: 1.0,
+                      ),
                     ),
                   ),
               ],
@@ -690,7 +698,7 @@ class PdfService {
                 ttfBold,
               ),
               _buildBulletPoint(
-                "Bu dokümanda, binanın MİMARİ özellikleri analiz edilmekte olup, ELEKTROMEKAMİK yangın güvenliği ihtiyaçlarıyla ilgili yine bu Uygulama'da sunulan 'Aktif Sistem Gereksinimleri' çalışmasını da telefonunuza indirmeniz önerilir.",
+                "Bu dokümanda, binanın MİMARİ özellikleri analiz edilmekte olup, ELEKTROMEKANİK yangın güvenliği ihtiyaçlarıyla ilgili yine bu Uygulama'da sunulan 'Aktif Sistem Gereksinimleri' çalışmasını da telefonunuza indirmeniz önerilir.",
                 ttfBold,
               ),
             ],
@@ -709,15 +717,15 @@ class PdfService {
             mainAxisAlignment: pw.MainAxisAlignment.start,
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", "(-4 Puan)"),
+              _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", ""),
               pw.SizedBox(width: 20),
-              _buildLegendItem(PdfColors.yellow700, "UYARI", "(-2 Puan)"),
+              _buildLegendItem(PdfColors.yellow700, "UYARI", ""),
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
               pw.SizedBox(width: 20),
               _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
               pw.SizedBox(width: 20),
-              _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", "(-1 Puan)"),
+              _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", ""),
             ],
           ),
 
@@ -760,9 +768,7 @@ class PdfService {
                     ttfBold,
                     riskColor: (id <= 10)
                         ? PdfColors.blue700
-                        : (id == 36
-                              ? const PdfColor.fromInt(0x00000000)
-                              : _getRiskColor(item['report'] ?? '')),
+                        : _getRiskColor(item['report'] ?? ''),
                     isLast: item == details.last,
                     sectionId: id,
                   ),
@@ -770,6 +776,7 @@ class PdfService {
               }
             } else {
               List<Map<String, dynamic>> tableGroup = [];
+              bool isFirstTableFor36 = true;
               for (int i = 0; i < details.length; i++) {
                 final item = details[i];
                 final isLast = i == details.length - 1;
@@ -780,6 +787,22 @@ class PdfService {
                   tableGroup.add(item);
                 } else {
                   if (tableGroup.isNotEmpty) {
+                    if (id == 36 && isFirstTableFor36) {
+                      itemsWidgets.add(
+                        pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text("Konu:", style: pw.TextStyle(font: ttfBold, fontSize: 9, color: PdfColors.indigo900)),
+                            pw.SizedBox(height: 1),
+                            pw.Text("Merdiven Uygunluk Değerlendirmesi", style: pw.TextStyle(font: ttf, fontSize: 9)),
+                            pw.SizedBox(height: 5),
+                            pw.Text("Kullanıcı Yanıtı:", style: pw.TextStyle(font: ttfBold, fontSize: 9, color: PdfColors.indigo900)),
+                            pw.SizedBox(height: 3),
+                          ],
+                        ),
+                      );
+                      isFirstTableFor36 = false;
+                    }
                     itemsWidgets.add(
                       _buildInfoTable(
                         tableGroup,
@@ -788,6 +811,7 @@ class PdfService {
                         (id <= 10 || id == 36)
                             ? const PdfColor.fromInt(0x00000000)
                             : effectiveSectionRiskColor,
+                        subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
                       ),
                     );
                     itemsWidgets.add(pw.SizedBox(height: 10));
@@ -800,9 +824,7 @@ class PdfService {
                       ttfBold,
                       riskColor: (id <= 10)
                           ? PdfColors.blue700
-                          : (id == 36
-                                ? const PdfColor.fromInt(0x00000000)
-                                : _getRiskColor(item['report'] ?? '')),
+                          : _getRiskColor(item['report'] ?? ''),
                       isLast: isLast,
                       sectionId: id,
                     ),
@@ -810,6 +832,22 @@ class PdfService {
                 }
               }
               if (tableGroup.isNotEmpty) {
+                if (id == 36 && isFirstTableFor36) {
+                  itemsWidgets.add(
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text("Konu:", style: pw.TextStyle(font: ttfBold, fontSize: 9, color: PdfColors.indigo900)),
+                        pw.SizedBox(height: 1),
+                        pw.Text("Merdiven Uygunluk Değerlendirmesi", style: pw.TextStyle(font: ttf, fontSize: 9)),
+                        pw.SizedBox(height: 5),
+                        pw.Text("Kullanıcı Yanıtı:", style: pw.TextStyle(font: ttfBold, fontSize: 9, color: PdfColors.indigo900)),
+                        pw.SizedBox(height: 3),
+                      ],
+                    ),
+                  );
+                  isFirstTableFor36 = false;
+                }
                 itemsWidgets.add(
                   _buildInfoTable(
                     tableGroup,
@@ -818,6 +856,7 @@ class PdfService {
                     (id <= 10 || id == 36)
                         ? const PdfColor.fromInt(0x00000000)
                         : effectiveSectionRiskColor,
+                    subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
                   ),
                 );
               }
@@ -1082,8 +1121,9 @@ class PdfService {
     List<Map<String, dynamic>> items,
     pw.Font font,
     pw.Font fontBold,
-    PdfColor sectionColor,
-  ) {
+    PdfColor sectionColor, {
+    String subjectLabel = "Konu",
+  }) {
     // If transparent, don't wrap in a border Container
     final table = pw.Table(
       border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
@@ -1098,7 +1138,7 @@ class PdfService {
             pw.Padding(
               padding: const pw.EdgeInsets.all(5),
               child: pw.Text(
-                "Konu",
+                subjectLabel,
                 style: pw.TextStyle(
                   font: fontBold,
                   fontSize: 9,
@@ -1147,13 +1187,21 @@ class PdfService {
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Text(
-                      value,
-                      style: pw.TextStyle(
-                        font: shouldBold ? fontBold : font,
-                        fontSize: 8,
-                      ),
-                    ),
+                    // Handle multi-line values where the first line should be bold
+                    ...value.split('\n').asMap().entries.map((vEntry) {
+                      final vIdx = vEntry.key;
+                      final vText = vEntry.value;
+                      if (vText.isEmpty) return pw.SizedBox();
+                      return pw.Text(
+                        _cleanEmojis(vText),
+                        style: pw.TextStyle(
+                          font: (vIdx == 0 && value.contains('\n'))
+                              ? fontBold
+                              : (shouldBold ? fontBold : font),
+                          fontSize: 8,
+                        ),
+                      );
+                    }),
                     if (item['subtitle'] != null &&
                         item['subtitle'].toString().isNotEmpty)
                       pw.Text(
