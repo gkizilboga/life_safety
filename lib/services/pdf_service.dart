@@ -5,6 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../data/bina_store.dart';
 import '../logic/report_engine.dart';
+import '../models/report_status.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_content.dart';
 import '../logic/active_systems_engine.dart';
@@ -383,6 +384,133 @@ class PdfService {
     );
   }
 
+  static String _convertToActionableText(String text) {
+    if (text.isEmpty) return "";
+    String processed = text;
+    
+    // 1. Etiketleri Temizle
+    processed = processed.replaceAll(RegExp(r'^(KRİTİK RİSK:\s*|UYARI:\s*|ÖNERİ:\s*)'), '').trim();
+    
+    // 2. Aksiyon Dışı Neden ve Rakamları Temizle (Parantez içi)
+    processed = processed.replaceAll(RegExp(r'\([^)]*\)'), '').trim();
+    processed = processed.replaceAll(RegExp(r'\s{2,}'), ' ').trim();
+
+    // 3. Aksiyon Bildiren Kelimelerle Değiştir
+    processed = processed.replaceAll("uygun değildir.", "yönetmelik esaslarına uygun hale getirilmelidir.");
+    processed = processed.replaceAll("uygun değildir", "yönetmelik esaslarına uygun hale getirilmelidir");
+    processed = processed.replaceAll("bulunmamaktadır.", "ilave edilmeli/tesis edilmelidir.");
+    processed = processed.replaceAll("bulunmamaktadır", "ilave edilmeli/tesis edilmelidir");
+    processed = processed.replaceAll("tespit edilmiştir.", "ilgili durum düzeltilmelidir.");
+    processed = processed.replaceAll("tespit edilmiştir", "ilgili durum düzeltilmelidir");
+    processed = processed.replaceAll("ihlal edilmiştir.", "ihlali giderilmeli, asgari yönetmelik sınırları sağlanmalıdır.");
+    processed = processed.replaceAll("ihlal edilmiştir", "ihlali giderilmeli, asgari yönetmelik sınırları sağlanmalıdır");
+    processed = processed.replaceAll("kullanılamaz.", "kullanılamaz, uygun alternatif bir kaçış rotası sağlanmalıdır.");
+    processed = processed.replaceAll("kullanılamaz", "kullanılamaz, uygun alternatif bir kaçış rotası sağlanmalıdır");
+    processed = processed.replaceAll("taşımamaktadır.", "taşıyacak şekilde modernize edilmelidir.");
+    processed = processed.replaceAll("taşımamaktadır", "taşıyacak şekilde modernize edilmelidir");
+    
+    if (!processed.endsWith('.') && !processed.endsWith(':')) {
+      processed += '.';
+    }
+    
+    return processed;
+  }
+
+  static List<pw.Page> _buildExecutiveSummaryPage({
+    required pw.PageTheme pageTheme,
+    required BinaStore store,
+    required Map<String, dynamic> metrics,
+    required pw.Font ttf,
+    required pw.Font ttfBold,
+  }) {
+    List<String> actionItems = [];
+    
+    for (int id = 1; id <= 36; id++) {
+      if ([3, 5, 6, 7, 10, 12, 21, 36].contains(id)) {
+        final fullReport = ReportEngine.getSectionFullReport(id, store: store);
+        final riskColor = _getRiskColor(fullReport);
+        if (riskColor == PdfColors.red700 || riskColor == PdfColors.yellow700) {
+           String act = _convertToActionableText(fullReport);
+           if (!actionItems.contains(act)) actionItems.add(act);
+        }
+      } else {
+        final details = ReportEngine.getSectionDetailedReport(id, store: store);
+        for (final item in details) {
+          final status = item['status'] as ReportStatus;
+          if (status == ReportStatus.risk || status == ReportStatus.warning) {
+            String actText = _convertToActionableText((item['report'] ?? '').toString());
+            if (actText.isNotEmpty && !actionItems.contains(actText)) {
+               actionItems.add(actText);
+            }
+          }
+        }
+      }
+    }
+    
+    if (actionItems.isEmpty) {
+        actionItems.add("Binada tespit edilmiş acil aksiyon gerektiren kritik bir ihlal veya uyarı bulunmamaktadır.");
+    }
+
+    final score = metrics['score'] as int;
+    final riskText = score > 80 ? "DÜŞÜK RİSK" : score > 50 ? "ORTA RİSK" : "YÜKSEK RİSK";
+    final riskColor = _getScoreColorForPdf(score);
+
+    return [
+      pw.MultiPage(
+        pageTheme: pageTheme,
+        header: (context) => pw.SizedBox(),
+        footer: _buildFooter,
+        build: (context) => [
+          pw.Text(
+            "YÖNETİCİ ÖZETİ VE ACİL EYLEM PLANI",
+            style: pw.TextStyle(
+              font: ttfBold,
+              fontSize: 13,
+              color: PdfColor.fromInt(0xFF1a365d),
+            ),
+          ),
+          pw.SizedBox(height: 12),
+          pw.RichText(
+            text: pw.TextSpan(
+              style: pw.TextStyle(font: ttf, fontSize: 9.5, lineSpacing: 2.2),
+              children: [
+                pw.TextSpan(text: "Bu bina, güncel Binaların Yangından Korunması Hakkında Yönetmelik kriterlerine göre genel hatlarıyla "),
+                pw.TextSpan(text: "[$riskText]", style: pw.TextStyle(font: ttfBold, color: riskColor)),
+                pw.TextSpan(text: " kategorisinde değerlendirilmiştir. Can ve mal güvenliğini asgari düzeyde sağlayabilmek adına, aşağıdaki listede yer alan yapısal/mimari tespitlerin ivedilikle giderilmesi veya ilgili eksikliklerle ilgili aksiyon alınması şiddetle önerilmektedir:"),
+              ]
+            ),
+          ),
+          pw.SizedBox(height: 15),
+          ...actionItems.map((item) {
+             return pw.Padding(
+               padding: const pw.EdgeInsets.only(bottom: 15),
+               child: pw.Row(
+                 crossAxisAlignment: pw.CrossAxisAlignment.start,
+                 children: [
+                    pw.Container(
+                       width: 12,
+                       height: 12,
+                       margin: const pw.EdgeInsets.only(top: 2, right: 10),
+                       decoration: pw.BoxDecoration(
+                         border: pw.Border.all(color: PdfColors.grey700, width: 1.2),
+                         borderRadius: pw.BorderRadius.circular(2)
+                       )
+                    ),
+                    pw.Expanded(
+                       child: pw.Text(
+                         item,
+                         style: pw.TextStyle(font: ttf, fontSize: 9, color: PdfColors.black, lineSpacing: 2.2),
+                       )
+                    )
+                 ]
+               )
+             );
+          })
+        ]
+      )
+    ];
+  }
+
   static pw.Page _buildLegalPage(pw.PageTheme pageTheme) {
     // Split the content manually for the two-column layout
     final disclaimerParts = AppStrings.legalDisclaimerContent.split('\n\n');
@@ -665,6 +793,17 @@ class PdfService {
         showScore: true,
       ),
     );
+
+    // 2. Executive Summary (Yönetici Özeti)
+    for (var page in _buildExecutiveSummaryPage(
+      pageTheme: pageTheme,
+      store: store,
+      metrics: metrics,
+      ttf: ttf,
+      ttfBold: ttfBold,
+    )) {
+      pdf.addPage(page);
+    }
 
     // 3. Risk Analizi ve Bölümler
     pdf.addPage(
