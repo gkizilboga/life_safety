@@ -520,30 +520,33 @@ class PdfService {
     final rightColumnText = disclaimerParts.sublist(4).join('\n\n');
 
     return pw.Page(
-      pageTheme: pageTheme,
+      pageTheme: pageTheme.copyWith(
+        margin: const pw.EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+      ),
       build: (context) => pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Text(
-            "YASAL DAYANAKLAR VE SORUMLULUK REDDİ",
+            "EK 1: YASAL DAYANAKLAR VE SORUMLULUK REDDİ BEYANI",
             style: pw.TextStyle(
-              fontSize: 12.5,
+              fontSize: 10,
               fontWeight: pw.FontWeight.bold,
-              color: PdfColors.blue900,
+              color: PdfColors.grey700,
+              letterSpacing: 1.0,
             ),
           ),
-          pw.SizedBox(height: 10),
+          pw.SizedBox(height: 15),
           pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Expanded(
                 child: pw.Text(
                   leftColumnText,
-                  style: const pw.TextStyle(fontSize: 6.5, lineSpacing: 2.2),
+                  style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey600, lineSpacing: 1.5),
                   textAlign: pw.TextAlign.justify,
                 ),
               ),
-              pw.SizedBox(width: 20),
+              pw.SizedBox(width: 25),
               pw.Expanded(
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -551,8 +554,9 @@ class PdfService {
                     pw.Text(
                       rightColumnText,
                       style: const pw.TextStyle(
-                        fontSize: 6.5,
-                        lineSpacing: 2.2,
+                        fontSize: 8,
+                        color: PdfColors.grey600,
+                        lineSpacing: 1.5,
                       ),
                       textAlign: pw.TextAlign.justify,
                     ),
@@ -560,17 +564,18 @@ class PdfService {
                     pw.Text(
                       AppStrings.kvkkTitle,
                       style: pw.TextStyle(
-                        fontSize: 10,
+                        fontSize: 8,
                         fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.blue900,
+                        color: PdfColors.grey700,
                       ),
                     ),
                     pw.SizedBox(height: 5),
                     pw.Text(
                       AppStrings.kvkkContent,
                       style: const pw.TextStyle(
-                        fontSize: 6.5,
-                        lineSpacing: 2.2,
+                        fontSize: 8,
+                        color: PdfColors.grey600,
+                        lineSpacing: 1.5,
                       ),
                       textAlign: pw.TextAlign.justify,
                     ),
