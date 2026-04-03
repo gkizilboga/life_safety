@@ -430,7 +430,7 @@ class Section36Handler {
     }
 
     if (!isBasement) {
-      add("Normal (Standart) Merdiven", b.normalMerdivenSayisi);
+      add("Normal Merdiven", b.normalMerdivenSayisi);
       add(
         "Bina İçi Korunumlu (Yangın) Merdiven",
         b.binaIciYanginMerdiveniSayisi,

@@ -181,8 +181,9 @@ class PdfService {
 
   static pw.Widget _buildGaugeChart(int score) {
     double angle = -180.0 + (score / 100.0) * 180.0;
-    
-    String svgContent = '''
+
+    String svgContent =
+        '''
     <svg width="240" height="130" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
       <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#10b981" stroke-width="20" />
       <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f59e0b" stroke-width="20" stroke-dasharray="201.06 251.33" />
@@ -197,11 +198,8 @@ class PdfService {
       <circle cx="100" cy="100" r="4" fill="#ffffff" />
     </svg>
     ''';
-    
-    return pw.Container(
-      height: 120,
-      child: pw.SvgImage(svg: svgContent),
-    );
+
+    return pw.Container(height: 120, child: pw.SvgImage(svg: svgContent));
   }
 
   static pw.Page _buildCoverPage({
@@ -275,9 +273,7 @@ class PdfService {
 
               // Skor Yüzdesi ve Gauge Chart (sadece showScore true ise)
               if (showScore) ...[
-                pw.Center(
-                  child: _buildGaugeChart(metrics['score'] as int),
-                ),
+                pw.Center(child: _buildGaugeChart(metrics['score'] as int)),
                 pw.Center(
                   child: pw.Text(
                     "${metrics['score']} / 100",
@@ -296,7 +292,9 @@ class PdfService {
                       vertical: 8,
                     ),
                     decoration: pw.BoxDecoration(
-                      color: _getScoreColorForPdf(metrics['score'] as int).shade(0.1),
+                      color: _getScoreColorForPdf(
+                        metrics['score'] as int,
+                      ).shade(0.1),
                       borderRadius: pw.BorderRadius.circular(20),
                     ),
                     child: pw.Text(
@@ -387,32 +385,70 @@ class PdfService {
   static String _convertToActionableText(String text) {
     if (text.isEmpty) return "";
     String processed = text;
-    
+
     // 1. Etiketleri Temizle
-    processed = processed.replaceAll(RegExp(r'^(KRİTİK RİSK:\s*|UYARI:\s*|ÖNERİ:\s*)'), '').trim();
-    
+    processed = processed
+        .replaceAll(RegExp(r'^(KRİTİK RİSK:\s*|UYARI:\s*|ÖNERİ:\s*)'), '')
+        .trim();
+
     // 2. Aksiyon Dışı Neden ve Rakamları Temizle (Parantez içi)
     processed = processed.replaceAll(RegExp(r'\([^)]*\)'), '').trim();
     processed = processed.replaceAll(RegExp(r'\s{2,}'), ' ').trim();
 
     // 3. Aksiyon Bildiren Kelimelerle Değiştir
-    processed = processed.replaceAll("uygun değildir.", "yönetmelik esaslarına uygun hale getirilmelidir.");
-    processed = processed.replaceAll("uygun değildir", "yönetmelik esaslarına uygun hale getirilmelidir");
-    processed = processed.replaceAll("bulunmamaktadır.", "ilave edilmeli/tesis edilmelidir.");
-    processed = processed.replaceAll("bulunmamaktadır", "ilave edilmeli/tesis edilmelidir");
-    processed = processed.replaceAll("tespit edilmiştir.", "ilgili durum düzeltilmelidir.");
-    processed = processed.replaceAll("tespit edilmiştir", "ilgili durum düzeltilmelidir");
-    processed = processed.replaceAll("ihlal edilmiştir.", "ihlali giderilmeli, asgari yönetmelik sınırları sağlanmalıdır.");
-    processed = processed.replaceAll("ihlal edilmiştir", "ihlali giderilmeli, asgari yönetmelik sınırları sağlanmalıdır");
-    processed = processed.replaceAll("kullanılamaz.", "kullanılamaz, uygun alternatif bir kaçış rotası sağlanmalıdır.");
-    processed = processed.replaceAll("kullanılamaz", "kullanılamaz, uygun alternatif bir kaçış rotası sağlanmalıdır");
-    processed = processed.replaceAll("taşımamaktadır.", "taşıyacak şekilde modernize edilmelidir.");
-    processed = processed.replaceAll("taşımamaktadır", "taşıyacak şekilde modernize edilmelidir");
-    
+    processed = processed.replaceAll(
+      "uygun değildir.",
+      "yönetmelik esaslarına uygun hale getirilmelidir.",
+    );
+    processed = processed.replaceAll(
+      "uygun değildir",
+      "yönetmelik esaslarına uygun hale getirilmelidir",
+    );
+    processed = processed.replaceAll(
+      "bulunmamaktadır.",
+      "ilave edilmeli/tesis edilmelidir.",
+    );
+    processed = processed.replaceAll(
+      "bulunmamaktadır",
+      "ilave edilmeli/tesis edilmelidir",
+    );
+    processed = processed.replaceAll(
+      "tespit edilmiştir.",
+      "ilgili durum düzeltilmelidir.",
+    );
+    processed = processed.replaceAll(
+      "tespit edilmiştir",
+      "ilgili durum düzeltilmelidir",
+    );
+    processed = processed.replaceAll(
+      "ihlal edilmiştir.",
+      "ihlali giderilmeli, asgari yönetmelik sınırları sağlanmalıdır.",
+    );
+    processed = processed.replaceAll(
+      "ihlal edilmiştir",
+      "ihlali giderilmeli, asgari yönetmelik sınırları sağlanmalıdır",
+    );
+    processed = processed.replaceAll(
+      "kullanılamaz.",
+      "kullanılamaz, uygun alternatif bir kaçış rotası sağlanmalıdır.",
+    );
+    processed = processed.replaceAll(
+      "kullanılamaz",
+      "kullanılamaz, uygun alternatif bir kaçış rotası sağlanmalıdır",
+    );
+    processed = processed.replaceAll(
+      "taşımamaktadır.",
+      "taşıyacak şekilde modernize edilmelidir.",
+    );
+    processed = processed.replaceAll(
+      "taşımamaktadır",
+      "taşıyacak şekilde modernize edilmelidir",
+    );
+
     if (!processed.endsWith('.') && !processed.endsWith(':')) {
       processed += '.';
     }
-    
+
     return processed;
   }
 
@@ -424,35 +460,43 @@ class PdfService {
     required pw.Font ttfBold,
   }) {
     List<String> actionItems = [];
-    
+
     for (int id = 1; id <= 36; id++) {
       if ([3, 5, 6, 7, 10, 12, 21, 36].contains(id)) {
         final fullReport = ReportEngine.getSectionFullReport(id, store: store);
         final riskColor = _getRiskColor(fullReport);
         if (riskColor == PdfColors.red700 || riskColor == PdfColors.yellow700) {
-           String act = _convertToActionableText(fullReport);
-           if (!actionItems.contains(act)) actionItems.add(act);
+          String act = _convertToActionableText(fullReport);
+          if (!actionItems.contains(act)) actionItems.add(act);
         }
       } else {
         final details = ReportEngine.getSectionDetailedReport(id, store: store);
         for (final item in details) {
           final status = item['status'] as ReportStatus;
           if (status == ReportStatus.risk || status == ReportStatus.warning) {
-            String actText = _convertToActionableText((item['report'] ?? '').toString());
+            String actText = _convertToActionableText(
+              (item['report'] ?? '').toString(),
+            );
             if (actText.isNotEmpty && !actionItems.contains(actText)) {
-               actionItems.add(actText);
+              actionItems.add(actText);
             }
           }
         }
       }
     }
-    
+
     if (actionItems.isEmpty) {
-        actionItems.add("Binada tespit edilmiş acil aksiyon gerektiren kritik bir ihlal veya uyarı bulunmamaktadır.");
+      actionItems.add(
+        "Binada tespit edilmiş acil aksiyon gerektiren kritik bir ihlal veya uyarı bulunmamaktadır.",
+      );
     }
 
     final score = metrics['score'] as int;
-    final riskText = score > 80 ? "DÜŞÜK RİSK" : score > 50 ? "ORTA RİSK" : "YÜKSEK RİSK";
+    final riskText = score > 80
+        ? "DÜŞÜK RİSK"
+        : score > 50
+        ? "ORTA RİSK"
+        : "YÜKSEK RİSK";
     final riskColor = _getScoreColorForPdf(score);
 
     return [
@@ -474,40 +518,57 @@ class PdfService {
             text: pw.TextSpan(
               style: pw.TextStyle(font: ttf, fontSize: 9.5, lineSpacing: 2.2),
               children: [
-                pw.TextSpan(text: "Bu bina, güncel Binaların Yangından Korunması Hakkında Yönetmelik kriterlerine göre genel hatlarıyla "),
-                pw.TextSpan(text: "[$riskText]", style: pw.TextStyle(font: ttfBold, color: riskColor)),
-                pw.TextSpan(text: " kategorisinde değerlendirilmiştir. Can ve mal güvenliğini asgari düzeyde sağlayabilmek adına, aşağıdaki listede yer alan yapısal/mimari tespitlerin ivedilikle giderilmesi veya ilgili eksikliklerle ilgili aksiyon alınması şiddetle önerilmektedir:"),
-              ]
+                pw.TextSpan(
+                  text:
+                      "Bu bina, güncel Binaların Yangından Korunması Hakkında Yönetmelik kriterlerine göre genel hatlarıyla ",
+                ),
+                pw.TextSpan(
+                  text: "[$riskText]",
+                  style: pw.TextStyle(font: ttfBold, color: riskColor),
+                ),
+                pw.TextSpan(
+                  text:
+                      " kategorisinde değerlendirilmiştir. Can ve mal güvenliğini asgari düzeyde sağlayabilmek adına, aşağıdaki listede yer alan yapısal/mimari tespitlerin ivedilikle giderilmesi veya ilgili eksikliklerle ilgili aksiyon alınması şiddetle önerilmektedir:",
+                ),
+              ],
             ),
           ),
           pw.SizedBox(height: 15),
           ...actionItems.map((item) {
-             return pw.Padding(
-               padding: const pw.EdgeInsets.only(bottom: 15),
-               child: pw.Row(
-                 crossAxisAlignment: pw.CrossAxisAlignment.start,
-                 children: [
-                    pw.Container(
-                       width: 12,
-                       height: 12,
-                       margin: const pw.EdgeInsets.only(top: 2, right: 10),
-                       decoration: pw.BoxDecoration(
-                         border: pw.Border.all(color: PdfColors.grey700, width: 1.2),
-                         borderRadius: pw.BorderRadius.circular(2)
-                       )
+            return pw.Padding(
+              padding: const pw.EdgeInsets.only(bottom: 15),
+              child: pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Container(
+                    width: 12,
+                    height: 12,
+                    margin: const pw.EdgeInsets.only(top: 2, right: 10),
+                    decoration: pw.BoxDecoration(
+                      border: pw.Border.all(
+                        color: PdfColors.grey700,
+                        width: 1.2,
+                      ),
+                      borderRadius: pw.BorderRadius.circular(2),
                     ),
-                    pw.Expanded(
-                       child: pw.Text(
-                         item,
-                         style: pw.TextStyle(font: ttf, fontSize: 9, color: PdfColors.black, lineSpacing: 2.2),
-                       )
-                    )
-                 ]
-               )
-             );
-          })
-        ]
-      )
+                  ),
+                  pw.Expanded(
+                    child: pw.Text(
+                      item,
+                      style: pw.TextStyle(
+                        font: ttf,
+                        fontSize: 9,
+                        color: PdfColors.black,
+                        lineSpacing: 2.2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
     ];
   }
 
@@ -542,7 +603,11 @@ class PdfService {
               pw.Expanded(
                 child: pw.Text(
                   leftColumnText,
-                  style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey600, lineSpacing: 1.5),
+                  style: const pw.TextStyle(
+                    fontSize: 8,
+                    color: PdfColors.grey600,
+                    lineSpacing: 1.5,
+                  ),
                   textAlign: pw.TextAlign.justify,
                 ),
               ),
@@ -618,12 +683,11 @@ class PdfService {
           ),
           pw.SizedBox(height: 2),
           pw.Container(
-            alignment: pw.Alignment.centerRight,
+            alignment: pw.Alignment.centerLeft,
             child: pw.Text(
-              "BU BELGE, UYGULAMA İLE ÜRETİLMİŞ OLUP RESMİ BELGE NİTELİĞİ TAŞIMAZ. ISLAK İMZA VEYA KAŞE YERİNE GEÇMEZ. "
-              "YASAL UYARILARIN TÜMÜ VE TCK SORUMLULUK BEYANI BU DOKÜMANIN AYRILMAZ PARÇASIDIR.",
+              "Bu doküman, Uygulama tarafından üretilmiş olup, resmi belge veya mühendislik raporu niteliği taşımaz; ıslak imza/kaşe yerine geçmez. Dokümanın sonunda yer alan Yasal Uyarılar ve Sorumluluk Beyanı bu belgenin ayrılmaz bir parçasıdır.",
               style: const pw.TextStyle(fontSize: 4.2, color: PdfColors.black),
-              textAlign: pw.TextAlign.right,
+              textAlign: pw.TextAlign.left,
             ),
           ),
         ],
@@ -834,7 +898,7 @@ class PdfService {
                 ttfBold,
               ),
               _buildBulletPoint(
-                "Bina içerisinde ticari işletmeler (işyeri) varsa bu çalışma, ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir.",
+                "Bina içerisinde ticari işletme (işyeri) varsa bu çalışma, ticari işletmeye ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir.",
                 ttfBold,
               ),
               _buildBulletPoint(
@@ -936,11 +1000,28 @@ class PdfService {
                         pw.Column(
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
-                            pw.Text("Konu:", style: pw.TextStyle(font: ttfBold, fontSize: 9, color: PdfColors.indigo900)),
+                            pw.Text(
+                              "Konu:",
+                              style: pw.TextStyle(
+                                font: ttfBold,
+                                fontSize: 9,
+                                color: PdfColors.indigo900,
+                              ),
+                            ),
                             pw.SizedBox(height: 1),
-                            pw.Text("Merdiven Uygunluk Değerlendirmesi", style: pw.TextStyle(font: ttf, fontSize: 9)),
+                            pw.Text(
+                              "Merdiven Uygunluk Değerlendirmesi",
+                              style: pw.TextStyle(font: ttf, fontSize: 9),
+                            ),
                             pw.SizedBox(height: 5),
-                            pw.Text("Kullanıcı Yanıtı:", style: pw.TextStyle(font: ttfBold, fontSize: 9, color: PdfColors.indigo900)),
+                            pw.Text(
+                              "Kullanıcı Yanıtı:",
+                              style: pw.TextStyle(
+                                font: ttfBold,
+                                fontSize: 9,
+                                color: PdfColors.indigo900,
+                              ),
+                            ),
                             pw.SizedBox(height: 3),
                           ],
                         ),
@@ -981,11 +1062,28 @@ class PdfService {
                     pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.Text("Konu:", style: pw.TextStyle(font: ttfBold, fontSize: 9, color: PdfColors.indigo900)),
+                        pw.Text(
+                          "Konu:",
+                          style: pw.TextStyle(
+                            font: ttfBold,
+                            fontSize: 9,
+                            color: PdfColors.indigo900,
+                          ),
+                        ),
                         pw.SizedBox(height: 1),
-                        pw.Text("Merdiven Uygunluk Değerlendirmesi", style: pw.TextStyle(font: ttf, fontSize: 9)),
+                        pw.Text(
+                          "Merdiven Uygunluk Değerlendirmesi",
+                          style: pw.TextStyle(font: ttf, fontSize: 9),
+                        ),
                         pw.SizedBox(height: 5),
-                        pw.Text("Kullanıcı Yanıtı:", style: pw.TextStyle(font: ttfBold, fontSize: 9, color: PdfColors.indigo900)),
+                        pw.Text(
+                          "Kullanıcı Yanıtı:",
+                          style: pw.TextStyle(
+                            font: ttfBold,
+                            fontSize: 9,
+                            color: PdfColors.indigo900,
+                          ),
+                        ),
                         pw.SizedBox(height: 3),
                       ],
                     ),

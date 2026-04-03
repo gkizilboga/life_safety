@@ -400,7 +400,7 @@ void main() {
       );
       expect(
         details.any(
-          (d) => d['label'] == 'Merdiven Tipleri ve Adetleri',
+          (d) => d['label'].contains('Normal Merdiven'),
         ),
         true,
       );
@@ -450,7 +450,7 @@ void main() {
 
       expect(
         det6.any(
-          (d) => d['label'].contains('büyük restoran (endüstriyel mutfak)'),
+          (d) => d['label'].contains('büyük restoran') && d['label'].contains('endüstriyel mutfak'),
         ),
         true,
       );
