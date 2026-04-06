@@ -142,7 +142,7 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                     isSelected: _model.hasTicari,
                     onTap: () => _toggleUsage('ticari'),
                     imageAssetPath: AppAssets.section6Ticari,
-                    imageTitle: "Ticari Alan Tanımları",
+                    imageTitle: "Ticari alanlar",
                   ),
                   const SizedBox(height: 8),
 

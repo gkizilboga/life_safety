@@ -79,7 +79,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
           QuestionHeaderWithImage(
             questionText: "Binada kullanmak zorunda kaldığınız eğimli bir rampa var mı?",
             imageAssetPath: AppAssets.section26Rampa,
-            imageTitle: "Kaçış Rampası Örneği",
+            imageTitle: "Kaçış rampası",
           ),
 
           QuestionCard(

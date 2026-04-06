@@ -150,7 +150,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
             child: QuestionHeaderWithImage(
               questionText: "Zemin Katın Kullanım Amacı",
               imageAssetPath: 'assets/images/sections/farkli_katlar_1.webp',
-              imageTitle: "Kat Kullanım Örnekleri",
+              imageTitle: "Kat tanımı",
             ),
           ),
           _buildChoiceGrid('zemin', null, _model.zemin),

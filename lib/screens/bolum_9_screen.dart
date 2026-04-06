@@ -63,7 +63,7 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
                 QuestionHeaderWithImage(
                   questionText: "Binada otomatik sprinkler sistemi var mı?",
                   imageAssetPath: AppAssets.section9Sprinkler,
-                  imageTitle: "Sprinkler Detayı",
+                  imageTitle: "Sprinkler başlığı",
                 ),
                 const SizedBox(height: 12),
                 SelectableCard(
@@ -99,7 +99,7 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
                   QuestionHeaderWithImage(
                     questionText: "Büyük restoran (endüstriyel mutfak) davlumbazında otomatik söndürme sistemi var mı?",
                     imageAssetPath: AppAssets.section9Davlumbaz,
-                    imageTitle: "Davlumbaz Detayı",
+                    imageTitle: "Davlumbaz söndürme sistemi",
                   ),
                   const SizedBox(height: 12),
                   SelectableCard(

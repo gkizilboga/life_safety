@@ -61,10 +61,10 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
                       onTap: () => ImageModalHelper.show(
                         context,
                         assetPath: 'assets/images/sections/ygh_1.webp',
-                        title: "Örnek YGH Yerleşimi İncele",
+                        title: "YGH",
                       ),
                       child: Tooltip(
-                        message: 'Görseli İncele',
+                        message: 'Görseli incele',
                         child: Container(
                           padding: const EdgeInsets.all(7),
                           decoration: BoxDecoration(

@@ -175,7 +175,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               term: "Kaçış Mesafesi",
               definition: AppDefinitions.kacisMesafesi,
               imagePath: AppAssets.section35DairedenOlcum,
-              imageTitle: "Tek Yön Kaçış Mesafesi Ölçüm Detayı",
+              imageTitle: "Tek yön kaçış mesafesi",
             ),
             if (_model.tekYon?.label == "35-1-C") ...[
               const SizedBox(height: 12),
@@ -213,7 +213,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               term: "Kaçış Mesafesi",
               definition: AppDefinitions.kacisMesafesi,
               imagePath: AppAssets.section35KacisGosterim,
-              imageTitle: "Çift Yön Kaçış Mesafesi Ölçüm Detayı",
+              imageTitle: "Çift yön kaçış mesafesi",
             ),
             if (_model.ciftYon?.label == "35-2-C") ...[
               const SizedBox(height: 12),
@@ -351,9 +351,9 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
       onTap: () => ImageModalHelper.show(
         context,
         assetPath: imagePath,
-        title: imageTitle ?? 'Görseli İncele',
+        title: imageTitle ?? 'Görseli incele',
       ),
-      tooltip: 'Görseli İncele',
+      tooltip: 'Görseli incele',
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(

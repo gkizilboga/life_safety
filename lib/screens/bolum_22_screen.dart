@@ -127,7 +127,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             ],
             _model.varlik,
             assetPath: AppAssets.section22ItfaiyeHol,
-            assetTitle: "İtfaiye Asansörü ve Hol Uygulama Detayı",
+            assetTitle: "İtfaiye asansörü ve hol uygulama detayı",
           ),
 
           if (_model.varlik?.label == Bolum22Content.varlikOptionB.label) ...[
@@ -169,7 +169,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               ],
               _model.kabin,
               assetPath: AppAssets.section22ItfaiyeKabin,
-              assetTitle: "İtfaiye Asansörü Kabin Ölçüleri",
+              assetTitle: "İtfaiye asansörü kabin ölçüleri",
             ),
 
             _buildSoru(
@@ -193,7 +193,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
               ],
               _model.basinc,
               assetPath: AppAssets.section22Basinclandirma,
-              assetTitle: "Asansör Kuyusu Basınçlandırma Sistemi",
+              assetTitle: "Asansör kuyusu basınçlandırma sistemi",
             ),
           ],
         ],
@@ -227,7 +227,7 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
             QuestionHeaderWithImage(
               questionText: title,
               imageAssetPath: assetPath,
-              imageTitle: assetTitle ?? "Teknik Detay",
+              imageTitle: assetTitle ?? "İtfaiye asansörü detayı",
             )
           else
             Text(title, style: AppStyles.questionTitle),

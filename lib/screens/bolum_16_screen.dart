@@ -131,7 +131,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                       Bolum16Content.mantolamaOptionA,
                     ),
                     imageAssetPath: AppAssets.section16EpsMantolama,
-                    imageTitle: "EPS / XPS Mantolama",
+                    imageTitle: "EPS/XPS mantolama",
                   ),
 
                   // Option B: A1, A2 (Taşyünü)
@@ -144,7 +144,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                       Bolum16Content.mantolamaOptionB,
                     ),
                     imageAssetPath: AppAssets.section16TasyunuMantolama,
-                    imageTitle: "Taşyünü Mantolama",
+                    imageTitle: "Taşyünü mantolama",
                   ),
 
                   // Option C: Giydirme Cephe
@@ -157,7 +157,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                       Bolum16Content.giydirmeOptionC,
                     ),
                     imageAssetPath: AppAssets.section16Giydirme,
-                    imageTitle: "Giydirme Cephe Örneği",
+                    imageTitle: "Giydirme cephe",
                   ),
 
                   // Other Options
@@ -238,7 +238,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               ],
               _model.sagirYuzey,
               imagePath: AppAssets.section16Spandrel,
-              imageTitle: "Spandrel Örneği",
+              imageTitle: "Spandrel (yanmaz yüzey)",
             ),
 
             if (_model.sagirYuzey?.label ==
@@ -269,7 +269,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 ],
                 _model.bitisikNizam,
                 imagePath: AppAssets.section16Sicrama,
-                imageTitle: "Yan Binadan Sıçrama Detayı",
+                imageTitle: "Yan binadan alev sıçrama",
               ),
 
             const SizedBox(height: 16),
@@ -340,7 +340,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             QuestionHeaderWithImage(
               questionText: title,
               imageAssetPath: imagePath,
-              imageTitle: imageTitle ?? "Görseli İncele",
+              imageTitle: imageTitle ?? "Cephe yangın güvenliği",
             )
           else
             Text(title, style: AppStyles.questionTitle),

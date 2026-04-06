@@ -928,12 +928,14 @@ class QuestionHeaderWithImage extends StatelessWidget {
   final String questionText;
   final String imageAssetPath;
   final String imageTitle;
+  final String? definition;
 
   const QuestionHeaderWithImage({
     super.key,
     required this.questionText,
     required this.imageAssetPath,
     required this.imageTitle,
+    this.definition,
   });
 
   @override
@@ -945,6 +947,13 @@ class QuestionHeaderWithImage extends StatelessWidget {
         children: [
           Expanded(child: Text(questionText, style: AppStyles.questionTitle)),
           const SizedBox(width: 10),
+          if (definition != null) ...[
+            DefinitionButton(
+              term: questionText,
+              definition: definition!,
+            ),
+            const SizedBox(width: 8),
+          ],
           GestureDetector(
             onTap: () => ImageModalHelper.show(
               context,
@@ -952,7 +961,7 @@ class QuestionHeaderWithImage extends StatelessWidget {
               title: imageTitle,
             ),
             child: Tooltip(
-              message: 'Görseli İncele',
+              message: 'Görseli incele',
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
@@ -972,6 +981,7 @@ class QuestionHeaderWithImage extends StatelessWidget {
     );
   }
 }
+
 
 /// Standart onay kutusu widget'ı - tüm ekranlarda tutarlı görünüm sağlar
 /// Açık yeşil arka plan ile dikkat çekici tasarım

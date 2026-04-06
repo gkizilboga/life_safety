@@ -169,7 +169,7 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
           child: QuestionHeaderWithImage(
             questionText: "Betonarme taşıyıcılarınızdaki paspayı (demir koruma tabakası) durumu nedir?",
             imageAssetPath: AppAssets.section12Paspayi,
-            imageTitle: "Paspayı Detayı",
+            imageTitle: "Paspayı detayı",
           ),
         ),
         const SizedBox(height: 12),
@@ -242,7 +242,6 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       decoration: InputDecoration(
         labelText: label,
         hintText: "5 - 100",
-        helperText: "Min: 5mm, Max: 100mm (2 ondalık)",
         errorText: error,
         suffixText: "mm",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),

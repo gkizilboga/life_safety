@@ -379,8 +379,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
     );
   }
 
-
-
   void _showCalculatorPopup(
     TextEditingController targetController,
     String title,
@@ -406,7 +404,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: InputDecoration(
-                labelText: "Kattaki daire adedi",
+                labelText: "Bir kattaki daire adedi",
                 labelStyle: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -516,7 +514,10 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
           suffixStyle: const TextStyle(fontWeight: FontWeight.bold),
           suffixIcon: onCalculatorTap != null
               ? IconButton(
-                  icon: const Icon(Icons.calculate_outlined, color: AppColors.primaryBlue),
+                  icon: const Icon(
+                    Icons.calculate_outlined,
+                    color: AppColors.primaryBlue,
+                  ),
                   onPressed: onCalculatorTap,
                   tooltip: 'Hesapla',
                 )
@@ -534,9 +535,15 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.primaryBlue, width: 2),
+            borderSide: const BorderSide(
+              color: AppColors.primaryBlue,
+              width: 2,
+            ),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 16,
+          ),
         ),
       ),
     );

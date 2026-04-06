@@ -31,6 +31,10 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   bool _askSiginak = false;
   bool _askEndustriyelMutfak = false;
 
+  // Otopark alan otomatik hesap
+  bool _autoOtoparkAlani = false;
+  double? _hesaplananOtoparkAlani;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +42,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       _model = BinaStore.instance.bolum13!;
     }
     _loadVisibilityLogic();
+    _applyOtoparkAutoSelection();
 
     // KRİTİK: Eğer hiçbir soru sorulmayacaksa otomatik olarak sonraki ekrana geç
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -45,6 +50,33 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _onNextPressed();
       }
     });
+  }
+
+  /// Bölüm 6'daki kapaliOtoparkAlani değerine göre otomatik şık seçer.
+  /// Kullanıcı daha önce seçim yapmışsa (bolum13 kayıtlıysa) dokunmaz.
+  void _applyOtoparkAutoSelection() {
+    final b6 = BinaStore.instance.bolum6;
+    if (b6 == null) return;
+    final alan = b6.kapaliOtoparkAlani;
+    if (alan == null) return;
+
+    _hesaplananOtoparkAlani = alan;
+
+    // Daha önce kullanıcı seçim yapmışsa otomatik seçim yapma
+    if (BinaStore.instance.bolum13?.otoparkAlan != null) return;
+
+    _autoOtoparkAlani = true;
+    ChoiceResult otomatikSecim;
+    if (alan < 600) {
+      otomatikSecim = Bolum13Content.otoparkAlanOptionA;
+    } else if (alan <= 1000) {
+      otomatikSecim = Bolum13Content.otoparkAlanOptionB;
+    } else if (alan <= 2000) {
+      otomatikSecim = Bolum13Content.otoparkAlanOptionC;
+    } else {
+      otomatikSecim = Bolum13Content.otoparkAlanOptionD;
+    }
+    _model = _model.copyWith(otoparkAlan: otomatikSecim);
   }
 
   bool _shouldShowAnyQuestion() {
@@ -163,18 +195,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               _model.otoparkKapi,
             ),
             // ALT SORU: Otopark Alanı
-            _buildSoru(
-              "Otopark alanları tüm katlarda toplam kaç metrekare?",
-              'otoparkAlan',
-              [
-                Bolum13Content.otoparkAlanOptionA,
-                Bolum13Content.otoparkAlanOptionB,
-                Bolum13Content.otoparkAlanOptionC,
-                Bolum13Content.otoparkAlanOptionD,
-                Bolum13Content.otoparkAlanOptionE,
-              ],
-              _model.otoparkAlan,
-            ),
+            _buildSoruOtoparkAlan(),
           ],
 
           if (_askKazan) ...[
@@ -313,6 +334,78 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               ],
               _model.endustriyelMutfakKapi,
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSoruOtoparkAlan() {
+    final bool hesaplandi =
+        _autoOtoparkAlani && _hesaplananOtoparkAlani != null;
+
+    return QuestionCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Otopark alanları tüm katlarda toplam kaç metrekare?",
+            style: AppStyles.questionTitle,
+          ),
+          if (hesaplandi) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF8E1),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: const Color(0xFFFFCC02), width: 1),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.info_outline,
+                    size: 16,
+                    color: Color(0xFFF57F17),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "Otopark kat alanı Bölüm 6'daki bilgilerinize göre "
+                      "${_hesaplananOtoparkAlani!.toStringAsFixed(0)} m² olarak "
+                      "tespit edilmiştir; aşağıdaki seçenek otomatik işaretlenmiştir. "
+                      "Farklı bir durum varsa başka bir seçenek işaretleyebilirsiniz.",
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF6D4C41),
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          const SizedBox(height: 12),
+          ...[
+            Bolum13Content.otoparkAlanOptionA,
+            Bolum13Content.otoparkAlanOptionB,
+            Bolum13Content.otoparkAlanOptionC,
+            Bolum13Content.otoparkAlanOptionD,
+            Bolum13Content.otoparkAlanOptionE,
+          ].map(
+            (opt) => SelectableCard(
+              choice: opt,
+              isSelected: _model.otoparkAlan?.label == opt.label,
+              onTap: () {
+                setState(() {
+                  _autoOtoparkAlani =
+                      false; // Kullanıcı değiştirdi, notı kaldır
+                });
+                _handleSelection('otoparkAlan', opt);
+              },
+            ),
+          ),
         ],
       ),
     );

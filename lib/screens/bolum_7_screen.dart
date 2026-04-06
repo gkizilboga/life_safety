@@ -116,7 +116,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasKazan,
             () => _toggleOption('kazan'),
             imagePath: AppAssets.section7Kazan,
-            imageTitle: "Kazan Dairesi",
+            imageTitle: "Kazan dairesi",
           ),
 
           _buildOption(
@@ -144,7 +144,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasJenerator,
             () => _toggleOption('jenerator'),
             imagePath: AppAssets.section7Jenerator,
-            imageTitle: "Jeneratör Odası",
+            imageTitle: "Jeneratör odası",
           ),
 
           _buildOption(
@@ -152,7 +152,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasElektrik,
             () => _toggleOption('elektrik'),
             imagePath: AppAssets.section7ElektrikOdasi,
-            imageTitle: "Elektrik Tesisat Odası",
+            imageTitle: "Elektrik odası",
           ),
 
           _buildOption(
@@ -160,7 +160,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             _model.hasTrafo,
             () => _toggleOption('trafo'),
             imagePath: AppAssets.section7Trafo,
-            imageTitle: "Trafo Odası",
+            imageTitle: "Trafo odası",
           ),
 
           _buildOption(
@@ -178,8 +178,6 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.duvar,
             _model.hasDuvar,
             () => _toggleOption('duvar'),
-            imagePath: AppAssets.section7OrtakDuvar,
-            imageTitle: "Bitişik Nizam",
           ),
 
           if (BinaStore.instance.bolum6?.buyukRestoran?.label ==

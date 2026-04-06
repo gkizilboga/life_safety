@@ -453,7 +453,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
         ? "Bodrum Kat: Çıkış Katı Tahliye Mesafesi"
         : "Çıkış Katı Tahliye Mesafesi";
     final question =
-        "Doğrudan dışarıya açılmayan merdivenlerin, son çıkış katındaki çıkış kapısına kadar olan mesafesi $limit metrenin altında mı?";
+        "Zemin katta merdivenden çıkınca binanın dış kapısına ulaşmak için kaç metre yürünüyor?";
 
     return Selector<Bolum20Provider, ChoiceResult?>(
       selector: (_, p) =>
@@ -475,8 +475,24 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: AppStyles.questionTitle),
-              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: Text(title, style: AppStyles.questionTitle)),
+                  _buildCameraIcon(
+                    context,
+                    AppAssets.section20LobbyDistance3D,
+                    "Tahliye Mesafesi (3D)",
+                  ),
+                  const SizedBox(width: 6),
+                  _buildCameraIcon(
+                    context,
+                    AppAssets.section20LobbyDistance2D,
+                    "Tahliye Mesafesi (2D)",
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
               Text(
                 question,
                 style: const TextStyle(
@@ -485,10 +501,20 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
                   color: AppColors.textBody,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 4),
+              Text(
+                "Yönetmelik limiti: $limit metre",
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textLight,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+              const SizedBox(height: 16),
+
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeAltinda.copyWith(
-                  uiTitle: "Evet, altında veya eşit.",
+                  uiTitle: "Mesafe limitin ALTI (veya doğrudan çıkış).",
                 ),
                 isSelected:
                     currentSelection?.label ==
@@ -502,7 +528,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
               ),
               SelectableCard(
                 choice: Bolum20Content.madde41MesafeUstunde.copyWith(
-                  uiTitle: "Hayır, üzerinde.",
+                  uiTitle: "Mesafe limitin ÜSTÜNDE.",
                 ),
                 isSelected:
                     currentSelection?.label ==
@@ -530,6 +556,26 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCameraIcon(BuildContext context, String path, String title) {
+    return ActionIconWrapper(
+      onTap: () =>
+          ImageModalHelper.show(context, assetPath: path, title: title),
+      tooltip: 'Görseli incele',
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: const Color(0xFF43A047).withOpacity(0.12),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(
+          Icons.photo_camera,
+          color: Color(0xFF2E7D32),
+          size: 24,
+        ),
+      ),
     );
   }
 }
@@ -766,7 +812,7 @@ class _StairInputRow extends StatelessWidget {
     return ActionIconWrapper(
       onTap: () =>
           ImageModalHelper.show(context, assetPath: path, title: title),
-      tooltip: 'Görseli İncele',
+      tooltip: 'Görseli incele',
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(

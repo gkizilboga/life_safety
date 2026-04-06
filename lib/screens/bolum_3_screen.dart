@@ -232,17 +232,21 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildSectionTitle("Kat adetleri nedir?"),
+                    QuestionHeaderWithImage(
+                      questionText: "Kat adetleri nedir?",
+                      imageAssetPath: AppAssets.section3Katlar,
+                      imageTitle: "Kat tanımı",
+                    ),
                     _buildInput(
-                      "Normal (zemin üstü) kat adedi giriniz.",
+                      "Normal (zemin ÜSTÜ) kat adedi giriniz.",
                       _normalCountCtrl,
-                      hint: "0 - 20 arası",
+                      hint: "0 - 20",
                       error: _normalCountErr,
                     ),
                     _buildInput(
-                      "Bodrum (zemin altı) kat adedi giriniz.",
+                      "Bodrum (zemin ALTI) kat adedi giriniz.",
                       _bodrumCountCtrl,
-                      hint: "0 - 10 arası",
+                      hint: "0 - 10",
                       error: _bodrumCountErr,
                     ),
 
@@ -250,7 +254,9 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                     QuestionHeaderWithImage(
                       questionText: "Kat yükseklikleri nedir?",
                       imageAssetPath: AppAssets.section3KatYuksekligi,
-                      imageTitle: "Kat Yüksekliği Nasıl Ölçülür?",
+                      imageTitle: "Kat yüksekliği ölçümü",
+                      definition:
+                          "Kat yüksekliği, binanın herhangi bir katının döşeme üstünden bir üstteki katının döşeme üstüne kadar olan mesafesini ifade eder.",
                     ),
                     SelectableCard(
                       choice: Bolum3Content.biliniyor,
@@ -491,7 +497,10 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.primaryBlue, width: 2),
+            borderSide: const BorderSide(
+              color: AppColors.primaryBlue,
+              width: 2,
+            ),
           ),
         ),
       ),

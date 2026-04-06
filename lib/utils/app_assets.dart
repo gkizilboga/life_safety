@@ -95,4 +95,8 @@ class AppAssets {
       'assets/images/sections/kat_yuksekligi_1.webp';
   static const String section9Davlumbaz =
       'assets/images/sections/davlumbaz.webp';
+  static const String section20LobbyDistance2D =
+      'assets/images/sections/lobby_distance_2d.webp';
+  static const String section20LobbyDistance3D =
+      'assets/images/sections/lobby_distance_3d.webp';
 }

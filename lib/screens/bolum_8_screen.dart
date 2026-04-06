@@ -119,7 +119,7 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                       _isLocked &&
                       _model.secim?.label != Bolum8Content.ayrikNizam.label,
                   imageAssetPath: AppAssets.section8Ayrik,
-                  imageTitle: "Ayrık Nizam Yerleşim Detayı",
+                  imageTitle: "Ayrık nizam",
                 ),
 
                 const SizedBox(height: 16),
@@ -137,7 +137,7 @@ class _Bolum8ScreenState extends State<Bolum8Screen> {
                       _isLocked &&
                       _model.secim?.label != Bolum8Content.bitisikNizam.label,
                   imageAssetPath: AppAssets.section8Bitisik,
-                  imageTitle: "Bitişik Nizam Yerleşim Detayı",
+                  imageTitle: "Bitişik nizam",
                 ),
               ],
             ),

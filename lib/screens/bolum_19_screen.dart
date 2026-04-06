@@ -158,10 +158,51 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
             ],
             _model.levha,
             imagePath: AppAssets.section19AcilYonlendirme,
-            imageTitle: "Acil Durum Yönlendirme Levhaları",
+            imageTitle: "Yönlendirme levhası",
           ),
+          // Yanıltıcı kapı sorusu — Bölüm 21 ile aynı yapı:
+          // soru metni + kamera ikonu + DefinitionButton yan yana
           _buildSoru(
-            "Yanıltıcı kapılar var mı? (Çıkışa ulaşırken kafanızı karıştırabilecek türden kapılar)",
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Text(
+                    "Yanıltıcı kapılar var mı? (Çıkışa ulaşırken kafanızı karıştırabilecek türden kapılar)",
+                    style: AppStyles.questionTitle,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () => ImageModalHelper.show(
+                    context,
+                    assetPath: AppAssets.section19YanilticiKapi,
+                    title: "Yanıltıcı kapı örneği",
+                  ),
+                  child: Tooltip(
+                    message: 'Görseli incele',
+                    child: Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF43A047).withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.photo_camera,
+                        color: Color(0xFF2E7D32),
+                        size: 26,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                DefinitionButton(
+                  term: "Yanıltıcı Kapı Nedir?",
+                  definition:
+                      "Kaçış yolu üzerinde bulunan, kullanıcıyı yanlışlıkla çıkmaz bir alana (depo, elektrik odası vb.) yönlendirebilecek ve üzerinde 'ÇIKIŞ DEĞİLDİR' veya mahalin adı (örneğin 'KAZAN DAİRESİ') yazılı olmayan kapılardır.",
+                ),
+              ],
+            ),
             'yaniltici',
             [
               Bolum19Content.yanilticiOptionA,
@@ -169,8 +210,6 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
               Bolum19Content.yanilticiOptionC,
             ],
             _model.yanilticiKapi,
-            imagePath: AppAssets.section19YanilticiKapi,
-            imageTitle: "Yanıltıcı Kapı Örneği",
           ),
 
           if (_model.yanilticiKapi?.label ==
@@ -203,7 +242,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
   }
 
   Widget _buildSoru(
-    String title,
+    dynamic title,
     String key,
     List<ChoiceResult> options,
     ChoiceResult? selected, {
@@ -214,14 +253,19 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (imagePath != null)
-            QuestionHeaderWithImage(
-              questionText: title,
-              imageAssetPath: imagePath,
-              imageTitle: imageTitle ?? "Görseli İncele",
-            )
-          else ...[
-            Text(title, style: AppStyles.questionTitle),
+          if (title is String) ...[
+            if (imagePath != null)
+              QuestionHeaderWithImage(
+                questionText: title,
+                imageAssetPath: imagePath,
+                imageTitle: imageTitle ?? "Acil durum yönlendirme detayı",
+              )
+            else ...[
+              Text(title, style: AppStyles.questionTitle),
+              const SizedBox(height: 12),
+            ],
+          ] else if (title is Widget) ...[
+            title,
             const SizedBox(height: 12),
           ],
           ...options.map(

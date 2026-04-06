@@ -80,6 +80,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
             ],
             _model.mesafe,
             assetPath: AppAssets.section11Yaklasim,
+            imageTitle: "İtfaiye yaklaşım mesafesi",
           ),
 
           if (_model.mesafe?.label == Bolum11Content.mesafeOptionB.label) ...[
@@ -96,6 +97,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
               ],
               _model.engel,
               assetPath: AppAssets.section11ErisimYok,
+              imageTitle: "Erişim engeli",
             ),
           ],
 
@@ -125,6 +127,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
     List<ChoiceResult> options,
     ChoiceResult? selected, {
     String? assetPath,
+    String? imageTitle,
   }) {
     return QuestionCard(
       child: Column(
@@ -134,7 +137,7 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
             QuestionHeaderWithImage(
               questionText: title,
               imageAssetPath: assetPath,
-              imageTitle: "Görseli İncele",
+              imageTitle: imageTitle ?? "Görseli incele",
             )
           else
             Text(title, style: AppStyles.questionTitle),

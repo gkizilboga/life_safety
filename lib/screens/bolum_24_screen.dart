@@ -85,7 +85,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
                   onTap: () =>
                       _handleSelection('tip', Bolum24Content.tipOptionA),
                   imageAssetPath: AppAssets.section24KapaliKoridor,
-                  imageTitle: "Kapalı Koridor Örneği",
+                  imageTitle: "Kapalı koridor",
                 ),
                 const SizedBox(height: 8),
 
@@ -96,7 +96,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
                   onTap: () =>
                       _handleSelection('tip', Bolum24Content.tipOptionB),
                   imageAssetPath: AppAssets.section24DisGecit,
-                  imageTitle: "Dış Kaçış Geçidi Örneği",
+                  imageTitle: "Dış kaçış geçidi",
                 ),
                 const SizedBox(height: 8),
 
@@ -165,7 +165,7 @@ class _Bolum24ScreenState extends State<Bolum24Screen> {
             QuestionHeaderWithImage(
               questionText: title,
               imageAssetPath: assetPath,
-              imageTitle: assetTitle ?? "Teknik Detay",
+              imageTitle: assetTitle ?? "Kaçış yolu detayı",
             )
           else ...[
             Text(title, style: AppStyles.questionTitle),

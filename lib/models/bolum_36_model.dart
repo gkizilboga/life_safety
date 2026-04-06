@@ -108,9 +108,9 @@ class Bolum36Model {
     }
 
     final kapiOptions = [
-      Bolum36WidthContent.kapiGenislikKritik,
-      Bolum36WidthContent.kapiGenislikOlumlu,
-      Bolum36WidthContent.kapiGenislikBilinmiyor,
+      Bolum36Content.kapiGenislikKritik,
+      Bolum36Content.kapiGenislikOlumlu,
+      Bolum36Content.kapiGenislikBilinmiyor,
     ];
 
     final kapiTipiOptions = [
@@ -138,20 +138,20 @@ class Bolum36Model {
     ];
 
     final merdOptions = [
-      Bolum36WidthContent.merdGenislikA,
-      Bolum36WidthContent.merdGenislikB,
-      Bolum36WidthContent.merdGenislikC,
-      Bolum36WidthContent.merdGenislikD,
-      Bolum36WidthContent.merdGenislikBilinmiyor,
+      Bolum36Content.merdGenislikA,
+      Bolum36Content.merdGenislikB,
+      Bolum36Content.merdGenislikC,
+      Bolum36Content.merdGenislikD,
+      Bolum36Content.merdGenislikBilinmiyor,
     ];
 
     final koridorOptions = [
-      Bolum36WidthContent.koridorGenislikA,
-      Bolum36WidthContent.koridorGenislikB,
-      Bolum36WidthContent.koridorGenislikC,
-      Bolum36WidthContent.koridorGenislikD,
-      Bolum36WidthContent.koridorGenislikE,
-      Bolum36WidthContent.koridorGenislikBilinmiyor,
+      Bolum36Content.koridorGenislikA,
+      Bolum36Content.koridorGenislikB,
+      Bolum36Content.koridorGenislikC,
+      Bolum36Content.koridorGenislikD,
+      Bolum36Content.koridorGenislikE,
+      Bolum36Content.koridorGenislikBilinmiyor,
     ];
 
     return Bolum36Model(

@@ -156,7 +156,7 @@ class _Bolum14ScreenState extends State<Bolum14Screen> {
           const SizedBox(height: 20),
           const Padding(
             padding: EdgeInsets.only(left: 4, bottom: 12),
-            child: Text("Şaft ve Kapak Detayı", style: AppStyles.questionTitle),
+            child: Text("Şaft ve kapak detayı", style: AppStyles.questionTitle),
           ),
           SectionImage(assetPath: AppAssets.section14SaftDuvarKapi),
           const SizedBox(height: 12),

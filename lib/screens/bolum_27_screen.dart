@@ -177,7 +177,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           _buildSoruHeader(
             Bolum27Content.questionYon,
             imagePath: AppAssets.section27KacisYonu,
-            imageTitle: "Kapı Açılış Yönü Kriterleri",
+            imageTitle: "Kapı açılış yönü",
           ),
           const SizedBox(height: 4),
           const Padding(
@@ -204,7 +204,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           _buildSoruHeader(
             Bolum27Content.questionKilit,
             imagePath: AppAssets.section27KilitTipi,
-            imageTitle: "Kilit ve Panik Bar Tipleri",
+            imageTitle: "Kilit ve panik bar tipleri",
           ),
           const SizedBox(height: 4),
           const Padding(
@@ -257,7 +257,7 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
         child: QuestionHeaderWithImage(
           questionText: title,
           imageAssetPath: imagePath,
-          imageTitle: imageTitle ?? "Görseli İncele",
+          imageTitle: imageTitle ?? "Kapı donanımı/kilit",
         ),
       );
     }

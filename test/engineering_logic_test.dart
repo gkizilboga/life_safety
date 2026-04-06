@@ -281,8 +281,8 @@ void main() {
         store.bolum33 = Bolum33Model(yukNormal: 100);
         store.bolum36 = Bolum36Model(
           areWidthsSame: false,
-          genislikKorunumlu: Bolum36WidthContent.merdGenislikB,
-          koridorGenislikKorunumlu: Bolum36WidthContent.koridorGenislikC,
+          genislikKorunumlu: Bolum36Content.merdGenislikB,
+          koridorGenislikKorunumlu: Bolum36Content.koridorGenislikC,
           merdivenDegerlendirme: "",
         );
 
@@ -314,9 +314,9 @@ void main() {
 
         store.bolum36 = Bolum36Model(
           areWidthsSame: false,
-          genislikKorunumsuz: Bolum36WidthContent.merdGenislikB,
-          koridorGenislikKorunumsuz: Bolum36WidthContent.koridorGenislikC,
-          kapiGenislikKorunumsuz: Bolum36WidthContent.kapiGenislikKritik,
+          genislikKorunumsuz: Bolum36Content.merdGenislikB,
+          koridorGenislikKorunumsuz: Bolum36Content.koridorGenislikC,
+          kapiGenislikKorunumsuz: Bolum36Content.kapiGenislikKritik,
           merdivenDegerlendirme: "",
         );
 
@@ -349,7 +349,7 @@ void main() {
         store.bolum33 = Bolum33Model();
         store.bolum36 = Bolum36Model(
           areWidthsSame: false,
-          genislikKorunumlu: Bolum36WidthContent.merdGenislikBilinmiyor,
+          genislikKorunumlu: Bolum36Content.merdGenislikBilinmiyor,
           merdivenDegerlendirme: "",
         );
 
@@ -370,11 +370,11 @@ void main() {
         store.bolum33 = Bolum33Model(yukNormal: 100);
         store.bolum36 = Bolum36Model(
           areWidthsSame: true,
-          genislikKorunumlu: Bolum36WidthContent.merdGenislikB, // 121-150cm
+          genislikKorunumlu: Bolum36Content.merdGenislikB, // 121-150cm
           koridorGenislikKorunumlu:
-              Bolum36WidthContent.koridorGenislikC, // 121-150cm
+              Bolum36Content.koridorGenislikC, // 121-150cm
           kapiGenislikKorunumlu:
-              Bolum36WidthContent.kapiGenislikOlumlu, // 80cm ve üzeri
+              Bolum36Content.kapiGenislikOlumlu, // 80cm ve üzeri
         );
 
         final details = ReportEngine.getSectionDetailedReport(36, store: store);

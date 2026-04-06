@@ -122,7 +122,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ],
             _model.yalitim,
             imagePath: AppAssets.section15DosemeYalitim,
-            imageTitle: "Döşeme Yalıtım Örneği",
+            imageTitle: "Döşeme yalıtımı",
           ),
 
           if (_model.yalitim?.label == Bolum15Content.yalitimOptionB.label) ...[
@@ -171,7 +171,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ],
             _model.tesisat,
             imagePath: AppAssets.section15Gecis,
-            imageTitle: "Tesisat Geçiş Örneği 1",
+            imageTitle: "Tesisat geçişleri",
           ),
         ],
       ),
@@ -196,7 +196,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
               child: QuestionHeaderWithImage(
                 questionText: title,
                 imageAssetPath: imagePath,
-                imageTitle: imageTitle ?? "Görseli İncele",
+                imageTitle: imageTitle ?? "Asansör kuyusu derinliği",
               ),
             )
           else
