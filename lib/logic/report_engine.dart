@@ -264,7 +264,8 @@ class ReportEngine {
             _addDetail(
               details,
               label: 'Bodrum Kat Kullanım Amacı (Tümü Aynı)',
-              value: "${b10.bodrumlar[0]!.uiTitle}\n${b10.bodrumlar[0]!.reportText}",
+              value:
+                  "${b10.bodrumlar[0]!.uiTitle}\n${b10.bodrumlar[0]!.reportText}",
               subtitle: b10.bodrumlar[0]!.uiSubtitle,
               report: '',
               advice: '',
@@ -275,7 +276,8 @@ class ReportEngine {
                 _addDetail(
                   details,
                   label: '${i + 1}. Bodrum Kat Kullanım Amacı',
-                  value: "${b10.bodrumlar[i]!.uiTitle}\n${b10.bodrumlar[i]!.reportText}",
+                  value:
+                      "${b10.bodrumlar[i]!.uiTitle}\n${b10.bodrumlar[i]!.reportText}",
                   subtitle: b10.bodrumlar[i]!.uiSubtitle,
                   report: '',
                   advice: '',
@@ -290,7 +292,8 @@ class ReportEngine {
             _addDetail(
               details,
               label: 'Normal Kat Kullanım Amacı (Tümü Aynı)',
-              value: "${b10.normaller[0]!.uiTitle}\n${b10.normaller[0]!.reportText}",
+              value:
+                  "${b10.normaller[0]!.uiTitle}\n${b10.normaller[0]!.reportText}",
               subtitle: b10.normaller[0]!.uiSubtitle,
               report: '',
               advice: '',
@@ -301,7 +304,8 @@ class ReportEngine {
                 _addDetail(
                   details,
                   label: '${i + 1}. Normal Kat Kullanım Amacı',
-                  value: "${b10.normaller[i]!.uiTitle}\n${b10.normaller[i]!.reportText}",
+                  value:
+                      "${b10.normaller[i]!.uiTitle}\n${b10.normaller[i]!.reportText}",
                   subtitle: b10.normaller[i]!.uiSubtitle,
                   report: '',
                   advice: '',
@@ -2990,12 +2994,28 @@ class ReportEngine {
         );
       }
       if (b13.asansorKapi != null) {
+        // MRL filtresi: Kullanıcı 29-4-C (makine dairesi yok) seçtiyse
+        // rapor metnindeki "makine dairesi varsa" cümlesini kaldır.
+        final bool isMrl = s.bolum29?.asansor?.label == '29-4-C';
+        final String rawReport = b13.asansorKapi!.reportText;
+        final String filteredReport = isMrl
+            ? rawReport
+                  .replaceAll(
+                    RegExp(
+                      r'\s*asansör makine dairesi varsa[^.]*\.',
+                      caseSensitive: false,
+                    ),
+                    '',
+                  )
+                  .trim()
+            : rawReport;
+
         _addDetail(
           details,
           label: 'Asansör kapısı nasıldır?',
           value: b13.asansorKapi!.uiTitle,
           subtitle: b13.asansorKapi!.uiSubtitle,
-          report: b13.asansorKapi!.reportText,
+          report: filteredReport,
           advice: b13.asansorKapi!.adviceText,
           level: b13.asansorKapi!.level,
         );
@@ -3092,9 +3112,20 @@ class ReportEngine {
         parts.add("Kazan Dairesi Kapısı: ${b13.kazanKapi!.reportText}");
       }
       if (b13.asansorKapi != null) {
-        parts.add(
-          "Asansör Makine Dairesi Kapısı: ${b13.asansorKapi!.reportText}",
-        );
+        final bool isMrl = s.bolum29?.asansor?.label == '29-4-C';
+        final String rawReport = b13.asansorKapi!.reportText;
+        final String filteredReport = isMrl
+            ? rawReport
+                  .replaceAll(
+                    RegExp(
+                      r'\s*asansör makine dairesi varsa[^.]*\.',
+                      caseSensitive: false,
+                    ),
+                    '',
+                  )
+                  .trim()
+            : rawReport;
+        parts.add("Asansör Makine Dairesi Kapısı: $filteredReport");
       }
       if (b13.jeneratorKapi != null) {
         parts.add("Jeneratör Odası Kapısı: ${b13.jeneratorKapi!.reportText}");

@@ -3278,8 +3278,8 @@ class Bolum29Content {
   static final asansorOptionA = ChoiceResult(
     label: "29-4-A",
     uiTitle: "Hayır, temiz.",
-    uiSubtitle: "Makine dairesinde sadece motor var.",
-    reportText: "OLUMLU: Asansör makine dairesi temizdir.",
+    uiSubtitle: "Makine dairesinde sadece motor ve kumanda panosu var.",
+    reportText: "OLUMLU: Asansör makine dairesi temiz ve düzenlidir.",
     level: RiskLevel.positive,
   );
   static final asansorOptionB = ChoiceResult(
@@ -3292,6 +3292,15 @@ class Bolum29Content {
   );
   static final asansorOptionC = ChoiceResult(
     label: "29-4-C",
+    uiTitle: "Binada asansör makine dairesi yok.",
+    uiSubtitle: "",
+    reportText:
+        "OLUMLU: Binada makine dairesiz (MRL) asansör sistemi kullanılmaktadır. Motor ve kumanda sistemi asansör kuyusunda yer almaktadır. Periyodik bakım ve kontrollerin düzenli yapılması özellikle önem taşımaktadır.",
+    level: RiskLevel.positive,
+  );
+
+  static final asansorOptionD = ChoiceResult(
+    label: "29-4-D",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
@@ -3531,7 +3540,7 @@ class Bolum30Content {
     uiTitle: "1 adet.",
     uiSubtitle: "",
     reportText:
-        "(Büyük Kazan İse) KRİTİK RİSK: Girdiğiniz bilgilere göre kazan daireniz 'Büyük/Yüksek Kapasiteli' sınıfındadır. Yönetmeliğe göre en az 2 adet çıkış kapısı zorunludur.<br>(Küçük Kazan İse) OLUMLU: Kapı sayısı yeterlidir.",
+        "KRİTİK RİSK: 300 kW üzeri kapasiteli büyük kazan dairesinde Yönetmeliğe göre en az 2 adet çıkış kapısı zorunludur. 300 kW altı kapasiteli kazan dairesinde ise tek çıkış kapısı yeterlidir.",
     level: RiskLevel.critical,
   );
   static final kapiOptionB = ChoiceResult(

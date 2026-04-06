@@ -97,6 +97,7 @@ class Bolum29Model {
         Bolum29Content.asansorOptionA,
         Bolum29Content.asansorOptionB,
         Bolum29Content.asansorOptionC,
+        Bolum29Content.asansorOptionD,
       ]),
       jenerator: find(map['jenerator_label'], [
         Bolum29Content.jeneratorOptionA,

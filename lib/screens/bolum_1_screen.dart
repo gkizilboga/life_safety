@@ -42,7 +42,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                 Text("• ", style: TextStyle(fontSize: 13, height: 1.4)),
                 Expanded(
                   child: Text(
-                    "Analiz süresi yaklaşık 15-20 dakikadır.",
+                    "Analiz süresi yaklaşık 45-60 dakikadır.",
                     style: TextStyle(fontSize: 13, height: 1.4),
                   ),
                 ),

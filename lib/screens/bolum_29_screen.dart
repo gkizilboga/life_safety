@@ -185,6 +185,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
                 Bolum29Content.asansorOptionA,
                 Bolum29Content.asansorOptionB,
                 Bolum29Content.asansorOptionC,
+                Bolum29Content.asansorOptionD,
               ],
               _model.asansor,
             ),

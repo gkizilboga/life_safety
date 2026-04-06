@@ -86,6 +86,12 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           }
         }
         _model = _model.copyWith(yon: current);
+        // Business Rule: If doors open inwards (27-2-B), Panik Bar (27-3-A) cannot exist.
+        if (current.any((e) => e.label == '27-2-B')) {
+          List<ChoiceResult> kilitCopy = List<ChoiceResult>.from(_model.kilit);
+          kilitCopy.removeWhere((e) => e.label == '27-3-A');
+          _model = _model.copyWith(kilit: kilitCopy);
+        }
       }
       if (type == 'kilit') {
         List<ChoiceResult> current = List<ChoiceResult>.from(_model.kilit);
@@ -106,6 +112,11 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           } else if (label.contains('27-3-A') ||
               label.contains('27-3-B') ||
               label.contains('27-3-D')) {
+            // Business Rule: 27-3-A (Panik bar) is not allowed if 27-2-B (Inwards) is selected.
+            if (label == '27-3-A' &&
+                _model.yon.any((e) => e.label == '27-2-B')) {
+              return;
+            }
             // Mutual exclusivity for A, B, D
             current.removeWhere(
               (e) =>
@@ -270,9 +281,15 @@ class _Bolum27ScreenState extends State<Bolum27Screen> {
           } else if (selected is List<ChoiceResult>) {
             isSelected = selected.any((e) => e.label == opt.label);
           }
+          bool isDisabled = false;
+          if (key == 'kilit' && opt.label == '27-3-A') {
+            isDisabled = _model.yon.any((e) => e.label == '27-2-B');
+          }
+
           return SelectableCard(
             choice: opt,
             isSelected: isSelected,
+            isDisabled: isDisabled,
             onTap: () => _handleSelection(key, opt),
           );
         }).toList(),
