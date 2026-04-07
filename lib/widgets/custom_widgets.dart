@@ -1089,7 +1089,7 @@ class ConfirmationCheckbox extends StatelessWidget {
   }
 }
 
-enum InfoNoteType { info, warning }
+enum InfoNoteType { info, warning, danger }
 
 /// Standart bilgi ve uyarı notu widget'ı - Bölüm 8'deki tasarımı temel alır
 class CustomInfoNote extends StatelessWidget {
@@ -1127,6 +1127,13 @@ class CustomInfoNote extends StatelessWidget {
       ic = const Color(0xFF1976D2); // Blue 700
       tc = const Color(0xFF0D47A1); // Blue 900
       displayIcon = icon ?? Icons.info_outline;
+    } else if (type == InfoNoteType.danger) {
+      // Danger: Red spectrum
+      bg = const Color(0xFFFFEBEE); // Red 50
+      bc = const Color(0xFFEF9A9A); // Red 200
+      ic = const Color(0xFFC62828); // Red 800
+      tc = const Color(0xFFB71C1C); // Red 900
+      displayIcon = icon ?? Icons.report_problem_rounded;
     } else {
       // Warning: Orange/Amber spectrum
       bg = const Color(0xFFFFF3E0); // Orange 50

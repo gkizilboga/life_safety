@@ -66,14 +66,6 @@ class Section21Handler {
         level: hasYgh ? RiskLevel.positive : RiskLevel.info,
       );
 
-      _addDetail(
-        details,
-        label: 'YGH Teknik Değerlendirmesi',
-        value: isMandatory ? 'ZORUNLU' : 'Gerekli Değil',
-        report: evaluationMessage,
-        level: finalLevel,
-      );
-
       if (hasYgh) {
         _addDetail(
           details,
@@ -103,6 +95,17 @@ class Section21Handler {
           level: b21.esya?.level,
         );
       }
+
+      // Otomatik Gereksinim Analizi (Tabloyu bölmemesi için en sona taşındı)
+      _addDetail(
+        details,
+        label: 'YGH Gereksinimi',
+        value: '',
+        report: isMandatory
+            ? "DURUM: ZORUNLU\n\n$evaluationMessage"
+            : "DURUM: ŞART DEĞİL\n\n$evaluationMessage",
+        level: finalLevel,
+      );
     }
     return details;
   }

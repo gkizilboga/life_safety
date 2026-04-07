@@ -1365,8 +1365,8 @@ class Bolum16Content {
     uiTitle: "Klasik Mantolama",
     uiSubtitle: "EPS, XPS, Strafor vb. yanıcı malzeme ile.",
     reportText:
-        "UYARI: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliği (bodrum katlar hariç) 28.50 m'nin üzerindeki binalarda bu uygulama yasaktır.",
-    level: RiskLevel.warning,
+        "KRİTİK RİSK: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliği (bodrum katlar hariç) 28.50 m'nin üzerindeki binalarda bu uygulama yasaktır.",
+    level: RiskLevel.critical,
   );
 
   static const String mantolamaOptionALowReport =
@@ -1857,8 +1857,6 @@ class Bolum19Content {
     uiSubtitle: "",
     reportText:
         "UYARI: Kaçış yollarında yangın merdiveni, kat veya bina çıkış kapısıyla karıştırılabilecek yanıltıcı kapılar mevcuttur.",
-    adviceText:
-        "Yanıltıcı kapıların üzerinde mahalin adı veya 'Çıkış Değildir' etiketleri bulunmalıdır.",
     level: RiskLevel.warning,
   );
 
@@ -2021,7 +2019,7 @@ class Bolum20Content {
     uiTitle: "Var.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Basınçlandırma olmayan tüm merdivenlerde doğal havalandırma (pencere/menfez) imkanı mevcut. Yönetmelik Madde 45 gereği korunmuş kaçış merdivenleri doğal veya mekanik havalandırma ile donatılmalıdır. Mevcut durum, yönetmelik gerekliliklerini karşılamaktadır.",
+        "OLUMLU: Basınçlandırma olmayan tüm merdivenlerde doğal havalandırma (pencere/menfez) imkanı mevcut. Yönetmelik gereği, korunmuş kaçış merdivenleri doğal veya mekanik havalandırma ile donatılmalıdır.",
     level: RiskLevel.positive,
   );
 
@@ -2694,7 +2692,7 @@ class Bolum25Content {
     uiTitle: "Evet, rahat basılıyor.",
     uiSubtitle: "Basamağın orta kısmı en az 25 cm genişlikte.",
     reportText:
-        "Dairesel merdivenin basamak genişliği yeterli seviyede olabilir. Emin olmak adına mimari proje üzerinde veya sahada merdiven ölçülerinin alınması önerilir.",
+        "OLUMLU: Dairesel merdivenin basamak genişliği yeterli seviyededir. Emin olmak adına mimari proje üzerinde veya sahada merdiven ölçülerinin alınması önerilir.",
     level: RiskLevel.positive,
   );
 
@@ -2757,8 +2755,8 @@ class Bolum25Content {
     uiTitle: "9.50 metre veya altı.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Dairesel merdiven yüksekliği 9.50 m'nin altındadır. Dairesel merdiven kaçış yolu olarak kullanılabilir.",
-    level: RiskLevel.info,
+        "OLUMLU: Dairesel merdiven yüksekliği 9.50 m'nin altındadır. Dairesel merdiven kaçış yolu olarak kullanılabilir.",
+    level: RiskLevel.positive,
   );
 
   static final daireselYukseklikOptionB = ChoiceResult(
@@ -2766,8 +2764,8 @@ class Bolum25Content {
     uiTitle: "9.50 metre üzeri.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Dairesel merdiven yüksekliği 9.50 m'nin üzerindedir. Bu durumda dairesel merdiven kaçış yolu olarak kullanılamaz.",
-    level: RiskLevel.warning,
+        "KRİTİK RİSK: Dairesel merdiven yüksekliği 9.50 m'nin üzerindedir. Bu durumda dairesel merdiven kaçış yolu olarak kullanılamaz.",
+    level: RiskLevel.critical,
   );
 
   static final daireselYukseklikOptionC = ChoiceResult(
@@ -2786,8 +2784,8 @@ class Bolum26Content {
     uiTitle: "Hayır, sadece merdiven var, rampa yok.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Binada rampa bulunmadığından Yönetmeliğe göre bu konuda bir değerlendirme yapılmaz.",
-    level: RiskLevel.positive,
+        "BİLGİ: Binada rampa bulunmadığından Yönetmeliğe göre bu konuda bir değerlendirme yapılmaz.",
+    level: RiskLevel.info,
   );
 
   static final varlikOptionB = ChoiceResult(
@@ -2795,8 +2793,8 @@ class Bolum26Content {
     uiTitle: "Evet, rampa var.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Binada kaçış rampası tespit edilmiştir. Eğimi ve sahanlık durumu Yönetmelik kriterlerine uygun olmalıdır. Aksi halde rampa kaçış yolu olarak kullanılamaz.",
-    level: RiskLevel.warning,
+        "BİLGİ: Binada kaçış rampası tespit edilmiştir. Eğimi ve sahanlık durumu Yönetmelik kriterlerine uygun olmalıdır. Aksi halde rampa kaçış yolu olarak kullanılamaz.",
+    level: RiskLevel.info,
   );
 
   static final varlikOptionC = ChoiceResult(
@@ -2804,8 +2802,8 @@ class Bolum26Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Binada kaçış rampası olup olmadığı veya konumu tespit edilememiştir. Eğimi ve sahanlık durumu Yönetmelik kriterlerine uygun olmalıdır. Aksi halde rampa kaçış yolu olarak kullanılamaz.",
-    level: RiskLevel.unknown,
+        "BİLGİ: Binada kaçış rampası olup olmadığı veya konumu tespit edilememiştir. Eğimi ve sahanlık durumu Yönetmelik kriterlerine uygun olmalıdır. Aksi halde rampa kaçış yolu olarak kullanılamaz.",
+    level: RiskLevel.info,
   );
 
   static final egimOptionA = ChoiceResult(
@@ -2813,8 +2811,8 @@ class Bolum26Content {
     uiTitle: "Eğim az (%10'dan az) ve zemin kaymaz.",
     uiSubtitle: "Rahat yürünüyor, zeminde kaymaz bant veya malzeme var.",
     reportText:
-        "OLUMLU: Rampa eğimi ve zemin kaplaması kaçış güvenliği için yeterli seviyededir.",
-    level: RiskLevel.positive,
+        "BİLGİ: Rampa eğimi ve zemin kaplaması kaçış güvenliği için yeterli seviyededir.",
+    level: RiskLevel.info,
   );
 
   static final egimOptionB = ChoiceResult(
@@ -2822,10 +2820,10 @@ class Bolum26Content {
     uiTitle: "Eğim fazla dik (%10'dan fazla) veya zemin kaygan.",
     uiSubtitle: "Yürürken insanı zorluyor, kayma tehlikesi var.",
     reportText:
-        "KRİTİK RİSK: Kaçış rampalarının eğimi %10'dan fazla olamaz. Dik ve kaygan rampalar panik anında düşmelere sebep olur.",
+        "BİLGİ: Kaçış rampalarının eğimi %10'dan fazla olamaz. Dik ve kaygan rampalar panik anında düşmelere sebep olur.",
     adviceText:
         "Eğimi düşürmek mümkün değilse, rampa yüzeyine kaydırmaz bant uygulaması yapılmalı ve her iki tarafa tutunma küpeştesi eklenmelidir.",
-    level: RiskLevel.critical,
+    level: RiskLevel.info,
   );
 
   static final egimOptionC = ChoiceResult(
@@ -2833,16 +2831,16 @@ class Bolum26Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Rampa eğimi ve zemin kaymazlık durumu bilinmiyor. Kaçış yolu üzerinde %10'dan fazla eğimli rampa varsa bu rampa kaçış yolu olarak kullanılamaz.",
-    level: RiskLevel.unknown,
+        "BİLGİ: Rampa eğimi ve zemin kaymazlık durumu bilinmiyor. Kaçış yolu üzerinde %10'dan fazla eğimli rampa varsa bu rampa kaçış yolu olarak kullanılamaz.",
+    level: RiskLevel.info,
   );
 
   static final sahanlikOptionA = ChoiceResult(
     label: "26-3-A",
     uiTitle: "Evet, sahanlık var, kapı önleri ve dönüşleri düz.",
     uiSubtitle: "Rampa başlangıç ve bitişinde güvenli düzlükler var.",
-    reportText: "OLUMLU: Rampa sahanlıkları ve kapı önü düzlükleri mevcuttur.",
-    level: RiskLevel.positive,
+    reportText: "BİLGİ: Rampa sahanlıkları ve kapı önü düzlükleri mevcuttur.",
+    level: RiskLevel.info,
   );
 
   static final sahanlikOptionB = ChoiceResult(
@@ -2850,8 +2848,8 @@ class Bolum26Content {
     uiTitle: "Hayır, rampadan önce veya sonra eğim var.",
     uiSubtitle: "Kapıyı açınca doğrudan eğimli yüzeye basılıyor.",
     reportText:
-        "UYARI: Rampa giriş ve çıkışlarında, kapı önlerinde mutlaka düz sahanlık bulunmalıdır.",
-    level: RiskLevel.warning,
+        "BİLGİ: Rampa giriş ve çıkışlarında, kapı önlerinde mutlaka düz sahanlık bulunmalıdır.",
+    level: RiskLevel.info,
   );
 
   static final sahanlikOptionC = ChoiceResult(
@@ -2859,8 +2857,8 @@ class Bolum26Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Rampa sahanlıklarının varlığı ve kapı önü düzlükleri bilinmiyor.",
-    level: RiskLevel.unknown,
+        "BİLGİ: Rampa sahanlıklarının varlığı ve kapı önü düzlükleri bilinmiyor.",
+    level: RiskLevel.info,
   );
 
   static final otoparkOptionA = ChoiceResult(
@@ -2868,8 +2866,8 @@ class Bolum26Content {
     uiTitle: "Evet, eğimi uygun (%10'un altı).",
     uiSubtitle: "Araç rampası yürüyerek çıkmaya müsait.",
     reportText:
-        "OLUMLU: Otopark rampası, eğimi uygun olduğu için 2. kaçış yolu olarak kabul edilebilir.",
-    level: RiskLevel.positive,
+        "BİLGİ: Otopark rampası, eğimi uygun olduğu için 2. kaçış yolu olarak kabul edilebilir.",
+    level: RiskLevel.info,
   );
 
   static final otoparkOptionB = ChoiceResult(
@@ -2878,7 +2876,7 @@ class Bolum26Content {
     uiSubtitle: "Rampayı sadece araçlar kullanabilir.",
     reportText:
         "BİLGİ: Otopark rampası %10'dan fazla eğime sahiptir. Eğer otopark içerisinden bina içerisine (merdiven veya asansör holüne) tahliye imkanı varsa ve bu çıkışlar otoparktaki kişi sayısı için yeterli genişlikte ise, rampanın dik olması kaçış güvenliği açısından kritik risk oluşturmaz.",
-    level: RiskLevel.critical,
+    level: RiskLevel.info,
   );
 
   static final otoparkOptionC = ChoiceResult(
@@ -2886,8 +2884,8 @@ class Bolum26Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Otopark rampasının kaçış yolu olarak kullanılabilirliği belirsizdir.",
-    level: RiskLevel.unknown,
+        "BİLGİ: Otopark rampasının kaçış yolu olarak kullanılabilirliği belirsizdir.",
+    level: RiskLevel.info,
   );
 }
 
@@ -4335,7 +4333,7 @@ class Bolum36Content {
     uiTitle: "Birbirlerine uzaklar.",
     uiSubtitle: "Merdivenler, kat koridorunun zıt uçlarında.",
     reportText:
-        "OLUMLU: Merdivenlerin zıt yönlerde olması, alternatif kaçış imkanı sağlar.",
+        "OLUMLU: Merdivenlerin zıt yönlerde olması, alternatif kaçış imkanı sağlar. Yönetmeliğe göre merdivenler arasında olması gereken minimum mesafenin tayini ve kesin uygunluk onayı için Yangın Güvenlik Uzmanı tarafından mimari projenin incelenmesi veya yerinde ölçüm yapılması önerilir.",
     level: RiskLevel.positive,
   );
   static final konumOptionB = ChoiceResult(
@@ -4417,7 +4415,7 @@ class Bolum36Content {
   // Merdiven Genişliği
   static final merdGenislikA = ChoiceResult(
     label: "36-Merd-A",
-    uiTitle: "120 cm'in altında",
+    uiTitle: "119 cm ve altı",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -4461,14 +4459,14 @@ class Bolum36Content {
   );
   static final koridorGenislikB = ChoiceResult(
     label: "36-Koridor-B",
-    uiTitle: "100 cm - 120 cm arası",
+    uiTitle: "100 cm - 119 cm arası",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
   );
   static final koridorGenislikC = ChoiceResult(
     label: "36-Koridor-C",
-    uiTitle: "121 cm - 150 cm arası",
+    uiTitle: "120 cm - 150 cm arası",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -4576,8 +4574,6 @@ class AppContent {
     }
   }
 }
-
-
 
 class AppDefinitions {
   static const String yanginGuvenlikHolu =

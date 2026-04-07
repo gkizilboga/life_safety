@@ -964,7 +964,7 @@ class PdfService {
             // Wrapping everything in a single Container caused TooManyPagesException
             // when a section's notes didn't fit on one page.
             // 1. Determine which sections use table format
-            final bool useTable = [3, 5, 6, 7, 10, 12, 21, 36].contains(id);
+            final bool useTable = [3, 5, 6, 7, 10, 12, 21, 33, 36].contains(id);
             final List<pw.Widget> itemsWidgets = [];
 
             if (!useTable) {
@@ -991,7 +991,12 @@ class PdfService {
                 final String report = _cleanEmojis(item['report'] ?? '');
                 final String advice = _cleanEmojis(item['advice'] ?? '');
 
-                if (report.isEmpty && advice.isEmpty) {
+                final bool isTableRow = (item['isTable'] == true) ||
+                    (report.isEmpty &&
+                        advice.isEmpty &&
+                        item['isTable'] != false);
+
+                if (isTableRow) {
                   tableGroup.add(item);
                 } else {
                   if (tableGroup.isNotEmpty) {
@@ -1033,7 +1038,7 @@ class PdfService {
                         tableGroup,
                         ttf,
                         ttfBold,
-                        (id <= 10 || id == 36)
+                        (id <= 10 || id == 12 || id == 36)
                             ? const PdfColor.fromInt(0x00000000)
                             : effectiveSectionRiskColor,
                         subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
@@ -1095,7 +1100,7 @@ class PdfService {
                     tableGroup,
                     ttf,
                     ttfBold,
-                    (id <= 10 || id == 36)
+                    (id <= 10 || id == 12 || id == 36)
                         ? const PdfColor.fromInt(0x00000000)
                         : effectiveSectionRiskColor,
                     subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
@@ -1366,98 +1371,151 @@ class PdfService {
     PdfColor sectionColor, {
     String subjectLabel = "Konu",
   }) {
+    // Determine max columns (usually 2, but 4 for Section 33)
+    int maxCols = 2;
+    for (var item in items) {
+      final value = (item['value'] ?? '').toString();
+      if (value.contains('|')) {
+        int partsCount = value.split('|').length + 1;
+        if (partsCount > maxCols) maxCols = partsCount;
+      }
+    }
+
     // If transparent, don't wrap in a border Container
     final table = pw.Table(
       border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-      columnWidths: {
-        0: const pw.IntrinsicColumnWidth(),
-        1: const pw.IntrinsicColumnWidth(),
-      },
+      columnWidths: maxCols == 4
+          ? {
+              0: const pw.FlexColumnWidth(20),
+              1: const pw.FlexColumnWidth(14),
+              2: const pw.FlexColumnWidth(14),
+              3: const pw.FlexColumnWidth(14),
+            }
+          : {
+              0: const pw.IntrinsicColumnWidth(),
+              1: const pw.IntrinsicColumnWidth(),
+            },
       children: [
-        pw.TableRow(
-          decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
-          children: [
-            pw.Padding(
-              padding: const pw.EdgeInsets.all(5),
-              child: pw.Text(
-                subjectLabel,
-                style: pw.TextStyle(
-                  font: fontBold,
-                  fontSize: 9,
-                  color: PdfColors.indigo900,
-                ),
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.all(5),
-              child: pw.Text(
-                "Yanıt / Durum",
-                style: pw.TextStyle(
-                  font: fontBold,
-                  fontSize: 9,
-                  color: PdfColors.indigo900,
-                ),
-              ),
-            ),
-          ],
-        ),
-        ...items.asMap().entries.map((entry) {
-          final i = entry.key;
-          final item = entry.value;
-          final String value = (item['value'] ?? '').toString();
-          // "Mevcut" içeren satırları veya isBold flag'i true olanları bold yap
-          final bool shouldBold =
-              item['isBold'] == true || value.contains('Mevcut');
-
-          return pw.TableRow(
-            decoration: i % 2 == 1
-                ? const pw.BoxDecoration(color: PdfColors.grey50)
-                : const pw.BoxDecoration(color: PdfColors.white),
+        // 1. Ana Başlık (Sadece 2 kolonlu ise)
+        if (maxCols == 2)
+          pw.TableRow(
+            decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
             children: [
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
                 child: pw.Text(
-                  item['label'] ?? '',
+                  subjectLabel,
                   style: pw.TextStyle(
-                    font: shouldBold ? fontBold : font,
-                    fontSize: 8,
+                    font: fontBold,
+                    fontSize: 9,
+                    color: PdfColors.indigo900,
                   ),
                 ),
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    // Handle multi-line values where the first line should be bold
-                    ...value.split('\n').asMap().entries.map((vEntry) {
-                      final vIdx = vEntry.key;
-                      final vText = vEntry.value;
-                      if (vText.isEmpty) return pw.SizedBox();
-                      return pw.Text(
-                        _cleanEmojis(vText),
-                        style: pw.TextStyle(
-                          font: (vIdx == 0 && value.contains('\n'))
-                              ? fontBold
-                              : (shouldBold ? fontBold : font),
-                          fontSize: 8,
-                        ),
-                      );
-                    }),
-                    if (item['subtitle'] != null &&
-                        item['subtitle'].toString().isNotEmpty)
-                      pw.Text(
-                        item['subtitle'].toString(),
-                        style: pw.TextStyle(
-                          font: font,
-                          fontSize: 7,
-                          fontStyle: pw.FontStyle.italic,
-                          color: PdfColors.grey700,
-                        ),
-                      ),
-                  ],
+                child: pw.Text(
+                  "Yanıt / Durum",
+                  style: pw.TextStyle(
+                    font: fontBold,
+                    fontSize: 9,
+                    color: PdfColors.indigo900,
+                  ),
                 ),
               ),
+            ],
+          ),
+        ...items.asMap().entries.map((entry) {
+          final i = entry.key;
+          final item = entry.value;
+          final String label = (item['label'] ?? '').toString();
+          final String valueRaw = (item['value'] ?? '').toString();
+          final List<String> parts = valueRaw.split('|');
+
+          // Özel Durum: Bölüm 33 Başlık Satırı (KAT TİPİ)
+          final bool isSubHeader = label == "KAT TİPİ";
+          final bool shouldBold =
+              item['isBold'] == true || valueRaw.contains('Mevcut');
+
+          return pw.TableRow(
+            decoration: isSubHeader
+                ? const pw.BoxDecoration(color: PdfColors.indigo50)
+                : (i % 2 == 1 // Stripe for all tables
+                    ? const pw.BoxDecoration(color: PdfColors.grey50)
+                    : const pw.BoxDecoration(color: PdfColors.white)),
+            children: [
+              // Kolon 1: Etiket (Label)
+              pw.Padding(
+                padding: const pw.EdgeInsets.all(5),
+                child: pw.Text(
+                  label,
+                  style: pw.TextStyle(
+                    font: (isSubHeader || shouldBold) ? fontBold : font,
+                    fontSize: 8.5,
+                    color: isSubHeader ? PdfColors.indigo900 : PdfColors.black,
+                  ),
+                ),
+              ),
+
+              // Veri Kolonları
+              if (maxCols == 2)
+                // Standart 2 Kolonlu Hücre
+                pw.Padding(
+                  padding: const pw.EdgeInsets.all(5),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      ...valueRaw.split('\n').asMap().entries.map((vEntry) {
+                        final vIdx = vEntry.key;
+                        final vText = vEntry.value;
+                        if (vText.isEmpty) return pw.SizedBox();
+                        return pw.Text(
+                          _cleanEmojis(vText),
+                          style: pw.TextStyle(
+                            font: (vIdx == 0 && valueRaw.contains('\n'))
+                                ? fontBold
+                                : (shouldBold ? fontBold : font),
+                            fontSize: 8,
+                          ),
+                        );
+                      }),
+                      if (item['subtitle'] != null &&
+                          item['subtitle'].toString().isNotEmpty)
+                        pw.Text(
+                          item['subtitle'].toString(),
+                          style: pw.TextStyle(
+                            font: font,
+                            fontSize: 7,
+                            fontStyle: pw.FontStyle.italic,
+                            color: PdfColors.grey700,
+                          ),
+                        ),
+                    ],
+                  ),
+                )
+              else ...[
+                // Çok Kolonlu Hücreler (Bölüm 33 vb.)
+                for (var p in parts)
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.all(5),
+                    child: pw.Text(
+                      _cleanEmojis(p),
+                      textAlign: pw.TextAlign.center,
+                      style: pw.TextStyle(
+                        font: (isSubHeader || shouldBold) ? fontBold : font,
+                        fontSize: 8.5,
+                        color:
+                            isSubHeader ? PdfColors.indigo900 : PdfColors.black,
+                      ),
+                    ),
+                  ),
+                // Boş kalan kolonları doldur
+                for (int fill = 0; fill < (maxCols - 1 - parts.length); fill++)
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.all(5),
+                    child: pw.SizedBox(),
+                  ),
+              ],
             ],
           );
         }),
