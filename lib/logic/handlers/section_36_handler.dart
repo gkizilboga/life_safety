@@ -517,50 +517,117 @@ class Section36Handler {
         status: fullEval.contains("KRİTİK RİSK")
             ? ReportStatus.risk
             : (fullEval.contains("UYARI")
-                  ? ReportStatus.warning
-                  : ReportStatus.compliant),
+                ? ReportStatus.warning
+                : ReportStatus.compliant),
       );
 
-      // 2. Özel Durumlar ve Beyanlar
-      if (b36.cikisKati != null)
+      // 3. Özel Durumlar ve Beyanlar
+      final cikisKati = b36.cikisKati;
+      if (cikisKati != null)
         _addDetail(
           details,
           label: Bolum36Content.questionCikisKati,
-          value: b36.cikisKati!.uiTitle,
-          subtitle: b36.cikisKati!.uiSubtitle,
-          report: b36.cikisKati!.reportText,
-          advice: b36.cikisKati!.adviceText,
-          level: b36.cikisKati!.level,
+          value: cikisKati.uiTitle,
+          subtitle: cikisKati.uiSubtitle,
+          report: cikisKati.reportText,
+          advice: cikisKati.adviceText,
+          status: cikisKati.level == RiskLevel.critical
+              ? ReportStatus.risk
+              : (cikisKati.level == RiskLevel.positive
+                  ? ReportStatus.compliant
+                  : ReportStatus.warning),
         );
-      if (b36.disMerd != null)
+
+      final disMerd = b36.disMerd;
+      if (disMerd != null)
         _addDetail(
           details,
           label: Bolum36Content.questionDisMerd,
-          value: b36.disMerd!.uiTitle,
-          subtitle: b36.disMerd!.uiSubtitle,
-          report: b36.disMerd!.reportText,
-          advice: b36.disMerd!.adviceText,
-          level: b36.disMerd!.level,
+          value: disMerd.uiTitle,
+          subtitle: disMerd.uiSubtitle,
+          report: disMerd.reportText,
+          advice: disMerd.adviceText,
+          status: disMerd.level == RiskLevel.critical
+              ? ReportStatus.risk
+              : (disMerd.level == RiskLevel.positive
+                  ? ReportStatus.compliant
+                  : ReportStatus.warning),
         );
-      if (b36.konum != null)
+
+      // Madde 41 Tahliye Mesafesi (Lobi) - Merkezi raporlama (Bölüm 20 yerine burada)
+      final hasSprinkler = _store.bolum9?.secim?.label == "9-1-A";
+      int lobbyLimit = hasSprinkler ? 15 : 10;
+      String replaceLobbyLimit(String? text) {
+        if (text == null) return "";
+        return text.replaceAll("[LIMIT]", lobbyLimit.toString());
+      }
+
+      if (b20 != null) {
+        final lobi = b20.lobiTahliyeMesafeDurumu;
+        if (lobi != null) {
+          _addDetail(
+            details,
+            label: 'Çıkış katındaki tahliye (lobi) mesafesi uygun mu?',
+            value: replaceLobbyLimit(lobi.uiTitle),
+            subtitle: replaceLobbyLimit(lobi.uiSubtitle),
+            report: replaceLobbyLimit(lobi.reportText),
+            advice: replaceLobbyLimit(lobi.adviceText),
+            status: lobi.level == RiskLevel.critical
+                ? ReportStatus.risk
+                : (lobi.level == RiskLevel.positive
+                    ? ReportStatus.compliant
+                    : ReportStatus.warning),
+          );
+        }
+
+        final bodLobi = b20.bodrumLobiTahliyeMesafeDurumu;
+        if (b20.isBodrumIndependent && bodLobi != null) {
+          _addDetail(
+            details,
+            label: 'Bodrum Kat: Çıkış katındaki tahliye (lobi) mesafesi uygun mu?',
+            value: replaceLobbyLimit(bodLobi.uiTitle),
+            subtitle: replaceLobbyLimit(bodLobi.uiSubtitle),
+            report: replaceLobbyLimit(bodLobi.reportText),
+            advice: replaceLobbyLimit(bodLobi.adviceText),
+            status: bodLobi.level == RiskLevel.critical
+                ? ReportStatus.risk
+                : (bodLobi.level == RiskLevel.positive
+                    ? ReportStatus.compliant
+                    : ReportStatus.warning),
+          );
+        }
+      }
+
+      final konum = b36.konum;
+      if (konum != null)
         _addDetail(
           details,
           label: Bolum36Content.questionKonum,
-          value: b36.konum!.uiTitle,
-          subtitle: b36.konum!.uiSubtitle,
-          report: b36.konum!.reportText,
-          advice: b36.konum!.adviceText,
-          level: b36.konum!.level,
+          value: konum.uiTitle,
+          subtitle: konum.uiSubtitle,
+          report: konum.reportText,
+          advice: konum.adviceText,
+          status: konum.level == RiskLevel.critical
+              ? ReportStatus.risk
+              : (konum.level == RiskLevel.positive
+                  ? ReportStatus.compliant
+                  : ReportStatus.warning),
         );
-      if (b36.kapiTipi != null)
+
+      final kapiTipi = b36.kapiTipi;
+      if (kapiTipi != null)
         _addDetail(
           details,
           label: Bolum36Content.questionKapiTipi,
-          value: b36.kapiTipi!.uiTitle,
-          subtitle: b36.kapiTipi!.uiSubtitle,
-          report: b36.kapiTipi!.reportText,
-          advice: b36.kapiTipi!.adviceText,
-          level: b36.kapiTipi!.level,
+          value: kapiTipi.uiTitle,
+          subtitle: kapiTipi.uiSubtitle,
+          report: kapiTipi.reportText,
+          advice: kapiTipi.adviceText,
+          status: kapiTipi.level == RiskLevel.critical
+              ? ReportStatus.risk
+              : (kapiTipi.level == RiskLevel.positive
+                  ? ReportStatus.compliant
+                  : ReportStatus.warning),
         );
 
       final b4 = _store.bolum4;

@@ -132,41 +132,41 @@ class Bolum5Content {
   static final oturumAlani = ChoiceResult(
     label: "5-1 (Oturum)",
     uiTitle: "Zemin Kat (Taban) Alanı",
-    uiSubtitle: "Binanın zemin katının brüt alanı.",
-    reportText: "BİLGİ: Zemin Kat (Taban) Alanı:",
+    uiSubtitle: ".",
+    reportText: "Zemin Kat (Taban) Alanı:",
     level: RiskLevel.info,
   );
 
   static final normalKatAlani = ChoiceResult(
     label: "5-2 (Normal)",
-    uiTitle: "Normal Kat Alanı",
-    uiSubtitle: "Zemin üstü standart bir katın brüt alanı.",
-    reportText: "BİLGİ: Normal Kat Alanı:",
+    uiTitle: "Normal (Zemin Üstü) Kat Alanı",
+    uiSubtitle: "",
+    reportText: "Normal (Zemin Üstü) Kat Alanı:",
     level: RiskLevel.info,
   );
 
   static final bodrumKatAlani = ChoiceResult(
     label: "5-3 (Bodrum)",
-    uiTitle: "Bodrum Kat Alanı",
-    uiSubtitle: "Zemin altı standart bir katın brüt alanı.",
-    reportText: "BİLGİ: Bodrum Kat Alanı:",
+    uiTitle: "Bodrum (Zemin Altı) Kat Alanı",
+    uiSubtitle: "",
+    reportText: "Bodrum (Zemin Altı) Kat Alanı:",
     level: RiskLevel.info,
   );
 
   static final toplamInsaat = ChoiceResult(
     label: "5-4 (Toplam)",
     uiTitle: "Toplam İnşaat Alanı",
-    uiSubtitle: "Tüm katların (Zemin+Normal+Bodrum) toplam brüt alanı.",
-    reportText: "BİLGİ: Toplam İnşaat Alanı:",
+    uiSubtitle: "",
+    reportText: "Toplam İnşaat Alanı:",
     level: RiskLevel.info,
   );
 
   static final otomatikHesap = ChoiceResult(
     label: "5-Otomatik",
     uiTitle: "OTOMATİK HESAPLA",
-    uiSubtitle: "Kat sayıları ve alan verileriyle toplamı hesaplar.",
+    uiSubtitle: "",
     reportText:
-        "BİLGİ: Toplam inşaat alanı Uygulama tarafından otomatik hesaplanmıştır.",
+        "Toplam inşaat alanı Uygulama tarafından otomatik hesaplanmıştır.",
     level: RiskLevel.info,
   );
 }
@@ -175,7 +175,7 @@ class Bolum6Content {
   static final otoparkVar = ChoiceResult(
     label: "6-1-A (Otopark)",
     uiTitle: "Otopark bulunmaktadır.",
-    uiSubtitle: "Zemin (ve/veya bodrum) katta kapalı otopark alanı mevcut.",
+    uiSubtitle: "",
     reportText:
         "BİLGİ: Binada kapalı veya yarı-açık (tek cephesinde açıklık olan) otopark alanı bulunmaktadır. Özellikle LPG'li araçların, elektrik motorlu araçların park edildiği / şarj edildiği otoparklar yangın yükü bakımından konut katlarına göre yüksek olduğundan ek önlemler almak mutlaka şarttır. ",
     level: RiskLevel.info,
@@ -2099,19 +2099,19 @@ class Bolum20Content {
 
   static final madde41MesafeAltinda = ChoiceResult(
     label: "41-MESAFE-A",
-    uiTitle: "Evet.",
+    uiTitle: "[LIMIT] metrenin altında (veya doğrudan çıkış).",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerlerinin (sprinklersiz 10 m / sprinklerli 15 m) altındadır.",
+        "OLUMLU: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerinin ([LIMIT] m) altındadır.",
     level: RiskLevel.positive,
   );
 
   static final madde41MesafeUstunde = ChoiceResult(
     label: "41-MESAFE-B",
-    uiTitle: "Hayır.",
+    uiTitle: "[LIMIT] metrenin üzerinde.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerlerini (sprinklersiz 10 m / sprinklerli 15 m) aşmaktadır.",
+        "KRİTİK RİSK: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerini ([LIMIT] m) aşmaktadır.",
     level: RiskLevel.critical,
   );
 
@@ -2120,7 +2120,7 @@ class Bolum20Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Çıkış katındaki tahliye mesafesi ölçülmemiş veya bilinmemektedir. (Limit Değerler: Sprinklersiz 10 m / Sprinklerli 15 m)",
+        "BİLİNMİYOR: Çıkış katındaki tahliye mesafesi bilinmemektedir. (Limit: [LIMIT] m)",
     level: RiskLevel.unknown,
   );
 }
@@ -2891,10 +2891,9 @@ class Bolum26Content {
 
 class Bolum27Content {
   static const String questionBoyut = "Kaçış kapılarında engel var mı?";
-  static const String questionYon =
-      "Kaçış kapıları hangi yöne açılıyor? (daire kapısı hariç)";
+  static const String questionYon = "Kaçış kapıları hangi yöne açılıyor?";
   static const String questionKilit =
-      "Kaçış kapılarının kilit mekanizması nasıldır? (daire kapısı hariç)";
+      "Kaçış kapılarının kilit mekanizması nasıldır?";
   static const String questionDayanim =
       "Kapalı yangın merdiveninin kapısı nasıl?";
 

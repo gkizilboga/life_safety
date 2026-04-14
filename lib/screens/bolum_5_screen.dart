@@ -505,8 +505,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
         decoration: InputDecoration(
           labelText: choice.uiTitle,
           labelStyle: const TextStyle(fontSize: 14, color: AppColors.textLabel),
-          helperText: choice.uiSubtitle.isNotEmpty ? choice.uiSubtitle : null,
-          helperStyle: const TextStyle(fontSize: 11, color: Colors.blueGrey),
           hintText: "0",
           hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
           errorText: error,

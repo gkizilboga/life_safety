@@ -472,7 +472,7 @@ class PdfService {
       } else {
         final details = ReportEngine.getSectionDetailedReport(id, store: store);
         for (final item in details) {
-          final status = item['status'] as ReportStatus;
+          final status = item['status'] as ReportStatus? ?? ReportStatus.info;
           if (status == ReportStatus.risk || status == ReportStatus.warning) {
             String actText = _convertToActionableText(
               (item['report'] ?? '').toString(),
@@ -991,7 +991,8 @@ class PdfService {
                 final String report = _cleanEmojis(item['report'] ?? '');
                 final String advice = _cleanEmojis(item['advice'] ?? '');
 
-                final bool isTableRow = (item['isTable'] == true) ||
+                final bool isTableRow =
+                    (item['isTable'] == true) ||
                     (report.isEmpty &&
                         advice.isEmpty &&
                         item['isTable'] != false);
@@ -1440,9 +1441,10 @@ class PdfService {
           return pw.TableRow(
             decoration: isSubHeader
                 ? const pw.BoxDecoration(color: PdfColors.indigo50)
-                : (i % 2 == 1 // Stripe for all tables
-                    ? const pw.BoxDecoration(color: PdfColors.grey50)
-                    : const pw.BoxDecoration(color: PdfColors.white)),
+                : (i % 2 ==
+                          1 // Stripe for all tables
+                      ? const pw.BoxDecoration(color: PdfColors.grey50)
+                      : const pw.BoxDecoration(color: PdfColors.white)),
             children: [
               // Kolon 1: Etiket (Label)
               pw.Padding(
@@ -1504,8 +1506,9 @@ class PdfService {
                       style: pw.TextStyle(
                         font: (isSubHeader || shouldBold) ? fontBold : font,
                         fontSize: 8.5,
-                        color:
-                            isSubHeader ? PdfColors.indigo900 : PdfColors.black,
+                        color: isSubHeader
+                            ? PdfColors.indigo900
+                            : PdfColors.black,
                       ),
                     ),
                   ),

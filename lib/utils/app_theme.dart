@@ -48,7 +48,7 @@ class AppStyles {
   static const TextStyle subQuestionTitle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w800,
-    color: Color(0xFF4A148C), // Koyu Mor - Sorular için dikkat çekici
+    color: AppColors.textHeader, // Standart nötr renk
     height: 1.4,
   );
 

@@ -459,6 +459,14 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
       selector: (_, p) =>
           isBasement ? p.bodLobiMesafeDurumu : p.lobiMesafeDurumu,
       builder: (context, currentSelection, _) {
+        ChoiceResult finalize(ChoiceResult original) {
+          return original.copyWith(
+            uiTitle: original.uiTitle.replaceAll("[LIMIT]", limit.toString()),
+            uiSubtitle:
+                original.uiSubtitle.replaceAll("[LIMIT]", limit.toString()),
+          );
+        }
+
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -501,23 +509,10 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
                   color: AppColors.textBody,
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                "Yönetmelik limiti: $limit metre",
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textLight,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
               const SizedBox(height: 16),
-
               SelectableCard(
-                choice: Bolum20Content.madde41MesafeAltinda.copyWith(
-                  uiTitle: "Mesafe limitin ALTI (veya doğrudan çıkış).",
-                ),
-                isSelected:
-                    currentSelection?.label ==
+                choice: finalize(Bolum20Content.madde41MesafeAltinda),
+                isSelected: currentSelection?.label ==
                     Bolum20Content.madde41MesafeAltinda.label,
                 onTap: () {
                   provider.handleSelection(
@@ -527,11 +522,8 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
                 },
               ),
               SelectableCard(
-                choice: Bolum20Content.madde41MesafeUstunde.copyWith(
-                  uiTitle: "Mesafe limitin ÜSTÜNDE.",
-                ),
-                isSelected:
-                    currentSelection?.label ==
+                choice: finalize(Bolum20Content.madde41MesafeUstunde),
+                isSelected: currentSelection?.label ==
                     Bolum20Content.madde41MesafeUstunde.label,
                 onTap: () {
                   provider.handleSelection(
@@ -541,9 +533,8 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
                 },
               ),
               SelectableCard(
-                choice: Bolum20Content.madde41MesafeBilmiyorum,
-                isSelected:
-                    currentSelection?.label ==
+                choice: finalize(Bolum20Content.madde41MesafeBilmiyorum),
+                isSelected: currentSelection?.label ==
                     Bolum20Content.madde41MesafeBilmiyorum.label,
                 onTap: () {
                   provider.handleSelection(
