@@ -202,7 +202,7 @@ void main() {
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       expect(report.contains("KRİTİK RİSK"), true);
-      expect(report.contains("9.50m limitini aşmaktadır"), true);
+      expect(report.contains("9.50m 'den fazla yüksekliğe sahip olması"), true);
     });
 
     test('Senaryo 3: Kullanıcı yükü > 25 kişi - GEÇERSİZ', () {
@@ -220,7 +220,7 @@ void main() {
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       expect(report.contains("KRİTİK RİSK"), true);
-      expect(report.contains("25 kişiyi aşmaktadır"), true);
+      expect(report.contains("hizmet ettiği katlardan birinin kullanıcı yükü bakımından 25 kişiyi aşması"), true);
     });
 
     test('Senaryo 4: Yükseklik bilinmiyor - UYARI', () {
@@ -238,7 +238,7 @@ void main() {
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       expect(report.contains("UYARI"), true);
-      expect(report.contains("BİLİNMİYOR"), true);
+      expect(report.contains("herhangi bir değerlendirme yapılamamıştır"), true);
     });
 
     test('Senaryo 5: Bölüm 34 bağımsız çıkış - Ticari alan yükü sayılmaz', () {
@@ -291,8 +291,8 @@ void main() {
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       expect(report.contains("KRİTİK RİSK"), true);
-      expect(report.contains("9.50m limitini aşmaktadır"), true);
-      expect(report.contains("25 kişiyi aşmaktadır"), true);
+      expect(report.contains("9.50m 'den fazla yüksekliğe sahip olması"), true);
+      expect(report.contains("hizmet ettiği katlardan birinin kullanıcı yükü bakımından 25 kişiyi aşması"), true);
     });
   });
 
@@ -365,7 +365,7 @@ void main() {
       );
 
       expect(
-        details.any((d) => d['label'] == 'YGH Teknik Değerlendirmesi'),
+        details.any((d) => d['label'] == 'YGH Gereksinimi'),
         true,
       );
     });
@@ -376,7 +376,7 @@ void main() {
       );
       final details = ReportEngine.getSectionDetailedReport(20, store: store);
       expect(
-        details.any((d) => d['label'] == 'Basınçlandırma Sistemi'),
+        details.any((d) => d['label'] == 'Basınçlandırma Sistemi Gereksinimi'),
         true,
       );
     });

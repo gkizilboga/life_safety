@@ -105,7 +105,7 @@ void main() {
         expect(metrics['criticalCount'] >= 1, true);
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
+        expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
       },
     );
 
@@ -176,8 +176,8 @@ void main() {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
-      expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
-      expect(report.contains("En az 1 açılmalı"), true);
+      expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
+      expect(report.contains("En az 1 adet doğrudan dışarıya açılmalıdır"), true);
     });
 
     test(
@@ -190,8 +190,8 @@ void main() {
         store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
-        expect(report.contains("En az 2 açılmalı"), true); // Check for number 2
+        expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
+        expect(report.contains("En az 2 adet doğrudan dışarıya açılmalıdır"), true); // Check for number 2
       },
     );
 
@@ -213,8 +213,8 @@ void main() {
         );
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
-        expect(report.contains("En az 3 açılmalı"), true);
+        expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
+        expect(report.contains("En az 3 adet doğrudan dışarıya açılmalıdır"), true);
       },
     );
 
