@@ -103,9 +103,9 @@ class RiskCalculator {
       }
     }
 
-    // Scoring formula (Base 100, weights: -5, -2, -1)
+    // Scoring formula (Base 100, weights: -3, -2, -1)
     double score =
-        100.0 - (criticalRisks * 4.0) - (warnings * 2.0) - (unknowns * 1.0);
+        100.0 - (criticalRisks * 3.0) - (warnings * 2.0) - (unknowns * 1.0);
 
     return {
       'score': score.toInt().clamp(0, 100),

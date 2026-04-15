@@ -229,13 +229,14 @@ class QuestionTitle extends StatelessWidget {
 
 class SubQuestionTitle extends StatelessWidget {
   final String title;
-  const SubQuestionTitle(this.title, {super.key});
+  final TextStyle? style;
+  const SubQuestionTitle(this.title, {super.key, this.style});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 12, top: 2),
-      child: FormattedText(title, style: AppStyles.subQuestionTitle),
+      child: FormattedText(title, style: style ?? AppStyles.subQuestionTitle),
     );
   }
 }
@@ -716,6 +717,9 @@ class DefinitionButton extends StatelessWidget {
   }
 
   void _showDefinition(BuildContext context) {
+    // Tanım açılmadan önce odağı (klavyeyi) kapat.
+    FocusManager.instance.primaryFocus?.unfocus();
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -804,6 +808,9 @@ class ImageModalHelper {
     required String assetPath,
     required String title,
   }) {
+    // Görsel açılmadan önce odağı (klavyeyi) kapat.
+    FocusManager.instance.primaryFocus?.unfocus();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,

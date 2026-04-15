@@ -7,9 +7,10 @@ class Bolum23Model {
   final ChoiceResult? konum;
   final ChoiceResult? levha;
   final ChoiceResult? havalandirma;
+  final ChoiceResult? basinc;
 
   ChoiceResult? get secim =>
-      bodrum ?? yanginModu ?? konum ?? levha ?? havalandirma;
+      bodrum ?? yanginModu ?? konum ?? levha ?? havalandirma ?? basinc;
 
   Bolum23Model({
     this.bodrum,
@@ -17,6 +18,7 @@ class Bolum23Model {
     this.konum,
     this.levha,
     this.havalandirma,
+    this.basinc,
   });
 
   Bolum23Model copyWith({
@@ -25,6 +27,7 @@ class Bolum23Model {
     ChoiceResult? konum,
     ChoiceResult? levha,
     ChoiceResult? havalandirma,
+    ChoiceResult? basinc,
   }) {
     return Bolum23Model(
       bodrum: bodrum ?? this.bodrum,
@@ -32,6 +35,7 @@ class Bolum23Model {
       konum: konum ?? this.konum,
       levha: levha ?? this.levha,
       havalandirma: havalandirma ?? this.havalandirma,
+      basinc: basinc ?? this.basinc,
     );
   }
 
@@ -42,6 +46,7 @@ class Bolum23Model {
       'konum_label': konum?.label,
       'levha_label': levha?.label,
       'havalandirma_label': havalandirma?.label,
+      'basinc_label': basinc?.label,
     };
   }
 
@@ -65,6 +70,9 @@ class Bolum23Model {
         Bolum23Content.havalandirmaOptionA,
         Bolum23Content.havalandirmaOptionB,
         Bolum23Content.havalandirmaOptionC,
+        Bolum23Content.basincOptionA,
+        Bolum23Content.basincOptionB,
+        Bolum23Content.basincOptionC,
       ].firstWhere(
         (e) => e.label == l,
         orElse: () => Bolum23Content.levhaOptionC,
@@ -77,6 +85,7 @@ class Bolum23Model {
       konum: find(map['konum_label']),
       levha: find(map['levha_label']),
       havalandirma: find(map['havalandirma_label']),
+      basinc: find(map['basinc_label']),
     );
   }
 }

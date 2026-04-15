@@ -153,6 +153,9 @@ class PdfService {
       return PdfColors.green700;
     }
     if (text.contains('BİLGİ')) return PdfColors.blue700;
+    if (text.contains('BİLİNMİYOR') || text.contains('Bilinmiyor')) {
+      return PdfColors.grey500;
+    }
     return PdfColors.grey500;
   }
 

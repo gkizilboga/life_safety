@@ -49,8 +49,14 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
       if (type == 'yanginModu') _model = _model.copyWith(yanginModu: choice);
       if (type == 'konum') _model = _model.copyWith(konum: choice);
       if (type == 'levha') _model = _model.copyWith(levha: choice);
-      if (type == 'havalandirma')
+      if (type == 'havalandirma') {
         _model = _model.copyWith(havalandirma: choice);
+        // Havalandırma yok ("23-5-B") harici bir şeye geçersek basıncı sıfırla ki kafa karıştırmasın
+        if (choice.label != Bolum23Content.havalandirmaOptionB.label) {
+          _model = _model.copyWith(basinc: null);
+        }
+      }
+      if (type == 'basinc') _model = _model.copyWith(basinc: choice);
     });
   }
 
@@ -69,6 +75,9 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
     if (_model.konum == null) return false;
     if (_model.levha == null) return false;
     if (_model.havalandirma == null) return false;
+    if (_model.havalandirma?.label == Bolum23Content.havalandirmaOptionB.label) {
+      if (_model.basinc == null) return false;
+    }
     return true;
   }
 
@@ -144,6 +153,18 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
             ],
             _model.havalandirma,
           ),
+
+          if (_model.havalandirma?.label == Bolum23Content.havalandirmaOptionB.label)
+            _buildSoru(
+              "Normal asansör kuyusunda basınçlandırma sistemi var mı?",
+              'basinc',
+              [
+                Bolum23Content.basincOptionA,
+                Bolum23Content.basincOptionB,
+                Bolum23Content.basincOptionC,
+              ],
+              _model.basinc,
+            ),
         ],
       ),
     );

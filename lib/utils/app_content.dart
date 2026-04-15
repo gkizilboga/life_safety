@@ -673,7 +673,7 @@ class Bolum12Content {
 
   static final yigmaOptionA = ChoiceResult(
     label: "12-A (Yığma)",
-    uiTitle: "Evet, duvarlar kalın (19 cm +).",
+    uiTitle: "Evet, duvarlar kalın.",
     uiSubtitle:
         "Binanın yükünü taşıyan dış duvarlar en az bir tuğla boyu (19 cm) veya daha kalındır.",
     reportText:
@@ -2305,7 +2305,7 @@ class Bolum22Content {
   static final boyutOptionA = ChoiceResult(
     label: "22-3-A",
     uiTitle: "Küçük (6 m²'den az).",
-    uiSubtitle: "Hol alanı dar.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: İtfaiye asansörü önündeki YGH alanı 6 m²'den azdır. Sedye ve itfaiye ekibinin sığması için bu alanın en az 6 m² olması gerekmektedir.",
     adviceText:
@@ -2316,7 +2316,7 @@ class Bolum22Content {
   static final boyutOptionB = ChoiceResult(
     label: "22-3-B",
     uiTitle: "Standart (6-10 m² arası).",
-    uiSubtitle: "Hol alanı yeterli genişlikte.",
+    uiSubtitle: "",
     reportText:
         "OLUMLU: İtfaiye asansörü önündeki YGH alanı yeterli büyüklüktedir.",
     level: RiskLevel.positive,
@@ -2325,7 +2325,7 @@ class Bolum22Content {
   static final boyutOptionC = ChoiceResult(
     label: "22-3-C",
     uiTitle: "Büyük (10 m²'den fazla).",
-    uiSubtitle: "Hol alanı fazla geniş.",
+    uiSubtitle: "",
     reportText:
         "UYARI: İtfaiye asansörü önündeki YGH alanı 10 m²'den büyüktür. Gereksiz büyük holler duman kontrolünü zorlaştırabilir.",
     level: RiskLevel.warning,
@@ -2564,6 +2564,33 @@ class Bolum23Content {
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Kuyu havalandırması bilinmiyor. Asansör kuyusuna sızan dumanın tahliye edilmesi için en üst noktada 'Duman Tahliye Bacası' (0.1 m²'den az olmamak kaydıyla) zorunludur.",
+    level: RiskLevel.unknown,
+  );
+
+  static final basincOptionA = ChoiceResult(
+    label: "23-6-A (Basınçlandırma)",
+    uiTitle: "Evet, var.",
+    uiSubtitle: "",
+    reportText:
+        "OLUMLU: Normal asansör kuyusunda basınçlandırma sistemi mevcuttur. Sistem tasarım hesaplaması ve projesi kontrol edildikten sonra uygunluğuna karar verilir.",
+    level: RiskLevel.positive,
+  );
+
+  static final basincOptionB = ChoiceResult(
+    label: "23-6-B (Basınçlandırma)",
+    uiTitle: "Hayır, yok.",
+    uiSubtitle: "",
+    reportText:
+        "KRİTİK RİSK: Normal asansör kuyusunda havalandırma (duman tahliye bacası) bulunmamaktadır ve kuyuda basınçlandırma sistemi de bulunmadığı beyan edilmiştir. Bu durumda yangın anında asansör kuyusuna sızan dumanın tahliye edilmesi için herhangi bir çözümün tesis edilmediği anlaşılmaktadır.",
+    level: RiskLevel.critical,
+  );
+
+  static final basincOptionC = ChoiceResult(
+    label: "23-6-C (Basınçlandırma)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: Normal asansör kuyusunda basınçlandırma olup olmadığı bilinmiyor. Kuyu içerisinde duman atım penceresi olmadığı için basınçlandırma zorunludur. Yerinde kontrol edilmesi önerilir.",
     level: RiskLevel.unknown,
   );
 }

@@ -111,36 +111,36 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
           Padding(
             padding: const EdgeInsets.only(left: 4, bottom: 12),
             child: Text(
-              "Dairesel merdiven teknik ölçümleri:",
+              "Binadaki dairesel merdivenin ölçüleri:",
               style: AppStyles.questionTitle,
             ),
           ),
           const SizedBox(height: 8),
-          _buildSoru("Merdiven kol genişliği yeterli mi?", 'genislik', [
+          _buildSoru("Merdiven kol genişliği nedir?", 'genislik', [
             Bolum25Content.genislikOptionA,
             Bolum25Content.genislikOptionB,
             Bolum25Content.genislikOptionC,
           ], _model.genislik),
-          _buildSoru("Basamak genişliği yeterli mi?", 'basamak', [
+          _buildSoru("Basamak genişliği nedir?", 'basamak', [
             Bolum25Content.basamakOptionA,
             Bolum25Content.basamakOptionB,
             Bolum25Content.basamakOptionC,
           ], _model.basamak),
+          _buildSoru("Baş kurtarma yüksekliği nedir?", 'basKurtarma', [
+            Bolum25Content.basKurtarmaOptionA,
+            Bolum25Content.basKurtarmaOptionB,
+            Bolum25Content.basKurtarmaOptionC,
+          ], _model.basKurtarma),
           _buildSoru(
-            "Baş kurtarma yüksekliği yeterli mi?",
-            'basKurtarma',
+            "Dairesel merdivenin (bina boyunca) toplam yüksekliği nedir?",
+            'yukseklik',
             [
-              Bolum25Content.basKurtarmaOptionA,
-              Bolum25Content.basKurtarmaOptionB,
-              Bolum25Content.basKurtarmaOptionC,
+              Bolum25Content.daireselYukseklikOptionA,
+              Bolum25Content.daireselYukseklikOptionB,
+              Bolum25Content.daireselYukseklikOptionC,
             ],
-            _model.basKurtarma,
+            _model.yukseklik,
           ),
-          _buildSoru("Dairesel merdivenin yüksekliği nedir?", 'yukseklik', [
-            Bolum25Content.daireselYukseklikOptionA,
-            Bolum25Content.daireselYukseklikOptionB,
-            Bolum25Content.daireselYukseklikOptionC,
-          ], _model.yukseklik),
         ],
       ),
     );

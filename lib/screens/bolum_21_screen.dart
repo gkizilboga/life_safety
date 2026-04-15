@@ -26,7 +26,6 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
@@ -52,7 +51,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
                   children: [
                     Expanded(
                       child: Text(
-                        "Merdivenin önünde Yangın Güvenlik Holü (YGH) var mı?",
+                        "Merdiven(ler)in önünde Yangın Güvenlik Holü (YGH) var mı?",
                         style: AppStyles.questionTitle,
                       ),
                     ),
@@ -145,7 +144,7 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SubQuestionTitle(title),
+          SubQuestionTitle(title, style: AppStyles.questionTitle),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,
