@@ -124,6 +124,8 @@ class PdfService {
 
   static String _cleanEmojis(String? t) {
     if (t == null) return "";
+
+    // 1. Emoji Clean
     String cleaned = t
         .replaceAll(
           RegExp(
@@ -134,16 +136,33 @@ class PdfService {
         )
         .trim();
 
-    // Remove category prefixes
-    cleaned = cleaned
-        .replaceAll(RegExp(r'^KRİTİK RİSK:\s*', multiLine: true), '')
-        .replaceAll(RegExp(r'^UYARI:\s*', multiLine: true), '')
-        .replaceAll(RegExp(r'^BİLİNMİYOR:\s*', multiLine: true), '')
-        .replaceAll(RegExp(r'^BİLGİ:\s*', multiLine: true), '')
-        .replaceAll(RegExp(r'^OLUMLU:\s*', multiLine: true), '')
-        .trim();
+    // 2. Technical Prefix Clean (PDF Output Only)
+    final List<String> prefixesToRemove = [
+      "KRİTİK RİSK",
+      "UYARI",
+      "BİLİNMİYOR",
+      "BİLGİ",
+      "OLUMLU",
+      "UYGUN",
+      "ÖNERİ"
+    ];
 
-    return cleaned;
+    for (var prefix in prefixesToRemove) {
+      cleaned = cleaned.replaceAll(
+        RegExp('^(DURUM:\\s*)?$prefix:?\\s*',
+            multiLine: true, caseSensitive: false),
+        '',
+      );
+    }
+
+    // Preserve DURUM: ZORUNLU but clean DURUM: OLUMLU etc.
+    if (cleaned.startsWith(
+        RegExp(r'^DURUM:\s*(?!ZORUNLU|ŞART DEĞİL)', caseSensitive: false))) {
+      cleaned = cleaned.replaceFirst(
+          RegExp(r'^DURUM:\s*', caseSensitive: false), '');
+    }
+
+    return cleaned.trim();
   }
 
   static PdfColor _getRiskColor(String text) {
@@ -387,14 +406,11 @@ class PdfService {
 
   static String _convertToActionableText(String text) {
     if (text.isEmpty) return "";
-    String processed = text;
 
-    // 1. Etiketleri Temizle
-    processed = processed
-        .replaceAll(RegExp(r'^(KRİTİK RİSK:\s*|UYARI:\s*|ÖNERİ:\s*)'), '')
-        .trim();
+    // Centralized cleaning (prefixes and emojis)
+    String processed = _cleanEmojis(text);
 
-    // 2. Aksiyon Dışı Neden ve Rakamları Temizle (Parantez içi)
+    // Clean actionable context (Parentheses)
     processed = processed.replaceAll(RegExp(r'\([^)]*\)'), '').trim();
     processed = processed.replaceAll(RegExp(r'\s{2,}'), ' ').trim();
 
@@ -544,15 +560,12 @@ class PdfService {
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
                   pw.Container(
-                    width: 12,
-                    height: 12,
-                    margin: const pw.EdgeInsets.only(top: 2, right: 10),
-                    decoration: pw.BoxDecoration(
-                      border: pw.Border.all(
-                        color: PdfColors.grey700,
-                        width: 1.2,
-                      ),
-                      borderRadius: pw.BorderRadius.circular(2),
+                    width: 4,
+                    height: 4,
+                    margin: const pw.EdgeInsets.only(top: 4, right: 10),
+                    decoration: const pw.BoxDecoration(
+                      color: PdfColors.grey700,
+                      shape: pw.BoxShape.circle,
                     ),
                   ),
                   pw.Expanded(
@@ -893,6 +906,15 @@ class PdfService {
         footer: _buildFooter,
         build: (context) => [
           pw.SizedBox(height: 12),
+          pw.Text(
+            "DEĞERLENDİRME NOTLARI",
+            style: pw.TextStyle(
+              font: ttfBold,
+              fontSize: 13,
+              color: PdfColor.fromInt(0xFF1a365d),
+            ),
+          ),
+          pw.SizedBox(height: 12),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -1042,7 +1064,7 @@ class PdfService {
                         tableGroup,
                         ttf,
                         ttfBold,
-                        (id <= 10 || id == 12 || id == 36)
+                        (id <= 10 || id == 12 || id == 33 || id == 36)
                             ? const PdfColor.fromInt(0x00000000)
                             : effectiveSectionRiskColor,
                         subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
@@ -1104,7 +1126,7 @@ class PdfService {
                     tableGroup,
                     ttf,
                     ttfBold,
-                    (id <= 10 || id == 12 || id == 36)
+                    (id <= 10 || id == 12 || id == 33 || id == 36)
                         ? const PdfColor.fromInt(0x00000000)
                         : effectiveSectionRiskColor,
                     subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
@@ -1242,6 +1264,15 @@ class PdfService {
         ),
         footer: _buildFooter,
         build: (context) => [
+          pw.Text(
+            "DEĞERLENDİRME NOTLARI",
+            style: pw.TextStyle(
+              font: ttfBold,
+              fontSize: 13,
+              color: PdfColor.fromInt(0xFF1a365d),
+            ),
+          ),
+          pw.SizedBox(height: 12),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -1395,12 +1426,18 @@ class PdfService {
               2: const pw.FlexColumnWidth(14),
               3: const pw.FlexColumnWidth(14),
             }
-          : {
-              0: const pw.IntrinsicColumnWidth(),
-              1: const pw.IntrinsicColumnWidth(),
-            },
+          : maxCols == 3
+              ? {
+                  0: const pw.FlexColumnWidth(18),
+                  1: const pw.FlexColumnWidth(22),
+                  2: const pw.FlexColumnWidth(40),
+                }
+              : {
+                  0: const pw.IntrinsicColumnWidth(),
+                  1: const pw.IntrinsicColumnWidth(),
+                },
       children: [
-        // 1. Ana Başlık (Sadece 2 kolonlu ise)
+        // 1. Ana Başlık (2 veya 3 kolonlu ise)
         if (maxCols == 2)
           pw.TableRow(
             decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
@@ -1420,6 +1457,45 @@ class PdfService {
                 padding: const pw.EdgeInsets.all(5),
                 child: pw.Text(
                   "Yanıt / Durum",
+                  style: pw.TextStyle(
+                    font: fontBold,
+                    fontSize: 9,
+                    color: PdfColors.indigo900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        if (maxCols == 3)
+          pw.TableRow(
+            decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
+            children: [
+              pw.Padding(
+                padding: const pw.EdgeInsets.all(5),
+                child: pw.Text(
+                  "Kat/Konum",
+                  style: pw.TextStyle(
+                    font: fontBold,
+                    fontSize: 9,
+                    color: PdfColors.indigo900,
+                  ),
+                ),
+              ),
+              pw.Padding(
+                padding: const pw.EdgeInsets.all(5),
+                child: pw.Text(
+                  "Kullanım Amacı",
+                  style: pw.TextStyle(
+                    font: fontBold,
+                    fontSize: 9,
+                    color: PdfColors.indigo900,
+                  ),
+                ),
+              ),
+              pw.Padding(
+                padding: const pw.EdgeInsets.all(5),
+                child: pw.Text(
+                  "Değerlendirme / Durum",
                   style: pw.TextStyle(
                     font: fontBold,
                     fontSize: 9,

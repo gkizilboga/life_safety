@@ -23,6 +23,7 @@ class Section21Handler {
       'subtitle': subtitle ?? '',
       'report': report,
       'advice': advice ?? '',
+      'isTable': false,
       'status': level != null
           ? ReportStatus.fromRiskLevel(level)
           : ReportStatus.info,

@@ -2688,8 +2688,8 @@ class Bolum24Content {
 class Bolum25Content {
   static final genislikOptionA = ChoiceResult(
     label: "25-1-A",
-    uiTitle: "Genişlik < 100 cm",
-    uiSubtitle: "Merdiven kol genişliği 100 cm'den az.",
+    uiTitle: "100 cm 'den az.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Döner merdiven genişliği 100 cm'den azdır. Yönetmelik gereği döner merdivenlerin kaçış yolu sayılabilmesi için en az 100 cm genişlik şarttır.",
     adviceText:
@@ -2699,10 +2699,10 @@ class Bolum25Content {
 
   static final genislikOptionB = ChoiceResult(
     label: "25-1-B",
-    uiTitle: "Genişlik ≥ 100 cm",
-    uiSubtitle: "Merdiven kol genişliği 100 cm ve üzeri.",
+    uiTitle: "100 cm ve üzeri.",
+    uiSubtitle: "",
     reportText:
-        "OLUMLU: Dairesel (döner) merdiven genişliği 100 cm ve üzerindedir. Kattaki kişi sayısı 25 kişiyi aşmıyorsa döner (dairesel) merdiven kullanılabilir. 25 kişiyi aşıyorsa döner (dairesel) merdiven kullanılamaz. Katlardaki kullanıcı yükü hesabı için bu Uygulamada yapılan hesaplamalar referans alınır.",
+        "OLUMLU: Dairesel (döner) merdiven genişliği 100 cm ve üzerindedir. Merdivenin hizmet ettiği herhangi bir kattaki kişi sayısı 25 kişiyi aşmıyorsa döner (dairesel) merdiven kullanılabilir. 25 kişiyi aşıyorsa bu merdiven tipi kullanılamaz. Katlardaki kullanıcı yükü hesabı için bu Uygulamada yapılan hesaplamalar referans alınabilir.",
     level: RiskLevel.positive,
   );
 

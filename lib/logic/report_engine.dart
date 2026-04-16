@@ -251,39 +251,30 @@ class ReportEngine {
       if (b10 != null) {
         // Zemin kat
         if (b10.zemin != null) {
-          _addDetail(
-            details,
-            label: 'Zemin Katın Kullanım Amacı',
-            value: "${b10.zemin!.uiTitle}\n${b10.zemin!.reportText}",
-            subtitle: b10.zemin!.uiSubtitle,
-            report: '',
-            advice: '',
-          );
+          details.add({
+            'label': 'Zemin Kat',
+            'value': "${b10.zemin!.uiTitle} | ${b10.zemin!.reportText}",
+            'isTable': true,
+          });
         }
         // Bodrum katlar
         if (b10.bodrumlar.isNotEmpty) {
           if (b10.bodrumlarAyni && b10.bodrumlar[0] != null) {
-            _addDetail(
-              details,
-              label: 'Bodrum Kat Kullanım Amacı (Tümü Aynı)',
-              value:
-                  "${b10.bodrumlar[0]!.uiTitle}\n${b10.bodrumlar[0]!.reportText}",
-              subtitle: b10.bodrumlar[0]!.uiSubtitle,
-              report: '',
-              advice: '',
-            );
+            details.add({
+              'label': '1-${b10.bodrumlar.length}. Bodrum Katlar',
+              'value':
+                  "${b10.bodrumlar[0]!.uiTitle} | ${b10.bodrumlar[0]!.reportText}",
+              'isTable': true,
+            });
           } else {
             for (int i = 0; i < b10.bodrumlar.length; i++) {
               if (b10.bodrumlar[i] != null) {
-                _addDetail(
-                  details,
-                  label: '${i + 1}. Bodrum Kat Kullanım Amacı',
-                  value:
-                      "${b10.bodrumlar[i]!.uiTitle}\n${b10.bodrumlar[i]!.reportText}",
-                  subtitle: b10.bodrumlar[i]!.uiSubtitle,
-                  report: '',
-                  advice: '',
-                );
+                details.add({
+                  'label': '${i + 1}. Bodrum Kat',
+                  'value':
+                      "${b10.bodrumlar[i]!.uiTitle} | ${b10.bodrumlar[i]!.reportText}",
+                  'isTable': true,
+                });
               }
             }
           }
@@ -291,27 +282,21 @@ class ReportEngine {
         // Normal katlar
         if (b10.normaller.isNotEmpty) {
           if (b10.normallerAyni && b10.normaller[0] != null) {
-            _addDetail(
-              details,
-              label: 'Normal Kat Kullanım Amacı (Tümü Aynı)',
-              value:
-                  "${b10.normaller[0]!.uiTitle}\n${b10.normaller[0]!.reportText}",
-              subtitle: b10.normaller[0]!.uiSubtitle,
-              report: '',
-              advice: '',
-            );
+            details.add({
+              'label': '1-${b10.normaller.length}. Normal Katlar',
+              'value':
+                  "${b10.normaller[0]!.uiTitle} | ${b10.normaller[0]!.reportText}",
+              'isTable': true,
+            });
           } else {
             for (int i = 0; i < b10.normaller.length; i++) {
               if (b10.normaller[i] != null) {
-                _addDetail(
-                  details,
-                  label: '${i + 1}. Normal Kat Kullanım Amacı',
-                  value:
-                      "${b10.normaller[i]!.uiTitle}\n${b10.normaller[i]!.reportText}",
-                  subtitle: b10.normaller[i]!.uiSubtitle,
-                  report: '',
-                  advice: '',
-                );
+                details.add({
+                  'label': '${i + 1}. Normal Kat',
+                  'value':
+                      "${b10.normaller[i]!.uiTitle} | ${b10.normaller[i]!.reportText}",
+                  'isTable': true,
+                });
               }
             }
           }
