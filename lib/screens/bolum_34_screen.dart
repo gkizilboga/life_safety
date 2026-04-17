@@ -97,12 +97,12 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     setState(() {
       if (type == 'zemin') {
         _model = _model.copyWith(zemin: choice);
-      }
-      if (type == 'bodrum') {
+      } else if (type == 'bodrum') {
         _model = _model.copyWith(bodrum: choice);
-      }
-      if (type == 'normal') {
+      } else if (type == 'normal') {
         _model = _model.copyWith(normal: choice);
+      } else if (type == 'mutfak') {
+        _model = _model.copyWith(mutfakBacasi: choice);
       }
     });
   }
@@ -113,6 +113,10 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     if (_hasBodrumKat && _hasTicariBodrum && _model.bodrum == null)
       return false;
     if (_hasTicariNormal && _model.normal == null) return false;
+
+    // Uzman önerisi: Mutfak bacası sorusu ticari alan varsa her zaman sorulmalı
+    if (_model.mutfakBacasi == null) return false;
+
     return true;
   }
 
@@ -126,6 +130,9 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       }
       if (_hasTicariNormal && _model.normal == null) {
         return _showError("Lütfen normal kat ticari çıkış durumunu seçiniz.");
+      }
+      if (_model.mutfakBacasi == null) {
+        return _showError("Lütfen ticari mutfak bacası durumunu seçiniz.");
       }
     }
 
@@ -209,6 +216,18 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
                       _model.normal,
                     ),
                   ],
+
+                  // --- YENİ SORU: MUTFAK BACASI ---
+                  _buildSoru(
+                    "Ticari işletmelere ait mutfak/davlumbaz bacaları, konut bacalarından tamamen bağımsız ve yangın yalıtımlı bir şaft içinden mi geçiyor?",
+                    'mutfak',
+                    [
+                      Bolum34Content.mutfakBacasiOptionA,
+                      Bolum34Content.mutfakBacasiOptionB,
+                      Bolum34Content.mutfakBacasiOptionC,
+                    ],
+                    _model.mutfakBacasi,
+                  ),
                 ],
               ),
             ),
@@ -277,4 +296,3 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     );
   }
 }
-

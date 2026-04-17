@@ -38,7 +38,7 @@ void main() {
     ReportEngine.getSectionFullReport(36);
     
     print("Testing ReportEngine requirement evaluations...");
-    ReportEngine.evaluateBasincRequirement(store: store);
+    ReportEngine.evaluateBasincRequirementForStairs(store: store);
     ReportEngine.evaluateYghRequirement(store: store);
     
     print("Testing ReportEngine risk levels and scores...");

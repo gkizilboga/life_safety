@@ -5,18 +5,21 @@ class Bolum34Model {
   final ChoiceResult? zemin;
   final ChoiceResult? bodrum;
   final ChoiceResult? normal;
+  final ChoiceResult? mutfakBacasi;
 
-  Bolum34Model({this.zemin, this.bodrum, this.normal});
+  Bolum34Model({this.zemin, this.bodrum, this.normal, this.mutfakBacasi});
 
   Bolum34Model copyWith({
     ChoiceResult? zemin,
     ChoiceResult? bodrum,
     ChoiceResult? normal,
+    ChoiceResult? mutfakBacasi,
   }) {
     return Bolum34Model(
       zemin: zemin ?? this.zemin,
       bodrum: bodrum ?? this.bodrum,
       normal: normal ?? this.normal,
+      mutfakBacasi: mutfakBacasi ?? this.mutfakBacasi,
     );
   }
 
@@ -25,6 +28,7 @@ class Bolum34Model {
       'zemin_label': zemin?.label,
       'bodrum_label': bodrum?.label,
       'normal_label': normal?.label,
+      'mutfak_bacasi_label': mutfakBacasi?.label,
     };
   }
 
@@ -52,6 +56,11 @@ class Bolum34Model {
         Bolum34Content.normalOptionA,
         Bolum34Content.normalOptionB,
         Bolum34Content.normalOptionC,
+      ]),
+      mutfakBacasi: find(map['mutfak_bacasi_label'], [
+        Bolum34Content.mutfakBacasiOptionA,
+        Bolum34Content.mutfakBacasiOptionB,
+        Bolum34Content.mutfakBacasiOptionC,
       ]),
     );
   }

@@ -44,8 +44,8 @@ void main() {
 
         // Kritik risk var mı?
         expect(metrics['criticalCount'] >= 1, true);
-        // Yeni skorlama: 100 - (1 * 4) = 96
-        expect(metrics['score'] <= 96, true);
+        // Yeni skorlama: 100 - (1 * 3) = 97
+        expect(metrics['score'] <= 97, true);
       },
     );
 
@@ -61,7 +61,7 @@ void main() {
         final metrics = ReportEngine.calculateRiskMetrics(store: store);
 
         expect(metrics['criticalCount'] >= 1, true);
-        expect(metrics['score'] <= 96, true);
+        expect(metrics['score'] <= 97, true);
       },
     );
 
@@ -88,8 +88,8 @@ void main() {
 
       // Sahanlıksız merdiven kritik risktir
       expect(metrics['criticalCount'] >= 1, true);
-      // Yeni skorlama: 96
-      expect(metrics['score'] <= 96, true);
+      // Yeni skorlama: 97
+      expect(metrics['score'] <= 97, true);
     });
 
     test(

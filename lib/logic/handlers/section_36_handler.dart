@@ -194,14 +194,14 @@ class Section36Handler {
         analysisParts.add(msg);
       } else if (mainMesafeUnknown || bodrumMesafeUnknown) {
         analysisParts.add(
-          "UYARI: Çıkış katı tahliye mesafesi kullanıcı tarafından beyan edilmediği için %50 kuralına göre herhangi bir değerlendirme yapılamamıştır. Bu konu, yangın anında can güvenliğini doğrudan etkileyen kritik bir konudur.",
+          "UYARI: Çıkış katı tahliye mesafesi kullanıcı tarafından beyan edilmediği için Yönetmelik Madde 41 'de yer alan %50 kuralına göre herhangi bir değerlendirme yapılamamıştır. Bu konu, yangın anında can güvenliğini doğrudan etkileyen kritik bir konudur.",
         );
       } else if ((totalMain > 0 &&
               b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-A") ||
           (totalBod > 0 &&
               b20.bodrumLobiTahliyeMesafeDurumu?.label == "41-MESAFE-A")) {
         analysisParts.add(
-          "OLUMLU: Çıkış katı tahliye (koşu) mesafelerinin Yönetmelik limitleri ($limit m) içerisinde oldukları tespit edilmiştir.",
+          "OLUMLU: Doğrudan dışarıya açılmayan merdivenlerin, çıkış katındaki tahliye mesafelerinin Yönetmelik kriteri ($limit m) içerisinde oldukları tespit edilmiştir.",
         );
       }
 
@@ -281,7 +281,7 @@ class Section36Handler {
                 "hizmet ettiği katlardan birinin kullanıcı yükü bakımından 25 kişiyi aşması ($loadForSpiral)",
               );
             analysisParts.add(
-              "KRİTİK RİSK: Dairesel merdivenin ${reasons.join(" VE ")} sebebiyle Yönetmelik kriterlerini sağlamamaktadır, bu nedenle mevcuttaki dairesel merdiven kaçış yolu olarak kullanılamaz. Binada mutlaka alternatif kaçış merdiveni veya güzergahları bulunmalıdır.",
+              "KRİTİK RİSK: Dairesel merdivenin ${reasons.join(" VE ")} sebebiyle Yönetmelik kriterlerini sağlamamaktadır, bu nedenle mevcuttaki dairesel merdiven kaçış yolu olarak kullanılamaz.",
             );
           }
         }
@@ -517,8 +517,8 @@ class Section36Handler {
         status: fullEval.contains("KRİTİK RİSK")
             ? ReportStatus.risk
             : (fullEval.contains("UYARI")
-                ? ReportStatus.warning
-                : ReportStatus.compliant),
+                  ? ReportStatus.warning
+                  : ReportStatus.compliant),
       );
 
       // 3. Özel Durumlar ve Beyanlar
@@ -534,8 +534,8 @@ class Section36Handler {
           status: cikisKati.level == RiskLevel.critical
               ? ReportStatus.risk
               : (cikisKati.level == RiskLevel.positive
-                  ? ReportStatus.compliant
-                  : ReportStatus.warning),
+                    ? ReportStatus.compliant
+                    : ReportStatus.warning),
         );
 
       final disMerd = b36.disMerd;
@@ -550,8 +550,8 @@ class Section36Handler {
           status: disMerd.level == RiskLevel.critical
               ? ReportStatus.risk
               : (disMerd.level == RiskLevel.positive
-                  ? ReportStatus.compliant
-                  : ReportStatus.warning),
+                    ? ReportStatus.compliant
+                    : ReportStatus.warning),
         );
 
       // Madde 41 Tahliye Mesafesi (Lobi) - Merkezi raporlama (Bölüm 20 yerine burada)
@@ -575,8 +575,8 @@ class Section36Handler {
             status: lobi.level == RiskLevel.critical
                 ? ReportStatus.risk
                 : (lobi.level == RiskLevel.positive
-                    ? ReportStatus.compliant
-                    : ReportStatus.warning),
+                      ? ReportStatus.compliant
+                      : ReportStatus.warning),
           );
         }
 
@@ -584,7 +584,8 @@ class Section36Handler {
         if (b20.isBodrumIndependent && bodLobi != null) {
           _addDetail(
             details,
-            label: 'Bodrum Kat: Çıkış katındaki tahliye (lobi) mesafesi uygun mu?',
+            label:
+                'Bodrum Kat: Çıkış katındaki tahliye (lobi) mesafesi uygun mu?',
             value: replaceLobbyLimit(bodLobi.uiTitle),
             subtitle: replaceLobbyLimit(bodLobi.uiSubtitle),
             report: replaceLobbyLimit(bodLobi.reportText),
@@ -592,8 +593,8 @@ class Section36Handler {
             status: bodLobi.level == RiskLevel.critical
                 ? ReportStatus.risk
                 : (bodLobi.level == RiskLevel.positive
-                    ? ReportStatus.compliant
-                    : ReportStatus.warning),
+                      ? ReportStatus.compliant
+                      : ReportStatus.warning),
           );
         }
       }
@@ -610,8 +611,8 @@ class Section36Handler {
           status: konum.level == RiskLevel.critical
               ? ReportStatus.risk
               : (konum.level == RiskLevel.positive
-                  ? ReportStatus.compliant
-                  : ReportStatus.warning),
+                    ? ReportStatus.compliant
+                    : ReportStatus.warning),
         );
 
       final kapiTipi = b36.kapiTipi;
@@ -626,8 +627,8 @@ class Section36Handler {
           status: kapiTipi.level == RiskLevel.critical
               ? ReportStatus.risk
               : (kapiTipi.level == RiskLevel.positive
-                  ? ReportStatus.compliant
-                  : ReportStatus.warning),
+                    ? ReportStatus.compliant
+                    : ReportStatus.warning),
         );
 
       final b4 = _store.bolum4;

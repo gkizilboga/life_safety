@@ -504,7 +504,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         _buildMenuTile(
           Icons.menu_book_outlined,
-          "Mevzuatlar",
+          "Mevzuat",
           "",
           () => Navigator.push(
             context,
@@ -595,9 +595,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F8E9), // Softer Mint Green
+        color: const Color(0xFFE8F5E9), // Slightly more pronounced soft green
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.green.shade100, width: 1),
+        border: Border.all(color: Colors.green.shade200, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -622,7 +622,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Uzman Desteği Alın",
+                      "Uzman Desteği",
                       style: TextStyle(
                         color: Colors.green.shade900,
                         fontWeight: FontWeight.bold,

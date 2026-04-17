@@ -183,15 +183,6 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               ),
             ),
 
-            if (_model.mantolama?.label ==
-                    Bolum16Content.mantolamaOptionA.label &&
-                _hBina > 28.50) ...[
-              const CustomInfoNote(
-                type: InfoNoteType.danger,
-                text:
-                    "DİKKAT: Bina yüksekliğiniz 28.50 metrenin üzerinde olduğu için dış cephede EPS, XPS veya Strafor gibi yanıcı malzemelerin kullanımı Yönetmelik gereği KESİNLİKLE YASAKTIR. Bu durum raporunuzda KRİTİK RİSK olarak işaretlenecektir.",
-              ),
-            ],
 
             if (_model.mantolama?.label ==
                     Bolum16Content.mantolamaOptionA.label &&

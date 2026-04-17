@@ -1186,9 +1186,10 @@ class BinaStore {
           reportText: "Zemin ve bodrum kat çıkış karakteristikleri.",
           adviceText: _joinAdvice([
             _bolum34!.zemin,
-            _bolum34!.bodrum,
-            _bolum34!.normal,
-          ]),
+             _bolum34!.bodrum,
+             _bolum34!.normal,
+             _bolum34!.mutfakBacasi,
+           ]),
         );
       case 35:
         if (_bolum35 == null) return null;

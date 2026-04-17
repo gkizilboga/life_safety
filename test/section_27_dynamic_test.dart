@@ -97,15 +97,15 @@ void main() {
       expect(yonDetail['report'], contains('OLUMLU'));
     });
 
-    test('Scoring Integration - Critical risk should penalize score by 5 points', () {
+    test('Scoring Integration - Critical risk should penalize score by 3 points', () {
       store.bolum33 = Bolum33Model(yukZemin: 60, yukNormal: 30, yukBodrum: 20);
       store.bolum27 = Bolum27Model(yon: [Bolum27Content.yonOptionB]);
       store.bolum36 = Bolum36Model(); // Completion 100%
 
       final metrics = ReportEngine.calculateRiskMetrics(store: store);
-      // Base score 100 - 5 (critical risk from Section 27) = 95
+      // Base score 100 - 3 (critical risk from Section 27) = 97
       expect(metrics['criticalCount'], greaterThanOrEqualTo(1));
-      expect(metrics['score'], lessThanOrEqualTo(96));
+      expect(metrics['score'], lessThanOrEqualTo(97));
     });
   }
 );

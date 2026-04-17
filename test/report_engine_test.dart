@@ -134,7 +134,7 @@ void main() {
   group('Basınçlandırma Zorunluluk Kriterleri Testleri', () {
     test('Kriter 1: hYapi >= 51.50m ise basınçlandırma zorunlu olmalı', () {
       store.bolum3 = Bolum3Model(hYapi: 55.0, bodrumKatSayisi: 0);
-      final reasons = ReportEngine.evaluateBasincRequirement(store: store);
+      final reasons = ReportEngine.evaluateBasincRequirementForStairs(store: store);
       expect(reasons.any((r) => r.contains("51.50m")), true);
       expect(reasons.any((r) => r.contains("KRİTİK RİSK")), true);
     });
@@ -144,22 +144,22 @@ void main() {
       store.bolum21 = Bolum21Model(
         varlik: ChoiceResult(label: "21-1-B", uiTitle: "Yok", uiSubtitle: "", reportText: ""),
       );
-      final reasons = ReportEngine.evaluateBasincRequirement(store: store);
+      final reasons = ReportEngine.evaluateBasincRequirementForStairs(store: store);
       expect(reasons.any((r) => r.contains("30.50m üzeri")), true);
       expect(reasons.any((r) => r.contains("YGH")), true);
     });
 
-    test('Kriter 3: İtfaiye asansörü (22-6-A) varsa basınçlandırma zorunlu olmalı', () {
+    test('Kriter 3: İtfaiye asansörü varsa basınçlandırma zorunlu veya gereksinim olmalı', () {
       store.bolum22 = Bolum22Model(
-        varlik: ChoiceResult(label: "22-6-A", uiTitle: "", uiSubtitle: "", reportText: ""),
+        varlik: ChoiceResult(label: "22-1-B", uiTitle: "", uiSubtitle: "", reportText: ""),
       );
-      final reasons = ReportEngine.evaluateBasincRequirement(store: store);
+      final reasons = ReportEngine.evaluateBasincRequirementForFiremanElevator(store: store);
       expect(reasons.any((r) => r.contains("İtfaiye asansörü")), true);
     });
 
     test('Kriter 4: Bodrum kat sayısı > 4 ise basınçlandırma zorunlu olmalı', () {
       store.bolum3 = Bolum3Model(bodrumKatSayisi: 5, hYapi: 10.0);
-      final reasons = ReportEngine.evaluateBasincRequirement(store: store);
+      final reasons = ReportEngine.evaluateBasincRequirementForStairs(store: store);
       expect(reasons.any((r) => r.contains("Bodrum kat sayısı 4'ten fazla")), true);
     });
   });

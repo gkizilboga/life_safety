@@ -414,61 +414,85 @@ class PdfService {
     processed = processed.replaceAll(RegExp(r'\([^)]*\)'), '').trim();
     processed = processed.replaceAll(RegExp(r'\s{2,}'), ' ').trim();
 
-    // 3. Aksiyon Bildiren Kelimelerle Değiştir
-    processed = processed.replaceAll(
-      "uygun değildir.",
-      "yönetmelik esaslarına uygun hale getirilmelidir.",
-    );
-    processed = processed.replaceAll(
-      "uygun değildir",
-      "yönetmelik esaslarına uygun hale getirilmelidir",
-    );
-    processed = processed.replaceAll(
-      "bulunmamaktadır.",
-      "ilave edilmeli/tesis edilmelidir.",
-    );
-    processed = processed.replaceAll(
-      "bulunmamaktadır",
-      "ilave edilmeli/tesis edilmelidir",
-    );
-    processed = processed.replaceAll(
-      "tespit edilmiştir.",
-      "ilgili durum düzeltilmelidir.",
-    );
-    processed = processed.replaceAll(
-      "tespit edilmiştir",
-      "ilgili durum düzeltilmelidir",
-    );
-    processed = processed.replaceAll(
-      "ihlal edilmiştir.",
-      "ihlali giderilmeli, asgari yönetmelik sınırları sağlanmalıdır.",
-    );
-    processed = processed.replaceAll(
-      "ihlal edilmiştir",
-      "ihlali giderilmeli, asgari yönetmelik sınırları sağlanmalıdır",
-    );
-    processed = processed.replaceAll(
-      "kullanılamaz.",
-      "kullanılamaz, uygun alternatif bir kaçış rotası sağlanmalıdır.",
-    );
-    processed = processed.replaceAll(
-      "kullanılamaz",
-      "kullanılamaz, uygun alternatif bir kaçış rotası sağlanmalıdır",
-    );
-    processed = processed.replaceAll(
-      "taşımamaktadır.",
-      "taşıyacak şekilde modernize edilmelidir.",
-    );
-    processed = processed.replaceAll(
-      "taşımamaktadır",
-      "taşıyacak şekilde modernize edilmelidir",
-    );
+    // 3. Orijinal cümleyi koru, AI tarafından eklenen "uygun hale getirilmelidir" gibi yapıları siliyoruz (kullanıcı isteği)
+    
+    // 4. Yasaklı kelimeleri ve gereksiz etiketleri temizle
+    processed = _scrubForbiddenKeywords(processed);
 
-    if (!processed.endsWith('.') && !processed.endsWith(':')) {
+    // 5. Daha kısa ve öz olması için yalnızca İLK CÜMLEYİ al (Noktadan böl, ama 51.5 gibi sayıları bozma)
+    // Regex: Nokta ve ardından gelen boşluk (veya metin sonu) üzerinden böl.
+    final sentenceParts = processed.split(RegExp(r'\.(?=\s|$)'));
+    if (sentenceParts.isNotEmpty) {
+      processed = sentenceParts.first.trim();
+    }
+
+    if (processed.isNotEmpty &&
+        !processed.endsWith('.') &&
+        !processed.endsWith(':')) {
       processed += '.';
     }
 
     return processed;
+  }
+
+  /// Yönetici Özeti ve Eylem Planı için 'çirkin' duran kelimeleri temizler.
+  static String _scrubForbiddenKeywords(String text) {
+    if (text.isEmpty) return "";
+    String cleaned = text;
+
+    // A. Önce Etiketleri ve Prefixes temizle (Satır başı veya DURUM: sonrası)
+    final labelsToScrub = [
+      'KRİTİK RİSK:',
+      'KRİTİK RİSK',
+      'UYARI:',
+      'UYARI',
+      'BİLİNMİYOR:',
+      'BİLİNMİYOR',
+      'BİLGİ:',
+      'BİLGİ',
+      'OLUMLU:',
+      'OLUMLU',
+      'DURUM:',
+      'NEDEN:',
+    ];
+
+    for (var label in labelsToScrub) {
+      cleaned = cleaned.replaceAll(
+        RegExp('^$label\\s*', multiLine: true, caseSensitive: false),
+        '',
+      );
+    }
+
+    // B. Cümle içerisindeki yasaklı kelimeleri temizle veya yumuşat
+    // zorunludur/şarttır -> "yapılmalıdır/gereklidir" dönüşümü yerine kullanıcı "kaldıralım" dediği için
+    // anlamı bozmadan temizliyoruz.
+    final wordsToRemove = [
+      r'zorunlu\s+değildir',
+      r'şart\s+değildir',
+      r'zorunludur',
+      r'şarttır',
+      r'kritik\s+risk',
+      r'uyarı',
+      r'bilinmiyor',
+      r'olumlu',
+      r'bilgi',
+      r'vs\.',
+      r'vesaire',
+    ];
+
+    for (var word in wordsToRemove) {
+      // Kelimeyi ve varsa sonundaki noktayı/virgülü de temizle
+      cleaned = cleaned.replaceAll(
+        RegExp('\\s*\\b$word[.?,;]?', caseSensitive: false),
+        '',
+      );
+    }
+
+    // C. Artık kalan boşlukları ve çift noktaları temizle
+    cleaned = cleaned.replaceAll(RegExp(r'\s{2,}'), ' ');
+    cleaned = cleaned.replaceAll(RegExp(r'\.\s*\.'), '.');
+
+    return cleaned.trim();
   }
 
   static List<pw.Page> _buildExecutiveSummaryPage({
@@ -484,7 +508,7 @@ class PdfService {
       if ([3, 5, 6, 7, 10, 12, 21, 36].contains(id)) {
         final fullReport = ReportEngine.getSectionFullReport(id, store: store);
         final riskColor = _getRiskColor(fullReport);
-        if (riskColor == PdfColors.red700 || riskColor == PdfColors.yellow700) {
+        if (riskColor == PdfColors.red700) {
           String act = _convertToActionableText(fullReport);
           if (!actionItems.contains(act)) actionItems.add(act);
         }
@@ -492,7 +516,7 @@ class PdfService {
         final details = ReportEngine.getSectionDetailedReport(id, store: store);
         for (final item in details) {
           final status = item['status'] as ReportStatus? ?? ReportStatus.info;
-          if (status == ReportStatus.risk || status == ReportStatus.warning) {
+          if (status == ReportStatus.risk) {
             String actText = _convertToActionableText(
               (item['report'] ?? '').toString(),
             );
@@ -506,7 +530,7 @@ class PdfService {
 
     if (actionItems.isEmpty) {
       actionItems.add(
-        "Binada tespit edilmiş acil aksiyon gerektiren kritik bir ihlal veya uyarı bulunmamaktadır.",
+        "Binada tespit edilmiş acil aksiyon gerektiren herhangi bir eksiklik veya aykırılık bulunmamaktadır.",
       );
     }
 
@@ -539,7 +563,7 @@ class PdfService {
               children: [
                 pw.TextSpan(
                   text:
-                      "Bu bina, güncel Binaların Yangından Korunması Hakkında Yönetmelik kriterlerine göre genel hatlarıyla ",
+                      "Bu bina, güncel Binaların Yangından Korunması Hakkında Yönetmelik kriterlerine göre ",
                 ),
                 pw.TextSpan(
                   text: "[$riskText]",
@@ -547,7 +571,7 @@ class PdfService {
                 ),
                 pw.TextSpan(
                   text:
-                      " kategorisinde değerlendirilmiştir. Can ve mal güvenliğini asgari düzeyde sağlayabilmek adına, aşağıdaki listede yer alan yapısal/mimari tespitlerin ivedilikle giderilmesi veya ilgili eksikliklerle ilgili aksiyon alınması şiddetle önerilmektedir:",
+                      " kategorisinde değerlendirilmiştir. Aşağıda binada tespit edilen ve eylem planı çerçevesinde incelenmesi gereken kritik bulgular yer almaktadır:",
                 ),
               ],
             ),
@@ -999,7 +1023,7 @@ class PdfService {
                     item,
                     ttf,
                     ttfBold,
-                    riskColor: (id <= 10)
+                    riskColor: (id <= 10 || id == 14)
                         ? PdfColors.blue700
                         : _getRiskColor(item['report'] ?? ''),
                     isLast: item == details.last,
@@ -1078,7 +1102,7 @@ class PdfService {
                       item,
                       ttf,
                       ttfBold,
-                      riskColor: (id <= 10)
+                      riskColor: (id <= 10 || id == 14)
                           ? PdfColors.blue700
                           : _getRiskColor(item['report'] ?? ''),
                       isLast: isLast,

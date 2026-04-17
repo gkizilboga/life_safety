@@ -116,11 +116,18 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
             ),
           ),
           const SizedBox(height: 8),
-          _buildSoru("Merdiven kol genişliği nedir?", 'genislik', [
-            Bolum25Content.genislikOptionA,
-            Bolum25Content.genislikOptionB,
-            Bolum25Content.genislikOptionC,
-          ], _model.genislik),
+          _buildSoru(
+            "Merdiven kol genişliği nedir?",
+            'genislik',
+            [
+              Bolum25Content.genislikOptionA,
+              Bolum25Content.genislikOptionB,
+              Bolum25Content.genislikOptionC,
+            ],
+            _model.genislik,
+            imageAssetPath: "assets/images/info/doner_genislik.webp",
+            imageTitle: "Dairesel merdiven kol genişliği",
+          ),
           _buildSoru("Basamak genişliği nedir?", 'basamak', [
             Bolum25Content.basamakOptionA,
             Bolum25Content.basamakOptionB,
@@ -164,13 +171,22 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
     String title,
     String key,
     List<ChoiceResult> options,
-    ChoiceResult? selected,
-  ) {
+    ChoiceResult? selected, {
+    String? imageAssetPath,
+    String? imageTitle,
+  }) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle),
+          if (imageAssetPath != null)
+            QuestionHeaderWithImage(
+              questionText: title,
+              imageAssetPath: imageAssetPath,
+              imageTitle: imageTitle ?? title,
+            )
+          else
+            Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(

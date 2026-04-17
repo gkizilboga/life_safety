@@ -921,14 +921,14 @@ class ReportEngine {
           store: s,
         );
         if (basincReasons.isNotEmpty) {
-          final bool isMet = basincReasons.any((r) => r.startsWith("OLUMLU"));
+          final bool isMet = basincReasons.every((r) => r.startsWith("OLUMLU"));
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi Gereksinimi (İtfaiye Asansörü)',
             value: '',
             report:
                 'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ:\n${basincReasons.join('\n')}',
-            level: isMet ? RiskLevel.info : RiskLevel.critical,
+            level: isMet ? RiskLevel.positive : RiskLevel.critical,
           );
         }
 
@@ -1009,14 +1009,14 @@ class ReportEngine {
           store: s,
         );
         if (basincReasons.isNotEmpty) {
-          final bool isMet = basincReasons.any((r) => r.startsWith("OLUMLU"));
+          final bool isMet = basincReasons.every((r) => r.startsWith("OLUMLU"));
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi Gereksinimi (Normal Asansör)',
             value: '',
             report:
-                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "UYARI"}\n\nBİLGİ:\n${basincReasons.join('\n')}',
-            level: isMet ? RiskLevel.info : RiskLevel.warning,
+                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ:\n${basincReasons.join('\n')}',
+            level: isMet ? RiskLevel.positive : RiskLevel.critical,
           );
         }
 
@@ -1069,7 +1069,7 @@ class ReportEngine {
         if (b25.genislik != null)
           _addDetail(
             details,
-            label: 'Merdiven kol genişliği yeterli mi?',
+            label: 'Merdiven kol genişliği nedir?',
             value: b25.genislik!.uiTitle,
             subtitle: b25.genislik!.uiSubtitle,
             report: b25.genislik!.reportText,
@@ -1079,7 +1079,7 @@ class ReportEngine {
         if (b25.basamak != null)
           _addDetail(
             details,
-            label: 'Basamak genişliği yeterli mi?',
+            label: 'Basamak genişliği nedir?',
             value: b25.basamak!.uiTitle,
             subtitle: b25.basamak!.uiSubtitle,
             report: b25.basamak!.reportText,
@@ -1089,7 +1089,7 @@ class ReportEngine {
         if (b25.basKurtarma != null)
           _addDetail(
             details,
-            label: 'Baş kurtarma yüksekliği yeterli mi?',
+            label: 'Baş kurtarma yüksekliği nedir?',
             value: b25.basKurtarma!.uiTitle,
             subtitle: b25.basKurtarma!.uiSubtitle,
             report: b25.basKurtarma!.reportText,
@@ -1100,7 +1100,7 @@ class ReportEngine {
           _addDetail(
             details,
             label:
-                'Kaçış yolu olarak kullanılacak döner merdiven yüksekliği nedir?',
+                'Dairesel merdivenin (bina boyunca) toplam yüksekliği nedir?',
             value: b25.yukseklik!.uiTitle,
             subtitle: b25.yukseklik!.uiSubtitle,
             report: b25.yukseklik!.reportText,
@@ -1214,13 +1214,14 @@ class ReportEngine {
         // Dinamik Basınçlandırma Analizi (Sadece PDF/Detaylı için)
         final basincReasons = evaluateBasincRequirementForStairs(store: s);
         if (basincReasons.isNotEmpty) {
+          final bool isMet = basincReasons.every((r) => r.startsWith("OLUMLU"));
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi Gereksinimi (Kaçış Merdivenleri)',
             value: '', // Don't show as a user response
             report:
-                'DURUM: ZORUNLU\n\nBİLGİ: Bina verilerine göre kaçış merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join('\n')}',
-            level: RiskLevel.critical,
+                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ: Bina verilerine göre kaçış merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join('\n')}',
+            level: isMet ? RiskLevel.positive : RiskLevel.critical,
           );
         } else if (b20.basinclandirma != null) {
           // Sadece kullanıcıya sorulduysa (kapalı merdiven varsa) "Şart Değil" bilgisini ekle
@@ -2419,11 +2420,9 @@ class ReportEngine {
 
       // Dinamik YGH Analizi (Puanlamaya dahil et)
       final yghReasons = evaluateYghRequirement(store: s);
-      for (var reason in yghReasons) {
-        if (reason.startsWith("KRİTİK RİSK"))
-          addLevel(RiskLevel.critical);
-        else if (reason.startsWith("UYARI"))
-          addLevel(RiskLevel.warning);
+      final bool hasYgh = b21.varlik?.label.contains("21-1-A") == true;
+      if (yghReasons.isNotEmpty && !hasYgh) {
+        addLevel(RiskLevel.critical);
       }
     }
 
@@ -2579,6 +2578,7 @@ class ReportEngine {
       add(b34.zemin);
       add(b34.bodrum);
       add(b34.normal);
+      add(b34.mutfakBacasi);
     }
 
     // --- BÖLÜM 35 (Mesafeler) ---
@@ -3080,6 +3080,7 @@ class ReportEngine {
         if (b34.zemin != null) parts.add(b34.zemin!.reportText);
         if (b34.bodrum != null) parts.add(b34.bodrum!.reportText);
         if (b34.normal != null) parts.add(b34.normal!.reportText);
+        if (b34.mutfakBacasi != null) parts.add(b34.mutfakBacasi!.reportText);
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }
@@ -3243,7 +3244,7 @@ class ReportEngine {
       if (b13.kazanKapi != null) {
         _addDetail(
           details,
-          label: 'Kazan dairesinin duvarları ve kapısı nasıl?',
+          label: 'Kazan dairesinin duvarları ve kapısı yangın dayanımlı mı?',
           value: b13.kazanKapi!.uiTitle,
           subtitle: b13.kazanKapi!.uiSubtitle,
           report: b13.kazanKapi!.reportText,
@@ -3270,7 +3271,7 @@ class ReportEngine {
 
         _addDetail(
           details,
-          label: 'Asansör kapısı nasıldır?',
+          label: 'Asansör kapısı yangın dayanımlı mı?',
           value: b13.asansorKapi!.uiTitle,
           subtitle: b13.asansorKapi!.uiSubtitle,
           report: filteredReport,
@@ -3281,7 +3282,7 @@ class ReportEngine {
       if (b13.jeneratorKapi != null) {
         _addDetail(
           details,
-          label: 'Jeneratör odasının duvar ve kapısı nasıl?',
+          label: 'Jeneratör odasının duvarı ve kapısı yangın dayanımlı mı?',
           value: b13.jeneratorKapi!.uiTitle,
           subtitle: b13.jeneratorKapi!.uiSubtitle,
           report: b13.jeneratorKapi!.reportText,
@@ -3292,7 +3293,7 @@ class ReportEngine {
       if (b13.elektrikKapi != null) {
         _addDetail(
           details,
-          label: 'Elektrik odasının duvarı ve kapısı nasıl?',
+          label: 'Elektrik odasının duvarı ve kapısı yangın dayanımlı mı?',
           value: b13.elektrikKapi!.uiTitle,
           subtitle: b13.elektrikKapi!.uiSubtitle,
           report: b13.elektrikKapi!.reportText,
@@ -3303,7 +3304,7 @@ class ReportEngine {
       if (b13.trafoKapi != null) {
         _addDetail(
           details,
-          label: 'Trafo odasının kapısı nasıl?',
+          label: 'Trafo odasının duvarı ve kapısı yangın dayanımlı mı?',
           value: b13.trafoKapi!.uiTitle,
           subtitle: b13.trafoKapi!.uiSubtitle,
           report: b13.trafoKapi!.reportText,
@@ -3314,7 +3315,7 @@ class ReportEngine {
       if (b13.depoKapi != null) {
         _addDetail(
           details,
-          label: 'Eşya deposunun kapısı nasıl?',
+          label: 'Eşya deposunun duvarı ve kapısı yangın dayanımlı mı?',
           value: b13.depoKapi!.uiTitle,
           subtitle: b13.depoKapi!.uiSubtitle,
           report: b13.depoKapi!.reportText,
@@ -3325,7 +3326,7 @@ class ReportEngine {
       if (b13.copKapi != null) {
         _addDetail(
           details,
-          label: 'Çöp toplama odasının kapısı nasıl?',
+          label: 'Çöp toplama odasının duvarı ve kapısı yangın dayanımlı mı?',
           value: b13.copKapi!.uiTitle,
           subtitle: b13.copKapi!.uiSubtitle,
           report: b13.copKapi!.reportText,
@@ -3347,12 +3348,25 @@ class ReportEngine {
       if (b13.ticariKapi != null) {
         _addDetail(
           details,
-          label: 'Ticari alanlardan konut merdivenine geçiş nasıl?',
+          label:
+              'Ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
           value: b13.ticariKapi!.uiTitle,
           subtitle: b13.ticariKapi!.uiSubtitle,
           report: b13.ticariKapi!.reportText,
           advice: b13.ticariKapi!.adviceText,
           level: b13.ticariKapi!.level,
+        );
+      }
+      if (b13.endustriyelMutfakKapi != null) {
+        _addDetail(
+          details,
+          label:
+              'Büyük restoran mutfağının kapısı ve duvarları yangın dayanımlı mı?',
+          value: b13.endustriyelMutfakKapi!.uiTitle,
+          subtitle: b13.endustriyelMutfakKapi!.uiSubtitle,
+          report: b13.endustriyelMutfakKapi!.reportText,
+          advice: b13.endustriyelMutfakKapi!.adviceText,
+          level: b13.endustriyelMutfakKapi!.level,
         );
       }
     }
@@ -3503,7 +3517,11 @@ class ReportEngine {
     List<String> reasons = [];
     final b23 = s.bolum23;
 
-    if (b23?.havalandirma?.label.contains("23-5-B") == true) {
+    final bool noVent =
+        b23?.havalandirma?.label.contains("23-5-B") == true ||
+        b23?.havalandirma?.label.contains("23-5-C") == true;
+
+    if (noVent) {
       final bool isAlreadyPressurized =
           b23?.basinc?.label.contains("23-6-A") == true;
       if (!isAlreadyPressurized) {

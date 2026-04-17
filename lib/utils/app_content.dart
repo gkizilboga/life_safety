@@ -2099,7 +2099,7 @@ class Bolum20Content {
 
   static final madde41MesafeAltinda = ChoiceResult(
     label: "41-MESAFE-A",
-    uiTitle: "[LIMIT] metrenin altında (veya doğrudan çıkış).",
+    uiTitle: "[LIMIT] metrenin altında.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Çıkış katındaki tahliye mesafesi Yönetmelik limit değerinin ([LIMIT] m) altındadır.",
@@ -4158,6 +4158,36 @@ class Bolum34Content {
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Normal katlardaki ticari alanların çıkış durumu bilinmiyor. Uzman görüşü alınması tavsiye edilir.",
+    level: RiskLevel.unknown,
+  );
+
+  // --- YENİ SORU: MUTFAK BACASI ---
+  static final mutfakBacasiOptionA = ChoiceResult(
+    label: "34-4-A (Mutfak Bacası)",
+    uiTitle: "Tamamen bağımsız ve korunumlu şaft içerisinden geçiyor.",
+    uiSubtitle: "",
+    reportText:
+        "OLUMLU: Ticari işletmenin bacaları konutlardan tamamen izole ve bağımsız bir şekilde tasarlanmıştır. Ticari işletmelerin şaftlarında gerekli önlemler alındıysa konut tarafı için büyük risk teşkil etmeyebilir ancak yine de yerinde kontrol edilmeleri önerilir.",
+    level: RiskLevel.positive,
+  );
+
+  static final mutfakBacasiOptionB = ChoiceResult(
+    label: "34-4-B (Mutfak Bacası)",
+    uiTitle: "Konutlarla ortak şaft kullanıyor.",
+    uiSubtitle: "",
+    reportText:
+        "KRİTİK RİSK: Ticari işletme bacaları konut alanları ile aynı şaftı kullanmakta olduğu beyan edilmiştir. Şaftlarda yeterince önlem alınmadıysa mutfak yangınında alevlerin ve dumanın tüm binaya yayılma riski yüksektir.",
+    adviceText:
+        "Ticari mutfak bacaları binanın diğer hacimlerinden en az 120 dakika yangına dayanıklı bir şaft içine alınmalı veya binadan tamamen bağımsız bir güzergah (dış cephe vb.) üzerinden, konut pencerelerinden uzak şekilde tahliye edilmelidir. Konunun detaylı analizi için yerinde inceleme yaptırılması önerilir.",
+    level: RiskLevel.critical,
+  );
+
+  static final mutfakBacasiOptionC = ChoiceResult(
+    label: "34-4-C (Mutfak Bacası)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: Ticari mutfak/davlumbaz bacalarının güzergahı ve şaftların yangın yalıtım durumu bilinmemektedir. Konuyla ilgili Uzman tarafından yerinde inceleme yapılması önerilir. Ticari işletmelerin bacalarında yağ birikmesi nedeniyle yüksek yangın riski bulunmakta olup, konut tarafına sıçrama durumunun araştırılması gerekir.",
     level: RiskLevel.unknown,
   );
 }

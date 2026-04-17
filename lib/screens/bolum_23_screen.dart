@@ -51,8 +51,9 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
       if (type == 'levha') _model = _model.copyWith(levha: choice);
       if (type == 'havalandirma') {
         _model = _model.copyWith(havalandirma: choice);
-        // Havalandırma yok ("23-5-B") harici bir şeye geçersek basıncı sıfırla ki kafa karıştırmasın
-        if (choice.label != Bolum23Content.havalandirmaOptionB.label) {
+        // Havalandırma yok ("23-5-B") veya Bilmiyorum ("23-5-C") harici bir şeye geçersek basıncı sıfırla
+        if (choice.label != Bolum23Content.havalandirmaOptionB.label &&
+            choice.label != Bolum23Content.havalandirmaOptionC.label) {
           _model = _model.copyWith(basinc: null);
         }
       }
@@ -75,7 +76,8 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
     if (_model.konum == null) return false;
     if (_model.levha == null) return false;
     if (_model.havalandirma == null) return false;
-    if (_model.havalandirma?.label == Bolum23Content.havalandirmaOptionB.label) {
+    if (_model.havalandirma?.label == Bolum23Content.havalandirmaOptionB.label ||
+        _model.havalandirma?.label == Bolum23Content.havalandirmaOptionC.label) {
       if (_model.basinc == null) return false;
     }
     return true;
@@ -154,7 +156,8 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
             _model.havalandirma,
           ),
 
-          if (_model.havalandirma?.label == Bolum23Content.havalandirmaOptionB.label)
+          if (_model.havalandirma?.label == Bolum23Content.havalandirmaOptionB.label ||
+              _model.havalandirma?.label == Bolum23Content.havalandirmaOptionC.label)
             _buildSoru(
               "Normal asansör kuyusunda basınçlandırma sistemi var mı?",
               'basinc',
