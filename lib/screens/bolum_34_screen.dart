@@ -158,10 +158,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     return Scaffold(
       body: Column(
         children: [
-          ModernHeader(
-            title: "Ticari Alanlar",
-            screenType: widget.runtimeType,
-          ),
+          ModernHeader(title: "Ticari Alanlar", screenType: widget.runtimeType),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
@@ -219,7 +216,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
 
                   // --- YENİ SORU: MUTFAK BACASI ---
                   _buildSoru(
-                    "Ticari işletmelere ait mutfak/davlumbaz bacaları, konut bacalarından tamamen bağımsız ve yangın yalıtımlı bir şaft içinden mi geçiyor?",
+                    "Ticari işletmelere ait mutfak/davlumbaz bacaları, konut bacalarından tamamen bağımsız ve korunumlu bir şaft içinden mi geçiyor?",
                     'mutfak',
                     [
                       Bolum34Content.mutfakBacasiOptionA,
