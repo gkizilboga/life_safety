@@ -249,7 +249,7 @@ class Bolum6Content {
     uiTitle: "Hayır, yok.",
     uiSubtitle: "",
     reportText:
-        "Binanın ticari alanında büyük restoran (endüstriyel mutfak) bulunmamaktadır. Ekstra önlem alınmasına gerek yoktur.",
+        "BİLGİ: Binanın ticari alanında büyük restoran (endüstriyel mutfak) bulunmamaktadır. Ekstra önlem alınmasına gerek yoktur.",
     level: RiskLevel.info,
   );
 
@@ -271,8 +271,8 @@ class Bolum7Content {
     label: "7-1 (Otopark)",
     uiTitle: "Kapalı Otopark",
     uiSubtitle: "(Sistem tarafından otomatik işaretlendi)",
-    reportText: "Bölüm 6'dan gelen bilgiye göre rapora eklenmiştir.",
-    level: RiskLevel.positive,
+    reportText: "BİLGİ: Bölüm 6'dan gelen bilgiye göre rapora eklenmiştir.",
+    level: RiskLevel.info,
   );
 
   static final kazan = ChoiceResult(
@@ -638,8 +638,8 @@ class Bolum12Content {
     label: "12-C (Beton)",
     uiTitle: "Paspayı ölçülerini biliyorum, kendim gireceğim.",
     uiSubtitle: "",
-    reportText: "(Girilen değerlere göre otomatik analiz edilir)",
-    level: RiskLevel.positive,
+    reportText: "BİLGİ: (Girilen değerlere göre otomatik analiz edilir)",
+    level: RiskLevel.info,
   );
 
   static final ahsapOptionA = ChoiceResult(
@@ -1593,7 +1593,7 @@ class Bolum17Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Çatı iskeletinin durumu bilinmiyor. Yüksek binalarda ahşap çatı büyük risk taşır. Uzman Görüşü alınması tavsiye edilir.",
+        "BİLİNMİYOR: Çatı iskeletinin durumu bilinmiyor. İtfaiye erişiminin kısıtlı olduğu, insan tahliye süresinin uzun olduğu yüksek binalarda çatı malzemeleri büyük önem taşır, konu hakkında proje üzerinde veya yerinde inceleme yapılması önerilir.",
     level: RiskLevel.unknown,
   );
 
@@ -1797,6 +1797,18 @@ class Bolum19Content {
 
   static final engelOptionD = ChoiceResult(
     label: "19-1-D",
+    uiTitle: "Otomatik sensörlü, kayar kapı var.",
+    uiSubtitle: "Yanlara açılır.",
+    reportText:
+        "UYARI: Kaçış yolunda otomatik kayar kapı tespit edilmiştir. Bu kapı(lar)ın yangın anında, binaya özgü hazırlanmış olan yangın senaryosu dahilinde beklemeksizin tamamen açık hale gelmeleri şarttır. Aynı zamanda binada elektrik kesildiğinde de bu kapı(lar) açık hale gelmelidir. Binada yangın senaryosu ve yangın matrisi hazırlanmamış ise kaçış yolu üzerindeki bu kayar kapıların yanına manuel kapı açma butonu yerleştirilmelidir. Aksi halde yangın esnasında bu kapıların insanlar tarafından zorlanara açılmaya çalışılması zaman kaybına, hatta can kaybına yol açabilir.",
+    adviceText:
+        "",
+    level: RiskLevel.warning,
+
+  );
+
+  static final engelOptionE = ChoiceResult(
+    label: "19-1-E",
     uiTitle: "Eşik, yükselti var.",
     uiSubtitle: "Düşme, takılma riski.",
     reportText:
@@ -2000,7 +2012,7 @@ class Bolum20Content {
     uiTitle: "Evet, aynı merdiven devam ediyor.",
     uiSubtitle: "",
     reportText:
-        "Binadaki merdivenler tüm katlara aynı anda hizmet verebilmektedir. Bodrum katlar için bağımsız merdiven(ler) bulunmamaktadır.",
+        "BİLGİ: Binadaki merdivenler tüm katlara aynı anda hizmet verebilmektedir. Bodrum katlar için bağımsız merdiven(ler) bulunmamaktadır.",
     level: RiskLevel.info,
   );
 
@@ -2055,7 +2067,7 @@ class Bolum20Content {
     uiTitle: "Evet.",
     uiSubtitle: "Eğimli yol ile çıkış sağlanıyor.",
     reportText:
-        "Rampa ile çıkış sağlanmaktadır. Rampanın eğimi %10'u aşmamalıdır. Ayrıca rampa genişliği en az 120 cm olmalıdır.",
+        "OLUMLU: Rampa ile çıkış sağlanmaktadır. Rampanın eğimi %10'u aşmamalıdır. Ayrıca rampa genişliği en az 120 cm olmalıdır.",
     level: RiskLevel.positive,
   );
 
@@ -2063,7 +2075,7 @@ class Bolum20Content {
     label: "20-C (Tek Kat)",
     uiTitle: "Hayır.",
     uiSubtitle: "Birkaç basamak inilerek/çıkılarak ulaşılıyor.",
-    reportText: "(Merdiven sayısı not edilir) Çıkışta basamak mevcuttur.",
+    reportText: "OLUMLU: (Merdiven sayısı not edilir) Çıkışta basamak mevcuttur.",
     level: RiskLevel.positive,
   );
 
@@ -2428,8 +2440,8 @@ class Bolum23Content {
     label: "23-1-A (Bodrum)",
     uiTitle: "İnmiyor.",
     uiSubtitle: "Sadece üst katlara hizmet veriyor.",
-    reportText: "Bilgi: Asansör bodrum katlara inmemektedir.",
-    level: RiskLevel.positive,
+    reportText: "BİLGİ: Asansör bodrum katlara inmemektedir.",
+    level: RiskLevel.info,
   );
 
   static final bodrumOptionB = ChoiceResult(
@@ -2447,7 +2459,7 @@ class Bolum23Content {
         "İniyor ancak HOLSÜZ biçimde DİREKT otoparka, depoya veya ticari alanlara açılıyor.",
     uiSubtitle: "Asansörün bodrum kata çıktığı noktada bir YGH yok.",
     reportText:
-        "KRİTİK RİSK: Asansör kuyuları binanın bacası gibidir. Bodrumdaki otoparkta veya kazan dairesinde çıkacak bir yangının dumanı, doğrudan asansör kapısından kuyuya girer ve saniyeler içinde tüm üst katlara yayılır.",
+        "KRİTİK RİSK: Asansör kuyuları yangın anında baca görevi görür. Bodrum katlarda yangın güvenlik holü olmayan asansör boşlukları dumanın üst katlara taşınmasına neden olur.",
     level: RiskLevel.critical,
   );
 
@@ -3504,15 +3516,15 @@ class Bolum30Content {
     uiTitle: "Yangın korunumlu bir koridora veya hole açılıyor.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Kazan dairesi kapısı yangına dayanıklı bir koridora veya hole açılmaktadır. Yönetmelik gereksinimini karşılamaktadır.",
+        "OLUMLU: Kazan dairesi kapısı yangına dayanıklı bir koridora veya hole açıldığı beyan edilmiştir. Yönetmelik gereksinimini karşılamaktadır.",
     level: RiskLevel.positive,
   );
   static final konumOptionB = ChoiceResult(
     label: "30-1-B",
-    uiTitle: "Doğrudan merdiven kovasına açılıyor.",
+    uiTitle: "Yangın korunumlu olmayan bir koridora veya doğrudan merdiven kovasına açılıyor.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Kazan dairesi kapısı ASLA doğrudan merdiven kovasına açılamaz. Olası bir patlama veya gaz sızıntısında merdiven kullanılamaz hale gelir.",
+        "KRİTİK RİSK: Kazan dairesi bina içerisinde doğrudan merdiven kovasına veya yangın korunumlu olmayan bir alana açılmamalıdır. Yönetmelik açısından uygunsuzluk mevcuttur.",
     level: RiskLevel.critical,
   );
   static final konumOptionC = ChoiceResult(
@@ -3537,15 +3549,15 @@ class Bolum30Content {
     label: "30-2-A (Kapasite)",
     uiTitle: "350 kW'ın altında.",
     uiSubtitle: "",
-    reportText: "Isıl kapasite 350 kW'ın altındadır.",
-    level: RiskLevel.positive,
+    reportText: "BİLGİ: Isıl kapasite 350 kW'ın altındadır.",
+    level: RiskLevel.info,
   );
 
   static final kapasiteUst = ChoiceResult(
     label: "30-2-B (Kapasite)",
     uiTitle: "350 kW ve üzerinde.",
     uiSubtitle: "",
-    reportText: "Isıl kapasite 350 kW ve üzerindedir.",
+    reportText: "UYARI: Isıl kapasite 350 kW ve üzerindedir.",
     level: RiskLevel.warning,
   );
 
@@ -3564,7 +3576,7 @@ class Bolum30Content {
     uiTitle: "1 adet.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: 300 kW üzeri kapasiteli büyük kazan dairesinde Yönetmeliğe göre en az 2 adet çıkış kapısı zorunludur. 300 kW altı kapasiteli kazan dairesinde ise tek çıkış kapısı yeterlidir.",
+        "KRİTİK RİSK: 350 kW üzeri kapasiteli büyük kazan dairesinde Yönetmeliğe göre en az 2 adet çıkış kapısı zorunludur. 350 kW altı kapasiteli kazan dairesinde ise tek çıkış kapısı yeterlidir.",
     level: RiskLevel.critical,
   );
   static final kapiOptionB = ChoiceResult(
@@ -3747,8 +3759,8 @@ class Bolum31Content {
     uiTitle: "Yağlı Tip.",
     uiSubtitle: "İçinde soğutma yağı var.",
     reportText:
-        "Yağlı tip trafolar oldukça risklidir. Bulundukları mahalde özel önlemler alınması şarttır.",
-    level: RiskLevel.positive,
+        "UYARI: Yağlı tip trafolar oldukça risklidir. Bulundukları mahalde özel önlemler alınması şarttır.",
+    level: RiskLevel.warning,
   );
 
   static final tipOptionC = ChoiceResult(
@@ -4000,7 +4012,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "Normal katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Normal katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4020,7 +4032,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "Zemin katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Zemin katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4040,7 +4052,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "Bodrum katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Bodrum katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4060,7 +4072,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "Bina geneli (Zemin, Normal ve Bodrum katlar) için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü kapasitesi için yeterlidir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Bina geneli (Zemin, Normal ve Bodrum katlar) için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü kapasitesi için yeterlidir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4200,7 +4212,7 @@ class Bolum35Content {
     uiSubtitle: "",
     reportText:
         "OLUMLU: Tek yön kaçış mesafesi, Yönetmelik sınırları içerisindedir.",
-    level: RiskLevel.positive,
+    level: RiskLevel.info,
   );
   static final tekYonOptionB = ChoiceResult(
     label: "35-1-B",
@@ -4214,8 +4226,8 @@ class Bolum35Content {
     label: "35-1-C",
     uiTitle: "Tam olarak ölçüyü biliyorum.",
     uiSubtitle: "",
-    reportText: "Girilen değere göre otomatik hesaplandı.",
-    level: RiskLevel.positive,
+    reportText: "BİLGİ: Girilen değere göre otomatik hesaplandı.",
+    level: RiskLevel.info,
   );
   static final tekYonOptionD = ChoiceResult(
     label: "35-1-D",
@@ -4263,8 +4275,9 @@ class Bolum35Content {
     label: "35-3-A",
     uiTitle: "Evet.",
     uiSubtitle: "Sadece tek yöne gidebiliyorum.",
-    reportText: "Çıkmaz koridor mesafesi alt soruya göre değerlendirilecektir.",
-    level: RiskLevel.positive,
+    reportText:
+        "BİLGİ: Çıkmaz koridor mesafesi alt soruya göre değerlendirilecektir.",
+    level: RiskLevel.info,
   );
   static final cikmazOptionB = ChoiceResult(
     label: "35-3-B",

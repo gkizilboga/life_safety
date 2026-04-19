@@ -407,20 +407,10 @@ class PdfService {
   static String _convertToActionableText(String text) {
     if (text.isEmpty) return "";
 
-    // Centralized cleaning (prefixes and emojis)
     String processed = _cleanEmojis(text);
-
-    // Clean actionable context (Parentheses)
     processed = processed.replaceAll(RegExp(r'\([^)]*\)'), '').trim();
     processed = processed.replaceAll(RegExp(r'\s{2,}'), ' ').trim();
 
-    // 3. Orijinal cümleyi koru, AI tarafından eklenen "uygun hale getirilmelidir" gibi yapıları siliyoruz (kullanıcı isteği)
-    
-    // 4. Yasaklı kelimeleri ve gereksiz etiketleri temizle
-    processed = _scrubForbiddenKeywords(processed);
-
-    // 5. Daha kısa ve öz olması için yalnızca İLK CÜMLEYİ al (Noktadan böl, ama 51.5 gibi sayıları bozma)
-    // Regex: Nokta ve ardından gelen boşluk (veya metin sonu) üzerinden böl.
     final sentenceParts = processed.split(RegExp(r'\.(?=\s|$)'));
     if (sentenceParts.isNotEmpty) {
       processed = sentenceParts.first.trim();
@@ -435,65 +425,26 @@ class PdfService {
     return processed;
   }
 
-  /// Yönetici Özeti ve Eylem Planı için 'çirkin' duran kelimeleri temizler.
-  static String _scrubForbiddenKeywords(String text) {
+  /// Yönetici Özeti için: PDF'in render edemediği emoji karakterleri dışında
+  /// hiçbir şey değiştirilmez. Değerlendirme notu birebir aktarılır.
+  static String _cleanFullEvaluationText(String text) {
     if (text.isEmpty) return "";
-    String cleaned = text;
 
-    // A. Önce Etiketleri ve Prefixes temizle (Satır başı veya DURUM: sonrası)
-    final labelsToScrub = [
-      'KRİTİK RİSK:',
-      'KRİTİK RİSK',
-      'UYARI:',
-      'UYARI',
-      'BİLİNMİYOR:',
-      'BİLİNMİYOR',
-      'BİLGİ:',
-      'BİLGİ',
-      'OLUMLU:',
-      'OLUMLU',
-      'DURUM:',
-      'NEDEN:',
-    ];
+    // Sadece emoji karakterlerini kaldır (PDF render edemez) — başka hiçbir işlem yapma
+    String processed = text.replaceAll(
+      RegExp(
+        r'[\u{1f300}-\u{1f5ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}'
+        r'\u{1f900}-\u{1f9ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}'
+        r'\u{fe00}-\u{fe0f}]',
+        unicode: true,
+      ),
+      '',
+    ).trim();
 
-    for (var label in labelsToScrub) {
-      cleaned = cleaned.replaceAll(
-        RegExp('^$label\\s*', multiLine: true, caseSensitive: false),
-        '',
-      );
-    }
-
-    // B. Cümle içerisindeki yasaklı kelimeleri temizle veya yumuşat
-    // zorunludur/şarttır -> "yapılmalıdır/gereklidir" dönüşümü yerine kullanıcı "kaldıralım" dediği için
-    // anlamı bozmadan temizliyoruz.
-    final wordsToRemove = [
-      r'zorunlu\s+değildir',
-      r'şart\s+değildir',
-      r'zorunludur',
-      r'şarttır',
-      r'kritik\s+risk',
-      r'uyarı',
-      r'bilinmiyor',
-      r'olumlu',
-      r'bilgi',
-      r'vs\.',
-      r'vesaire',
-    ];
-
-    for (var word in wordsToRemove) {
-      // Kelimeyi ve varsa sonundaki noktayı/virgülü de temizle
-      cleaned = cleaned.replaceAll(
-        RegExp('\\s*\\b$word[.?,;]?', caseSensitive: false),
-        '',
-      );
-    }
-
-    // C. Artık kalan boşlukları ve çift noktaları temizle
-    cleaned = cleaned.replaceAll(RegExp(r'\s{2,}'), ' ');
-    cleaned = cleaned.replaceAll(RegExp(r'\.\s*\.'), '.');
-
-    return cleaned.trim();
+    return processed;
   }
+
+
 
   static List<pw.Page> _buildExecutiveSummaryPage({
     required pw.PageTheme pageTheme,
@@ -504,22 +455,31 @@ class PdfService {
   }) {
     List<String> actionItems = [];
 
+    // Red Bar Logic Matcher: PDF bölümlerinde kırmızı bar çizen mantıkla birebir aynı
+    bool isRedBar(String text, ReportStatus? status, int sectionId) {
+      if (sectionId <= 10 || sectionId == 14) return false; // Bu bölümler PDF'de hep mavidir
+      if (status == ReportStatus.risk) return true;
+      return _getRiskColor(text) == PdfColors.red700;
+    }
+
     for (int id = 1; id <= 36; id++) {
-      if ([3, 5, 6, 7, 10, 12, 21, 36].contains(id)) {
+      // 33 (Kapasite Analizi) eklendi
+      if ([3, 5, 6, 7, 10, 12, 21, 33, 36].contains(id)) {
         final fullReport = ReportEngine.getSectionFullReport(id, store: store);
-        final riskColor = _getRiskColor(fullReport);
-        if (riskColor == PdfColors.red700) {
-          String act = _convertToActionableText(fullReport);
-          if (!actionItems.contains(act)) actionItems.add(act);
+        if (isRedBar(fullReport, null, id)) {
+          // Değerlendirme notunun TAMAMINI al
+          String act = _cleanFullEvaluationText(fullReport);
+          if (act.isNotEmpty && !actionItems.contains(act)) actionItems.add(act);
         }
       } else {
         final details = ReportEngine.getSectionDetailedReport(id, store: store);
         for (final item in details) {
           final status = item['status'] as ReportStatus? ?? ReportStatus.info;
-          if (status == ReportStatus.risk) {
-            String actText = _convertToActionableText(
-              (item['report'] ?? '').toString(),
-            );
+          final reportText = (item['report'] ?? '').toString();
+          
+          if (isRedBar(reportText, status, id)) {
+            // Değerlendirme notunun TAMAMINI al
+            String actText = _cleanFullEvaluationText(reportText);
             if (actText.isNotEmpty && !actionItems.contains(actText)) {
               actionItems.add(actText);
             }
@@ -577,33 +537,21 @@ class PdfService {
             ),
           ),
           pw.SizedBox(height: 15),
+          // Çok uzun metinlerin (overflow) PDF'i çökertmemesi için pw.Bullet yapısına geçildi
           ...actionItems.map((item) {
             return pw.Padding(
-              padding: const pw.EdgeInsets.only(bottom: 15),
-              child: pw.Row(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Container(
-                    width: 4,
-                    height: 4,
-                    margin: const pw.EdgeInsets.only(top: 4, right: 10),
-                    decoration: const pw.BoxDecoration(
-                      color: PdfColors.grey700,
-                      shape: pw.BoxShape.circle,
-                    ),
-                  ),
-                  pw.Expanded(
-                    child: pw.Text(
-                      item,
-                      style: pw.TextStyle(
-                        font: ttf,
-                        fontSize: 9,
-                        color: PdfColors.black,
-                        lineSpacing: 2.2,
-                      ),
-                    ),
-                  ),
-                ],
+              padding: const pw.EdgeInsets.only(bottom: 12),
+              child: pw.Bullet(
+                text: item,
+                style: pw.TextStyle(
+                  font: ttf,
+                  fontSize: 9,
+                  color: PdfColors.black,
+                  lineSpacing: 2.2,
+                ),
+                bulletColor: PdfColors.red700,
+                bulletMargin: const pw.EdgeInsets.only(top: 4, right: 10),
+                bulletSize: 3,
               ),
             );
           }),
@@ -611,6 +559,7 @@ class PdfService {
       ),
     ];
   }
+
 
   static pw.Page _buildLegalPage(pw.PageTheme pageTheme) {
     // Split the content manually for the two-column layout
@@ -1177,7 +1126,7 @@ class PdfService {
                 children: [
                   pw.Expanded(
                     child: pw.Text(
-                      "Bölüm $id: ${_toTitleCaseTR(AppDefinitions.getSectionTitle(id))}",
+                      "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
                       style: pw.TextStyle(
                         fontSize: 10,
                         fontWeight: pw.FontWeight.bold,

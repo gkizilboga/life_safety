@@ -251,11 +251,17 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(left: 4, bottom: 12),
+                    padding: EdgeInsets.only(left: 4, bottom: 4),
                     child: Text(
                       "Brüt Alan Girişi (m²)",
                       style: AppStyles.questionTitle,
                     ),
+                  ),
+                  const CustomInfoNote(
+                    type: InfoNoteType.info,
+                    text: "İpucu: Kutucukların sağındaki hesap makinesi ikonuna basarak hızlıca alan hesabı yapabilirsiniz.",
+                    icon: Icons.lightbulb_outline,
+                    margin: EdgeInsets.only(bottom: 12),
                   ),
                   QuestionCard(
                     child: Column(
@@ -598,7 +604,10 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
               "Bodrum Katlar ($_bKat adet):",
               "${((InputValidator.parseFlex(_bodrumCtrl.text) ?? 0) * _bKat).toStringAsFixed(2)} m²",
             ),
-          const Divider(),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4),
+            child: Divider(height: 1, thickness: 0.5),
+          ),
           _buildSummaryRow(
             "Toplam İnşaat Alanı:",
             "${_toplamCtrl.text} m²",
@@ -626,7 +635,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
             value,
             style: TextStyle(
               fontSize: 15,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.w600,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+              color: isTotal ? const Color(0xFF2E7D32) : Colors.black87,
             ),
           ),
         ],

@@ -135,6 +135,7 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
                   Bolum19Content.engelOptionB,
                   Bolum19Content.engelOptionC,
                   Bolum19Content.engelOptionD,
+                  Bolum19Content.engelOptionE,
                 ].map(
                   (opt) => SelectableCard(
                     choice: opt,

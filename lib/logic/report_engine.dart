@@ -191,24 +191,28 @@ class ReportEngine {
           value: '',
           report: '',
         );
+        details.last['isTable'] = false;
         _addDetail(
           details,
           label: 'Ticari Alan (İşyeri)',
           value: b6.hasTicari ? 'Mevcut' : 'Mevcut değil',
           report: '',
         );
+        details.last['isTable'] = true;
         _addDetail(
           details,
           label: 'Kapalı Otopark',
           value: b6.hasOtopark ? 'Mevcut' : 'Mevcut değil',
           report: '',
         );
+        details.last['isTable'] = true;
         _addDetail(
           details,
           label: 'Depolama Alanı',
           value: b6.hasDepo ? 'Mevcut' : 'Mevcut değil',
           report: '',
         );
+        details.last['isTable'] = true;
 
         if (b6.hasTicari && b6.buyukRestoran != null) {
           _addDetail(
@@ -928,7 +932,7 @@ class ReportEngine {
             value: '',
             report:
                 'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ:\n${basincReasons.join('\n')}',
-            level: isMet ? RiskLevel.positive : RiskLevel.critical,
+            level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
           );
         }
 
@@ -1016,7 +1020,7 @@ class ReportEngine {
             value: '',
             report:
                 'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ:\n${basincReasons.join('\n')}',
-            level: isMet ? RiskLevel.positive : RiskLevel.critical,
+            level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
           );
         }
 
@@ -1214,14 +1218,19 @@ class ReportEngine {
         // Dinamik Basınçlandırma Analizi (Sadece PDF/Detaylı için)
         final basincReasons = evaluateBasincRequirementForStairs(store: s);
         if (basincReasons.isNotEmpty) {
-          final bool isMet = basincReasons.every((r) => r.startsWith("OLUMLU"));
+          // Kullanıcı "Var" dediyse (20-BAS-A) kriter karşılanmış sayılır
+          final bool userHasBasinc =
+              b20.basinclandirma?.label.contains("20-BAS-A") == true;
+          final bool isMet =
+              userHasBasinc ||
+              basincReasons.every((r) => r.startsWith("OLUMLU"));
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi Gereksinimi (Kaçış Merdivenleri)',
             value: '', // Don't show as a user response
             report:
-                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ: Bina verilerine göre kaçış merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join('\n')}',
-            level: isMet ? RiskLevel.positive : RiskLevel.critical,
+                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ: Bina verilerine göre kaçış merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join("\n")}',
+            level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
           );
         } else if (b20.basinclandirma != null) {
           // Sadece kullanıcıya sorulduysa (kapalı merdiven varsa) "Şart Değil" bilgisini ekle
@@ -1231,7 +1240,7 @@ class ReportEngine {
             value: '', // Don't show as a user response
             report:
                 'DURUM: ŞART DEĞİL\n\nBİLGİ: Bina verilerine göre merdivenlerde basınçlandırma sistemi tesis edilmesi mecburi değildir.',
-            level: RiskLevel.info,
+            level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
           );
         }
         // Madde 45: Doğal Havalandırma
@@ -3608,7 +3617,7 @@ class ReportEngine {
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı sağlanmadığında tüm asansörlerin önünde YGH gereklidir.",
+        "Bodrum katlarda asansörün önünde yangın güvenlik holü/koridoru gereklidir.",
       );
     }
 

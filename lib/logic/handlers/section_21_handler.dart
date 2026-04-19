@@ -57,6 +57,14 @@ class Section21Handler {
         finalLevel = hasYgh ? RiskLevel.positive : RiskLevel.info;
       }
 
+      // Kullanıcı yanıtının rengi: zorunluluk + mevcut durum birlikte değerlendiriliyor
+      final RiskLevel varlikLevel;
+      if (isMandatory) {
+        varlikLevel = hasYgh ? RiskLevel.positive : RiskLevel.critical;
+      } else {
+        varlikLevel = hasYgh ? RiskLevel.positive : RiskLevel.info;
+      }
+
       _addDetail(
         details,
         label: 'Merdiven önünde Yangın Güvenlik Holü var mı?',
@@ -64,7 +72,7 @@ class Section21Handler {
         subtitle: b21.varlik?.uiSubtitle,
         report: '',
         advice: b21.varlik?.adviceText,
-        level: hasYgh ? RiskLevel.positive : RiskLevel.info,
+        level: varlikLevel,
       );
 
       if (hasYgh) {
@@ -97,7 +105,7 @@ class Section21Handler {
         );
       }
 
-      // Otomatik Gereksinim Analizi (Tabloyu bölmemesi için en sona taşındı)
+      // YGH Gereksinimi: sistem notu — kullanıcı yanıtı değil, sol çubuk gösterilmez (info sabit)
       _addDetail(
         details,
         label: 'YGH Gereksinimi',
@@ -105,7 +113,7 @@ class Section21Handler {
         report: isMandatory
             ? "DURUM: ZORUNLU\n\n$evaluationMessage"
             : "DURUM: ŞART DEĞİL\n\n$evaluationMessage",
-        level: finalLevel,
+        level: RiskLevel.info,
       );
     }
     return details;
