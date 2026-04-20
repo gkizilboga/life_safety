@@ -21,16 +21,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Column(
         children: [
           const ModernHeader(
-            title: "Profil ve Ayarlar",
+            title: "Ayarlar",
             screenType: SettingsScreen,
           ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(20),
               children: [
-                _buildProfileCard(store),
-                const SizedBox(height: 25),
-                _buildSectionLabel("Uygulama Tercihleri"),
                 _buildSettingTile(
                   icon: Icons.vibration,
                   title: "Dokunsal Geri Bildirim",
@@ -60,49 +57,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     "Versiyon 1.0.0",
                     style: TextStyle(color: Colors.grey.shade400, fontSize: 12),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProfileCard(BinaStore store) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: AppColors.primaryBlue.withOpacity(0.1),
-            child: const Icon(
-              Icons.person,
-              color: AppColors.primaryBlue,
-              size: 30,
-            ),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  store.userName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                Text(
-                  store.userProfession,
-                  style: const TextStyle(color: Colors.grey, fontSize: 13),
                 ),
               ],
             ),

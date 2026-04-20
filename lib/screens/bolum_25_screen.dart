@@ -179,11 +179,14 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (imageAssetPath != null) ...[
-            SectionImage(assetPath: imageAssetPath),
-            const SizedBox(height: 8),
-          ],
-          Text(title, style: AppStyles.questionTitle),
+          if (imageAssetPath != null)
+            QuestionHeaderWithImage(
+              questionText: title,
+              imageAssetPath: imageAssetPath,
+              imageTitle: imageTitle ?? title,
+            )
+          else
+            Text(title, style: AppStyles.questionTitle),
           const SizedBox(height: 12),
           ...options.map(
             (opt) => SelectableCard(

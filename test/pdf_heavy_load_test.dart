@@ -1,18 +1,23 @@
 
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:life_safety/logic/bina_store.dart';
-import 'package:life_safety/models/bolum_models.dart';
+import 'package:life_safety/data/bina_store.dart';
+import 'package:life_safety/models/bolum_1_model.dart';
+import 'package:life_safety/models/bolum_3_model.dart';
+import 'package:life_safety/models/bolum_21_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 import 'package:life_safety/services/pdf_service.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   test('PDF Heavy Load Test: Extremely long evaluation notes should not crash PDF generation', () async {
     final store = BinaStore.instance;
-    store.clear();
+    store.reset();
 
     // 1. Çok uzun bir metin oluştur (Yaklaşık 5000 karakter)
-    String veryLongNote = "KRİTİK RİSK: " + List.generate(500, (i) => "Bu bir test cümlesidir ve PDF sayfa yapısını zorlamak için eklenmiştir ($i).").join(" ");
+    String veryLongNote =
+        "KRİTİK RİSK: ${List.generate(500, (i) => "Bu bir test cümlesidir ve PDF sayfa yapısını zorlamak için eklenmiştir ($i).").join(" ")}";
 
     // 2. Bölüm 21'e bu devasa notu ekle
     store.bolum21 = Bolum21Model(
@@ -26,7 +31,14 @@ void main() {
     );
 
     // 3. Bina bilgilerini doldur (PDF için zorunlu alanlar)
-    store.bolum1 = Bolum1Model(ruhsatTarihi: ChoiceResult(label: "1-1-A", uiTitle: "2007 Öncesi", reportText: ""));
+    store.bolum1 = Bolum1Model(
+      secim: ChoiceResult(
+        label: "1-1-A",
+        uiTitle: "2007 Öncesi",
+        uiSubtitle: "",
+        reportText: "",
+      ),
+    );
     store.bolum3 = Bolum3Model(hYapi: 35.0, bodrumKatSayisi: 1);
 
     // 4. PDF Üretimini başlat

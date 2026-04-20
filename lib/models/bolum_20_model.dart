@@ -235,10 +235,12 @@ class Bolum20Model {
       ]),
       normalMerdivenSayisi: toInt(map['normalMerdivenSayisi']),
       binaIciYanginMerdiveniSayisi: toInt(map['binaIciYanginMerdiveniSayisi']),
-      binaDisiKapaliYanginMerdiveniSayisi:
-          toInt(map['binaDisiKapaliYanginMerdiveniSayisi']),
-      binaDisiAcikYanginMerdiveniSayisi:
-          toInt(map['binaDisiAcikYanginMerdiveniSayisi']),
+      binaDisiKapaliYanginMerdiveniSayisi: toInt(
+        map['binaDisiKapaliYanginMerdiveniSayisi'],
+      ),
+      binaDisiAcikYanginMerdiveniSayisi: toInt(
+        map['binaDisiAcikYanginMerdiveniSayisi'],
+      ),
       donerMerdivenSayisi: toInt(map['donerMerdivenSayisi']),
       sahanliksizMerdivenSayisi: toInt(map['sahanliksizMerdivenSayisi']),
       dengelenmisMerdivenSayisi: toInt(map['dengelenmisMerdivenSayisi']),
@@ -247,16 +249,17 @@ class Bolum20Model {
         map['toplamDisariAcilanMerdivenSayisi'],
       ),
 
-      lobiTahliyeMesafeDurumu: find(map['lobiTahliyeMesafeDurumu_label']?.toString(), [
-        Bolum20Content.madde41MesafeAltinda,
-        Bolum20Content.madde41MesafeUstunde,
-        Bolum20Content.madde41MesafeBilmiyorum,
-      ]),
+      lobiTahliyeMesafeDurumu:
+          find(map['lobiTahliyeMesafeDurumu_label']?.toString(), [
+            Bolum20Content.madde41MesafeAltinda,
+            Bolum20Content.madde41MesafeUstunde,
+            Bolum20Content.madde41MesafeBilmiyorum,
+          ]),
       isBodrumIndependent: toBool(map['isBodrumIndependent']),
-      bodrumMerdivenDevami: find(map['bodrumMerdivenDevami_label']?.toString(), [
-        Bolum20Content.bodrumOptionA,
-        Bolum20Content.bodrumOptionB,
-      ]),
+      bodrumMerdivenDevami: find(
+        map['bodrumMerdivenDevami_label']?.toString(),
+        [Bolum20Content.bodrumOptionA, Bolum20Content.bodrumOptionB],
+      ),
       bodrumNormalMerdivenSayisi: toInt(map['bodrumNormalMerdivenSayisi']),
       bodrumBinaIciYanginMerdiveniSayisi: toInt(
         map['bodrumBinaIciYanginMerdiveniSayisi'],
@@ -279,14 +282,12 @@ class Bolum20Model {
         map['bodrumToplamDisariAcilanMerdivenSayisi'],
       ),
 
-      bodrumLobiTahliyeMesafeDurumu: find(
-        map['bodrumLobiTahliyeMesafeDurumu_label']?.toString(),
-        [
-          Bolum20Content.madde41MesafeAltinda,
-          Bolum20Content.madde41MesafeUstunde,
-          Bolum20Content.madde41MesafeBilmiyorum,
-        ],
-      ),
+      bodrumLobiTahliyeMesafeDurumu:
+          find(map['bodrumLobiTahliyeMesafeDurumu_label']?.toString(), [
+            Bolum20Content.madde41MesafeAltinda,
+            Bolum20Content.madde41MesafeUstunde,
+            Bolum20Content.madde41MesafeBilmiyorum,
+          ]),
       basinclandirma: find(map['basinclandirma_label']?.toString(), [
         Bolum20Content.basYghOptionA,
         Bolum20Content.basYghOptionB,

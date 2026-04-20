@@ -177,7 +177,10 @@ void main() {
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
-      expect(report.contains("En az 1 adet doğrudan dışarıya açılmalıdır"), true);
+      expect(
+        report.contains("En az 1 adet doğrudan dışarıya açılmalıdır"),
+        true,
+      );
     });
 
     test(
@@ -191,7 +194,10 @@ void main() {
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
         expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
-        expect(report.contains("En az 2 adet doğrudan dışarıya açılmalıdır"), true); // Check for number 2
+        expect(
+          report.contains("En az 2 adet doğrudan dışarıya açılmalıdır"),
+          true,
+        ); // Check for number 2
       },
     );
 
@@ -214,7 +220,10 @@ void main() {
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
         expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
-        expect(report.contains("En az 3 adet doğrudan dışarıya açılmalıdır"), true);
+        expect(
+          report.contains("En az 3 adet doğrudan dışarıya açılmalıdır"),
+          true,
+        );
       },
     );
 

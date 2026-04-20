@@ -34,35 +34,42 @@ class Section21Handler {
     List<Map<String, dynamic>> details = [];
     final b21 = _store.bolum21;
     if (b21 != null) {
-      final yghReasons = ReportEngine.evaluateYghRequirement(store: _store);
-      final bool isMandatory = yghReasons.isNotEmpty;
+      final result = ReportEngine.evaluateYghRequirement(store: _store);
+      final bool isMandatory = result.isMandatory;
       final bool hasYgh = b21.varlik?.label.contains("21-1-A") == true;
 
       String evaluationMessage = "";
-      RiskLevel finalLevel = b21.varlik?.level ?? RiskLevel.info;
 
       if (isMandatory) {
         if (hasYgh) {
           evaluationMessage =
-              "OLUMLU: Binadaki aşağıdaki teknik veriler nedeniyle YGH zorunluluğu bulunmakta olup, kullanıcı tarafından binada MEVCUT olduğu beyan edilmiştir:\n- ${yghReasons.join('\n- ')}";
-          finalLevel = RiskLevel.positive;
+              "OLUMLU: Binadaki aşağıdaki teknik veriler nedeniyle YGH zorunluluğu bulunmakta olup, kullanıcı tarafından binada MEVCUT olduğu beyan edilmiştir:\n- ${result.reasons.join('\n- ')}";
         } else {
           evaluationMessage =
-              "KRİTİK RİSK: Bina teknik verilerine göre Yangın Güvenlik Holü (YGH) ZORUNLU olmasına rağmen binada MEVCUT OLMADIĞI beyan edilmiştir. Bu durum tahliye güvenliği adına yüksek risk oluşturmaktadır.\n\nBinadaki YGH zorunluluğu gerekçeleri:\n- ${yghReasons.join('\n- ')}";
-          finalLevel = RiskLevel.critical;
+              "KRİTİK RİSK: Bina teknik verilerine göre Yangın Güvenlik Holü (YGH) ZORUNLU olmasına rağmen binada MEVCUT OLMADIĞI beyan edilmiştir. Bu durum tahliye güvenliği adına yüksek risk oluşturmaktadır.\n\nBinadaki YGH zorunluluğu gerekçeleri:\n- ${result.reasons.join('\n- ')}";
         }
       } else {
-        evaluationMessage =
-            "Mevcut bina verilerine göre (yükseklik, kullanım amacı vb.) bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.";
-        finalLevel = hasYgh ? RiskLevel.positive : RiskLevel.info;
+        if (result.waiverNote != null) {
+          evaluationMessage = result.waiverNote!;
+        } else if (result.isUnknown) {
+          evaluationMessage =
+              "BİLİNMİYOR: Merdivenlerde basınçlandırma durumu beyan edilmediği için BYKHY Madde 38/c uyarınca YGH zorunluluğu netleştirilememiştir. Yerinde kontrol edilmelidir.";
+        } else {
+          evaluationMessage =
+              "Mevcut bina verilerine göre (yükseklik, kullanım amacı vb.) bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.";
+        }
       }
 
-      // Kullanıcı yanıtının rengi: zorunluluk + mevcut durum birlikte değerlendiriliyor
+      // Kullanıcı yanıtının rengi
       final RiskLevel varlikLevel;
       if (isMandatory) {
         varlikLevel = hasYgh ? RiskLevel.positive : RiskLevel.critical;
       } else {
-        varlikLevel = hasYgh ? RiskLevel.positive : RiskLevel.info;
+        if (result.isUnknown) {
+          varlikLevel = RiskLevel.unknown;
+        } else {
+          varlikLevel = hasYgh ? RiskLevel.positive : RiskLevel.info;
+        }
       }
 
       _addDetail(
@@ -76,6 +83,7 @@ class Section21Handler {
       );
 
       if (hasYgh) {
+        // ... (remaining questions about material, doors, items are same)
         _addDetail(
           details,
           label: 'YGH (Hol) içindeki kaplama malzemeleri yanmaz özellikte mi?',
@@ -105,15 +113,23 @@ class Section21Handler {
         );
       }
 
-      // YGH Gereksinimi: sistem notu — kullanıcı yanıtı değil, sol çubuk gösterilmez (info sabit)
+      // YGH Gereksinimi
       _addDetail(
         details,
         label: 'YGH Gereksinimi',
         value: '',
         report: isMandatory
             ? "DURUM: ZORUNLU\n\n$evaluationMessage"
-            : "DURUM: ŞART DEĞİL\n\n$evaluationMessage",
-        level: RiskLevel.info,
+            : (result.waiverNote != null
+                ? "DURUM: MUAFİYET (Madde 38/c)\n\n$evaluationMessage"
+                : (result.isUnknown
+                    ? "DURUM: BELİRSİZ\n\n$evaluationMessage"
+                    : "DURUM: ŞART DEĞİL\n\n$evaluationMessage")),
+        level: isMandatory
+            ? RiskLevel.critical
+            : (result.waiverNote != null
+                ? RiskLevel.positive
+                : (result.isUnknown ? RiskLevel.unknown : RiskLevel.info)),
       );
     }
     return details;
@@ -121,21 +137,26 @@ class Section21Handler {
 
   String getSectionFullReport() {
     final b21 = _store.bolum21;
-    final yghReasons = ReportEngine.evaluateYghRequirement(store: _store);
+    final result = ReportEngine.evaluateYghRequirement(store: _store);
     final bool hasYgh = b21?.varlik?.label.contains("21-1-A") ?? false;
     final bool noYgh = b21?.varlik?.label.contains("21-1-B") ?? false;
-    final bool isMandatory = yghReasons.isNotEmpty;
+    final bool isMandatory = result.isMandatory;
 
     List<String> parts = [];
 
     // 1. Değerlendirme Özeti
     if (isMandatory) {
       parts.add(
-        "BİLGİ: YGH ZORUNLUDUR\nBinada aşağıdaki teknik gerekçelerden dolayı Yangın Güvenlik Holü (YGH) bulunması zorunludur:\n${yghReasons.join('\n')}",
+        "BİLGİ: YGH ZORUNLUDUR\nBinada aşağıdaki teknik gerekçelerden dolayı Yangın Güvenlik Holü (YGH) bulunması zorunludur:\n${result.reasons.join('\n')}",
       );
+    } else if (result.waiverNote != null) {
+      parts.add(result.waiverNote!);
+    } else if (result.isUnknown) {
+      parts.add(
+          "BİLGİ: Basınçlandırma durumu belirsiz olduğundan Madde 38/c uyarınca YGH muafiyeti netleştirilememiştir.");
     } else {
       parts.add(
-        "BİLGİ: YGH ZORUNLU DEĞİLDİR\nMevcut yapı ile ilgili beyanlara göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
+        "BİLGİ: YGH ZORUNLU DEĞİLDİR\nMevcut bina verilerine göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
       );
     }
 
@@ -159,11 +180,16 @@ class Section21Handler {
   }
 
   String getSummaryReport(String baseLabel) {
-    final yghReasons = ReportEngine.evaluateYghRequirement(store: _store);
-    final bool isMandatory = yghReasons.isNotEmpty;
-    final String mandatoryText = isMandatory
-        ? " (Zorunlu)"
-        : " (Zorunlu Değil)";
+    final result = ReportEngine.evaluateYghRequirement(store: _store);
+    final bool isMandatory = result.isMandatory;
+    String mandatoryText = isMandatory ? " (Zorunlu)" : " (Zorunlu Değil)";
+    if (!isMandatory) {
+      if (result.waiverNote != null) {
+        mandatoryText = " (Muaf - Madde 38/c)";
+      } else if (result.isUnknown) {
+        mandatoryText = " (Belirsiz)";
+      }
+    }
     return "$baseLabel$mandatoryText";
   }
 }

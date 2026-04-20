@@ -42,7 +42,6 @@ flutter:
   assets:
     - assets/images/ui/
     - assets/images/sections/
-    - assets/images/info/
     - assets/intro_video.mp4
 
   fonts:

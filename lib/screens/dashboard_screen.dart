@@ -524,7 +524,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         _buildMenuTile(
           Icons.settings_outlined,
-          "Profil ve Ayarlar",
+          "Ayarlar",
           "",
           () => Navigator.push(
             context,

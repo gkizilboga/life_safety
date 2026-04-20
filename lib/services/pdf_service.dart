@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -10,43 +9,6 @@ import '../utils/app_strings.dart';
 import '../utils/app_content.dart';
 import '../logic/active_systems_engine.dart';
 
-// Helper function for Turkish locale-aware uppercase conversion
-// Dart's standard toUpperCase() doesn't handle Turkish characters correctly (İ→I, ı→i)
-String _toTitleCaseTR(String text) {
-  if (text.isEmpty) return text;
-  return text
-      .split(' ')
-      .map((word) {
-        if (word.isEmpty) return word;
-        String first = word.substring(0, 1);
-        String rest = word.substring(1);
-
-        // Convert first letter to TR uppercase
-        first = first
-            .replaceAll('i', 'İ')
-            .replaceAll('ı', 'I')
-            .replaceAll('ö', 'Ö')
-            .replaceAll('ü', 'Ü')
-            .replaceAll('ç', 'Ç')
-            .replaceAll('ş', 'Ş')
-            .replaceAll('ğ', 'Ğ')
-            .toUpperCase();
-
-        // Convert rest to TR lowercase
-        rest = rest
-            .replaceAll('İ', 'i')
-            .replaceAll('I', 'ı')
-            .replaceAll('Ö', 'ö')
-            .replaceAll('Ü', 'ü')
-            .replaceAll('Ç', 'ç')
-            .replaceAll('Ş', 'ş')
-            .replaceAll('Ğ', 'ğ')
-            .toLowerCase();
-
-        return first + rest;
-      })
-      .join(' ');
-}
 
 class PdfService {
   // Keywords that get bold+red highlighting in PDF output.
@@ -404,33 +366,13 @@ class PdfService {
     );
   }
 
-  static String _convertToActionableText(String text) {
-    if (text.isEmpty) return "";
 
-    String processed = _cleanEmojis(text);
-    processed = processed.replaceAll(RegExp(r'\([^)]*\)'), '').trim();
-    processed = processed.replaceAll(RegExp(r'\s{2,}'), ' ').trim();
-
-    final sentenceParts = processed.split(RegExp(r'\.(?=\s|$)'));
-    if (sentenceParts.isNotEmpty) {
-      processed = sentenceParts.first.trim();
-    }
-
-    if (processed.isNotEmpty &&
-        !processed.endsWith('.') &&
-        !processed.endsWith(':')) {
-      processed += '.';
-    }
-
-    return processed;
-  }
-
-  /// Yönetici Özeti için: PDF'in render edemediği emoji karakterleri dışında
-  /// hiçbir şey değiştirilmez. Değerlendirme notu birebir aktarılır.
+  /// Yönetici Özeti için: Teknik önekleri (KRİTİK RİSK, DURUM, ZORUNLU vb.) temizler
+  /// ve PDF'in render edemediği emoji karakterlerini kaldırır.
   static String _cleanFullEvaluationText(String text) {
     if (text.isEmpty) return "";
 
-    // Sadece emoji karakterlerini kaldır (PDF render edemez) — başka hiçbir işlem yapma
+    // 1. Emoji temizliği (PDF çökmemesi için kritik)
     String processed = text.replaceAll(
       RegExp(
         r'[\u{1f300}-\u{1f5ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}'
@@ -439,7 +381,22 @@ class PdfService {
         unicode: true,
       ),
       '',
-    ).trim();
+    );
+
+    // 2. Teknik öneklerin temizliği (KRİTİK RİSK, DURUM: ZORUNLU, BİLGİ vb.)
+    // Satır başlarındaki veya metin içindeki kalıpları temizler.
+    processed = processed
+        .replaceAll(
+          RegExp(
+            r'(KRİTİK RİSK|UYARI|BİLGİ|OLUMLU|BİLİNMİYOR|DURUM|ZORUNLU|ŞART DEĞİL|UYGUN)[:\s]*',
+            caseSensitive: false,
+          ),
+          '',
+        )
+        .trim();
+
+    // Başta veya sonunda kalan gereksiz karakterleri temizle
+    if (processed.startsWith(':')) processed = processed.substring(1).trim();
 
     return processed;
   }
@@ -814,7 +771,20 @@ class PdfService {
   }
 
   // --- 1. RİSK ANALİZ RAPORU ---
+  // --- 1. RİSK ANALİZ RAPORU ---
+  static Future<Uint8List> generatePdf(BinaStore store) async {
+    final pdf = await _buildRiskAnalysisDocument(providedStore: store);
+    return pdf.save();
+  }
+
   static Future<void> generateRiskAnalysisPdf() async {
+    final pdf = await _buildRiskAnalysisDocument();
+    await Printing.layoutPdf(onLayout: (format) async => pdf.save());
+  }
+
+  static Future<pw.Document> _buildRiskAnalysisDocument({
+    BinaStore? providedStore,
+  }) async {
     final pdf = pw.Document();
     // Bundle edilmiş Roboto fontları - offline çalışır, Türkçe karakterleri destekler
     final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
@@ -834,8 +804,8 @@ class PdfService {
     final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
     final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
 
-    final store = BinaStore.instance;
-    final metrics = ReportEngine.calculateRiskMetrics();
+    final store = providedStore ?? BinaStore.instance;
+    final metrics = ReportEngine.calculateRiskMetrics(store: store);
 
     final pageTheme = _buildPageTheme(ttf, ttfBold, ttfItalic, ttfBoldItalic);
 
@@ -974,7 +944,9 @@ class PdfService {
                     ttfBold,
                     riskColor: (id <= 10 || id == 14)
                         ? PdfColors.blue700
-                        : _getRiskColor(item['report'] ?? ''),
+                        : (id == 12
+                            ? effectiveSectionRiskColor
+                            : _getRiskColor(item['report'] ?? '')),
                     isLast: item == details.last,
                     sectionId: id,
                   ),
@@ -1037,7 +1009,7 @@ class PdfService {
                         tableGroup,
                         ttf,
                         ttfBold,
-                        (id <= 10 || id == 12 || id == 33 || id == 36)
+                        (id <= 10 || id == 33 || id == 36)
                             ? const PdfColor.fromInt(0x00000000)
                             : effectiveSectionRiskColor,
                         subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
@@ -1053,7 +1025,9 @@ class PdfService {
                       ttfBold,
                       riskColor: (id <= 10 || id == 14)
                           ? PdfColors.blue700
-                          : _getRiskColor(item['report'] ?? ''),
+                          : (id == 12
+                              ? effectiveSectionRiskColor
+                              : _getRiskColor(item['report'] ?? '')),
                       isLast: isLast,
                       sectionId: id,
                     ),
@@ -1099,7 +1073,7 @@ class PdfService {
                     tableGroup,
                     ttf,
                     ttfBold,
-                    (id <= 10 || id == 12 || id == 33 || id == 36)
+                    (id <= 10 || id == 33 || id == 36)
                         ? const PdfColor.fromInt(0x00000000)
                         : effectiveSectionRiskColor,
                     subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
@@ -1181,7 +1155,7 @@ class PdfService {
     // Yasal (En Sona Taşındı)
     pdf.addPage(_buildLegalPage(pageTheme));
 
-    await Printing.layoutPdf(onLayout: (format) async => pdf.save());
+    return pdf;
   }
 
   // --- 2. AKTİF SİSTEM GEREKSİNİMLERİ RAPORU ---

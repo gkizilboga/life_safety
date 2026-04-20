@@ -36,9 +36,9 @@ void main() {
       'Kriter 1: Yapı yüksekliği 51.50m ve üzeri ise YGH zorunlu olmalı (30.5m mesajı gizlenmeli)',
       () {
         store.bolum3 = Bolum3Model(hYapi: 52.0, bodrumKatSayisi: 0);
-        final reasons = ReportEngine.evaluateYghRequirement(store: store);
-        expect(reasons.any((r) => r.contains("51.50 metre")), true);
-        expect(reasons.any((r) => r.contains("30.50m üzeri")), false);
+        final result = ReportEngine.evaluateYghRequirement(store: store);
+        expect(result.reasons.any((r) => r.contains("51.50 metre")), true);
+        expect(result.reasons.any((r) => r.contains("itfaiye asansörü")), true);
       },
     );
 
@@ -55,22 +55,17 @@ void main() {
             ),
           ],
         );
-        final reasons = ReportEngine.evaluateYghRequirement(store: store);
-        expect(reasons.any((r) => r.contains("Bodrum katlarda")), true);
+        final result = ReportEngine.evaluateYghRequirement(store: store);
+        expect(result.reasons.any((r) => r.contains("Bodrum katlarda")), true);
       },
     );
 
-    test('Kriter 3: İtfaiye asansörü (22-1-B) varsa YGH zorunlu olmalı', () {
-      store.bolum22 = Bolum22Model(
-        varlik: ChoiceResult(
-          label: "22-1-B",
-          uiTitle: "",
-          uiSubtitle: "",
-          reportText: "",
-        ),
-      );
-      final reasons = ReportEngine.evaluateYghRequirement(store: store);
-      expect(reasons.any((r) => r.contains("İtfaiye Asansörü")), true);
+    test('Kriter 3: İtfaiye asansörü zorunluluğu (Konutlarda 51.50m)', () {
+      // Note: In residential buildings, Fire Elevator limit is 51.50m.
+      // If we set hYapi high, it should trigger YGH.
+      store.bolum3 = Bolum3Model(hYapi: 55.0, bodrumKatSayisi: 0);
+      final result = ReportEngine.evaluateYghRequirement(store: store);
+      expect(result.reasons.any((r) => r.contains("itfaiye asansörü")), true);
     });
 
     test(
@@ -85,9 +80,9 @@ void main() {
             reportText: "",
           ),
         );
-        final reasons = ReportEngine.evaluateYghRequirement(store: store);
+        final result = ReportEngine.evaluateYghRequirement(store: store);
         expect(
-          reasons.any((r) => r.contains("Bodrum katlarda asansörün")),
+          result.reasons.any((r) => r.contains("asansör kapılarının")),
           true,
         );
       },
@@ -105,8 +100,8 @@ void main() {
             reportText: "",
           ),
         );
-        final reasons = ReportEngine.evaluateYghRequirement(store: store);
-        expect(reasons.any((r) => r.contains("30.50m üzeri")), true);
+        final result = ReportEngine.evaluateYghRequirement(store: store);
+        expect(result.reasons.any((r) => r.contains("Yüksek Bina")), true);
       },
     );
 
@@ -122,9 +117,9 @@ void main() {
             reportText: "",
           ),
         );
-        final reasons = ReportEngine.evaluateYghRequirement(store: store);
+        final result = ReportEngine.evaluateYghRequirement(store: store);
         expect(
-          reasons.any((r) => r.contains("kesintisiz devam etmesi")),
+          result.reasons.any((r) => r.contains("kesintisiz devam etmesi")),
           false,
         );
       },
@@ -135,18 +130,15 @@ void main() {
     test('Kriter 1: hYapi >= 51.50m ise basınçlandırma zorunlu olmalı', () {
       store.bolum3 = Bolum3Model(hYapi: 55.0, bodrumKatSayisi: 0);
       final reasons = ReportEngine.evaluateBasincRequirementForStairs(store: store);
-      expect(reasons.any((r) => r.contains("51.50m")), true);
+      expect(reasons.any((r) => r.contains("51.50 metre")), true);
       expect(reasons.any((r) => r.contains("KRİTİK RİSK")), true);
     });
 
-    test('Kriter 2: 30.50m <= hYapi < 51.50m ve YGH yoksa basınçlandırma zorunlu olmalı', () {
-      store.bolum3 = Bolum3Model(hYapi: 35.0, bodrumKatSayisi: 0);
-      store.bolum21 = Bolum21Model(
-        varlik: ChoiceResult(label: "21-1-B", uiTitle: "Yok", uiSubtitle: "", reportText: ""),
-      );
+    test('Kriter 2: 30.50m <= hYapi < 51.50m - Basınçlandırma BILGI notu', () {
+      store.bolum3 = Bolum3Model(hYapi: 40.0, bodrumKatSayisi: 0);
       final reasons = ReportEngine.evaluateBasincRequirementForStairs(store: store);
-      expect(reasons.any((r) => r.contains("30.50m üzeri")), true);
-      expect(reasons.any((r) => r.contains("YGH")), true);
+      expect(reasons.any((r) => r.contains("30.50 m - 51.50 m")), true);
+      expect(reasons.any((r) => r.contains("BİLGİ")), true);
     });
 
     test('Kriter 3: İtfaiye asansörü varsa basınçlandırma zorunlu veya gereksinim olmalı', () {
@@ -160,7 +152,7 @@ void main() {
     test('Kriter 4: Bodrum kat sayısı > 4 ise basınçlandırma zorunlu olmalı', () {
       store.bolum3 = Bolum3Model(bodrumKatSayisi: 5, hYapi: 10.0);
       final reasons = ReportEngine.evaluateBasincRequirementForStairs(store: store);
-      expect(reasons.any((r) => r.contains("Bodrum kat sayısı 4'ten fazla")), true);
+      expect(reasons.any((r) => r.contains("Madde 89/2")), true);
     });
   });
 

@@ -94,10 +94,10 @@ class RiskCalculator {
     }
 
     // YGH Requirement
-    final yghReasons = ReportEngine.evaluateYghRequirement(store: _store);
+    final result = ReportEngine.evaluateYghRequirement(store: _store);
     final bool hasYgh =
         _store.bolum21?.varlik?.label.contains("21-1-A") ?? false;
-    if (yghReasons.isNotEmpty && !hasYgh) {
+    if (result.isMandatory && !hasYgh) {
       if (!criticalTitles.contains("Bölüm 21")) {
         criticalTitles.add("Bölüm 21");
       }

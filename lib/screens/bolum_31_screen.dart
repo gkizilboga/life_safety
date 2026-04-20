@@ -241,7 +241,7 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SubQuestionTitle(title),
+          QuestionTitle(title),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,

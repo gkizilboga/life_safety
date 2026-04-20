@@ -60,6 +60,20 @@ enum ReportModule {
   );
 }
 
+class YghRequirementResult {
+  final List<String> reasons;
+  final String? waiverNote;
+  final bool isUnknown;
+
+  YghRequirementResult({
+    required this.reasons,
+    this.waiverNote,
+    this.isUnknown = false,
+  });
+
+  bool get isMandatory => reasons.isNotEmpty;
+}
+
 class ReportEngine {
   static BinaStore _getStore(BinaStore? store) => store ?? BinaStore.instance;
 
@@ -91,6 +105,31 @@ class ReportEngine {
       }
     }
     return topStatus;
+  }
+
+  static String _addSection20DynamicBasinc(Bolum20Model b20) {
+    if (b20.basinclandirma == null) return "";
+    String bReport = b20.basinclandirma!.reportText;
+    if (b20.basinclandirma!.label == "20-BAS-C") {
+      bReport = Bolum20Content.basYghOptionB.reportText.replaceAll(
+        "bulunmamaktadır",
+        "durumu bilinmemektedir",
+      );
+    }
+    return bReport;
+  }
+
+  static String _addSection20DynamicHavalandirma(Bolum20Model b20) {
+    if (b20.havalandirma == null) return "";
+    String hReport = b20.havalandirma!.reportText;
+    final String bLabel = b20.basinclandirma?.label ?? "";
+
+    // Kullanıcı basınçlandırma sorusunda "Var" derse (20-BAS-A)
+    // havalandırma sorusunun başına ekleme yapıyoruz.
+    if (bLabel == "20-BAS-A") {
+      hReport = "Basınçlandırma olmayan merdivenlerde $hReport";
+    }
+    return hReport;
   }
 
   static void _addDetail(
@@ -852,17 +891,19 @@ class ReportEngine {
         final bool hasItfaiye = b22.varlik?.label.contains("22-1-B") == true;
 
         if (b22.varlik != null) {
-          RiskLevel varlikLevel = b22.varlik!.level;
-          if (isMandatory && !hasItfaiye) {
-            varlikLevel = RiskLevel.critical;
-          }
+          String varlikPrefix = isMandatory
+              ? (hasItfaiye ? "OLUMLU: " : "KRİTİK RİSK: ")
+              : "BİLGİ: ";
+          RiskLevel varlikLevel = isMandatory
+              ? (hasItfaiye ? RiskLevel.positive : RiskLevel.critical)
+              : RiskLevel.info;
 
           _addDetail(
             details,
             label: 'Binada İtfaiye Asansörü var mı?',
             value: b22.varlik!.uiTitle,
             subtitle: b22.varlik!.uiSubtitle,
-            report: b22.varlik!.reportText,
+            report: "$varlikPrefix${_cleanPrefix(b22.varlik!.reportText)}",
             advice: b22.varlik!.adviceText,
             level: varlikLevel,
           );
@@ -924,15 +965,24 @@ class ReportEngine {
         final basincReasons = evaluateBasincRequirementForFiremanElevator(
           store: s,
         );
-        if (basincReasons.isNotEmpty) {
-          final bool isMet = basincReasons.every((r) => r.startsWith("OLUMLU"));
+        if (basincReasons.isNotEmpty || isMandatory) {
+          String reqPrefix = isMandatory
+              ? (hasItfaiye ? "OLUMLU: " : "KRİTİK RİSK: ")
+              : "BİLGİ: ";
+          RiskLevel reqLevel = isMandatory
+              ? (hasItfaiye ? RiskLevel.positive : RiskLevel.critical)
+              : RiskLevel.info;
+
+          final String itfaiyePart = itfaiyeReasons.isNotEmpty ? "${itfaiyeReasons.join('\n')}\n" : "";
+          final String basincPart = basincReasons.join('\n');
+
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi Gereksinimi (İtfaiye Asansörü)',
             value: '',
             report:
-                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ:\n${basincReasons.join('\n')}',
-            level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
+                'DURUM: ${isMandatory ? (hasItfaiye ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU") : "ŞART DEĞİL"}\n\n$reqPrefix$itfaiyePart$basincPart',
+            level: reqLevel,
           );
         }
 
@@ -1204,16 +1254,17 @@ class ReportEngine {
             level: b20.bodrumMerdivenDevami!.level,
           );
         // YGH Basınçlandırma (Kullanıcıdan alınan bilgi)
-        if (b20.basinclandirma != null)
+        if (b20.basinclandirma != null) {
           _addDetail(
             details,
             label: 'Merdivenlerde basınçlandırma sistemi var mı?',
             value: b20.basinclandirma!.uiTitle,
             subtitle: b20.basinclandirma!.uiSubtitle,
-            report: b20.basinclandirma!.reportText,
+            report: _addSection20DynamicBasinc(b20),
             advice: b20.basinclandirma!.adviceText,
             level: b20.basinclandirma!.level,
           );
+        }
 
         // Dinamik Basınçlandırma Analizi (Sadece PDF/Detaylı için)
         final basincReasons = evaluateBasincRequirementForStairs(store: s);
@@ -1226,10 +1277,11 @@ class ReportEngine {
               basincReasons.every((r) => r.startsWith("OLUMLU"));
           _addDetail(
             details,
-            label: 'Basınçlandırma Sistemi Gereksinimi (Kaçış Merdivenleri)',
+            label:
+                'Basınçlandırma Sistemi Gereksinimi (Kapalı Yangın Merdivenleri)',
             value: '', // Don't show as a user response
             report:
-                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ: Bina verilerine göre kaçış merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join("\n")}',
+                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join("\n")}',
             level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
           );
         } else if (b20.basinclandirma != null) {
@@ -1239,20 +1291,21 @@ class ReportEngine {
             label: 'Basınçlandırma Sistemi Gereksinimi',
             value: '', // Don't show as a user response
             report:
-                'DURUM: ŞART DEĞİL\n\nBİLGİ: Bina verilerine göre merdivenlerde basınçlandırma sistemi tesis edilmesi mecburi değildir.',
+                'DURUM: ŞART DEĞİL\n\nBİLGİ: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi tesis edilmesi mecburi değildir.',
             level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
           );
         }
         // Madde 45: Doğal Havalandırma
-        if (b20.havalandirma != null)
+        if (b20.havalandirma != null) {
           _addDetail(
             details,
             label: 'Merdivenlerde doğal havalandırma var mı?',
             value: b20.havalandirma!.uiTitle,
-            report: b20.havalandirma!.reportText,
+            report: _addSection20DynamicHavalandirma(b20),
             advice: b20.havalandirma!.adviceText,
             level: b20.havalandirma!.level,
           );
+        }
 
         // Madde 41 Tahliye Mesafesi (Lobi) - Bölüm 36 analiz notunda merkezileştirildiği için buradan kaldırıldı.
 
@@ -2059,8 +2112,8 @@ class ReportEngine {
       case 21:
         final b = s.bolum21;
         final List<RiskLevel> extraLevels = [];
-        final yghReasons = evaluateYghRequirement(store: s);
-        for (var reason in yghReasons) {
+        final result = evaluateYghRequirement(store: s);
+        for (var reason in result.reasons) {
           if (reason.startsWith("KRİTİK RİSK"))
             extraLevels.add(RiskLevel.critical);
           else if (reason.startsWith("UYARI"))
@@ -2428,9 +2481,9 @@ class ReportEngine {
       add(b21.esya);
 
       // Dinamik YGH Analizi (Puanlamaya dahil et)
-      final yghReasons = evaluateYghRequirement(store: s);
+      final result = evaluateYghRequirement(store: s);
       final bool hasYgh = b21.varlik?.label.contains("21-1-A") == true;
-      if (yghReasons.isNotEmpty && !hasYgh) {
+      if (result.isMandatory && !hasYgh) {
         addLevel(RiskLevel.critical);
       }
     }
@@ -2807,8 +2860,9 @@ class ReportEngine {
         if (b20.bodrumMerdivenDevami != null)
           parts.add(b20.bodrumMerdivenDevami!.reportText);
         if (b20.basinclandirma != null)
-          parts.add(b20.basinclandirma!.reportText);
-        if (b20.havalandirma != null) parts.add(b20.havalandirma!.reportText);
+          parts.add(_addSection20DynamicBasinc(b20));
+        if (b20.havalandirma != null)
+          parts.add(_addSection20DynamicHavalandirma(b20));
 
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
@@ -2844,7 +2898,9 @@ class ReportEngine {
 
         // 2. Mevcut Durum
         if (hasItfaiye) {
-          parts.add("BİLGİ: Binada İtfaiye Asansörü mevcuttur.");
+          parts.add(
+            "${isMandatory ? "OLUMLU: " : "BİLGİ: "}Binada İtfaiye Asansörü mevcuttur.",
+          );
           if (b22.konum != null) parts.add(b22.konum!.reportText);
           if (b22.boyut != null) parts.add(b22.boyut!.reportText);
           if (b22.kabin != null) parts.add(b22.kabin!.reportText);
@@ -3454,38 +3510,25 @@ class ReportEngine {
     final s = _getStore(store);
     List<String> reasons = [];
     final hYapi = _getHYapi(s);
-    final b21 = s.bolum21;
-    final b20 = s.bolum20;
+    final int bodrumKatSayisi = s.bolum3?.bodrumKatSayisi ?? 0;
 
-    final bool isAlreadyPressurized =
-        b20?.basinclandirma?.label.contains("20-7-A") == true;
-
-    // 1. Yapı Yüksekliği >= 51.50m
+    // 1. Yapı Yüksekliği > 51.50m (Madde 89)
     if (hYapi >= (51.50 - 0.001)) {
-      final String prefix = isAlreadyPressurized ? "OLUMLU: " : "KRİTİK RİSK: ";
       reasons.add(
-        "${prefix}Yapı Yüksekliği ≥ 51.50m olduğu için en az 2 merdivende basınçlandırma sistemi tesis edilmesi gerekmektedir.",
+        "KRİTİK RİSK: Konut binalarında Yapı Yüksekliği ≥ 51.50 metre olduğu için kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89).",
       );
     }
-    // 2. Yapı Yüksekliği >= 30.50m ve YGH yoksa
-    else if (hYapi >= (30.50 - 0.001)) {
-      final vLabel = b21?.varlik?.label;
-      final bool hasYgh = vLabel != null && vLabel.contains("21-1-A");
-      if (!hasYgh) {
-        final String prefix = isAlreadyPressurized
-            ? "OLUMLU: "
-            : "KRİTİK RİSK: ";
-        reasons.add(
-          "${prefix}Yapı Yüksekliği 30.50m üzeri ve merdiven önünde YGH (Yangın Güvenlik Holü) bulunmadığı durumlarda en az bir merdivende basınçlandırma sistemi tesis edilmesi gerekmektedir.",
-        );
-      }
+    // 2. Danışmanlık Notu: 30.50m - 51.50m
+    else if (hYapi > (30.50 - 0.001)) {
+      reasons.add(
+        "BİLGİ: Yapı yüksekliği 30.50 m - 51.50 m arasında olduğunda, merdivenlerde basınçlandırma sistemi tesisi YGH zorunluluğu için muafiyet sağlar (Madde 38/c).",
+      );
     }
 
-    // 5. Bodrum Kat Sayısı > 4
-    if ((s.bolum3?.bodrumKatSayisi ?? 0) > 4) {
-      final String prefix = isAlreadyPressurized ? "OLUMLU: " : "KRİTİK RİSK: ";
+    // 3. Bodrum Kat Sayısı > 4 (Madde 89/2)
+    if (bodrumKatSayisi > 4) {
       reasons.add(
-        "${prefix}Bodrum kat sayısı 4'ten fazla olduğu için bodruma hizmet veren tüm merdivenlerde basınçlandırma zorunludur.",
+        "KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89/2).",
       );
     }
 
@@ -3558,36 +3601,38 @@ class ReportEngine {
     return reasons;
   }
 
-  static List<String> evaluateYghRequirement({BinaStore? store}) {
+  static YghRequirementResult evaluateYghRequirement({BinaStore? store}) {
     final s = _getStore(store);
     List<String> reasons = [];
+    String? waiverNote;
+    bool isUnknown = false;
     final hYapi = _getHYapi(s);
+    final b20 = s.bolum20;
+    final int bodrumKatSayisi = s.bolum3?.bodrumKatSayisi ?? 0;
 
-    // 1. Yapı Yüksekliği >= 51.50m (En üst limit - diğer yükseklik şartlarını kapsar)
+    // 1. Yapı Yüksekliği >= 51.50m (Konutlarda Üst Eşik)
     if (hYapi >= (51.50 - 0.001)) {
       reasons.add(
-        "Yapı Yüksekliği 51.50 metrenin üzerinde olması sebebiyle en az 2 adet merdiven önünde yangın güvenlik holü zorunludur.",
+        "Yapı Yüksekliği 51.50 metrenin üzerinde olması sebebiyle hem zorunlu itfaiye asansörü (Md. 63) hem de genel kaçış güvenliği için YGH zorunludur.",
       );
     }
-    // 2. Yapı Yüksekliği > 30.50m (Basınçlandırma yoksa zorunlu)
+    // 2. Yapı Yüksekliği > 30.50m (Konutlarda Yüksek Bina Eşiği)
     else if (hYapi > (30.50 - 0.001)) {
-      final b20 = s.bolum20;
       if (b20?.basinclandirma?.label.contains("-B") == true) {
         // 20-BAS-B: Hayır
         reasons.add(
-          "Yapı Yüksekliği 30.50m üzeri ve en az bir merdivende basınçlandırma sistemi yok ise YGH (Yangın Güvenlik Holü) zorunludur.",
+          "Yapı Yüksekliği 30.50m üzeri (Yüksek Bina) olduğu için kaçış merdivenleri önünde YGH zorunludur.",
         );
+      } else if (b20?.basinclandirma?.label.contains("-A") == true) {
+        // MUAFİYET DURUMU (Madde 38/c)
+        waiverNote =
+            "BİLGİ: Binada basınçlandırma sistemi tercih edilerek, BYKHY Madde 38/c uyarınca Yangın Güvenlik Holü (YGH) zorunluluğundan muafiyet sağlanmıştır.";
+      } else if (b20?.basinclandirma?.label.contains("-C") == true) {
+        isUnknown = true;
       }
     }
-    // 3. Bina Yüksekliği > 21.50m ve Konut Harici Kullanım
-    final bool isSadeceKonut = s.bolum6?.isSadeceKonut ?? false;
-    if (!isSadeceKonut && hYapi > (21.50 - 0.001)) {
-      reasons.add(
-        "Konut harici (veya karma kullanımlı) binalarda Yapı Yüksekliği 21.50 metreyi aştığında kaçış merdivenleri önünde YGH zorunludur.",
-      );
-    }
 
-    // 4. Bodrum katlarda ticari/teknik kullanım (Bölüm 10)
+    // 3. Bodrum katlarda ticari/teknik kullanım (Bölüm 10)
     final b10 = s.bolum10;
     if (b10 != null) {
       final hasNonResInBasement = b10.bodrumlar.any(
@@ -3600,35 +3645,37 @@ class ReportEngine {
       );
       if (hasNonResInBasement) {
         reasons.add(
-          "Bodrum katlarda, konuttan farklı bir kullanım amacı olduğundan tüm merdivenlerin önünde YGH (Yangın Güvenlik Holü) zorunludur.",
+          "Bodrum katlarda otopark harici (ticari/teknik) kullanım alanları olduğundan bu merdivenlerin önünde YGH zorunludur.",
         );
       }
     }
 
-    // 5. İtfaiye Asansörü zorunluluğu (Bölüm 22)
-    final b22 = s.bolum22;
-    if (b22?.varlik?.label.contains("22-1-B") == true) {
-      reasons.add(
-        "Binada İtfaiye Asansörü bulunması zorunludur. İtfaiye asansörüne ulaşım mutlaka bir YGH üzerinden sağlanmalıdır.",
-      );
+    // 4. İtfaiye Asansörü zorunluluğu (Madde 63 - Konutlarda 51.50m)
+    if (hYapi >= (51.50 - 0.001)) {
+      // Bu zaten yukarıda madde 1'de kapsandı ancak asansör bağlantısı için not düşmek gerekirse:
+      // "İtfaiye asansörüne ulaşım mutlaka bir YGH üzerinden sağlanmalıdır."
     }
 
-    // 6. Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı (Bölüm 23)
+    // 5. Bodrum katlarda asansörün kuyu önü duman sızdırmazlığı (Bölüm 23)
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "Bodrum katlarda asansörün önünde yangın güvenlik holü/koridoru gereklidir.",
+        "Bodrum katlarda asansör kapılarının binanın diğer bölümlerine açılması durumunda yangın güvenlik holü gereklidir.",
       );
     }
 
-    // 7. Bodrum kat sayısı > 4
-    if ((s.bolum3?.bodrumKatSayisi ?? 0) > 4) {
+    // 6. Bodrum kat sayısı > 4
+    if (bodrumKatSayisi > 4) {
       reasons.add(
         "Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren tüm merdivenlerin önünde YGH zorunludur.",
       );
     }
 
-    return reasons;
+    return YghRequirementResult(
+      reasons: reasons,
+      waiverNote: waiverNote,
+      isUnknown: isUnknown,
+    );
   }
 
   static String _getYesNoUnknown(int? val) {
@@ -3798,5 +3845,20 @@ class ReportEngine {
       return maxYuk <= 100 ? RiskLevel.positive : RiskLevel.critical;
     }
     return res.level;
+  }
+
+  static String _cleanPrefix(String text) {
+    if (text.isEmpty) return "";
+
+    return text
+        .replaceAll(
+          RegExp(
+            r'(KRİTİK RİSK|UYARI|BİLGİ|OLUMLU|BİLİNMİYOR|DURUM|ZORUNLU|ŞART DEĞİL|UYGUN)[:\s]*',
+            caseSensitive: false,
+          ),
+          '',
+        )
+        .replaceAll(RegExp(r'^\s*[:\-]\s*', multiLine: true), '')
+        .trim();
   }
 }

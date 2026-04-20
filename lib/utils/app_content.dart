@@ -177,7 +177,7 @@ class Bolum6Content {
     uiTitle: "Otopark bulunmaktadır.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Binada kapalı veya yarı-açık (tek cephesinde açıklık olan) otopark alanı bulunmaktadır. Özellikle LPG'li araçların, elektrik motorlu araçların park edildiği / şarj edildiği otoparklar yangın yükü bakımından konut katlarına göre yüksek olduğundan ek önlemler almak mutlaka şarttır. ",
+        "BİLGİ: Binada otopark alanı bulunmaktadır. Özellikle LPG'li araçların, elektrik motorlu araçların park edildiği / şarj edildiği otoparklar yangın yükü bakımından konut katlarına göre yüksek olduğundan ek önlemler almak mutlaka şarttır. ",
     level: RiskLevel.info,
   );
 
@@ -186,7 +186,7 @@ class Bolum6Content {
     uiTitle: "Ticari alanlar bulunmaktadır.",
     uiSubtitle: "Dükkan, mağaza, kafe, ofis, her türlü işyeri vb.",
     reportText:
-        "BİLGİ: Binada konut harici ticari kullanım (işyerleri vb.) mevcuttur. Karma kullanımlı binalarda, ticari alanların konutlardan yangın duvarı ile ayrılması önerilmektedir. Özellikle içerisinde endüstriyel mutfak bulunan işletmelerin binanın diğer bölümlerinden ayrılması ve yönetmelikçe belirlenen önlemlerin alınması şiddetle önerilir.",
+        "BİLGİ: Binada ticari kullanım (dükkan, mağaza vb.) mevcuttur. Konut binalarının zemin (veya bodrum) katlarındaki bu alanların konut girişlerinden yangın duvarı ile ayrılması önerilmektedir. Özellikle içerisinde endüstriyel mutfak bulunan işletmelerin binanın diğer bölümlerinden ayrılması ve yönetmelikçe belirlenen önlemlerin alınması şiddetle önerilir.",
     level: RiskLevel.info,
   );
 
@@ -201,8 +201,8 @@ class Bolum6Content {
 
   static final sadeceKonut = ChoiceResult(
     label: "6-1-D (Sadece Konut)",
-    uiTitle: "Konut harici hiçbir alan yok.",
-    uiSubtitle: "Sadece daireler var.",
+    uiTitle: "Sadece konut alanı var.",
+    uiSubtitle: "Otopark veya dükkan gibi alanlar yok.",
     reportText:
         "BİLGİ: Bina sadece konut amaçlı kullanılmaktadır. Ekstra yangın yükü oluşturabilecek bir fonksiyon bulunmamaktadır. Konut risklerine göre alınacak yangın güvenlik önlemleri yeterli olacaktır.",
     level: RiskLevel.info,
@@ -280,7 +280,7 @@ class Bolum7Content {
     uiTitle: "Kazan Dairesi / Isı Merkezi",
     uiSubtitle: "Mahal içerisinde ısıtma kazanı (boiler) bulunur.",
     reportText:
-        "BİLGİ: Binada kazan dairesi mevcuttur. Basınçlı ekipmanlar ve yakıt sebebiyle binadaki yüksek riskli alanlarından biridir. Kazan dairesi 120 dk yangın dayanımlı duvar ve 90 dk dayanıklı kapı ile binanın diğer alanlarından ayrılmalıdır.",
+        "BİLGİ: Binada kazan dairesi mevcuttur. Basınçlı ekipmanlar ve yakıt sebebiyle binadaki yüksek riskli alanlardan biridir. Kazan dairesi 120 dk yangın dayanımlı duvar ve 90 dk dayanıklı kapı ile dairelerden ve merdivenlerden ayrılmalıdır.",
     level: RiskLevel.info,
   );
 
@@ -1801,10 +1801,8 @@ class Bolum19Content {
     uiSubtitle: "Yanlara açılır.",
     reportText:
         "UYARI: Kaçış yolunda otomatik kayar kapı tespit edilmiştir. Bu kapı(lar)ın yangın anında, binaya özgü hazırlanmış olan yangın senaryosu dahilinde beklemeksizin tamamen açık hale gelmeleri şarttır. Aynı zamanda binada elektrik kesildiğinde de bu kapı(lar) açık hale gelmelidir. Binada yangın senaryosu ve yangın matrisi hazırlanmamış ise kaçış yolu üzerindeki bu kayar kapıların yanına manuel kapı açma butonu yerleştirilmelidir. Aksi halde yangın esnasında bu kapıların insanlar tarafından zorlanara açılmaya çalışılması zaman kaybına, hatta can kaybına yol açabilir.",
-    adviceText:
-        "",
+    adviceText: "",
     level: RiskLevel.warning,
-
   );
 
   static final engelOptionE = ChoiceResult(
@@ -1995,7 +1993,7 @@ class Bolum20Content {
     uiTitle: "Yok.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Kapalı yangın merdivenlerinde basınçlandırma sistemi bulunmamaktadır. Binaya özgü olarak YGH ihtiyacı bu analiz dokümanında ayrıca belirtilmiştir.",
+        "BİLGİ: Kapalı yangın merdivenlerinde basınçlandırma sistemi bulunmamaktadır. Binaya özgü Yangın Güvenlik Holü ihtiyacı bu dokümanında ayrıca belirtilmiştir.",
     level: RiskLevel.warning,
   );
 
@@ -2003,7 +2001,8 @@ class Bolum20Content {
     label: "20-BAS-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText: "BİLİNMİYOR: Merdiven basınçlandırma durumu belirsizdir.",
+    reportText:
+        "BİLİNMİYOR: Kapalı yangın merdivenlerinde basınçlandırma durumu belirsizdir.",
     level: RiskLevel.unknown,
   );
 
@@ -2031,7 +2030,7 @@ class Bolum20Content {
     uiTitle: "Var.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Basınçlandırma olmayan tüm merdivenlerde doğal havalandırma (pencere/menfez) imkanı mevcut. Yönetmelik gereği, korunmuş kaçış merdivenleri doğal veya mekanik havalandırma ile donatılmalıdır.",
+        "OLUMLU: Merdivenlerde doğal havalandırma (pencere/menfez) imkanı mevcuttur. Yönetmelik gereği, binadaki merdivenlerin tamamında doğal veya mekanik havalandırma tesis edilmesi şarttır.",
     level: RiskLevel.positive,
   );
 
@@ -2040,7 +2039,7 @@ class Bolum20Content {
     uiTitle: "Bazı merdivenlerde var.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Basınçlandırma olmayan merdivenlerde doğal havalandırma imkanı mevcut ancak tümünde değil. Yönetmelik Madde 45 uyarınca bütün korunmuş kaçış merdivenleri doğal veya mekanik havalandırma ile donatılmalıdır. Havalandırması olmayan merdivenlere mekanik havalandırma veya basınçlandırma sistemi tesis edilmesi gerekmektedir.",
+        "UYARI: Merdivenlerde doğal havalandırma imkanı mevcut ancak tümünde değil. Yönetmelik gereği, binadaki merdivenlerin tamamında doğal veya mekanik havalandırma tesis edilmelidir.",
     level: RiskLevel.warning,
   );
 
@@ -2049,7 +2048,7 @@ class Bolum20Content {
     uiTitle: "Yok.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Basınçlandırma olmayan merdivenlerde doğal havalandırma da bulunmadığı beyan edilmiştir. Bu durumda merdivene duman dolması halinde duman tahliye edilemeyebilir ve kaçış güvenliği tehlike altına girer. Yönetmelik Madde 45 gereği tüm korunmuş kaçış merdivenleri doğal yolla veya mekanik yolla havalandırılmalı ya da basınçlandırılmalıdır. Acil olarak mekanik havalandırma veya basınçlandırma sistemi tesis edilmesi zorunludur.",
+        "KRİTİK RİSK: Merdivenlerde doğal havalandırma bulunmadığı beyan edilmiştir. Bu durumda merdivene duman dolması halinde duman tahliye edilemeyebilir ve kaçış güvenliği tehlike altına girer. Yönetmelik Madde 45 gereği tüm korunmuş kaçış merdivenleri doğal yolla veya mekanik yolla havalandırılmalı ya da basınçlandırılmalıdır. Acil olarak mekanik havalandırma veya basınçlandırma sistemi tesis edilmesi zorunludur.",
     level: RiskLevel.critical,
   );
 
@@ -2058,7 +2057,7 @@ class Bolum20Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Basınçlandırma olmayan merdivenlerde doğal havalandırma (pencere/menfez) imkanının olup olmadığı bilinmemektedir. Yönetmelik Madde 45 gereği merdivenler proje üzerinde veya yerinde kontrol edilmelidir.",
+        "BİLİNMİYOR: Merdivenlerde doğal havalandırma (pencere/menfez) imkanının olup olmadığı bilinmemektedir. Yönetmelik Madde 45 gereği merdivenler proje üzerinde veya yerinde kontrol edilmelidir.",
     level: RiskLevel.unknown,
   );
 
@@ -2075,7 +2074,8 @@ class Bolum20Content {
     label: "20-C (Tek Kat)",
     uiTitle: "Hayır.",
     uiSubtitle: "Birkaç basamak inilerek/çıkılarak ulaşılıyor.",
-    reportText: "OLUMLU: (Merdiven sayısı not edilir) Çıkışta basamak mevcuttur.",
+    reportText:
+        "OLUMLU: (Merdiven sayısı not edilir) Çıkışta basamak mevcuttur.",
     level: RiskLevel.positive,
   );
 
@@ -3112,7 +3112,7 @@ class Bolum28Content {
     uiTitle: "(Otomatik Ekran)",
     uiSubtitle: "(Kullanıcı seçim yapmaz, sistem gösterir)",
     reportText:
-        "OLUMLU: Binanız bodrum dahil 4 katı geçmemektedir ve binada konut harici ticari alan da bulunmamaktadır. Yapı tek kullanım amaçlı olup, özel bir yangın merdiveni veya kaçış mesafesi şartı aranmaz.",
+        "OLUMLU: Binanız bodrum dahil 4 katı geçmemektedir ve binada ticari alan da bulunmamaktadır. Yapı tek kullanım amaçlı olup, özel bir yangın merdiveni veya kaçış mesafesi şartı aranmaz.",
     level: RiskLevel.positive,
   );
 
@@ -3521,7 +3521,8 @@ class Bolum30Content {
   );
   static final konumOptionB = ChoiceResult(
     label: "30-1-B",
-    uiTitle: "Yangın korunumlu olmayan bir koridora veya doğrudan merdiven kovasına açılıyor.",
+    uiTitle:
+        "Yangın korunumlu olmayan bir koridora veya doğrudan merdiven kovasına açılıyor.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Kazan dairesi bina içerisinde doğrudan merdiven kovasına veya yangın korunumlu olmayan bir alana açılmamalıdır. Yönetmelik açısından uygunsuzluk mevcuttur.",
@@ -4577,7 +4578,7 @@ class AppContent {
       case 5:
         return "Binanın toplam inşaat alanı ve kat alanları nedir?";
       case 6:
-        return "Binada konut harici ticari alanlar bulunmakta mıdır?";
+        return "Binada dükkan, otopark vb. ticari/ortak alanlar bulunmakta mıdır?";
       case 7:
         return "Binada hangi teknik hacimler mevcuttur?";
       case 8:
