@@ -43,11 +43,13 @@ void main() {
       final report = ReportEngine.getSectionFullReport(33, store: store);
       
       // Zemin should be OLUMLU because of independent exit
-      expect(report.contains("OLUMLU (Zemin Kat)"), isTrue);
+      expect(report.contains("ZEMIN KAT"), isTrue);
+      expect(report.contains("OLUMLU"), isTrue);
       expect(report.contains("bağımsız çıkışları olduğundan"), isTrue);
       
       // Normal floor should be KRİTİK RİSK because it uses main stairs
-      expect(report.contains("KRİTİK RİSK (Normal Katlar)"), isTrue);
+      expect(report.contains("NORMAL KATLAR"), isTrue);
+      expect(report.contains("KRİTİK RİSK"), isTrue);
     });
 
     test('Scenario: All floors have independent exits', () {
@@ -87,9 +89,10 @@ void main() {
       
       // Everything should be OLUMLU despite low current exit count
       expect(report.contains("KRİTİK RİSK"), isFalse);
-      expect(report.contains("OLUMLU (Zemin Kat)"), isTrue);
-      expect(report.contains("OLUMLU (Normal Katlar)"), isTrue);
-      expect(report.contains("OLUMLU (Bodrum Katlar)"), isTrue);
+      expect(report.contains("ZEMIN KAT"), isTrue);
+      expect(report.contains("NORMAL KATLAR"), isTrue);
+      expect(report.contains("BODRUM KATLAR"), isTrue);
+      expect(report.contains("OLUMLU"), isTrue);
     });
   });
 }

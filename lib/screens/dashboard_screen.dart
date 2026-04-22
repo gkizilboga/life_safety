@@ -245,7 +245,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       await Future.delayed(Duration.zero);
                       if (!context.mounted) return;
                       try {
-                        await PdfService.generateRiskAnalysisPdf();
+                        await PdfService.generateRiskAnalysisPdf(context);
                       } catch (e) {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -292,7 +292,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   try {
-                    await PdfService.generateActiveSystemsPdf();
+                    await PdfService.generateActiveSystemsPdf(context);
                   } catch (e) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(

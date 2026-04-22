@@ -449,11 +449,19 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
     final hasSprinkler = BinaStore.instance.bolum9?.secim?.label == "9-1-A";
     final limit = hasSprinkler ? 15 : 10;
 
+    final cikisKatiRes = BinaStore.instance.bolum36?.cikisKati;
+    String katIsmi = "Çıkış";
+    if (cikisKatiRes != null) {
+      if (cikisKatiRes.label.contains("-A")) katIsmi = "Zemin";
+      if (cikisKatiRes.label.contains("-B")) katIsmi = "Normal";
+      if (cikisKatiRes.label.contains("-C")) katIsmi = "Bodrum";
+    }
+
     final title = isBasement
-        ? "Bodrum Kat: Çıkış Katı Tahliye Mesafesi"
-        : "Çıkış Katı Tahliye Mesafesi";
+        ? "Bodrum Kat: $katIsmi Kat Tahliye Mesafesi"
+        : "$katIsmi Kat Tahliye Mesafesi";
     final question =
-        "Zemin katta merdivenden çıkınca binanın dış kapısına ulaşmak için kaç metre yürünüyor?";
+        "$katIsmi katında merdivenden çıkınca binanın dış kapısına ulaşmak için kaç metre yürünüyor?";
 
     return Selector<Bolum20Provider, ChoiceResult?>(
       selector: (_, p) =>

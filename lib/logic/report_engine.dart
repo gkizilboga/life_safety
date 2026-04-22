@@ -303,8 +303,9 @@ class ReportEngine {
         // Bodrum katlar
         if (b10.bodrumlar.isNotEmpty) {
           if (b10.bodrumlarAyni && b10.bodrumlar[0] != null) {
+            final int len = b10.bodrumlar.length;
             details.add({
-              'label': '1-${b10.bodrumlar.length}. Bodrum Katlar',
+              'label': len == 1 ? '1. Bodrum Kat' : '1. - $len. Bodrum Katlar',
               'value':
                   "${b10.bodrumlar[0]!.uiTitle} | ${b10.bodrumlar[0]!.reportText}",
               'isTable': true,
@@ -325,8 +326,9 @@ class ReportEngine {
         // Normal katlar
         if (b10.normaller.isNotEmpty) {
           if (b10.normallerAyni && b10.normaller[0] != null) {
+            final int len = b10.normaller.length;
             details.add({
-              'label': '1-${b10.normaller.length}. Normal Katlar',
+              'label': len == 1 ? '1. Normal Kat' : '1. - $len. Normal Katlar',
               'value':
                   "${b10.normaller[0]!.uiTitle} | ${b10.normaller[0]!.reportText}",
               'isTable': true,
@@ -898,12 +900,22 @@ class ReportEngine {
               ? (hasItfaiye ? RiskLevel.positive : RiskLevel.critical)
               : RiskLevel.info;
 
+          String finalReportText;
+          if (isMandatory) {
+            finalReportText =
+                "$varlikPrefix${cleanPrefix(b22.varlik!.reportText)}";
+          } else {
+            final hYapi = _getHYapi(s);
+            finalReportText =
+                "BİLGİ: Yapı yüksekliği (${hYapi.toStringAsFixed(2)} m) itfaiye asansörü zorunluluğu sınırının (51.50 m) altındadır. Bu nedenle binada itfaiye asansörü tesisi zorunlu değildir.";
+          }
+
           _addDetail(
             details,
             label: 'Binada İtfaiye Asansörü var mı?',
             value: b22.varlik!.uiTitle,
             subtitle: b22.varlik!.uiSubtitle,
-            report: "$varlikPrefix${_cleanPrefix(b22.varlik!.reportText)}",
+            report: finalReportText,
             advice: b22.varlik!.adviceText,
             level: varlikLevel,
           );
@@ -973,7 +985,9 @@ class ReportEngine {
               ? (hasItfaiye ? RiskLevel.positive : RiskLevel.critical)
               : RiskLevel.info;
 
-          final String itfaiyePart = itfaiyeReasons.isNotEmpty ? "${itfaiyeReasons.join('\n')}\n" : "";
+          final String itfaiyePart = itfaiyeReasons.isNotEmpty
+              ? "${itfaiyeReasons.join('\n')}\n"
+              : "";
           final String basincPart = basincReasons.join('\n');
 
           _addDetail(
@@ -1036,16 +1050,29 @@ class ReportEngine {
             advice: b23.levha!.adviceText,
             level: b23.levha!.level,
           );
-        if (b23.havalandirma != null)
+        if (b23.havalandirma != null) {
+          final bool hasBasinc = b23.basinc?.label.contains("23-6-A") == true;
+          final bool noVent = b23.havalandirma!.label.contains("23-5-B");
+
+          String report = b23.havalandirma!.reportText;
+          RiskLevel level = b23.havalandirma!.level;
+
+          if (hasBasinc && noVent) {
+            report =
+                "OLUMLU: Asansör kuyusunda basınçlandırma sistemi mevcut olduğu için Yönetmelik gereği 0.1 m² doğal havalandırma bacası tesisi zorunlu değildir. Mevcut durum yeterlidir.";
+            level = RiskLevel.positive;
+          }
+
           _addDetail(
             details,
             label: 'Asansör kuyusunun tepesinde havalandırma penceresi var mı?',
             value: b23.havalandirma!.uiTitle,
             subtitle: b23.havalandirma!.uiSubtitle,
-            report: b23.havalandirma!.reportText,
+            report: report,
             advice: b23.havalandirma!.adviceText,
-            level: b23.havalandirma!.level,
+            level: level,
           );
+        }
 
         if (b23.basinc != null) {
           _addDetail(
@@ -1190,27 +1217,59 @@ class ReportEngine {
             advice: b19.levha!.adviceText,
             level: b19.levha!.level,
           );
-        if (b19.yanilticiKapi != null)
+
+        // Dinamik Yanıltıcı Kapı Mantığı
+        if (b19.yanilticiKapi != null) {
+          final bool hasDoor =
+              b19.yanilticiKapi!.label == Bolum19Content.yanilticiOptionB.label;
+          final bool hasLabel =
+              b19.yanilticiEtiket?.label == Bolum19Content.etiketOptionA.label;
+          final bool noLabel =
+              b19.yanilticiEtiket?.label == Bolum19Content.etiketOptionB.label;
+
+          String doorReport = b19.yanilticiKapi!.reportText;
+          RiskLevel doorLevel = b19.yanilticiKapi!.level;
+
+          if (hasDoor) {
+            if (hasLabel) {
+              doorReport =
+                  "BİLGİ: Kaçış yollarında yanıltıcı kapılar mevcut ancak üzerlerinde gerekli uyarı levhaları bulunduğu için tahliye güvenliği korunmaktadır.";
+              doorLevel = RiskLevel.info;
+            } else if (noLabel) {
+              doorReport =
+                  "KRİTİK RİSK: Kaçış yollarında bulunan yanıltıcı kapılar üzerinde herhangi bir uyarı levhası bulunmamaktadır. Bu durum yangın anında yanlış yöne yönlenmeye ve can kaybına neden olabilir.";
+              doorLevel = RiskLevel.critical;
+            } else {
+              // Bilmiyorum durumu
+              doorReport =
+                  "UYARI: Yanıltıcı kapıların varlığı beyan edilmiş ancak etiket durumu belirsizdir. Etiketlerin varlığı hayati önem taşır.";
+              doorLevel = RiskLevel.warning;
+            }
+          }
+
           _addDetail(
             details,
             label:
                 'Yanıltıcı kapılar var mı? (Çıkış ulaşırken kafanızı karıştırabilecek türden kapılar)',
             value: b19.yanilticiKapi!.uiTitle,
             subtitle: b19.yanilticiKapi!.uiSubtitle,
-            report: b19.yanilticiKapi!.reportText,
+            report: doorReport,
             advice: b19.yanilticiKapi!.adviceText,
-            level: b19.yanilticiKapi!.level,
+            level: doorLevel,
           );
-        if (b19.yanilticiEtiket != null)
-          _addDetail(
-            details,
-            label: 'Bu kapıların üzerinde yazı var mı?',
-            value: b19.yanilticiEtiket!.uiTitle,
-            subtitle: b19.yanilticiEtiket!.uiSubtitle,
-            report: b19.yanilticiEtiket!.reportText,
-            advice: b19.yanilticiEtiket!.adviceText,
-            level: b19.yanilticiEtiket!.level,
-          );
+
+          if (b19.yanilticiEtiket != null) {
+            _addDetail(
+              details,
+              label: 'Bu kapıların üzerinde yazı var mı?',
+              value: b19.yanilticiEtiket!.uiTitle,
+              subtitle: b19.yanilticiEtiket!.uiSubtitle,
+              report: b19.yanilticiEtiket!.reportText,
+              advice: b19.yanilticiEtiket!.adviceText,
+              level: hasLabel ? RiskLevel.positive : b19.yanilticiEtiket!.level,
+            );
+          }
+        }
         handled = true;
       }
     }
@@ -1901,14 +1960,21 @@ class ReportEngine {
             advice: replaceLimit(b35.cikmazMesafe!.adviceText, limitTekYon),
             level: b35.cikmazMesafe!.level,
           );
-        if (b35.manuelMesafe != null && b35.manuelMesafe! > 0)
+        if (b35.manuelMesafe != null && b35.manuelMesafe! > 0) {
+          final int limit = (b35.tekYon != null || b35.cikmaz != null)
+              ? limitTekYon
+              : limitCiftYon;
+          final bool isOk = b35.manuelMesafe! <= limit;
           _addDetail(
             details,
             label: 'Elle Girilen Kaçış Mesafesi',
             value: '${b35.manuelMesafe} m',
-            report: '',
-            status: ReportStatus.info,
+            report: isOk
+                ? 'OLUMLU: Girilen mesafe yönetmelik sınırı olan $limit m içerisindedir.'
+                : 'KRİTİK RİSK: Girilen mesafe yönetmelik sınırı olan $limit m üzerindedir.',
+            status: isOk ? ReportStatus.compliant : ReportStatus.risk,
           );
+        }
         handled = true;
       }
     }
@@ -2272,11 +2338,26 @@ class ReportEngine {
         return _maxLevel([b?.zemin?.level, b?.bodrum?.level, b?.normal?.level]);
       case 35:
         final b = s.bolum35;
+        if (b == null) return RiskLevel.positive;
+
+        final hasSprinkler = s.bolum9?.secim?.label == "9-1-A";
+        int limitTekYon = hasSprinkler ? 30 : 15;
+        int limitCiftYon = hasSprinkler ? 75 : 30;
+
+        RiskLevel manualLevel = RiskLevel.positive;
+        if (b.manuelMesafe != null && b.manuelMesafe! > 0) {
+          final int limit = (b.tekYon != null || b.cikmaz != null)
+              ? limitTekYon
+              : limitCiftYon;
+          if (b.manuelMesafe! > limit) manualLevel = RiskLevel.critical;
+        }
+
         return _maxLevel([
-          b?.tekYon?.level,
-          b?.ciftYon?.level,
-          b?.cikmaz?.level,
-          b?.cikmazMesafe?.level,
+          b.tekYon?.level,
+          b.ciftYon?.level,
+          b.cikmaz?.level,
+          b.cikmazMesafe?.level,
+          manualLevel,
         ]);
       case 36:
         final b = s.bolum36;
@@ -2439,8 +2520,34 @@ class ReportEngine {
     if (b19 != null) {
       addAll(b19.engeller);
       add(b19.levha);
-      add(b19.yanilticiKapi);
-      add(b19.yanilticiEtiket);
+
+      // Dinamik Yanıltıcı Kapı Puanlaması
+      if (b19.yanilticiKapi != null) {
+        final bool hasDoor =
+            b19.yanilticiKapi!.label == Bolum19Content.yanilticiOptionB.label;
+        final bool hasLabel =
+            b19.yanilticiEtiket?.label == Bolum19Content.etiketOptionA.label;
+        final bool noLabel =
+            b19.yanilticiEtiket?.label == Bolum19Content.etiketOptionB.label;
+
+        if (hasDoor) {
+          if (hasLabel) {
+            addLevel(RiskLevel.info); // Puan düşmez
+          } else if (noLabel) {
+            addLevel(RiskLevel.critical); // Ciddi puan düşer
+          } else {
+            addLevel(RiskLevel.warning); // Orta puan düşer
+          }
+        } else {
+          add(b19.yanilticiKapi); // Diğer seçenekler (Yok/Bilmiyorum)
+        }
+      }
+
+      if (b19.yanilticiEtiket != null) {
+        final bool hasLabel =
+            b19.yanilticiEtiket?.label == Bolum19Content.etiketOptionA.label;
+        addLevel(hasLabel ? RiskLevel.positive : b19.yanilticiEtiket!.level);
+      }
     }
 
     // --- BÖLÜM 20 (Merdiven Analizi) ---
@@ -2774,7 +2881,18 @@ class ReportEngine {
       final b16 = s.bolum16;
       if (b16 != null) {
         List<String> parts = [];
-        if (b16.mantolama != null) parts.add(b16.mantolama!.reportText);
+        if (b16.mantolama != null) {
+          final hBina = s.bolum3?.hBina ?? 0.0;
+          // BYKHY Madde 27: 21.50m üzeri yanıcı mantolama yasaktır.
+          String text = b16.mantolama!.reportText.replaceAll(
+            "[LİMİT]",
+            "21.50",
+          );
+          if (hBina <= 21.50 && b16.mantolama!.label.contains("16-1-A")) {
+            text = Bolum16Content.mantolamaOptionALowReport;
+          }
+          parts.add(text);
+        }
 
         // Bariyer Analizi (Mantolama 16-1-A ise)
         if (b16.mantolama?.label.contains("16-1-A") == true) {
@@ -2940,6 +3058,14 @@ class ReportEngine {
       }
     }
 
+    // Bölüm 28: Kaçış Mesafesi
+    if (id == 28) {
+      final b28 = s.bolum28;
+      if (b28 != null && b28.mesafe != null) {
+        return b28.mesafe!.reportText;
+      }
+    }
+
     // Bölüm 29: Ortak Hatalar (Depolama vb.)
     if (id == 29) {
       final b29 = s.bolum29;
@@ -3019,7 +3145,13 @@ class ReportEngine {
       final b31 = s.bolum31;
       if (b31 != null) {
         List<String> parts = [];
-        if (b31.yapi != null) parts.add(b31.yapi!.reportText);
+        if (b31.yapi != null) {
+          String text = b31.yapi!.reportText;
+          if (b31.yapi!.label.contains("31-1-A")) {
+            text = text.replaceAll("BİLGİ:", "OLUMLU:");
+          }
+          parts.add(text);
+        }
         if (b31.tip != null) parts.add(b31.tip!.reportText);
         if (b31.cukur != null) parts.add(b31.cukur!.reportText);
         if (b31.sondurme != null) parts.add(b31.sondurme!.reportText);
@@ -3071,17 +3203,17 @@ class ReportEngine {
           if (hasIndependentExit) {
             // override: POSITIVE because of independent commercial exit
             reportParts.add(
-              "OLUMLU ($title): Kattaki kullanıcı yükü $yuk kişi olarak hesaplanmıştır. Normal şartlarda $gerekli adet çıkış gerekmektedir (Mevcut: $mevcut). ANCAK, ticari alanların doğrudan dışarıya açılan bağımsız çıkışları olduğundan (Bölüm 34 beyanı), ticari kullanım kaynaklı yük konut merdiveni hesabına dahil edilmemiştir. Mevcut konut merdivenleri yeterli kabul edilmiştir.",
+              "${title.toUpperCase()}:\nOLUMLU: Kattaki kullanıcı yükü $yuk kişi olarak hesaplanmıştır. Normal şartlarda $gerekli adet çıkış gerekmektedir (Mevcut: $mevcut). ANCAK, ticari alanların doğrudan dışarıya açılan bağımsız çıkışları olduğundan (Bölüm 34 beyanı), ticari kullanım kaynaklı yük konut merdiveni hesabına dahil edilmemiştir. Mevcut konut merdivenleri yeterli kabul edilmiştir.",
             );
           } else {
             // Standard check
             if (isSufficient) {
               reportParts.add(
-                "OLUMLU ($title): Hesaplanan kullanıcı yükü ($yuk kişi) için mevcut çıkış sayısı ($mevcut adet) yeterlidir. (Gereken: $gerekli)",
+                "${title.toUpperCase()}:\nOLUMLU: Hesaplanan kullanıcı yükü ($yuk kişi) için mevcut çıkış sayısı ($mevcut adet) yeterlidir. (Gereken: $gerekli)",
               );
             } else {
               reportParts.add(
-                "KRİTİK RİSK ($title): Hesaplanan kullanıcı yükü ($yuk kişi) için $gerekli adet çıkış gerekmektedir ancak binada $mevcut adet uygun çıkış tespit edilmiştir. Çıkış kapasitesi yetersizdir.",
+                "${title.toUpperCase()}:\nKRİTİK RİSK: Hesaplanan kullanıcı yükü ($yuk kişi) için $gerekli adet çıkış gerekmektedir ancak binada $mevcut adet uygun çıkış tespit edilmiştir. Çıkış kapasitesi yetersizdir.",
               );
             }
           }
@@ -3131,7 +3263,7 @@ class ReportEngine {
         // We can append the standard disclaimer about Section 36
         if (finalReport.contains("OLUMLU")) {
           finalReport +=
-              "\n\n(NOT: Bu bölümdeki 'OLUMLU' ibaresi, yalnızca kişi yüküne göre hesaplanan sayısal çıkış yeterliliğini ifade eder. Merdivenlerin korunumlu olup olmadığı veya niteliklerinin yönetmeliğe uygunluğu Bölüm 36'da ayrıca değerlendirilmiştir.)";
+              "\n\n(NOT: Bu bölümdeki \"OLUMLU\" ibaresi, yalnızca kişi yüküne göre hesaplanan sayısal çıkış yeterliliğini ifade eder. Merdivenlerin korunumlu olup olmadığı veya niteliklerinin yönetmeliğe uygunluğu Bölüm 36'da ayrıca değerlendirilmiştir.)";
         }
         return finalReport;
       }
@@ -3578,7 +3710,7 @@ class ReportEngine {
           b23?.basinc?.label.contains("23-6-A") == true;
       if (!isAlreadyPressurized) {
         reasons.add(
-          "KRİTİK RİSK: Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden normal asansör kuyusunda basınçlandırma yapılması gereklidir.",
+          "KRİTİK RİSK: Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden, normal asansör kuyusunda basınçlandırma yapılması zorunludur. Mevcut durumda herhangi bir duman tahliye çözümü (baca veya basınçlandırma) tesis edilmediği anlaşılmaktadır.",
         );
       } else {
         reasons.add(
@@ -3674,7 +3806,9 @@ class ReportEngine {
     return YghRequirementResult(
       reasons: reasons,
       waiverNote: waiverNote,
-      isUnknown: isUnknown,
+      isUnknown:
+          reasons.isEmpty &&
+          isUnknown, // Eğer bir sebeple zorunluysa artık belirsiz değildir
     );
   }
 
@@ -3686,8 +3820,7 @@ class ReportEngine {
 
   static String _getBariyerReport(int val, String subject) {
     if (val == 1) return "OLUMLU: $subject mevcuttur.";
-    if (val == 0)
-      return "KRİTİK RİSK: $subject bulunmamaktadır. Yangının cepheden yayılma riski bulunmaktadır.";
+    if (val == 0) return "KRİTİK RİSK: $subject bulunmamaktadır.";
     return "BİLİNMİYOR: $subject durumu bilinmemektedir. Yerinde kontrol edilmelidir.";
   }
 
@@ -3696,7 +3829,7 @@ class ReportEngine {
     final res = s.getResultForSection(id);
     if (res == null) return "Değerlendirilmedi.";
 
-    // Bölüm 3: ÖZET sayfasında maddeler halinde alt alta gösterim
+    // 1. Özel İşleyici Olan Bölümler
     if (id == 3) {
       final details = Section3Handler(s).getDetailedReport();
       if (details.isNotEmpty) {
@@ -3707,7 +3840,6 @@ class ReportEngine {
       }
     }
 
-    // Bölüm 35 için dinamik etiket (LİMİT yerine sayı yazması için)
     if (id == 35) {
       final b35 = s.bolum35;
       if (b35 != null) {
@@ -3728,21 +3860,35 @@ class ReportEngine {
       }
     }
 
-    // Bölüm 21 için dinamik özet (Zorunluluk durumu)
     if (id == 21) {
       if (s.bolum21 != null) {
         return Section21Handler(s).getSummaryReport(res.label);
       }
     }
 
-    // Bölüm 36 için dinamik özet (Uyarılar ve Kritik Riskler)
     if (id == 36) {
       if (s.bolum36 != null) {
         return Section36Handler(s).getSummaryReport();
       }
     }
 
-    return res.label;
+    // 2. Diğer Bölümler İçin Anlamlı Başlık Döndür (Etiket yerine UI Title)
+    // Eğer uiTitle boşsa label döndür (fallback)
+    String summary = res.uiTitle.isNotEmpty ? res.uiTitle : res.label;
+
+    // Özel eklemeler
+    if (id == 16 && res.label.contains("16-1-A")) {
+      final hBina = s.bolum3?.hBina ?? 0.0;
+      if (hBina > 21.50) {
+        summary += " (Yüksek Bina: YASAK)";
+      }
+    }
+
+    if (id == 31 && res.label.contains("31-1-A")) {
+      summary = "Trafo Odası Uygun (Olumlu)";
+    }
+
+    return summary;
   }
 
   static String _filterSprinklerText(
@@ -3847,14 +3993,15 @@ class ReportEngine {
     return res.level;
   }
 
-  static String _cleanPrefix(String text) {
+  static String cleanPrefix(String text) {
     if (text.isEmpty) return "";
 
     return text
         .replaceAll(
           RegExp(
-            r'(KRİTİK RİSK|UYARI|BİLGİ|OLUMLU|BİLİNMİYOR|DURUM|ZORUNLU|ŞART DEĞİL|UYGUN)[:\s]*',
+            r'^(KRİTİK RİSK|UYARI|BİLGİ|OLUMLU|BİLİNMİYOR|DURUM|ZORUNLU|ŞART DEĞİL|UYGUN)\b[:\s]*',
             caseSensitive: false,
+            multiLine: true,
           ),
           '',
         )

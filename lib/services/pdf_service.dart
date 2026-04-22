@@ -8,7 +8,8 @@ import '../models/report_status.dart';
 import '../utils/app_strings.dart';
 import '../utils/app_content.dart';
 import '../logic/active_systems_engine.dart';
-
+import 'package:flutter/material.dart';
+import '../screens/pdf_preview_screen.dart';
 
 class PdfService {
   // Keywords that get bold+red highlighting in PDF output.
@@ -106,22 +107,28 @@ class PdfService {
       "BİLGİ",
       "OLUMLU",
       "UYGUN",
-      "ÖNERİ"
+      "ÖNERİ",
     ];
 
     for (var prefix in prefixesToRemove) {
       cleaned = cleaned.replaceAll(
-        RegExp('^(DURUM:\\s*)?$prefix:?\\s*',
-            multiLine: true, caseSensitive: false),
+        RegExp(
+          '^(DURUM:\\s*)?$prefix:?\\s*',
+          multiLine: true,
+          caseSensitive: false,
+        ),
         '',
       );
     }
 
     // Preserve DURUM: ZORUNLU but clean DURUM: OLUMLU etc.
     if (cleaned.startsWith(
-        RegExp(r'^DURUM:\s*(?!ZORUNLU|ŞART DEĞİL)', caseSensitive: false))) {
+      RegExp(r'^DURUM:\s*(?!ZORUNLU|ŞART DEĞİL)', caseSensitive: false),
+    )) {
       cleaned = cleaned.replaceFirst(
-          RegExp(r'^DURUM:\s*', caseSensitive: false), '');
+        RegExp(r'^DURUM:\s*', caseSensitive: false),
+        '',
+      );
     }
 
     return cleaned.trim();
@@ -366,7 +373,6 @@ class PdfService {
     );
   }
 
-
   /// Yönetici Özeti için: Teknik önekleri (KRİTİK RİSK, DURUM, ZORUNLU vb.) temizler
   /// ve PDF'in render edemediği emoji karakterlerini kaldırır.
   static String _cleanFullEvaluationText(String text) {
@@ -383,25 +389,14 @@ class PdfService {
       '',
     );
 
-    // 2. Teknik öneklerin temizliği (KRİTİK RİSK, DURUM: ZORUNLU, BİLGİ vb.)
-    // Satır başlarındaki veya metin içindeki kalıpları temizler.
-    processed = processed
-        .replaceAll(
-          RegExp(
-            r'(KRİTİK RİSK|UYARI|BİLGİ|OLUMLU|BİLİNMİYOR|DURUM|ZORUNLU|ŞART DEĞİL|UYGUN)[:\s]*',
-            caseSensitive: false,
-          ),
-          '',
-        )
-        .trim();
+    // 2. Teknik öneklerin güvenli temizliği (ReportEngine'deki satır başı mantığı)
+    processed = ReportEngine.cleanPrefix(processed);
 
     // Başta veya sonunda kalan gereksiz karakterleri temizle
     if (processed.startsWith(':')) processed = processed.substring(1).trim();
 
     return processed;
   }
-
-
 
   static List<pw.Page> _buildExecutiveSummaryPage({
     required pw.PageTheme pageTheme,
@@ -414,7 +409,8 @@ class PdfService {
 
     // Red Bar Logic Matcher: PDF bölümlerinde kırmızı bar çizen mantıkla birebir aynı
     bool isRedBar(String text, ReportStatus? status, int sectionId) {
-      if (sectionId <= 10 || sectionId == 14) return false; // Bu bölümler PDF'de hep mavidir
+      if (sectionId <= 10 || sectionId == 14)
+        return false; // Bu bölümler PDF'de hep mavidir
       if (status == ReportStatus.risk) return true;
       return _getRiskColor(text) == PdfColors.red700;
     }
@@ -426,14 +422,15 @@ class PdfService {
         if (isRedBar(fullReport, null, id)) {
           // Değerlendirme notunun TAMAMINI al
           String act = _cleanFullEvaluationText(fullReport);
-          if (act.isNotEmpty && !actionItems.contains(act)) actionItems.add(act);
+          if (act.isNotEmpty && !actionItems.contains(act))
+            actionItems.add(act);
         }
       } else {
         final details = ReportEngine.getSectionDetailedReport(id, store: store);
         for (final item in details) {
           final status = item['status'] as ReportStatus? ?? ReportStatus.info;
           final reportText = (item['report'] ?? '').toString();
-          
+
           if (isRedBar(reportText, status, id)) {
             // Değerlendirme notunun TAMAMINI al
             String actText = _cleanFullEvaluationText(reportText);
@@ -516,7 +513,6 @@ class PdfService {
       ),
     ];
   }
-
 
   static pw.Page _buildLegalPage(pw.PageTheme pageTheme) {
     // Split the content manually for the two-column layout
@@ -777,9 +773,23 @@ class PdfService {
     return pdf.save();
   }
 
-  static Future<void> generateRiskAnalysisPdf() async {
-    final pdf = await _buildRiskAnalysisDocument();
-    await Printing.layoutPdf(onLayout: (format) async => pdf.save());
+  static Future<void> generateRiskAnalysisPdf(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildRiskAnalysisDocument(providedStore: store);
+
+    if (!context.mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PdfPreviewScreen(
+          onLayout: (format) async => pdf.save(),
+          title: "YANGIN RİSK ANALİZİ",
+          fileName:
+              "yangin_risk_analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}.pdf",
+        ),
+      ),
+    );
   }
 
   static Future<pw.Document> _buildRiskAnalysisDocument({
@@ -945,8 +955,8 @@ class PdfService {
                     riskColor: (id <= 10 || id == 14)
                         ? PdfColors.blue700
                         : (id == 12
-                            ? effectiveSectionRiskColor
-                            : _getRiskColor(item['report'] ?? '')),
+                              ? effectiveSectionRiskColor
+                              : _getRiskColor(item['report'] ?? '')),
                     isLast: item == details.last,
                     sectionId: id,
                   ),
@@ -1026,8 +1036,8 @@ class PdfService {
                       riskColor: (id <= 10 || id == 14)
                           ? PdfColors.blue700
                           : (id == 12
-                              ? effectiveSectionRiskColor
-                              : _getRiskColor(item['report'] ?? '')),
+                                ? effectiveSectionRiskColor
+                                : _getRiskColor(item['report'] ?? '')),
                       isLast: isLast,
                       sectionId: id,
                     ),
@@ -1148,6 +1158,10 @@ class PdfService {
               children: finalSectionWidgets,
             );
           }),
+
+          // --- PROFESYONEL PROMOSYON VE QR KUTUSU ---
+          pw.SizedBox(height: 30),
+          _buildPromoQRBox(ttf, ttfBold),
         ],
       ),
     );
@@ -1159,7 +1173,7 @@ class PdfService {
   }
 
   // --- 2. AKTİF SİSTEM GEREKSİNİMLERİ RAPORU ---
-  static Future<void> generateActiveSystemsPdf() async {
+  static Future<void> generateActiveSystemsPdf(BuildContext context) async {
     final pdf = pw.Document();
     // Bundle edilmiş Roboto fontları - offline çalışır, Türkçe karakterleri destekler
     final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
@@ -1322,7 +1336,7 @@ class PdfService {
                       if (req.note.isNotEmpty) ...[
                         pw.SizedBox(height: 2),
                         pw.Text(
-                          "NOT: ${_cleanEmojis(req.note)}",
+                          _cleanEmojis(req.note),
                           style: const pw.TextStyle(
                             fontSize: 9,
                             color: PdfColors.black,
@@ -1336,6 +1350,9 @@ class PdfService {
               ],
             );
           }),
+          // --- PROFESYONEL PROMOSYON VE QR KUTUSU ---
+          pw.SizedBox(height: 30),
+          _buildPromoQRBox(ttf, ttfBold),
         ],
       ),
     );
@@ -1343,7 +1360,19 @@ class PdfService {
     // Yasal (En Sona Taşındı)
     pdf.addPage(_buildLegalPage(pageTheme));
 
-    await Printing.layoutPdf(onLayout: (format) async => pdf.save());
+    if (!context.mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PdfPreviewScreen(
+          onLayout: (format) async => pdf.save(),
+          title: "AKTİF SİSTEM GEREKSİNİMLERİ",
+          fileName:
+              "aktif_sistem_gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}.pdf",
+        ),
+      ),
+    );
   }
 
   static pw.Widget _buildInfoTable(
@@ -1374,15 +1403,15 @@ class PdfService {
               3: const pw.FlexColumnWidth(14),
             }
           : maxCols == 3
-              ? {
-                  0: const pw.FlexColumnWidth(18),
-                  1: const pw.FlexColumnWidth(22),
-                  2: const pw.FlexColumnWidth(40),
-                }
-              : {
-                  0: const pw.IntrinsicColumnWidth(),
-                  1: const pw.IntrinsicColumnWidth(),
-                },
+          ? {
+              0: const pw.FlexColumnWidth(18),
+              1: const pw.FlexColumnWidth(22),
+              2: const pw.FlexColumnWidth(40),
+            }
+          : {
+              0: const pw.IntrinsicColumnWidth(),
+              1: const pw.IntrinsicColumnWidth(),
+            },
       children: [
         // 1. Ana Başlık (2 veya 3 kolonlu ise)
         if (maxCols == 2)
@@ -1459,10 +1488,23 @@ class PdfService {
           final String valueRaw = (item['value'] ?? '').toString();
           final List<String> parts = valueRaw.split('|');
 
-          // Özel Durum: Bölüm 33 Başlık Satırı (KAT TİPİ)
+          // Özel Durum: Bölüm 33 Başlık Satırı (KAT TİPİ) ve Kapasite Yetersizliği Bold Kontrolü
           final bool isSubHeader = label == "KAT TİPİ";
+          bool capacityFail = false;
+          if (maxCols == 4 && !isSubHeader && parts.length >= 2) {
+            try {
+              // Parts: 0:Yük, 1:Gereken, 2:Mevcut
+              // Örn: "2 Adet" -> "2"
+              final int req = int.tryParse(parts[1].split(' ')[0]) ?? 0;
+              final int current = int.tryParse(parts[2].split(' ')[0]) ?? 0;
+              if (req > current) capacityFail = true;
+            } catch (_) {}
+          }
+
           final bool shouldBold =
-              item['isBold'] == true || valueRaw.contains('Mevcut');
+              item['isBold'] == true ||
+              valueRaw.contains('Mevcut') ||
+              capacityFail;
 
           return pw.TableRow(
             decoration: isSubHeader
@@ -1584,7 +1626,8 @@ class PdfService {
   }) {
     final label = item['label'] ?? '';
     final value = item['value'] ?? '';
-    final report = _cleanEmojis(item['report'] ?? '');
+    // Rengi tetikleyen ancak görsel kirlilik yaratan önekleri (BİLGİ, DURUM vb.) temizle
+    final report = ReportEngine.cleanPrefix(_cleanEmojis(item['report'] ?? ''));
 
     final content = pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1700,6 +1743,77 @@ class PdfService {
       ),
       padding: const pw.EdgeInsets.only(left: 8),
       child: content,
+    );
+  }
+
+  static pw.Widget _buildPromoQRBox(pw.Font font, pw.Font fontBold) {
+    return pw.Container(
+      decoration: pw.BoxDecoration(
+        color: PdfColor.fromInt(0xFFf8fafc), // Çok açık gri/mavi arka plan
+        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+        border: pw.Border.all(color: PdfColors.blueGrey100, width: 1),
+      ),
+      padding: const pw.EdgeInsets.all(15),
+      child: pw.Row(
+        crossAxisAlignment: pw.CrossAxisAlignment.center,
+        children: [
+          // Sol Taraf: QR Kod
+          pw.Container(
+            width: 90,
+            height: 90,
+            padding: const pw.EdgeInsets.all(5),
+            decoration: pw.BoxDecoration(
+              color: PdfColors.white,
+              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
+            ),
+            child: pw.BarcodeWidget(
+              barcode: pw.Barcode.qrCode(),
+              data: AppStrings.qrDownloadUrl,
+              drawText: false,
+              color: const PdfColor.fromInt(0xFF1a365d), // Kurumsal lacivert
+            ),
+          ),
+          pw.SizedBox(width: 20),
+          // Sağ Taraf: Tanıtım Metni
+          pw.Expanded(
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              mainAxisAlignment: pw.MainAxisAlignment.center,
+              children: [
+                pw.Text(
+                  "Bu Uygulama, uluslararası yetkinlik sertifikalarına sahip ve alanında tecrübeli Yangın Mühendisleri tarafından hazırlanmıştır.",
+                  style: pw.TextStyle(
+                    font: fontBold,
+                    fontSize: 10,
+                    color: const PdfColor.fromInt(0xFF1a365d),
+                    lineSpacing: 1.2,
+                  ),
+                ),
+                pw.SizedBox(height: 6),
+                pw.Text(
+                  "Binanız için yeni bir yangın risk analizi yapmak veya profesyonel destek almak için aşağıdaki karekodu okutarak uygulamayı indirebilirsiniz.",
+                  style: pw.TextStyle(
+                    font: font,
+                    fontSize: 9,
+                    color: PdfColors.blueGrey700,
+                    lineSpacing: 1.6,
+                  ),
+                ),
+                pw.SizedBox(height: 8),
+                pw.Text(
+                  "Google Play'den indirin.",
+                  style: pw.TextStyle(
+                    font: fontBold,
+                    fontSize: 8,
+                    color: PdfColors.blueGrey400,
+                    fontStyle: pw.FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

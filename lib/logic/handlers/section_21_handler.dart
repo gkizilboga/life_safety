@@ -43,17 +43,17 @@ class Section21Handler {
       if (isMandatory) {
         if (hasYgh) {
           evaluationMessage =
-              "OLUMLU: Binadaki aşağıdaki teknik veriler nedeniyle YGH zorunluluğu bulunmakta olup, kullanıcı tarafından binada MEVCUT olduğu beyan edilmiştir:\n- ${result.reasons.join('\n- ')}";
+              "Binadaki aşağıdaki teknik veriler nedeniyle YGH zorunluluğu bulunmakta olup, kullanıcı tarafından binada MEVCUT olduğu beyan edilmiştir:\n- ${result.reasons.join('\n- ')}";
         } else {
           evaluationMessage =
-              "KRİTİK RİSK: Bina teknik verilerine göre Yangın Güvenlik Holü (YGH) ZORUNLU olmasına rağmen binada MEVCUT OLMADIĞI beyan edilmiştir. Bu durum tahliye güvenliği adına yüksek risk oluşturmaktadır.\n\nBinadaki YGH zorunluluğu gerekçeleri:\n- ${result.reasons.join('\n- ')}";
+              "Bina teknik verilerine göre Yangın Güvenlik Holü (YGH) ZORUNLU olmasına rağmen binada MEVCUT OLMADIĞI beyan edilmiştir. Bu durum tahliye güvenliği adına yüksek risk oluşturmaktadır.\n\nBinadaki YGH zorunluluğu gerekçeleri:\n- ${result.reasons.join('\n- ')}";
         }
       } else {
         if (result.waiverNote != null) {
           evaluationMessage = result.waiverNote!;
         } else if (result.isUnknown) {
           evaluationMessage =
-              "BİLİNMİYOR: Merdivenlerde basınçlandırma durumu beyan edilmediği için BYKHY Madde 38/c uyarınca YGH zorunluluğu netleştirilememiştir. Yerinde kontrol edilmelidir.";
+              "Merdivenlerde basınçlandırma durumu beyan edilmediği için BYKHY Madde 38/c uyarınca YGH zorunluluğu netleştirilememiştir. Yerinde kontrol edilmelidir.";
         } else {
           evaluationMessage =
               "Mevcut bina verilerine göre (yükseklik, kullanım amacı vb.) bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.";
@@ -63,13 +63,13 @@ class Section21Handler {
       // Kullanıcı yanıtının rengi
       final RiskLevel varlikLevel;
       if (isMandatory) {
+        // Zorunluysa: Var ise Olumlu, Yok veya Bilmiyorum ise Kritik
         varlikLevel = hasYgh ? RiskLevel.positive : RiskLevel.critical;
+      } else if (result.isUnknown) {
+        varlikLevel = RiskLevel.unknown;
       } else {
-        if (result.isUnknown) {
-          varlikLevel = RiskLevel.unknown;
-        } else {
-          varlikLevel = hasYgh ? RiskLevel.positive : RiskLevel.info;
-        }
+        // Zorunlu değilse: Var ise Olumlu, Yok ise Bilgi
+        varlikLevel = hasYgh ? RiskLevel.positive : RiskLevel.info;
       }
 
       _addDetail(
@@ -119,14 +119,16 @@ class Section21Handler {
         label: 'YGH Gereksinimi',
         value: '',
         report: isMandatory
-            ? "DURUM: ZORUNLU\n\n$evaluationMessage"
+            ? (hasYgh 
+                ? "OLUMLU: ZORUNLULUK GEREKÇELERİ:\n\n$evaluationMessage"
+                : "KRİTİK RİSK: ZORUNLULUK GEREKÇELERİ:\n\n$evaluationMessage")
             : (result.waiverNote != null
-                ? "DURUM: MUAFİYET (Madde 38/c)\n\n$evaluationMessage"
+                ? "BİLGİ: MUAFİYET DURUMU (Madde 38/c):\n\n$evaluationMessage"
                 : (result.isUnknown
-                    ? "DURUM: BELİRSİZ\n\n$evaluationMessage"
-                    : "DURUM: ŞART DEĞİL\n\n$evaluationMessage")),
+                    ? "BİLİNMİYOR: BELİRSİZLİK DURUMU:\n\n$evaluationMessage"
+                    : "BİLGİ: $evaluationMessage")),
         level: isMandatory
-            ? RiskLevel.critical
+            ? (hasYgh ? RiskLevel.positive : RiskLevel.critical)
             : (result.waiverNote != null
                 ? RiskLevel.positive
                 : (result.isUnknown ? RiskLevel.unknown : RiskLevel.info)),

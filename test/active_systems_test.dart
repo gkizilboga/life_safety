@@ -306,6 +306,7 @@ void main() {
       () {
         // Birkaç zorunlu sistem ekleyelim
         store.bolum3 = Bolum3Model(hYapi: 55.0);
+        store.bolum6 = Bolum6Model(hasTicari: true);
         final reqs = ActiveSystemsEngine.calculateRequirements(store);
 
         expect(reqs.first.name, "Yangın Senaryosu");

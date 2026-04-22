@@ -576,7 +576,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF2E7D32), // Dark green
+                  color: AppColors.textHeader,
                 ),
               ),
               Text(
@@ -584,7 +584,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF2E7D32),
+                  color: AppColors.textHeader,
                 ),
               ),
             ],
@@ -619,6 +619,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
   }
 
   Widget _buildSummaryRow(String label, String value, {bool isTotal = false}) {
+    final Color textColor = isTotal ? AppColors.textHeader : AppColors.textBody;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -629,6 +630,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
             style: TextStyle(
               fontSize: 15,
               fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+              color: textColor,
             ),
           ),
           Text(
@@ -636,7 +638,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
             style: TextStyle(
               fontSize: 15,
               fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-              color: isTotal ? const Color(0xFF2E7D32) : Colors.black87,
+              color: textColor,
             ),
           ),
         ],

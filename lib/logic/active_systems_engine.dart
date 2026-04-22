@@ -16,8 +16,10 @@ class ActiveSystemsEngine {
         b16?.cepheUzunlugu?.label ==
         Bolum16Content.cepheUzunluguBilinmiyor.label;
 
-    final hYapi = store.bolum4?.hesaplananYapiYuksekligi ?? store.bolum3?.hYapi ?? 0;
-    final hBina = store.bolum4?.hesaplananBinaYuksekligi ?? store.bolum3?.hBina ?? 0;
+    final hYapi =
+        store.bolum4?.hesaplananYapiYuksekligi ?? store.bolum3?.hYapi ?? 0;
+    final hBina =
+        store.bolum4?.hesaplananBinaYuksekligi ?? store.bolum3?.hBina ?? 0;
     final tabanAlani = store.bolum5?.tabanAlani ?? 0;
     final toplamInsaat = store.bolum5?.toplamInsaatAlani ?? 0;
 
@@ -623,16 +625,28 @@ class ActiveSystemsEngine {
       ),
     );
 
-    // 16. Gaz Algılayıcı
-    requirements.add(
-      ActiveSystemRequirement(
-        name: "Gaz Algılama Sistemi",
-        isMandatory: false,
-        isWarning: true,
-        reason:
-            "Kazan dairesi (doğalgaz, LPG), otopark (karbonmonoksit) veya varsa ticari/endüstriyel mutfak alanlarında uygun gaz algılama dedektörleri, gaz kesme tertibatı vs. kullanılmalıdır.",
-      ),
-    );
+    // 16. Gaz Algılayıcı (Dinamik Kontrol)
+    final bool hasKazan = store.bolum30 != null ||
+        (store.bolum13?.kazanAlan != null);
+    final bool hasOtopark = (store.bolum13?.otoparkAlan != null) ||
+        (store.bolum29?.otopark != null) ||
+        (store.bolum6?.hasOtopark == true);
+    final bool hasTicariMutfak =
+        (store.bolum34?.mutfakBacasi?.label.contains("34-4-A") == true) ||
+        (store.bolum6?.hasTicari == true) ||
+        (store.bolum6?.buyukRestoran?.label == Bolum6Content.buyukRestoranVar.label);
+
+    if (hasKazan || hasOtopark || hasTicariMutfak) {
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "Gaz Algılama Sistemi",
+          isMandatory: false,
+          isWarning: true,
+          reason:
+              "Kazan dairesi (doğalgaz, LPG), otopark veya varsa ticari/endüstriyel mutfak alanlarında uygun gaz algılama dedektörleri, gaz kesme tertibatı vs. kullanılmalıdır.",
+        ),
+      );
+    }
 
     // 17. Yangın Damperi
     requirements.add(

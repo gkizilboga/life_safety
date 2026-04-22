@@ -1,0 +1,633 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":20640,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":1}
+{"suite":{"id":2,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_hang_test.dart"},"type":"suite","time":4}
+{"test":{"id":3,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_hang_test.dart","suiteID":2,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":4}
+{"suite":{"id":4,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_test.dart"},"type":"suite","time":5}
+{"test":{"id":5,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_test.dart","suiteID":4,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":5}
+{"suite":{"id":6,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/b20_hang_test.dart"},"type":"suite","time":5}
+{"test":{"id":7,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/b20_hang_test.dart","suiteID":6,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":5}
+{"suite":{"id":8,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart"},"type":"suite","time":7}
+{"test":{"id":9,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart","suiteID":8,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":8}
+{"suite":{"id":10,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/comprehensive_report_audit_test.dart"},"type":"suite","time":9}
+{"test":{"id":11,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/comprehensive_report_audit_test.dart","suiteID":10,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":9}
+{"count":23,"time":11,"type":"allSuites"}
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2466}
+{"group":{"id":12,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":18,"line":null,"column":null,"url":null},"type":"group","time":2469}
+{"group":{"id":13,"suiteID":0,"parentID":12,"name":"ActiveSystemsEngine Logic Tests","metadata":{"skip":false,"skipReason":null},"testCount":18,"line":17,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"group","time":2469}
+{"test":{"id":14,"name":"ActiveSystemsEngine Logic Tests Yang??n Alg??lama: hYapi >= 51.50 -> Zorunlu","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":24,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2469}
+{"testID":14,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2515}
+{"test":{"id":15,"name":"ActiveSystemsEngine Logic Tests Yang??n Alg??lama: hYapi < 51.50 -> Zorunlu De??il","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":31,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2515}
+{"testID":15,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2530}
+{"test":{"id":16,"name":"ActiveSystemsEngine Logic Tests Sprinkler: hYapi >= 51.50 -> Zorunlu","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":38,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2531}
+{"testID":16,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2536}
+{"test":{"id":17,"name":"ActiveSystemsEngine Logic Tests Sprinkler: Otopark < 600 -> Zorunlu De??il (13-1-ALT-A)","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":45,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2537}
+{"testID":17,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2543}
+{"test":{"id":18,"name":"ActiveSystemsEngine Logic Tests Sprinkler: Otopark Bilmiyorum -> Uyar?? (13-1-ALT-E)","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":64,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2543}
+{"testID":18,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2549}
+{"test":{"id":19,"name":"ActiveSystemsEngine Logic Tests Sprinkler: Ka?????? Mesafesi (35-1-C) -> Zorunlu DE????L art??k","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":82,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2549}
+{"testID":19,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2554}
+{"test":{"id":20,"name":"ActiveSystemsEngine Logic Tests ??tfaiye Su Alma: hBina >= 21.50 -> Zorunlu","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":106,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2555}
+{"testID":20,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2560}
+{"test":{"id":21,"name":"ActiveSystemsEngine Logic Tests Hidrant: Taban > 5000 -> Zorunlu","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":113,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2560}
+{"testID":21,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2565}
+{"test":{"id":22,"name":"ActiveSystemsEngine Logic Tests Bas??n??land??rma: 23-5-B (Kuyu Kapal??) -> Normal Asans??r Kuyu Bas??n??land??rma","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":120,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2566}
+{"testID":22,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2570}
+{"test":{"id":23,"name":"ActiveSystemsEngine Logic Tests Sismik Ask??lama (Uyar??): Sprinkler Zorunlu -> isWarning=true, isMandatory=false","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":139,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2571}
+{"testID":23,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2574}
+{"test":{"id":24,"name":"ActiveSystemsEngine Logic Tests Sismik Ask??lama: Sprinkler Zorunlu De??il -> Sismik ??ncelikli De??il","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":166,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2574}
+{"testID":24,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2577}
+{"test":{"id":25,"name":"ActiveSystemsEngine Logic Tests Sprinkler: Bilmiyorum Durumu (Section 35) -> Uyar?? VER??LMEMEL?? (Sprinkler i??in)","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":190,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2578}
+{"testID":25,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2582}
+{"test":{"id":26,"name":"ActiveSystemsEngine Logic Tests Senaryo 1: Y??ksek ve Karma Kullan??ml?? Bina (T??m Sistemler Zorunlu)","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":217,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2583}
+{"testID":26,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2588}
+{"test":{"id":27,"name":"ActiveSystemsEngine Logic Tests Edge Case: Siyam ??kizi - Cephe Geni??li??i > 75m","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":254,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2588}
+{"testID":27,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2592}
+{"test":{"id":28,"name":"ActiveSystemsEngine Logic Tests Edge Case: Gaz Alg??lama Dedekt??rleri (Kazan Dairesi/Ticari)","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":269,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2593}
+{"testID":28,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2595}
+{"test":{"id":29,"name":"ActiveSystemsEngine Logic Tests Mutually Exclusive Kontrol??: isMandatory ve isWarning ayn?? anda true olamaz","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":281,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2596}
+{"testID":29,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2599}
+{"test":{"id":30,"name":"ActiveSystemsEngine Logic Tests S??ralama (Ordering) Testi: Yang??n Senaryosu ba??ta, Gaz Alg??lama sonda","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":304,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2600}
+{"testID":30,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2603}
+{"test":{"id":31,"name":"ActiveSystemsEngine Logic Tests 75. TEST: Bas??n??land??rma - Y??ksek Bina Kriteri (hYapi >= 30.50)","suiteID":0,"groupIDs":[12,13],"metadata":{"skip":false,"skipReason":null},"line":317,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/active_systems_test.dart"},"type":"testStart","time":2603}
+{"testID":31,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2606}
+{"suite":{"id":32,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/concurrency_save_test.dart"},"type":"suite","time":2644}
+{"test":{"id":33,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/concurrency_save_test.dart","suiteID":32,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":2644}
+{"testID":3,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2724}
+{"group":{"id":34,"suiteID":2,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":2724}
+{"test":{"id":35,"name":"Test Bolum 19 Devam Et freezes","suiteID":2,"groupIDs":[34],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":7,"root_column":3,"root_url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_hang_test.dart"},"type":"testStart","time":2724}
+{"testID":5,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2981}
+{"group":{"id":36,"suiteID":4,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":2981}
+{"test":{"id":37,"name":"check toMap","suiteID":4,"groupIDs":[36],"metadata":{"skip":false,"skipReason":null},"line":5,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_test.dart"},"type":"testStart","time":2981}
+{"testID":37,"messageType":"print","message":"{engeller_labels: [19-1-A], levha_label: 19-2-A, yanilticiKapi_label: 19-3-A, yanilticiEtiket_label: null}","type":"print","time":3002}
+{"testID":37,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3002}
+{"suite":{"id":38,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"suite","time":3034}
+{"test":{"id":39,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart","suiteID":38,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":3034}
+{"testID":7,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":3279}
+{"group":{"id":40,"suiteID":6,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":3280}
+{"test":{"id":41,"name":"Test AppProgress with bolum 19","suiteID":6,"groupIDs":[40],"metadata":{"skip":false,"skipReason":null},"line":8,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/b20_hang_test.dart"},"type":"testStart","time":3280}
+{"testID":41,"messageType":"print","message":"Progress calculation successful: 5%","type":"print","time":3307}
+{"testID":41,"messageType":"print","message":"To map works: {engeller_labels: [19-1-A], levha_label: 19-2-A, yanilticiKapi_label: 19-3-A, yanilticiEtiket_label: null}","type":"print","time":3307}
+{"testID":41,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3308}
+{"suite":{"id":42,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"suite","time":3340}
+{"test":{"id":43,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart","suiteID":42,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":3340}
+{"testID":9,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":3563}
+{"group":{"id":44,"suiteID":8,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":null,"column":null,"url":null},"type":"group","time":3563}
+{"group":{"id":45,"suiteID":8,"parentID":44,"name":"Chaos & Robustness: Logic Engines","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":10,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart"},"type":"group","time":3563}
+{"test":{"id":46,"name":"Chaos & Robustness: Logic Engines Stress: Absurdly High Building (10km high)","suiteID":8,"groupIDs":[44,45],"metadata":{"skip":false,"skipReason":null},"line":17,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart"},"type":"testStart","time":3563}
+{"testID":46,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3600}
+{"test":{"id":47,"name":"Chaos & Robustness: Logic Engines Stress: Near-Zero Building (1mm high)","suiteID":8,"groupIDs":[44,45],"metadata":{"skip":false,"skipReason":null},"line":36,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart"},"type":"testStart","time":3600}
+{"testID":47,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3605}
+{"test":{"id":48,"name":"Chaos & Robustness: Logic Engines Stress: Extreme Area Values (Millions of m2)","suiteID":8,"groupIDs":[44,45],"metadata":{"skip":false,"skipReason":null},"line":49,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart"},"type":"testStart","time":3605}
+{"testID":48,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3609}
+{"test":{"id":49,"name":"Chaos & Robustness: Logic Engines Robustness: Missing/Null Models","suiteID":8,"groupIDs":[44,45],"metadata":{"skip":false,"skipReason":null},"line":56,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart"},"type":"testStart","time":3609}
+{"testID":49,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3613}
+{"test":{"id":50,"name":"Chaos & Robustness: Logic Engines Robustness: Malformed Choice Labels","suiteID":8,"groupIDs":[44,45],"metadata":{"skip":false,"skipReason":null},"line":73,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart"},"type":"testStart","time":3613}
+{"testID":50,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3616}
+{"test":{"id":51,"name":"Chaos & Robustness: Logic Engines Robustness: Large Strings in Choices","suiteID":8,"groupIDs":[44,45],"metadata":{"skip":false,"skipReason":null},"line":85,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/chaos_test.dart"},"type":"testStart","time":3617}
+{"testID":51,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3622}
+{"suite":{"id":52,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/engine_test.dart"},"type":"suite","time":3658}
+{"test":{"id":53,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/engine_test.dart","suiteID":52,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":3658}
+{"testID":35,"messageType":"print","message":"\nWarning: A call to tap() with finder \"Found 1 widget with text \"Evet, t??m ????k????larda var.\": [\n  Text(\"Evet, t??m ????k????larda var.\", inherit: true, color: Color(alpha: 1.0000, red: 0.1490, green: 0.1961, blue: 0.2196, colorSpace: ColorSpace.sRGB), size: 15.0, weight: 700, height: 1.3x, dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery]),\n]\" derived an Offset (Offset(273.6, 732.4)) that would not hit test on the specified widget.\nMaybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.\nIndeed, Offset(273.6, 732.4) is outside the bounds of the root of the render tree, Size(800.0, 600.0).\nThe finder corresponds to this RenderBox: RenderParagraph#28e28 relayoutBoundary=up25\nThe hit test result at that offset is: HitTestResult(HitTestEntry<HitTestTarget>#3a977(_ReusableRenderView#18921), HitTestEntry<HitTestTarget>#29ad8(<AutomatedTestWidgetsFlutterBinding>))\n#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2081:25)\n#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1865:12)\n#2      WidgetController.tap (package:flutter_test/src/controller.dart:1045:7)\n#3      main.<anonymous closure> (file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_hang_test.dart:26:18)\n<asynchronous suspension>\n#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)\n<asynchronous suspension>\n#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)\n<asynchronous suspension>\n#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)\n<asynchronous suspension>\nTo silence this warning, pass \"warnIfMissed: false\" to \"tap()\".\nTo make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.\n","type":"print","time":3695}
+{"testID":35,"messageType":"print","message":"\nWarning: A call to tap() with finder \"Found 1 widget with text \"Yok, ????k?????? kolayca bulabilirim.\": [\n  Text(\"Yok, ????k?????? kolayca bulabilirim.\", inherit: true, color: Color(alpha: 1.0000, red: 0.1490, green: 0.1961, blue: 0.2196, colorSpace: ColorSpace.sRGB), size: 15.0, weight: 700, height: 1.3x, dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery]),\n]\" derived an Offset (Offset(327.0, 1065.4)) that would not hit test on the specified widget.\nMaybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.\nIndeed, Offset(327.0, 1065.4) is outside the bounds of the root of the render tree, Size(800.0, 600.0).\nThe finder corresponds to this RenderBox: RenderParagraph#c21c8 relayoutBoundary=up25\nThe hit test result at that offset is: HitTestResult(HitTestEntry<HitTestTarget>#4301b(_ReusableRenderView#18921), HitTestEntry<HitTestTarget>#4bab2(<AutomatedTestWidgetsFlutterBinding>))\n#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2081:25)\n#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1865:12)\n#2      WidgetController.tap (package:flutter_test/src/controller.dart:1045:7)\n#3      main.<anonymous closure> (file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_hang_test.dart:30:18)\n<asynchronous suspension>\n#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)\n<asynchronous suspension>\n#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)\n<asynchronous suspension>\n#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)\n<asynchronous suspension>\nTo silence this warning, pass \"warnIfMissed: false\" to \"tap()\".\nTo make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.\n","type":"print","time":3700}
+{"testID":35,"messageType":"print","message":"\nWarning: A call to tap() with finder \"Found 1 widget with text \"DEVAM ET\" (ignoring all but first): [\n  Text(\"DEVAM ET\", dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery]),\n]\" derived an Offset (Offset(400.0, 555.0)) that would not hit test on the specified widget.\nMaybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.\nThe finder corresponds to this RenderBox: RenderParagraph#ca6ea relayoutBoundary=up20\nThe hit test result at that offset is: HitTestResult(_RenderColoredBox#55028@Offset(380.0, 25.0), RenderPointerListener#5ca62@Offset(380.0, 25.0), RenderSemanticsGestureHandler#c6f8e@Offset(380.0, 25.0), RenderStack#cdc4e@Offset(380.0, 25.0), RenderFlex#850c0@Offset(380.0, 25.0), RenderPadding#6e36e@Offset(380.0, 25.0), RenderPadding#21a7b@Offset(400.0, 35.0), RenderDecoratedBox#49187@Offset(400.0, 35.0), RenderFlex#906d6@Offset(400.0, 555.0), RenderCustomMultiChildLayoutBox#33217@Offset(400.0, 555.0), _RenderInkFeatures#b2138@Offset(400.0, 555.0), RenderPhysicalModel#c6943@Offset(400.0, 555.0), RenderSemanticsAnnotations#f0dea@Offset(400.0, 555.0), RenderRepaintBoundary#fd19b@Offset(400.0, 555.0), RenderIgnorePointer#0760c@Offset(400.0, 555.0), RenderAnimatedOpacity#79989@Offset(400.0, 555.0), RenderAnimatedOpacity#872dd@Offset(400.0, 555.0), _RenderColoredBox#6a278@Offset(400.0, 555.0), RenderAnimatedOpacity#914b2@Offset(400.0, 555.0), RenderIgnorePointer#617ff@Offset(400.0, 555.0), RenderAnimatedOpacity#91c69@Offset(400.0, 555.0), RenderRepaintBoundary#5c61f@Offset(400.0, 555.0), RenderSemanticsAnnotations#d77f1@Offset(400.0, 555.0), RenderOffstage#25e8a@Offset(400.0, 555.0), RenderSemanticsAnnotations#aaf0f@Offset(400.0, 555.0), _RenderTheater#2656c@Offset(400.0, 555.0), RenderAbsorbPointer#5138d@Offset(400.0, 555.0), RenderPointerListener#7ccf6@Offset(400.0, 555.0), RenderSemanticsAnnotations#d2aa4@Offset(400.0, 555.0), RenderCustomPaint#ae081@Offset(400.0, 555.0), RenderSemanticsAnnotations#07fc5@Offset(400.0, 555.0), RenderSemanticsAnnotations#644a0@Offset(400.0, 555.0), RenderTapRegionSurface#0a96a@Offset(400.0, 555.0), RenderSemanticsAnnotations#0aad5@Offset(400.0, 555.0), RenderSemanticsAnnotations#5aa27@Offset(400.0, 555.0), RenderSemanticsAnnotations#44573@Offset(400.0, 555.0), HitTestEntry<HitTestTarget>#4d5dc(_ReusableRenderView#18921), HitTestEntry<HitTestTarget>#aa237(<AutomatedTestWidgetsFlutterBinding>))\n#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2081:25)\n#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1865:12)\n#2      WidgetController.tap (package:flutter_test/src/controller.dart:1045:7)\n#3      main.<anonymous closure> (file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/b19_hang_test.dart:34:18)\n<asynchronous suspension>\n#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)\n<asynchronous suspension>\n#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)\n<asynchronous suspension>\n#6      StackZoneSpecification._registerCallback.<anonymous closure> (package:stack_trace/src/stack_zone_specification.dart:114:42)\n<asynchronous suspension>\nTo silence this warning, pass \"warnIfMissed: false\" to \"tap()\".\nTo make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.\n","type":"print","time":3701}
+{"testID":35,"messageType":"print","message":"Clicked Devam Et. Pumping UI to see if it freezes...","type":"print","time":3702}
+{"testID":35,"messageType":"print","message":"Transition complete and timers settled.","type":"print","time":3704}
+{"testID":35,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3705}
+{"suite":{"id":54,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/complex_exit_scenarios_test.dart"},"type":"suite","time":3741}
+{"test":{"id":55,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/complex_exit_scenarios_test.dart","suiteID":54,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":3742}
+{"testID":11,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":3828}
+{"group":{"id":56,"suiteID":10,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":3828}
+{"test":{"id":57,"name":"(setUpAll)","suiteID":10,"groupIDs":[56],"metadata":{"skip":false,"skipReason":null},"line":44,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/comprehensive_report_audit_test.dart"},"type":"testStart","time":3829}
+{"testID":57,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":3845}
+{"test":{"id":58,"name":"Comprehensive Report Audit: Verify All 36 Sections","suiteID":10,"groupIDs":[56],"metadata":{"skip":false,"skipReason":null},"line":50,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/comprehensive_report_audit_test.dart"},"type":"testStart","time":3846}
+{"testID":58,"messageType":"print","message":"\n--- [DETAYLI RAPOR DENET??M?? BA??LADI] ---\n","type":"print","time":3919}
+{"testID":58,"messageType":"print","message":"\nSECTION 1:","type":"print","time":3920}
+{"testID":58,"messageType":"print","message":"  - [Binan??z??n yap?? ruhsat tarihi nedir?]: 2007 sonras??","type":"print","time":3920}
+{"testID":58,"messageType":"print","message":"\nSECTION 2:","type":"print","time":3920}
+{"testID":58,"messageType":"print","message":"  - [Binan??z??n ta????y??c?? sistemi (yap?? t??r??) nedir?]: Betonarme","type":"print","time":3920}
+{"testID":58,"messageType":"print","message":"\nSECTION 3:","type":"print","time":3920}
+{"testID":58,"messageType":"print","message":"  - [Normal Kat Say??s?? (Zemin ??st??)]: 10 adet","type":"print","time":3920}
+{"testID":58,"messageType":"print","message":"  - [Bodrum Kat Say??s?? (Zemin Alt??)]: 2 adet","type":"print","time":3921}
+{"testID":58,"messageType":"print","message":"  - [Zemin Kat]: 1 adet","type":"print","time":3921}
+{"testID":58,"messageType":"print","message":"  - [Toplam Kat Adedi]: 13 kat","type":"print","time":3921}
+{"testID":58,"messageType":"print","message":"  - [Zemin Kat Y??ksekli??i]: - m","type":"print","time":3921}
+{"testID":58,"messageType":"print","message":"  - [Normal Kat Y??ksekli??i (1 kat i??in)]: - m","type":"print","time":3922}
+{"testID":58,"messageType":"print","message":"  - [Bodrum Kat Y??ksekli??i (1 kat i??in)]: - m","type":"print","time":3922}
+{"testID":58,"messageType":"print","message":"  - [Bina Y??ksekli??i (hBina)]: 30.50 m","type":"print","time":3922}
+{"testID":58,"messageType":"print","message":"  - [Yap?? Y??ksekli??i (hYap??)]: 30.50 m","type":"print","time":3923}
+{"testID":58,"messageType":"print","message":"  - [Y??ksek Bina Stat??s??]: Y??ksek Olmayan Bina","type":"print","time":3923}
+{"testID":58,"messageType":"print","message":"\nSECTION 4:","type":"print","time":3923}
+{"testID":58,"messageType":"print","message":"  - [Bina Y??kseklik Bilgisi]: BYK-4","type":"print","time":3924}
+{"testID":58,"messageType":"print","message":"\nSECTION 5:","type":"print","time":3924}
+{"testID":58,"messageType":"print","message":"  - [Zemin Kat Taban Alan??]: 500.0 m??","type":"print","time":3925}
+{"testID":58,"messageType":"print","message":"  - [Toplam ??n??aat Alan??]: 5000.0 m??","type":"print","time":3925}
+{"testID":58,"messageType":"print","message":"\nSECTION 6:","type":"print","time":3925}
+{"testID":58,"messageType":"print","message":"  - [Binan??zda konut haricinde a??a????dakilerden hangileri mevcut?]: ","type":"print","time":3925}
+{"testID":58,"messageType":"print","message":"  - [Ticari Alan (????yeri)]: Mevcut","type":"print","time":3926}
+{"testID":58,"messageType":"print","message":"  - [Kapal?? Otopark]: Mevcut","type":"print","time":3926}
+{"testID":58,"messageType":"print","message":"  - [Depolama Alan??]: Mevcut de??il","type":"print","time":3926}
+{"testID":58,"messageType":"print","message":"\nSECTION 7:","type":"print","time":3926}
+{"testID":58,"messageType":"print","message":"  - [Kazan Dairesi]: Mevcut","type":"print","time":3927}
+{"testID":58,"messageType":"print","message":"  - [Asans??r]: Mevcut","type":"print","time":3927}
+{"testID":58,"messageType":"print","message":"  - [??at?? Aras??]: Yok","type":"print","time":3927}
+{"testID":58,"messageType":"print","message":"  - [Jenerat??r Odas??]: Yok","type":"print","time":3927}
+{"testID":58,"messageType":"print","message":"  - [Elektrik Odas??]: Yok","type":"print","time":3928}
+{"testID":58,"messageType":"print","message":"  - [Trafo Odas??]: Yok","type":"print","time":3928}
+{"testID":58,"messageType":"print","message":"  - [E??ya Deposu]: Yok","type":"print","time":3928}
+{"testID":58,"messageType":"print","message":"  - [????p Odas??]: Yok","type":"print","time":3928}
+{"testID":58,"messageType":"print","message":"  - [S??????nak]: Mevcut","type":"print","time":3929}
+{"testID":58,"messageType":"print","message":"  - [Biti??ik Nizam Ortak Duvar??]: Yok","type":"print","time":3929}
+{"testID":58,"messageType":"print","message":"\nSECTION 8:","type":"print","time":3929}
+{"testID":58,"messageType":"print","message":"  - [Binan??z??n yerle??im d??zeni nedir?]: Ayr??k","type":"print","time":3930}
+{"testID":58,"messageType":"print","message":"\nSECTION 9:","type":"print","time":3930}
+{"testID":58,"messageType":"print","message":"  - [Binada sprinkler sistemi var m???]: Yanmaz","type":"print","time":3931}
+{"testID":58,"messageType":"print","message":"\nSECTION 10:","type":"print","time":3931}
+{"testID":58,"messageType":"print","message":"  - [Zemin Kat]: Konut | Metin","type":"print","time":3931}
+{"testID":58,"messageType":"print","message":"\nSECTION 11:","type":"print","time":3931}
+{"testID":58,"messageType":"print","message":"  - [??tfaiye arac??n??n binaya yakla????m mesafesi 45 metreyi a????yor mu?]: 5m+","type":"print","time":3932}
+{"testID":58,"messageType":"print","message":"\nSECTION 12:","type":"print","time":3932}
+{"testID":58,"messageType":"print","message":"  - [Betonarme ta????y??c??lar??n??zdaki paspay?? (demir koruma tabakas??) durumu nedir?]: Betonarme","type":"print","time":3932}
+{"testID":58,"messageType":"print","message":"\nSECTION 13:","type":"print","time":3933}
+{"testID":58,"messageType":"print","message":"  - [Otoparktan bina i??ine a????lan kap??n??n ??zelli??i nedir?]: Yang??na Dayan??kl??","type":"print","time":3933}
+{"testID":58,"messageType":"print","message":"\nSECTION 14:","type":"print","time":3933}
+{"testID":58,"messageType":"print","message":"  - [De??erlendirme]: ","type":"print","time":3934}
+{"testID":58,"messageType":"print","message":"\nSECTION 15:","type":"print","time":3934}
+{"testID":58,"messageType":"print","message":"  - [Zemin kaplama malzemesi nedir?]: Yanmaz","type":"print","time":3934}
+{"testID":58,"messageType":"print","message":"\nSECTION 16:","type":"print","time":3935}
+{"testID":58,"messageType":"print","message":"  - [D???? cephe kaplama veya ??s?? yal??t??m sistemi nedir?]: Yanmaz","type":"print","time":3935}
+{"testID":58,"messageType":"print","message":"\nSECTION 17:","type":"print","time":3935}
+{"testID":58,"messageType":"print","message":"  - [??at??n??z??n en ??st katman??nda hangi malzeme kullan??l??yor?]: Yanmaz","type":"print","time":3936}
+{"testID":58,"messageType":"print","message":"\nSECTION 18:","type":"print","time":3936}
+{"testID":58,"messageType":"print","message":"  - [Bina i??indeki duvar y??zeylerinde ne t??r malzeme var?]: Yanmaz","type":"print","time":3936}
+{"testID":58,"messageType":"print","message":"\nSECTION 19:","type":"print","time":3937}
+{"testID":58,"messageType":"print","message":"  - [Y??nlendirme levhalar?? as??l?? m???]: Mevcut","type":"print","time":3937}
+{"testID":58,"messageType":"print","message":"\nSECTION 20:","type":"print","time":3937}
+{"testID":58,"messageType":"print","message":"  - [Bas??n??land??rma Sistemi Gereksinimi (Kapal?? Yang??n Merdivenleri)]: ","type":"print","time":3938}
+{"testID":58,"messageType":"print","message":"\nSECTION 21:","type":"print","time":3938}
+{"testID":58,"messageType":"print","message":"  - [Merdiven ??n??nde Yang??n G??venlik Hol?? var m???]: Evet","type":"print","time":3938}
+{"testID":58,"messageType":"print","message":"  - [YGH (Hol) i??indeki kaplama malzemeleri yanmaz ??zellikte mi?]: Yanmaz","type":"print","time":3939}
+{"testID":58,"messageType":"print","message":"  - [YGH (Hol) kap??lar?? duman s??zd??rmaz ve yang??na dayan??kl?? m???]: Uygun","type":"print","time":3939}
+{"testID":58,"messageType":"print","message":"  - [YGH (Hol) i??inde e??ya (bisiklet, dolap vb.) var m???]: Yok","type":"print","time":3939}
+{"testID":58,"messageType":"print","message":"  - [YGH Gereksinimi]: ","type":"print","time":3939}
+{"testID":58,"messageType":"print","message":"\nSECTION 22:","type":"print","time":3940}
+{"testID":58,"messageType":"print","message":"  - [Binada ??tfaiye Asans??r?? var m???]: Var","type":"print","time":3940}
+{"testID":58,"messageType":"print","message":"\nSECTION 23:","type":"print","time":3941}
+{"testID":58,"messageType":"print","message":"  - [Asans??r??n??z bodrum katlara da iniyor mu?]: Var","type":"print","time":3941}
+{"testID":58,"messageType":"print","message":"\nSECTION 24:","type":"print","time":3941}
+{"testID":58,"messageType":"print","message":"  - [Dairenizden itibaren bina d??????na ????k???? nas??l?]: Bas??n??land??rma","type":"print","time":3942}
+{"testID":58,"messageType":"print","message":"\nSECTION 25:","type":"print","time":3942}
+{"testID":58,"messageType":"print","message":"  - [Merdiven kol geni??li??i nedir?]: 120cm","type":"print","time":3942}
+{"testID":58,"messageType":"print","message":"\nSECTION 26:","type":"print","time":3942}
+{"testID":58,"messageType":"print","message":"  - [Binada kullanmak zorunda kald??????n??z e??imli bir rampa var m???]: Yok","type":"print","time":3943}
+{"testID":58,"messageType":"print","message":"\nSECTION 27:","type":"print","time":3943}
+{"testID":58,"messageType":"print","message":"  - [Ka?????? kap??lar?? hangi y??ne a????l??yor?]: D????a A????l??r","type":"print","time":3943}
+{"testID":58,"messageType":"print","message":"  - [Ka?????? kap??lar??n??n kilit mekanizmas?? nas??ld??r?]: Panik Bar","type":"print","time":3944}
+{"testID":58,"messageType":"print","message":"\nSECTION 28:","type":"print","time":3944}
+{"testID":58,"messageType":"print","message":"  - [Evinizin i??indeki en uzak odadan daire giri?? kap??s??na kadar olan mesafe ne kadard??r?]: 15m","type":"print","time":3944}
+{"testID":58,"messageType":"print","message":"\nSECTION 29:","type":"print","time":3944}
+{"testID":58,"messageType":"print","message":"  - [Otoparkta yanabilir e??yalar (lastik, boya vb.) bulunuyor mu?]: Yok","type":"print","time":3945}
+{"testID":58,"messageType":"print","message":"\nSECTION 30:","type":"print","time":3945}
+{"testID":58,"messageType":"print","message":"  - [Kazan dairesinin konumu ve kap??s??n??n a????ld?????? yer nas??l?]: Uygun","type":"print","time":3945}
+{"testID":58,"messageType":"print","message":"\nSECTION 31:","type":"print","time":3945}
+{"testID":58,"messageType":"print","message":"  - [Trafo odas??n??n duvarlar?? ve kap??s?? yang??na dayan??kl?? m???]: Uygun","type":"print","time":3946}
+{"testID":58,"messageType":"print","message":"\nSECTION 32:","type":"print","time":3946}
+{"testID":58,"messageType":"print","message":"  - [Jenerat??r odas??n??n duvarlar?? yang??na dayan??kl?? m?? ve kap??s?? nereye a????l??yor?]: Uygun","type":"print","time":3946}
+{"testID":58,"messageType":"print","message":"\nSECTION 33:","type":"print","time":3947}
+{"testID":58,"messageType":"print","message":"  - [Kullan??c?? Y??k?? ve ????k???? Kapasitesi Analizi]: ","type":"print","time":3947}
+{"testID":58,"messageType":"print","message":"  - [KAT T??P??]: KULLANICI Y??K??|GEREKEN ??IKI??|MEVCUT ??IKI??","type":"print","time":3947}
+{"testID":58,"messageType":"print","message":"  - [Normal Katlar]: 40|null Adet|null Adet","type":"print","time":3947}
+{"testID":58,"messageType":"print","message":"  - [Zemin Kat]: 50|null Adet|null Adet","type":"print","time":3947}
+{"testID":58,"messageType":"print","message":"\nSECTION 34:","type":"print","time":3947}
+{"testID":58,"messageType":"print","message":"  - [Zemin kattaki ticari alanlar??n do??rudan soka??a/bah??eye a????lan kendilerine ait kap??lar?? var m???]: Ba????ms??z","type":"print","time":3948}
+{"testID":58,"messageType":"print","message":"\nSECTION 35:","type":"print","time":3948}
+{"testID":58,"messageType":"print","message":"  - [Daire kap??n??zdan ????kt??????n??zda bina merdiven kap??s??na kadar olan mesafe ka?? metredir?]: 15m","type":"print","time":3948}
+{"testID":58,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":3948}
+{"testID":58,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":3948}
+{"testID":58,"messageType":"print","message":"\nSECTION 36:","type":"print","time":3949}
+{"testID":58,"messageType":"print","message":"  - [Normal Merdiven (Adet)]: 1 adet","type":"print","time":3949}
+{"testID":58,"messageType":"print","message":"  - [Bina ????i Korunumlu (Yang??n) Merdiven (Adet)]: 1 adet","type":"print","time":3949}
+{"testID":58,"messageType":"print","message":"  - [Bina D?????? Kapal?? (Yang??n) Merdiven (Adet)]: 0 adet","type":"print","time":3949}
+{"testID":58,"messageType":"print","message":"  - [Bina D?????? A????k (Yang??n) Merdiven (Adet)]: 0 adet","type":"print","time":3949}
+{"testID":58,"messageType":"print","message":"  - [D??ner (Spiral) Merdiven (Adet)]: 0 adet","type":"print","time":3950}
+{"testID":58,"messageType":"print","message":"  - [Sahanl??ks??z (D??z) Merdiven (Adet)]: 0 adet","type":"print","time":3950}
+{"testID":58,"messageType":"print","message":"  - [Dengelenmi?? Merdiven (Adet)]: 0 adet","type":"print","time":3950}
+{"testID":58,"messageType":"print","message":"  - [Do??rudan D????ar?? A????lan Merdiven (Adet)]: 0 adet","type":"print","time":3950}
+{"testID":58,"messageType":"print","message":"  - []: ","type":"print","time":3950}
+{"testID":58,"messageType":"print","message":"  - [Binadan d???? havaya (atmosfere) ????kt??????n??z kat hangisidir?]: Zemin","type":"print","time":3951}
+{"testID":58,"messageType":"print","message":"  - []: ","type":"print","time":3951}
+{"testID":58,"messageType":"print","message":"\n--- [DENET??M TAMAMLANDI] ---\n","type":"print","time":3951}
+{"testID":58,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3951}
+{"test":{"id":59,"name":"(tearDownAll)","suiteID":10,"groupIDs":[56],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":3952}
+{"testID":59,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":3955}
+{"suite":{"id":60,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/crash_test.dart"},"type":"suite","time":3984}
+{"test":{"id":61,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/crash_test.dart","suiteID":60,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":3984}
+{"testID":33,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":4101}
+{"group":{"id":62,"suiteID":32,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":null,"column":null,"url":null},"type":"group","time":4102}
+{"group":{"id":63,"suiteID":32,"parentID":62,"name":"BinaStore Concurrency and Race Condition Tests","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":7,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/concurrency_save_test.dart"},"type":"group","time":4102}
+{"test":{"id":64,"name":"BinaStore Concurrency and Race Condition Tests Rapid consecutive saves should not corrupt state","suiteID":32,"groupIDs":[62,63],"metadata":{"skip":false,"skipReason":null},"line":20,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/concurrency_save_test.dart"},"type":"testStart","time":4102}
+{"testID":39,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":4398}
+{"group":{"id":65,"suiteID":38,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":9,"line":null,"column":null,"url":null},"type":"group","time":4398}
+{"group":{"id":66,"suiteID":38,"parentID":65,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi","metadata":{"skip":false,"skipReason":null},"testCount":9,"line":14,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"group","time":4398}
+{"test":{"id":67,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 1. K??t?? Niyetli Girdi Testi: Emoji ve A????r?? Uzun ??sim","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":21,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4399}
+{"testID":67,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4430}
+{"test":{"id":68,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 2. A????r?? De??erler Testi: 99 Kat, 10 Bodrum, 999999 m??","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":37,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4431}
+{"testID":68,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4441}
+{"test":{"id":69,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 3. ReportText Emoji Temizli??i Kontrol??","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":59,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4442}
+{"testID":69,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4447}
+{"test":{"id":70,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 4. Kategori Renk E??le??tirmesi Testi","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":91,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4447}
+{"testID":70,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4451}
+{"test":{"id":71,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 5. Kaydet & Devam Et Sim??lasyonu","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":106,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4451}
+{"testID":71,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4460}
+{"test":{"id":72,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 6. ??zet Ekran?? Risk Metrikleri Testi","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":128,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4460}
+{"testID":72,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4464}
+{"test":{"id":73,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 7. PDF Haz??rl??k Verisi Testi (Badge Renkleri)","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":146,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4465}
+{"testID":73,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4475}
+{"test":{"id":74,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 8. T??m B??l??m ????eriklerinde Emoji Taramas??","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":175,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4475}
+{"testID":74,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4480}
+{"test":{"id":75,"name":"U??tan Uca Test: Telefonu Olan Bir Kullan??c?? Gibi 9. DEMO SENARYO: Dairesel Merdiven Bulunan Bina - Tam Analiz","suiteID":38,"groupIDs":[65,66],"metadata":{"skip":false,"skipReason":null},"line":218,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/end_to_end_test.dart"},"type":"testStart","time":4480}
+{"testID":75,"messageType":"print","message":"\n?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????","type":"print","time":4498}
+{"testID":75,"messageType":"print","message":"???? DEMO: Dairesel Merdiven Analizi","type":"print","time":4499}
+{"testID":75,"messageType":"print","message":"?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????\n","type":"print","time":4500}
+{"testID":75,"messageType":"print","message":"???? Bina: Boutique Apartman - Ni??anta????","type":"print","time":4500}
+{"testID":75,"messageType":"print","message":"???? Yap?? Bilgileri:","type":"print","time":4500}
+{"testID":75,"messageType":"print","message":"   ??? Zemin + 4 normal kat (toplam 5 kat)","type":"print","time":4501}
+{"testID":75,"messageType":"print","message":"   ??? Yap?? y??ksekli??i: 15.5m","type":"print","time":4501}
+{"testID":75,"messageType":"print","message":"   ??? Kat alan??: 150 m?? (kompakt boutique apartman)","type":"print","time":4502}
+{"testID":75,"messageType":"print","message":"\n???? Merdiven Durumu:","type":"print","time":4502}
+{"testID":75,"messageType":"print","message":"   ??? 1 adet DA??RESEL MERD??VEN (spiral stairs)","type":"print","time":4503}
+{"testID":75,"messageType":"print","message":"   ??? Y??kseklik: 8.5m (??? 9.50m) ???","type":"print","time":4503}
+{"testID":75,"messageType":"print","message":"\n???? Kullan??c?? Y??k?? (KONUT):","type":"print","time":4503}
+{"testID":75,"messageType":"print","message":"   ??? Zemin kat: 20 ki??i (konut kullan??m??)","type":"print","time":4503}
+{"testID":75,"messageType":"print","message":"   ??? Normal katlar: 20 ki??i/kat (konut kullan??m??)","type":"print","time":4503}
+{"testID":75,"messageType":"print","message":"   ??? Maksimum: 20 ki??i (??? 25) ???","type":"print","time":4504}
+{"testID":75,"messageType":"print","message":"\n???? DA??RESEL MERD??VEN KURALLARI:","type":"print","time":4504}
+{"testID":75,"messageType":"print","message":"   ?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????","type":"print","time":4504}
+{"testID":75,"messageType":"print","message":"   Kural 1: Y??kseklik ??? 9.50m olmal??","type":"print","time":4504}
+{"testID":75,"messageType":"print","message":"   Kural 2: Kullan??c?? y??k?? ??? 25 ki??i olmal??","type":"print","time":4504}
+{"testID":75,"messageType":"print","message":"   ?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????","type":"print","time":4505}
+{"testID":75,"messageType":"print","message":"\n???? RAPOR SONUCU:","type":"print","time":4505}
+{"testID":75,"messageType":"print","message":"????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????","type":"print","time":4505}
+{"testID":75,"messageType":"print","message":"\n???? Rapor ????eri??i:","type":"print","time":4505}
+{"testID":75,"messageType":"print","message":"Bu b??l??m de??erlendirme kapsam?? d??????ndad??r.","type":"print","time":4506}
+{"testID":75,"messageType":"print","message":"????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????","type":"print","time":4506}
+{"testID":75,"messageType":"print","message":"????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????","type":"print","time":4506}
+{"testID":75,"messageType":"print","message":"\n???? Tam Rapor Metni:","type":"print","time":4506}
+{"testID":75,"messageType":"print","message":"???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????","type":"print","time":4507}
+{"testID":75,"messageType":"print","message":"Bu b??l??m de??erlendirme kapsam?? d??????ndad??r.","type":"print","time":4507}
+{"testID":75,"messageType":"print","message":"???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????","type":"print","time":4508}
+{"testID":75,"messageType":"print","message":"\n???? Risk Metrikleri:","type":"print","time":4508}
+{"testID":75,"messageType":"print","message":"   ??? G??venlik Skoru: 97/100","type":"print","time":4508}
+{"testID":75,"messageType":"print","message":"   ??? Kritik Riskler: 1","type":"print","time":4508}
+{"testID":75,"messageType":"print","message":"   ??? Uyar??lar: 0","type":"print","time":4508}
+{"testID":75,"messageType":"print","message":"\n??? Demo senaryo ba??ar??yla tamamland??!","type":"print","time":4509}
+{"testID":75,"messageType":"print","message":"?????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????\n","type":"print","time":4509}
+{"testID":75,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4510}
+{"suite":{"id":76,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_engine_invariants_test.dart"},"type":"suite","time":4539}
+{"test":{"id":77,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_engine_invariants_test.dart","suiteID":76,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":4540}
+{"testID":43,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":4721}
+{"group":{"id":78,"suiteID":42,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":16,"line":null,"column":null,"url":null},"type":"group","time":4722}
+{"test":{"id":79,"name":"(setUpAll)","suiteID":42,"groupIDs":[78],"metadata":{"skip":false,"skipReason":null},"line":19,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4722}
+{"testID":79,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":4740}
+{"group":{"id":80,"suiteID":42,"parentID":78,"name":"M??hendislik ve Kapasite Hesaplama Testleri","metadata":{"skip":false,"skipReason":null},"testCount":16,"line":29,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"group","time":4740}
+{"test":{"id":81,"name":"M??hendislik ve Kapasite Hesaplama Testleri YGH Analizi: Yap?? y??ksekli??i 52m ve YGH yoksa KR??T??K R??SK say??lmal??","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":30,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4740}
+{"testID":81,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4771}
+{"test":{"id":82,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 33: Mevcut ????k???? (1), gereken ????k????tan (2) az ise KR??T??K R??SK olu??mal??","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":52,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4771}
+{"testID":82,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4777}
+{"test":{"id":83,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 25: D??ner merdiven geni??li??i < 100cm ise KR??T??K R??SK olu??mal??","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":68,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4778}
+{"testID":83,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4784}
+{"test":{"id":84,"name":"M??hendislik ve Kapasite Hesaplama Testleri Skorlama: Sahanl??ks??z Merdiven varsa puan %96 alt??na d????meli","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":82,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4784}
+{"testID":84,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4789}
+{"test":{"id":85,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 36 (Madde 41): Merdivenlerin yar??s??ndan az?? d????ar?? a????l??yorsa KR??T??K R??SK","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":95,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4789}
+{"testID":85,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4802}
+{"testID":85,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4802}
+{"testID":85,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4803}
+{"test":{"id":86,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 20 (Madde 41): Sprinkler yoksa ve tahliye mesafesi > 10m ise KR??T??K R??SK","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":112,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4803}
+{"testID":86,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4807}
+{"testID":86,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4807}
+{"testID":86,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4808}
+{"test":{"id":87,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 20 (Madde 41): Sprinkler varsa ve tahliye mesafesi <= 15m ise OLUMLU","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":135,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4808}
+{"testID":87,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4811}
+{"testID":87,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4811}
+{"testID":87,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4811}
+{"test":{"id":88,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 20 (Madde 41): Tek Merdiven varsa (1/1) d????ar?? a????lmal??","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":171,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4812}
+{"testID":88,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4815}
+{"testID":88,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4815}
+{"testID":88,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4815}
+{"test":{"id":89,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 20 (Madde 41): 3 Merdiven varsa (ceil(3/2)=2) d????ar?? a????lmal??","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":186,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4816}
+{"testID":89,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4818}
+{"testID":89,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4819}
+{"testID":89,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4819}
+{"test":{"id":90,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 20 (Madde 41): 5 Merdiven varsa (ceil(5/2)=3) d????ar?? a????lmal??","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":204,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4819}
+{"testID":90,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4821}
+{"testID":90,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4822}
+{"testID":90,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4822}
+{"test":{"id":91,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 20 (Madde 41): Ba????ms??z Bodrum Merdivenleri Kontrol?? (2 merdiven, 0 direkt)","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":230,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4823}
+{"testID":91,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4826}
+{"testID":91,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4826}
+{"testID":91,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4826}
+{"test":{"id":92,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 20 (Madde 41): Ba????ms??z Bodrum Merdivenleri Mesafe Kontrol??","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":256,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4826}
+{"testID":92,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4829}
+{"testID":92,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4829}
+{"testID":92,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4830}
+{"test":{"id":93,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 36: Geni??lik Aral??k Analizi - Ba??ar??l?? Y??netmelik Uyumu (OLUMLU)","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":282,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4830}
+{"testID":93,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4847}
+{"test":{"id":94,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 36: Geni??lik Aral??k Analizi - Kesin ??hlal Durumu (KR??T??K R??SK)","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":314,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4847}
+{"testID":94,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4851}
+{"test":{"id":95,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 36: Geni??lik Aral??k Analizi - Bilinmiyor Se??ene??i (WARNING)","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":354,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4852}
+{"testID":95,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4856}
+{"test":{"id":96,"name":"M??hendislik ve Kapasite Hesaplama Testleri B??l??m 36: Birle??ik Geni??lik Giri??i Analizi (areWidthsSame = true)","suiteID":42,"groupIDs":[78,80],"metadata":{"skip":false,"skipReason":null},"line":375,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engineering_logic_test.dart"},"type":"testStart","time":4856}
+{"testID":96,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4861}
+{"test":{"id":97,"name":"(tearDownAll)","suiteID":42,"groupIDs":[78],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":4862}
+{"testID":97,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":4865}
+{"suite":{"id":98,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_snapshot_test.dart"},"type":"suite","time":4896}
+{"test":{"id":99,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_snapshot_test.dart","suiteID":98,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":4897}
+{"testID":53,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":4920}
+{"group":{"id":100,"suiteID":52,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":4920}
+{"test":{"id":101,"name":"Test ReportEngine","suiteID":52,"groupIDs":[100],"metadata":{"skip":false,"skipReason":null},"line":9,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/engine_test.dart"},"type":"testStart","time":4920}
+{"testID":101,"messageType":"print","message":"Testing Report Engine...","type":"print","time":4964}
+{"testID":101,"messageType":"print","message":"getSectionSummary(36)","type":"print","time":4965}
+{"testID":101,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4965}
+{"testID":101,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4965}
+{"testID":101,"messageType":"print","message":"getSectionFullReport(36)","type":"print","time":4966}
+{"testID":101,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":4966}
+{"testID":101,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":4966}
+{"testID":101,"messageType":"print","message":"calculateRiskMetrics","type":"print","time":4966}
+{"testID":101,"messageType":"print","message":"calculateModuleScores","type":"print","time":4967}
+{"testID":101,"messageType":"print","message":"Done testing.","type":"print","time":4967}
+{"testID":101,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4968}
+{"suite":{"id":102,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart"},"type":"suite","time":4996}
+{"test":{"id":103,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart","suiteID":102,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":4996}
+{"testID":55,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":5202}
+{"group":{"id":104,"suiteID":54,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":null,"column":null,"url":null},"type":"group","time":5203}
+{"group":{"id":105,"suiteID":54,"parentID":104,"name":"Complex Exit Scenarios (Section 33/34) Matrix","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":9,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/complex_exit_scenarios_test.dart"},"type":"group","time":5203}
+{"test":{"id":106,"name":"Complex Exit Scenarios (Section 33/34) Matrix Scenario: Independent Zemin exit, dependent Normal floor exit","suiteID":54,"groupIDs":[104,105],"metadata":{"skip":false,"skipReason":null},"line":17,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/complex_exit_scenarios_test.dart"},"type":"testStart","time":5203}
+{"testID":106,"error":"Expected: true\n  Actual: <false>\n","stackTrace":"package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 473:18  expect\ntest\\logic\\complex_exit_scenarios_test.dart 46:7    main.<fn>.<fn>\n","isFailure":true,"type":"error","time":5256}
+{"testID":106,"result":"failure","skipped":false,"hidden":false,"type":"testDone","time":5256}
+{"test":{"id":107,"name":"Complex Exit Scenarios (Section 33/34) Matrix Scenario: All floors have independent exits","suiteID":54,"groupIDs":[104,105],"metadata":{"skip":false,"skipReason":null},"line":53,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/complex_exit_scenarios_test.dart"},"type":"testStart","time":5257}
+{"testID":107,"error":"Expected: true\n  Actual: <false>\n","stackTrace":"package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 473:18  expect\ntest\\logic\\complex_exit_scenarios_test.dart 90:7    main.<fn>.<fn>\n","isFailure":true,"type":"error","time":5267}
+{"testID":107,"result":"failure","skipped":false,"hidden":false,"type":"testDone","time":5267}
+{"suite":{"id":108,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/pdf_heavy_load_test.dart"},"type":"suite","time":5296}
+{"test":{"id":109,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/pdf_heavy_load_test.dart","suiteID":108,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":5296}
+{"testID":61,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":5452}
+{"group":{"id":110,"suiteID":60,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":5453}
+{"test":{"id":111,"name":"Section 36 Handler & ReportEngine Null Safety Test","suiteID":60,"groupIDs":[110],"metadata":{"skip":false,"skipReason":null},"line":15,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/crash_test.dart"},"type":"testStart","time":5453}
+{"testID":111,"messageType":"print","message":"Testing Section36Handler reports...","type":"print","time":5507}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":5508}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":5508}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":5509}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":5509}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":5509}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":5509}
+{"testID":111,"messageType":"print","message":"Testing ReportEngine summary/full reports...","type":"print","time":5510}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":5510}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":5511}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":5511}
+{"testID":111,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":5511}
+{"testID":111,"messageType":"print","message":"Testing ReportEngine requirement evaluations...","type":"print","time":5511}
+{"testID":111,"messageType":"print","message":"Testing ReportEngine risk levels and scores...","type":"print","time":5511}
+{"testID":111,"messageType":"print","message":"All null safety tests passed!","type":"print","time":5512}
+{"testID":111,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5512}
+{"suite":{"id":112,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/pdf_ordering_test.dart"},"type":"suite","time":5540}
+{"test":{"id":113,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/pdf_ordering_test.dart","suiteID":112,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":5540}
+{"testID":77,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":5708}
+{"group":{"id":114,"suiteID":76,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":5709}
+{"group":{"id":115,"suiteID":76,"parentID":114,"name":"ReportEngine - Data Invariant Tests (Robustness)","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":9,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_engine_invariants_test.dart"},"type":"group","time":5709}
+{"test":{"id":116,"name":"ReportEngine - Data Invariant Tests (Robustness) Section 36 - All possible width labels should not crash the engine","suiteID":76,"groupIDs":[114,115],"metadata":{"skip":false,"skipReason":null},"line":17,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_engine_invariants_test.dart"},"type":"testStart","time":5709}
+{"testID":116,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5760}
+{"test":{"id":117,"name":"ReportEngine - Data Invariant Tests (Robustness) Section 36 - Edge Case: Null choices should not crash the engine","suiteID":76,"groupIDs":[114,115],"metadata":{"skip":false,"skipReason":null},"line":60,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_engine_invariants_test.dart"},"type":"testStart","time":5760}
+{"testID":117,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5765}
+{"test":{"id":118,"name":"ReportEngine - Data Invariant Tests (Robustness) Global - ReportEngine.getSectionStatus should handle arbitrary IDs safely","suiteID":76,"groupIDs":[114,115],"metadata":{"skip":false,"skipReason":null},"line":71,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_engine_invariants_test.dart"},"type":"testStart","time":5765}
+{"testID":118,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5790}
+{"suite":{"id":119,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"suite","time":5824}
+{"test":{"id":120,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart","suiteID":119,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":5825}
+{"testID":99,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":5985}
+{"group":{"id":121,"suiteID":98,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":null,"column":null,"url":null},"type":"group","time":5985}
+{"group":{"id":122,"suiteID":98,"parentID":121,"name":"ReportEngine Snapshot Tests (Safety Net)","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":14,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_snapshot_test.dart"},"type":"group","time":5985}
+{"test":{"id":123,"name":"ReportEngine Snapshot Tests (Safety Net) Section 3 - Known values produce identical report details","suiteID":98,"groupIDs":[121,122],"metadata":{"skip":false,"skipReason":null},"line":22,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_snapshot_test.dart"},"type":"testStart","time":5985}
+{"testID":123,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6023}
+{"test":{"id":124,"name":"ReportEngine Snapshot Tests (Safety Net) calculateRiskMetrics - Scenario: Complex risks and stale data","suiteID":98,"groupIDs":[121,122],"metadata":{"skip":false,"skipReason":null},"line":46,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/logic/report_snapshot_test.dart"},"type":"testStart","time":6023}
+{"testID":124,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6038}
+{"suite":{"id":125,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"suite","time":6068}
+{"test":{"id":126,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart","suiteID":125,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":6068}
+{"testID":103,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":6242}
+{"group":{"id":127,"suiteID":102,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":6242}
+{"group":{"id":128,"suiteID":102,"parentID":127,"name":"Malicious User Simulation","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":8,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart"},"type":"group","time":6242}
+{"test":{"id":129,"name":"Malicious User Simulation Attacker Attempt: Storage Exhaustion via Massive Strings","suiteID":102,"groupIDs":[127,128],"metadata":{"skip":false,"skipReason":null},"line":15,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart"},"type":"testStart","time":6243}
+{"testID":129,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6279}
+{"test":{"id":130,"name":"Malicious User Simulation Attacker Attempt: Character Injection for PDF/UI Breakage","suiteID":102,"groupIDs":[127,128],"metadata":{"skip":false,"skipReason":null},"line":28,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart"},"type":"testStart","time":6280}
+{"testID":130,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6288}
+{"test":{"id":131,"name":"Malicious User Simulation Attacker Attempt: Negative and NaN forcing","suiteID":102,"groupIDs":[127,128],"metadata":{"skip":false,"skipReason":null},"line":42,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/malicious_user_test.dart"},"type":"testStart","time":6288}
+{"testID":131,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6292}
+{"suite":{"id":132,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/simulation_audit_test.dart"},"type":"suite","time":6320}
+{"test":{"id":133,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/simulation_audit_test.dart","suiteID":132,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":6320}
+{"testID":109,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":6561}
+{"group":{"id":134,"suiteID":108,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":6561}
+{"test":{"id":135,"name":"PDF Heavy Load Test: Extremely long evaluation notes should not crash PDF generation","suiteID":108,"groupIDs":[134],"metadata":{"skip":false,"skipReason":null},"line":14,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/pdf_heavy_load_test.dart"},"type":"testStart","time":6561}
+{"testID":113,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":6754}
+{"group":{"id":136,"suiteID":112,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":6754}
+{"test":{"id":137,"name":"Active Systems Engine Requirement Ordering","suiteID":112,"groupIDs":[136],"metadata":{"skip":false,"skipReason":null},"line":6,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/pdf_ordering_test.dart"},"type":"testStart","time":6754}
+{"testID":137,"messageType":"print","message":"Verified: Yang??n Senaryosu is first.","type":"print","time":6787}
+{"testID":137,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6788}
+{"suite":{"id":138,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/stress_test.dart"},"type":"suite","time":6822}
+{"test":{"id":139,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/stress_test.dart","suiteID":138,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":6823}
+{"testID":64,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7138}
+{"test":{"id":140,"name":"BinaStore Concurrency and Race Condition Tests Overlapping asynchronous tasks should maintain data integrity","suiteID":32,"groupIDs":[62,63],"metadata":{"skip":false,"skipReason":null},"line":39,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/concurrency_save_test.dart"},"type":"testStart","time":7139}
+{"testID":120,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":7182}
+{"group":{"id":141,"suiteID":119,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":22,"line":null,"column":null,"url":null},"type":"group","time":7182}
+{"test":{"id":142,"name":"(setUpAll)","suiteID":119,"groupIDs":[141],"metadata":{"skip":false,"skipReason":null},"line":24,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7182}
+{"testID":142,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":7201}
+{"group":{"id":143,"suiteID":119,"parentID":141,"name":"YGH Zorunluluk Kriterleri Testleri","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":34,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"group","time":7202}
+{"test":{"id":144,"name":"YGH Zorunluluk Kriterleri Testleri Kriter 1: Yap?? y??ksekli??i 51.50m ve ??zeri ise YGH zorunlu olmal?? (30.5m mesaj?? gizlenmeli)","suiteID":119,"groupIDs":[141,143],"metadata":{"skip":false,"skipReason":null},"line":35,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7202}
+{"testID":144,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7222}
+{"test":{"id":145,"name":"YGH Zorunluluk Kriterleri Testleri Kriter 2: Bodrum katta ticari/teknik kullan??m (10-C) varsa YGH zorunlu olmal??","suiteID":119,"groupIDs":[141,143],"metadata":{"skip":false,"skipReason":null},"line":45,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7223}
+{"testID":145,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7228}
+{"test":{"id":146,"name":"YGH Zorunluluk Kriterleri Testleri Kriter 3: ??tfaiye asans??r?? zorunlulu??u (Konutlarda 51.50m)","suiteID":119,"groupIDs":[141,143],"metadata":{"skip":false,"skipReason":null},"line":63,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7229}
+{"testID":146,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7232}
+{"test":{"id":147,"name":"YGH Zorunluluk Kriterleri Testleri Kriter 4: Bodrum kat var ve B??l??m 23 se??imi 23-1-C ise YGH zorunlu olmal??","suiteID":119,"groupIDs":[141,143],"metadata":{"skip":false,"skipReason":null},"line":71,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7232}
+{"testID":147,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7236}
+{"test":{"id":148,"name":"YGH Zorunluluk Kriterleri Testleri Kriter 5: hYapi > 30.50m ve bas??n??land??rma yok (20-BAS-B) ise YGH zorunlu olmal??","suiteID":119,"groupIDs":[141,143],"metadata":{"skip":false,"skipReason":null},"line":91,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7237}
+{"testID":148,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7240}
+{"test":{"id":149,"name":"YGH Zorunluluk Kriterleri Testleri Kriter 6: Merdiven bodruma kesintisiz devam ediyorsa (20-Bodrum-A) YGH zorunlu olmal??","suiteID":119,"groupIDs":[141,143],"metadata":{"skip":false,"skipReason":null},"line":108,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7240}
+{"testID":149,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7243}
+{"group":{"id":150,"suiteID":119,"parentID":141,"name":"Bas??n??land??rma Zorunluluk Kriterleri Testleri","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":129,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"group","time":7243}
+{"test":{"id":151,"name":"Bas??n??land??rma Zorunluluk Kriterleri Testleri Kriter 1: hYapi >= 51.50m ise bas??n??land??rma zorunlu olmal??","suiteID":119,"groupIDs":[141,150],"metadata":{"skip":false,"skipReason":null},"line":130,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7244}
+{"testID":151,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7247}
+{"test":{"id":152,"name":"Bas??n??land??rma Zorunluluk Kriterleri Testleri Kriter 2: 30.50m <= hYapi < 51.50m - Bas??n??land??rma BILGI notu","suiteID":119,"groupIDs":[141,150],"metadata":{"skip":false,"skipReason":null},"line":137,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7247}
+{"testID":152,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7250}
+{"test":{"id":153,"name":"Bas??n??land??rma Zorunluluk Kriterleri Testleri Kriter 3: ??tfaiye asans??r?? varsa bas??n??land??rma zorunlu veya gereksinim olmal??","suiteID":119,"groupIDs":[141,150],"metadata":{"skip":false,"skipReason":null},"line":144,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7251}
+{"testID":153,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7256}
+{"test":{"id":154,"name":"Bas??n??land??rma Zorunluluk Kriterleri Testleri Kriter 4: Bodrum kat say??s?? > 4 ise bas??n??land??rma zorunlu olmal??","suiteID":119,"groupIDs":[141,150],"metadata":{"skip":false,"skipReason":null},"line":152,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7256}
+{"testID":154,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7260}
+{"group":{"id":155,"suiteID":119,"parentID":141,"name":"Dairesel Merdiven De??erlendirmesi Testleri","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":159,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"group","time":7261}
+{"test":{"id":156,"name":"Dairesel Merdiven De??erlendirmesi Testleri Senaryo 1: Dairesel merdiven y??ksekli??i <= 9.50m VE kullan??c?? y??k?? <= 25 - GE??ERL??","suiteID":119,"groupIDs":[141,155],"metadata":{"skip":false,"skipReason":null},"line":160,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7261}
+{"testID":156,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":7280}
+{"testID":156,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":7280}
+{"testID":156,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7281}
+{"test":{"id":157,"name":"Dairesel Merdiven De??erlendirmesi Testleri Senaryo 2: Dairesel merdiven y??ksekli??i > 9.50m - GE??ERS??Z","suiteID":119,"groupIDs":[141,155],"metadata":{"skip":false,"skipReason":null},"line":182,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7281}
+{"testID":157,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":7285}
+{"testID":157,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":7286}
+{"testID":157,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7286}
+{"test":{"id":158,"name":"Dairesel Merdiven De??erlendirmesi Testleri Senaryo 3: Kullan??c?? y??k?? > 25 ki??i - GE??ERS??Z","suiteID":119,"groupIDs":[141,155],"metadata":{"skip":false,"skipReason":null},"line":200,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7286}
+{"testID":158,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":7289}
+{"testID":158,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":7290}
+{"testID":158,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7290}
+{"test":{"id":159,"name":"Dairesel Merdiven De??erlendirmesi Testleri Senaryo 4: Y??kseklik bilinmiyor - UYARI","suiteID":119,"groupIDs":[141,155],"metadata":{"skip":false,"skipReason":null},"line":218,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7291}
+{"testID":159,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":7295}
+{"testID":159,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":7296}
+{"testID":159,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7296}
+{"test":{"id":160,"name":"Dairesel Merdiven De??erlendirmesi Testleri Senaryo 5: B??l??m 34 ba????ms??z ????k???? - Ticari alan y??k?? say??lmaz","suiteID":119,"groupIDs":[141,155],"metadata":{"skip":false,"skipReason":null},"line":236,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7297}
+{"testID":160,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":7301}
+{"testID":160,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":7301}
+{"testID":160,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7302}
+{"test":{"id":161,"name":"Dairesel Merdiven De??erlendirmesi Testleri Senaryo 6: HER ??K?? ??ART DA sa??lanm??yor - ??oklu sebep","suiteID":119,"groupIDs":[141,155],"metadata":{"skip":false,"skipReason":null},"line":267,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7302}
+{"testID":161,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":7305}
+{"testID":161,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":7306}
+{"testID":161,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7306}
+{"group":{"id":162,"suiteID":119,"parentID":141,"name":"Rapor Etiketi De??erlendirme Testleri","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":291,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"group","time":7306}
+{"test":{"id":163,"name":"Rapor Etiketi De??erlendirme Testleri B??l??m 1 ve 2 Etiketleri Do??ru Gelmeli","suiteID":119,"groupIDs":[141,162],"metadata":{"skip":false,"skipReason":null},"line":292,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7307}
+{"testID":163,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7322}
+{"test":{"id":164,"name":"Rapor Etiketi De??erlendirme Testleri B??l??m 7 Teknik Hacimler Detayl?? Listelenmeli","suiteID":119,"groupIDs":[141,162],"metadata":{"skip":false,"skipReason":null},"line":317,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7323}
+{"testID":164,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7327}
+{"test":{"id":165,"name":"Rapor Etiketi De??erlendirme Testleri B??l??m 21 YGH Alt Sorular?? Listelenmeli","suiteID":119,"groupIDs":[141,162],"metadata":{"skip":false,"skipReason":null},"line":333,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7327}
+{"testID":165,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7332}
+{"test":{"id":166,"name":"Rapor Etiketi De??erlendirme Testleri B??l??m 20 Bas??n??land??rma Dinamik Blo??u Listelenmeli","suiteID":119,"groupIDs":[141,162],"metadata":{"skip":false,"skipReason":null},"line":365,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7333}
+{"testID":166,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7337}
+{"test":{"id":167,"name":"Rapor Etiketi De??erlendirme Testleri B??l??m 36 Merdiven Analizi Etiketi Do??ru Gelmeli","suiteID":119,"groupIDs":[141,162],"metadata":{"skip":false,"skipReason":null},"line":376,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7338}
+{"testID":167,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi ba??lad??: GENEL","type":"print","time":7345}
+{"testID":167,"messageType":"print","message":"[B??L??M 36] Geni??lik analizi bitti: GENEL","type":"print","time":7345}
+{"testID":167,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7346}
+{"test":{"id":168,"name":"Rapor Etiketi De??erlendirme Testleri End??striyel Mutfak (B??y??k Restoran) rapor i??eri??i do??rulamas??","suiteID":119,"groupIDs":[141,162],"metadata":{"skip":false,"skipReason":null},"line":401,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/report_engine_test.dart"},"type":"testStart","time":7346}
+{"testID":168,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7355}
+{"test":{"id":169,"name":"(tearDownAll)","suiteID":119,"groupIDs":[141],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":7355}
+{"testID":169,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":7361}
+{"suite":{"id":170,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/summary_transition_test.dart"},"type":"suite","time":7402}
+{"test":{"id":171,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/summary_transition_test.dart","suiteID":170,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":7402}
+{"testID":126,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":7441}
+{"group":{"id":172,"suiteID":125,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":null,"column":null,"url":null},"type":"group","time":7442}
+{"test":{"id":173,"name":"(setUpAll)","suiteID":125,"groupIDs":[172],"metadata":{"skip":false,"skipReason":null},"line":13,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"testStart","time":7442}
+{"testID":173,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":7464}
+{"group":{"id":174,"suiteID":125,"parentID":172,"name":"Section 27 Dynamic Logic Tests","metadata":{"skip":false,"skipReason":null},"testCount":6,"line":23,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"group","time":7465}
+{"test":{"id":175,"name":"Section 27 Dynamic Logic Tests Door Direction (27-2-B) - Below 50 threshold - Positive","suiteID":125,"groupIDs":[172,174],"metadata":{"skip":false,"skipReason":null},"line":24,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"testStart","time":7465}
+{"testID":175,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7510}
+{"test":{"id":176,"name":"Section 27 Dynamic Logic Tests Door Direction (27-2-B) - Above 50 threshold - Critical","suiteID":125,"groupIDs":[172,174],"metadata":{"skip":false,"skipReason":null},"line":38,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"testStart","time":7510}
+{"testID":176,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7516}
+{"test":{"id":177,"name":"Section 27 Dynamic Logic Tests Lock Mechanism (27-3-B) - Below 100 threshold - Positive","suiteID":125,"groupIDs":[172,174],"metadata":{"skip":false,"skipReason":null},"line":53,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"testStart","time":7516}
+{"testID":177,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7522}
+{"test":{"id":178,"name":"Section 27 Dynamic Logic Tests Lock Mechanism (27-3-B) - Above 100 threshold - Critical","suiteID":125,"groupIDs":[172,174],"metadata":{"skip":false,"skipReason":null},"line":67,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"testStart","time":7522}
+{"testID":178,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7526}
+{"test":{"id":179,"name":"Section 27 Dynamic Logic Tests Section 34 Independence - Zemin load should be ignored if independent","suiteID":125,"groupIDs":[172,174],"metadata":{"skip":false,"skipReason":null},"line":82,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"testStart","time":7527}
+{"testID":179,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7531}
+{"test":{"id":180,"name":"Section 27 Dynamic Logic Tests Scoring Integration - Critical risk should penalize score by 3 points","suiteID":125,"groupIDs":[172,174],"metadata":{"skip":false,"skipReason":null},"line":100,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/section_27_dynamic_test.dart"},"type":"testStart","time":7532}
+{"testID":180,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7542}
+{"test":{"id":181,"name":"(tearDownAll)","suiteID":125,"groupIDs":[172],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":7542}
+{"testID":181,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":7545}
+{"suite":{"id":182,"platform":"vm","path":"C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/visual_consistency_test.dart"},"type":"suite","time":7581}
+{"test":{"id":183,"name":"loading C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/visual_consistency_test.dart","suiteID":182,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":7581}
+{"testID":133,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":7710}
+{"group":{"id":184,"suiteID":132,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":7711}
+{"test":{"id":185,"name":"Simulation: Architect Audit of 55m Mixed-Use Building","suiteID":132,"groupIDs":[184],"metadata":{"skip":false,"skipReason":null},"line":14,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/simulation_audit_test.dart"},"type":"testStart","time":7711}
+{"testID":185,"messageType":"print","message":"\n--- [S??M??LASYON BA??LATILDI: M??MAR G??Z??YLE ANAL??Z] ---\n","type":"print","time":7765}
+{"testID":185,"messageType":"print","message":"B??NA PROF??L??: 55m Y??kseklik, Karma Kullan??m, 22 Kat Toplam.","type":"print","time":7766}
+{"testID":185,"messageType":"print","message":"\n[GENEL R??SK DURUMU]","type":"print","time":7766}
+{"testID":185,"messageType":"print","message":"G??venlik Skoru: %94","type":"print","time":7766}
+{"testID":185,"messageType":"print","message":"Kritik Risk Say??s??: 2","type":"print","time":7767}
+{"testID":185,"messageType":"print","message":"Kritik Alanlar: [B??l??m 33 (VER?? UYUMSUZLU??U), B??l??m 21]","type":"print","time":7767}
+{"testID":185,"messageType":"print","message":"\n[AKT??F S??STEM GEREKS??N??MLER??]","type":"print","time":7768}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Yang??n Senaryosu","type":"print","time":7768}
+{"testID":185,"messageType":"print","message":"   - Sebep: Binada zorunlu aktif sistemler bulundu??u i??in bir Yang??n Senaryosu olu??turulmas?? zorunludur.","type":"print","time":7768}
+{"testID":185,"messageType":"print","message":"   - Not: Aktif sistem gereksinimlerinin belirtildi??i bu ??al????madaki hi??bir sistem veya ekipman binan??zda zorunlu de??il ise ve binada asans??r de yok ise yang??n SENARYOSU ve yang??n MATR??S?? olu??turulmas?? zorunlu olmayabilir.","type":"print","time":7769}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Yang??n Matrisi (Cause and Effect)","type":"print","time":7769}
+{"testID":185,"messageType":"print","message":"   - Sebep: Sistemlerin birbiriyle entegrasyonu i??in Yang??n Matrisi (Cause and Effect) haz??rlanmal??d??r.","type":"print","time":7769}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Yang??n Alg??lama ve Uyar?? Sistemi","type":"print","time":7770}
+{"testID":185,"messageType":"print","message":"   - Sebep: Yap?? Y??ksekli??i ??? 51.50m oldu??u i??in zorunludur.","type":"print","time":7770}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Acil Ayd??nlatma Sistemi","type":"print","time":7770}
+{"testID":185,"messageType":"print","message":"   - Sebep: Yap?? Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":7771}
+{"testID":185,"messageType":"print","message":"[??STE??E BA??LI] Acil Durum Y??nlendirmeleri","type":"print","time":7771}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Sesli Tahliye (Anons) Sistemi","type":"print","time":7771}
+{"testID":185,"messageType":"print","message":"   - Sebep: Yap?? Y??ksekli??i ??? 51.50m oldu??u i??in zorunludur.","type":"print","time":7772}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Elle ??hbar Sistemi (K??r-Bas Yang??n Butonu)","type":"print","time":7772}
+{"testID":185,"messageType":"print","message":"   - Sebep: Bina Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":7772}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Sesli ve I????kl?? Alarm Cihazlar??","type":"print","time":7772}
+{"testID":185,"messageType":"print","message":"   - Sebep: Elle ihbar sistemi (Buton) zorunlu oldu??u i??in alarm cihazlar?? da zorunludur.","type":"print","time":7773}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Yang??n Dolab?? Sistemi","type":"print","time":7773}
+{"testID":185,"messageType":"print","message":"   - Sebep: Yap?? Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":7773}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] ??tfaiye Su Alma A??z??","type":"print","time":7774}
+{"testID":185,"messageType":"print","message":"   - Sebep: Bina Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":7774}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] ??tfaiye Su Verme A??z?? (Siyam ??kizi)","type":"print","time":7774}
+{"testID":185,"messageType":"print","message":"   - Sebep: Bina Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":7775}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Otomatik Sprinkler Sistemi","type":"print","time":7775}
+{"testID":185,"messageType":"print","message":"   - Sebep: Zorunluluk Sebebi: Yap?? Y??ksekli??i ??? 51.50m.","type":"print","time":7776}
+{"testID":185,"messageType":"print","message":"[??STE??E BA??LI] Yang??n Hidrant Sistemi(Bina ??evresinde)","type":"print","time":7776}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Duman Kontrol Sistemi","type":"print","time":7776}
+{"testID":185,"messageType":"print","message":"   - Sebep: Yap?? Y??ksekli??i ??? 51.50m oldu??u i??in zorunludur.","type":"print","time":7777}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Bas??n??land??rma Sistemi","type":"print","time":7777}
+{"testID":185,"messageType":"print","message":"   - Sebep: A??a????daki alanlarda bas??n??land??rma yap??lmas?? ZORUNLUDUR:","type":"print","time":7777}
+{"testID":185,"messageType":"print","message":"   - Not: Merdivenlerin en az ikisinde.","type":"print","time":7778}
+{"testID":185,"messageType":"print","message":"[UYARI] Sismik Ask??lama (Depreme Kar???? Tesisat Koruma) Sistemleri","type":"print","time":7778}
+{"testID":185,"messageType":"print","message":"   - Sebep: Otomatik Sprinkler sistemi zorunlu oldu??u i??in, binan??z??n deprem b??lgesine g??re sismik ??nlemler al??nmas?? gerekebilir. Kesin sismik ??nlemler i??in binan??z??n bulundu??u b??lgeye g??re yorum yap??lmal??d??r.","type":"print","time":7779}
+{"testID":185,"messageType":"print","message":"   - Not: Birinci ve ikinci derece deprem b??lgelerinde, sismik hareketlere kar???? ana kolonlar??n herhangi bir y??ne s??r??klenmemesi i??in, d??rt yollu destek kullan??lmas?? ve 65 mm ve daha b??y??k nominal ??apl?? borular??n katlardan ana da????t??m borular??na ba??lanmas??nda esnek ba??lant??lar ile borular??n tavanlara tutturulmas??nda iki yollu enlemesine ve boylamas??na sabitleme ask?? elemanlar?? kullan??larak borular??n k??r??lmas??n??n ??nlenmesi gerekir. Dilatasyon ge??i??lerinde her ???? y??nde hareketi kar????layacak detaylar uygulan??r.","type":"print","time":7779}
+{"testID":185,"messageType":"print","message":"[ZORUNLU] Ta????nabilir (Portatif) S??nd??r??c??ler (YSC)","type":"print","time":7779}
+{"testID":185,"messageType":"print","message":"   - Sebep: Her yap??da zorunludur.","type":"print","time":7780}
+{"testID":185,"messageType":"print","message":"   - Not: Toplam ??n??aat Alan?? (16000.0 m??) hesab??na g??re binada en az 64 adet 6kg Kuru Kimyevi Tozlu (KKT) Yang??n S??nd??rme Cihaz?? bulunmal??d??r.","type":"print","time":7780}
+{"testID":185,"messageType":"print","message":"[UYARI] Yang??n Damperi","type":"print","time":7780}
+{"testID":185,"messageType":"print","message":"   - Sebep: Yang??n kompart??man?? veya yang??n zonu olarak tan??mlanm???? alanlar??n d????eme ve t??m duvarlar??nda yer alan, havaland??rma kanal?? ge??i??i vb. korunumsuz a????kl??klarda Yang??n Damperi kullan??lmal??d??r.","type":"print","time":7781}
+{"testID":185,"messageType":"print","message":"[UYARI] Duman Damperi","type":"print","time":7781}
+{"testID":185,"messageType":"print","message":"   - Sebep: Duman tahliye sistemine ait kanallar??n yang??n kompart??man?? veya yang??n zonundan ge??mesi halinde ge??i?? noktalar??nda duman damperi kullan??lmal??d??r.","type":"print","time":7782}
+{"testID":185,"messageType":"print","message":"[UYARI] Atrium Duman Kontrol??","type":"print","time":7782}
+{"testID":185,"messageType":"print","message":"   - Sebep: (Binan??zda varsa) Alan?? 90 m??'den k??????k olan atrium bo??luklar??n??n ??evresi her katta en az 45 cm y??ksekli??inde duman perdesi ile ??evrelenir ve ya??murlama sistemi ile korunan binalarda duman perdesinden 15 ila 30 cm uzakl??kta, aralar??ndaki mesafe en ??ok 2 m olacak ??ekilde ya??murlama ba??l?????? yerle??tirilir. Atriumlarda do??al veya mekanik olarak duman kontrol?? yap??l??r.","type":"print","time":7782}
+{"testID":185,"messageType":"print","message":"[UYARI] Gaz Alg??lama Sistemi","type":"print","time":7783}
+{"testID":185,"messageType":"print","message":"   - Sebep: Kazan dairesi (do??algaz, LPG), otopark veya varsa ticari/end??striyel mutfak alanlar??nda uygun gaz alg??lama dedekt??rleri, gaz kesme tertibat?? vs. kullan??lmal??d??r.","type":"print","time":7783}
+{"testID":185,"messageType":"print","message":"\n--- [S??M??LASYON TAMAMLANDI] ---\n","type":"print","time":7784}
+{"testID":185,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7784}
+{"testID":139,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":8017}
+{"group":{"id":186,"suiteID":138,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":8018}
+{"test":{"id":187,"name":"Zorlu Kullan??c?? Sim??lasyonu: Maksimum De??erler Alt??nda Sistem Davran??????","suiteID":138,"groupIDs":[186],"metadata":{"skip":false,"skipReason":null},"line":22,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/stress_test.dart"},"type":"testStart","time":8018}
+{"testID":135,"messageType":"print","message":"--- DE??ERLEND??RME: ??ok uzun metinli PDF ??retimi ba??lat??l??yor... ---","type":"print","time":8051}
+{"testID":135,"messageType":"print","message":"--- BA??ARILI: PDF ba??ar??yla ??retildi (715144 byte). ---","type":"print","time":8051}
+{"testID":135,"messageType":"print","message":"Not: Metin ??ok uzun olmas??na ra??men PDF motoru ????kmedi.","type":"print","time":8052}
+{"testID":135,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":8052}
+{"testID":187,"messageType":"print","message":"--- STRESS TEST?? BA??LATILIYOR (MAKS??MUM DE??ERLER) ---","type":"print","time":8082}
+{"testID":187,"messageType":"print","message":"\n[SONU??LAR]","type":"print","time":8082}
+{"testID":187,"messageType":"print","message":"Toplam ??n??aat Alan??: 200000.0 m2","type":"print","time":8082}
+{"testID":187,"messageType":"print","message":"Yap?? Y??ksekli??i: 125.0 m","type":"print","time":8083}
+{"testID":187,"messageType":"print","message":"G??venlik Skoru: %70","type":"print","time":8083}
+{"testID":187,"messageType":"print","message":"Kritik Risk Say??s??: 10","type":"print","time":8084}
+{"testID":187,"messageType":"print","message":"Gereken ????k???? Say??s?? (B??l??m 33): 67","type":"print","time":8084}
+{"testID":187,"messageType":"print","message":"Mevcut ????k???? Say??s??: 1","type":"print","time":8084}
+{"testID":187,"messageType":"print","message":"\n[AKT??F S??STEM ANAL??Z??]","type":"print","time":8085}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Yang??n Senaryosu - Binada zorunlu aktif sistemler bulundu??u i??in bir Yang??n Senaryosu olu??turulmas?? zorunludur.","type":"print","time":8085}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Yang??n Matrisi (Cause and Effect) - Sistemlerin birbiriyle entegrasyonu i??in Yang??n Matrisi (Cause and Effect) haz??rlanmal??d??r.","type":"print","time":8086}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Yang??n Alg??lama ve Uyar?? Sistemi - Yap?? Y??ksekli??i ??? 51.50m oldu??u i??in zorunludur.","type":"print","time":8086}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Acil Ayd??nlatma Sistemi - Yap?? Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":8086}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Sesli Tahliye (Anons) Sistemi - Yap?? Y??ksekli??i ??? 51.50m oldu??u i??in zorunludur.","type":"print","time":8087}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Elle ??hbar Sistemi (K??r-Bas Yang??n Butonu) - Bina Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":8087}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Sesli ve I????kl?? Alarm Cihazlar?? - Elle ihbar sistemi (Buton) zorunlu oldu??u i??in alarm cihazlar?? da zorunludur.","type":"print","time":8087}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Yang??n Dolab?? Sistemi - Yap?? Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":8100}
+{"testID":187,"messageType":"print","message":"ZORUNLU: ??tfaiye Su Alma A??z?? - Bina Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":8100}
+{"testID":187,"messageType":"print","message":"ZORUNLU: ??tfaiye Su Verme A??z?? (Siyam ??kizi) - Bina Y??ksekli??i ??? 21.50m oldu??u i??in zorunludur.","type":"print","time":8100}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Otomatik Sprinkler Sistemi - Zorunluluk Sebebi: Yap?? Y??ksekli??i ??? 51.50m.","type":"print","time":8100}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Duman Kontrol Sistemi - Yap?? Y??ksekli??i ??? 51.50m oldu??u i??in zorunludur.","type":"print","time":8100}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Bas??n??land??rma Sistemi - A??a????daki alanlarda bas??n??land??rma yap??lmas?? ZORUNLUDUR:","type":"print","time":8100}
+{"testID":187,"messageType":"print","message":"ZORUNLU: Ta????nabilir (Portatif) S??nd??r??c??ler (YSC) - Her yap??da zorunludur.","type":"print","time":8100}
+{"testID":187,"messageType":"print","message":"\n--- STRESS TEST?? BA??ARIYLA TAMAMLANDI ---\n","type":"print","time":8100}
+{"testID":187,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":8100}
+{"testID":171,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":8329}
+{"group":{"id":188,"suiteID":170,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":8329}
+{"test":{"id":189,"name":"B??l??m 36 - ??zet Ekran?? Asenkron Ge??i?? Testi","suiteID":170,"groupIDs":[188],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":7,"root_column":3,"root_url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/summary_transition_test.dart"},"type":"testStart","time":8329}
+{"testID":183,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":8573}
+{"group":{"id":190,"suiteID":182,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":null,"column":null,"url":null},"type":"group","time":8573}
+{"group":{"id":191,"suiteID":182,"parentID":190,"name":"Visual Consistency and Style Compliance Tests","metadata":{"skip":false,"skipReason":null},"testCount":3,"line":7,"column":3,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/visual_consistency_test.dart"},"type":"group","time":8573}
+{"test":{"id":192,"name":"Visual Consistency and Style Compliance Tests Section 5 input labels should be \"silky\" (black38 or grey)","suiteID":182,"groupIDs":[190,191],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":8,"root_column":5,"root_url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/visual_consistency_test.dart"},"type":"testStart","time":8573}
+{"testID":189,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":9096}
+{"test":{"id":193,"name":"Anti-Freeze: Y??kleme S??ras??nda ??lerleme Sayac?? G??r??nmeli ve Kapanmal??","suiteID":170,"groupIDs":[188],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":18,"root_column":3,"root_url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/summary_transition_test.dart"},"type":"testStart","time":9096}
+{"testID":193,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":9163}
+{"test":{"id":194,"name":"Robustness: Hesaplama Hatas?? Durumunda Uygulama Tak??lmamal?? (Anti-Freeze)","suiteID":170,"groupIDs":[188],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":34,"root_column":3,"root_url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/summary_transition_test.dart"},"type":"testStart","time":9163}
+{"testID":194,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":9222}
+{"testID":192,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":9387}
+{"test":{"id":195,"name":"Visual Consistency and Style Compliance Tests AppColors.accentGold should be defined and consistent","suiteID":182,"groupIDs":[190,191],"metadata":{"skip":false,"skipReason":null},"line":43,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/visual_consistency_test.dart"},"type":"testStart","time":9388}
+{"testID":195,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":9392}
+{"test":{"id":196,"name":"Visual Consistency and Style Compliance Tests Question title colors should be unified (Deep Purple)","suiteID":182,"groupIDs":[190,191],"metadata":{"skip":false,"skipReason":null},"line":49,"column":5,"url":"file:///C:/Users/SGM/Desktop/Vs1/life_safety/test/ui/visual_consistency_test.dart"},"type":"testStart","time":9392}
+{"testID":196,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":9395}
+{"testID":140,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":10149}
+{"success":false,"type":"done","time":10182}

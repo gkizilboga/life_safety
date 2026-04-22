@@ -57,7 +57,7 @@ class Section36Handler {
 
         if (heightLimitReached || userLoadLimitReached) {
           final List<String> reasons = [];
-          if (heightLimitReached) reasons.add("bina yüksekliği ($hBina m)");
+          if (heightLimitReached) reasons.add("yapı yüksekliği ($hYapi m)");
           if (userLoadLimitReached)
             reasons.add("kullanıcı yükü ($maxYuk kişi)");
 
@@ -66,7 +66,7 @@ class Section36Handler {
           );
         } else {
           analysisParts.add(
-            "OLUMLU: Dengelenmiş merdiven, bina yüksekliği ve kullanıcı yükü sınırları aşılmadığı için Yönetmeliğe göre kaçış yolu olarak kullanılabilir.",
+            "OLUMLU: Dengelenmiş merdiven, yapı yüksekliği ve kullanıcı yükü sınırları aşılmadığı için Yönetmeliğe göre kaçış yolu olarak kullanılabilir.",
           );
         }
       }
@@ -84,7 +84,7 @@ class Section36Handler {
 
           if (heightLimitReached || userLoadLimitReached) {
             final List<String> reasons = [];
-            if (heightLimitReached) reasons.add("bina yüksekliği ($hBina m)");
+            if (heightLimitReached) reasons.add("yapı yüksekliği ($hYapi m)");
             if (userLoadLimitReached)
               reasons.add("kullanıcı yükü ($maxYuk kişi)");
 
@@ -164,20 +164,19 @@ class Section36Handler {
           ? "(Sprinkler var: Limit 15 m.)"
           : "(Sprinkler yok: Limit 10 m.)";
 
+      bool mainMesafeReq = (directMain < totalMain) && totalMain > 0;
       bool mainMesafeFail =
-          (directMain < totalMain) &&
-          b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
+          mainMesafeReq && b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
       bool mainMesafeUnknown =
-          (directMain < totalMain) &&
-          b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-C";
+          mainMesafeReq && b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-C";
 
+      bool bodrumMesafeReq =
+          b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
       bool bodrumMesafeFail =
-          b20.isBodrumIndependent &&
-          (directBod < totalBod) &&
+          bodrumMesafeReq &&
           b20.bodrumLobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
       bool bodrumMesafeUnknown =
-          b20.isBodrumIndependent &&
-          (directBod < totalBod) &&
+          bodrumMesafeReq &&
           b20.bodrumLobiTahliyeMesafeDurumu?.label == "41-MESAFE-C";
 
       if (mainMesafeFail || bodrumMesafeFail) {
@@ -194,7 +193,7 @@ class Section36Handler {
         analysisParts.add(msg);
       } else if (mainMesafeUnknown || bodrumMesafeUnknown) {
         analysisParts.add(
-          "UYARI: Çıkış katı tahliye mesafesi kullanıcı tarafından beyan edilmediği için Yönetmelik Madde 41 'de yer alan %50 kuralına göre herhangi bir değerlendirme yapılamamıştır. Bu konu, yangın anında can güvenliğini doğrudan etkileyen kritik bir konudur.",
+          "UYARI: Çıkış katı tahliye mesafesi kullanıcı tarafından beyan edilmediğinden, doğrudan dışarıya açılmayan merdivenlerin çıkış katındaki koşu mesafesi ile ilgili bir değerlendirme yapılamammıştır. Kuralla ilgili olarak mimari proje üzerinde veya sahada ölçüm yapılması şiddetle önerilir.",
         );
       } else if ((totalMain > 0 &&
               b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-A") ||
@@ -234,19 +233,19 @@ class Section36Handler {
 
         if (mainKoruFail && bodrumKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Bina yüksekliği ($hPrimary m) nedeniyle hem normal hem de bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' (Yangın Merdiveni) bulunması zorunludur. Kapasiteler yetersizdir. (Normal: $currentProtected, Bodrum: $korBod)",
+            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle hem normal hem de bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' (Yangın Merdiveni) bulunması zorunludur. Kapasiteler yetersizdir. (Normal: $currentProtected, Bodrum: $korBod)",
           );
         } else if (mainKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Bina yüksekliği ($hPrimary m) nedeniyle normal katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. (Mevcut: $currentProtected)",
+            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle normal katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. (Mevcut: $currentProtected)",
           );
         } else if (bodrumKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Bina yüksekliği ($hPrimary m) nedeniyle bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. (Mevcut: $korBod)",
+            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. (Mevcut: $korBod)",
           );
         } else {
           analysisParts.add(
-            "OLUMLU: Bina yüksekliği ($hPrimary m) için gereken korunumlu merdiven adetleri ($requiredProtected adet) sağlanmaktadır.",
+            "OLUMLU: Yapı yüksekliği ($hPrimary m) için gereken en az korunumlu merdiven adedi ($requiredProtected adet) sağlanmaktadır.",
           );
         }
       }
@@ -400,7 +399,7 @@ class Section36Handler {
     if (summaryBullets.isNotEmpty) {
       return summaryBullets.join("\n");
     }
-    return "Tüm kaçış merdivenleri Yönetmelik kriterlerine (Korunumlu Merdiven adetleri, kapı yönleri ve %50 tahliye kuralları) göre yeterlidir.";
+    return "Tüm kaçış merdivenleri Yönetmelik kriterlerine (korunumlu merdiven adedi, kapı yönleri ve %50 tahliye kuralları) göre yeterlidir.";
   }
 
   void _addDetail(
@@ -500,7 +499,34 @@ class Section36Handler {
     if (b36 != null) {
       // 1. Merdiven Tipleri (Tablo için)
       final b20 = _store.bolum20;
+      int totalMain = 0;
+      int directMain = 0;
+      int totalBod = 0;
+      int directBod = 0;
+
       if (b20 != null) {
+        totalMain =
+            b20.normalMerdivenSayisi +
+            b20.binaIciYanginMerdiveniSayisi +
+            b20.binaDisiKapaliYanginMerdiveniSayisi +
+            b20.binaDisiAcikYanginMerdiveniSayisi +
+            b20.donerMerdivenSayisi +
+            b20.sahanliksizMerdivenSayisi +
+            b20.dengelenmisMerdivenSayisi;
+        directMain = b20.toplamDisariAcilanMerdivenSayisi;
+
+        if (b20.isBodrumIndependent) {
+          totalBod =
+              b20.bodrumNormalMerdivenSayisi +
+              b20.bodrumBinaIciYanginMerdiveniSayisi +
+              b20.bodrumBinaDisiKapaliYanginMerdiveniSayisi +
+              b20.bodrumBinaDisiAcikYanginMerdiveniSayisi +
+              b20.bodrumDonerMerdivenSayisi +
+              b20.bodrumSahanliksizMerdivenSayisi +
+              b20.bodrumDengelenmisMerdivenSayisi;
+          directBod = b20.bodrumToplamDisariAcilanMerdivenSayisi;
+        }
+
         _addStaircaseRows(details, b20);
         if (b20.isBodrumIndependent) {
           _addStaircaseRows(details, b20, isBasement: true);
@@ -563,11 +589,20 @@ class Section36Handler {
       }
 
       if (b20 != null) {
+        final cikisKatiRes = b36.cikisKati;
+        String katPrefix = "Çıkış";
+        if (cikisKatiRes != null) {
+          if (cikisKatiRes.label.contains("-A")) katPrefix = "Zemin";
+          if (cikisKatiRes.label.contains("-B")) katPrefix = "Normal";
+          if (cikisKatiRes.label.contains("-C")) katPrefix = "Bodrum";
+        }
+
         final lobi = b20.lobiTahliyeMesafeDurumu;
-        if (lobi != null) {
+        final bool showLobby = (directMain < totalMain) && totalMain > 0;
+        if (showLobby && lobi != null) {
           _addDetail(
             details,
-            label: 'Çıkış katındaki tahliye (lobi) mesafesi uygun mu?',
+            label: '$katPrefix katındaki tahliye (lobi) mesafesi uygun mu?',
             value: replaceLobbyLimit(lobi.uiTitle),
             subtitle: replaceLobbyLimit(lobi.uiSubtitle),
             report: replaceLobbyLimit(lobi.reportText),
@@ -581,11 +616,13 @@ class Section36Handler {
         }
 
         final bodLobi = b20.bodrumLobiTahliyeMesafeDurumu;
-        if (b20.isBodrumIndependent && bodLobi != null) {
+        final bool showBodLobby =
+            b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
+        if (showBodLobby && bodLobi != null) {
           _addDetail(
             details,
             label:
-                'Bodrum Kat: Çıkış katındaki tahliye (lobi) mesafesi uygun mu?',
+                'Bodrum Kat: $katPrefix katındaki tahliye (lobi) mesafesi uygun mu?',
             value: replaceLobbyLimit(bodLobi.uiTitle),
             subtitle: replaceLobbyLimit(bodLobi.uiSubtitle),
             report: replaceLobbyLimit(bodLobi.reportText),

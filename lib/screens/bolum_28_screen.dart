@@ -24,38 +24,12 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
     if (BinaStore.instance.bolum28 != null) {
       _model = BinaStore.instance.bolum28!;
     }
-    _checkMuafiyet();
   }
 
-  void _checkMuafiyet() {
+  bool _isSmallBuilding() {
     final b3 = BinaStore.instance.bolum3;
-    final b6 = BinaStore.instance.bolum6;
-    final b10 = BinaStore.instance.bolum10;
-
-    // Modeldeki normal ve bodrum katları toplayarak toplam katı buluyoruz
-    int toplamKat = (b3?.normalKatSayisi ?? 0) + (b3?.bodrumKatSayisi ?? 0);
-
-    bool hasTicari = (b6?.hasTicari ?? false);
-    if (b10 != null && !hasTicari) {
-      hasTicari =
-          (b10.zemin?.label.contains("Ticari") ?? false) ||
-          (b10.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false)) ||
-          (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
-    }
-
-    if (toplamKat <= 4 && !hasTicari) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final muafiyetModel = Bolum28Model(
-          muafiyet: Bolum28Content.muafiyetOption,
-        );
-        BinaStore.instance.bolum28 = muafiyetModel;
-        BinaStore.instance.saveToDisk(); // DISKE KAYDET
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Bolum29Screen()),
-        );
-      });
-    }
+    int toplamKat = (b3?.normalKatSayisi ?? 0) + (b3?.bodrumKatSayisi ?? 0) + 1;
+    return toplamKat <= 4;
   }
 
   void _handleSelection(String type, ChoiceResult choice) {
@@ -118,6 +92,10 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
       onNext: _onNextPressed,
       child: Column(
         children: [
+          if (_isSmallBuilding())
+            _buildInfoNote(
+              "Rehber Bilgi: 4 kat ve altı binalarda daire içi kaçış mesafeleri genellikle 20 metrelik yasal sınırın altındadır. Yine de en uzak noktayı göz kararı teyit etmeniz önerilir.",
+            ),
           _buildSoru(
             "Evinizin içindeki en uzak odadan daire giriş kapısına kadar olan mesafe ne kadardır?",
             'mesafe',

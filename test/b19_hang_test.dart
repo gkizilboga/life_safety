@@ -23,7 +23,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Option: 'Yönlendirme levhalarına sahibim'
-    await tester.tap(find.text('EVET, tüm çıkışlarda var.'));
+    await tester.tap(find.text('Evet, tüm çıkışlarda var.'));
     await tester.pumpAndSettle();
 
     // Option: 'Yanıltıcı kapım yok'

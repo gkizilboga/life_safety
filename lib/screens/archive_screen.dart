@@ -23,12 +23,11 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
       backgroundColor: const Color(0xFFF8F9FA),
       body: Column(
         children: [
-          const ModernHeader(
-            title: "Analiz Arşivi",
-            screenType: ArchiveScreen,
-          ),
+          const ModernHeader(title: "Analiz Arşivi", screenType: ArchiveScreen),
           Expanded(
-            child: archive.isEmpty ? _buildEmptyState() : _buildArchiveList(archive),
+            child: archive.isEmpty
+                ? _buildEmptyState()
+                : _buildArchiveList(archive),
           ),
         ],
       ),
@@ -242,7 +241,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   return;
                 }
 
-                await PdfService.generateRiskAnalysisPdf();
+                await PdfService.generateRiskAnalysisPdf(context);
               },
             ),
             const Divider(),
@@ -276,7 +275,7 @@ class _ArchiveScreenState extends State<ArchiveScreen> {
                   return;
                 }
 
-                await PdfService.generateActiveSystemsPdf();
+                await PdfService.generateActiveSystemsPdf(context);
               },
             ),
             const SizedBox(height: 10),

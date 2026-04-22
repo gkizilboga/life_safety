@@ -322,12 +322,12 @@ class Bolum20Provider extends ChangeNotifier {
       }
 
       // Reset relevance-based fields if they are no longer shown
-      if (!lobbyReq && _lobiMesafeDurumu != null) {
+      if (!lobbyReq && (_lobiMesafeDurumu != null || _model.lobiTahliyeMesafeDurumu != null)) {
         _lobiMesafeDurumu = null;
         _model = _model.copyWith(lobiTahliyeMesafeDurumu: null);
         changed = true;
       }
-      if (!bLobbyReq && _bodLobiMesafeDurumu != null) {
+      if (!bLobbyReq && (_bodLobiMesafeDurumu != null || _model.bodrumLobiTahliyeMesafeDurumu != null)) {
         _bodLobiMesafeDurumu = null;
         _model = _model.copyWith(bodrumLobiTahliyeMesafeDurumu: null);
         changed = true;
