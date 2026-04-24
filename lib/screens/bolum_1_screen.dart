@@ -95,6 +95,9 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                       children: [
                         TextSpan(text: "Analiz yalnızca "),
                         TextSpan(
+                          text: "19.12.2007 sonrası ruhsatlı ",
+                        ),
+                        TextSpan(
                           text: "KONUT",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),

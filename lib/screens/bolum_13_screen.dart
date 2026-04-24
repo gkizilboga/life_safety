@@ -265,7 +265,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
           if (_askDepo)
             _buildSoru(
-              "Eşya deposunun duvarı ve kapısı yangın dayanımlı mı?",
+              "Apartmana ait (ortak) eşya deposunun duvarı ve kapısı yangın dayanımlı mı?",
               'depo',
               [
                 Bolum13Content.depoOptionA,
