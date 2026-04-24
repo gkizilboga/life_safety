@@ -639,7 +639,10 @@ class ReportEngine {
       if (b16 != null) {
         // Ana Soru
         if (b16.mantolama != null) {
-          String report = b16.mantolama!.reportText;
+          String report = b16.mantolama!.reportText.replaceAll(
+            "[LİMİT]",
+            "28.50",
+          );
           RiskLevel level = b16.mantolama!.level;
 
           if (b16.mantolama!.label.contains("16-1-A")) {
@@ -1074,33 +1077,71 @@ class ReportEngine {
           );
         }
 
+        final basincReasons = evaluateBasincRequirementForNormalElevator(
+          store: s,
+        );
+        final bool isMandatory = basincReasons.isNotEmpty;
+        final bool userHasBasinc = b23.basinc?.label.contains("23-6-A") == true;
+
         if (b23.basinc != null) {
+          String dynamicBasincReport = b23.basinc!.reportText;
+          RiskLevel dynamicLevel = b23.basinc!.level;
+
+          if (b23.basinc!.label == "23-6-B" && isMandatory) {
+            dynamicBasincReport = dynamicBasincReport.replaceAll(
+              "BİLGİ:",
+              "KRİTİK RİSK:",
+            );
+            dynamicLevel = RiskLevel.critical;
+          }
+
           _addDetail(
             details,
             label: 'Normal asansör kuyusunda basınçlandırma sistemi var mı?',
             value: b23.basinc!.uiTitle,
             subtitle: b23.basinc!.uiSubtitle,
-            report: b23.basinc!.reportText,
+            report: dynamicBasincReport,
             advice: b23.basinc!.adviceText,
-            level: b23.basinc!.level,
+            level: dynamicLevel,
           );
         }
 
-        final basincReasons = evaluateBasincRequirementForNormalElevator(
-          store: s,
-        );
-        if (basincReasons.isNotEmpty) {
-          final bool isMet = basincReasons.every((r) => r.startsWith("OLUMLU"));
+        if (isMandatory) {
+          final bool isUnknown = b23.basinc?.label == "23-6-C";
+          String evalReport;
+          RiskLevel evalLevel;
+
+          if (userHasBasinc) {
+            evalReport =
+                'OLUMLU: Bina verilerine göre normal asansör kuyularında basınçlandırma sistemi zorunluluğu bulunmaktadır ve binada tesis edilmiştir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+            evalLevel = RiskLevel.positive;
+          } else if (isUnknown) {
+            evalReport =
+                'BİLİNMİYOR: Bina verilerine göre normal asansör kuyularında basınçlandırma sistemi ZORUNLUDUR, ancak binadaki durumu bilinmemektedir. Sistem yerinde kontrol edilmelidir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+            evalLevel = RiskLevel.unknown;
+          } else {
+            evalReport =
+                'KRİTİK RİSK: Bina verilerine göre normal asansör kuyularında basınçlandırma sistemi ZORUNLUDUR, ancak binada tesis edilmediği tespit edilmiştir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+            evalLevel = RiskLevel.critical;
+          }
+
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi Gereksinimi (Normal Asansör)',
             value: '',
+            report: evalReport,
+            level: evalLevel,
+          );
+        } else if (b23.basinc != null) {
+          _addDetail(
+            details,
+            label: 'Basınçlandırma Sistemi Gereksinimi',
+            value: '',
             report:
-                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ:\n${basincReasons.join('\n')}',
-            level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
+                'BİLGİ: Bina verilerine göre normal asansör kuyularında basınçlandırma sistemi tesis edilmesi mecburi değildir.',
+            level: RiskLevel.info,
           );
         }
-
         handled = true;
       }
     }
@@ -1313,45 +1354,72 @@ class ReportEngine {
             level: b20.bodrumMerdivenDevami!.level,
           );
         // YGH Basınçlandırma (Kullanıcıdan alınan bilgi)
+        // Dinamik Basınçlandırma Analizi
+        final basincReasons = evaluateBasincRequirementForStairs(store: s);
+        final bool isMandatory = basincReasons.isNotEmpty;
+        final bool userHasBasinc =
+            b20.basinclandirma?.label.contains("20-BAS-A") == true;
+
         if (b20.basinclandirma != null) {
+          // Dinamik metin alınıyor (eğer 20-BAS-C ise bilinmiyor override'ı vs.)
+          String dynamicBasincReport = _addSection20DynamicBasinc(b20);
+          RiskLevel dynamicLevel = b20.basinclandirma!.level;
+
+          // Eğer basınçlandırma YOKSA ve ZORUNLUYSA, ilk soruyu da KRİTİK RİSK yapıyoruz!
+          if (b20.basinclandirma!.label == "20-BAS-B" && isMandatory) {
+            dynamicBasincReport = dynamicBasincReport.replaceAll(
+              "BİLGİ:",
+              "KRİTİK RİSK:",
+            );
+            dynamicLevel = RiskLevel.critical;
+          }
+
           _addDetail(
             details,
             label: 'Merdivenlerde basınçlandırma sistemi var mı?',
             value: b20.basinclandirma!.uiTitle,
             subtitle: b20.basinclandirma!.uiSubtitle,
-            report: _addSection20DynamicBasinc(b20),
+            report: dynamicBasincReport,
             advice: b20.basinclandirma!.adviceText,
-            level: b20.basinclandirma!.level,
+            level: dynamicLevel,
           );
         }
 
-        // Dinamik Basınçlandırma Analizi (Sadece PDF/Detaylı için)
-        final basincReasons = evaluateBasincRequirementForStairs(store: s);
-        if (basincReasons.isNotEmpty) {
-          // Kullanıcı "Var" dediyse (20-BAS-A) kriter karşılanmış sayılır
-          final bool userHasBasinc =
-              b20.basinclandirma?.label.contains("20-BAS-A") == true;
-          final bool isMet =
-              userHasBasinc ||
-              basincReasons.every((r) => r.startsWith("OLUMLU"));
+        if (isMandatory) {
+          final bool isUnknown = b20.basinclandirma?.label == "20-BAS-C";
+          String evalReport;
+          RiskLevel evalLevel;
+
+          if (userHasBasinc) {
+            evalReport =
+                'OLUMLU: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır ve binada tesis edilmiştir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+            evalLevel = RiskLevel.positive;
+          } else if (isUnknown) {
+            evalReport =
+                'BİLİNMİYOR: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi ZORUNLUDUR, ancak binadaki durumu bilinmemektedir. Sistem yerinde kontrol edilmelidir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+            evalLevel = RiskLevel.unknown;
+          } else {
+            evalReport =
+                'KRİTİK RİSK: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi ZORUNLUDUR, ancak binada tesis edilmediği tespit edilmiştir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+            evalLevel = RiskLevel.critical;
+          }
+
           _addDetail(
             details,
             label:
                 'Basınçlandırma Sistemi Gereksinimi (Kapalı Yangın Merdivenleri)',
-            value: '', // Don't show as a user response
-            report:
-                'DURUM: ${isMet ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU"}\n\nBİLGİ: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır:\n${basincReasons.join("\n")}',
-            level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
+            value: '',
+            report: evalReport,
+            level: evalLevel,
           );
         } else if (b20.basinclandirma != null) {
-          // Sadece kullanıcıya sorulduysa (kapalı merdiven varsa) "Şart Değil" bilgisini ekle
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi Gereksinimi',
-            value: '', // Don't show as a user response
+            value: '',
             report:
-                'DURUM: ŞART DEĞİL\n\nBİLGİ: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi tesis edilmesi mecburi değildir.',
-            level: RiskLevel.info, // Sistem notu — sol çubuk rengi gösterilmez
+                'BİLGİ: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi tesis edilmesi mecburi değildir.',
+            level: RiskLevel.info,
           );
         }
         // Madde 45: Doğal Havalandırma
@@ -1970,8 +2038,8 @@ class ReportEngine {
             label: 'Elle Girilen Kaçış Mesafesi',
             value: '${b35.manuelMesafe} m',
             report: isOk
-                ? 'OLUMLU: Girilen mesafe yönetmelik sınırı olan $limit m içerisindedir.'
-                : 'KRİTİK RİSK: Girilen mesafe yönetmelik sınırı olan $limit m üzerindedir.',
+                ? 'OLUMLU: Girilen mesafe Yönetmelik sınırı olan $limit m. nin içerisindedir.'
+                : 'KRİTİK RİSK: Girilen mesafe Yönetmelik sınırı olan $limit m. nin üzerindedir.',
             status: isOk ? ReportStatus.compliant : ReportStatus.risk,
           );
         }
@@ -2883,12 +2951,12 @@ class ReportEngine {
         List<String> parts = [];
         if (b16.mantolama != null) {
           final hBina = s.bolum3?.hBina ?? 0.0;
-          // BYKHY Madde 27: 21.50m üzeri yanıcı mantolama yasaktır.
+          // BYKHY Madde 27: 28.50m üzeri yanıcı mantolama yasaktır.
           String text = b16.mantolama!.reportText.replaceAll(
             "[LİMİT]",
-            "21.50",
+            "28.50",
           );
-          if (hBina <= 21.50 && b16.mantolama!.label.contains("16-1-A")) {
+          if (hBina <= 28.50 && b16.mantolama!.label.contains("16-1-A")) {
             text = Bolum16Content.mantolamaOptionALowReport;
           }
           parts.add(text);
@@ -3879,7 +3947,7 @@ class ReportEngine {
     // Özel eklemeler
     if (id == 16 && res.label.contains("16-1-A")) {
       final hBina = s.bolum3?.hBina ?? 0.0;
-      if (hBina > 21.50) {
+      if (hBina > 28.50) {
         summary += " (Yüksek Bina: YASAK)";
       }
     }

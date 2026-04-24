@@ -147,6 +147,23 @@ class PdfService {
     return PdfColors.grey500;
   }
 
+  static PdfColor _getColorForItem(Map<String, dynamic> item) {
+    if (item['status'] != null && item['status'] is ReportStatus) {
+      return _getColorFromStatus(item['status'] as ReportStatus);
+    }
+    // Fallback to text parsing
+    return _getRiskColor(item['report']?.toString() ?? '');
+  }
+
+  static PdfColor _getColorFromStatus(ReportStatus status) {
+    if (status == ReportStatus.risk) return PdfColors.red700;
+    if (status == ReportStatus.warning) return PdfColors.amber700;
+    if (status == ReportStatus.compliant) return PdfColors.green700;
+    if (status == ReportStatus.info) return PdfColors.blue700;
+    if (status == ReportStatus.unknown) return PdfColors.grey500;
+    return PdfColors.grey500;
+  }
+
   static PdfColor _getScoreColorForPdf(int score) {
     if (score >= 80) return PdfColors.green300;
     if (score >= 50) return PdfColors.orange300;
@@ -202,172 +219,188 @@ class PdfService {
     required Map<String, dynamic> metrics,
     bool showScore = true,
   }) {
-    // Renk Paleti
     const navyBlue = PdfColor.fromInt(0xFF1a365d);
-    const darkNavy = PdfColor.fromInt(0xFF0d2137);
-    const softGray = PdfColor.fromInt(0xFF6b7280);
+    const softGray = PdfColor.fromInt(0xFF94a3b8);
+    final score = metrics['score'] as int;
 
     return pw.Page(
       pageTheme: pageTheme,
       build: (context) {
-        return pw.Container(
-          color: PdfColors.white,
-          child: pw.Column(
-            children: [
-              // Üst Boşluk
-              pw.SizedBox(height: 50),
-
-              // Logo - Ortada
-              pw.Center(
+        return pw.Stack(
+          children: [
+            // 1. Teknik Arka Plan (Grid Pattern)
+            pw.Positioned.fill(
+              child: pw.Opacity(
+                opacity: 0.05,
                 child: pw.Container(
-                  height: 100, // Daha büyük logo
-                  width: 250,
-                  child: pw.Image(logoImage, fit: pw.BoxFit.contain),
-                ),
-              ),
-
-              pw.SizedBox(height: 30),
-
-              // Yönetmelik Başlığı
-              pw.Center(
-                child: pw.Text(
-                  "BİNALARIN YANGINDAN KORUNMASI HAKKINDA YÖNETMELİĞİ'NE GÖRE",
-                  textAlign: pw.TextAlign.center,
-                  style: pw.TextStyle(
-                    color: softGray,
-                    fontSize: 10,
-                    letterSpacing: 1.2,
+                  decoration: pw.BoxDecoration(
+                    border: pw.Border.all(color: PdfColors.blueGrey100, width: 0.5),
                   ),
-                ),
-              ),
-
-              pw.SizedBox(height: 15),
-
-              // Ana Başlık
-              pw.Center(
-                child: pw.Padding(
-                  padding: const pw.EdgeInsets.symmetric(horizontal: 20),
-                  child: pw.Text(
-                    mainTitle,
-                    textAlign: pw.TextAlign.center,
-                    style: pw.TextStyle(
-                      color: navyBlue,
-                      fontSize: 32, // Daha büyük ve ihtişamlı ana başlık
-                      fontWeight: pw.FontWeight.bold,
-                      letterSpacing: 1.5,
+                  child: pw.GridView(
+                    crossAxisCount: 15,
+                    children: List.generate(
+                      200,
+                      (_) => pw.Container(
+                        decoration: pw.BoxDecoration(
+                          border: pw.Border.all(color: PdfColors.blueGrey100, width: 0.2),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
+            ),
 
-              pw.SizedBox(height: 40),
+            // 2. Ana İçerik
+            pw.Column(
+              children: [
+                pw.SizedBox(height: 60),
 
-              // Skor Yüzdesi ve Gauge Chart (sadece showScore true ise)
-              if (showScore) ...[
-                pw.Center(child: _buildGaugeChart(metrics['score'] as int)),
-                pw.Center(
-                  child: pw.Text(
-                    "${metrics['score']} / 100",
-                    style: pw.TextStyle(
-                      fontSize: 32,
-                      fontWeight: pw.FontWeight.bold,
-                      color: _getScoreColorForPdf(metrics['score'] as int),
-                    ),
-                  ),
-                ),
-                pw.SizedBox(height: 5),
+                // Üst Logo ve Çizgi
                 pw.Center(
                   child: pw.Container(
-                    padding: const pw.EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 8,
-                    ),
-                    decoration: pw.BoxDecoration(
-                      color: _getScoreColorForPdf(
-                        metrics['score'] as int,
-                      ).shade(0.1),
-                      borderRadius: pw.BorderRadius.circular(20),
-                    ),
-                    child: pw.Text(
-                      (metrics['score'] as int) > 80
-                          ? "DÜŞÜK RİSK"
-                          : (metrics['score'] as int) > 50
-                          ? "ORTA RİSK"
-                          : "YÜKSEK RİSK",
-                      style: pw.TextStyle(
-                        color: _getScoreColorForPdf(metrics['score'] as int),
-                        fontSize: 16,
-                        fontWeight: pw.FontWeight.bold,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
+                    height: 80,
+                    width: 200,
+                    child: pw.Image(logoImage),
                   ),
                 ),
-              ] else ...[
-                pw.SizedBox(height: 30),
-                if (subTitle.isNotEmpty)
-                  pw.Center(
-                    child: pw.Text(
-                      subTitle,
-                      style: pw.TextStyle(
-                        color: softGray,
-                        fontSize: 14,
-                        letterSpacing: 1.0,
+                pw.SizedBox(height: 20),
+                pw.Container(width: 40, height: 2, color: navyBlue),
+
+                pw.SizedBox(height: 50),
+
+                // Başlıklar
+                pw.Center(
+                  child: pw.Column(
+                    children: [
+                      pw.Text(
+                        "BİNALARIN YANGINDAN KORUNMASI HAKKINDA YÖNETMELİĞİ",
+                        style: pw.TextStyle(
+                          color: softGray,
+                          fontSize: 8,
+                          letterSpacing: 2.0,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
                       ),
+                      pw.SizedBox(height: 12),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.symmetric(horizontal: 40),
+                        child: pw.Text(
+                          mainTitle,
+                          textAlign: pw.TextAlign.center,
+                          style: pw.TextStyle(
+                            color: navyBlue,
+                            fontSize: 32,
+                            fontWeight: pw.FontWeight.bold,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                pw.Spacer(),
+
+                // Skor (Gauge Chart) - Merkeze Odaklı
+                if (showScore) ...[
+                  _buildGaugeChart(score),
+                  pw.SizedBox(height: 10),
+                  pw.Text(
+                    "GÜVENLİK SKORU: $score / 100",
+                    style: pw.TextStyle(
+                      fontSize: 16,
+                      fontWeight: pw.FontWeight.bold,
+                      color: navyBlue,
+                      letterSpacing: 1.0,
                     ),
                   ),
+                  pw.SizedBox(height: 4),
+                  pw.Text(
+                    score > 80
+                        ? "DÜŞÜK RİSK"
+                        : score > 50
+                        ? "ORTA RİSK"
+                        : "YÜKSEK RİSK",
+                    style: pw.TextStyle(
+                      fontSize: 10,
+                      color: _getScoreColorForPdf(score),
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                ],
+
+                pw.Spacer(),
+
+                // Alt Bilgiler - Minimalist
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(40),
+                  child: pw.Column(
+                    children: [
+                      pw.Divider(color: PdfColors.blueGrey100, thickness: 0.5),
+                      pw.SizedBox(height: 20),
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Text(
+                                "BİNA / PROJE ADI",
+                                style: pw.TextStyle(
+                                  color: softGray,
+                                  fontSize: 7,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                              pw.SizedBox(height: 4),
+                              pw.Text(
+                                _cleanEmojis(store.currentBinaName).isEmpty
+                                    ? "Bina Adı Belirtilmemiş"
+                                    : _cleanEmojis(store.currentBinaName),
+                                style: pw.TextStyle(
+                                  color: navyBlue,
+                                  fontSize: 12,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                              pw.Text(
+                                "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
+                                style: pw.TextStyle(color: navyBlue, fontSize: 10),
+                              ),
+                            ],
+                          ),
+                          pw.Column(
+                            crossAxisAlignment: pw.CrossAxisAlignment.end,
+                            children: [
+                              pw.Text(
+                                "RAPOR TARİHİ",
+                                style: pw.TextStyle(
+                                  color: softGray,
+                                  fontSize: 7,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                              pw.SizedBox(height: 4),
+                              pw.Text(
+                                "${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year}",
+                                style: pw.TextStyle(
+                                  color: navyBlue,
+                                  fontSize: 11,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
-
-              pw.Spacer(),
-
-              // Alt Bilgi Şeridi - Koyu Lacivert
-              pw.Container(
-                width: double.infinity,
-                padding: const pw.EdgeInsets.symmetric(
-                  vertical: 25,
-                  horizontal: 30,
-                ),
-                color: darkNavy,
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    // Bina Adı
-                    pw.Text(
-                      _cleanEmojis(store.currentBinaName).isEmpty
-                          ? "Bina Adı Belirtilmemiş"
-                          : _cleanEmojis(store.currentBinaName),
-                      style: pw.TextStyle(
-                        color: PdfColors.white,
-                        fontSize: 12,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    pw.SizedBox(height: 8),
-                    // Konum ve Tarih
-                    pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                      children: [
-                        pw.Text(
-                          "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
-                          style: const pw.TextStyle(
-                            color: PdfColors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                        pw.Text(
-                          "Tarih: ${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year}",
-                          style: const pw.TextStyle(
-                            color: PdfColors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );
@@ -389,8 +422,11 @@ class PdfService {
       '',
     );
 
-    // 2. Teknik öneklerin güvenli temizliği (ReportEngine'deki satır başı mantığı)
+    // 2. Teknik öneklerin güvenli temizliği
     processed = ReportEngine.cleanPrefix(processed);
+
+    // 3. Yer tutucuları temizle (Bölüm 16 vb. için güvenlik katmanı)
+    processed = processed.replaceAll("[LİMİT]", "28.50").replaceAll("[LIMIT]", "28.50");
 
     // Başta veya sonunda kalan gereksiz karakterleri temizle
     if (processed.startsWith(':')) processed = processed.substring(1).trim();
@@ -460,7 +496,7 @@ class PdfService {
       pw.MultiPage(
         pageTheme: pageTheme,
         header: (context) => pw.SizedBox(),
-        footer: _buildFooter,
+        footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
           pw.Text(
             "YÖNETİCİ ÖZETİ VE ACİL EYLEM PLANI",
@@ -514,7 +550,7 @@ class PdfService {
     ];
   }
 
-  static pw.Page _buildLegalPage(pw.PageTheme pageTheme) {
+  static pw.Page _buildLegalPage(pw.PageTheme pageTheme, pw.Font font, pw.Font fontBold) {
     // Split the content manually for the two-column layout
     final disclaimerParts = AppStrings.legalDisclaimerContent.split('\n\n');
     // Part 1: İŞBU METİN + 1 + 2 + 3
@@ -592,45 +628,76 @@ class PdfService {
             ],
           ),
           pw.Spacer(),
-          _buildFooter(context),
+          _buildFooter(context, font, fontBold),
         ],
       ),
     );
   }
 
-  static pw.Widget _buildFooter(pw.Context context) {
+  static pw.Widget _buildHeader(pw.Context context, String docNo, pw.Font fontBold, String title) {
     return pw.Container(
-      alignment: pw.Alignment.center,
+      margin: const pw.EdgeInsets.only(bottom: 15),
       child: pw.Column(
         children: [
-          pw.Divider(color: PdfColors.grey400, thickness: 0.5),
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
             children: [
               pw.Text(
-                "Version v1.0",
-                style: const pw.TextStyle(
-                  fontSize: 6,
-                  color: PdfColors.grey600,
+                title,
+                style: pw.TextStyle(
+                  font: fontBold,
+                  fontSize: 8,
+                  color: const PdfColor.fromInt(0xFF1a365d), // Navy blue
+                  letterSpacing: 0.5,
                 ),
               ),
               pw.Text(
-                "Sayfa ${context.pageNumber} / ${context.pagesCount}",
-                style: const pw.TextStyle(
-                  fontSize: 6,
-                  color: PdfColors.grey600,
+                "Doküman No: $docNo",
+                style: pw.TextStyle(
+                  font: fontBold,
+                  fontSize: 8,
+                  color: PdfColors.grey700,
                 ),
               ),
             ],
           ),
-          pw.SizedBox(height: 2),
-          pw.Container(
-            alignment: pw.Alignment.centerLeft,
-            child: pw.Text(
-              "Bu doküman, Uygulama tarafından üretilmiş olup, resmi belge veya mühendislik raporu niteliği taşımaz; ıslak imza/kaşe yerine geçmez. Dokümanın sonunda yer alan Yasal Uyarılar ve Sorumluluk Beyanı bu belgenin ayrılmaz bir parçasıdır.",
-              style: const pw.TextStyle(fontSize: 4.2, color: PdfColors.black),
-              textAlign: pw.TextAlign.left,
-            ),
+          pw.SizedBox(height: 4),
+          pw.Divider(color: const PdfColor.fromInt(0xFF1a365d), thickness: 1),
+        ],
+      ),
+    );
+  }
+
+  static pw.Widget _buildFooter(pw.Context context, pw.Font font, pw.Font fontBold) {
+    return pw.Container(
+      margin: const pw.EdgeInsets.only(top: 15),
+      child: pw.Column(
+        children: [
+          pw.Divider(color: const PdfColor.fromInt(0xFF1a365d), thickness: 0.5),
+          pw.SizedBox(height: 4),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: pw.CrossAxisAlignment.end,
+            children: [
+              pw.Expanded(
+                child: pw.Text(
+                  "Bu doküman sistem tarafından otomatik üretilmiştir. Islak imza veya kaşe yerine geçmez. Dokümanın sonunda yer alan Yasal Uyarılar bu belgenin ayrılmaz bir parçasıdır.",
+                  style: pw.TextStyle(
+                    font: font,
+                    fontSize: 5,
+                    color: PdfColors.grey600,
+                  ),
+                ),
+              ),
+              pw.Text(
+                "Sayfa ${context.pageNumber} / ${context.pagesCount}",
+                style: pw.TextStyle(
+                  font: fontBold,
+                  fontSize: 8,
+                  color: const PdfColor.fromInt(0xFF1a365d),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -843,20 +910,17 @@ class PdfService {
       pdf.addPage(page);
     }
 
+    // Doküman No Oluştur (Risk Analizi)
+    final now = DateTime.now();
+    final docNo = "LS-YRA-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
+
     // 3. Risk Analizi ve Bölümler
     pdf.addPage(
       pw.MultiPage(
         maxPages: 2000,
-
         pageTheme: pageTheme,
-        header: (context) => pw.Container(
-          alignment: pw.Alignment.centerRight,
-          child: pw.Text(
-            "",
-            style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
-          ),
-        ),
-        footer: _buildFooter,
+        header: (context) => _buildHeader(context, docNo, ttfBold, "YANGIN RİSK ANALİZİ"),
+        footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
           pw.SizedBox(height: 12),
           pw.Text(
@@ -926,12 +990,28 @@ class PdfService {
               id,
               store: store,
             );
-            // Fallback for coloring: use the main result text or first item
-            final fullReportForColor = ReportEngine.getSectionFullReport(
-              id,
-              store: store,
-            );
-            final riskColor = _getRiskColor(fullReportForColor);
+            // Ana renk ataması: Alt detaylar içindeki en yüksek riskli statüyü (priority) baz al.
+            ReportStatus sectionStatus = ReportStatus.info; // Default fallback lowest priority
+            bool hasValidStatus = false;
+            for (final item in details) {
+              if (item['status'] != null && item['status'] is ReportStatus) {
+                final status = item['status'] as ReportStatus;
+                if (!hasValidStatus || status.priority > sectionStatus.priority) {
+                  sectionStatus = status;
+                  hasValidStatus = true;
+                }
+              }
+            }
+
+            PdfColor riskColor;
+            if (hasValidStatus) {
+              riskColor = _getColorFromStatus(sectionStatus);
+            } else {
+              // Fallback
+              final fullReportForColor = ReportEngine.getSectionFullReport(id, store: store);
+              riskColor = _getRiskColor(fullReportForColor);
+            }
+
             final effectiveSectionRiskColor = id <= 10
                 ? PdfColors
                       .blue700 // Info sections are blue
@@ -956,7 +1036,7 @@ class PdfService {
                         ? PdfColors.blue700
                         : (id == 12
                               ? effectiveSectionRiskColor
-                              : _getRiskColor(item['report'] ?? '')),
+                              : _getColorForItem(item)),
                     isLast: item == details.last,
                     sectionId: id,
                   ),
@@ -1037,7 +1117,7 @@ class PdfService {
                           ? PdfColors.blue700
                           : (id == 12
                                 ? effectiveSectionRiskColor
-                                : _getRiskColor(item['report'] ?? '')),
+                                : _getColorForItem(item)),
                       isLast: isLast,
                       sectionId: id,
                     ),
@@ -1167,7 +1247,7 @@ class PdfService {
     );
 
     // Yasal (En Sona Taşındı)
-    pdf.addPage(_buildLegalPage(pageTheme));
+    pdf.addPage(_buildLegalPage(pageTheme, ttf, ttfBold));
 
     return pdf;
   }
@@ -1210,20 +1290,17 @@ class PdfService {
       ),
     );
 
+    // Doküman No Oluştur (Aktif Sistemler)
+    final now = DateTime.now();
+    final docNo = "LS-ASG-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
+
     // 3. Aktif Sistem Listesi
     pdf.addPage(
       pw.MultiPage(
         maxPages: 2000,
-
         pageTheme: pageTheme,
-        header: (context) => pw.Container(
-          alignment: pw.Alignment.centerRight,
-          child: pw.Text(
-            "Aktif Sistem Gereksinimleri",
-            style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey500),
-          ),
-        ),
-        footer: _buildFooter,
+        header: (context) => _buildHeader(context, docNo, ttfBold, "AKTİF SİSTEM GEREKSİNİMLERİ"),
+        footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
           pw.Text(
             "DEĞERLENDİRME NOTLARI",
@@ -1358,7 +1435,7 @@ class PdfService {
     );
 
     // Yasal (En Sona Taşındı)
-    pdf.addPage(_buildLegalPage(pageTheme));
+    pdf.addPage(_buildLegalPage(pageTheme, ttf, ttfBold));
 
     if (!context.mounted) return;
 
@@ -1501,18 +1578,23 @@ class PdfService {
             } catch (_) {}
           }
 
+          final bool highlightRow =
+              label.contains("Doğrudan Dışarı Açılan Merdiven");
+
           final bool shouldBold =
               item['isBold'] == true ||
               valueRaw.contains('Mevcut') ||
-              capacityFail;
+              capacityFail ||
+              highlightRow;
 
           return pw.TableRow(
             decoration: isSubHeader
                 ? const pw.BoxDecoration(color: PdfColors.indigo50)
-                : (i % 2 ==
-                          1 // Stripe for all tables
-                      ? const pw.BoxDecoration(color: PdfColors.grey50)
-                      : const pw.BoxDecoration(color: PdfColors.white)),
+                : (highlightRow
+                    ? const pw.BoxDecoration(color: PdfColors.orange50)
+                    : (i % 2 == 1
+                        ? const pw.BoxDecoration(color: PdfColors.grey50)
+                        : const pw.BoxDecoration(color: PdfColors.white))),
             children: [
               // Kolon 1: Etiket (Label)
               pw.Padding(

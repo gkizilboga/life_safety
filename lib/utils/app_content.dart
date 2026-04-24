@@ -1365,7 +1365,7 @@ class Bolum16Content {
     uiTitle: "Klasik Mantolama",
     uiSubtitle: "EPS, XPS, Strafor vb. yanıcı malzeme ile.",
     reportText:
-        "KRİTİK RİSK: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliğinin [LİMİT] m üzerinde olduğu binalarda bu uygulama yönetmelik gereği yasaktır.",
+        "KRİTİK RİSK: Dış cephede yanıcı özellikli (EPS, XPS, Strafor vb.) ısı yalıtım levhaları kullanılmıştır. Bina yüksekliğinin 28.50 m üzerinde olduğu binalarda bu uygulama yönetmelik gereği yasaktır.",
     level: RiskLevel.critical,
   );
 
@@ -2703,9 +2703,9 @@ class Bolum25Content {
     uiTitle: "100 cm 'den az.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Döner merdiven genişliği 100 cm'den azdır. Yönetmelik gereği döner merdivenlerin kaçış yolu sayılabilmesi için en az 100 cm genişlik şarttır.",
+        "KRİTİK RİSK: Dairesel merdiven genişliği 100 cm'den azdır. Yönetmelik gereği dairesel merdivenlerin kaçış yolu sayılabilmesi için en az 100 cm genişlik şarttır.",
     adviceText:
-        "Genişliği 100 cm altında kalan döner merdivenler yasal kaçış yolu kabul edilmez. Binaya, yönetmeliğe uygun şekilde başka kaçış yolu veya yolları ilave edilmesi gerekebilir. Karar verilebilmesi için binanın mimari projesi veya sahada inceleme yapılması gerekir.",
+        "Genişliği 100 cm altında kalan dairesel merdivenler yasal kaçış yolu kabul edilmez. Binaya, yönetmeliğe uygun şekilde başka kaçış yolu veya yolları ilave edilmesi gerekebilir. Karar verilebilmesi için binanın mimari projesi veya sahada inceleme yapılması gerekir.",
     level: RiskLevel.critical,
   );
 
@@ -4075,7 +4075,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Bina geneli (Zemin, Normal ve Bodrum katlar) için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü kapasitesi için yeterlidir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Bina genelindeki tüm katlar için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü kapasitesi için yeterlidir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4084,7 +4084,7 @@ class Bolum33Content {
     uiTitle: "Yetersiz",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Bina genelinde (Zemin, Normal ve Bodrum katlar) mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış veya kapasite artırımı gereklidir.",
+        "KRİTİK RİSK: Bina genelindeki tüm katlar için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış veya kapasite artırımı gereklidir.",
     adviceText:
         "Kullanıcı yükü kapasiteyi aştığı için binaya yönetmelik limitleri çerçevesinde ilave kaçış merdiveni eklenmesi, yatay tahliye koridoru oluşturulması veya kat alanlarının yangın kompartımanlarına bölünerek her bölge için ayrı çıkış tasarlanması yöntemlerinden biri veya birkaçı uygulanarak sorunun çözülmesi gerekmektedir.",
     level: RiskLevel.critical,
@@ -4107,8 +4107,7 @@ class Bolum34Content {
     uiSubtitle: "İşyerlerinin çıkışları bina koridorunun içinden sağlanıyor.",
     reportText:
         "UYARI: Ticari alanların bina koridoruna açılması, kaçış yolundaki yoğunluğu artırır. Bina ana giriş kapısının genişliği bu ekstra yükü kaldıracak kapasitede olmalıdır.",
-    adviceText:
-        "Ticari alanların bina içine açılan kapıları iptal edilerek, giriş-çıkışları tamamen dış cepheden sağlanması önerilir. Mümkün değilse, bu kapıların en az EI60 (60 dk) yangın dayanım sınıfında ve kendiliğinden kapanır olması önerilir.",
+    adviceText: "",
     level: RiskLevel.warning,
   );
 
@@ -4413,9 +4412,7 @@ class Bolum36Content {
     uiTitle: "Birbirlerine yakınlar.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Kaçış merdivenleri birbirinin alternatifi olmalıdır. Yan yana yapılan merdivenler 'Alternatif Çıkış'sayılmaz. Merdivenler arasında Yönetmeliğe göre olması gereken minimum mesafenin tayini için mimari projenin veya sahadaki mevcut durumun Yangın Güvenlik Uzmanı tarafından hususi olarak incelenmesi gereklidir.",
-    adviceText:
-        "Merdivenlerin birbirine olan mesafesi, katın en uzak iki noktasına hizmet edecek şekilde artırılmalı veya merdivenler arasında yangına dayanıklı duman sızdırmaz bölmeler oluşturulmalıdır.",
+        "UYARI: Kaçış merdivenleri birbirinin alternatifi olarak konumlandırılmalıdır. Birbibirine çok yakın (yan yana) bulunan merdivenler 'Alternatif Çıkış' sayılmaz. Merdivenler arasında Yönetmeliğe göre olması gereken minimum mesafenin tayini için mimari projenin veya sahadaki mevcut durumun Yangın Güvenlik Uzmanı tarafından incelenmesi gereklidir. Bu inceleme sonrasında merdiven konumlarının uygunluğuna karar verilir.",
     level: RiskLevel.warning,
   );
   static final konumOptionC = ChoiceResult(
@@ -4447,14 +4444,16 @@ class Bolum36Content {
     label: "36-4-B",
     uiTitle: "Çift Kanatlı Kapı.",
     uiSubtitle: "",
-    reportText: "BİLGİ: Çıkış kapısı çift kanatlıdır.",
+    reportText:
+        "BİLGİ: Çıkış kapısı çift kanatlıdır. Katın kullanıcı yüküne göre kapı genişliklerinin yeterlilik kontrolü yapılması önerilir.",
     level: RiskLevel.info,
   );
   static final kapiTipiOptionC = ChoiceResult(
     label: "36-4-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText: "BİLİNMİYOR: Çıkış kapısı tipi bilinmiyor.",
+    reportText:
+        "BİLİNMİYOR: Çıkış kapısı tipi bilinmiyor. Katın kullanıcı yüküne göre kapı genişliklerinin yeterlilik kontrolü yapılması önerilir.",
     level: RiskLevel.unknown,
   );
 

@@ -142,15 +142,15 @@ class Section36Handler {
       // Kombine Raporlama (Madde 41 - Dışa Açılan Merdiven)
       if (mainDirectFail && bodrumDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Hem normal katlara hem de bodrum katlara hitap eden kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (Normal: $directMain/$reqDirectMain, Bodrum: $directBod/$reqDirectBod sağlanıyor.)",
+          "KRİTİK RİSK: Hem normal katlara hem de bodrum katlara hitap eden kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanMAmaktadır. (Normal: $directMain/$reqDirectMain adet, Bodrum: $directBod/$reqDirectBod adet)",
         );
       } else if (mainDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Normal katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (En az $reqDirectMain adet doğrudan dışarıya açılmalıdır, mevcutta $directMain adet doğrudan dışarıya açılmaktadır).",
+          "KRİTİK RİSK: Normal katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanMAmaktadır. (En az $reqDirectMain adet doğrudan dışarıya açılmalıdır, mevcutta $directMain adet doğrudan dışarıya açılmaktadır).",
         );
       } else if (bodrumDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Bodrum katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (En az $reqDirectBod adet doğrudan dışarıya açılmalıdır, mevcutta $directBod adet doğrudan dışarıya açılmaktadır).",
+          "KRİTİK RİSK: Bodrum katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanMAmaktadır. (En az $reqDirectBod adet doğrudan dışarıya açılmalıdır, mevcutta $directBod adet doğrudan dışarıya açılmaktadır).",
         );
       } else if (totalMain > 0 || totalBod > 0) {
         analysisParts.add(
@@ -161,8 +161,8 @@ class Section36Handler {
       // 3. Madde 41/2: Çıkış Katı Tahliye Mesafesi (BİRLEŞTİRİLMİŞ MANTIK)
       int limit = hasSprinkler ? 15 : 10;
       String sprinklerNote = hasSprinkler
-          ? "(Sprinkler var: Limit 15 m.)"
-          : "(Sprinkler yok: Limit 10 m.)";
+          ? "(Binada sprinkler mevcut, Yönetmelikte limit 15 m. dir.)"
+          : "(Binada sprinkler mevcut değil, Yönetmelikte limit 10 m. dir.)";
 
       bool mainMesafeReq = (directMain < totalMain) && totalMain > 0;
       bool mainMesafeFail =
@@ -233,19 +233,19 @@ class Section36Handler {
 
         if (mainKoruFail && bodrumKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle hem normal hem de bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' (Yangın Merdiveni) bulunması zorunludur. Kapasiteler yetersizdir. (Normal: $currentProtected, Bodrum: $korBod)",
+            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle hem normal hem de bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' bulunması zorunludur. Mevcut binada bu durum yetersizdir. (Normal: $currentProtected, Bodrum: $korBod)",
           );
         } else if (mainKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle normal katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. (Mevcut: $currentProtected)",
+            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle normal katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Normal: $currentProtected)",
           );
         } else if (bodrumKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. (Mevcut: $korBod)",
+            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Bodrum: $korBod)",
           );
         } else {
           analysisParts.add(
-            "OLUMLU: Yapı yüksekliği ($hPrimary m) için gereken en az korunumlu merdiven adedi ($requiredProtected adet) sağlanmaktadır.",
+            "OLUMLU: Yapı yüksekliği ($hPrimary m) için gereken en az 'Korunumlu Merdiven' adedi ($requiredProtected adet) sağlanmaktadır. Mevcut binada bu kriter karşılanmaktadır.",
           );
         }
       }
@@ -433,7 +433,7 @@ class Section36Handler {
     Bolum20Model b, {
     bool isBasement = false,
   }) {
-    final prefix = isBasement ? "Bodrum Kat " : "";
+    final prefix = isBasement ? "Bodrum " : "";
 
     void add(String label, int count) {
       if (count >= 0) {
@@ -487,7 +487,7 @@ class Section36Handler {
       add("Bodrum Sahanlıksız Merdiven", b.bodrumSahanliksizMerdivenSayisi);
       add("Bodrum Dengelenmiş Merdiven", b.bodrumDengelenmisMerdivenSayisi);
       add(
-        "Bodrum Doğrudan Dışarı Açılan Merdiven",
+        "Doğrudan Dışarı Açılan Merdiven",
         b.bodrumToplamDisariAcilanMerdivenSayisi,
       );
     }
