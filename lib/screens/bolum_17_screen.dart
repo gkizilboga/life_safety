@@ -44,6 +44,9 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
           _model = _model.copyWith(isiklikMalzemesi: null);
         }
       }
+      if (type == 'catiPiyes') {
+        _model = _model.copyWith(catiPiyesKacisi: choice);
+      }
     });
   }
 
@@ -54,6 +57,10 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
     if (_model.isiklik == null) return false;
     if (_model.isiklik?.label == Bolum17Content.isiklikOptionB.label &&
         _model.isiklikMalzemesi == null) {
+      return false;
+    }
+    if (BinaStore.instance.bolum7?.hasCati == true &&
+        _model.catiPiyesKacisi == null) {
       return false;
     }
     return true;
@@ -182,6 +189,23 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
               ),
             ),
           ],
+
+          if (BinaStore.instance.bolum7?.hasCati == true) ...[
+            _buildSoru(
+              Bolum17Content.questionCatiPiyes,
+              'catiPiyes',
+              [
+                Bolum17Content.catiPiyesOptionA,
+                Bolum17Content.catiPiyesOptionB,
+                Bolum17Content.catiPiyesOptionC,
+              ],
+              _model.catiPiyesKacisi,
+              compact: true,
+              infoTerm: "Çatı Piyesi",
+              infoDefinition:
+                  "Çatı eğimi içerisinde kalmak şartıyla, altındaki bağımsız bölüme ait, bu bölümle içeriden irtibatlı yapılan, terasların da dâhil olabildiği mekânları ifade eder. Çatı arası yatak odası, mutfak, banyo vs. gibi yaşam alanı barındırıyorsa bu katın yüksekliği yapı yüksekliğine kesinlikle dahil edilir. Teknik hacim, asansör makine dairesi vs. gibi yaşam alanı değil ise ve kata ulaşım imkanları yönetmeliğe uygun ise binanın yapı yüksekliğine dahil edilmeyebilir.",
+            ),
+          ],
         ],
       ),
     );
@@ -201,12 +225,26 @@ class _Bolum17ScreenState extends State<Bolum17Screen> {
     List<ChoiceResult> options,
     ChoiceResult? selected, {
     bool compact = false,
+    String? infoTerm,
+    String? infoDefinition,
   }) {
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(child: Text(title, style: AppStyles.questionTitle)),
+              if (infoDefinition != null) ...[
+                const SizedBox(width: 8),
+                DefinitionButton(
+                  term: infoTerm ?? title,
+                  definition: infoDefinition,
+                ),
+              ],
+            ],
+          ),
           SizedBox(height: compact ? 4 : 10),
           ...options.map(
             (opt) => SelectableCard(

@@ -1178,6 +1178,42 @@ class PdfService {
               }
             }
 
+            if (id == 20 && store.bolum20?.isBodrumIndependent == true) {
+              itemsWidgets.add(pw.SizedBox(height: 10));
+              itemsWidgets.add(
+                pw.Container(
+                  padding: const pw.EdgeInsets.all(8),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColors.yellow50,
+                    border: pw.Border.all(color: PdfColors.orange),
+                    borderRadius: pw.BorderRadius.circular(4),
+                  ),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(
+                        "Not (BYKHY Madde 48/7):",
+                        style: pw.TextStyle(
+                          font: ttfBold,
+                          fontSize: 9,
+                          color: PdfColors.orange800,
+                        ),
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Text(
+                        "Giriş, çıkış ve şaftları üst katlardan 120 dakika yangına dayanıklı döşeme veya bölme ile ayrılan bodrum katlar, yapı yüksekliğine dâhil edilmez ve yangın güvenlik tedbirleri bakımından ayrı değerlendirilir. Binanızda bodrum kat merdivenlerinin ayrıldığı beyan edilmiştir. Bu ayrımın 120 dakika yangına dayanımlı olup olmadığı ve bodrumun gerçekten yapı yüksekliğinden muaf tutulup tutulamayacağı hususunda yetkin bir Yangın Mühendisi tarafından sahada detaylı inceleme yapılması gereklidir.",
+                        style: pw.TextStyle(
+                          font: ttf,
+                          fontSize: 9,
+                          color: PdfColors.grey800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
             // 2. Build Section Widgets with Orphan Prevention
             final List<pw.Widget> finalSectionWidgets = [];
 

@@ -844,6 +844,18 @@ class ReportEngine {
             );
           }
         }
+        
+        if (b17.catiPiyesKacisi != null) {
+          _addDetail(
+            details,
+            label: Bolum17Content.questionCatiPiyes,
+            value: b17.catiPiyesKacisi!.uiTitle,
+            subtitle: b17.catiPiyesKacisi!.uiSubtitle,
+            report: b17.catiPiyesKacisi!.reportText,
+            advice: b17.catiPiyesKacisi!.adviceText,
+            level: b17.catiPiyesKacisi!.level,
+          );
+        }
         handled = true;
       }
     }
@@ -2209,6 +2221,7 @@ class ReportEngine {
           b?.iskelet?.level,
           b?.bitisikDuvar?.level,
           b?.isiklik?.level,
+          b?.catiPiyesKacisi?.level,
         ]);
       case 18:
         final b = s.bolum18;
@@ -2574,6 +2587,7 @@ class ReportEngine {
       add(b17.iskelet);
       add(b17.bitisikDuvar);
       add(b17.isiklik);
+      add(b17.catiPiyesKacisi);
     }
 
     // --- BÖLÜM 18 (Koridor Kaplamaları) ---
@@ -2994,6 +3008,7 @@ class ReportEngine {
         if (b17.iskelet != null) parts.add(b17.iskelet!.reportText);
         if (b17.bitisikDuvar != null) parts.add(b17.bitisikDuvar!.reportText);
         if (b17.isiklik != null) parts.add(b17.isiklik!.reportText);
+        if (b17.catiPiyesKacisi != null) parts.add(b17.catiPiyesKacisi!.reportText);
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }

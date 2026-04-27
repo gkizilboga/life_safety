@@ -237,7 +237,7 @@ class Bolum6Content {
 
   static final buyukRestoranVar = ChoiceResult(
     label: "6-3-A (Büyük Restoran)",
-    uiTitle: "Evet, var.",
+    uiTitle: "Var.",
     uiSubtitle: "",
     reportText:
         "BİLGİ: Ticari alanda büyük restoran (endüstriyel mutfak) olduğu beyan edilmiştir. Endüstriyel mutfaklar yüksek yangın riski taşır. Yönetmelik gereği, ticari alan içerisinde yer alan endüstriyel mutfaklar, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve kapılar ile ayrılmış biçimde konumlandırılır. Aynı anda 100’den fazla kişiye hizmet verebilen restoranların davlumbazlarına otomatik söndürme sistemi yapılması ve ocaklarında kullanılan gazın özelliklerine göre gaz algılama, gaz kesme ve uyarı tesisatının kurulması şarttır.",
@@ -246,7 +246,7 @@ class Bolum6Content {
 
   static final buyukRestoranYok = ChoiceResult(
     label: "6-3-B (Büyük Restoran)",
-    uiTitle: "Hayır, yok.",
+    uiTitle: "Yok.",
     uiSubtitle: "",
     reportText:
         "BİLGİ: Binanın ticari alanında büyük restoran (endüstriyel mutfak) bulunmamaktadır. Ekstra önlem alınmasına gerek yoktur.",
@@ -1677,6 +1677,36 @@ class Bolum17Content {
     reportText:
         "BİLİNMİYOR: Işıklık malzeme tipi bilinmiyor. Plastik vb. ise aşağı damlama ve yangın yayma riski yüksektir. Yerinde inceleme ve Uzman görüşü alınması tavsiye edilir.",
     level: RiskLevel.unknown,
+  );
+
+  static const String questionCatiPiyes =
+      "Çatı arası piyesinden bina merdivenlerine alternatif kaçış imkânı sağlanmış mı?";
+
+  static final catiPiyesOptionA = ChoiceResult(
+    label: "17-5-A (Çatı Piyesi)",
+    uiTitle: "Evet.",
+    uiSubtitle: "",
+    reportText:
+        "BİLGİ: Binanızda çatı arası piyesten merdivenlere alternatif kaçış sağlandığı için, bu piyesin yüksekliği yapı yüksekliğine dâhil edilmeyebilir. Kesin karar için merdivenlere ulaşım imkanının Yangın Güvenlik Uzmanı tarafından yerinde incelenmesi önemlidir.",
+    level: RiskLevel.info,
+  );
+
+  static final catiPiyesOptionB = ChoiceResult(
+    label: "17-5-B (Çatı Piyesi)",
+    uiTitle: "Hayır.",
+    uiSubtitle: "",
+    reportText:
+        "BİLGİ: Çatı arası piyesten merdivenlere alternatif kaçış imkânı sağlanmadığı beyan edilmiştir. Bu durumda çatı arasının yüksekliği yapı yüksekliğine dâhil edilir.",
+    level: RiskLevel.info,
+  );
+
+  static final catiPiyesOptionC = ChoiceResult(
+    label: "17-5-C (Çatı Piyesi)",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLGİ: Çatı piyesinden alternatif kaçış durumu bilinmiyor. Eğer kaçış sağlanmamışsa piyes yüksekliği yapı yüksekliğine dâhil edilmelidir. Konu hakkında kesin karar için Yangın Güvenlik Uzmanı tarafından yerinde inceleme yapılması tavsiye edilir.",
+    level: RiskLevel.info,
   );
 }
 

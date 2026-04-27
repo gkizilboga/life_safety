@@ -7,6 +7,7 @@ class Bolum17Model {
   final ChoiceResult? bitisikDuvar; // Sadece bitişik nizam ise sorulur
   final ChoiceResult? isiklik;
   final String? isiklikMalzemesi; // "cam" veya "plastik"
+  final ChoiceResult? catiPiyesKacisi;
 
   Bolum17Model({
     this.kaplama,
@@ -14,6 +15,7 @@ class Bolum17Model {
     this.bitisikDuvar,
     this.isiklik,
     this.isiklikMalzemesi,
+    this.catiPiyesKacisi,
   });
 
   Bolum17Model copyWith({
@@ -22,6 +24,7 @@ class Bolum17Model {
     ChoiceResult? bitisikDuvar,
     ChoiceResult? isiklik,
     String? isiklikMalzemesi,
+    ChoiceResult? catiPiyesKacisi,
   }) {
     return Bolum17Model(
       kaplama: kaplama ?? this.kaplama,
@@ -29,6 +32,7 @@ class Bolum17Model {
       bitisikDuvar: bitisikDuvar ?? this.bitisikDuvar,
       isiklik: isiklik ?? this.isiklik,
       isiklikMalzemesi: isiklikMalzemesi ?? this.isiklikMalzemesi,
+      catiPiyesKacisi: catiPiyesKacisi ?? this.catiPiyesKacisi,
     );
   }
 
@@ -39,6 +43,7 @@ class Bolum17Model {
       'bitisikDuvar_label': bitisikDuvar?.label,
       'isiklik_label': isiklik?.label,
       'isiklikMalzemesi': isiklikMalzemesi,
+      'catiPiyesKacisi_label': catiPiyesKacisi?.label,
     };
   }
 
@@ -85,12 +90,22 @@ class Bolum17Model {
     else if (l4 == Bolum17Content.isiklikOptionC.label)
       ls = Bolum17Content.isiklikOptionC;
 
+    ChoiceResult? cp;
+    final l5 = map['catiPiyesKacisi_label'];
+    if (l5 == Bolum17Content.catiPiyesOptionA.label)
+      cp = Bolum17Content.catiPiyesOptionA;
+    else if (l5 == Bolum17Content.catiPiyesOptionB.label)
+      cp = Bolum17Content.catiPiyesOptionB;
+    else if (l5 == Bolum17Content.catiPiyesOptionC.label)
+      cp = Bolum17Content.catiPiyesOptionC;
+
     return Bolum17Model(
       kaplama: k,
       iskelet: i,
       bitisikDuvar: b,
       isiklik: ls,
       isiklikMalzemesi: map['isiklikMalzemesi'],
+      catiPiyesKacisi: cp,
     );
   }
 }

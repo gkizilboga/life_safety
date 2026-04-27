@@ -137,6 +137,9 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.cati,
             _model.hasCati,
             () => _toggleOption('cati'),
+            infoTerm: "Çatı Piyesi",
+            infoDefinition:
+                "Çatı eğimi içerisinde kalmak şartıyla, altındaki bağımsız bölüme ait, bu bölümle içeriden irtibatlı yapılan, terasların da dâhil olabildiği mekânları ifade eder. Çatı arası; yatak odası, mutfak, banyo vs. gibi yaşam alanı barındırıyorsa bu katın yüksekliği yapı yüksekliğine kesinlikle dahil edilir. Teknik hacim, asansör makine dairesi vs. gibi kullanılacaksa, (daireye ait yaşam alanı değil ise ve kata ulaşım imkanları yangın yönetmeliğine uygun ise) binanın yapı yüksekliğine dahil edilmeyebilir.",
           ),
 
           _buildOption(
@@ -212,6 +215,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
     VoidCallback onTap, {
     String? imagePath,
     String? imageTitle,
+    String? infoTerm,
+    String? infoDefinition,
   }) {
     return SelectableCard(
       choice: choice,
@@ -219,6 +224,8 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
       onTap: onTap,
       imageAssetPath: imagePath,
       imageTitle: imageTitle,
+      infoTerm: infoTerm,
+      infoDefinition: infoDefinition,
     );
   }
 }
