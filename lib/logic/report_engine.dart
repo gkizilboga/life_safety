@@ -844,7 +844,7 @@ class ReportEngine {
             );
           }
         }
-        
+
         if (b17.catiPiyesKacisi != null) {
           _addDetail(
             details,
@@ -1374,7 +1374,7 @@ class ReportEngine {
             label: 'Yönetmelik Madde 48/7 Notu',
             value: 'GEÇERLİ',
             report:
-                'Not (BYKHY Madde 48/7): Giriş, çıkış ve şaftları üst katlardan 120 dakika yangına dayanıklı döşeme veya bölme ile ayrılan bodrum katlar, yapı yüksekliğine dâhil edilmez ve yangın güvenlik tedbirleri bakımından ayrı değerlendirilir. Binanızda hem bodrum kat merdivenlerinin ayrıldığı hem de asansörlerin bodruma inmediği beyan edilmiştir. Bu ayrımın 120 dakika yangına dayanımlı olup olmadığı ve bodrumun gerçekten yapı yüksekliğinden muaf tutulup tutulamayacağı hususunda yetkin bir Yangın Mühendisi tarafından sahada detaylı inceleme yapılması gereklidir.',
+                'Not: Giriş, çıkış ve şaftları üst katlardan 120 dakika yangına dayanıklı döşeme veya bölme ile ayrılan bodrum katlar, yapı yüksekliğine dâhil edilmez ve yangın güvenlik tedbirleri bakımından ayrı değerlendirilir. Binanızda hem bodrum kat merdivenlerinin ayrıldığı hem de asansörlerin bodruma inmediği beyan edilmiştir. Bu ayrımın 120 dakika yangına dayanımlı olup olmadığı ve bodrumun gerçekten yapı yüksekliğinden muaf tutulup tutulamayacağı hususunda yetkin bir Yangın Mühendisi tarafından sahada detaylı inceleme yapılması gereklidir.',
             level: RiskLevel.info,
           );
         }
@@ -3021,7 +3021,8 @@ class ReportEngine {
         if (b17.iskelet != null) parts.add(b17.iskelet!.reportText);
         if (b17.bitisikDuvar != null) parts.add(b17.bitisikDuvar!.reportText);
         if (b17.isiklik != null) parts.add(b17.isiklik!.reportText);
-        if (b17.catiPiyesKacisi != null) parts.add(b17.catiPiyesKacisi!.reportText);
+        if (b17.catiPiyesKacisi != null)
+          parts.add(b17.catiPiyesKacisi!.reportText);
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }
