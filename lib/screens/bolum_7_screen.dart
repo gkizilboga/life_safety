@@ -139,7 +139,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             () => _toggleOption('cati'),
             infoTerm: "Çatı Piyesi",
             infoDefinition:
-                "Çatı eğimi içerisinde kalmak şartıyla, altındaki bağımsız bölüme ait, bu bölümle içeriden irtibatlı yapılan, terasların da dâhil olabildiği mekânları ifade eder. Çatı arası; yatak odası, mutfak, banyo vs. gibi yaşam alanı barındırıyorsa bu katın yüksekliği yapı yüksekliğine kesinlikle dahil edilir. Teknik hacim, asansör makine dairesi vs. gibi kullanılacaksa, (daireye ait yaşam alanı değil ise ve kata ulaşım imkanları yangın yönetmeliğine uygun ise) binanın yapı yüksekliğine dahil edilmeyebilir.",
+                "• Çatı eğimi içerisinde kalmak şartıyla, altındaki bağımsız bölüme ait, bu bölümle içeriden irtibatlı yapılan, terasların da dâhil olabildiği mekânları ifade eder.\n\n• Çatı arası; yatak odası, mutfak, banyo vb. gibi yaşam alanı barındırıyorsa bu katın yüksekliği yapı yüksekliğine kesinlikle dahil edilir.\n\n• Teknik hacim, asansör makine dairesi vb. gibi kullanılacaksa (daireye ait yaşam alanı değil ise ve kata ulaşım imkanları yangın yönetmeliğine uygun ise) binanın yapı yüksekliğine dahil edilmeyebilir.",
           ),
 
           _buildOption(

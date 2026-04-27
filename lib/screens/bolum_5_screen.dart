@@ -259,7 +259,8 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                   ),
                   const CustomInfoNote(
                     type: InfoNoteType.info,
-                    text: "İpucu: Kutucukların sağındaki hesap makinesi ikonuna basarak hızlıca alan hesabı yapabilirsiniz.",
+                    text:
+                        "İpucu: Kutucukların sağındaki hesap makinesi ikonuna basarak hızlıca alan hesabı yapabilirsiniz.",
                     icon: Icons.lightbulb_outline,
                     margin: EdgeInsets.only(bottom: 12),
                   ),
@@ -281,7 +282,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                             Bolum5Content.normalKatAlani,
                             onCalculatorTap: () => _showCalculatorPopup(
                               _normalCtrl,
-                              "Normal Katlar",
+                              "Normal Kat (1 katın alanı)",
                             ),
                             error: _normalError,
                           ),
@@ -293,7 +294,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                             Bolum5Content.bodrumKatAlani,
                             onCalculatorTap: () => _showCalculatorPopup(
                               _bodrumCtrl,
-                              "Bodrum Katlar",
+                              "Bodrum Kat (1 katın alanı)",
                             ),
                             error: _bodrumError,
                           ),

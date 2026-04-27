@@ -1365,6 +1365,19 @@ class ReportEngine {
             advice: b20.bodrumMerdivenDevami!.adviceText,
             level: b20.bodrumMerdivenDevami!.level,
           );
+
+        // Madde 48/7 Notu (Dinamik)
+        if (b20.isBodrumIndependent == true &&
+            s.bolum23?.bodrum?.label == "23-1-A (Bodrum)") {
+          _addDetail(
+            details,
+            label: 'Yönetmelik Madde 48/7 Notu',
+            value: 'GEÇERLİ',
+            report:
+                'Not (BYKHY Madde 48/7): Giriş, çıkış ve şaftları üst katlardan 120 dakika yangına dayanıklı döşeme veya bölme ile ayrılan bodrum katlar, yapı yüksekliğine dâhil edilmez ve yangın güvenlik tedbirleri bakımından ayrı değerlendirilir. Binanızda hem bodrum kat merdivenlerinin ayrıldığı hem de asansörlerin bodruma inmediği beyan edilmiştir. Bu ayrımın 120 dakika yangına dayanımlı olup olmadığı ve bodrumun gerçekten yapı yüksekliğinden muaf tutulup tutulamayacağı hususunda yetkin bir Yangın Mühendisi tarafından sahada detaylı inceleme yapılması gereklidir.',
+            level: RiskLevel.info,
+          );
+        }
         // YGH Basınçlandırma (Kullanıcıdan alınan bilgi)
         // Dinamik Basınçlandırma Analizi
         final basincReasons = evaluateBasincRequirementForStairs(store: s);

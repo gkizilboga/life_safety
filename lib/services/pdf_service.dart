@@ -1178,7 +1178,9 @@ class PdfService {
               }
             }
 
-            if (id == 20 && store.bolum20?.isBodrumIndependent == true) {
+            if (id == 20 &&
+                store.bolum20?.isBodrumIndependent == true &&
+                store.bolum23?.bodrum?.label == "23-1-A (Bodrum)") {
               itemsWidgets.add(pw.SizedBox(height: 10));
               itemsWidgets.add(
                 pw.Container(

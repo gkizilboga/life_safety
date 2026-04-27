@@ -2293,8 +2293,8 @@ class Bolum21Content {
 class Bolum22Content {
   static final varlikOptionA = ChoiceResult(
     label: "22-1-A",
-    uiTitle: "Hayır, sadece normal (insan taşıma) asansör var.",
-    uiSubtitle: "",
+    uiTitle: "Hayır, sadece normal asansör var.",
+    uiSubtitle: "İnsan taşıma asansörü mevcut.",
     reportText:
         "BİLGİ: Binada itfaiye asansörü bulunmamaktadır. Yönetmelik gereği yapı yüksekliği 51.50 metreyi geçen binalarda yangın anında itfaiyenin kullanabileceği, jeneratöre bağlı ve korunumlu İtfaiye Asansörü tesisi mecburidir.",
     level: RiskLevel.info,
@@ -2449,7 +2449,7 @@ class Bolum22Content {
   static final basincOptionB = ChoiceResult(
     label: "22-6-B",
     uiTitle: "Hayır, yok.",
-    uiSubtitle: "Asansör kuyusuna hava üfleyen yok.",
+    uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: İtfaiye asansör kuyusunda basınçlandırma sistemi bulunmamaktadır. Bu durum kuyuya duman dolma riskini artırır.",
     level: RiskLevel.critical,
