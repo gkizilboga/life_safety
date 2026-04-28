@@ -12,11 +12,13 @@ class Bolum20Provider extends ChangeNotifier {
   bool _hasBodrum = false;
   bool _showBasinclandirma = false;
   bool _isBodrumIndependent = false;
+  bool _hideHavalandirma = false;
 
   bool get isTekKatli => _isTekKatli;
   bool get hasBodrum => _hasBodrum;
   bool get showBasinclandirma => _showBasinclandirma;
   bool get isBodrumIndependent => _isBodrumIndependent;
+  bool get hideHavalandirma => _hideHavalandirma;
 
   // Upper/Main Stair Controllers
   final normalCtrl = TextEditingController();
@@ -91,6 +93,11 @@ class Bolum20Provider extends ChangeNotifier {
 
     _isTekKatli = (toplamKat == 1);
     _hasBodrum = (bKat > 0);
+
+    final double hYapi = BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? BinaStore.instance.bolum3?.hYapi ?? 0.0;
+    final bool isKonut = BinaStore.instance.bolum10?.secim?.label.contains("10-A") == true || BinaStore.instance.bolum6?.isSadeceKonut == true;
+    _hideHavalandirma = isKonut && hYapi >= (51.50 - 0.001);
+    
     // Don't notify listeners here, as it's called in constructor
   }
 
@@ -535,7 +542,7 @@ class Bolum20Provider extends ChangeNotifier {
         return false;
       }
 
-      if (_model.havalandirma == null) {
+      if (!_hideHavalandirma && _model.havalandirma == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Lütfen havalandırma durumunu seçiniz."),

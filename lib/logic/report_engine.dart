@@ -119,8 +119,15 @@ class ReportEngine {
     return bReport;
   }
 
-  static String _addSection20DynamicHavalandirma(Bolum20Model b20) {
+  static String _addSection20DynamicHavalandirma(BinaStore s, Bolum20Model b20) {
     if (b20.havalandirma == null) return "";
+
+    final hYapi = _getHYapi(s);
+    final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+    if (isKonut && hYapi >= (51.50 - 0.001)) {
+      return "";
+    }
+
     String hReport = b20.havalandirma!.reportText;
     final String bLabel = b20.basinclandirma?.label ?? "";
 
@@ -130,6 +137,37 @@ class ReportEngine {
       hReport = "Basınçlandırma olmayan merdivenlerde $hReport";
     }
     return hReport;
+  }
+
+  // --- Dinamik Rapor Yardımcıları (Consistency Fix) ---
+
+  static String _getSection17KaplamaReport(BinaStore s) {
+    final b17 = s.bolum17;
+    if (b17?.kaplama == null) return "";
+    String kaplamaReport = b17!.kaplama!.reportText;
+
+    final bool isYuksek = s.bolum3?.isYuksekBina ?? false;
+    final bool isBitisik = s.bolum8?.secim?.label == "8-1-B";
+
+    if (b17.kaplama!.label.contains("17-1-B") ||
+        b17.kaplama!.label.contains("17-1-C") ||
+        b17.kaplama!.label.contains("17-1-E")) {
+      String prefix = "";
+      if (isBitisik && isYuksek) {
+        prefix =
+            "UYARI: Binanız hem Bitişik Nizam hem de Yüksek Bina statüsündedir. Bu yapılarda çatı kaplamasının HİÇ YANMAZ (A1 sınıfı) taşyünü, camyünü, mineralyünü vb. malzemeyle yapılması zorunludur.\n\n";
+      } else if (isBitisik && !isYuksek) {
+        prefix =
+            "UYARI: Binanız Bitişik Nizam yapı statüsündedir. Bitişik nizam yapılarda yangının komşu binalara sirayetini önlemek adına çatı kaplamasının HİÇ YANMAZ (A1 sınıfı) taşyünü, camyünü, mineralyünü vb. malzemeyle yapılması gereklidir.\n\n";
+      } else if (!isBitisik && isYuksek) {
+        prefix =
+            "UYARI: Binanız Yüksek Bina statüsündedir. Yüksek binalarda çatı kaplamasının HİÇ YANMAZ (A1 sınıfı) taşyünü, camyünü, mineralyünü vb. malzemeyle yapılması gereklidir.\n\n";
+      }
+      if (prefix.isNotEmpty) {
+        kaplamaReport = prefix + b17.kaplama!.reportText;
+      }
+    }
+    return kaplamaReport;
   }
 
   static void _addDetail(
@@ -194,25 +232,25 @@ class ReportEngine {
         if (b5.tabanAlani != null)
           details.add({
             'label': 'Zemin Kat Taban Alanı',
-            'value': '${b5.tabanAlani} m²',
+            'value': '${b5.tabanAlani!.toStringAsFixed(2)} m²',
             'report': '',
           });
         if (b5.normalKatAlani != null)
           details.add({
             'label': 'Normal Kat Alanı',
-            'value': '${b5.normalKatAlani} m²',
+            'value': '${b5.normalKatAlani!.toStringAsFixed(2)} m²',
             'report': '',
           });
         if (b5.bodrumKatAlani != null)
           details.add({
             'label': 'Bodrum Kat Alanı',
-            'value': '${b5.bodrumKatAlani} m²',
+            'value': '${b5.bodrumKatAlani!.toStringAsFixed(2)} m²',
             'report': '',
           });
         if (b5.toplamInsaatAlani != null)
           details.add({
             'label': 'Toplam İnşaat Alanı',
-            'value': '${b5.toplamInsaatAlani} m²',
+            'value': '${b5.toplamInsaatAlani!.toStringAsFixed(2)} m²',
             'report': '',
           });
         handled = true;
@@ -234,22 +272,25 @@ class ReportEngine {
         _addDetail(
           details,
           label: 'Ticari Alan (İşyeri)',
-          value: b6.hasTicari ? 'Mevcut' : 'Mevcut değil',
+          value: b6.hasTicari ? 'Mevcut' : 'Yok',
           report: '',
+          isBold: b6.hasTicari,
         );
         details.last['isTable'] = true;
         _addDetail(
           details,
           label: 'Kapalı Otopark',
-          value: b6.hasOtopark ? 'Mevcut' : 'Mevcut değil',
+          value: b6.hasOtopark ? 'Mevcut' : 'Yok',
           report: '',
+          isBold: b6.hasOtopark,
         );
         details.last['isTable'] = true;
         _addDetail(
           details,
           label: 'Depolama Alanı',
-          value: b6.hasDepo ? 'Mevcut' : 'Mevcut değil',
+          value: b6.hasDepo ? 'Mevcut' : 'Yok',
           report: '',
+          isBold: b6.hasDepo,
         );
         details.last['isTable'] = true;
 
@@ -281,7 +322,7 @@ class ReportEngine {
           _addDetail(
             details,
             label: 'Kapalı Otopark Alanı',
-            value: '${b6.kapaliOtoparkAlani} m²',
+            value: '${b6.kapaliOtoparkAlani!.toStringAsFixed(2)} m²',
             report: '',
           );
         handled = true;
@@ -372,11 +413,14 @@ class ReportEngine {
         }
 
         spaces.forEach((name, exists) {
-          details.add({
-            'label': name,
-            'value': exists ? 'Mevcut' : 'Yok',
-            'report': '',
-          });
+          _addDetail(
+            details,
+            label: name,
+            value: exists ? 'Mevcut' : 'Yok',
+            report: '',
+            isBold: exists,
+          );
+          details.last['isTable'] = true;
         });
         handled = true;
       }
@@ -455,21 +499,21 @@ class ReportEngine {
             // 1. Tablo Elemanları (isTable: true ile gruplanacaklar)
             details.add({
               'label': 'Kolon Paspayı',
-              'value': '$k mm',
+              'value': '${k.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
               'isBold': true,
             });
             details.add({
               'label': 'Kiriş Paspayı',
-              'value': '$r mm',
+              'value': '${r.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
               'isBold': true,
             });
             details.add({
               'label': 'Döşeme Paspayı',
-              'value': '$d mm',
+              'value': '${d.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
               'isBold': true,
@@ -485,7 +529,7 @@ class ReportEngine {
             RiskLevel autoLevel;
             if (fails.isEmpty) {
               autoReport =
-                  "OLUMLU: Paspayı ölçüleri (Kolon: ${k}mm, Kiriş: ${r}mm, Döşeme: ${d}mm) TS 500 standartlarını karşılamaktadır. Yangın anında betonun içindeki demirin ısınması gecikecek, yapısal stabilite korunacaktır.";
+                  "OLUMLU: Paspayı ölçüleri (Kolon: ${k.toStringAsFixed(1)}mm, Kiriş: ${r.toStringAsFixed(1)}mm, Döşeme: ${d.toStringAsFixed(1)}mm) TS 500 standartlarını karşılamaktadır. Yangın anında betonun içindeki demirin ısınması gecikecek, yapısal stabilite korunacaktır.";
               autoLevel = RiskLevel.positive;
             } else {
               autoReport =
@@ -602,15 +646,27 @@ class ReportEngine {
             advice: b15.yalitimSap!.adviceText,
             level: b15.yalitimSap!.level,
           );
-        if (b15.tavan != null)
+        if (b15.tavan != null) {
+          String tavanReport = b15.tavan!.reportText;
+          RiskLevel tavanLevel = b15.tavan!.level;
+
+          // Eğer asma tavan varsa ve malzemesi güvenliyse (Alçıpanel vb.), yeşile çekiyoruz.
+          if (b15.tavan!.label == "15-3-B" &&
+              b15.tavanMalzeme?.label == "15-3-ALT-A") {
+            tavanReport =
+                "OLUMLU: Binada asma tavan bulunmaktadır ancak kullanılan malzemenin (Alçıpanel, metal vb.) yangın performansı yeterlidir.";
+            tavanLevel = RiskLevel.positive;
+          }
+
           _addDetail(
             details,
             label: 'Asma Tavan var mı?',
             value: b15.tavan!.uiTitle,
-            report: b15.tavan!.reportText,
+            report: tavanReport,
             advice: b15.tavan!.adviceText,
-            level: b15.tavan!.level,
+            level: tavanLevel,
           );
+        }
         if (b15.tavanMalzeme != null)
           _addDetail(
             details,
@@ -769,32 +825,25 @@ class ReportEngine {
     if (id == 17) {
       final b17 = s.bolum17;
       if (b17 != null) {
-        final bool isYuksek = s.bolum3?.isYuksekBina ?? false;
-
-        if (b17.kaplama != null)
+        if (b17.kaplama != null) {
           _addDetail(
             details,
             label: 'Çatınızın en üst katmanında hangi malzeme kullanılıyor?',
             value: b17.kaplama!.uiTitle,
-            report: b17.kaplama!.reportText,
+            report: _getSection17KaplamaReport(s),
             advice: b17.kaplama!.adviceText,
             level: b17.kaplama!.level,
           );
+        }
 
-        // Çatı iskelet sorusu (dinamik)
+        // Çatı iskelet sorusu
         if (b17.iskelet != null) {
-          final String iskeletReport =
-              b17.iskelet!.label == Bolum17Content.iskeletOptionB.label
-              ? (isYuksek
-                    ? Bolum17Content.iskeletOptionBYuksekReport
-                    : Bolum17Content.iskeletOptionBNormalReport)
-              : b17.iskelet!.reportText;
           _addDetail(
             details,
             label: 'Çatıyı taşıyan iskelet ve altındaki ısı yalıtımı nedir?',
             value: b17.iskelet!.uiTitle,
             subtitle: b17.iskelet!.uiSubtitle,
-            report: iskeletReport,
+            report: b17.iskelet!.reportText,
             advice: b17.iskelet!.adviceText,
             level: b17.iskelet!.level,
           );
@@ -908,21 +957,23 @@ class ReportEngine {
         final bool hasItfaiye = b22.varlik?.label.contains("22-1-B") == true;
 
         if (b22.varlik != null) {
-          String varlikPrefix = isMandatory
-              ? (hasItfaiye ? "OLUMLU: " : "KRİTİK RİSK: ")
-              : "BİLGİ: ";
           RiskLevel varlikLevel = isMandatory
               ? (hasItfaiye ? RiskLevel.positive : RiskLevel.critical)
               : RiskLevel.info;
 
           String finalReportText;
-          if (isMandatory) {
+          if (hasItfaiye) {
             finalReportText =
-                "$varlikPrefix${cleanPrefix(b22.varlik!.reportText)}";
+                "${isMandatory ? "OLUMLU: " : "BİLGİ: "}Binada İtfaiye Asansörü mevcuttur.";
           } else {
-            final hYapi = _getHYapi(s);
-            finalReportText =
-                "BİLGİ: Yapı yüksekliği (${hYapi.toStringAsFixed(2)} m) itfaiye asansörü zorunluluğu sınırının (51.50 m) altındadır. Bu nedenle binada itfaiye asansörü tesisi zorunlu değildir.";
+            if (isMandatory) {
+              finalReportText =
+                  "KRİTİK RİSK: Binada İtfaiye Asansörü zorunlu olmasına rağmen, mevcut olmadığı beyan edilmiştir.";
+            } else {
+              final hYapi = _getHYapi(s);
+              finalReportText =
+                  "BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${hYapi.toStringAsFixed(2)}m < 51.50m).";
+            }
           }
 
           _addDetail(
@@ -992,26 +1043,45 @@ class ReportEngine {
         final basincReasons = evaluateBasincRequirementForFiremanElevator(
           store: s,
         );
-        if (basincReasons.isNotEmpty || isMandatory) {
-          String reqPrefix = isMandatory
-              ? (hasItfaiye ? "OLUMLU: " : "KRİTİK RİSK: ")
-              : "BİLGİ: ";
-          RiskLevel reqLevel = isMandatory
-              ? (hasItfaiye ? RiskLevel.positive : RiskLevel.critical)
-              : RiskLevel.info;
+        if (basincReasons.isNotEmpty) {
+          final bool userHasBasinc = b22.basinc?.label.contains("22-6-A") == true;
+          final bool isUnknown = b22.basinc?.label == "22-6-C";
+          String evalReport;
+          RiskLevel evalLevel;
 
           final String itfaiyePart = itfaiyeReasons.isNotEmpty
-              ? "${itfaiyeReasons.join('\n')}\n"
+              ? "${itfaiyeReasons.map((e) => cleanPrefix(e)).join('\n')}\n"
               : "";
-          final String basincPart = basincReasons.join('\n');
+
+          if (userHasBasinc) {
+            evalReport =
+                'OLUMLU: Bina verilerine göre itfaiye asansörü kuyusunda basınçlandırma sistemi zorunluluğu bulunmaktadır ve binada tesis edilmiştir.\n\nGerekçe:\n$itfaiyePartİtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.';
+            evalLevel = RiskLevel.positive;
+          } else if (isUnknown) {
+            evalReport =
+                'BİLİNMİYOR: Bina verilerine göre itfaiye asansörü kuyusunda basınçlandırma sistemi ZORUNLUDUR, ancak binadaki durumu bilinmemektedir. Sistem yerinde kontrol edilmelidir.\n\nGerekçe:\n$itfaiyePartİtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.';
+            evalLevel = RiskLevel.unknown;
+          } else {
+            evalReport =
+                'KRİTİK RİSK: Bina verilerine göre itfaiye asansörü kuyusunda basınçlandırma sistemi ZORUNLUDUR, ancak binada tesis edilmediği tespit edilmiştir.\n\nGerekçe:\n$itfaiyePartİtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.';
+            evalLevel = RiskLevel.critical;
+          }
 
           _addDetail(
             details,
             label: 'Basınçlandırma Sistemi Gereksinimi (İtfaiye Asansörü)',
             value: '',
+            report: evalReport,
+            level: evalLevel,
+          );
+        } else if (b22.basinc != null) {
+          _addDetail(
+            details,
+            label: 'Basınçlandırma Sistemi Gereksinimi',
+            value: '',
             report:
-                'DURUM: ${isMandatory ? (hasItfaiye ? "OLUMLU (Kriter Karşılandı)" : "ZORUNLU") : "ŞART DEĞİL"}\n\n$reqPrefix$itfaiyePart$basincPart',
-            level: reqLevel,
+                'BİLGİ: Bina verilerine göre itfaiye asansörü kuyularında basınçlandırma sistemi tesis edilmesi mecburi değildir.',
+            level: RiskLevel.info,
           );
         }
 
@@ -1449,14 +1519,18 @@ class ReportEngine {
         }
         // Madde 45: Doğal Havalandırma
         if (b20.havalandirma != null) {
-          _addDetail(
-            details,
-            label: 'Merdivenlerde doğal havalandırma var mı?',
-            value: b20.havalandirma!.uiTitle,
-            report: _addSection20DynamicHavalandirma(b20),
-            advice: b20.havalandirma!.adviceText,
-            level: b20.havalandirma!.level,
-          );
+          final hYapi = _getHYapi(s);
+          final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+          if (!(isKonut && hYapi >= (51.50 - 0.001))) {
+            _addDetail(
+              details,
+              label: 'Merdivenlerde doğal havalandırma var mı?',
+              value: b20.havalandirma!.uiTitle,
+              report: _addSection20DynamicHavalandirma(s, b20),
+              advice: b20.havalandirma!.adviceText,
+              level: b20.havalandirma!.level,
+            );
+          }
         }
 
         // Madde 41 Tahliye Mesafesi (Lobi) - Bölüm 36 analiz notunda merkezileştirildiği için buradan kaldırıldı.
@@ -2061,7 +2135,7 @@ class ReportEngine {
           _addDetail(
             details,
             label: 'Elle Girilen Kaçış Mesafesi',
-            value: '${b35.manuelMesafe} m',
+            value: '${b35.manuelMesafe!.toStringAsFixed(2)} m',
             report: isOk
                 ? 'OLUMLU: Girilen mesafe Yönetmelik sınırı olan $limit m. nin içerisindedir.'
                 : 'KRİTİK RİSK: Girilen mesafe Yönetmelik sınırı olan $limit m. nin üzerindedir.',
@@ -2190,11 +2264,16 @@ class ReportEngine {
         return s.getResultForSection(14)?.level ?? RiskLevel.info;
       case 15:
         final b = s.bolum15;
+        RiskLevel? tavanLvl = b?.tavan?.level;
+        if (b?.tavan?.label == "15-3-B" &&
+            b?.tavanMalzeme?.label == "15-3-ALT-A") {
+          tavanLvl = RiskLevel.positive;
+        }
         return _maxLevel([
           b?.kaplama?.level,
           b?.yalitim?.level,
           b?.yalitimSap?.level,
-          b?.tavan?.level,
+          tavanLvl,
           b?.tavanMalzeme?.level,
           b?.tesisat?.level,
         ]);
@@ -2259,12 +2338,16 @@ class ReportEngine {
             extraLevels.add(RiskLevel.warning);
         }
 
+        final hYapi = _getHYapi(s);
+        final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+        final ignoreHavalandirma = isKonut && hYapi >= (51.50 - 0.001);
+
         return _maxLevel([
           b?.tekKatCikis?.level,
           b?.tekKatRampa?.level,
           b?.bodrumMerdivenDevami?.level,
           b?.basinclandirma?.level,
-          b?.havalandirma?.level,
+          ignoreHavalandirma ? null : b?.havalandirma?.level,
           b?.lobiTahliyeMesafeDurumu?.level,
           b?.bodrumLobiTahliyeMesafeDurumu?.level,
           ...extraLevels,
@@ -2652,7 +2735,13 @@ class ReportEngine {
       add(b20.tekKatRampa);
       add(b20.bodrumMerdivenDevami);
       add(b20.basinclandirma);
-      add(b20.havalandirma);
+      
+      final hYapi = _getHYapi(s);
+      final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+      if (!(isKonut && hYapi >= (51.50 - 0.001))) {
+        add(b20.havalandirma);
+      }
+
       add(b20.lobiTahliyeMesafeDurumu);
       add(b20.bodrumLobiTahliyeMesafeDurumu);
 
@@ -3017,7 +3106,7 @@ class ReportEngine {
       final b17 = s.bolum17;
       if (b17 != null) {
         List<String> parts = [];
-        if (b17.kaplama != null) parts.add(b17.kaplama!.reportText);
+        if (b17.kaplama != null) parts.add(_getSection17KaplamaReport(s));
         if (b17.iskelet != null) parts.add(b17.iskelet!.reportText);
         if (b17.bitisikDuvar != null) parts.add(b17.bitisikDuvar!.reportText);
         if (b17.isiklik != null) parts.add(b17.isiklik!.reportText);
@@ -3076,8 +3165,13 @@ class ReportEngine {
           parts.add(b20.bodrumMerdivenDevami!.reportText);
         if (b20.basinclandirma != null)
           parts.add(_addSection20DynamicBasinc(b20));
-        if (b20.havalandirma != null)
-          parts.add(_addSection20DynamicHavalandirma(b20));
+        if (b20.havalandirma != null) {
+          final hYapi = _getHYapi(s);
+          final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+          if (!(isKonut && hYapi >= (51.50 - 0.001))) {
+            parts.add(_addSection20DynamicHavalandirma(s, b20));
+          }
+        }
 
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
@@ -3127,7 +3221,8 @@ class ReportEngine {
               "KRİTİK RİSK: Binada İtfaiye Asansörü zorunlu olmasına rağmen, mevcut olmadığı beyan edilmiştir.",
             );
           } else {
-            parts.add("BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır.");
+            final hYapi = _getHYapi(s);
+            parts.add("BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${hYapi.toStringAsFixed(2)}m < 51.50m).");
           }
         }
 

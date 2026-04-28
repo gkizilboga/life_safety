@@ -303,7 +303,7 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                 ),
               ),
 
-            if (!isTekKatli)
+            if (!isTekKatli && !context.select((Bolum20Provider p) => p.hideHavalandirma))
               Selector<Bolum20Provider, ChoiceResult?>(
                 selector: (_, p) => p.model.havalandirma,
                 builder: (context, val, _) => StairQuestion(

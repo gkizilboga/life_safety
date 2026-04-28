@@ -259,7 +259,7 @@ class Bolum6Content {
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Ticari alanda büyük restoran (endüstriyel mutfak) olup olmadığı bilinmemektedir. Endüstriyel mutfaklar yüksek yangın riski taşır. Mevcudiyeti halinde; Yönetmelik gereği, ticari alan içerisinde yer alan endüstriyel mutfaklar, binanın diğer kısımlarından en az 120 dakika süreyle yangına dayanıklı duvar ve kapılar ile ayrılmış biçimde konumlandırılması gerekir. Ayrıca belirli kapasite üzerindeki mutfaklarda otomatik söndürme ve gaz algılama sistemleri zorunludur. Uzman tarafından yerinde tespit yapılması önerilir.",
-    level: RiskLevel.info,
+    level: RiskLevel.unknown,
   );
 }
 
@@ -622,7 +622,7 @@ class Bolum12Content {
         "TS 500 standardı uyarınca, paspayı ölçülerinin (Kolon ≥ 35mm, Kiriş ≥ 25mm, Döşeme ≥ 20 mm) uygun olduğu varsayılmıştır.",
     reportText:
         "OLUMLU: TS 500 standardı uyarınca, binanızın inşa tarihi baz alınarak paspayı ölçülerinin uygun olduğu varsayılmıştır.",
-    level: RiskLevel.warning,
+    level: RiskLevel.positive,
   );
 
   static final betonOptionB = ChoiceResult(
@@ -1547,10 +1547,11 @@ class Bolum17Content {
   static final kaplamaOptionE = ChoiceResult(
     label: "17-1-E (Kaplama)",
     uiTitle: "Ahşap kaplama.",
-    uiSubtitle: "Çatı yüzeyi tamamen ahşap malzeme ile kaplanmıştır.",
+    uiSubtitle:
+        "Çatı yüzeyi tamamen ahşap malzeme ile kaplanmıştır. Yangın riski mevcuttur. Yerinde Uzman incelemesi yapılması gereklidir.",
     reportText:
-        "KRİTİK RİSK: Çatı kaplamasında ahşap kullanılması yüksek yangın riski oluşturur. Kıvılcım sıçraması durumunda çatı hızla tutuşabilir.",
-    level: RiskLevel.critical,
+        "UYARI: Çatı kaplamasında ahşap kullanılması yüksek yangın riski oluşturur.",
+    level: RiskLevel.warning,
   );
 
   static final kaplamaOptionF = ChoiceResult(
@@ -1558,7 +1559,7 @@ class Bolum17Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Çatı kaplama malzemesi bilinmiyor. Yanıcı bir malzeme (shingle, plastik vb.) kullanıldıysa tüm bina risk altındadır. Uzman Görüşü alınması tavsiye edilir.",
+        "BİLİNMİYOR: Çatı kaplama malzemesi bilinmiyor. Yanıcı bir malzeme (shingle, plastik vb.) kullanıldıysa tüm bina risk altındadır. Yerinde inceleme yapılması önerilir.",
     level: RiskLevel.unknown,
   );
 
@@ -1577,16 +1578,10 @@ class Bolum17Content {
     uiTitle:
         "Taşıyıcılar ve altındaki ısı yalıtım malzemesi YANICI ürünlerdir.",
     uiSubtitle: "Ahşap, XPS, EPS, Strafor vb. malzemeler.",
-    reportText: "",
-    level: RiskLevel.positive,
+    reportText:
+        "UYARI: Çatı iskeletinde veya altında yanıcı XPS, EPS, strafor vb. kullanımı yangın riskini artırır. Kullanılan bu yanıcı malzemelerin yangına tepki test raporları Yangın Güvenlik Uzmanı tarafından incelenmesi ve uygunluğuna karar verilmesi gerekir.",
+    level: RiskLevel.warning,
   );
-
-  // Dinamik rapor metinleri — report_engine tarafından seçilir
-  static const String iskeletOptionBYuksekReport =
-      "KRİTİK RİSK: Bina YÜKSEK BİNA sınıfındadır. Yüksek binalarda ahşap taşıyıcı veya yanıcı ısı yalıtım malzemeleri (XPS, EPS, strafor) kullanılması yasaktır.";
-
-  static const String iskeletOptionBNormalReport =
-      "UYARI: Ahşap çatı iskeletinde veya altında yanıcı köpük (XPS, EPS) ya da strafor kullanımı yangın riskini artırır. Yakın bir yangında çatının hızla tutuşmasına yol açabilir.";
 
   static final iskeletOptionC = ChoiceResult(
     label: "17-2-C (İskelet)",
@@ -1895,8 +1890,7 @@ class Bolum19Content {
     label: "19-3-B",
     uiTitle: "Var, çıkışı bulmakta güçlük çekebilirim.",
     uiSubtitle: "",
-    reportText:
-        "UYARI: Kaçış yollarında yangın merdiveni, kat veya bina çıkış kapısıyla karıştırılabilecek yanıltıcı kapılar mevcuttur.",
+    reportText: "",
     level: RiskLevel.warning,
   );
 
@@ -1986,7 +1980,7 @@ class Bolum20Content {
 
   static final cokKatOption5 = ChoiceResult(
     label: "20-5 (Çok Kat)",
-    uiTitle: "Dairesel (Spiral, Döner) Merdiven.",
+    uiTitle: "Dairesel Merdiven.",
     uiSubtitle: "BİNA DIŞI, yuvarlak, dönerek inilen çelik merdiven.",
     reportText: "",
     level: RiskLevel.positive,
@@ -2024,15 +2018,14 @@ class Bolum20Content {
     uiSubtitle: "",
     reportText:
         "BİLGİ: Kapalı yangın merdiven(ler)inde basınçlandırma sistemi bulunmamaktadır. Binaya özelinde merdivenlerde basınçlandırma ihtiyacı hemen alttaki değerlendirmede yer almaktadır.",
-    level: RiskLevel.warning,
+    level: RiskLevel.info,
   );
 
   static final basYghOptionC = ChoiceResult(
     label: "20-BAS-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Kapalı yangın merdivenlerinde basınçlandırma durumu belirsizdir.",
+    reportText: "",
     level: RiskLevel.unknown,
   );
 
@@ -2172,8 +2165,7 @@ class Bolum21Content {
     label: "21-1-A",
     uiTitle: "Evet, var.",
     uiSubtitle: "Giriş-çıkış kapıları olan odacık mevcut.",
-    reportText:
-        "OLUMLU: Merdivenin önünde Yangın Güvenlik Holü (YGH) mevcuttur.",
+    reportText: "",
     level: RiskLevel.positive,
   );
 
@@ -2181,19 +2173,15 @@ class Bolum21Content {
     label: "21-1-B",
     uiTitle: "Hayır, yok.",
     uiSubtitle: "Holden geçmeden doğrudan merdivene çıkılıyor.",
-    reportText:
-        "BİLGİ: Binada YGH bulunmamaktadır. Binada YGH zorunluluğu bulunup bulunmadığı testin sonunda kontrol edilmelidir. Detaylı bilgi için Yangın Güvenlik Uzmanı'nın görüşüne başvurulması önerilir.",
-    adviceText:
-        "Bu raporda YGH zorunluluğu belirtildiyse ve binada YGH oluşturulamıyorsa, Kaçış merdiveni yuvasının basınçlandırılması alternatif bir güvenlik önlemi olarak değerlendirilebilir. Kesin değerlendirme için Yangın Güvenlik Uzmanı'ndan bilgi alınmalıdır.",
-    level: RiskLevel.warning,
+    reportText: "",
+    level: RiskLevel.info,
   );
 
   static final varlikOptionC = ChoiceResult(
     label: "21-1-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Merdiven önünde Yangın Güvenlik Holü (YGH) olup olmadığı bilinmiyor. Yüksek binalarda bulunması kritiktir.",
+    reportText: "",
     level: RiskLevel.unknown,
   );
 
@@ -2295,8 +2283,7 @@ class Bolum22Content {
     label: "22-1-A",
     uiTitle: "Hayır, sadece normal asansör var.",
     uiSubtitle: "İnsan taşıma asansörü mevcut.",
-    reportText:
-        "BİLGİ: Binada itfaiye asansörü bulunmamaktadır. Yönetmelik gereği yapı yüksekliği 51.50 metreyi geçen binalarda yangın anında itfaiyenin kullanabileceği, jeneratöre bağlı ve korunumlu İtfaiye Asansörü tesisi mecburidir.",
+    reportText: "",
     level: RiskLevel.info,
   );
 
@@ -2304,7 +2291,7 @@ class Bolum22Content {
     label: "22-1-B",
     uiTitle: "Evet, var.",
     uiSubtitle: "Bazı binalarda yük asansörü olarak da isimlendirilir.",
-    reportText: "BİLGİ: Binada itfaiye asansörü mevcuttur.",
+    reportText: "",
     level: RiskLevel.info,
   );
 
@@ -2312,8 +2299,7 @@ class Bolum22Content {
     label: "22-1-C",
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Binada itfaiye asansörü varlığı teyit edilememiştir. Yapı yüksekliği 51.50 metreyi geçen binalarda bu donanım zorunludur.",
+    reportText: "",
     level: RiskLevel.unknown,
   );
 
@@ -2562,7 +2548,7 @@ class Bolum23Content {
     uiTitle: "Her katta levha var.",
     uiSubtitle: "",
     reportText: "OLUMLU: Asansörlerde gerekli uyarı levhaları mevcuttur.",
-    level: RiskLevel.warning,
+    level: RiskLevel.positive,
   );
 
   static final levhaOptionB = ChoiceResult(
@@ -2580,7 +2566,7 @@ class Bolum23Content {
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Uyarı levhalarının varlığı bilinmiyor. Panik anında insanlar refleks olarak asansöre yönelebilir. Bu levha, insanları merdivene yönlendirmek için yasal zorunluluktur.",
-    level: RiskLevel.warning,
+    level: RiskLevel.unknown,
   );
 
   static final havalandirmaOptionA = ChoiceResult(
@@ -2744,7 +2730,7 @@ class Bolum25Content {
     uiTitle: "100 cm ve üzeri.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Dairesel (döner) merdiven genişliği 100 cm ve üzerindedir. Merdivenin hizmet ettiği herhangi bir kattaki kişi sayısı 25 kişiyi aşmıyorsa döner (dairesel) merdiven kullanılabilir. 25 kişiyi aşıyorsa bu merdiven tipi kullanılamaz. Katlardaki kullanıcı yükü hesabı için bu Uygulamada yapılan hesaplamalar referans alınabilir.",
+        "OLUMLU: Dairesel merdiven genişliği 100 cm ve üzerindedir. Merdivenin hizmet ettiği herhangi bir kattaki kişi sayısı 25 kişiyi aşmıyorsa dairesel merdiven kullanılabilir. 25 kişiyi aşıyorsa bu merdiven tipi kullanılamaz. Katlardaki kullanıcı yükü hesabı için bu Uygulamada yapılan hesaplamalar referans alınabilir.",
     level: RiskLevel.positive,
   );
 
@@ -2753,7 +2739,7 @@ class Bolum25Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Dairesel (döner) merdiven genişliği tespit edilememiştir. Genişliğin 100 cm altında olması veya kullanıcı yükünün 25 kişiyi aşması durumunda bu merdiven kaçış yolu sayılamaz.",
+        "BİLİNMİYOR: Dairesel merdiven genişliği tespit edilememiştir. Genişliğin 100 cm altında olması veya kullanıcı yükünün 25 kişiyi aşması durumunda bu merdiven kaçış yolu sayılamaz.",
     level: RiskLevel.unknown,
   );
   static final basamakOptionA = ChoiceResult(
@@ -2781,7 +2767,7 @@ class Bolum25Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Döner merdiven basamak genişliği bilinmemektedir. Binanın tahliyesinde bu dairesel merdiven kritik bir rol oynuyorsa proje üzerinden veya yerinde merdivenin incelenmesi gereklidir.",
+        "BİLİNMİYOR: Dairesel merdiven basamak genişliği bilinmemektedir. Binanın tahliyesinde bu dairesel merdiven kritik bir rol oynuyorsa proje üzerinden veya yerinde merdivenin incelenmesi gereklidir.",
     level: RiskLevel.unknown,
   );
 
@@ -4647,7 +4633,7 @@ class AppContent {
       case 24:
         return "Kaçış yollarının atmosfere açılan son çıkış noktası nasıldır?";
       case 25:
-        return "Döner merdiven kol genişliği ve basamak yapısı uygun mu?";
+        return "Dairesel merdiven kol genişliği ve basamak yapısı uygun mu?";
       case 26:
         return "Kaçış yollarında rampa kullanımı ve eğimi uygun mu?";
       case 27:

@@ -57,7 +57,7 @@ class Section36Handler {
 
         if (heightLimitReached || userLoadLimitReached) {
           final List<String> reasons = [];
-          if (heightLimitReached) reasons.add("yapı yüksekliği ($hYapi m)");
+          if (heightLimitReached) reasons.add("yapı yüksekliği (${hYapi.toStringAsFixed(2)} m)");
           if (userLoadLimitReached)
             reasons.add("kullanıcı yükü ($maxYuk kişi)");
 
@@ -84,7 +84,7 @@ class Section36Handler {
 
           if (heightLimitReached || userLoadLimitReached) {
             final List<String> reasons = [];
-            if (heightLimitReached) reasons.add("yapı yüksekliği ($hYapi m)");
+            if (heightLimitReached) reasons.add("yapı yüksekliği (${hYapi.toStringAsFixed(2)} m)");
             if (userLoadLimitReached)
               reasons.add("kullanıcı yükü ($maxYuk kişi)");
 
@@ -162,7 +162,7 @@ class Section36Handler {
       int limit = hasSprinkler ? 15 : 10;
       String sprinklerNote = hasSprinkler
           ? "(Binada sprinkler mevcut, Yönetmelikte limit 15 m. dir.)"
-          : "(Binada sprinkler mevcut değil, Yönetmelikte limit 10 m. dir.)";
+          : "(Binada sprinkler yok, Yönetmelikte limit 10 m. dir.)";
 
       bool mainMesafeReq = (directMain < totalMain) && totalMain > 0;
       bool mainMesafeFail =
@@ -233,19 +233,19 @@ class Section36Handler {
 
         if (mainKoruFail && bodrumKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle hem normal hem de bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' bulunması zorunludur. Mevcut binada bu durum yetersizdir. (Normal: $currentProtected, Bodrum: $korBod)",
+            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle hem normal hem de bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' bulunması zorunludur. Mevcut binada bu durum yetersizdir. (Normal: $currentProtected, Bodrum: $korBod)",
           );
         } else if (mainKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle normal katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Normal: $currentProtected)",
+            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle normal katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Normal: $currentProtected)",
           );
         } else if (bodrumKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği ($hPrimary m) nedeniyle bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Bodrum: $korBod)",
+            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Bodrum: $korBod)",
           );
         } else {
           analysisParts.add(
-            "OLUMLU: Yapı yüksekliği ($hPrimary m) için gereken en az 'Korunumlu Merdiven' adedi ($requiredProtected adet) sağlanmaktadır. Mevcut binada bu kriter karşılanmaktadır.",
+            "OLUMLU: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) için gereken en az 'Korunumlu Merdiven' adedi ($requiredProtected adet) sağlanmaktadır. Mevcut binada bu kriter karşılanmaktadır.",
           );
         }
       }
@@ -462,12 +462,35 @@ class Section36Handler {
         "Bina Dışı Açık (Yangın) Merdiven",
         b.binaDisiAcikYanginMerdiveniSayisi,
       );
-      add("Döner (Spiral) Merdiven", b.donerMerdivenSayisi);
+      add("Dairesel Merdiven", b.donerMerdivenSayisi);
       add("Sahanlıksız (Düz) Merdiven", b.sahanliksizMerdivenSayisi);
       add("Dengelenmiş Merdiven", b.dengelenmisMerdivenSayisi);
-      add(
-        "Doğrudan Dışarı Açılan Merdiven",
-        b.toplamDisariAcilanMerdivenSayisi,
+
+      final int total =
+          b.normalMerdivenSayisi +
+          b.binaIciYanginMerdiveniSayisi +
+          b.binaDisiKapaliYanginMerdiveniSayisi +
+          b.binaDisiAcikYanginMerdiveniSayisi +
+          b.donerMerdivenSayisi +
+          b.sahanliksizMerdivenSayisi +
+          b.dengelenmisMerdivenSayisi;
+
+      _addDetail(
+        details,
+        label: 'TOPLAM MERDİVEN (Adet)',
+        value: '$total adet',
+        report: '',
+        status: ReportStatus.warning,
+        isBold: true,
+      );
+
+      _addDetail(
+        details,
+        label: "Doğrudan Dışarı Açılan Merdiven (Adet)",
+        value: '${b.toplamDisariAcilanMerdivenSayisi} adet',
+        report: '',
+        status: ReportStatus.warning,
+        isBold: true,
       );
     } else {
       add("Bodrum Normal Merdiven", b.bodrumNormalMerdivenSayisi);
@@ -486,9 +509,32 @@ class Section36Handler {
       add("Bodrum Dairesel Merdiven", b.bodrumDonerMerdivenSayisi);
       add("Bodrum Sahanlıksız Merdiven", b.bodrumSahanliksizMerdivenSayisi);
       add("Bodrum Dengelenmiş Merdiven", b.bodrumDengelenmisMerdivenSayisi);
-      add(
-        "Doğrudan Dışarı Açılan Merdiven",
-        b.bodrumToplamDisariAcilanMerdivenSayisi,
+
+      final int totalBod =
+          b.bodrumNormalMerdivenSayisi +
+          b.bodrumBinaIciYanginMerdiveniSayisi +
+          b.bodrumBinaDisiKapaliYanginMerdiveniSayisi +
+          b.bodrumBinaDisiAcikYanginMerdiveniSayisi +
+          b.bodrumDonerMerdivenSayisi +
+          b.bodrumSahanliksizMerdivenSayisi +
+          b.bodrumDengelenmisMerdivenSayisi;
+
+      _addDetail(
+        details,
+        label: 'BODRUM KATLAR TOPLAM MERDİVEN (Adet)',
+        value: '$totalBod adet',
+        report: '',
+        status: ReportStatus.warning,
+        isBold: true,
+      );
+
+      _addDetail(
+        details,
+        label: "Bodrum Doğrudan Dışarı Açılan Merdiven (Adet)",
+        value: '${b.bodrumToplamDisariAcilanMerdivenSayisi} adet',
+        report: '',
+        status: ReportStatus.warning,
+        isBold: true,
       );
     }
   }

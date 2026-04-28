@@ -148,11 +148,29 @@ class PdfService {
   }
 
   static PdfColor _getColorForItem(Map<String, dynamic> item) {
+    final String reportText = item['report']?.toString() ?? '';
+
+    // GÜVENLİK AĞI: Çubuk rengini metne uydurmak için ilk önceliği metnin kendisine veriyoruz.
+    // (Böylece "Kökten mimari" değiştirmeden sadece görsel senkronizasyonu sağlıyoruz)
+    if (reportText.startsWith('KRİTİK RİSK') ||
+        reportText.startsWith('UYARI') ||
+        reportText.startsWith('OLUMLU') ||
+        reportText.startsWith('Olumlu') ||
+        reportText.startsWith('BİLGİ') ||
+        reportText.startsWith('BİLİNMİYOR') ||
+        reportText.startsWith('Bilinmiyor') ||
+        reportText.startsWith('DURUM:') ||
+        reportText.startsWith('ZORUNLU')) {
+      return _getRiskColor(reportText);
+    }
+
+    // 2. Öncelik: Eğer metinde açık bir önek yoksa (sade metinse), koddaki statüye bak.
     if (item['status'] != null && item['status'] is ReportStatus) {
       return _getColorFromStatus(item['status'] as ReportStatus);
     }
-    // Fallback to text parsing
-    return _getRiskColor(item['report']?.toString() ?? '');
+    
+    // Son Çare: Fallback
+    return _getRiskColor(reportText);
   }
 
   static PdfColor _getColorFromStatus(ReportStatus status) {
@@ -937,26 +955,26 @@ class PdfService {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               _buildBulletPoint(
-                "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup, KONUT ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) MİMARİ yangın güvenliği ihtiyaçlarına odaklanmaktadır.",
+                "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup, konut ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) MİMARİ yangın güvenliği ihtiyaçlarına odaklanmaktadır.",
                 ttfBold,
               ),
               _buildBulletPoint(
-                "Bina içerisinde ticari işletme (işyeri) varsa bu çalışma, ticari işletmeye ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir.",
+                "Bina içerisinde ticari işletme (işyeri) varsa bu çalışma, ticari işletmeye ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir. Ticari işletmelerde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
                 ttfBold,
               ),
               _buildBulletPoint(
-                "Ticari işletmelerde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
+                "Bu dokümanda, binanın mimari özellikleri analiz edilmekte olup, elektromekanik yangın güvenliği ihtiyaçlarıyla ilgili yine bu Uygulama'da sunulan 'Aktif Sistem Gereksinimleri' çalışmasını da telefonunuza indirmeniz önerilir.",
                 ttfBold,
               ),
               _buildBulletPoint(
-                "Bu dokümanda, binanın MİMARİ özellikleri analiz edilmekte olup, ELEKTROMEKANİK yangın güvenliği ihtiyaçlarıyla ilgili yine bu Uygulama'da sunulan 'Aktif Sistem Gereksinimleri' çalışmasını da telefonunuza indirmeniz önerilir.",
+                "Bu analiz, bir binanın yangın risklerinin %100'ünü tespit etmez; yalnızca kullanıcının yanıtlayabileceği ve bu yanıtlara göre uygulama tarafından değerlendirilebilecek başlıkları içerir. Mevcut binada yalnızca sahada veya proje üzerinde yapılabilecek detaylı incelemeler bu uygulamada yer almayabilir. Tam kapsamlı bir risk analizi için yetkin bir Yangın Mühendisi'nin binaya özgü çalışma yapması şarttır.",
                 ttfBold,
               ),
             ],
           ),
           pw.SizedBox(height: 8),
           pw.Text(
-            "Bu doküman içerisinde yer alan renk kodları ve anlamları aşağıda açıklanmıştır:",
+            "Bu doküman içerisinde (paragrafların hemen solunda yer alan) renk kodları ve anlamları aşağıda açıklanmıştır:",
             style: const pw.TextStyle(
               fontSize: 9,
               color: PdfColors.grey700,
@@ -1522,23 +1540,7 @@ class PdfService {
     // If transparent, don't wrap in a border Container
     final table = pw.Table(
       border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-      columnWidths: maxCols == 4
-          ? {
-              0: const pw.FlexColumnWidth(20),
-              1: const pw.FlexColumnWidth(14),
-              2: const pw.FlexColumnWidth(14),
-              3: const pw.FlexColumnWidth(14),
-            }
-          : maxCols == 3
-          ? {
-              0: const pw.FlexColumnWidth(18),
-              1: const pw.FlexColumnWidth(22),
-              2: const pw.FlexColumnWidth(40),
-            }
-          : {
-              0: const pw.IntrinsicColumnWidth(),
-              1: const pw.IntrinsicColumnWidth(),
-            },
+      defaultColumnWidth: const pw.IntrinsicColumnWidth(),
       children: [
         // 1. Ana Başlık (2 veya 3 kolonlu ise)
         if (maxCols == 2)
@@ -1703,7 +1705,7 @@ class PdfService {
                     padding: const pw.EdgeInsets.all(5),
                     child: pw.Text(
                       _cleanEmojis(p),
-                      textAlign: pw.TextAlign.center,
+                      textAlign: pw.TextAlign.left,
                       style: pw.TextStyle(
                         font: (isSubHeader || shouldBold) ? fontBold : font,
                         fontSize: 8.5,
