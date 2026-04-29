@@ -75,22 +75,34 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
     int gZemin = (hYapi >= 21.50) ? math.max(gZeminLoad, 2) : gZeminLoad;
 
-    // 2. NORMAL KAT HESABI
+    // 2. NORMAL KAT HESABI (En Kritik Kat)
     double alanNormal = b5?.normalKatAlani ?? 0.0;
-    double kNormal = _getKatsayi(
-      b10?.normaller.isNotEmpty == true ? b10!.normaller.first : null,
-    );
-    int yukNormal = (alanNormal / kNormal).ceil();
+    int yukNormal = 0;
+    if (b10 != null && b10.normaller.isNotEmpty) {
+      for (var choice in b10.normaller) {
+        double k = _getKatsayi(choice);
+        int yuk = (alanNormal / k).ceil();
+        if (yuk > yukNormal) yukNormal = yuk;
+      }
+    } else {
+      yukNormal = (alanNormal / _getKatsayi(null)).ceil();
+    }
     int gNormalLoad = _hesaplaGerekliCikis(yukNormal);
     // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
     int gNormal = (hYapi >= 21.50) ? math.max(gNormalLoad, 2) : gNormalLoad;
 
-    // 3. BODRUM KAT HESABI
+    // 3. BODRUM KAT HESABI (En Kritik Kat)
     double alanBodrum = b5?.bodrumKatAlani ?? 0.0;
-    double kBodrum = _getKatsayi(
-      b10?.bodrumlar.isNotEmpty == true ? b10!.bodrumlar.first : null,
-    );
-    int yukBodrum = (alanBodrum / kBodrum).ceil();
+    int yukBodrum = 0;
+    if (b10 != null && b10.bodrumlar.isNotEmpty) {
+      for (var choice in b10.bodrumlar) {
+        double k = _getKatsayi(choice);
+        int yuk = (alanBodrum / k).ceil();
+        if (yuk > yukBodrum) yukBodrum = yuk;
+      }
+    } else {
+      yukBodrum = (alanBodrum / _getKatsayi(null)).ceil();
+    }
     int gBodrumLoad = _hesaplaGerekliCikis(yukBodrum);
     // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
     int gBodrum = (hYapi >= 21.50) ? math.max(gBodrumLoad, 2) : gBodrumLoad;

@@ -858,8 +858,14 @@ class BinaStore {
           parts.add(
             "Ortak Duvar Yangın Dayanımı: ${m13.ortakDuvar!.reportText}",
           );
-        if (m13.ticariKapi != null)
-          parts.add("Ticari Alan Kapısı: ${m13.ticariKapi!.reportText}");
+        if (m13.areTicariKapiSame) {
+          final choice = m13.ticariKapiZemin ?? m13.ticariKapiNormal ?? m13.ticariKapiBodrum;
+          if (choice != null) parts.add("Tüm Ticari Alanların Kapıları: ${choice.reportText}");
+        } else {
+          if (m13.ticariKapiZemin != null) parts.add("Zemin Kat Ticari Alan Kapısı: ${m13.ticariKapiZemin!.reportText}");
+          if (m13.ticariKapiNormal != null) parts.add("Normal Kat Ticari Alan Kapısı: ${m13.ticariKapiNormal!.reportText}");
+          if (m13.ticariKapiBodrum != null) parts.add("Bodrum Kat Ticari Alan Kapısı: ${m13.ticariKapiBodrum!.reportText}");
+        }
 
         // Duman Tahliye Sistemleri
         if (m13.otoparkAlan != null)
@@ -896,7 +902,9 @@ class BinaStore {
             m13.depoKapi,
             m13.copKapi,
             m13.ortakDuvar,
-            m13.ticariKapi,
+            m13.ticariKapiZemin,
+            m13.ticariKapiNormal,
+            m13.ticariKapiBodrum,
             m13.otoparkAlan,
             m13.kazanAlan,
             m13.siginakAlan,

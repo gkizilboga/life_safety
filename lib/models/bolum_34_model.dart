@@ -2,20 +2,29 @@ import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum34Model {
+  final bool areTicariCikisSame;
   final ChoiceResult? zemin;
   final ChoiceResult? bodrum;
   final ChoiceResult? normal;
   final ChoiceResult? mutfakBacasi;
 
-  Bolum34Model({this.zemin, this.bodrum, this.normal, this.mutfakBacasi});
+  Bolum34Model({
+    this.areTicariCikisSame = true,
+    this.zemin,
+    this.bodrum,
+    this.normal,
+    this.mutfakBacasi,
+  });
 
   Bolum34Model copyWith({
+    bool? areTicariCikisSame,
     ChoiceResult? zemin,
     ChoiceResult? bodrum,
     ChoiceResult? normal,
     ChoiceResult? mutfakBacasi,
   }) {
     return Bolum34Model(
+      areTicariCikisSame: areTicariCikisSame ?? this.areTicariCikisSame,
       zemin: zemin ?? this.zemin,
       bodrum: bodrum ?? this.bodrum,
       normal: normal ?? this.normal,
@@ -25,6 +34,7 @@ class Bolum34Model {
 
   Map<String, dynamic> toMap() {
     return {
+      'areTicariCikisSame': areTicariCikisSame,
       'zemin_label': zemin?.label,
       'bodrum_label': bodrum?.label,
       'normal_label': normal?.label,
@@ -42,6 +52,7 @@ class Bolum34Model {
     }
 
     return Bolum34Model(
+      areTicariCikisSame: map['areTicariCikisSame'] ?? true,
       zemin: find(map['zemin_label'], [
         Bolum34Content.zeminOptionA,
         Bolum34Content.zeminOptionB,

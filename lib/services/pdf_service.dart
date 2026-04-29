@@ -168,7 +168,7 @@ class PdfService {
     if (item['status'] != null && item['status'] is ReportStatus) {
       return _getColorFromStatus(item['status'] as ReportStatus);
     }
-    
+
     // Son Çare: Fallback
     return _getRiskColor(reportText);
   }
@@ -444,6 +444,7 @@ class PdfService {
     required Map<String, dynamic> metrics,
     required pw.Font ttf,
     required pw.Font ttfBold,
+    required String docNo,
   }) {
     List<String> actionItems = [];
 
@@ -458,7 +459,10 @@ class PdfService {
     for (int id = 1; id <= 36; id++) {
       // 33 (Kapasite Analizi) eklendi
       if ([3, 5, 6, 7, 10, 12, 21, 33, 36].contains(id)) {
-        final fullReport = ReportEngine.getSectionFullReport(id, store: store);
+        final fullReport = ReportEngine.getSectionSummaryReport(
+          id,
+          store: store,
+        );
         if (isRedBar(fullReport, null, id)) {
           // Değerlendirme notunun TAMAMINI al
           String act = _cleanFullEvaluationText(fullReport);
@@ -499,7 +503,8 @@ class PdfService {
     return [
       pw.MultiPage(
         pageTheme: pageTheme,
-        header: (context) => pw.SizedBox(),
+        header: (context) =>
+            _buildHeader(context, docNo, ttfBold, "YANGIN RİSK ANALİZİ"),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
           pw.Text(
@@ -903,6 +908,11 @@ class PdfService {
 
     final pageTheme = _buildPageTheme(ttf, ttfBold, ttfItalic, ttfBoldItalic);
 
+    // Doküman No Oluştur (Risk Analizi)
+    final now = DateTime.now();
+    final docNo =
+        "LS-YRA-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
+
     // 1. Kapak
     pdf.addPage(
       _buildCoverPage(
@@ -923,14 +933,10 @@ class PdfService {
       metrics: metrics,
       ttf: ttf,
       ttfBold: ttfBold,
+      docNo: docNo,
     )) {
       pdf.addPage(page);
     }
-
-    // Doküman No Oluştur (Risk Analizi)
-    final now = DateTime.now();
-    final docNo =
-        "LS-YRA-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
 
     // 3. Risk Analizi ve Bölümler
     pdf.addPage(

@@ -27,7 +27,10 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   bool _askDepo = false;
   bool _askCop = false;
   bool _askDuvar = false;
-  bool _askTicari = false;
+  bool _askTicariZemin = false;
+  bool _askTicariNormal = false;
+  bool _askTicariBodrum = false;
+  int _activeTicariFloorCount = 0;
   bool _askSiginak = false;
   bool _askEndustriyelMutfak = false;
 
@@ -89,7 +92,9 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _askDepo ||
         _askCop ||
         _askDuvar ||
-        _askTicari ||
+        _askTicariZemin ||
+        _askTicariNormal ||
+        _askTicariBodrum ||
         _askSiginak ||
         _askEndustriyelMutfak;
   }
@@ -98,15 +103,6 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     final b6 = BinaStore.instance.bolum6;
     final b7 = BinaStore.instance.bolum7;
     final b10 = BinaStore.instance.bolum10;
-
-    // Bölüm 10'da herhangi bir katta "Ticari" seçilmiş mi kontrolü
-    bool hasTicariInB10 = false;
-    if (b10 != null) {
-      hasTicariInB10 =
-          (b10.zemin?.label.contains("Ticari") ?? false) ||
-          (b10.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false)) ||
-          (b10.normaller.any((e) => e?.label.contains("Ticari") ?? false));
-    }
 
     setState(() {
       _askOtopark = b6?.hasOtopark ?? false;
@@ -118,8 +114,17 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       _askDepo = b6?.hasDepo ?? false;
       _askCop = b7?.hasCop ?? false;
       _askDuvar = b7?.hasDuvar ?? false;
-      // Hem Bölüm 6 hem de Bölüm 10'daki ticari alan seçimlerine bakıyoruz
-      _askTicari = (b6?.hasTicari ?? false) || hasTicariInB10;
+
+      bool hasTicariZemin = (b6?.hasTicari ?? false) || (b10?.zemin?.label.contains("Ticari") ?? false);
+      bool hasTicariBodrum = b10?.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false) ?? false;
+      bool hasTicariNormal = b10?.normaller.any((e) => e?.label.contains("Ticari") ?? false) ?? false;
+
+      _askTicariZemin = hasTicariZemin;
+      _askTicariBodrum = hasTicariBodrum;
+      _askTicariNormal = hasTicariNormal;
+
+      _activeTicariFloorCount = (hasTicariZemin ? 1 : 0) + (hasTicariBodrum ? 1 : 0) + (hasTicariNormal ? 1 : 0);
+
       _askSiginak = b7?.hasSiginak ?? false;
       _askEndustriyelMutfak =
           b6?.buyukRestoran?.label == Bolum6Content.buyukRestoranVar.label;
@@ -146,8 +151,19 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _model = _model.copyWith(copKapi: choice);
       else if (type == 'duvar')
         _model = _model.copyWith(ortakDuvar: choice);
-      else if (type == 'ticari')
-        _model = _model.copyWith(ticariKapi: choice);
+      else if (type == 'ticariZemin')
+        _model = _model.copyWith(ticariKapiZemin: choice);
+      else if (type == 'ticariNormal')
+        _model = _model.copyWith(ticariKapiNormal: choice);
+      else if (type == 'ticariBodrum')
+        _model = _model.copyWith(ticariKapiBodrum: choice);
+      else if (type == 'ticariUnified') {
+        _model = _model.copyWith(
+          ticariKapiZemin: _askTicariZemin ? choice : null,
+          ticariKapiNormal: _askTicariNormal ? choice : null,
+          ticariKapiBodrum: _askTicariBodrum ? choice : null,
+        );
+      }
       else if (type == 'otoparkAlan')
         _model = _model.copyWith(otoparkAlan: choice);
       else if (type == 'kazanAlan')
@@ -156,6 +172,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
         _model = _model.copyWith(siginakAlan: choice);
       else if (type == 'endustriyelMutfak')
         _model = _model.copyWith(endustriyelMutfakKapi: choice);
+      else if (type == 'depoBodrumAlan')
+        _model = _model.copyWith(depoBodrumAlan: choice);
     });
   }
 
@@ -263,7 +281,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               _model.trafoKapi,
             ),
 
-          if (_askDepo)
+          if (_askDepo) ...[
             _buildSoru(
               "Apartmana ait (ortak) eşya deposunun duvarı ve kapısı yangın dayanımlı mı?",
               'depo',
@@ -274,6 +292,17 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               ],
               _model.depoKapi,
             ),
+            _buildSoru(
+              "Bodrum katlardaki bu depolama alanlarının toplamı kaç metrekare?",
+              'depoBodrumAlan',
+              [
+                Bolum13Content.depoBodrumAlanOptionA,
+                Bolum13Content.depoBodrumAlanOptionB,
+                Bolum13Content.depoBodrumAlanOptionC,
+              ],
+              _model.depoBodrumAlan,
+            ),
+          ],
 
           if (_askCop)
             _buildSoru(
@@ -307,18 +336,150 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               _model.ortakDuvar,
             ),
 
-          if (_askTicari)
-            _buildSoru(
-              "Ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
-              'ticari',
-              [
-                Bolum13Content.ticariOptionA,
-                Bolum13Content.ticariOptionB,
-                Bolum13Content.ticariOptionC,
-                Bolum13Content.ticariOptionD,
-              ],
-              _model.ticariKapi,
+          // Tek katta ticari alan varsa toggle göstermeden direkt kat adıyla sor
+          if (_activeTicariFloorCount == 1) ...[
+            if (_askTicariZemin)
+              _buildSoru(
+                "Zemin kattaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                'ticariZemin',
+                [
+                  Bolum13Content.ticariOptionA,
+                  Bolum13Content.ticariOptionB,
+                  Bolum13Content.ticariOptionC,
+                  Bolum13Content.ticariOptionD,
+                ],
+                _model.ticariKapiZemin,
+              ),
+            if (_askTicariNormal)
+              _buildSoru(
+                "Normal katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                'ticariNormal',
+                [
+                  Bolum13Content.ticariOptionA,
+                  Bolum13Content.ticariOptionB,
+                  Bolum13Content.ticariOptionC,
+                  Bolum13Content.ticariOptionD,
+                ],
+                _model.ticariKapiNormal,
+              ),
+            if (_askTicariBodrum)
+              _buildSoru(
+                "Bodrum katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                'ticariBodrum',
+                [
+                  Bolum13Content.ticariOptionA,
+                  Bolum13Content.ticariOptionB,
+                  Bolum13Content.ticariOptionC,
+                  Bolum13Content.ticariOptionD,
+                ],
+                _model.ticariKapiBodrum,
+              ),
+          ] else if (_activeTicariFloorCount > 1) ...[
+            // Birden fazla katta ticari alan varsa toggle göster
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              margin: const EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: AppColors.primaryBlue.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.primaryBlue.withOpacity(0.2)),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Benzer Geçiş Özellikleri",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryBlue,
+                          ),
+                        ),
+                        const Text(
+                          "Tüm ticari alanlardan konut bölümüne geçiş özellikleri aynı mı?",
+                          style: TextStyle(fontSize: 14, color: Colors.black54),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch(
+                    value: _model.areTicariKapiSame,
+                    onChanged: (val) {
+                      setState(() {
+                        if (val) {
+                          ChoiceResult? base = _model.ticariKapiZemin ?? _model.ticariKapiNormal ?? _model.ticariKapiBodrum;
+                          _model = _model.copyWith(
+                            areTicariKapiSame: true,
+                            ticariKapiZemin: _askTicariZemin ? base : null,
+                            ticariKapiNormal: _askTicariNormal ? base : null,
+                            ticariKapiBodrum: _askTicariBodrum ? base : null,
+                          );
+                        } else {
+                          _model = _model.copyWith(areTicariKapiSame: false);
+                        }
+                      });
+                    },
+                    activeColor: AppColors.primaryBlue,
+                  ),
+                ],
+              ),
             ),
+
+            // Toggle ON: tek unified soru
+            if (_model.areTicariKapiSame) ...[
+              _buildSoru(
+                "Tüm ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                'ticariUnified',
+                [
+                  Bolum13Content.ticariOptionA,
+                  Bolum13Content.ticariOptionB,
+                  Bolum13Content.ticariOptionC,
+                  Bolum13Content.ticariOptionD,
+                ],
+                _model.ticariKapiZemin ?? _model.ticariKapiNormal ?? _model.ticariKapiBodrum,
+              ),
+            ] else ...[
+              // Toggle OFF: her kat için ayrı soru
+              if (_askTicariZemin)
+                _buildSoru(
+                  "Zemin kattaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                  'ticariZemin',
+                  [
+                    Bolum13Content.ticariOptionA,
+                    Bolum13Content.ticariOptionB,
+                    Bolum13Content.ticariOptionC,
+                    Bolum13Content.ticariOptionD,
+                  ],
+                  _model.ticariKapiZemin,
+                ),
+              if (_askTicariNormal)
+                _buildSoru(
+                  "Normal katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                  'ticariNormal',
+                  [
+                    Bolum13Content.ticariOptionA,
+                    Bolum13Content.ticariOptionB,
+                    Bolum13Content.ticariOptionC,
+                    Bolum13Content.ticariOptionD,
+                  ],
+                  _model.ticariKapiNormal,
+                ),
+              if (_askTicariBodrum)
+                _buildSoru(
+                  "Bodrum katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                  'ticariBodrum',
+                  [
+                    Bolum13Content.ticariOptionA,
+                    Bolum13Content.ticariOptionB,
+                    Bolum13Content.ticariOptionC,
+                    Bolum13Content.ticariOptionD,
+                  ],
+                  _model.ticariKapiBodrum,
+                ),
+            ],
+          ],
 
           if (_askEndustriyelMutfak)
             _buildSoruWithDef(

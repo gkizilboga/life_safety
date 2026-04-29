@@ -715,7 +715,7 @@ class Bolum13Content {
     uiTitle: "Yangın dayanımsız.",
     uiSubtitle: "Sac, demir, plastik, aluminyum, ahşap vb.",
     reportText:
-        "KRİTİK RİSK: Otopark kapısı yangına dayanıksızdır. Yönetmelik gereği bu kapı en az 90 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanan bir kapı olmalıdır. Mevcut kapı, yangın anında ısı ve dumanı saniyeler içinde yaşam alanlarına geçirebilir.",
+        "KRİTİK RİSK: Otopark kapısı yangına dayanıksızdır. Yönetmelik gereği bu kapı en az 90 dakika yangın dayanımlı, duman sızdırmaz ve kendiliğinden kapanan bir kapı olmalıdır. Otopark ile konut katları arasında tehlike sınıfı ve yangın yükü farkı bulunduğundan, otopark yangınının konut katlarına sirayeti öngörülmeyen sonuçlara yol açabilir.",
     level: RiskLevel.critical,
   );
 
@@ -964,7 +964,7 @@ class Bolum13Content {
     uiTitle: "İnce bölme duvar.",
     uiSubtitle: "Yan bina ile aradaki duvar ince ve zayıf bir yapıdadır.",
     reportText:
-        "KRİTİK RİSK: Ortak duvarlar en az 90 dk yangına dayanıklı olmalıdır.",
+        "KRİTİK RİSK: Yan bina ile ortak kullanılan duvarlar en az 90 dk. yangına dayanıklı olmalıdır.",
     level: RiskLevel.critical,
   );
 
@@ -973,7 +973,7 @@ class Bolum13Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Bitişik nizam bina ile aradaki duvarın kalınlığı bilinmiyor. Duvarın 90 dk dayanım gösterecek özellikte olması şarttır. Uzman görüşü alınması tavsiye edilir.",
+        "BİLİNMİYOR: Yan bina ile ortak kullanılan duvarın kalınlığı bilinmiyor. Ortak duvarın 90 dk. dayanım gösterecek özellikte olması şarttır. Uzman görüşü alınması tavsiye edilir.",
     level: RiskLevel.unknown,
   );
 
@@ -999,10 +999,10 @@ class Bolum13Content {
 
   static final ticariOptionC = ChoiceResult(
     label: "13-11-C (Ticari)",
-    uiTitle: "Geçiş yok.",
-    uiSubtitle: "Ticari alandan konuta doğrudan geçiş yok.",
+    uiTitle: "Hiçbir ticari alandan binaya geçiş yok.",
+    uiSubtitle: "Arada kapı, merdiven, pencere vs. kesinlikle olmayacak.",
     reportText:
-        "OLUMLU: Ticari alan ile konut arasında doğrudan içeriden geçiş bulunmamaktadır. Alanlar birbirinden bağımsızdır.",
+        "OLUMLU: Ticari alan ile konut arasında doğrudan içeriden geçiş bulunmamaktadır. Bu durumda ticari alanların kullanıcı yükü binanın kullanıcı yükü hesabına katılmayacaktır. Ticari alanların içerisindeki kaçış yollarının hususi olarak değerlendirmesi bu Uygulama 'nın kapsamı dışındadır.",
     level: RiskLevel.positive,
   );
 
@@ -1136,6 +1136,29 @@ class Bolum13Content {
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.positive,
+  );
+
+  // DEPO ALANI (Bodrum Kat - Yeni Soru)
+  static final depoBodrumAlanOptionA = ChoiceResult(
+    label: "13-13-A (Depo)",
+    uiTitle: "2000 m² veya altında",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final depoBodrumAlanOptionB = ChoiceResult(
+    label: "13-13-B (Depo)",
+    uiTitle: "2000 m²'nin üzerinde",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
+  );
+  static final depoBodrumAlanOptionC = ChoiceResult(
+    label: "13-13-C (Depo)",
+    uiTitle: "Bilmiyorum",
+    uiSubtitle: "",
+    reportText: "",
+    level: RiskLevel.info,
   );
 }
 
@@ -1754,7 +1777,7 @@ class Bolum18Content {
     uiTitle: "Dökme demir boru vb. kullanılmış.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Tesisat şaftlarında zor yanıcı (sessiz boru) veya yanmaz (döküm) borular kullanılmıştır.",
+        "OLUMLU: Tesisat şaftlarında zor yanıcı veya hiç yanmaz (döküm) borular kullanılmıştır.",
     level: RiskLevel.positive,
   );
 
@@ -2629,7 +2652,7 @@ class Bolum24Content {
     uiTitle: "Kapalı koridordan geçerek bina çıkış kapısına ulaşabiliyorum.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Binadan çıkışta dış kaçış geçidi yer almamaktadır, Yönetmeliğe göre bir değerlendirmeye ihtiyaç bulunmaz.",
+        "OLUMLU: Binadan çıkışta dış kaçış geçidi yer almamakta, dolayısıyla Yönetmeliğe göre bir değerlendirmeye ihtiyaç bulunmamaktadır.",
     level: RiskLevel.positive,
   );
 

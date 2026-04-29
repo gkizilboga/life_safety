@@ -2,6 +2,7 @@ import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum13Model {
+  final bool areTicariKapiSame;
   final ChoiceResult? otoparkKapi;
   final ChoiceResult? kazanKapi;
   final ChoiceResult? asansorKapi;
@@ -11,13 +12,17 @@ class Bolum13Model {
   final ChoiceResult? depoKapi;
   final ChoiceResult? copKapi;
   final ChoiceResult? ortakDuvar;
-  final ChoiceResult? ticariKapi;
+  final ChoiceResult? ticariKapiZemin;
+  final ChoiceResult? ticariKapiNormal;
+  final ChoiceResult? ticariKapiBodrum;
   final ChoiceResult? otoparkAlan;
   final ChoiceResult? kazanAlan;
   final ChoiceResult? siginakAlan;
+  final ChoiceResult? depoBodrumAlan;
   final ChoiceResult? endustriyelMutfakKapi;
 
   Bolum13Model({
+    this.areTicariKapiSame = true,
     this.otoparkKapi,
     this.kazanKapi,
     this.asansorKapi,
@@ -27,14 +32,18 @@ class Bolum13Model {
     this.depoKapi,
     this.copKapi,
     this.ortakDuvar,
-    this.ticariKapi,
+    this.ticariKapiZemin,
+    this.ticariKapiNormal,
+    this.ticariKapiBodrum,
     this.otoparkAlan,
     this.kazanAlan,
     this.siginakAlan,
+    this.depoBodrumAlan,
     this.endustriyelMutfakKapi,
   });
 
   Bolum13Model copyWith({
+    bool? areTicariKapiSame,
     ChoiceResult? otoparkKapi,
     ChoiceResult? kazanKapi,
     ChoiceResult? asansorKapi,
@@ -44,13 +53,17 @@ class Bolum13Model {
     ChoiceResult? depoKapi,
     ChoiceResult? copKapi,
     ChoiceResult? ortakDuvar,
-    ChoiceResult? ticariKapi,
+    ChoiceResult? ticariKapiZemin,
+    ChoiceResult? ticariKapiNormal,
+    ChoiceResult? ticariKapiBodrum,
     ChoiceResult? otoparkAlan,
     ChoiceResult? kazanAlan,
     ChoiceResult? siginakAlan,
+    ChoiceResult? depoBodrumAlan,
     ChoiceResult? endustriyelMutfakKapi,
   }) {
     return Bolum13Model(
+      areTicariKapiSame: areTicariKapiSame ?? this.areTicariKapiSame,
       otoparkKapi: otoparkKapi ?? this.otoparkKapi,
       kazanKapi: kazanKapi ?? this.kazanKapi,
       asansorKapi: asansorKapi ?? this.asansorKapi,
@@ -60,10 +73,13 @@ class Bolum13Model {
       depoKapi: depoKapi ?? this.depoKapi,
       copKapi: copKapi ?? this.copKapi,
       ortakDuvar: ortakDuvar ?? this.ortakDuvar,
-      ticariKapi: ticariKapi ?? this.ticariKapi,
+      ticariKapiZemin: ticariKapiZemin ?? this.ticariKapiZemin,
+      ticariKapiNormal: ticariKapiNormal ?? this.ticariKapiNormal,
+      ticariKapiBodrum: ticariKapiBodrum ?? this.ticariKapiBodrum,
       otoparkAlan: otoparkAlan ?? this.otoparkAlan,
       kazanAlan: kazanAlan ?? this.kazanAlan,
       siginakAlan: siginakAlan ?? this.siginakAlan,
+      depoBodrumAlan: depoBodrumAlan ?? this.depoBodrumAlan,
       endustriyelMutfakKapi:
           endustriyelMutfakKapi ?? this.endustriyelMutfakKapi,
     );
@@ -71,6 +87,7 @@ class Bolum13Model {
 
   Map<String, dynamic> toMap() {
     return {
+      'areTicariKapiSame': areTicariKapiSame,
       'otoparkKapi_label': otoparkKapi?.label,
       'kazanKapi_label': kazanKapi?.label,
       'asansorKapi_label': asansorKapi?.label,
@@ -80,10 +97,13 @@ class Bolum13Model {
       'depoKapi_label': depoKapi?.label,
       'copKapi_label': copKapi?.label,
       'ortakDuvar_label': ortakDuvar?.label,
-      'ticariKapi_label': ticariKapi?.label,
+      'ticariKapiZemin_label': ticariKapiZemin?.label,
+      'ticariKapiNormal_label': ticariKapiNormal?.label,
+      'ticariKapiBodrum_label': ticariKapiBodrum?.label,
       'otoparkAlan_label': otoparkAlan?.label,
       'kazanAlan_label': kazanAlan?.label,
       'siginakAlan_label': siginakAlan?.label,
+      'depoBodrumAlan_label': depoBodrumAlan?.label,
       'endustriyelMutfakKapi_label': endustriyelMutfakKapi?.label,
     };
   }
@@ -146,7 +166,21 @@ class Bolum13Model {
         Bolum13Content.ortakDuvarOptionB,
         Bolum13Content.ortakDuvarOptionC,
       ]),
-      ticariKapi: find(map['ticariKapi_label'], [
+      areTicariKapiSame: map['areTicariKapiSame'] ?? true,
+      // Backward compatibility: map old ticariKapi to Zemin
+      ticariKapiZemin: find(map['ticariKapiZemin_label'] ?? map['ticariKapi_label'], [
+        Bolum13Content.ticariOptionA,
+        Bolum13Content.ticariOptionB,
+        Bolum13Content.ticariOptionC,
+        Bolum13Content.ticariOptionD,
+      ]),
+      ticariKapiNormal: find(map['ticariKapiNormal_label'], [
+        Bolum13Content.ticariOptionA,
+        Bolum13Content.ticariOptionB,
+        Bolum13Content.ticariOptionC,
+        Bolum13Content.ticariOptionD,
+      ]),
+      ticariKapiBodrum: find(map['ticariKapiBodrum_label'], [
         Bolum13Content.ticariOptionA,
         Bolum13Content.ticariOptionB,
         Bolum13Content.ticariOptionC,
@@ -166,6 +200,11 @@ class Bolum13Model {
         Bolum13Content.siginakAlanOptionA,
         Bolum13Content.siginakAlanOptionB,
         Bolum13Content.siginakAlanOptionC,
+      ]),
+      depoBodrumAlan: find(map['depoBodrumAlan_label'], [
+        Bolum13Content.depoBodrumAlanOptionA,
+        Bolum13Content.depoBodrumAlanOptionB,
+        Bolum13Content.depoBodrumAlanOptionC,
       ]),
       endustriyelMutfakKapi: find(map['endustriyelMutfakKapi_label'], [
         Bolum13Content.endustriyelMutfakOptionA,

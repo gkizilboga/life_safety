@@ -461,6 +461,24 @@ class ActiveSystemsEngine {
       }
     }
 
+    // DEPO KONTROLÜ (Bölüm 13)
+    final depoAlan = store.bolum13?.depoBodrumAlan?.label;
+    if (depoAlan != null) {
+      if (depoAlan.contains("13-13-B")) {
+        // > 2000 m2
+        dumanZorunlu = true;
+        dumanReasons.add(
+          "Bodrum kattaki depo alanlarının toplamda 2000 m²'nin üzerinde olduğu beyan edildiğinden bu alanda 10 hava değişimi sağlayan duman tahliye sistemi kurulması zorunludur.",
+        );
+      } else if (depoAlan.contains("13-13-C")) {
+        // Bilmiyorum
+        dumanWarning = true;
+        dumanNotes.add(
+          "Bodrum kattaki depo alanları ile ilgili bir alan bilgisi beyan edilmemiştir. Depo alanlarının 2000 m²'yi aşması halinde 10 hava değişimi sağlayan duman tahliye sistemi kurulması zorunludur.",
+        );
+      }
+    }
+
     if (dumanZorunlu) {
       requirements.add(
         ActiveSystemRequirement(
@@ -626,15 +644,17 @@ class ActiveSystemsEngine {
     );
 
     // 16. Gaz Algılayıcı (Dinamik Kontrol)
-    final bool hasKazan = store.bolum30 != null ||
-        (store.bolum13?.kazanAlan != null);
-    final bool hasOtopark = (store.bolum13?.otoparkAlan != null) ||
+    final bool hasKazan =
+        store.bolum30 != null || (store.bolum13?.kazanAlan != null);
+    final bool hasOtopark =
+        (store.bolum13?.otoparkAlan != null) ||
         (store.bolum29?.otopark != null) ||
         (store.bolum6?.hasOtopark == true);
     final bool hasTicariMutfak =
         (store.bolum34?.mutfakBacasi?.label.contains("34-4-A") == true) ||
         (store.bolum6?.hasTicari == true) ||
-        (store.bolum6?.buyukRestoran?.label == Bolum6Content.buyukRestoranVar.label);
+        (store.bolum6?.buyukRestoran?.label ==
+            Bolum6Content.buyukRestoranVar.label);
 
     if (hasKazan || hasOtopark || hasTicariMutfak) {
       requirements.add(

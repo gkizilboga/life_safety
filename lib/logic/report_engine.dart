@@ -119,11 +119,16 @@ class ReportEngine {
     return bReport;
   }
 
-  static String _addSection20DynamicHavalandirma(BinaStore s, Bolum20Model b20) {
+  static String _addSection20DynamicHavalandirma(
+    BinaStore s,
+    Bolum20Model b20,
+  ) {
     if (b20.havalandirma == null) return "";
 
     final hYapi = _getHYapi(s);
-    final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+    final isKonut =
+        s.bolum10?.secim?.label.contains("10-A") == true ||
+        s.bolum6?.isSadeceKonut == true;
     if (isKonut && hYapi >= (51.50 - 0.001)) {
       return "";
     }
@@ -134,7 +139,7 @@ class ReportEngine {
     // Kullanıcı basınçlandırma sorusunda "Var" derse (20-BAS-A)
     // havalandırma sorusunun başına ekleme yapıyoruz.
     if (bLabel == "20-BAS-A") {
-      hReport = "Basınçlandırma olmayan merdivenlerde $hReport";
+      hReport = "(Basınçlandırma olmayan merdivenlerde) $hReport";
     }
     return hReport;
   }
@@ -602,7 +607,7 @@ class ReportEngine {
         if (b14.raporMesaji != null && b14.raporMesaji!.isNotEmpty) {
           _addDetail(
             details,
-            label: 'Değerlendirme',
+            label: '',
             value: '',
             report: b14.raporMesaji!,
             level: RiskLevel.info,
@@ -1044,7 +1049,8 @@ class ReportEngine {
           store: s,
         );
         if (basincReasons.isNotEmpty) {
-          final bool userHasBasinc = b22.basinc?.label.contains("22-6-A") == true;
+          final bool userHasBasinc =
+              b22.basinc?.label.contains("22-6-A") == true;
           final bool isUnknown = b22.basinc?.label == "22-6-C";
           String evalReport;
           RiskLevel evalLevel;
@@ -1520,7 +1526,9 @@ class ReportEngine {
         // Madde 45: Doğal Havalandırma
         if (b20.havalandirma != null) {
           final hYapi = _getHYapi(s);
-          final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+          final isKonut =
+              s.bolum10?.secim?.label.contains("10-A") == true ||
+              s.bolum6?.isSadeceKonut == true;
           if (!(isKonut && hYapi >= (51.50 - 0.001))) {
             _addDetail(
               details,
@@ -1841,6 +1849,16 @@ class ReportEngine {
             advice: b30.tup!.adviceText,
             level: b30.tup!.level,
           );
+        // Kazan Isıl Kapasitesi (KW)
+        if (b30.kapasiteChoice != null)
+          _addDetail(
+            details,
+            label: 'Kazanların toplam ısıl kapasitesi (kW) ne kadar?',
+            value: b30.kapasiteChoice!.uiTitle,
+            report:
+                "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+            level: RiskLevel.info,
+          );
         handled = true;
       }
     }
@@ -1998,7 +2016,7 @@ class ReportEngine {
         if (b33.yukNormal != null) {
           _addDetail(
             details,
-            label: 'Normal Katlar',
+            label: 'Normal Katlar (En Yoğun)',
             value:
                 '${b33.yukNormal}|${b33.gerekliNormal} Adet|${b33.mevcutUst} Adet',
             report: '',
@@ -2018,7 +2036,7 @@ class ReportEngine {
         if (b33.yukBodrum != null) {
           _addDetail(
             details,
-            label: 'Bodrum Katlar',
+            label: 'Bodrum Katlar (En Yoğun)',
             value:
                 '${b33.yukBodrum}|${b33.gerekliBodrum} Adet|${b33.mevcutBodrum} Adet',
             report: '',
@@ -2033,39 +2051,68 @@ class ReportEngine {
     if (id == 34) {
       final b34 = s.bolum34;
       if (b34 != null) {
-        if (b34.zemin != null)
+        if (b34.areTicariCikisSame) {
+          final choice = b34.zemin ?? b34.bodrum ?? b34.normal;
+          if (choice != null) {
+            _addDetail(
+              details,
+              label:
+                  'Ticari alanların hepsinin doğrudan sokağa açılan kendilerine ait kapıları var mı?',
+              value: choice.uiTitle,
+              subtitle: choice.uiSubtitle,
+              report: choice.reportText,
+              advice: choice.adviceText,
+              level: choice.level,
+            );
+          }
+        } else {
+          if (b34.zemin != null)
+            _addDetail(
+              details,
+              label:
+                  'Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?',
+              value: b34.zemin!.uiTitle,
+              subtitle: b34.zemin!.uiSubtitle,
+              report: b34.zemin!.reportText,
+              advice: b34.zemin!.adviceText,
+              level: b34.zemin!.level,
+            );
+          if (b34.bodrum != null)
+            _addDetail(
+              details,
+              label:
+                  'Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?',
+              value: b34.bodrum!.uiTitle,
+              subtitle: b34.bodrum!.uiSubtitle,
+              report: b34.bodrum!.reportText,
+              advice: b34.bodrum!.adviceText,
+              level: b34.bodrum!.level,
+            );
+          if (b34.normal != null)
+            _addDetail(
+              details,
+              label:
+                  'Normal katlardaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?',
+              value: b34.normal!.uiTitle,
+              subtitle: b34.normal!.uiSubtitle,
+              report: b34.normal!.reportText,
+              advice: b34.normal!.adviceText,
+              level: b34.normal!.level,
+            );
+        }
+
+        if (b34.mutfakBacasi != null) {
           _addDetail(
             details,
             label:
-                'Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?',
-            value: b34.zemin!.uiTitle,
-            subtitle: b34.zemin!.uiSubtitle,
-            report: b34.zemin!.reportText,
-            advice: b34.zemin!.adviceText,
-            level: b34.zemin!.level,
+                'Ticari işletmelere ait mutfak bacaları, konut bacalarından bağımsız mı?',
+            value: b34.mutfakBacasi!.uiTitle,
+            subtitle: b34.mutfakBacasi!.uiSubtitle,
+            report: b34.mutfakBacasi!.reportText,
+            advice: b34.mutfakBacasi!.adviceText,
+            level: b34.mutfakBacasi!.level,
           );
-        if (b34.bodrum != null)
-          _addDetail(
-            details,
-            label:
-                'Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?',
-            value: b34.bodrum!.uiTitle,
-            subtitle: b34.bodrum!.uiSubtitle,
-            report: b34.bodrum!.reportText,
-            advice: b34.bodrum!.adviceText,
-            level: b34.bodrum!.level,
-          );
-        if (b34.normal != null)
-          _addDetail(
-            details,
-            label:
-                'Normal katlardaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?',
-            value: b34.normal!.uiTitle,
-            subtitle: b34.normal!.uiSubtitle,
-            report: b34.normal!.reportText,
-            advice: b34.normal!.adviceText,
-            level: b34.normal!.level,
-          );
+        }
         handled = true;
       }
     }
@@ -2254,7 +2301,9 @@ class ReportEngine {
           b?.depoKapi?.level,
           b?.copKapi?.level,
           b?.ortakDuvar?.level,
-          b?.ticariKapi?.level,
+          b?.ticariKapiZemin?.level,
+          b?.ticariKapiNormal?.level,
+          b?.ticariKapiBodrum?.level,
           b?.otoparkAlan?.level,
           b?.kazanAlan?.level,
           b?.siginakAlan?.level,
@@ -2339,7 +2388,9 @@ class ReportEngine {
         }
 
         final hYapi = _getHYapi(s);
-        final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+        final isKonut =
+            s.bolum10?.secim?.label.contains("10-A") == true ||
+            s.bolum6?.isSadeceKonut == true;
         final ignoreHavalandirma = isKonut && hYapi >= (51.50 - 0.001);
 
         return _maxLevel([
@@ -2637,7 +2688,9 @@ class ReportEngine {
       add(b13.depoKapi);
       add(b13.copKapi);
       add(b13.ortakDuvar);
-      add(b13.ticariKapi);
+      add(b13.ticariKapiZemin);
+      add(b13.ticariKapiNormal);
+      add(b13.ticariKapiBodrum);
       add(b13.otoparkAlan);
       add(b13.kazanAlan);
       add(b13.siginakAlan);
@@ -2735,9 +2788,11 @@ class ReportEngine {
       add(b20.tekKatRampa);
       add(b20.bodrumMerdivenDevami);
       add(b20.basinclandirma);
-      
+
       final hYapi = _getHYapi(s);
-      final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+      final isKonut =
+          s.bolum10?.secim?.label.contains("10-A") == true ||
+          s.bolum6?.isSadeceKonut == true;
       if (!(isKonut && hYapi >= (51.50 - 0.001))) {
         add(b20.havalandirma);
       }
@@ -3106,12 +3161,21 @@ class ReportEngine {
       final b17 = s.bolum17;
       if (b17 != null) {
         List<String> parts = [];
-        if (b17.kaplama != null) parts.add(_getSection17KaplamaReport(s));
-        if (b17.iskelet != null) parts.add(b17.iskelet!.reportText);
-        if (b17.bitisikDuvar != null) parts.add(b17.bitisikDuvar!.reportText);
-        if (b17.isiklik != null) parts.add(b17.isiklik!.reportText);
-        if (b17.catiPiyesKacisi != null)
-          parts.add(b17.catiPiyesKacisi!.reportText);
+        final kaplama = b17.kaplama;
+        if (kaplama != null) parts.add(_getSection17KaplamaReport(s));
+
+        final iskelet = b17.iskelet;
+        if (iskelet != null) parts.add(iskelet.reportText);
+
+        final bitisik = b17.bitisikDuvar;
+        if (bitisik != null) parts.add(bitisik.reportText);
+
+        final isiklik = b17.isiklik;
+        if (isiklik != null) parts.add(isiklik.reportText);
+
+        final cp = b17.catiPiyesKacisi;
+        if (cp != null) parts.add(cp.reportText);
+
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }
@@ -3167,7 +3231,9 @@ class ReportEngine {
           parts.add(_addSection20DynamicBasinc(b20));
         if (b20.havalandirma != null) {
           final hYapi = _getHYapi(s);
-          final isKonut = s.bolum10?.secim?.label.contains("10-A") == true || s.bolum6?.isSadeceKonut == true;
+          final isKonut =
+              s.bolum10?.secim?.label.contains("10-A") == true ||
+              s.bolum6?.isSadeceKonut == true;
           if (!(isKonut && hYapi >= (51.50 - 0.001))) {
             parts.add(_addSection20DynamicHavalandirma(s, b20));
           }
@@ -3222,7 +3288,9 @@ class ReportEngine {
             );
           } else {
             final hYapi = _getHYapi(s);
-            parts.add("BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${hYapi.toStringAsFixed(2)}m < 51.50m).");
+            parts.add(
+              "BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${hYapi.toStringAsFixed(2)}m < 51.50m).",
+            );
           }
         }
 
@@ -3328,6 +3396,11 @@ class ReportEngine {
         if (b30.hava != null) parts.add(b30.hava!.reportText);
         if (b30.drenaj != null) parts.add(b30.drenaj!.reportText);
         if (b30.tup != null) parts.add(b30.tup!.reportText);
+        if (b30.kapasiteChoice != null) {
+          parts.add(
+            "Kazanların Isıl Kapasitesi (${b30.kapasiteChoice!.uiTitle}): BİLGİ: Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+          );
+        }
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }
@@ -3466,10 +3539,26 @@ class ReportEngine {
       final b34 = s.bolum34;
       if (b34 != null) {
         List<String> parts = [];
-        if (b34.zemin != null) parts.add(b34.zemin!.reportText);
-        if (b34.bodrum != null) parts.add(b34.bodrum!.reportText);
-        if (b34.normal != null) parts.add(b34.normal!.reportText);
-        if (b34.mutfakBacasi != null) parts.add(b34.mutfakBacasi!.reportText);
+        if (b34.areTicariCikisSame) {
+          final choice = b34.zemin ?? b34.bodrum ?? b34.normal;
+          if (choice != null)
+            parts.add(
+              "Tüm Ticari Alanların Bağımsız Çıkışı: ${choice.reportText}",
+            );
+        } else {
+          if (b34.zemin != null)
+            parts.add("Zemin Kat Ticari Alan Çıkışı: ${b34.zemin!.reportText}");
+          if (b34.bodrum != null)
+            parts.add(
+              "Bodrum Kat Ticari Alan Çıkışı: ${b34.bodrum!.reportText}",
+            );
+          if (b34.normal != null)
+            parts.add(
+              "Normal Kat Ticari Alan Çıkışı: ${b34.normal!.reportText}",
+            );
+        }
+        if (b34.mutfakBacasi != null)
+          parts.add("Mutfak Bacası: ${b34.mutfakBacasi!.reportText}");
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
     }
@@ -3533,6 +3622,38 @@ class ReportEngine {
 
     // Varsayılan: AppContent içindeki metni olduğu gibi döndür.
     return res.reportText;
+  }
+
+  static String getSectionSummaryReport(int id, {BinaStore? store}) {
+    final s = _getStore(store);
+
+    // Bölüm 33: Kullanıcı Yükü Özeti
+    if (id == 33) {
+      final b33 = s.bolum33;
+      if (b33 != null) {
+        bool anyFail =
+            (b33.normalKatSonuc?.label.contains("-FAIL") == true) ||
+            (b33.zeminKatSonuc?.label.contains("-FAIL") == true) ||
+            (b33.bodrumKatSonuc?.label.contains("-FAIL") == true);
+
+        if (anyFail) {
+          return "KRİTİK RİSK: Hesaplanan (tahmini) kullanıcı yükü için mevcut çıkış sayısı yetersiz olduğu tespit edilmiştir. Detaylar bu dokümandaki Bölüm-33 'te yer almaktadır.";
+        }
+      }
+    }
+
+    // Bölüm 36: Merdiven Özeti
+    if (id == 36) {
+      if (s.bolum36 != null) {
+        final fullReport = Section36Handler(s).getFullReport();
+        if (fullReport.contains("KRİTİK RİSK")) {
+          return "KRİTİK RİSK: Kaçış yollarında (genişlik, tahliye mesafesi vb.) Yönetmeliğe göre uygunsuzluklar tespit edilmiştir. Detaylar bu dokümandaki Bölüm-36 'te yer almaktadır.";
+        }
+      }
+    }
+
+    // Diğer tüm durumlar için normal detaylı raporu döndür
+    return getSectionFullReport(id, store: store);
   }
 
   static List<Map<String, String>> getActionPlan() {
@@ -3630,6 +3751,17 @@ class ReportEngine {
           level: b13.otoparkKapi!.level,
         );
       }
+      // Otopark Alan Alt Sorusu
+      if (b13.otoparkAlan != null) {
+        _addDetail(
+          details,
+          label: 'Otopark alanları tüm katlarda toplam kaç metrekare?',
+          value: b13.otoparkAlan!.uiTitle,
+          report:
+              "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+          level: RiskLevel.info,
+        );
+      }
       if (b13.kazanKapi != null) {
         _addDetail(
           details,
@@ -3639,6 +3771,17 @@ class ReportEngine {
           report: b13.kazanKapi!.reportText,
           advice: b13.kazanKapi!.adviceText,
           level: b13.kazanKapi!.level,
+        );
+      }
+      // Kazan Dairesi Alan Alt Sorusu
+      if (b13.kazanAlan != null) {
+        _addDetail(
+          details,
+          label: 'Kazan dairesi kaç metrekare?',
+          value: b13.kazanAlan!.uiTitle,
+          report:
+              "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+          level: RiskLevel.info,
         );
       }
       if (b13.asansorKapi != null) {
@@ -3712,6 +3855,18 @@ class ReportEngine {
           level: b13.depoKapi!.level,
         );
       }
+      // Depo Alan Alt Sorusu
+      if (b13.depoBodrumAlan != null) {
+        _addDetail(
+          details,
+          label:
+              'Bodrum katlardaki depolama alanlarının toplamı kaç metrekare?',
+          value: b13.depoBodrumAlan!.uiTitle,
+          report:
+              "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+          level: RiskLevel.info,
+        );
+      }
       if (b13.copKapi != null) {
         _addDetail(
           details,
@@ -3734,17 +3889,69 @@ class ReportEngine {
           level: b13.ortakDuvar!.level,
         );
       }
-      if (b13.ticariKapi != null) {
+      // Sığınak Alan Alt Sorusu
+      if (b13.siginakAlan != null) {
         _addDetail(
           details,
-          label:
-              'Ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
-          value: b13.ticariKapi!.uiTitle,
-          subtitle: b13.ticariKapi!.uiSubtitle,
-          report: b13.ticariKapi!.reportText,
-          advice: b13.ticariKapi!.adviceText,
-          level: b13.ticariKapi!.level,
+          label: 'Sığınak kaç metrekare?',
+          value: b13.siginakAlan!.uiTitle,
+          report:
+              "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+          level: RiskLevel.info,
         );
+      }
+      if (b13.areTicariKapiSame) {
+        final choice =
+            b13.ticariKapiZemin ?? b13.ticariKapiNormal ?? b13.ticariKapiBodrum;
+        if (choice != null) {
+          _addDetail(
+            details,
+            label:
+                'Tüm ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
+            value: choice.uiTitle,
+            subtitle: choice.uiSubtitle,
+            report: choice.reportText,
+            advice: choice.adviceText,
+            level: choice.level,
+          );
+        }
+      } else {
+        if (b13.ticariKapiZemin != null) {
+          _addDetail(
+            details,
+            label:
+                'Zemin kattaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
+            value: b13.ticariKapiZemin!.uiTitle,
+            subtitle: b13.ticariKapiZemin!.uiSubtitle,
+            report: b13.ticariKapiZemin!.reportText,
+            advice: b13.ticariKapiZemin!.adviceText,
+            level: b13.ticariKapiZemin!.level,
+          );
+        }
+        if (b13.ticariKapiNormal != null) {
+          _addDetail(
+            details,
+            label:
+                'Normal katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
+            value: b13.ticariKapiNormal!.uiTitle,
+            subtitle: b13.ticariKapiNormal!.uiSubtitle,
+            report: b13.ticariKapiNormal!.reportText,
+            advice: b13.ticariKapiNormal!.adviceText,
+            level: b13.ticariKapiNormal!.level,
+          );
+        }
+        if (b13.ticariKapiBodrum != null) {
+          _addDetail(
+            details,
+            label:
+                'Bodrum katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
+            value: b13.ticariKapiBodrum!.uiTitle,
+            subtitle: b13.ticariKapiBodrum!.uiSubtitle,
+            report: b13.ticariKapiBodrum!.reportText,
+            advice: b13.ticariKapiBodrum!.adviceText,
+            level: b13.ticariKapiBodrum!.level,
+          );
+        }
       }
       if (b13.endustriyelMutfakKapi != null) {
         _addDetail(
@@ -3769,8 +3976,18 @@ class ReportEngine {
       if (b13.otoparkKapi != null) {
         parts.add("Otopark Kapısı: ${b13.otoparkKapi!.reportText}");
       }
+      if (b13.otoparkAlan != null) {
+        parts.add(
+          "Otopark Alan Bilgisi (${b13.otoparkAlan!.uiTitle}): BİLGİ: Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+        );
+      }
       if (b13.kazanKapi != null) {
         parts.add("Kazan Dairesi Kapısı: ${b13.kazanKapi!.reportText}");
+      }
+      if (b13.kazanAlan != null) {
+        parts.add(
+          "Kazan Dairesi Alan Bilgisi (${b13.kazanAlan!.uiTitle}): BİLGİ: Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+        );
       }
       if (b13.asansorKapi != null) {
         final bool isMrl = s.bolum29?.asansor?.label == '29-4-C';
@@ -3802,18 +4019,47 @@ class ReportEngine {
       if (b13.depoKapi != null) {
         parts.add("Depo Alanı Kapısı: ${b13.depoKapi!.reportText}");
       }
+      if (b13.depoBodrumAlan != null) {
+        parts.add(
+          "Bodrum Kat Depo Alan Bilgisi (${b13.depoBodrumAlan!.uiTitle}): BİLGİ: Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+        );
+      }
       if (b13.copKapi != null) {
         parts.add("Çöp Odası Kapısı: ${b13.copKapi!.reportText}");
       }
       if (b13.ortakDuvar != null) {
         parts.add("Ortak Duvar Yangın Dayanımı: ${b13.ortakDuvar!.reportText}");
       }
-      if (b13.ticariKapi != null) {
-        parts.add("Ticari Alan Kapısı: ${b13.ticariKapi!.reportText}");
+      if (b13.areTicariKapiSame) {
+        final choice =
+            b13.ticariKapiZemin ?? b13.ticariKapiNormal ?? b13.ticariKapiBodrum;
+        if (choice != null)
+          parts.add("Tüm Ticari Alanların Kapıları: ${choice.reportText}");
+      } else {
+        if (b13.ticariKapiZemin != null) {
+          parts.add(
+            "Zemin Kat Ticari Alan Kapısı: ${b13.ticariKapiZemin!.reportText}",
+          );
+        }
+        if (b13.ticariKapiNormal != null) {
+          parts.add(
+            "Normal Kat Ticari Alan Kapısı: ${b13.ticariKapiNormal!.reportText}",
+          );
+        }
+        if (b13.ticariKapiBodrum != null) {
+          parts.add(
+            "Bodrum Kat Ticari Alan Kapısı: ${b13.ticariKapiBodrum!.reportText}",
+          );
+        }
       }
       if (b13.endustriyelMutfakKapi != null) {
         parts.add(
           "Endüstriyel Mutfak (Büyük Restoran) Kapısı: ${b13.endustriyelMutfakKapi!.reportText}",
+        );
+      }
+      if (b13.siginakAlan != null) {
+        parts.add(
+          "Sığınak Alan Bilgisi (${b13.siginakAlan!.uiTitle}): BİLGİ: Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
         );
       }
 

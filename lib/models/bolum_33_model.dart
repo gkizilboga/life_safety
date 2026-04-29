@@ -82,12 +82,12 @@ class Bolum33Model {
 
     // Normal Kat
     if (resNormal != null) {
-      parts.add("NORMAL KATLAR: ${resNormal.reportText}");
+      parts.add("NORMAL KATLAR (En Yoğun Kat): ${resNormal.reportText}");
     }
 
     // Bodrum Kat
     if (resBodrum != null) {
-      parts.add("BODRUM KATLAR: ${resBodrum.reportText}");
+      parts.add("BODRUM KATLAR (En Yoğun Kat): ${resBodrum.reportText}");
     }
 
     return parts.join("\n\n");
