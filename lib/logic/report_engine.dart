@@ -9,6 +9,7 @@ import 'handlers/section_36_handler.dart';
 import 'handlers/section_21_handler.dart';
 import 'handlers/section_27_handler.dart';
 import 'handlers/risk_calculator.dart';
+import '../utils/input_validator.dart';
 
 enum ReportModule {
   binaBilgileri(
@@ -237,25 +238,25 @@ class ReportEngine {
         if (b5.tabanAlani != null)
           details.add({
             'label': 'Zemin Kat Taban Alanı',
-            'value': '${b5.tabanAlani!.toStringAsFixed(2)} m²',
+            'value': '${InputValidator.formatArea(b5.tabanAlani!)} m²',
             'report': '',
           });
         if (b5.normalKatAlani != null)
           details.add({
             'label': 'Normal Kat Alanı',
-            'value': '${b5.normalKatAlani!.toStringAsFixed(2)} m²',
+            'value': '${InputValidator.formatArea(b5.normalKatAlani!)} m²',
             'report': '',
           });
         if (b5.bodrumKatAlani != null)
           details.add({
             'label': 'Bodrum Kat Alanı',
-            'value': '${b5.bodrumKatAlani!.toStringAsFixed(2)} m²',
+            'value': '${InputValidator.formatArea(b5.bodrumKatAlani!)} m²',
             'report': '',
           });
         if (b5.toplamInsaatAlani != null)
           details.add({
             'label': 'Toplam İnşaat Alanı',
-            'value': '${b5.toplamInsaatAlani!.toStringAsFixed(2)} m²',
+            'value': '${InputValidator.formatArea(b5.toplamInsaatAlani!)} m²',
             'report': '',
           });
         handled = true;
@@ -327,7 +328,7 @@ class ReportEngine {
           _addDetail(
             details,
             label: 'Kapalı Otopark Alanı',
-            value: '${b6.kapaliOtoparkAlani!.toStringAsFixed(2)} m²',
+            value: '${InputValidator.formatArea(b6.kapaliOtoparkAlani!)} m²',
             report: '',
           );
         handled = true;
@@ -351,7 +352,7 @@ class ReportEngine {
           if (b10.bodrumlarAyni && b10.bodrumlar[0] != null) {
             final int len = b10.bodrumlar.length;
             details.add({
-              'label': len == 1 ? '1. Bodrum Kat' : '1. - $len. Bodrum Katlar',
+              'label': len == 1 ? 'Bodrum Kat' : '1. - $len. Bodrum Katlar',
               'value':
                   "${b10.bodrumlar[0]!.uiTitle} | ${b10.bodrumlar[0]!.reportText}",
               'isTable': true,
@@ -360,7 +361,9 @@ class ReportEngine {
             for (int i = 0; i < b10.bodrumlar.length; i++) {
               if (b10.bodrumlar[i] != null) {
                 details.add({
-                  'label': '${i + 1}. Bodrum Kat',
+                  'label': b10.bodrumlar.length == 1
+                      ? 'Bodrum Kat'
+                      : '${i + 1}. Bodrum Kat',
                   'value':
                       "${b10.bodrumlar[i]!.uiTitle} | ${b10.bodrumlar[i]!.reportText}",
                   'isTable': true,
@@ -374,7 +377,7 @@ class ReportEngine {
           if (b10.normallerAyni && b10.normaller[0] != null) {
             final int len = b10.normaller.length;
             details.add({
-              'label': len == 1 ? '1. Normal Kat' : '1. - $len. Normal Katlar',
+              'label': len == 1 ? 'Normal Kat' : '1. - $len. Normal Katlar',
               'value':
                   "${b10.normaller[0]!.uiTitle} | ${b10.normaller[0]!.reportText}",
               'isTable': true,
@@ -383,7 +386,9 @@ class ReportEngine {
             for (int i = 0; i < b10.normaller.length; i++) {
               if (b10.normaller[i] != null) {
                 details.add({
-                  'label': '${i + 1}. Normal Kat',
+                  'label': b10.normaller.length == 1
+                      ? 'Normal Kat'
+                      : '${i + 1}. Normal Kat',
                   'value':
                       "${b10.normaller[i]!.uiTitle} | ${b10.normaller[i]!.reportText}",
                   'isTable': true,
@@ -977,7 +982,7 @@ class ReportEngine {
             } else {
               final hYapi = _getHYapi(s);
               finalReportText =
-                  "BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${hYapi.toStringAsFixed(2)}m < 51.50m).";
+                  "BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${InputValidator.formatArea(hYapi)}m < 51.50m).";
             }
           }
 
@@ -1195,7 +1200,8 @@ class ReportEngine {
         }
 
         if (isMandatory) {
-          final bool isUnknown = b23.basinc?.label == "23-6-C";
+          final bool isUnknownBasinc = b23.basinc?.label == "23-6-C";
+          final bool isUnknownVent = b23.havalandirma?.label == "23-5-C";
           String evalReport;
           RiskLevel evalLevel;
 
@@ -1203,9 +1209,9 @@ class ReportEngine {
             evalReport =
                 'OLUMLU: Bina verilerine göre normal asansör kuyularında basınçlandırma sistemi zorunluluğu bulunmaktadır ve binada tesis edilmiştir.\n\nGerekçe:\n${basincReasons.join("\n")}';
             evalLevel = RiskLevel.positive;
-          } else if (isUnknown) {
+          } else if (isUnknownBasinc || isUnknownVent) {
             evalReport =
-                'BİLİNMİYOR: Bina verilerine göre normal asansör kuyularında basınçlandırma sistemi ZORUNLUDUR, ancak binadaki durumu bilinmemektedir. Sistem yerinde kontrol edilmelidir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+                'BİLİNMİYOR: Bina verilerine göre normal asansör kuyularında basınçlandırma sistemi ZORUNLUDUR, ancak binadaki durumlar tam olarak netleştirilememiştir. Sistem yerinde ve proje üzerinde kontrol edilmelidir.\n\nGerekçe:\n${basincReasons.join("\n")}';
             evalLevel = RiskLevel.unknown;
           } else {
             evalReport =
@@ -1991,7 +1997,6 @@ class ReportEngine {
           '',
         );
 
-        final prefix = anyFail ? "KRİTİK RİSK: " : "OLUMLU: ";
         final status = anyFail ? ReportStatus.risk : ReportStatus.compliant;
 
         // 1. Özet Değerlendirme
@@ -1999,7 +2004,7 @@ class ReportEngine {
           details,
           label: 'Kullanıcı Yükü ve Çıkış Kapasitesi Analizi',
           value: '',
-          report: "$prefix$cleanReport",
+          report: report, // Use raw report to preserve "OLUMLU/BİLGİ" prefixes on new lines
           status: status,
         );
 
@@ -2017,8 +2022,9 @@ class ReportEngine {
           _addDetail(
             details,
             label: 'Normal Katlar (En Yoğun)',
-            value:
-                '${b33.yukNormal}|${b33.gerekliNormal} Adet|${b33.mevcutUst} Adet',
+            value: b33.yukNormal == 0
+                ? 'Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.|-|-'
+                : '${b33.yukNormal}|${b33.gerekliNormal} Adet|${b33.mevcutUst} Adet',
             report: '',
             isTable: true,
           );
@@ -2027,8 +2033,9 @@ class ReportEngine {
           _addDetail(
             details,
             label: 'Zemin Kat',
-            value:
-                '${b33.yukZemin}|${b33.gerekliZemin} Adet|${b33.mevcutUst} Adet',
+            value: b33.yukZemin == 0
+                ? 'Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.|-|-'
+                : '${b33.yukZemin}|${b33.gerekliZemin} Adet|${b33.mevcutUst} Adet',
             report: '',
             isTable: true,
           );
@@ -2037,8 +2044,9 @@ class ReportEngine {
           _addDetail(
             details,
             label: 'Bodrum Katlar (En Yoğun)',
-            value:
-                '${b33.yukBodrum}|${b33.gerekliBodrum} Adet|${b33.mevcutBodrum} Adet',
+            value: b33.yukBodrum == 0
+                ? 'Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.|-|-'
+                : '${b33.yukBodrum}|${b33.gerekliBodrum} Adet|${b33.mevcutBodrum} Adet',
             report: '',
             isTable: true,
           );
@@ -2182,7 +2190,7 @@ class ReportEngine {
           _addDetail(
             details,
             label: 'Elle Girilen Kaçış Mesafesi',
-            value: '${b35.manuelMesafe!.toStringAsFixed(2)} m',
+            value: '${InputValidator.formatArea(b35.manuelMesafe!)} m',
             report: isOk
                 ? 'OLUMLU: Girilen mesafe Yönetmelik sınırı olan $limit m. nin içerisindedir.'
                 : 'KRİTİK RİSK: Girilen mesafe Yönetmelik sınırı olan $limit m. nin üzerindedir.',
@@ -3074,8 +3082,12 @@ class ReportEngine {
         }
 
         // Yükseklik Bilgilerini Ekle
-        parts.add("Bina Yüksekliği: ${b3.hBina?.toStringAsFixed(2) ?? "-"} m");
-        parts.add("Yapı Yüksekliği: ${b3.hYapi?.toStringAsFixed(2) ?? "-"} m");
+        parts.add(
+          "Bina Yüksekliği: ${b3.hBina != null ? InputValidator.formatArea(b3.hBina!) : "-"} m",
+        );
+        parts.add(
+          "Yapı Yüksekliği: ${b3.hYapi != null ? InputValidator.formatArea(b3.hYapi!) : "-"} m",
+        );
 
         if (parts.isNotEmpty) return "BİLGİ: ${parts.join(', ')}";
       }
@@ -3122,15 +3134,18 @@ class ReportEngine {
         List<String> parts = [];
         if (b16.mantolama != null) {
           final hBina = s.bolum3?.hBina ?? 0.0;
-          // BYKHY Madde 27: 28.50m üzeri yanıcı mantolama yasaktır.
-          String text = b16.mantolama!.reportText.replaceAll(
-            "[LİMİT]",
-            "28.50",
-          );
-          if (hBina <= 28.50 && b16.mantolama!.label.contains("16-1-A")) {
+
+          // Null safety ve olası bellek state hatalarına karşı defansif yazım
+          final rawText = b16.mantolama?.reportText ?? "";
+          String text = rawText.isNotEmpty
+              ? rawText.replaceAll("[LİMİT]", "28.50")
+              : "";
+
+          final label = b16.mantolama?.label ?? "";
+          if (hBina <= 28.50 && label.contains("16-1-A")) {
             text = Bolum16Content.mantolamaOptionALowReport;
           }
-          parts.add(text);
+          if (text.isNotEmpty) parts.add(text);
         }
 
         // Bariyer Analizi (Mantolama 16-1-A ise)
@@ -3289,7 +3304,7 @@ class ReportEngine {
           } else {
             final hYapi = _getHYapi(s);
             parts.add(
-              "BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${hYapi.toStringAsFixed(2)}m < 51.50m).",
+              "BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${InputValidator.formatArea(hYapi)}m < 51.50m).",
             );
           }
         }
@@ -3448,20 +3463,35 @@ class ReportEngine {
         // to account for Section 34 overrides.
         List<String> reportParts = [];
 
+        // areTicariCikisSame: tüm katlar için tek cevap → hangi alanda saklandığına
+        // bakılmaksızın paylaşımlı seçimi al; aksi hâlde kata özel seçimleri kullan.
+        final ChoiceResult? effectiveB34Zemin;
+        final ChoiceResult? effectiveB34Bodrum;
+        final ChoiceResult? effectiveB34Normal;
+        if (b34?.areTicariCikisSame == true) {
+          final shared = b34?.zemin ?? b34?.bodrum ?? b34?.normal;
+          effectiveB34Zemin = shared;
+          effectiveB34Bodrum = shared;
+          effectiveB34Normal = shared;
+        } else {
+          effectiveB34Zemin = b34?.zemin;
+          effectiveB34Bodrum = b34?.bodrum;
+          effectiveB34Normal = b34?.normal;
+        }
+
         // Helper function to evaluate a floor type
         void evaluateFloor({
           required String title,
           required int? yuk,
           required int? gerekli,
           required int? mevcut,
-          required ChoiceResult? secim34, // Selection from Section 34
-          required String
-          independentExitLabel, // Label to look for (e.g. "34-1-A")
+          required ChoiceResult? secim34,
         }) {
           if (yuk == null || gerekli == null || mevcut == null) return;
 
-          bool hasIndependentExit =
-              secim34?.label.contains(independentExitLabel) ?? false;
+          // "-A" ile biten her label "bağımsız çıkış VAR" anlamına gelir
+          // (34-1-A zemin, 34-2-A bodrum, 34-3-A normal).
+          bool hasIndependentExit = secim34?.label.endsWith("-A") ?? false;
 
           bool isSufficient = (mevcut >= gerekli);
 
@@ -3490,8 +3520,7 @@ class ReportEngine {
           yuk: b33.yukZemin,
           gerekli: b33.gerekliZemin,
           mevcut: b33.mevcutUst,
-          secim34: b34?.zemin,
-          independentExitLabel: "34-1-A",
+          secim34: effectiveB34Zemin,
         );
 
         // 2. NORMAL KAT DEĞERLENDİRMESİ
@@ -3501,8 +3530,7 @@ class ReportEngine {
             yuk: b33.yukNormal,
             gerekli: b33.gerekliNormal,
             mevcut: b33.mevcutUst,
-            secim34: b34?.normal,
-            independentExitLabel: "34-3-A",
+            secim34: effectiveB34Normal,
           );
         }
 
@@ -3513,8 +3541,7 @@ class ReportEngine {
             yuk: b33.yukBodrum,
             gerekli: b33.gerekliBodrum,
             mevcut: b33.mevcutBodrum,
-            secim34: b34?.bodrum,
-            independentExitLabel: "34-2-A",
+            secim34: effectiveB34Bodrum,
           );
         }
 
@@ -3523,9 +3550,17 @@ class ReportEngine {
         }
 
         String finalReport = reportParts.join("\n\n");
-        // Maintain the original specific warning if it exists in the model or needs re-eval
-        // Since we are reconstructing, we rely on the evaluation above.
-        // We can append the standard disclaimer about Section 36
+
+        // Add transparency note about Section 34 override if any independent exit was chosen
+        bool hasAnyIndependentExit =
+            (b34?.zemin?.label.contains("34-1-A") ?? false) ||
+            (b34?.bodrum?.label.contains("34-2-A") ?? false) ||
+            (b34?.normal?.label.contains("34-3-A") ?? false);
+        if (hasAnyIndependentExit) {
+          finalReport +=
+              "\n\nNOT: Ticari alanların bağımsız çıkışa sahip olduğu belirtildiğinden, bu alanlar merdiven kapasitesi hesabından otomatik olarak çıkarılmıştır. Yukarıdaki kullanıcı yükü ve çıkış sayıları bu düzeltme yapıldıktan sonraki değerleri yansıtmaktadır.";
+        }
+
         if (finalReport.contains("OLUMLU")) {
           finalReport +=
               "\n\n(NOT: Bu bölümdeki \"OLUMLU\" ibaresi, yalnızca kişi yüküne göre hesaplanan sayısal çıkış yeterliliğini ifade eder. Merdivenlerin korunumlu olup olmadığı veya niteliklerinin yönetmeliğe uygunluğu Bölüm 36'da ayrıca değerlendirilmiştir.)";
@@ -4085,20 +4120,20 @@ class ReportEngine {
     // 1. Yapı Yüksekliği > 51.50m (Madde 89)
     if (hYapi >= (51.50 - 0.001)) {
       reasons.add(
-        "KRİTİK RİSK: Konut binalarında Yapı Yüksekliği ≥ 51.50 metre olduğu için kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89).",
+        "Konut binalarında Yapı Yüksekliği ≥ 51.50 metre olduğu için kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89).",
       );
     }
     // 2. Danışmanlık Notu: 30.50m - 51.50m
     else if (hYapi > (30.50 - 0.001)) {
       reasons.add(
-        "BİLGİ: Yapı yüksekliği 30.50 m - 51.50 m arasında olduğunda, merdivenlerde basınçlandırma sistemi tesisi YGH zorunluluğu için muafiyet sağlar (Madde 38/c).",
+        "Yapı yüksekliği 30.50 m - 51.50 m arasında olduğunda, merdivenlerde basınçlandırma sistemi tesisi YGH zorunluluğu için muafiyet sağlar (Madde 38/c).",
       );
     }
 
     // 3. Bodrum Kat Sayısı > 4 (Madde 89/2)
     if (bodrumKatSayisi > 4) {
       reasons.add(
-        "KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89/2).",
+        "Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89/2).",
       );
     }
 
@@ -4120,11 +4155,11 @@ class ReportEngine {
           b22?.basinc?.label.contains("22-6-A") == true;
       if (!isAlreadyPressurized) {
         reasons.add(
-          "KRİTİK RİSK: İtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.",
+          "İtfaiye asansörü kuyusunda basınçlandırma sistemi zorunludur.",
         );
       } else {
         reasons.add(
-          "OLUMLU: İtfaiye asansörü kuyusunda basınçlandırma zorunluluğu karşılanmıştır.",
+          "İtfaiye asansörü kuyusunda basınçlandırma zorunluluğu karşılanmıştır.",
         );
       }
     }
@@ -4139,20 +4174,28 @@ class ReportEngine {
     List<String> reasons = [];
     final b23 = s.bolum23;
 
-    final bool noVent =
-        b23?.havalandirma?.label.contains("23-5-B") == true ||
+    final bool isNoVent = b23?.havalandirma?.label.contains("23-5-B") == true;
+    final bool isUnknownVent =
         b23?.havalandirma?.label.contains("23-5-C") == true;
 
-    if (noVent) {
+    if (isNoVent || isUnknownVent) {
       final bool isAlreadyPressurized =
           b23?.basinc?.label.contains("23-6-A") == true;
       if (!isAlreadyPressurized) {
-        reasons.add(
-          "KRİTİK RİSK: Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden, normal asansör kuyusunda basınçlandırma yapılması zorunludur. Mevcut durumda herhangi bir duman tahliye çözümü (baca veya basınçlandırma) tesis edilmediği anlaşılmaktadır.",
-        );
+        if (isUnknownVent) {
+          reasons.add(
+            "Normal asansör kuyusunda duman tahliye bacası/penceresi durumu BİLİNMEDİĞİNDEN, bu alanın havalandırmasız olduğu varsayıldığında basınçlandırma yapılması zorunluluğu doğabilir. Mevcut durumda duman tahliye çözümü (baca veya basınçlandırma) netleşmemiştir.",
+          );
+        } else {
+          reasons.add(
+            "Normal asansör kuyusunda duman tahliye bacası/penceresi bulunmadığı beyan edildiğinden, normal asansör kuyusunda basınçlandırma yapılması zorunludur. Mevcut durumda herhangi bir duman tahliye çözümü (baca veya basınçlandırma) tesis edilmediği anlaşılmaktadır.",
+          );
+        }
       } else {
         reasons.add(
-          "OLUMLU: Normal asansör kuyusunda havalandırma bulunmaması sebebiyle oluşan basınçlandırma zorunluluğu karşılanmıştır.",
+          isUnknownVent
+              ? "Normal asansör kuyusunda havalandırma durumu bilinmese de, basınçlandırma sistemi mevcut olduğundan duman tahliye güvenliği sağlanmıştır."
+              : "Normal asansör kuyusunda havalandırma bulunmaması sebebiyle oluşan basınçlandırma zorunluluğu karşılanmıştır.",
         );
       }
     }
@@ -4165,7 +4208,7 @@ class ReportEngine {
     final hYapi = _getHYapi(s);
 
     if (hYapi >= (51.50 - 0.001)) {
-      reasons.add("KRİTİK RİSK: Yapı Yüksekliği ≥ 51.50 metre");
+      reasons.add("Yapı Yüksekliği ≥ 51.50 metre");
     }
 
     return reasons;

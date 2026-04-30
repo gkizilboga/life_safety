@@ -43,14 +43,19 @@ class _Bolum22ScreenState extends State<Bolum22Screen> {
       });
     } else {
       _checkHeight();
+      // YENİ: Yapı yüksekliği 51.50m altındaysa ve kullanıcı daha önce seçim yapmadıysa
+      // "Hayır, yok" şıkkını varsayılan olarak işaretleyelim.
+      if (BinaStore.instance.bolum22 == null && _currentHeight < 51.50) {
+        _model = _model.copyWith(varlik: Bolum22Content.varlikOptionA);
+      }
     }
   }
 
   void _checkHeight() {
     _currentHeight = BinaStore.instance.bolum3?.hYapi ?? 0.0;
-    setState(() {
-      _isMandatory = _currentHeight >= 51.50;
-    });
+    _isMandatory = _currentHeight >= 51.50;
+    // UI'ın güncellenmesi için setState gerekebilir ancak initState içinde olduğumuz için 
+    // _model güncellemesi yeterli, build tetiklenecektir.
   }
 
   void _handleSelection(String type, ChoiceResult choice) {

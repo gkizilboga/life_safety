@@ -34,6 +34,9 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
     super.initState();
     if (BinaStore.instance.bolum29 != null) {
       _model = BinaStore.instance.bolum29!;
+    } else {
+      // Sığınakların temiz ve boş olması beklendiği için varsayılan "Hayır" seçiyoruz.
+      _model = _model.copyWith(siginak: Bolum29Content.siginakOptionA);
     }
     _loadVisibility();
 

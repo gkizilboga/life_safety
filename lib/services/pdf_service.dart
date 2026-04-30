@@ -135,42 +135,38 @@ class PdfService {
   }
 
   static PdfColor _getRiskColor(String text) {
-    if (text.contains('KRİTİK RİSK')) return PdfColors.red700;
-    if (text.contains('UYARI')) return PdfColors.amber700;
-    if (text.contains('OLUMLU') || text.contains('Olumlu')) {
+    final t = text.trim();
+    if (t.startsWith('KRİTİK RİSK')) return PdfColors.red700;
+    if (t.startsWith('UYARI')) return PdfColors.amber700;
+    if (t.startsWith('OLUMLU') || t.startsWith('Olumlu')) {
       return PdfColors.green700;
     }
-    if (text.contains('BİLGİ')) return PdfColors.blue700;
-    if (text.contains('BİLİNMİYOR') || text.contains('Bilinmiyor')) {
+    if (t.startsWith('BİLGİ')) return PdfColors.blue700;
+    if (t.startsWith('BİLİNMİYOR') || t.startsWith('Bilinmiyor')) {
       return PdfColors.grey500;
+    }
+    if (t.startsWith('DURUM:') || t.startsWith('ZORUNLU')) {
+      return PdfColors.red700;
     }
     return PdfColors.grey500;
   }
 
   static PdfColor _getColorForItem(Map<String, dynamic> item) {
-    final String reportText = item['report']?.toString() ?? '';
-
-    // GÜVENLİK AĞI: Çubuk rengini metne uydurmak için ilk önceliği metnin kendisine veriyoruz.
-    // (Böylece "Kökten mimari" değiştirmeden sadece görsel senkronizasyonu sağlıyoruz)
-    if (reportText.startsWith('KRİTİK RİSK') ||
-        reportText.startsWith('UYARI') ||
-        reportText.startsWith('OLUMLU') ||
-        reportText.startsWith('Olumlu') ||
-        reportText.startsWith('BİLGİ') ||
-        reportText.startsWith('BİLİNMİYOR') ||
-        reportText.startsWith('Bilinmiyor') ||
-        reportText.startsWith('DURUM:') ||
-        reportText.startsWith('ZORUNLU')) {
-      return _getRiskColor(reportText);
-    }
-
-    // 2. Öncelik: Eğer metinde açık bir önek yoksa (sade metinse), koddaki statüye bak.
+    // 1. ÖNCELİK: Kod Mantığı (Status Nesnesi)
+    // Eğer logic handler açıkça bir statü atamışsa, metin içeriğinden bağımsız olarak onu baz al.
+    // Bu yöntem en stabil ve hatasız yaklaşımdır.
     if (item['status'] != null && item['status'] is ReportStatus) {
       return _getColorFromStatus(item['status'] as ReportStatus);
     }
 
-    // Son Çare: Fallback
-    return _getRiskColor(reportText);
+    // 2. ÖNCELİK: Metin Öneki (Fallback)
+    // Eğer statü nesnesi yoksa, rapor metninin en başındaki anahtar kelimeye bak.
+    final String reportText = item['report']?.toString() ?? '';
+    if (reportText.trim().isNotEmpty) {
+      return _getRiskColor(reportText);
+    }
+
+    return PdfColors.grey500;
   }
 
   static PdfColor _getColorFromStatus(ReportStatus status) {
@@ -390,7 +386,7 @@ class PdfService {
                           ),
                         ),
                         pw.Text(
-                          "Tarih: ${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year}",
+                          "Oluşturma Tarihi: ${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year} ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
                           style: const pw.TextStyle(
                             color: PdfColors.white,
                             fontSize: 12,
@@ -702,19 +698,22 @@ class PdfService {
             crossAxisAlignment: pw.CrossAxisAlignment.end,
             children: [
               pw.Expanded(
-                child: pw.Text(
-                  "Bu doküman, Uygulama tarafından otomatik üretilmiştir. Resmi evrak niteliği taşımamaktadır.Dokümanın sonunda yer alan Yasal Uyarılar bu belgenin ayrılmaz bir parçasıdır.",
-                  style: pw.TextStyle(
-                    font: font,
-                    fontSize: 5,
-                    color: PdfColors.grey600,
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.only(bottom: 1.0),
+                  child: pw.Text(
+                    "Bu doküman, Uygulama tarafından otomatik üretilmiştir. Resmi evrak niteliği taşımamaktadır.Dokümanın sonunda yer alan Yasal Uyarılar bu belgenin ayrılmaz bir parçasıdır.",
+                    style: pw.TextStyle(
+                      font: font,
+                      fontSize: 5,
+                      color: PdfColors.grey600,
+                    ),
                   ),
                 ),
               ),
               pw.Text(
                 "Sayfa ${context.pageNumber} / ${context.pagesCount}",
                 style: pw.TextStyle(
-                  font: fontBold,
+                  font: font,
                   fontSize: 8,
                   color: const PdfColor.fromInt(0xFF1a365d),
                 ),
@@ -1376,15 +1375,6 @@ class PdfService {
         ),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
-          pw.Text(
-            "DEĞERLENDİRME NOTLARI",
-            style: pw.TextStyle(
-              font: ttfBold,
-              fontSize: 13,
-              color: PdfColor.fromInt(0xFF1a365d),
-            ),
-          ),
-          pw.SizedBox(height: 12),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -1555,23 +1545,29 @@ class PdfService {
             children: [
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child: pw.Text(
-                  subjectLabel,
-                  style: pw.TextStyle(
-                    font: fontBold,
-                    fontSize: 9,
-                    color: PdfColors.indigo900,
+                child: pw.Container(
+                  constraints: const pw.BoxConstraints(maxWidth: 160),
+                  child: pw.Text(
+                    subjectLabel,
+                    style: pw.TextStyle(
+                      font: fontBold,
+                      fontSize: 9,
+                      color: PdfColors.indigo900,
+                    ),
                   ),
                 ),
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child: pw.Text(
-                  "Yanıt / Durum",
-                  style: pw.TextStyle(
-                    font: fontBold,
-                    fontSize: 9,
-                    color: PdfColors.indigo900,
+                child: pw.Container(
+                  constraints: const pw.BoxConstraints(maxWidth: 320),
+                  child: pw.Text(
+                    "Yanıt / Durum",
+                    style: pw.TextStyle(
+                      font: fontBold,
+                      fontSize: 9,
+                      color: PdfColors.indigo900,
+                    ),
                   ),
                 ),
               ),
@@ -1583,34 +1579,43 @@ class PdfService {
             children: [
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child: pw.Text(
-                  "Kat/Konum",
-                  style: pw.TextStyle(
-                    font: fontBold,
-                    fontSize: 9,
-                    color: PdfColors.indigo900,
+                child: pw.Container(
+                  constraints: const pw.BoxConstraints(maxWidth: 130),
+                  child: pw.Text(
+                    "Kat/Konum",
+                    style: pw.TextStyle(
+                      font: fontBold,
+                      fontSize: 9,
+                      color: PdfColors.indigo900,
+                    ),
                   ),
                 ),
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child: pw.Text(
-                  "Kullanım Amacı",
-                  style: pw.TextStyle(
-                    font: fontBold,
-                    fontSize: 9,
-                    color: PdfColors.indigo900,
+                child: pw.Container(
+                  constraints: const pw.BoxConstraints(maxWidth: 100),
+                  child: pw.Text(
+                    "Kullanım Amacı",
+                    style: pw.TextStyle(
+                      font: fontBold,
+                      fontSize: 9,
+                      color: PdfColors.indigo900,
+                    ),
                   ),
                 ),
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child: pw.Text(
-                  "Değerlendirme / Durum",
-                  style: pw.TextStyle(
-                    font: fontBold,
-                    fontSize: 9,
-                    color: PdfColors.indigo900,
+                child: pw.Container(
+                  constraints: const pw.BoxConstraints(maxWidth: 240),
+                  child: pw.Text(
+                    "Değerlendirme / Durum",
+                    style: pw.TextStyle(
+                      font: fontBold,
+                      fontSize: 9,
+                      color: PdfColors.indigo900,
+                    ),
                   ),
                 ),
               ),
@@ -1658,12 +1663,15 @@ class PdfService {
               // Kolon 1: Etiket (Label)
               pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child: pw.Text(
-                  label,
-                  style: pw.TextStyle(
-                    font: (isSubHeader || shouldBold) ? fontBold : font,
-                    fontSize: 8.5,
-                    color: isSubHeader ? PdfColors.indigo900 : PdfColors.black,
+                child: pw.Container(
+                  constraints: pw.BoxConstraints(maxWidth: maxCols == 2 ? 160.0 : (maxCols == 3 ? 130.0 : 100.0)),
+                  child: pw.Text(
+                    label,
+                    style: pw.TextStyle(
+                      font: (isSubHeader || shouldBold) ? fontBold : font,
+                      fontSize: 8.5,
+                      color: isSubHeader ? PdfColors.indigo900 : PdfColors.black,
+                    ),
                   ),
                 ),
               ),
@@ -1673,35 +1681,38 @@ class PdfService {
                 // Standart 2 Kolonlu Hücre
                 pw.Padding(
                   padding: const pw.EdgeInsets.all(5),
-                  child: pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      ...valueRaw.split('\n').asMap().entries.map((vEntry) {
-                        final vIdx = vEntry.key;
-                        final vText = vEntry.value;
-                        if (vText.isEmpty) return pw.SizedBox();
-                        return pw.Text(
-                          _cleanEmojis(vText),
-                          style: pw.TextStyle(
-                            font: (vIdx == 0 && valueRaw.contains('\n'))
-                                ? fontBold
-                                : (shouldBold ? fontBold : font),
-                            fontSize: 8,
+                  child: pw.Container(
+                    constraints: const pw.BoxConstraints(maxWidth: 320),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        ...valueRaw.split('\n').asMap().entries.map((vEntry) {
+                          final vIdx = vEntry.key;
+                          final vText = vEntry.value;
+                          if (vText.isEmpty) return pw.SizedBox();
+                          return pw.Text(
+                            _cleanEmojis(vText),
+                            style: pw.TextStyle(
+                              font: (vIdx == 0 && valueRaw.contains('\n'))
+                                  ? fontBold
+                                  : (shouldBold ? fontBold : font),
+                              fontSize: 8,
+                            ),
+                          );
+                        }),
+                        if (item['subtitle'] != null &&
+                            item['subtitle'].toString().isNotEmpty)
+                          pw.Text(
+                            item['subtitle'].toString(),
+                            style: pw.TextStyle(
+                              font: font,
+                              fontSize: 7,
+                              fontStyle: pw.FontStyle.italic,
+                              color: PdfColors.grey700,
+                            ),
                           ),
-                        );
-                      }),
-                      if (item['subtitle'] != null &&
-                          item['subtitle'].toString().isNotEmpty)
-                        pw.Text(
-                          item['subtitle'].toString(),
-                          style: pw.TextStyle(
-                            font: font,
-                            fontSize: 7,
-                            fontStyle: pw.FontStyle.italic,
-                            color: PdfColors.grey700,
-                          ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 )
               else ...[
@@ -1709,15 +1720,18 @@ class PdfService {
                 for (var p in parts)
                   pw.Padding(
                     padding: const pw.EdgeInsets.all(5),
-                    child: pw.Text(
-                      _cleanEmojis(p),
-                      textAlign: pw.TextAlign.left,
-                      style: pw.TextStyle(
-                        font: (isSubHeader || shouldBold) ? fontBold : font,
-                        fontSize: 8.5,
-                        color: isSubHeader
-                            ? PdfColors.indigo900
-                            : PdfColors.black,
+                    child: pw.Container(
+                      constraints: pw.BoxConstraints(maxWidth: maxCols == 3 ? 240.0 : 120.0),
+                      child: pw.Text(
+                        _cleanEmojis(p),
+                        textAlign: pw.TextAlign.left,
+                        style: pw.TextStyle(
+                          font: (isSubHeader || shouldBold) ? fontBold : font,
+                          fontSize: 8.5,
+                          color: isSubHeader
+                              ? PdfColors.indigo900
+                              : PdfColors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -1842,7 +1856,7 @@ class PdfService {
               color: PdfColors.blue900,
             ),
           ),
-          _buildRichText(report, font, fontBold),
+          _buildRichText("\n$report", font, fontBold),
         ],
         if (item['advice'] != null && item['advice']!.isNotEmpty) ...[
           pw.SizedBox(height: 2),

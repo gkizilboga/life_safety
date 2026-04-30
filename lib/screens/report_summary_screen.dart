@@ -6,6 +6,7 @@ import '../widgets/custom_widgets.dart';
 import '../logic/report_engine.dart';
 import '../data/bina_store.dart';
 import 'dashboard_screen.dart';
+import 'bolum_33_screen.dart';
 import 'paywall_screen.dart';
 import '../utils/app_content.dart';
 import '../utils/app_theme.dart';
@@ -48,6 +49,9 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   Future<void> _initData() async {
     // Let the route transition finish smoothly before blocking the thread
     await Future.delayed(const Duration(milliseconds: 300));
+
+    // FAIL-SAFE: Re-calculate User Loads before any report logic to ensure Section 34 overrides are applied.
+    Bolum33Screen.recalculateAndSaveUserLoads(BinaStore.instance);
 
     // Perform heavy calculations once
     try {

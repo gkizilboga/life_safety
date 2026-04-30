@@ -158,14 +158,15 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           if (_model.bodrumlar.isNotEmpty) ...[
             const SizedBox(height: 12),
             _buildSectionTitle("Bodrum Katların Kullanım Amacı"),
-            _buildToggleRow(
-              "Tüm bodrumlar aynı fonksiyona sahip",
-              _model.bodrumlarAyni,
-              (val) {
-                setState(() => _model = _model.copyWith(bodrumlarAyni: val));
-              },
-            ),
-            if (_model.bodrumlarAyni)
+            if (_model.bodrumlar.length > 1)
+              _buildToggleRow(
+                "Tüm bodrumlar aynı fonksiyona sahip",
+                _model.bodrumlarAyni,
+                (val) {
+                  setState(() => _model = _model.copyWith(bodrumlarAyni: val));
+                },
+              ),
+            if (_model.bodrumlarAyni || _model.bodrumlar.length == 1)
               _buildChoiceGrid('bodrum', 0, _model.bodrumlar[0])
             else
               ...List.generate(
@@ -180,7 +181,7 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
                         left: 4,
                       ),
                       child: Text(
-                        "${i + 1}. Bodrum Katların Kullanım Amacı",
+                        "${i + 1}. Bodrum Katın Kullanım Amacı",
                         style: AppStyles.questionTitle,
                       ),
                     ),
@@ -193,14 +194,15 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
           if (_model.normaller.isNotEmpty) ...[
             const SizedBox(height: 12),
             _buildSectionTitle("Normal Katların Kullanım Amacı"),
-            _buildToggleRow(
-              "Tüm normal katlar aynı fonksiyona sahip",
-              _model.normallerAyni,
-              (val) {
-                setState(() => _model = _model.copyWith(normallerAyni: val));
-              },
-            ),
-            if (_model.normallerAyni)
+            if (_model.normaller.length > 1)
+              _buildToggleRow(
+                "Tüm normal katlar aynı fonksiyona sahip",
+                _model.normallerAyni,
+                (val) {
+                  setState(() => _model = _model.copyWith(normallerAyni: val));
+                },
+              ),
+            if (_model.normallerAyni || _model.normaller.length == 1)
               _buildChoiceGrid('normal', 0, _model.normaller[0])
             else
               ...List.generate(

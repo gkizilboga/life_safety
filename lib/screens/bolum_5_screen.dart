@@ -59,24 +59,16 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
     if (existing != null) {
       _model = existing;
       if (existing.tabanAlani != null) {
-        _tabanCtrl.text = existing.tabanAlani!
-            .toStringAsFixed(2)
-            .replaceAll('.', ',');
+        _tabanCtrl.text = InputValidator.formatArea(existing.tabanAlani!);
       }
       if (existing.normalKatAlani != null) {
-        _normalCtrl.text = existing.normalKatAlani!
-            .toStringAsFixed(2)
-            .replaceAll('.', ',');
+        _normalCtrl.text = InputValidator.formatArea(existing.normalKatAlani!);
       }
       if (existing.bodrumKatAlani != null) {
-        _bodrumCtrl.text = existing.bodrumKatAlani!
-            .toStringAsFixed(2)
-            .replaceAll('.', ',');
+        _bodrumCtrl.text = InputValidator.formatArea(existing.bodrumKatAlani!);
       }
       if (existing.toplamInsaatAlani != null) {
-        _toplamCtrl.text = existing.toplamInsaatAlani!
-            .toStringAsFixed(2)
-            .replaceAll('.', ',');
+        _toplamCtrl.text = InputValidator.formatArea(existing.toplamInsaatAlani!);
         _isCalculated = true;
       }
       _isConfirmed = true; // If we have data, they confirmed before
@@ -174,7 +166,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
         (_bKat == 0 || bAlani > 0)) {
       double toplam = tAlani + (_nKat * nAlani) + (_bKat * bAlani);
       setState(() {
-        _toplamCtrl.text = toplam.toStringAsFixed(2).replaceAll('.', ',');
+        _toplamCtrl.text = InputValidator.formatArea(toplam);
         _isCalculated = true;
       });
     } else {
@@ -471,9 +463,7 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
             if (toplam == toplam.truncateToDouble()) {
               targetController.text = toplam.toInt().toString();
             } else {
-              targetController.text = toplam
-                  .toStringAsFixed(2)
-                  .replaceAll('.', ',');
+              targetController.text = InputValidator.formatArea(toplam);
             }
           });
           _validate();
@@ -594,16 +584,19 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
             padding: EdgeInsets.symmetric(vertical: 8),
             child: Divider(height: 1, thickness: 0.5),
           ),
-          _buildSummaryRow("Zemin Kat:", "${_tabanCtrl.text} m²"),
+          _buildSummaryRow(
+            "Zemin Kat:",
+            "${InputValidator.formatArea(InputValidator.parseFlex(_tabanCtrl.text) ?? 0)} m²",
+          ),
           if (_nKat > 0)
             _buildSummaryRow(
               "Normal Katlar ($_nKat adet):",
-              "${((InputValidator.parseFlex(_normalCtrl.text) ?? 0) * _nKat).toStringAsFixed(2)} m²",
+              "${InputValidator.formatArea((InputValidator.parseFlex(_normalCtrl.text) ?? 0) * _nKat)} m²",
             ),
           if (_bKat > 0)
             _buildSummaryRow(
               "Bodrum Katlar ($_bKat adet):",
-              "${((InputValidator.parseFlex(_bodrumCtrl.text) ?? 0) * _bKat).toStringAsFixed(2)} m²",
+              "${InputValidator.formatArea((InputValidator.parseFlex(_bodrumCtrl.text) ?? 0) * _bKat)} m²",
             ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 4),

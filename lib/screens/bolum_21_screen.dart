@@ -23,6 +23,38 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     super.initState();
     if (BinaStore.instance.bolum21 != null) {
       _model = BinaStore.instance.bolum21!;
+    } else {
+      _applyAutoSelection();
+    }
+  }
+
+  void _applyAutoSelection() {
+    final b20 = BinaStore.instance.bolum20;
+    final b10 = BinaStore.instance.bolum10;
+    final double hYapi = BinaStore.instance.bolum3?.hYapi ?? 0.0;
+
+    bool shouldBeNo = false;
+
+    // 1. Kriter: Merdiven tiplerine göre kontrol (Bina içi/dışı kapalı yangın merdiveni yoksa)
+    if (b20 != null) {
+      final int totalSpecialStairs = b20.binaIciYanginMerdiveniSayisi +
+          b20.binaDisiKapaliYanginMerdiveniSayisi +
+          b20.bodrumBinaIciYanginMerdiveniSayisi +
+          b20.bodrumBinaDisiKapaliYanginMerdiveniSayisi;
+      if (totalSpecialStairs == 0) shouldBeNo = true;
+    }
+
+    // 2. Kriter: Konut harici alan yoksa VE yapı yüksekliği 30.5m altındaysa
+    if (b10 != null && hYapi < 30.5) {
+      bool isAllKonut = (b10.zemin?.label == Bolum10Content.konut.label) &&
+          b10.bodrumlar.every((e) => e?.label == Bolum10Content.konut.label) &&
+          b10.normaller.every((e) => e?.label == Bolum10Content.konut.label);
+
+      if (isAllKonut) shouldBeNo = true;
+    }
+
+    if (shouldBeNo) {
+      _model = _model.copyWith(varlik: Bolum21Content.varlikOptionB);
     }
   }
 

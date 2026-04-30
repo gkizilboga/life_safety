@@ -24,6 +24,9 @@ class _Bolum11ScreenState extends State<Bolum11Screen> {
     super.initState();
     if (BinaStore.instance.bolum11 != null) {
       _model = BinaStore.instance.bolum11!;
+    } else {
+      // Çoğu bina yola cepheli olduğu için varsayılan olarak "Aşmıyor" seçiyoruz.
+      _model = _model.copyWith(mesafe: Bolum11Content.mesafeOptionA);
     }
   }
 

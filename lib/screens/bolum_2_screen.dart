@@ -24,6 +24,10 @@ class _Bolum2ScreenState extends State<Bolum2Screen> {
     super.initState();
     if (BinaStore.instance.bolum2 != null) {
       _model = BinaStore.instance.bolum2!;
+    } else {
+      // Ülke genelindeki yapı stokunun büyük çoğunluğu betonarme olduğu için 
+      // kullanıcı deneyimini hızlandırmak adına varsayılan olarak seçiyoruz.
+      _model = _model.copyWith(secim: Bolum2Content.betonarme);
     }
   }
 

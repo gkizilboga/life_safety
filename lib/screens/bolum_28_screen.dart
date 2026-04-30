@@ -23,6 +23,13 @@ class _Bolum28ScreenState extends State<Bolum28Screen> {
     super.initState();
     if (BinaStore.instance.bolum28 != null) {
       _model = BinaStore.instance.bolum28!;
+    } else {
+      // Çoğu apartman dairesi tek katlı olduğu ve 20m mesafeyi aşmadığı için 
+      // bu şıkları varsayılan olarak işaretleyip kullanıcıyı hızlandırıyoruz.
+      _model = _model.copyWith(
+        mesafe: Bolum28Content.mesafeOptionA,
+        dubleks: Bolum28Content.dubleksOptionA,
+      );
     }
   }
 

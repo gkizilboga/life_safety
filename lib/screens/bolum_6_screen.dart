@@ -23,9 +23,10 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
   @override
   void initState() {
     super.initState();
-    // Manual Progress Tracking (since we don't use AnalysisPageLayout here)
-    // Bolum 6 is Step 6 (after Bolum 4 fix: 1,2,3,4,5,6)
-    // Indexes: B1->1, B2->2, B3->3, B4->4, B5->5, B6->6
+    if (BinaStore.instance.bolum6 != null) {
+      _model = BinaStore.instance.bolum6!;
+    }
+    // Manual Progress Tracking
     BinaStore.instance.lastActiveSection = 6;
     BinaStore.instance.saveToDisk();
   }
@@ -45,7 +46,13 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
           newDepo = false;
         }
       } else {
-        if (type == 'otopark') newOtopark = !newOtopark;
+        if (type == 'otopark') {
+          newOtopark = !newOtopark;
+          // Eğer otopark yeni seçildiyse ve tipi boşsa varsayılan olarak "Kapalı" (6-2-A) seç
+          if (newOtopark && _model.otoparkTipi == null) {
+            _model = _model.copyWith(otoparkTipi: Bolum6Content.otoparkKapali);
+          }
+        }
         if (type == 'ticari') newTicari = !newTicari;
         if (type == 'depo') newDepo = !newDepo;
 

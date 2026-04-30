@@ -29,6 +29,13 @@ class Bolum33Model {
   });
 
   ChoiceResult? get normalKatSonuc {
+    if (yukNormal == 0) return ChoiceResult(
+      label: "33-N-EXCLUDED",
+      uiTitle: "Hesaplanmadı",
+      uiSubtitle: "",
+      reportText: "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
+      level: RiskLevel.info,
+    );
     if (mevcutUst == null || gerekliNormal == null) return null;
     return (mevcutUst! >= gerekliNormal!)
         ? Bolum33Content.normalKatYeterli
@@ -36,6 +43,13 @@ class Bolum33Model {
   }
 
   ChoiceResult? get zeminKatSonuc {
+    if (yukZemin == 0) return ChoiceResult(
+      label: "33-Z-EXCLUDED",
+      uiTitle: "Hesaplanmadı",
+      uiSubtitle: "",
+      reportText: "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
+      level: RiskLevel.info,
+    );
     if (mevcutUst == null || gerekliZemin == null) return null;
     return (mevcutUst! >= gerekliZemin!)
         ? Bolum33Content.zeminKatYeterli
@@ -43,6 +57,13 @@ class Bolum33Model {
   }
 
   ChoiceResult? get bodrumKatSonuc {
+    if (yukBodrum == 0) return ChoiceResult(
+      label: "33-B-EXCLUDED",
+      uiTitle: "Hesaplanmadı",
+      uiSubtitle: "",
+      reportText: "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
+      level: RiskLevel.info,
+    );
     if (mevcutBodrum == null || gerekliBodrum == null) return null;
     return (mevcutBodrum! >= gerekliBodrum!)
         ? Bolum33Content.bodrumKatYeterli
@@ -77,17 +98,20 @@ class Bolum33Model {
     List<String> parts = [];
     // Zemin Kat
     if (resZemin != null) {
-      parts.add("ZEMİN KAT: ${resZemin.reportText}");
+      String text = resZemin.reportText;
+      parts.add("ZEMİN KAT:\n$text");
     }
 
     // Normal Kat
     if (resNormal != null) {
-      parts.add("NORMAL KATLAR (En Yoğun Kat): ${resNormal.reportText}");
+      String text = resNormal.reportText;
+      parts.add("NORMAL KATLAR (En Yoğun Kat):\n$text");
     }
 
     // Bodrum Kat
     if (resBodrum != null) {
-      parts.add("BODRUM KATLAR (En Yoğun Kat): ${resBodrum.reportText}");
+      String text = resBodrum.reportText;
+      parts.add("BODRUM KATLAR (En Yoğun Kat):\n$text");
     }
 
     return parts.join("\n\n");

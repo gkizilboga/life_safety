@@ -869,13 +869,13 @@ class BinaStore {
 
         // Duman Tahliye Sistemleri
         if (m13.otoparkAlan != null)
-          parts.add("Otopark Duman Tahliyesi: ${m13.otoparkAlan!.reportText}");
+          parts.add("Otopark Duman Tahliyesi: ${m13.otoparkAlan!.uiTitle}");
         if (m13.kazanAlan != null)
-          parts.add(
-            "Kazan Dairesi Duman Tahliyesi: ${m13.kazanAlan!.reportText}",
-          );
+          parts.add("Kazan Dairesi Duman Tahliyesi: ${m13.kazanAlan!.uiTitle}");
         if (m13.siginakAlan != null)
-          parts.add("Sığınak Duman Tahliyesi: ${m13.siginakAlan!.reportText}");
+          parts.add("Sığınak Duman Tahliyesi: ${m13.siginakAlan!.uiTitle}");
+        if (m13.depoBodrumAlan != null)
+          parts.add("Depo Duman Tahliyesi: ${m13.depoBodrumAlan!.uiTitle}");
 
         if (parts.isEmpty) {
           return ChoiceResult(

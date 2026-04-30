@@ -11,14 +11,14 @@ class Section36Handler {
 
   static const Map<String, List<int>> _widthRanges = {
     "36-Merd-A": [0, 119],
-    "36-Merd-B": [120, 150],
-    "36-Merd-C": [151, 200],
-    "36-Merd-D": [201, 500],
+    "36-Merd-B": [120, 149],
+    "36-Merd-C": [150, 199],
+    "36-Merd-D": [200, 500],
     "36-Koridor-A": [0, 99],
     "36-Koridor-B": [100, 119],
-    "36-Koridor-C": [120, 150],
-    "36-Koridor-D": [151, 200],
-    "36-Koridor-E": [201, 500],
+    "36-Koridor-C": [120, 149],
+    "36-Koridor-D": [150, 199],
+    "36-Koridor-E": [200, 500],
   };
 
   static List<int>? _getRangeForLabel(String label) {
@@ -43,7 +43,7 @@ class Section36Handler {
       // Dairesel merdiven uyarısı detaylı analizde (#5) halledilecek, burada sadece sahanlıksız uyarısı kalsın.
       if (b20.sahanliksizMerdivenSayisi > 0) {
         analysisParts.add(
-          "KRİTİK RİSK: Binada ${b20.sahanliksizMerdivenSayisi} adet sahanlıksız merdiven tespit edilmiştir. Sahanlıksız merdiven tipi kaçış yolu olarak kabul edilmemektedir. Binada alternatif kaçış güzergahı bulunmalıdır.",
+          "KRİTİK RİSK: Binada ${b20.sahanliksizMerdivenSayisi} adet sahanlıksız merdiven tespit edilmiştir. Sahanlıksız merdiven tipi Yönetmeliğe göre kaçış yolu olarak kabul edilmemektedir.",
         );
       }
 
@@ -57,7 +57,8 @@ class Section36Handler {
 
         if (heightLimitReached || userLoadLimitReached) {
           final List<String> reasons = [];
-          if (heightLimitReached) reasons.add("yapı yüksekliği (${hYapi.toStringAsFixed(2)} m)");
+          if (heightLimitReached)
+            reasons.add("yapı yüksekliği (${hYapi.toStringAsFixed(2)} m)");
           if (userLoadLimitReached)
             reasons.add("kullanıcı yükü ($maxYuk kişi)");
 
@@ -84,7 +85,8 @@ class Section36Handler {
 
           if (heightLimitReached || userLoadLimitReached) {
             final List<String> reasons = [];
-            if (heightLimitReached) reasons.add("yapı yüksekliği (${hYapi.toStringAsFixed(2)} m)");
+            if (heightLimitReached)
+              reasons.add("yapı yüksekliği (${hYapi.toStringAsFixed(2)} m)");
             if (userLoadLimitReached)
               reasons.add("kullanıcı yükü ($maxYuk kişi)");
 

@@ -36,6 +36,10 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     final saved = BinaStore.instance.bolum36;
     if (saved != null) {
       _model = saved;
+    } else {
+      // Binaların %99'unda çıkış zemin kattan olduğu için 
+      // kullanıcıyı hızlandırmak adına varsayılan olarak seçiyoruz.
+      _model = _model.copyWith(cikisKati: Bolum36Content.cikisKatiOptionA);
     }
 
     final b20 = BinaStore.instance.bolum20;

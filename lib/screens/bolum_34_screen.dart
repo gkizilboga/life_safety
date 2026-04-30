@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_34_model.dart';
+import 'bolum_33_screen.dart';
 import 'bolum_35_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
@@ -31,6 +32,14 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     super.initState();
     if (BinaStore.instance.bolum34 != null) {
       _model = BinaStore.instance.bolum34!;
+    } else {
+      // Çoğu dükkanın sokağa doğrudan açılan kapısı olduğu için
+      // kullanıcı deneyimini hızlandırmak adına varsayılan olarak "Evet" seçiyoruz.
+      _model = _model.copyWith(
+        zemin: Bolum34Content.zeminOptionA,
+        bodrum: Bolum34Content.bodrumOptionA,
+        normal: Bolum34Content.normalOptionA,
+      );
     }
     _checkEligibilityAndDetermineQuestions();
   }
@@ -54,25 +63,23 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     // Bölüm 10'dan kat bazında ticari kullanım kontrolü
     if (b10 != null) {
       // Zemin katta ticari var mı?
-      _hasTicariZemin = b10.zemin?.label.contains("Ticari") ?? false;
+      _hasTicariZemin = b10.zemin?.uiTitle.toLowerCase().contains("ticari") ?? false;
 
       // Bodrum katlarda ticari var mı? (sadece bodrum kat varsa kontrol et)
       if (_hasBodrumKat) {
         _hasTicariBodrum = b10.bodrumlar.any(
-          (e) => e?.label.contains("Ticari") ?? false,
+          (e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false,
         );
       }
 
       // Normal katlarda ticari var mı?
       _hasTicariNormal = b10.normaller.any(
-        (e) => e?.label.contains("Ticari") ?? false,
+        (e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false,
       );
     }
 
     // En az bir kat tipinde ticari alan varsa veya Bölüm 6'da ticari işaretlenmişse eligible
     bool hasAnyTicari = _hasTicariZemin || _hasTicariBodrum || _hasTicariNormal;
-
-    _activeTicariFloorCount = (_hasTicariZemin ? 1 : 0) + (_hasTicariBodrum ? 1 : 0) + (_hasTicariNormal ? 1 : 0);
 
     // Bölüm 6'da ticari var ama Bölüm 10'da hiçbir katta ticari seçilmemişse,
     // varsayılan olarak zemin kat sorusunu göster
@@ -80,6 +87,8 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       _hasTicariZemin = true;
       hasAnyTicari = true;
     }
+
+    _activeTicariFloorCount = (_hasTicariZemin ? 1 : 0) + (_hasTicariBodrum ? 1 : 0) + (_hasTicariNormal ? 1 : 0);
 
     if (hasTicariInB6 || hasAnyTicari) {
       setState(() {
@@ -153,6 +162,12 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     }
 
     BinaStore.instance.bolum34 = _model;
+    
+    // ARKA PLAN GÜNCELLEMESİ:
+    // Bölüm 34'te ticari alan çıkışları belirlendiği için, Kullanıcı Yükünü 
+    // hesaplayan Bölüm 33'ü bu yeni verilere göre otomatik olarak yeniden hesaplıyoruz.
+    Bolum33Screen.recalculateAndSaveUserLoads(BinaStore.instance);
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum35Screen()),

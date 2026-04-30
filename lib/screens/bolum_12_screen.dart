@@ -43,6 +43,10 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
         if (_model.dosemePaspayi != null)
           _dosemePaspayiCtrl.text = _model.dosemePaspayi.toString();
       }
+    } else {
+      // Çoğu bina 2000 sonrası deprem yönetmeliğine göre yapıldığı için 
+      // kullanıcı deneyimini hızlandırmak adına varsayılan olarak seçiyoruz.
+      _model = _model.copyWith(betonPaspayi: Bolum12Content.betonOptionA);
     }
     final bolum2 = BinaStore.instance.bolum2;
     _tasiyiciSistemLabel = bolum2?.secim?.label;

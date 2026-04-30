@@ -458,8 +458,8 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
     }
 
     final title = isBasement
-        ? "Bodrum Kat: $katIsmi Kat Tahliye Mesafesi"
-        : "$katIsmi Kat Tahliye Mesafesi";
+        ? "Bodrum Kat: $katIsmi Katı Tahliye Mesafesi"
+        : "$katIsmi Katı Tahliye Mesafesi";
     final question =
         "$katIsmi katında merdivenden çıkınca binanın dış kapısına ulaşmak için kaç metre yürünüyor?";
 

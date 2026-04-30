@@ -4532,21 +4532,21 @@ class Bolum36Content {
   );
   static final merdGenislikB = ChoiceResult(
     label: "36-Merd-B",
-    uiTitle: "120 cm - 150 cm arası",
+    uiTitle: "120 cm - 149 cm arası",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
   );
   static final merdGenislikC = ChoiceResult(
     label: "36-Merd-C",
-    uiTitle: "151 cm - 200 cm arası",
+    uiTitle: "150 cm - 199 cm arası",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
   );
   static final merdGenislikD = ChoiceResult(
     label: "36-Merd-D",
-    uiTitle: "201 cm ve üzeri",
+    uiTitle: "200 cm ve üzeri",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -4562,7 +4562,7 @@ class Bolum36Content {
   // Koridor Genişliği
   static final koridorGenislikA = ChoiceResult(
     label: "36-Koridor-A",
-    uiTitle: "100 cm'in altında",
+    uiTitle: "99 cm ve altı",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
@@ -4576,21 +4576,21 @@ class Bolum36Content {
   );
   static final koridorGenislikC = ChoiceResult(
     label: "36-Koridor-C",
-    uiTitle: "120 cm - 150 cm arası",
+    uiTitle: "120 cm - 149 cm arası",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
   );
   static final koridorGenislikD = ChoiceResult(
     label: "36-Koridor-D",
-    uiTitle: "151 cm - 200 cm arası",
+    uiTitle: "150 cm - 199 cm arası",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,
   );
   static final koridorGenislikE = ChoiceResult(
     label: "36-Koridor-E",
-    uiTitle: "201 cm ve üzeri",
+    uiTitle: "200 cm ve üzeri",
     uiSubtitle: "",
     reportText: "",
     level: RiskLevel.info,

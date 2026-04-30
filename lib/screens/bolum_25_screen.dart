@@ -49,10 +49,10 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
 
     bool hasTicari =
         (b6?.hasTicari ?? false) ||
-        (b10?.zemin?.label.contains("Ticari") ?? false) ||
-        (b10?.bodrumlar.any((e) => e?.label.contains("Ticari") ?? false) ??
+        (b10?.zemin?.uiTitle.toLowerCase().contains("ticari") ?? false) ||
+        (b10?.bodrumlar.any((e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false) ??
             false) ||
-        (b10?.normaller.any((e) => e?.label.contains("Ticari") ?? false) ??
+        (b10?.normaller.any((e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false) ??
             false);
 
     setState(() {

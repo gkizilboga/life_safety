@@ -25,6 +25,9 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
     super.initState();
     if (BinaStore.instance.bolum26 != null) {
       _model = BinaStore.instance.bolum26!;
+    } else {
+      // Kaçış yolu üzerinde rampa kullanımı nadir olduğu için varsayılan "Yok" seçiyoruz.
+      _model = _model.copyWith(varlik: Bolum26Content.varlikOptionA);
     }
     // Bölüm 6'daki otopark varlığına göre şalteri ayarla
     final b6 = BinaStore.instance.bolum6;

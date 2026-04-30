@@ -48,4 +48,23 @@ class InputValidator {
 
     return null;
   }
+
+  /// Alan ve hesaplama sonuçlarını standart görünüme kavuşturur (örn: 1.234,56)
+  static String formatArea(double value) {
+    bool isNegative = value < 0;
+    String str = value.abs().toStringAsFixed(2);
+    List<String> parts = str.split('.');
+    String intPart = parts[0];
+    String decPart = parts.length > 1 ? parts[1] : '00';
+
+    String formattedInt = '';
+    for (int i = 0; i < intPart.length; i++) {
+      if (i > 0 && (intPart.length - i) % 3 == 0) {
+        formattedInt += '.';
+      }
+      formattedInt += intPart[i];
+    }
+
+    return "${isNegative ? '-' : ''}$formattedInt,$decPart";
+  }
 }

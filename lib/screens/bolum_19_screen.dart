@@ -24,6 +24,9 @@ class _Bolum19ScreenState extends State<Bolum19Screen> {
     super.initState();
     if (BinaStore.instance.bolum19 != null) {
       _model = BinaStore.instance.bolum19!;
+    } else {
+      // Çoğu binada yanıltıcı kapı bulunmadığı için varsayılan olarak "Yok" seçiyoruz.
+      _model = _model.copyWith(yanilticiKapi: Bolum19Content.yanilticiOptionA);
     }
   }
 

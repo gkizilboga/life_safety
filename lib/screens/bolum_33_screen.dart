@@ -10,8 +10,159 @@ import '../../utils/app_theme.dart';
 
 class Bolum33Screen extends StatefulWidget {
   const Bolum33Screen({super.key});
+
   @override
   State<Bolum33Screen> createState() => _Bolum33ScreenState();
+
+  static double getKatsayi(ChoiceResult? choice) {
+    if (choice == null) return 20.0;
+    final label = choice.label;
+    if (label.contains("10-A")) return 20.0;
+    if (label.contains("10-B")) return 10.0;
+    if (label.contains("10-C")) return 5.0;
+    if (label.contains("10-D")) return 1.5;
+    if (label.contains("10-E")) return 30.0;
+    return 20.0;
+  }
+
+  static int hesaplaGerekliCikis(int kisi) {
+    if (kisi <= 50) return 1;
+    if (kisi <= 500) return 2;
+    if (kisi <= 1000) return 3;
+    return 4 + ((kisi - 1000) / 500).ceil();
+  }
+
+  static void recalculateAndSaveUserLoads(BinaStore store) {
+    final b3 = store.bolum3;
+    final b5 = store.bolum5;
+    final b10 = store.bolum10;
+    final b13 = store.bolum13;
+    final b20 = store.bolum20;
+    final b34 = store.bolum34;
+
+    bool hasNormal = (b3?.normalKatSayisi ?? 0) >= 1;
+    bool hasBodrum = (b3?.bodrumKatSayisi ?? 0) >= 1;
+    double hYapi = b3?.hYapi ?? 0.0;
+
+    bool isExcluded(ChoiceResult? choice, ChoiceResult? kapiSecimi, ChoiceResult? b34Secimi, String b34Target) {
+      if (choice == null) return false;
+      bool isTicari = choice.uiTitle.toLowerCase().contains("ticari");
+      if (!isTicari) return false;
+      bool excludedBy13 = kapiSecimi?.label.contains("13-11-C") ?? false;
+      bool excludedBy34 = false;
+      if (b34?.areTicariCikisSame == true) {
+        // Tüm katlar için aynı cevap geçerli; paylaşımlı label "34-1-A" gibi
+        // olabilir, ama "-A" ile biten her label "bağımsız çıkış VAR" anlamına gelir.
+        final shared = b34?.zemin ?? b34?.bodrum ?? b34?.normal;
+        excludedBy34 = shared?.label.endsWith("-A") ?? false;
+      } else {
+        excludedBy34 = b34Secimi?.label.contains(b34Target) ?? false;
+      }
+      return excludedBy13 || excludedBy34;
+    }
+
+    ChoiceResult? b34Zemin = b34?.areTicariCikisSame == true
+        ? (b34?.zemin ?? b34?.bodrum ?? b34?.normal)
+        : b34?.zemin;
+    ChoiceResult? b34Normal = b34?.areTicariCikisSame == true
+        ? (b34?.zemin ?? b34?.bodrum ?? b34?.normal)
+        : b34?.normal;
+    ChoiceResult? b34Bodrum = b34?.areTicariCikisSame == true
+        ? (b34?.zemin ?? b34?.bodrum ?? b34?.normal)
+        : b34?.bodrum;
+
+    // 1. ZEMİN KAT
+    double alanZemin = b5?.tabanAlani ?? 0.0;
+    int yukZemin = 0;
+    int gZemin = 0;
+    if (isExcluded(b10?.zemin, b13?.ticariKapiZemin, b34Zemin, "34-1-A")) {
+      yukZemin = 0;
+      gZemin = 0;
+    } else {
+      double kZemin = getKatsayi(b10?.zemin);
+      yukZemin = (alanZemin / kZemin).ceil();
+      int gZeminLoad = hesaplaGerekliCikis(yukZemin);
+      gZemin = (hYapi >= 21.50) ? math.max(gZeminLoad, 2) : gZeminLoad;
+    }
+
+    // 2. NORMAL KAT
+    double alanNormal = b5?.normalKatAlani ?? 0.0;
+    int yukNormal = 0;
+    if (b10 != null && b10.normaller.isNotEmpty) {
+      for (var choice in b10.normaller) {
+        if (isExcluded(choice, b13?.ticariKapiNormal, b34Normal, "34-3-A")) continue;
+        double k = getKatsayi(choice);
+        int yuk = (alanNormal / k).ceil();
+        if (yuk > yukNormal) yukNormal = yuk;
+      }
+    } else {
+      yukNormal = (alanNormal / getKatsayi(null)).ceil();
+    }
+    int gNormal = 0;
+    if (yukNormal > 0) {
+      int gNormalLoad = hesaplaGerekliCikis(yukNormal);
+      gNormal = (hYapi >= 21.50) ? math.max(gNormalLoad, 2) : gNormalLoad;
+    }
+
+    // 3. BODRUM KAT
+    double alanBodrum = b5?.bodrumKatAlani ?? 0.0;
+    int yukBodrum = 0;
+    if (b10 != null && b10.bodrumlar.isNotEmpty) {
+      for (var choice in b10.bodrumlar) {
+        if (isExcluded(choice, b13?.ticariKapiBodrum, b34Bodrum, "34-2-A")) continue;
+        double k = getKatsayi(choice);
+        int yuk = (alanBodrum / k).ceil();
+        if (yuk > yukBodrum) yukBodrum = yuk;
+      }
+    } else {
+      yukBodrum = (alanBodrum / getKatsayi(null)).ceil();
+    }
+    int gBodrum = 0;
+    if (yukBodrum > 0) {
+      int gBodrumLoad = hesaplaGerekliCikis(yukBodrum);
+      gBodrum = (hYapi >= 21.50) ? math.max(gBodrumLoad, 2) : gBodrumLoad;
+    }
+
+    // 4. MEVCUT ÇIKIŞ SAYILARI
+    int mevcutUst =
+        (b20?.normalMerdivenSayisi ?? 0) +
+        (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
+        (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+        (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0) +
+        (b20?.donerMerdivenSayisi ?? 0) +
+        (b20?.sahanliksizMerdivenSayisi ?? 0) +
+        (b20?.dengelenmisMerdivenSayisi ?? 0);
+
+    int mevcutBodrum = 0;
+    bool isBodrumIndependent = b20?.isBodrumIndependent ?? false;
+    if (isBodrumIndependent) {
+      mevcutBodrum =
+          (b20?.bodrumNormalMerdivenSayisi ?? 0) +
+          (b20?.bodrumBinaIciYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumBinaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumBinaDisiAcikYanginMerdiveniSayisi ?? 0) +
+          (b20?.bodrumDonerMerdivenSayisi ?? 0) +
+          (b20?.bodrumSahanliksizMerdivenSayisi ?? 0) +
+          (b20?.bodrumDengelenmisMerdivenSayisi ?? 0);
+    } else {
+      mevcutBodrum = (b20?.bodrumMerdivenDevami?.label == "20-Bodrum-A") ? mevcutUst : 0;
+    }
+
+    var newModel = store.bolum33 ?? Bolum33Model();
+    store.bolum33 = newModel.copyWith(
+      alanZemin: alanZemin,
+      alanNormal: hasNormal ? alanNormal : null,
+      alanBodrumMax: hasBodrum ? alanBodrum : null,
+      yukZemin: yukZemin,
+      yukNormal: hasNormal ? yukNormal : null,
+      yukBodrum: hasBodrum ? yukBodrum : null,
+      gerekliZemin: gZemin,
+      gerekliNormal: hasNormal ? gNormal : null,
+      gerekliBodrum: hasBodrum ? gBodrum : null,
+      mevcutUst: mevcutUst,
+      mevcutBodrum: hasBodrum ? mevcutBodrum : null,
+    );
+  }
 }
 
 class _Bolum33ScreenState extends State<Bolum33Screen> {
@@ -33,143 +184,33 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     _hesapla();
   }
 
-  double _getKatsayi(ChoiceResult? choice) {
-    if (choice == null) return 20.0; // Varsayılan (Konut)
-    final label = choice.label;
-    // Bölüm 10'daki etiketlere göre katsayılar (Yönetmelik Ek-5/A)
-    if (label.contains("10-A")) return 20.0; // Konut
-    if (label.contains("10-B")) return 10.0; // Büro/Ofis
-    if (label.contains("10-C")) return 5.0; // Mağaza/Ticari
-    if (label.contains("10-D")) return 1.5; // Toplanma/Eğlence
-    if (label.contains("10-E")) return 30.0; // Depo/Otopark
-    return 20.0;
-  }
-
-  int _hesaplaGerekliCikis(int kisi) {
-    if (kisi <= 50) return 1;
-    if (kisi <= 500) return 2;
-    if (kisi <= 1000) return 3;
-    // Yönetmelik gereği 1000'den sonra her 500 kişide 1 çıkış eklenir:
-    return 4 + ((kisi - 1000) / 500).ceil();
-  }
-
   void _hesapla() {
     final store = BinaStore.instance;
-    final b3 = store.bolum3;
-    final b5 = store.bolum5;
-    final b9 = store.bolum9;
-    final b10 = store.bolum10;
-    final b20 = store.bolum20;
-
-    _hasNormal = (b3?.normalKatSayisi ?? 0) >= 1;
-    _hasBodrum = (b3?.bodrumKatSayisi ?? 0) >= 1;
-
-    double hYapi = b3?.hYapi ?? 0.0;
-    bool hasSprinkler = b9?.secim?.label == "9-A";
-
-    // 1. ZEMİN KAT HESABI
-    double alanZemin = b5?.tabanAlani ?? 0.0;
-    double kZemin = _getKatsayi(b10?.zemin);
-    int yukZemin = (alanZemin / kZemin).ceil();
-    int gZeminLoad = _hesaplaGerekliCikis(yukZemin);
-    // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
-    int gZemin = (hYapi >= 21.50) ? math.max(gZeminLoad, 2) : gZeminLoad;
-
-    // 2. NORMAL KAT HESABI (En Kritik Kat)
-    double alanNormal = b5?.normalKatAlani ?? 0.0;
-    int yukNormal = 0;
-    if (b10 != null && b10.normaller.isNotEmpty) {
-      for (var choice in b10.normaller) {
-        double k = _getKatsayi(choice);
-        int yuk = (alanNormal / k).ceil();
-        if (yuk > yukNormal) yukNormal = yuk;
-      }
-    } else {
-      yukNormal = (alanNormal / _getKatsayi(null)).ceil();
+    // Arka plan fonksiyonumuzu çağırıp State'i güncelliyoruz
+    Bolum33Screen.recalculateAndSaveUserLoads(store);
+    
+    // UI state'i güncelle
+    if (store.bolum33 != null) {
+      setState(() {
+        _model = store.bolum33!;
+        _hasNormal = (store.bolum3?.normalKatSayisi ?? 0) >= 1;
+        _hasBodrum = (store.bolum3?.bodrumKatSayisi ?? 0) >= 1;
+        
+        bool hasSprinkler = store.bolum9?.secim?.label == "9-A";
+        double alanNormal = _model.alanNormal ?? 0.0;
+        int gNormal = _model.gerekliNormal ?? 0;
+        
+        if (gNormal == 1) {
+          if (hasSprinkler && alanNormal > 450) {
+            _specialWarning =
+                "Normal kat alanı belli büyüklüğün üzerindedir. Bu sebeple, binada sprinkler olsa bile tek yön kaçış mesafesinin (30m) aşılma ihtimali var. İkinci çıkış gereksinimi doğabilir. Uzman kontrolü tavsiye edilir.";
+          } else if (!hasSprinkler && alanNormal > 600) {
+            _specialWarning =
+                "Normal kat alanı belli büyüklüğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. 2. çıkış gerekebilir.";
+          }
+        }
+      });
     }
-    int gNormalLoad = _hesaplaGerekliCikis(yukNormal);
-    // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
-    int gNormal = (hYapi >= 21.50) ? math.max(gNormalLoad, 2) : gNormalLoad;
-
-    // 3. BODRUM KAT HESABI (En Kritik Kat)
-    double alanBodrum = b5?.bodrumKatAlani ?? 0.0;
-    int yukBodrum = 0;
-    if (b10 != null && b10.bodrumlar.isNotEmpty) {
-      for (var choice in b10.bodrumlar) {
-        double k = _getKatsayi(choice);
-        int yuk = (alanBodrum / k).ceil();
-        if (yuk > yukBodrum) yukBodrum = yuk;
-      }
-    } else {
-      yukBodrum = (alanBodrum / _getKatsayi(null)).ceil();
-    }
-    int gBodrumLoad = _hesaplaGerekliCikis(yukBodrum);
-    // Yapı yüksekliği (bodrumlar dahil) 21.50m ve üzeri ise en az 2 çıkış şarttır
-    int gBodrum = (hYapi >= 21.50) ? math.max(gBodrumLoad, 2) : gBodrumLoad;
-
-    // 4. MEVCUT ÇIKIŞ SAYILARI
-    // Binadaki TÜM merdiven tiplerini dahil ediyoruz (Sahanlıksız ve Dengelenmiş dahil)
-    int mevcutUst =
-        (b20?.normalMerdivenSayisi ?? 0) +
-        (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
-        (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
-        (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0) +
-        (b20?.donerMerdivenSayisi ?? 0) +
-        (b20?.sahanliksizMerdivenSayisi ?? 0) +
-        (b20?.dengelenmisMerdivenSayisi ?? 0);
-
-    // Bodrum için Çıkış Sayısı
-    int mevcutBodrum = 0;
-    bool isBodrumIndependent = b20?.isBodrumIndependent ?? false;
-
-    if (isBodrumIndependent) {
-      // Bağımsız ise kendi sayısını topla (TÜM tipler)
-      mevcutBodrum =
-          (b20?.bodrumNormalMerdivenSayisi ?? 0) +
-          (b20?.bodrumBinaIciYanginMerdiveniSayisi ?? 0) +
-          (b20?.bodrumBinaDisiKapaliYanginMerdiveniSayisi ?? 0) +
-          (b20?.bodrumBinaDisiAcikYanginMerdiveniSayisi ?? 0) +
-          (b20?.bodrumDonerMerdivenSayisi ?? 0) +
-          (b20?.bodrumSahanliksizMerdivenSayisi ?? 0) +
-          (b20?.bodrumDengelenmisMerdivenSayisi ?? 0);
-    } else {
-      // Bağımsız değilse, merdiven bodruma iniyor mu?
-      if (b20?.bodrumMerdivenDevami?.label == "20-Bodrum-A") {
-        mevcutBodrum = mevcutUst;
-      } else {
-        mevcutBodrum = 0;
-      }
-    }
-
-    // 450/600m² UYARISI (Sadece Normal Kat İçin Örnek)
-    if (gNormal == 1) {
-      if (hasSprinkler && alanNormal > 450) {
-        _specialWarning =
-            "Normal kat alanı belli büyüklüğün üzerindedir. Bu sebeple, binada sprinkler olsa bile tek yön kaçış mesafesinin (30m) aşılma ihtimali var. İkinci çıkış gereksinimi doğabilir. Uzman kontrolü tavsiye edilir.";
-      } else if (!hasSprinkler && alanNormal > 600) {
-        // Yönetmelikte 600m2 sınırı sprinklersiz için değil, genel bir sınırdır ama senin mantığına göre:
-        // Düzeltme: Sprinklersiz ise sınır daha düşüktür ama senin metnine sadık kalıyorum.
-        _specialWarning =
-            "Normal kat alanı belli büyüklüğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. 2. çıkış gerekebilir.";
-      }
-    }
-
-    setState(() {
-      _model = _model.copyWith(
-        alanZemin: alanZemin,
-        alanNormal: _hasNormal ? alanNormal : null,
-        alanBodrumMax: _hasBodrum ? alanBodrum : null,
-        yukZemin: yukZemin,
-        yukNormal: _hasNormal ? yukNormal : null,
-        yukBodrum: _hasBodrum ? yukBodrum : null,
-        gerekliZemin: gZemin,
-        gerekliNormal: _hasNormal ? gNormal : null,
-        gerekliBodrum: _hasBodrum ? gBodrum : null,
-        mevcutUst:
-            mevcutUst, // Bu değer Zemin için de kullanıldığı için null yapmıyoruz, ama normal kat yoksa zaten sadece zemin için anlamlıdır.
-        mevcutBodrum: _hasBodrum ? mevcutBodrum : null,
-      );
-    });
   }
 
   @override
@@ -236,6 +277,25 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
               text: _specialWarning,
               icon: Icons.warning_amber_rounded,
             ),
+
+          if (_hasBodrum || _hasNormal)
+            Builder(builder: (context) {
+              final b10 = BinaStore.instance.bolum10;
+              bool hasTicariArea = false;
+              if (b10 != null) {
+                hasTicariArea =
+                    b10.bodrumlar.whereType<ChoiceResult>().any((c) => c.uiTitle.toLowerCase().contains("ticari")) ||
+                    b10.normaller.whereType<ChoiceResult>().any((c) => c.uiTitle.toLowerCase().contains("ticari")) ||
+                    (b10.zemin?.uiTitle.toLowerCase().contains("ticari") ?? false);
+              }
+              if (!hasTicariArea) return const SizedBox.shrink();
+              return CustomInfoNote(
+                type: InfoNoteType.info,
+                icon: Icons.sync_outlined,
+                text:
+                    "Bir sonraki adımda (Bölüm 34) ticari alanların bağımsız çıkışlarını belirtmeniz halinde, bu tablodaki kullanıcı yükü hesabı otomatik olarak güncellenir ve nihai rapordaki değerler buna göre düzenlenir.",
+              );
+            }),
 
           ConfirmationCheckbox(
             value: _isConfirmed,
