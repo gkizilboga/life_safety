@@ -47,13 +47,16 @@ class _Bolum25ScreenState extends State<Bolum25Screen> {
       });
     }
 
-    bool hasTicari =
-        (b6?.hasTicari ?? false) ||
-        (b10?.zemin?.uiTitle.toLowerCase().contains("ticari") ?? false) ||
-        (b10?.bodrumlar.any((e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false) ??
-            false) ||
-        (b10?.normaller.any((e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false) ??
-            false);
+    bool checkTic(ChoiceResult? c) {
+      if (c == null) return false;
+      final l = c.label;
+      return l.startsWith("10-B") || l.startsWith("10-C") || l.startsWith("10-D");
+    }
+
+    bool hasTicari = (b6?.hasTicari ?? false) ||
+        checkTic(b10?.zemin) ||
+        (b10?.bodrumlar.any(checkTic) ?? false) ||
+        (b10?.normaller.any(checkTic) ?? false);
 
     setState(() {
       _isCommercial = hasTicari;

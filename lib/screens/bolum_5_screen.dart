@@ -87,11 +87,11 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
       _isCalculated = false;
       _isConfirmed = false;
 
-      // Zemin kat validasyonu (min: 5, max: 2500)
+      // Zemin kat validasyonu (min: 5, max: 10000)
       double? taban = double.tryParse(_tabanCtrl.text.replaceAll(',', '.'));
       if (_tabanCtrl.text.isNotEmpty && taban != null) {
-        if (taban < 5 || taban > 2500) {
-          _tabanError = "Değer 5 ile 2500 m² arasında olmalıdır.";
+        if (taban < 5 || taban > 10000) {
+          _tabanError = "Değer 5 ile 10.000 m² arasında olmalıdır.";
         } else {
           _tabanError = null;
         }

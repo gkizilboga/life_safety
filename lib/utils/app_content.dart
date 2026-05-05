@@ -725,7 +725,7 @@ class Bolum13Content {
     uiSubtitle:
         "Otopark ile merdiven arasında herhangi bir yangın kapısı bulunmuyor.",
     reportText:
-        "KRİTİK RİSK: Otopark ile bina arasında yangına dayanıklı ayrım (kompartıman) yoktur. Bir araç yangınında duman doğrudan binanın içine dolarak tüm kaçış yollarını kullanılamaz hale getirebilir. Yangın duvarı ve kapısı ile ayrım yapılmalıdır.",
+        "KRİTİK RİSK: Otopark ile ana bina arasında yangına dayanıklı bir geçiş imkanı bulunmamaktadır. Bir araç yangınında duman doğrudan binanın içine dolarak ana binaya ait kaçış yollarını kullanılamaz hale getirebilir. Bu iki alan arasında duman sızdırmaz veya yangına dayanıklı bölme oluşturulmalıdır.",
     level: RiskLevel.critical,
   );
 
@@ -937,7 +937,7 @@ class Bolum13Content {
     uiSubtitle:
         "Duvarları veya kapısı yangın dayanımsız (sac, demir, plastik, aluminyum, ahşap, cam).",
     reportText:
-        "KRİTİK RİSK: Çöp odaları metan gazı birikme riski taşır. Kapı yangına dayanıklı olmalı ve oda mutlaka havalandırılmalıdır. Mevcut durum patlama veya zehirlenme riski oluşturabilir.",
+        "KRİTİK RİSK: Çöp odalarında metan gazı birikebilir. Çöp odasının kappısı yangına dayanıklı olmalı ve odada sürekli havalandırma imkanı olmalıdır.",
     level: RiskLevel.critical,
   );
 
@@ -4131,89 +4131,6 @@ class Bolum33Content {
 }
 
 class Bolum34Content {
-  static final zeminOptionA = ChoiceResult(
-    label: "34-1-A (Zemin)",
-    uiTitle: "Evet, var.",
-    uiSubtitle: "Müşteriler doğrudan dükkan kapısından çıkabiliyor.",
-    reportText:
-        "OLUMLU: Zemin kattaki ticari alanların kendi bağımsız çıkışları olduğu için, bina ana girişine ve merdivenlerine ek yük getirmezler.",
-    level: RiskLevel.positive,
-  );
-
-  static final zeminOptionB = ChoiceResult(
-    label: "34-1-B (Zemin)",
-    uiTitle: "Hayır, yok.",
-    uiSubtitle: "İşyerlerinin çıkışları bina koridorunun içinden sağlanıyor.",
-    reportText:
-        "UYARI: Ticari alanların bina koridoruna açılması, kaçış yolundaki yoğunluğu artırır. Bina ana giriş kapısının genişliği bu ekstra yükü kaldıracak kapasitede olmalıdır.",
-    adviceText: "",
-    level: RiskLevel.warning,
-  );
-
-  static final zeminOptionC = ChoiceResult(
-    label: "34-1-C (Zemin)",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Ticari alanların bina koridoruna açılması, kaçış yolundaki yoğunluğu artırır. Uzman görüşü alınması tavsiye edilir.",
-    level: RiskLevel.unknown,
-  );
-
-  static final bodrumOptionA = ChoiceResult(
-    label: "34-2-A (Bodrum)",
-    uiTitle: "Evet, var.",
-    uiSubtitle: "İşyerleri bina ortak merdivenini kullanmak zorunda değiller.",
-    reportText:
-        "OLUMLU: Bodrum kattaki ticari kullanımın kendine ait bağımsız kaçış yolu olması büyük avantajdır. Bina merdivenleri sadece konut sakinlerine kalır.",
-    level: RiskLevel.positive,
-  );
-
-  static final bodrumOptionB = ChoiceResult(
-    label: "34-2-B (Bodrum)",
-    uiTitle: "Hayır, yok.",
-    uiSubtitle: "İşyerleri bina ortak merdivenini kullanıyorlar.",
-    reportText:
-        "UYARI: Bodrum kattaki ticari alanın (Örn: Restauran, kafe, spor salonu vb.) kalabalığı, bina sakinleriyle aynı merdiveni kullanacaktır. Bu durum kaçış anında merdivende tıkanıklığa yol açabilir.",
-    level: RiskLevel.warning,
-  );
-
-  static final bodrumOptionC = ChoiceResult(
-    label: "34-2-C (Bodrum)",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Ticari alanların bina koridoruna açılması, kaçış yolundaki yoğunluğu artırır. Uzman görüşü alınması tavsiye edilir.",
-    level: RiskLevel.unknown,
-  );
-
-  // --- NORMAL KAT TİCARİ ALAN ÇIKIŞLARI ---
-  static final normalOptionA = ChoiceResult(
-    label: "34-3-A (Normal)",
-    uiTitle: "Evet, var.",
-    uiSubtitle: "İşyerleri bina ortak merdivenini kullanmak zorunda değiller.",
-    reportText:
-        "OLUMLU: Normal katlardaki ticari kullanımın kendine ait bağımsız kaçış yolu olması büyük avantajdır. Bina merdivenleri sadece konut sakinlerine kalır.",
-    level: RiskLevel.positive,
-  );
-
-  static final normalOptionB = ChoiceResult(
-    label: "34-3-B (Normal)",
-    uiTitle: "Hayır, yok.",
-    uiSubtitle: "İşyerleri bina ortak merdivenini kullanıyorlar.",
-    reportText:
-        "UYARI: Normal katlardaki ticari alanın (Örn: Ofis, kurs merkezi, spor salonu vb.) kalabalığı, bina sakinleriyle aynı merdiveni kullanacaktır. Bu durum kaçış anında merdivende tıkanıklığa yol açabilir.",
-    level: RiskLevel.warning,
-  );
-
-  static final normalOptionC = ChoiceResult(
-    label: "34-3-C (Normal)",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Normal katlardaki ticari alanların çıkış durumu bilinmiyor. Uzman görüşü alınması tavsiye edilir.",
-    level: RiskLevel.unknown,
-  );
-
   // --- YENİ SORU: MUTFAK BACASI ---
   static final mutfakBacasiOptionA = ChoiceResult(
     label: "34-4-A (Mutfak Bacası)",

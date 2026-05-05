@@ -1191,11 +1191,8 @@ class BinaStore {
           label: "34",
           uiTitle: "Kat Karakteristikleri",
           uiSubtitle: "",
-          reportText: "Zemin ve bodrum kat çıkış karakteristikleri.",
+          reportText: "Ticari alanların mutfak bacası özellikleri belirlenmiştir.",
           adviceText: _joinAdvice([
-            _bolum34!.zemin,
-             _bolum34!.bodrum,
-             _bolum34!.normal,
              _bolum34!.mutfakBacasi,
            ]),
         );
@@ -1222,7 +1219,7 @@ class BinaStore {
           uiSubtitle: "",
           reportText: m.merdivenDegerlendirme ?? "Değerlendirme yapılamadı.",
           adviceText: _joinAdvice([
-            m.cikisKati,
+            _bolum33?.cikisKati,
             m.disMerd,
             m.konum,
             m.kapiTipi,

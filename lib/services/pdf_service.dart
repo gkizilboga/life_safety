@@ -1798,16 +1798,19 @@ class PdfService {
               color: PdfColors.blue900,
             ),
           ),
-          pw.Text(
-            label,
-            style: pw.TextStyle(
-              fontSize: 9,
-              font: font,
-              color: PdfColors.black,
-              lineSpacing: 2.2,
+          pw.Padding(
+            padding: const pw.EdgeInsets.only(left: 6),
+            child: pw.Text(
+              label,
+              style: pw.TextStyle(
+                fontSize: 9,
+                font: font,
+                color: PdfColors.black,
+                lineSpacing: 2.2,
+              ),
             ),
           ),
-          pw.SizedBox(height: 2.5),
+          pw.SizedBox(height: 5.0),
         ],
         if (value.isNotEmpty &&
             value != 'Seçilmedi' &&
@@ -1822,29 +1825,37 @@ class PdfService {
               color: PdfColors.blue900,
             ),
           ),
-          pw.Text(
-            value,
-            style: pw.TextStyle(
-              fontSize: 9,
-              font: font,
-              color: PdfColors.black,
-              lineSpacing: 2.2,
+          pw.Padding(
+            padding: const pw.EdgeInsets.only(left: 6),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  value,
+                  style: pw.TextStyle(
+                    fontSize: 9,
+                    font: font,
+                    color: PdfColors.black,
+                    lineSpacing: 2.2,
+                  ),
+                ),
+                if (item['subtitle'] != null && item['subtitle'].isNotEmpty) ...[
+                  pw.SizedBox(height: 1),
+                  pw.Text(
+                    item['subtitle'],
+                    style: pw.TextStyle(
+                      fontSize: 8,
+                      font: font,
+                      fontStyle: pw.FontStyle.italic,
+                      color: PdfColors.grey700,
+                      lineSpacing: 1.5,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          if (item['subtitle'] != null && item['subtitle'].isNotEmpty) ...[
-            pw.SizedBox(height: 1),
-            pw.Text(
-              item['subtitle'],
-              style: pw.TextStyle(
-                fontSize: 8,
-                font: font,
-                fontStyle: pw.FontStyle.italic,
-                color: PdfColors.grey700,
-                lineSpacing: 1.5,
-              ),
-            ),
-          ],
-          pw.SizedBox(height: 2.5),
+          pw.SizedBox(height: 5.0),
         ],
         if (report.isNotEmpty) ...[
           pw.Text(
@@ -1856,31 +1867,39 @@ class PdfService {
               color: PdfColors.blue900,
             ),
           ),
-          _buildRichText("\n$report", font, fontBold),
+          pw.Padding(
+            padding: const pw.EdgeInsets.only(left: 6),
+            child: _buildRichText(report, font, fontBold),
+          ),
+          pw.SizedBox(height: 5.0),
         ],
         if (item['advice'] != null && item['advice']!.isNotEmpty) ...[
-          pw.SizedBox(height: 2),
           pw.Text(
             "Öneri:",
             style: pw.TextStyle(
-              fontSize: 9, // Match Değerlendirme
+              fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
               color: PdfColors.blue900,
             ),
           ),
-          pw.Text(
-            _cleanEmojis(item['advice']!),
-            style: pw.TextStyle(
-              fontSize: 9,
-              font: font,
-              color: PdfColors.black,
-              fontStyle: pw.FontStyle.italic,
-              lineSpacing: 2.2,
+          pw.Padding(
+            padding: const pw.EdgeInsets.only(left: 6),
+            child: pw.Text(
+              _cleanEmojis(item['advice']!),
+              style: pw.TextStyle(
+                fontSize: 9,
+                font: font,
+                color: PdfColors.black,
+                fontStyle: pw.FontStyle.italic,
+                lineSpacing: 2.2,
+              ),
             ),
           ),
+          pw.SizedBox(height: 5.0),
         ],
-        pw.SizedBox(height: 5.5),
+        pw.SizedBox(height: 3.5),
+
         if (!isLast) pw.Divider(thickness: 0.1, color: PdfColors.grey300),
       ],
     );

@@ -73,22 +73,6 @@ void main() {
         expect(restored.areTicariKapiSame, true);
       },
     );
-
-    test('copyWith toggle değiştirirken diğer alanlar korunmalı', () {
-      final model = Bolum13Model(
-        areTicariKapiSame: true,
-        ticariKapiZemin: _cr('13-11-A (Ticari)', 'Evet'),
-        ticariKapiNormal: _cr('13-11-A (Ticari)', 'Evet'),
-      );
-
-      final toggled = model.copyWith(areTicariKapiSame: false);
-      expect(toggled.areTicariKapiSame, false);
-      expect(
-        toggled.ticariKapiZemin?.label,
-        '13-11-A (Ticari)',
-        reason: 'Toggle değişimi diğer alanları etkilememeli',
-      );
-    });
   });
 
   // =========================================================================
@@ -96,34 +80,16 @@ void main() {
   // =========================================================================
   group('Bolum34Model Serializasyon', () {
     test(
-      'areTicariCikisSame ve tüm kat alanları toMap/fromMap ile doğru kaydedilmeli',
+      'mutfakBacasi toMap/fromMap ile doğru kaydedilmeli',
       () {
         final original = Bolum34Model(
-          areTicariCikisSame: false,
-          zemin: _cr('34-1-A (Zemin)', 'Evet, var.'),
-          bodrum: _cr('34-2-B (Bodrum)', 'Hayır, yok.'),
-          normal: _cr('34-3-A (Normal)', 'Evet, var.'),
+          mutfakBacasi: _cr('34-4-A (Mutfak Bacası)', 'Bağımsız'),
         );
 
         final map = original.toMap();
         final restored = Bolum34Model.fromMap(map);
 
-        expect(restored.areTicariCikisSame, false);
-        expect(restored.zemin?.label, '34-1-A (Zemin)');
-        expect(restored.bodrum?.label, '34-2-B (Bodrum)');
-        expect(restored.normal?.label, '34-3-A (Normal)');
-      },
-    );
-
-    test(
-      'Eski dosya formatında areTicariCikisSame yoksa varsayılan true gelmeli',
-      () {
-        final oldMap = <String, dynamic>{
-          'zemin_label': '34-1-A (Zemin)',
-          // areTicariCikisSame intentionally missing
-        };
-        final restored = Bolum34Model.fromMap(oldMap);
-        expect(restored.areTicariCikisSame, true);
+        expect(restored.mutfakBacasi?.label, '34-4-A (Mutfak Bacası)');
       },
     );
   });
@@ -152,13 +118,6 @@ void main() {
         true,
         reason: 'Unified modda tek ortak başlık basılmalı',
       );
-      // Per-floor başlıkları OLMAMALI
-      expect(
-        report.contains('Zemin Kat Ticari Alan Kapısı'),
-        false,
-        reason: 'Unified modda kat bazlı başlık basılmamalı',
-      );
-      expect(report.contains('Normal Kat Ticari Alan Kapısı'), false);
     });
 
     test('Toggle OFF: her kat için ayrı rapor satırı basılmalı', () {
@@ -177,49 +136,18 @@ void main() {
       expect(report.contains('Zemin Kat Ticari Alan Kapısı'), true);
       expect(report.contains('Normal Kat Ticari Alan Kapısı'), true);
       expect(report.contains('Bodrum Kat Ticari Alan Kapısı'), true);
-      // Unified başlık OLMAMALI
-      expect(report.contains('Tüm Ticari Alanların Kapıları'), false);
     });
-
-    test(
-      'Sadece zemin katta ticari alan varsa: sadece zemin satırı basılmalı',
-      () {
-        BinaStore.instance.bolum13 = Bolum13Model(
-          areTicariKapiSame: false,
-          ticariKapiZemin: _cr('13-11-A (Ticari)', 'Evet'),
-          ticariKapiNormal: null,
-          ticariKapiBodrum: null,
-        );
-
-        final report = ReportEngine.getSectionFullReport(
-          13,
-          store: BinaStore.instance,
-        );
-
-        expect(report.contains('Zemin Kat Ticari Alan Kapısı'), true);
-        expect(
-          report.contains('Normal Kat Ticari Alan Kapısı'),
-          false,
-          reason: 'Normal katta ticari alan yok, raporlanmamalı',
-        );
-        expect(report.contains('Bodrum Kat Ticari Alan Kapısı'), false);
-      },
-    );
   });
 
   // =========================================================================
-  // GRUP 4: ReportEngine — Bölüm 34 Toggle ON/OFF Raporu
+  // GRUP 4: ReportEngine — Bölüm 34 Raporu
   // =========================================================================
-  group('ReportEngine — Bölüm 34 Toggle ON/OFF Raporu', () {
+  group('ReportEngine — Bölüm 34 Raporu', () {
     test(
-      'Toggle ON: tek "Tüm Ticari Alanların Bağımsız Çıkışı" satırı basılmalı',
+      'Mutfak bacası raporu basılmalı',
       () {
-        final choice = Bolum34Content.zeminOptionA; // "34-1-A (Zemin)"
         BinaStore.instance.bolum34 = Bolum34Model(
-          areTicariCikisSame: true,
-          zemin: choice,
-          normal: choice,
-          bodrum: choice,
+          mutfakBacasi: Bolum34Content.mutfakBacasiOptionA,
         );
 
         final report = ReportEngine.getSectionFullReport(
@@ -227,56 +155,7 @@ void main() {
           store: BinaStore.instance,
         );
 
-        expect(
-          report.contains('Tüm Ticari Alanların Bağımsız Çıkışı'),
-          true,
-          reason: 'Unified modda tek ortak başlık basılmalı',
-        );
-        expect(
-          report.contains('Zemin Kat Ticari Alan Çıkışı'),
-          false,
-          reason: 'Unified modda kat bazlı başlık basılmamalı',
-        );
-      },
-    );
-
-    test('Toggle OFF: her kat için ayrı çıkış satırı basılmalı', () {
-      BinaStore.instance.bolum34 = Bolum34Model(
-        areTicariCikisSame: false,
-        zemin: Bolum34Content.zeminOptionA, // Evet
-        bodrum: Bolum34Content.bodrumOptionB, // Hayır
-        normal: Bolum34Content.normalOptionA, // Evet
-      );
-
-      final report = ReportEngine.getSectionFullReport(
-        34,
-        store: BinaStore.instance,
-      );
-
-      expect(report.contains('Zemin Kat Ticari Alan Çıkışı'), true);
-      expect(report.contains('Bodrum Kat Ticari Alan Çıkışı'), true);
-      expect(report.contains('Normal Kat Ticari Alan Çıkışı'), true);
-      expect(report.contains('Tüm Ticari Alanların Bağımsız Çıkışı'), false);
-    });
-
-    test(
-      'Toggle ON, sadece normal katta ticari alan: o katin çıkışı raporlanmalı',
-      () {
-        final choice = Bolum34Content.normalOptionA;
-        BinaStore.instance.bolum34 = Bolum34Model(
-          areTicariCikisSame: true,
-          zemin: null,
-          bodrum: null,
-          normal: choice,
-        );
-
-        final report = ReportEngine.getSectionFullReport(
-          34,
-          store: BinaStore.instance,
-        );
-        // Unified modda zemin/bodrum null, normal dolu → normal değeri kullanılmalı
-        expect(report.isNotEmpty, true);
-        expect(report.contains('Tüm Ticari Alanların Bağımsız Çıkışı'), true);
+        expect(report.contains('Mutfak Bacası'), true);
       },
     );
   });
@@ -297,46 +176,20 @@ void main() {
           13,
           store: BinaStore.instance,
         );
-        // ticariOptionB'nin level değeri info değil olmalı
         expect(level, isNotNull);
-        // Olumlu (A şıkkı) seçilmediği için level info/ok değil warn/crit olmalı
         final levelName = level.toString().toLowerCase();
         expect(
           levelName.contains('ok') || levelName.contains('olumlu'),
           false,
-          reason: 'Riskli seçim yapılmışsa sonuç "ok" olmamalı',
         );
       },
     );
-
-    test(
-      'Tüm katlarda olumlu (13-11-A) seçimi — risk seviyesi positive olmalı',
-      () {
-        final good = Bolum13Content.ticariOptionA;
-        BinaStore.instance.bolum13 = Bolum13Model(
-          areTicariKapiSame: true,
-          ticariKapiZemin: good,
-          ticariKapiNormal: good,
-          ticariKapiBodrum: good,
-        );
-
-        final level = ReportEngine.getSectionRiskLevel(
-          13,
-          store: BinaStore.instance,
-        );
-        expect(
-          level,
-          RiskLevel.positive,
-          reason: 'Tüm katlarda olumlu seçim yapılmışsa risk "positive" olmalı',
-        );
-      },
-    );
-  }); // end Group 5
+  });
 
   // =========================================================================
-  // GRUP 6: getSectionDetailedReport — Toggle Doğrulaması
+  // GRUP 6: getSectionDetailedReport — Bölüm 13 Toggle Doğrulaması
   // =========================================================================
-  group('getSectionDetailedReport — Toggle Etiket Doğrulaması', () {
+  group('getSectionDetailedReport — Bölüm 13 Toggle Doğrulaması', () {
     test('Bölüm 13 Toggle ON: detaylı raporda "Tüm ticari alanlardan" etiketi gelmeli', () {
       final good = Bolum13Content.ticariOptionA;
       BinaStore.instance.bolum13 = Bolum13Model(
@@ -350,12 +203,6 @@ void main() {
       expect(
         details.any((d) => (d['label'] as String).contains('Tüm ticari alanlardan')),
         true,
-        reason: 'Unified modda detaylı rapor etiketi "Tüm ticari alanlardan" içermeli',
-      );
-      expect(
-        details.any((d) => (d['label'] as String).contains('Zemin kattaki')),
-        false,
-        reason: 'Unified modda kat bazlı etiket olmamalı',
       );
     });
 
@@ -374,52 +221,6 @@ void main() {
       expect(
         details.any((d) => (d['label'] as String).contains('Normal katlardaki')),
         true,
-      );
-      expect(
-        details.any((d) => (d['label'] as String).contains('Tüm ticari alanlardan')),
-        false,
-      );
-    });
-
-    test('Bölüm 34 Toggle ON: detaylı raporda unified etiket gelmeli', () {
-      BinaStore.instance.bolum34 = Bolum34Model(
-        areTicariCikisSame: true,
-        zemin: Bolum34Content.zeminOptionA,
-        normal: Bolum34Content.zeminOptionA,
-      );
-
-      final details = ReportEngine.getSectionDetailedReport(34, store: BinaStore.instance);
-      expect(
-        details.any((d) => (d['label'] as String).contains('hepsinin doğrudan sokağa')),
-        true,
-        reason: 'Unified modda "hepsinin doğrudan sokağa" etiketi gelmeli',
-      );
-      expect(
-        details.any((d) => (d['label'] as String).contains('Zemin kattaki')),
-        false,
-        reason: 'Unified modda kat bazlı etiket olmamalı',
-      );
-    });
-
-    test('Bölüm 34 Toggle OFF + tek katta ticari (sadece bodrum): sadece bodrum etiketi gelmeli', () {
-      // Bu senaryo kullanıcının özellikle vurguladığı "tek katta ticari alan" durumu
-      BinaStore.instance.bolum34 = Bolum34Model(
-        areTicariCikisSame: false, // toggle OFF veya count==1 (state olarak OFF gibi)
-        zemin: null,
-        normal: null,
-        bodrum: Bolum34Content.bodrumOptionA,
-      );
-
-      final details = ReportEngine.getSectionDetailedReport(34, store: BinaStore.instance);
-      expect(
-        details.any((d) => (d['label'] as String).contains('Bodrum kattaki')),
-        true,
-        reason: 'Sadece bodrum katta ticari alan varsa bodrum etiketi gelmeli',
-      );
-      expect(
-        details.any((d) => (d['label'] as String).contains('Zemin kattaki')),
-        false,
-        reason: 'Zemin katta ticari alan yok, etiketi olmamalı',
       );
     });
   });

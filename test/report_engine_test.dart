@@ -249,14 +249,15 @@ void main() {
         yukNormal: 20, // Konut, düşük yük
         yukBodrum: 0,
       );
-      store.bolum34 = Bolum34Model(
-        zemin: ChoiceResult(
-          label: "34-1-A",
-          uiTitle: "Evet, bağımsız çıkışı var",
+      store.bolum13 = Bolum13Model(
+        ticariKapiZemin: ChoiceResult(
+          label: "13-11-C",
+          uiTitle: "Hiçbir ticari alandan binaya geçiş yok",
           uiSubtitle: "",
           reportText: "",
         ),
       );
+      store.bolum34 = Bolum34Model();
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
       // Ticari zemin bağımsız, sadece normal kat (20 kişi) sayılır
@@ -374,14 +375,16 @@ void main() {
     });
 
     test('Bölüm 36 Merdiven Analizi Etiketi Doğru Gelmeli', () {
-      store.bolum36 = Bolum36Model(
-        merdivenDegerlendirme: "Test Analizi",
+      store.bolum33 = Bolum33Model(
         cikisKati: ChoiceResult(
           label: "36-1-A",
           uiTitle: "Zemin",
           uiSubtitle: "",
           reportText: "",
         ),
+      );
+      store.bolum36 = Bolum36Model(
+        merdivenDegerlendirme: "Test Analizi",
       );
       store.bolum20 = Bolum20Model();
       final details = ReportEngine.getSectionDetailedReport(36, store: store);

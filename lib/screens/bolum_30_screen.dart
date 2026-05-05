@@ -28,6 +28,13 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
     super.initState();
     if (BinaStore.instance.bolum30 != null) {
       _model = BinaStore.instance.bolum30!;
+    } else {
+      // Kullanıcı talebi doğrultusunda sadece kritik işletme kalemlerini ön tanımlı seçiyoruz
+      _model = _model.copyWith(
+        yakit: Bolum30Content.yakitOptionA, // Doğalgaz
+        hava: Bolum30Content.havaOptionA, // Havalandırma var
+        tup: Bolum30Content.tupOptionD, // Tüp/LPG yok
+      );
     }
     _checkKazanAndRedirect();
   }

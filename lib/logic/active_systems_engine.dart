@@ -520,7 +520,7 @@ class ActiveSystemsEngine {
         final depoAlan = store.bolum13?.depoBodrumAlan?.label;
         if (depoAlan != null && depoAlan.contains("13-13-A")) {
           positiveNotes.add(
-            "Bodrum katlardaki depo alanlarının toplamda 2000 m² veya altında olduğu beyan edildiğinden bu alanda duman tahliye sistemi kurulması zorunlu değildir.",
+            "Binadaki (eşya vb.) depolama alanlarının toplamda 2000 m² veya altında olduğu beyan edildiğinden bu alanda duman tahliye sistemi kurulması zorunlu değildir.",
           );
         }
 

@@ -24,6 +24,11 @@ class _Bolum31ScreenState extends State<Bolum31Screen> {
     super.initState();
     if (BinaStore.instance.bolum31 != null) {
       _model = BinaStore.instance.bolum31!;
+    } else {
+      // Kullanıcı talebi doğrultusunda sadece çevresel risk durumunu ön tanımlı seçiyoruz
+      _model = _model.copyWith(
+        cevre: Bolum31Content.cevreOptionA, // Su sızıntısı riski yok
+      );
     }
     _checkAndRedirect();
   }

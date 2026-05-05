@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:math' as math;
 import '../../data/bina_store.dart';
 import '../../models/bolum_33_model.dart';
 import 'bolum_34_screen.dart';
 import '../../widgets/custom_widgets.dart';
+import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import '../../utils/app_theme.dart';
@@ -38,44 +40,29 @@ class Bolum33Screen extends StatefulWidget {
     final b10 = store.bolum10;
     final b13 = store.bolum13;
     final b20 = store.bolum20;
-    final b34 = store.bolum34;
 
     bool hasNormal = (b3?.normalKatSayisi ?? 0) >= 1;
     bool hasBodrum = (b3?.bodrumKatSayisi ?? 0) >= 1;
     double hYapi = b3?.hYapi ?? 0.0;
 
-    bool isExcluded(ChoiceResult? choice, ChoiceResult? kapiSecimi, ChoiceResult? b34Secimi, String b34Target) {
+    bool isExcluded(ChoiceResult? choice, ChoiceResult? kapiSecimi) {
       if (choice == null) return false;
-      bool isTicari = choice.uiTitle.toLowerCase().contains("ticari");
+      bool isTicari =
+          choice.label.startsWith("10-B") ||
+          choice.label.startsWith("10-C") ||
+          choice.label.startsWith("10-D");
       if (!isTicari) return false;
-      bool excludedBy13 = kapiSecimi?.label.contains("13-11-C") ?? false;
-      bool excludedBy34 = false;
-      if (b34?.areTicariCikisSame == true) {
-        // Tüm katlar için aynı cevap geçerli; paylaşımlı label "34-1-A" gibi
-        // olabilir, ama "-A" ile biten her label "bağımsız çıkış VAR" anlamına gelir.
-        final shared = b34?.zemin ?? b34?.bodrum ?? b34?.normal;
-        excludedBy34 = shared?.label.endsWith("-A") ?? false;
-      } else {
-        excludedBy34 = b34Secimi?.label.contains(b34Target) ?? false;
-      }
-      return excludedBy13 || excludedBy34;
-    }
 
-    ChoiceResult? b34Zemin = b34?.areTicariCikisSame == true
-        ? (b34?.zemin ?? b34?.bodrum ?? b34?.normal)
-        : b34?.zemin;
-    ChoiceResult? b34Normal = b34?.areTicariCikisSame == true
-        ? (b34?.zemin ?? b34?.bodrum ?? b34?.normal)
-        : b34?.normal;
-    ChoiceResult? b34Bodrum = b34?.areTicariCikisSame == true
-        ? (b34?.zemin ?? b34?.bodrum ?? b34?.normal)
-        : b34?.bodrum;
+      // Eğer Bölüm 13'te "Geçiş Yok" (13-11-C) seçilmişse, bu alan bağımsız
+      // çıkışlı kabul edilir ve konut merdiveni yüküne dahil edilmez.
+      return kapiSecimi?.label.contains("13-11-C") ?? false;
+    }
 
     // 1. ZEMİN KAT
     double alanZemin = b5?.tabanAlani ?? 0.0;
     int yukZemin = 0;
     int gZemin = 0;
-    if (isExcluded(b10?.zemin, b13?.ticariKapiZemin, b34Zemin, "34-1-A")) {
+    if (isExcluded(b10?.zemin, b13?.ticariKapiZemin)) {
       yukZemin = 0;
       gZemin = 0;
     } else {
@@ -90,7 +77,7 @@ class Bolum33Screen extends StatefulWidget {
     int yukNormal = 0;
     if (b10 != null && b10.normaller.isNotEmpty) {
       for (var choice in b10.normaller) {
-        if (isExcluded(choice, b13?.ticariKapiNormal, b34Normal, "34-3-A")) continue;
+        if (isExcluded(choice, b13?.ticariKapiNormal)) continue;
         double k = getKatsayi(choice);
         int yuk = (alanNormal / k).ceil();
         if (yuk > yukNormal) yukNormal = yuk;
@@ -109,7 +96,7 @@ class Bolum33Screen extends StatefulWidget {
     int yukBodrum = 0;
     if (b10 != null && b10.bodrumlar.isNotEmpty) {
       for (var choice in b10.bodrumlar) {
-        if (isExcluded(choice, b13?.ticariKapiBodrum, b34Bodrum, "34-2-A")) continue;
+        if (isExcluded(choice, b13?.ticariKapiBodrum)) continue;
         double k = getKatsayi(choice);
         int yuk = (alanBodrum / k).ceil();
         if (yuk > yukBodrum) yukBodrum = yuk;
@@ -145,10 +132,16 @@ class Bolum33Screen extends StatefulWidget {
           (b20?.bodrumSahanliksizMerdivenSayisi ?? 0) +
           (b20?.bodrumDengelenmisMerdivenSayisi ?? 0);
     } else {
-      mevcutBodrum = (b20?.bodrumMerdivenDevami?.label == "20-Bodrum-A") ? mevcutUst : 0;
+      mevcutBodrum = (b20?.bodrumMerdivenDevami?.label == "20-Bodrum-A")
+          ? mevcutUst
+          : 0;
     }
 
     var newModel = store.bolum33 ?? Bolum33Model();
+    final ChoiceResult? cikisKati = newModel.cikisKati;
+    final int cikisSayisi = newModel.cikisSayisi ?? 0;
+
+    // Sonuçları modele ata
     store.bolum33 = newModel.copyWith(
       alanZemin: alanZemin,
       alanNormal: hasNormal ? alanNormal : null,
@@ -159,8 +152,13 @@ class Bolum33Screen extends StatefulWidget {
       gerekliZemin: gZemin,
       gerekliNormal: hasNormal ? gNormal : null,
       gerekliBodrum: hasBodrum ? gBodrum : null,
-      mevcutUst: mevcutUst,
-      mevcutBodrum: hasBodrum ? mevcutBodrum : null,
+      // Çıkış katı ise manuel girişi, değilse merdiven sayısını baz al
+      mevcutUst: (cikisKati?.label == "36-0-A" || cikisKati?.label == "36-0-B")
+          ? cikisSayisi
+          : mevcutUst,
+      mevcutBodrum: hasBodrum
+          ? ((cikisKati?.label == "36-0-C") ? cikisSayisi : mevcutBodrum)
+          : null,
     );
   }
 }
@@ -174,32 +172,57 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
   bool _hasNormal = false;
   bool _hasBodrum = false;
 
+  final TextEditingController _cikisSayisiCtrl = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     if (BinaStore.instance.bolum33 != null) {
       _model = BinaStore.instance.bolum33!;
       _isConfirmed = true; // Confirmation load
+      if (_model.cikisSayisi != null) {
+        _cikisSayisiCtrl.text = _model.cikisSayisi.toString();
+      }
+    } else {
+      // Varsayılan olarak Zemin Katı çıkış katı seçelim (kullanıcı dostu olması için)
+      _model = _model.copyWith(cikisKati: Bolum36Content.cikisKatiOptionA);
     }
     _hesapla();
+
+    _cikisSayisiCtrl.addListener(() {
+      final val = int.tryParse(_cikisSayisiCtrl.text);
+      if (val != null && val >= 0 && val <= 20) {
+        setState(() {
+          _isConfirmed = false;
+        });
+        _model = _model.copyWith(cikisSayisi: val);
+        _hesapla();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _cikisSayisiCtrl.dispose();
+    super.dispose();
   }
 
   void _hesapla() {
     final store = BinaStore.instance;
     // Arka plan fonksiyonumuzu çağırıp State'i güncelliyoruz
     Bolum33Screen.recalculateAndSaveUserLoads(store);
-    
+
     // UI state'i güncelle
     if (store.bolum33 != null) {
       setState(() {
         _model = store.bolum33!;
         _hasNormal = (store.bolum3?.normalKatSayisi ?? 0) >= 1;
         _hasBodrum = (store.bolum3?.bodrumKatSayisi ?? 0) >= 1;
-        
+
         bool hasSprinkler = store.bolum9?.secim?.label == "9-A";
         double alanNormal = _model.alanNormal ?? 0.0;
         int gNormal = _model.gerekliNormal ?? 0;
-        
+
         if (gNormal == 1) {
           if (hasSprinkler && alanNormal > 450) {
             _specialWarning =
@@ -218,7 +241,12 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
     return AnalysisPageLayout(
       title: "Kullanıcı Yükü",
       screenType: widget.runtimeType,
-      isNextEnabled: _isConfirmed,
+      isNextEnabled:
+          _isConfirmed &&
+          _model.cikisKati != null &&
+          _model.cikisSayisi != null,
+      customWarningText:
+          "Lütfen çıkış katını ve kattaki toplam çıkış sayısını girerek hesaplamaları onaylayınız.",
       onNext: () {
         BinaStore.instance.bolum33 = _model;
         BinaStore.instance.saveToDisk();
@@ -230,12 +258,103 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 12),
+
+          QuestionCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Binadan dış havaya çıktığınız kat hangisidir?",
+                  style: AppStyles.questionTitle,
+                ),
+                const SizedBox(height: 12),
+                ...[
+                  Bolum36Content.cikisKatiOptionA,
+                  if ((BinaStore.instance.bolum3?.normalKatSayisi ?? 0) > 0)
+                    Bolum36Content.cikisKatiOptionB,
+                  if ((BinaStore.instance.bolum3?.bodrumKatSayisi ?? 0) > 0)
+                    Bolum36Content.cikisKatiOptionC,
+                ].map(
+                  (opt) => SelectableCard(
+                    choice: opt,
+                    isSelected: _model.cikisKati?.label == opt.label,
+                    onTap: () {
+                      setState(() {
+                        _isConfirmed = false;
+                        _model = _model.copyWith(cikisKati: opt);
+                        BinaStore.instance.bolum33 =
+                            _model; // Bug fix: sync with store
+                      });
+                      _hesapla();
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Binadan çıkış katında toplam kaç adet dışarı çıkış kapısı var?",
+                  style: AppStyles.questionTitle,
+                ),
+                const SizedBox(height: 8),
+                TextFormField(
+                  controller: _cikisSayisiCtrl,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryBlue,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: "0-20 arası",
+                    hintStyle: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 16,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.grey.shade300),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(
+                        color: AppColors.primaryBlue,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+                if (_cikisSayisiCtrl.text.isNotEmpty &&
+                    (int.tryParse(_cikisSayisiCtrl.text) ?? -1) > 20)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 4),
+                    child: Text(
+                      "Sayı 20'den büyük olamaz.",
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
                 child: Text(
-                  "Katlardaki kullanıcı yükleri (tahmini).",
+                  "Katlardaki kullanıcı yükleri (tahmini)",
                   style: AppStyles.questionTitle,
                 ),
               ),
@@ -278,25 +397,6 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
               icon: Icons.warning_amber_rounded,
             ),
 
-          if (_hasBodrum || _hasNormal)
-            Builder(builder: (context) {
-              final b10 = BinaStore.instance.bolum10;
-              bool hasTicariArea = false;
-              if (b10 != null) {
-                hasTicariArea =
-                    b10.bodrumlar.whereType<ChoiceResult>().any((c) => c.uiTitle.toLowerCase().contains("ticari")) ||
-                    b10.normaller.whereType<ChoiceResult>().any((c) => c.uiTitle.toLowerCase().contains("ticari")) ||
-                    (b10.zemin?.uiTitle.toLowerCase().contains("ticari") ?? false);
-              }
-              if (!hasTicariArea) return const SizedBox.shrink();
-              return CustomInfoNote(
-                type: InfoNoteType.info,
-                icon: Icons.sync_outlined,
-                text:
-                    "Bir sonraki adımda (Bölüm 34) ticari alanların bağımsız çıkışlarını belirtmeniz halinde, bu tablodaki kullanıcı yükü hesabı otomatik olarak güncellenir ve nihai rapordaki değerler buna göre düzenlenir.",
-              );
-            }),
-
           ConfirmationCheckbox(
             value: _isConfirmed,
             onChanged: (v) => setState(() => _isConfirmed = v ?? false),
@@ -331,8 +431,8 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
           Text(title, style: AppStyles.questionTitle),
           const Divider(),
           _buildRow("Kullanıcı Yükü:", "$yuk Kişi"),
-          _buildRow("Gereken Merdiven:", "$gerekli Adet"),
-          _buildRow("Mevcut Merdiven:", "$mevcut Adet"),
+          _buildRow("Gereken Çıkış:", "$gerekli Adet"),
+          _buildRow("Mevcut Çıkış:", "$mevcut Adet"),
           const SizedBox(height: 4),
         ],
       ),

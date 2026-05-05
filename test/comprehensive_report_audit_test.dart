@@ -129,11 +129,14 @@ void main() {
     store.bolum30 = Bolum30Model(konum: mockRes("30-A", "Uygun"));
     store.bolum31 = Bolum31Model(yapi: mockRes("31-A", "Uygun"));
     store.bolum32 = Bolum32Model(yapi: mockRes("32-A", "Uygun"));
-    store.bolum33 = Bolum33Model(yukZemin: 50, yukNormal: 40);
-    store.bolum34 = Bolum34Model(zemin: mockRes("34-A", "Bağımsız"));
+    store.bolum33 = Bolum33Model(
+      yukZemin: 50,
+      yukNormal: 40,
+      cikisKati: mockRes("36-1-A", "Zemin"),
+    );
+    store.bolum34 = Bolum34Model(mutfakBacasi: mockRes("34-4-A", "Bağımsız"));
     store.bolum35 = Bolum35Model(tekYon: mockRes("35-A", "15m"));
     store.bolum36 = Bolum36Model(
-      cikisKati: mockRes("36-1-A", "Zemin"),
       merdivenDegerlendirme: "Detaylı Analiz Metni",
     );
 

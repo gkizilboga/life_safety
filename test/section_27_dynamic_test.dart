@@ -7,6 +7,7 @@ import 'package:life_safety/models/bolum_33_model.dart';
 import 'package:life_safety/models/bolum_34_model.dart';
 import 'package:life_safety/models/bolum_36_model.dart';
 import 'package:life_safety/utils/app_content.dart';
+import 'package:life_safety/models/bolum_13_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 
 void main() {
@@ -80,9 +81,17 @@ void main() {
     });
 
     test('Section 34 Independence - Zemin load should be ignored if independent', () {
-      // Zemin load is 150 (above thresholds), but it has independent exit
+      // Zemin load is 150 (above thresholds), but it has independent exit via Section 13
       store.bolum33 = Bolum33Model(yukZemin: 150, yukNormal: 30, yukBodrum: 20);
-      store.bolum34 = Bolum34Model(zemin: Bolum34Content.zeminOptionA); // 34-1-A is independent
+      store.bolum13 = Bolum13Model(
+        ticariKapiZemin: ChoiceResult(
+          label: "13-11-C",
+          uiTitle: "Geçiş Yok",
+          uiSubtitle: "",
+          reportText: "",
+        ),
+      );
+      store.bolum34 = Bolum34Model(); // Minimal model
       store.bolum27 = Bolum27Model(
         yon: [Bolum27Content.yonOptionB],
         kilit: [Bolum27Content.kilitOptionB],

@@ -36,10 +36,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     final saved = BinaStore.instance.bolum36;
     if (saved != null) {
       _model = saved;
-    } else {
-      // Binaların %99'unda çıkış zemin kattan olduğu için 
-      // kullanıcıyı hızlandırmak adına varsayılan olarak seçiyoruz.
-      _model = _model.copyWith(cikisKati: Bolum36Content.cikisKatiOptionA);
     }
 
     final b20 = BinaStore.instance.bolum20;
@@ -63,20 +59,9 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
     _hasKorunumsuz = (normal + doner + disAcik + sahanliksiz + dengelenmis) > 0;
   }
 
-  List<ChoiceResult> _getFilteredCikisKatiOptions() {
-    final b3 = BinaStore.instance.bolum3;
-    final int nKat = b3?.normalKatSayisi ?? 0;
-    final int bKat = b3?.bodrumKatSayisi ?? 0;
-
-    List<ChoiceResult> options = [Bolum36Content.cikisKatiOptionA];
-    if (nKat > 0) options.add(Bolum36Content.cikisKatiOptionB);
-    if (bKat > 0) options.add(Bolum36Content.cikisKatiOptionC);
-    return options;
-  }
 
   void _handleSelection(String type, ChoiceResult choice) {
     setState(() {
-      if (type == 'cikisKati') _model = _model.copyWith(cikisKati: choice);
       if (type == 'disMerd') _model = _model.copyWith(disMerd: choice);
       if (type == 'konum') _model = _model.copyWith(konum: choice);
       if (type == 'kapiTipi') _model = _model.copyWith(kapiTipi: choice);
@@ -121,7 +106,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
 
 
   bool get _isFormValid {
-    if (_model.cikisKati == null) return false;
     if (_cntDisCelik > 0 && _model.disMerd == null) return false;
     if (_totalValidCikisSayisi > 1 && _model.konum == null) return false;
 
@@ -175,12 +159,6 @@ class _Bolum36ScreenState extends State<Bolum36Screen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSoruHeader(Bolum36Content.questionCikisKati),
-          _buildSoruCard(
-            'cikisKati',
-            _getFilteredCikisKatiOptions(),
-            _model.cikisKati,
-          ),
           if (_cntDisCelik > 0) ...[
             _buildSoruHeader(Bolum36Content.questionDisMerd),
             _buildSoruCard('disMerd', [

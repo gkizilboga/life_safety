@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_34_model.dart';
-import 'bolum_33_screen.dart';
 import 'bolum_35_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
@@ -20,77 +19,32 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
   Bolum34Model _model = Bolum34Model();
   bool _isEligible = false;
 
-  // Dinamik bayraklar - hangi kat tiplerinde ticari alan var?
-  bool _hasTicariZemin = false;
-  bool _hasTicariBodrum = false;
-  bool _hasTicariNormal = false;
-  bool _hasBodrumKat = false; // Bina'da bodrum kat var mı?
-  int _activeTicariFloorCount = 0;
-
   @override
   void initState() {
     super.initState();
     if (BinaStore.instance.bolum34 != null) {
       _model = BinaStore.instance.bolum34!;
-    } else {
-      // Çoğu dükkanın sokağa doğrudan açılan kapısı olduğu için
-      // kullanıcı deneyimini hızlandırmak adına varsayılan olarak "Evet" seçiyoruz.
-      _model = _model.copyWith(
-        zemin: Bolum34Content.zeminOptionA,
-        bodrum: Bolum34Content.bodrumOptionA,
-        normal: Bolum34Content.normalOptionA,
-      );
     }
-    _checkEligibilityAndDetermineQuestions();
+    _checkEligibility();
   }
 
-  void _checkEligibilityAndDetermineQuestions() {
-    final b3 = BinaStore.instance.bolum3;
+  void _checkEligibility() {
     final b6 = BinaStore.instance.bolum6;
     final b10 = BinaStore.instance.bolum10;
 
-    // Reset flags
-    _hasTicariZemin = false;
-    _hasTicariBodrum = false;
-    _hasTicariNormal = false;
-
-    // Bölüm 3'ten bodrum kat sayısını al
-    _hasBodrumKat = (b3?.bodrumKatSayisi ?? 0) > 0;
-
-    // Bölüm 6'da işaretlenmiş mi?
-    bool hasTicariInB6 = b6?.hasTicari ?? false;
-
-    // Bölüm 10'dan kat bazında ticari kullanım kontrolü
-    if (b10 != null) {
-      // Zemin katta ticari var mı?
-      _hasTicariZemin = b10.zemin?.uiTitle.toLowerCase().contains("ticari") ?? false;
-
-      // Bodrum katlarda ticari var mı? (sadece bodrum kat varsa kontrol et)
-      if (_hasBodrumKat) {
-        _hasTicariBodrum = b10.bodrumlar.any(
-          (e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false,
-        );
-      }
-
-      // Normal katlarda ticari var mı?
-      _hasTicariNormal = b10.normaller.any(
-        (e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false,
-      );
+    // Bölüm 6'da veya Bölüm 10'da herhangi bir katta ticari kullanım varsa bu bölüm aktiftir.
+    bool checkTic(ChoiceResult? c) {
+      if (c == null) return false;
+      final l = c.label;
+      return l.startsWith("10-B") || l.startsWith("10-C") || l.startsWith("10-D");
     }
 
-    // En az bir kat tipinde ticari alan varsa veya Bölüm 6'da ticari işaretlenmişse eligible
-    bool hasAnyTicari = _hasTicariZemin || _hasTicariBodrum || _hasTicariNormal;
+    bool hasAnyTicari = (b6?.hasTicari ?? false) ||
+        checkTic(b10?.zemin) ||
+        (b10?.bodrumlar.any(checkTic) ?? false) ||
+        (b10?.normaller.any(checkTic) ?? false);
 
-    // Bölüm 6'da ticari var ama Bölüm 10'da hiçbir katta ticari seçilmemişse,
-    // varsayılan olarak zemin kat sorusunu göster
-    if (hasTicariInB6 && !hasAnyTicari) {
-      _hasTicariZemin = true;
-      hasAnyTicari = true;
-    }
-
-    _activeTicariFloorCount = (_hasTicariZemin ? 1 : 0) + (_hasTicariBodrum ? 1 : 0) + (_hasTicariNormal ? 1 : 0);
-
-    if (hasTicariInB6 || hasAnyTicari) {
+    if (hasAnyTicari) {
       setState(() {
         _isEligible = true;
       });
@@ -105,69 +59,23 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
     }
   }
 
-  void _handleSelection(String type, ChoiceResult choice) {
+  void _handleSelection(ChoiceResult choice) {
     setState(() {
-      if (type == 'zemin') {
-        _model = _model.copyWith(zemin: choice);
-      } else if (type == 'bodrum') {
-        _model = _model.copyWith(bodrum: choice);
-      } else if (type == 'normal') {
-        _model = _model.copyWith(normal: choice);
-      } else if (type == 'mutfak') {
-        _model = _model.copyWith(mutfakBacasi: choice);
-      } else if (type == 'cikisUnified') {
-        _model = _model.copyWith(
-          zemin: _hasTicariZemin ? choice : null,
-          normal: _hasTicariNormal ? choice : null,
-          bodrum: (_hasBodrumKat && _hasTicariBodrum) ? choice : null,
-        );
-      }
+      _model = _model.copyWith(mutfakBacasi: choice);
     });
   }
 
   bool _canProceed() {
-    if (_model.areTicariCikisSame && _activeTicariFloorCount > 0) {
-      if (_model.zemin == null && _model.normal == null && _model.bodrum == null) return false;
-    } else {
-      if (_hasTicariZemin && _model.zemin == null) return false;
-      if (_hasBodrumKat && _hasTicariBodrum && _model.bodrum == null)
-        return false;
-      if (_hasTicariNormal && _model.normal == null) return false;
-    }
-
-    // Uzman önerisi: Mutfak bacası sorusu ticari alan varsa her zaman sorulmalı
-    if (_model.mutfakBacasi == null) return false;
-
-    return true;
+    return _model.mutfakBacasi != null;
   }
 
   void _onNextPressed() {
     if (!_canProceed()) {
-      if (_model.areTicariCikisSame && _activeTicariFloorCount > 0 && _model.zemin == null && _model.normal == null && _model.bodrum == null) {
-        return _showError("Lütfen ticari çıkış durumunu seçiniz.");
-      } else {
-        if (_hasTicariZemin && _model.zemin == null) {
-          return _showError("Lütfen zemin kat ticari çıkış durumunu seçiniz.");
-        }
-        if (_hasBodrumKat && _hasTicariBodrum && _model.bodrum == null) {
-          return _showError("Lütfen bodrum kat ticari çıkış durumunu seçiniz.");
-        }
-        if (_hasTicariNormal && _model.normal == null) {
-          return _showError("Lütfen normal kat ticari çıkış durumunu seçiniz.");
-        }
-      }
-      if (_model.mutfakBacasi == null) {
-        return _showError("Lütfen ticari mutfak bacası durumunu seçiniz.");
-      }
+      return _showError("Lütfen ticari mutfak bacası durumunu seçiniz.");
     }
 
     BinaStore.instance.bolum34 = _model;
     
-    // ARKA PLAN GÜNCELLEMESİ:
-    // Bölüm 34'te ticari alan çıkışları belirlendiği için, Kullanıcı Yükünü 
-    // hesaplayan Bölüm 33'ü bu yeni verilere göre otomatik olarak yeniden hesaplıyoruz.
-    Bolum33Screen.recalculateAndSaveUserLoads(BinaStore.instance);
-
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Bolum35Screen()),
@@ -186,12 +94,6 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    // Her build'da taze hesapla - kullanıcı geri gidip Bölüm 13'ü değiştirmiş olabilir
-    final b13 = BinaStore.instance.bolum13;
-    final bool showWarningZemin = b13?.ticariKapiZemin?.label.contains("13-11-C") ?? false;
-    final bool showWarningNormal = b13?.ticariKapiNormal?.label.contains("13-11-C") ?? false;
-    final bool showWarningBodrum = b13?.ticariKapiBodrum?.label.contains("13-11-C") ?? false;
-
     return Scaffold(
       body: Column(
         children: [
@@ -201,191 +103,8 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  // Tek katta ticari alan varsa toggle göstermeden direkt kat adıyla sor
-                  if (_activeTicariFloorCount == 1) ...[
-                    if (_hasTicariZemin) ...[
-                      if (showWarningZemin)
-                        _buildInfoNote(
-                          "Bölüm 13'te zemin kat ticari alanı için 'Geçiş Yok' demiştiniz. Tutarlılık açısından burada 'Bağımsız Çıkış Var' (Evet) seçeneğini işaretlemeniz tavsiye edilir.",
-                          isWarning: true,
-                        ),
-                      _buildSoru(
-                        "Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?",
-                        'zemin',
-                        [
-                          Bolum34Content.zeminOptionA,
-                          Bolum34Content.zeminOptionB,
-                          Bolum34Content.zeminOptionC,
-                        ],
-                        _model.zemin,
-                      ),
-                    ],
-                    if (_hasBodrumKat && _hasTicariBodrum) ...[
-                      if (showWarningBodrum)
-                        _buildInfoNote(
-                          "Bölüm 13'te bodrum kat ticari alanı için 'Geçiş Yok' demiştiniz. Tutarlılık açısından burada 'Bağımsız Çıkış Var' (Evet) seçeneğini işaretlemeniz tavsiye edilir.",
-                          isWarning: true,
-                        ),
-                      _buildSoru(
-                        "Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni veya çıkışları var mı?",
-                        'bodrum',
-                        [
-                          Bolum34Content.bodrumOptionA,
-                          Bolum34Content.bodrumOptionB,
-                          Bolum34Content.bodrumOptionC,
-                        ],
-                        _model.bodrum,
-                      ),
-                    ],
-                    if (_hasTicariNormal) ...[
-                      if (showWarningNormal)
-                        _buildInfoNote(
-                          "Bölüm 13'te normal kat ticari alanı için 'Geçiş Yok' demiştiniz. Tutarlılık açısından burada 'Bağımsız Çıkış Var' (Evet) seçeneğini işaretlemeniz tavsiye edilir.",
-                          isWarning: true,
-                        ),
-                      _buildSoru(
-                        "Normal katlardaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni veya çıkışları var mı?",
-                        'normal',
-                        [
-                          Bolum34Content.normalOptionA,
-                          Bolum34Content.normalOptionB,
-                          Bolum34Content.normalOptionC,
-                        ],
-                        _model.normal,
-                      ),
-                    ],
-                  ] else if (_activeTicariFloorCount > 1) ...[
-                    // Birden fazla katta ticari alan varsa toggle göster
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      margin: const EdgeInsets.only(bottom: 20),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryBlue.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.primaryBlue.withOpacity(0.2)),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Benzer Bağımsız Çıkış Özellikleri",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.primaryBlue,
-                                  ),
-                                ),
-                                const Text(
-                                  "Ticari alanların hepsinin sokağa açılan çıkış özellikleri aynı mı?",
-                                  style: TextStyle(fontSize: 14, color: Colors.black54),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Switch(
-                            value: _model.areTicariCikisSame,
-                            onChanged: (val) {
-                              setState(() {
-                                if (val) {
-                                  ChoiceResult? base = _model.zemin ?? _model.normal ?? _model.bodrum;
-                                  _model = _model.copyWith(
-                                    areTicariCikisSame: true,
-                                    zemin: _hasTicariZemin ? base : null,
-                                    normal: _hasTicariNormal ? base : null,
-                                    bodrum: (_hasBodrumKat && _hasTicariBodrum) ? base : null,
-                                  );
-                                } else {
-                                  _model = _model.copyWith(areTicariCikisSame: false);
-                                }
-                              });
-                            },
-                            activeColor: AppColors.primaryBlue,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Toggle ON: tek unified soru
-                    if (_model.areTicariCikisSame) ...[
-                      if ((_hasTicariZemin && showWarningZemin) ||
-                          (_hasTicariNormal && showWarningNormal) ||
-                          (_hasBodrumKat && _hasTicariBodrum && showWarningBodrum))
-                        _buildInfoNote(
-                          "Bölüm 13'te bazı ticari alanlar için konut bölümüne 'Geçiş Yok' demiştiniz. Tutarlılık açısından burada ticari alanların 'Bağımsız Çıkış Var' (Evet) seçeneğini işaretlemeniz tavsiye edilir.",
-                          isWarning: true,
-                        ),
-                      _buildSoru(
-                        "Ticari alanların hepsinin doğrudan sokağa açılan kendilerine ait kapıları var mı?",
-                        'cikisUnified',
-                        [
-                          Bolum34Content.zeminOptionA,
-                          Bolum34Content.zeminOptionB,
-                          Bolum34Content.zeminOptionC,
-                        ],
-                        _model.zemin ?? _model.normal ?? _model.bodrum,
-                      ),
-                    ] else ...[
-                      // Toggle OFF: her kat için ayrı soru
-                      if (_hasTicariZemin) ...[
-                        if (showWarningZemin)
-                          _buildInfoNote(
-                            "Bölüm 13'te zemin kat ticari alanı için 'Geçiş Yok' demiştiniz. Tutarlılık açısından burada 'Bağımsız Çıkış Var' (Evet) seçeneğini işaretlemeniz tavsiye edilir.",
-                            isWarning: true,
-                          ),
-                        _buildSoru(
-                          "Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?",
-                          'zemin',
-                          [
-                            Bolum34Content.zeminOptionA,
-                            Bolum34Content.zeminOptionB,
-                            Bolum34Content.zeminOptionC,
-                          ],
-                          _model.zemin,
-                        ),
-                      ],
-                      if (_hasBodrumKat && _hasTicariBodrum) ...[
-                        if (showWarningBodrum)
-                          _buildInfoNote(
-                            "Bölüm 13'te bodrum kat ticari alanı için 'Geçiş Yok' demiştiniz. Tutarlılık açısından burada 'Bağımsız Çıkış Var' (Evet) seçeneğini işaretlemeniz tavsiye edilir.",
-                            isWarning: true,
-                          ),
-                        _buildSoru(
-                          "Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni veya çıkışları var mı?",
-                          'bodrum',
-                          [
-                            Bolum34Content.bodrumOptionA,
-                            Bolum34Content.bodrumOptionB,
-                            Bolum34Content.bodrumOptionC,
-                          ],
-                          _model.bodrum,
-                        ),
-                      ],
-                      if (_hasTicariNormal) ...[
-                        if (showWarningNormal)
-                          _buildInfoNote(
-                            "Bölüm 13'te normal kat ticari alanı için 'Geçiş Yok' demiştiniz. Tutarlılık açısından burada 'Bağımsız Çıkış Var' (Evet) seçeneğini işaretlemeniz tavsiye edilir.",
-                            isWarning: true,
-                          ),
-                        _buildSoru(
-                          "Normal katlardaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni veya çıkışları var mı?",
-                          'normal',
-                          [
-                            Bolum34Content.normalOptionA,
-                            Bolum34Content.normalOptionB,
-                            Bolum34Content.normalOptionC,
-                          ],
-                          _model.normal,
-                        ),
-                      ],
-                    ],
-                  ],
-
-                  // --- YENİ SORU: MUTFAK BACASI ---
                   _buildSoru(
                     "Ticari işletmelere ait mutfak/davlumbaz bacaları, konut bacalarından tamamen bağımsız ve korunumlu bir şaft içinden mi geçiyor?",
-                    'mutfak',
                     [
                       Bolum34Content.mutfakBacasiOptionA,
                       Bolum34Content.mutfakBacasiOptionB,
@@ -400,14 +119,6 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
           _buildBottomNav(),
         ],
       ),
-    );
-  }
-
-  Widget _buildInfoNote(String text, {bool isWarning = false}) {
-    return CustomInfoNote(
-      type: isWarning ? InfoNoteType.warning : InfoNoteType.info,
-      text: text,
-      icon: isWarning ? Icons.warning_amber_rounded : Icons.arrow_downward,
     );
   }
 
@@ -439,7 +150,6 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
 
   Widget _buildSoru(
     String title,
-    String key,
     List<ChoiceResult> options,
     ChoiceResult? selected,
   ) {
@@ -453,7 +163,7 @@ class _Bolum34ScreenState extends State<Bolum34Screen> {
             (opt) => SelectableCard(
               choice: opt,
               isSelected: selected?.label == opt.label,
-              onTap: () => _handleSelection(key, opt),
+              onTap: () => _handleSelection(opt),
             ),
           ),
         ],

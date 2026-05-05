@@ -1,5 +1,5 @@
 class AppStrings {
-  static const String appName = "Yangın Risk Analizi";
+  static const String appName = "BinaMuayene";
   static const String stepLabel = "Adım";
   static const String completeLabel = "Tamamlandı";
   static const String nextButton = "DEVAM ET";

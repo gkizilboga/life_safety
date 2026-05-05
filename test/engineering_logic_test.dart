@@ -153,8 +153,8 @@ void main() {
 
         // Just call getStatusColor to ensure it doesn't crash for Section 36
         ReportEngine.getStatusColor(
-          store.bolum36?.cikisKati,
-          sectionId: 36,
+          store.bolum33?.cikisKati,
+          sectionId: 33,
           store: store,
         );
         // If there are no other errors in Section 36 for this mock store, it should be green or blue
@@ -208,13 +208,15 @@ void main() {
           normalMerdivenSayisi: 5,
           toplamDisariAcilanMerdivenSayisi: 2, // 2 < 3 -> Fail
         );
-        store.bolum36 = Bolum36Model(
+        store.bolum33 = Bolum33Model(
           cikisKati: ChoiceResult(
             label: "test",
             uiTitle: "test",
             uiSubtitle: "",
             reportText: "",
           ),
+        );
+        store.bolum36 = Bolum36Model(
           merdivenDegerlendirme: "",
         );
 
@@ -235,13 +237,15 @@ void main() {
           bodrumNormalMerdivenSayisi: 4,
           bodrumToplamDisariAcilanMerdivenSayisi: 1, // 1/4 < 2/4 -> Ratio Fail
         );
-        store.bolum36 = Bolum36Model(
+        store.bolum33 = Bolum33Model(
           cikisKati: ChoiceResult(
             label: "test",
             uiTitle: "test",
             uiSubtitle: "",
             reportText: "",
           ),
+        );
+        store.bolum36 = Bolum36Model(
           merdivenDegerlendirme: "",
         );
 
@@ -264,13 +268,15 @@ void main() {
               Bolum20Content.madde41MesafeUstunde, // Above limit
         );
         store.bolum9 = Bolum9Model(secim: Bolum9Content.yok);
-        store.bolum36 = Bolum36Model(
+        store.bolum33 = Bolum33Model(
           cikisKati: ChoiceResult(
             label: "test",
             uiTitle: "test",
             uiSubtitle: "",
             reportText: "",
           ),
+        );
+        store.bolum36 = Bolum36Model(
           merdivenDegerlendirme: "",
         );
 

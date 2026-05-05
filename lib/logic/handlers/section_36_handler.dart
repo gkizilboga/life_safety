@@ -48,7 +48,6 @@ class Section36Handler {
       }
 
       final b33 = _store.bolum33;
-      final b34 = _store.bolum34;
       final int maxYuk = ReportEngine.calculateMaxYuk(_store);
 
       if (b20.dengelenmisMerdivenSayisi > 0) {
@@ -255,9 +254,10 @@ class Section36Handler {
       // 5. Dairesel Merdiven (Madde 25) Analizi
       if (b20.donerMerdivenSayisi > 0 || b20.bodrumDonerMerdivenSayisi > 0) {
         final b25 = _store.bolum25;
-        // b34 ve b33 yukarıda tanımlandı
-        final zLabel = b34?.zemin?.label;
-        bool zeminIndependent = zLabel != null && zLabel.contains("34-1-A");
+        // b33 yukarıda tanımlandı
+        final b13 = _store.bolum13;
+        final zLabel = b13?.ticariKapiZemin?.label;
+        bool zeminIndependent = zLabel != null && zLabel.contains("13-11-C");
         int loadForSpiral = zeminIndependent ? (b33?.yukNormal ?? 0) : maxYuk;
 
         if (b25 != null) {
@@ -596,7 +596,7 @@ class Section36Handler {
       );
 
       // 3. Özel Durumlar ve Beyanlar
-      final cikisKati = b36.cikisKati;
+      final cikisKati = _store.bolum33?.cikisKati;
       if (cikisKati != null)
         _addDetail(
           details,
@@ -637,7 +637,7 @@ class Section36Handler {
       }
 
       if (b20 != null) {
-        final cikisKatiRes = b36.cikisKati;
+        final cikisKatiRes = BinaStore.instance.bolum33?.cikisKati;
         String katPrefix = "Çıkış";
         if (cikisKatiRes != null) {
           if (cikisKatiRes.label.contains("-A")) katPrefix = "Zemin";

@@ -34,13 +34,9 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   bool _askSiginak = false;
   bool _askEndustriyelMutfak = false;
 
-  // Otopark alan otomatik hesap
-  bool _autoOtoparkAlani = false;
   double? _hesaplananOtoparkAlani;
 
-  // Depo bodrum alan otomatik hesap
   bool _askDepoBodrumAlan = false;
-  bool _autoDepoBodrumAlani = false;
   double? _hesaplananDepoBodrumAlani;
 
   @override
@@ -89,10 +85,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
 
     _hesaplananOtoparkAlani = alan;
 
-    // Daha önce kullanıcı seçim yapmışsa otomatik seçim yapma (Kullanıcı müdahalesini koru)
     if (BinaStore.instance.bolum13?.otoparkAlan != null) return;
 
-    _autoOtoparkAlani = true;
     ChoiceResult otomatikSecim;
     if (alan < 600) {
       otomatikSecim = Bolum13Content.otoparkAlanOptionA;
@@ -150,33 +144,36 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
           }
         }
       }
-      
-      _hesaplananDepoBodrumAlani = totalBodrumDepoAlan > 0 ? totalBodrumDepoAlan : null;
-      
-      _askDepoBodrumAlan = _askDepo || ((b5?.bodrumKatAlani ?? 0) > 2000) || totalBodrumDepoAlan > 0;
 
-      if (_hesaplananDepoBodrumAlani != null && BinaStore.instance.bolum13?.depoBodrumAlan == null) {
-        _autoDepoBodrumAlani = true;
-        ChoiceResult autoChoice = _hesaplananDepoBodrumAlani! <= 2000 
-            ? Bolum13Content.depoBodrumAlanOptionA 
+      _hesaplananDepoBodrumAlani = totalBodrumDepoAlan > 0
+          ? totalBodrumDepoAlan
+          : null;
+
+      _askDepoBodrumAlan =
+          _askDepo ||
+          ((b5?.bodrumKatAlani ?? 0) > 2000) ||
+          totalBodrumDepoAlan > 0;
+
+      if (_hesaplananDepoBodrumAlani != null &&
+          BinaStore.instance.bolum13?.depoBodrumAlan == null) {
+        ChoiceResult autoChoice = _hesaplananDepoBodrumAlani! <= 2000
+            ? Bolum13Content.depoBodrumAlanOptionA
             : Bolum13Content.depoBodrumAlanOptionB;
         _model = _model.copyWith(depoBodrumAlan: autoChoice);
       }
       _askDuvar = b7?.hasDuvar ?? false;
 
-      bool hasTicariZemin =
-          (b6?.hasTicari ?? false) ||
-          (b10?.zemin?.uiTitle.toLowerCase().contains("ticari") ?? false);
-      bool hasTicariBodrum =
-          b10?.bodrumlar.any(
-            (e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false,
-          ) ??
-          false;
-      bool hasTicariNormal =
-          b10?.normaller.any(
-            (e) => e?.uiTitle.toLowerCase().contains("ticari") ?? false,
-          ) ??
-          false;
+      bool checkTic(ChoiceResult? c) {
+        if (c == null) return false;
+        final l = c.label;
+        return l.startsWith("10-B") ||
+            l.startsWith("10-C") ||
+            l.startsWith("10-D");
+      }
+
+      bool hasTicariZemin = (b6?.hasTicari ?? false) || checkTic(b10?.zemin);
+      bool hasTicariBodrum = b10?.bodrumlar.any(checkTic) ?? false;
+      bool hasTicariNormal = b10?.normaller.any(checkTic) ?? false;
 
       _askTicariZemin = hasTicariZemin;
       _askTicariBodrum = hasTicariBodrum;
@@ -191,18 +188,24 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
       _askEndustriyelMutfak =
           b6?.buyukRestoran?.label == Bolum6Content.buyukRestoranVar.label;
 
-      // YENİ: Ticari alan geçişleri için otomatik seçim. 
-      // Türkiye'de genelde ticari alanların dışarıya kendi bağımsız çıkışları olduğu için 
+      // YENİ: Ticari alan geçişleri için otomatik seçim.
+      // Türkiye'de genelde ticari alanların dışarıya kendi bağımsız çıkışları olduğu için
       // varsayılan olarak "Geçiş Yok / Bağımsız Çıkış Var" (13-11-C) seçiyoruz.
       if (BinaStore.instance.bolum13 == null) {
         if (hasTicariZemin && _model.ticariKapiZemin == null) {
-          _model = _model.copyWith(ticariKapiZemin: Bolum13Content.ticariOptionC);
+          _model = _model.copyWith(
+            ticariKapiZemin: Bolum13Content.ticariOptionC,
+          );
         }
         if (hasTicariBodrum && _model.ticariKapiBodrum == null) {
-          _model = _model.copyWith(ticariKapiBodrum: Bolum13Content.ticariOptionC);
+          _model = _model.copyWith(
+            ticariKapiBodrum: Bolum13Content.ticariOptionC,
+          );
         }
         if (hasTicariNormal && _model.ticariKapiNormal == null) {
-          _model = _model.copyWith(ticariKapiNormal: Bolum13Content.ticariOptionC);
+          _model = _model.copyWith(
+            ticariKapiNormal: Bolum13Content.ticariOptionC,
+          );
         }
       }
     });
@@ -369,10 +372,8 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               _model.depoKapi,
             ),
           ],
-          
-          if (_askDepoBodrumAlan) ...[
-            _buildSoruDepoBodrumAlan(),
-          ],
+
+          if (_askDepoBodrumAlan) ...[_buildSoruDepoBodrumAlan()],
 
           if (_askCop)
             _buildSoru(
@@ -578,9 +579,6 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   }
 
   Widget _buildSoruOtoparkAlan() {
-    final bool hesaplandi =
-        _autoOtoparkAlani && _hesaplananOtoparkAlani != null;
-
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -589,48 +587,14 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
             "Otopark alanları tüm katlarda toplam kaç metrekare?",
             style: AppStyles.questionTitle,
           ),
-          if (_hesaplananOtoparkAlani != null && _hesaplananOtoparkAlani! > 0) ...[
+          if (_hesaplananOtoparkAlani != null &&
+              _hesaplananOtoparkAlani! > 0) ...[
             const SizedBox(height: 10),
             CustomInfoNote(
               type: InfoNoteType.warning,
               text:
                   "Hatırlatma: Binanızda 'depo, teknik hacim, otopark' olarak toplamda ${_formatM2(_hesaplananOtoparkAlani)} m² 'lik alan belirtmiştiniz.",
               icon: Icons.lightbulb_outline,
-            ),
-          ],
-          if (hesaplandi) ...[
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF8E1),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFFFCC02), width: 1),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.info_outline,
-                    size: 16,
-                    color: Color(0xFFF57F17),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "Otopark kat alanı Bölüm 6'daki bilgilerinize göre "
-                      "${_formatM2(_hesaplananOtoparkAlani)} m² olarak "
-                      "tespit edilmiştir; aşağıdaki seçenek otomatik işaretlenmiştir. "
-                      "Farklı bir durum varsa başka bir seçenek işaretleyebilirsiniz.",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF6D4C41),
-                        height: 1.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
           const SizedBox(height: 12),
@@ -645,10 +609,6 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               choice: opt,
               isSelected: _model.otoparkAlan?.label == opt.label,
               onTap: () {
-                setState(() {
-                  _autoOtoparkAlani =
-                      false; // Kullanıcı değiştirdi, notı kaldır
-                });
                 _handleSelection('otoparkAlan', opt);
               },
             ),
@@ -659,52 +619,15 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
   }
 
   Widget _buildSoruDepoBodrumAlan() {
-    final bool hesaplandi = _autoDepoBodrumAlani && _hesaplananDepoBodrumAlani != null;
-
     return QuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Bodrum katlardaki bu depolama alanlarının toplamı kaç metrekare?",
+            "Binadaki (eşya vb.) depolama alanlarının toplamı kaç metrekare?",
             style: AppStyles.questionTitle,
           ),
 
-          if (hesaplandi) ...[
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFF8E1),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: const Color(0xFFFFCC02), width: 1),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.info_outline,
-                    size: 16,
-                    color: Color(0xFFF57F17),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "Bodrum depo alanı Bölüm 6 ve Bölüm 10'daki bilgilerinize göre "
-                      "${_formatM2(_hesaplananDepoBodrumAlani)} m² olarak "
-                      "tespit edilmiştir; aşağıdaki seçenek otomatik işaretlenmiştir. "
-                      "Farklı bir durum varsa başka bir seçenek işaretleyebilirsiniz.",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF6D4C41),
-                        height: 1.5,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
           const SizedBox(height: 12),
           ...[
             Bolum13Content.depoBodrumAlanOptionA,
@@ -715,9 +638,6 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               choice: opt,
               isSelected: _model.depoBodrumAlan?.label == opt.label,
               onTap: () {
-                setState(() {
-                  _autoDepoBodrumAlani = false; // Kullanıcı değiştirdi, notu kaldır
-                });
                 _handleSelection('depoBodrumAlan', opt);
               },
             ),
@@ -798,7 +718,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     if (decimalPart == "00" || decimalPart == "0") {
       return integerPart;
     }
-    
+
     // Değilse virgül ile ekle (gereksiz sıfırları temizle)
     decimalPart = decimalPart.replaceAll(RegExp(r'0+$'), '');
     return "$integerPart,$decimalPart";

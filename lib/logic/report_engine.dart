@@ -1992,11 +1992,6 @@ class ReportEngine {
         if (b33.zeminKatSonuc?.label.contains("-FAIL") == true) anyFail = true;
         if (b33.bodrumKatSonuc?.label.contains("-FAIL") == true) anyFail = true;
 
-        final cleanReport = report.replaceAll(
-          RegExp(r'^(KRİTİK RİSK|UYARI|OLUMLU|BİLGİ):\s*', multiLine: true),
-          '',
-        );
-
         final status = anyFail ? ReportStatus.risk : ReportStatus.compliant;
 
         // 1. Özet Değerlendirme
@@ -2004,7 +1999,8 @@ class ReportEngine {
           details,
           label: 'Kullanıcı Yükü ve Çıkış Kapasitesi Analizi',
           value: '',
-          report: report, // Use raw report to preserve "OLUMLU/BİLGİ" prefixes on new lines
+          report:
+              report, // Use raw report to preserve "OLUMLU/BİLGİ" prefixes on new lines
           status: status,
         );
 
@@ -2055,60 +2051,10 @@ class ReportEngine {
       }
     }
 
-    // Bölüm 34: Zemin/Bodrum Karakteristiği
+    // Bölüm 34: Ticari Alanlar
     if (id == 34) {
       final b34 = s.bolum34;
       if (b34 != null) {
-        if (b34.areTicariCikisSame) {
-          final choice = b34.zemin ?? b34.bodrum ?? b34.normal;
-          if (choice != null) {
-            _addDetail(
-              details,
-              label:
-                  'Ticari alanların hepsinin doğrudan sokağa açılan kendilerine ait kapıları var mı?',
-              value: choice.uiTitle,
-              subtitle: choice.uiSubtitle,
-              report: choice.reportText,
-              advice: choice.adviceText,
-              level: choice.level,
-            );
-          }
-        } else {
-          if (b34.zemin != null)
-            _addDetail(
-              details,
-              label:
-                  'Zemin kattaki ticari alanların doğrudan sokağa/bahçeye açılan kendilerine ait kapıları var mı?',
-              value: b34.zemin!.uiTitle,
-              subtitle: b34.zemin!.uiSubtitle,
-              report: b34.zemin!.reportText,
-              advice: b34.zemin!.adviceText,
-              level: b34.zemin!.level,
-            );
-          if (b34.bodrum != null)
-            _addDetail(
-              details,
-              label:
-                  'Bodrum kattaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?',
-              value: b34.bodrum!.uiTitle,
-              subtitle: b34.bodrum!.uiSubtitle,
-              report: b34.bodrum!.reportText,
-              advice: b34.bodrum!.adviceText,
-              level: b34.bodrum!.level,
-            );
-          if (b34.normal != null)
-            _addDetail(
-              details,
-              label:
-                  'Normal katlardaki ticari alanların doğrudan dışarıya çıkan kendilerine ait merdiveni ve çıkışları var mı?',
-              value: b34.normal!.uiTitle,
-              subtitle: b34.normal!.uiSubtitle,
-              report: b34.normal!.reportText,
-              advice: b34.normal!.adviceText,
-              level: b34.normal!.level,
-            );
-        }
-
         if (b34.mutfakBacasi != null) {
           _addDetail(
             details,
@@ -2565,13 +2511,14 @@ class ReportEngine {
         // Bölüm 33 kompleks hesaplama — sayısal alanlara göre dinamik olarak hesaplanan ChoiceResult kullanılır
         final b33 = s.bolum33;
         return _maxLevel([
+          b33?.cikisKati?.level,
           b33?.normalKatSonuc?.level,
           b33?.zeminKatSonuc?.level,
           b33?.bodrumKatSonuc?.level,
         ]);
       case 34:
         final b = s.bolum34;
-        return _maxLevel([b?.zemin?.level, b?.bodrum?.level, b?.normal?.level]);
+        return b?.mutfakBacasi?.level ?? RiskLevel.positive;
       case 35:
         final b = s.bolum35;
         if (b == null) return RiskLevel.positive;
@@ -2616,7 +2563,7 @@ class ReportEngine {
           // Tahliye mesafesi kontrolü (lobiTahliyeMesafeDurumu) zaten ChoiceResult.level içinde
         }
         return _maxLevel([
-          b?.cikisKati?.level,
+          s.bolum33?.cikisKati?.level,
           b?.disMerd?.level,
           b?.konum?.level,
           b?.kapiTipi?.level,
@@ -2983,6 +2930,7 @@ class ReportEngine {
     // --- BÖLÜM 33 (Yük ve Çıkış) ---
     final b33 = s.bolum33;
     if (b33 != null) {
+      add(b33.cikisKati);
       add(b33.normalKatSonuc);
       add(b33.zeminKatSonuc);
       add(b33.bodrumKatSonuc);
@@ -2991,9 +2939,6 @@ class ReportEngine {
     // --- BÖLÜM 34 (Karakteristik) ---
     final b34 = s.bolum34;
     if (b34 != null) {
-      add(b34.zemin);
-      add(b34.bodrum);
-      add(b34.normal);
       add(b34.mutfakBacasi);
     }
 
@@ -3009,7 +2954,6 @@ class ReportEngine {
     // --- BÖLÜM 36 (Genişlikler) ---
     final b36 = s.bolum36;
     if (b36 != null) {
-      add(b36.cikisKati);
       add(b36.disMerd);
       add(b36.konum);
       add(b36.kapiTipi);
@@ -3456,28 +3400,10 @@ class ReportEngine {
     // Bölüm 33: Yetersiz Çıkış
     if (id == 33) {
       final b33 = s.bolum33;
-      final b34 = s.bolum34; // Section 34 data needed for override logic
 
       if (b33 != null) {
-        // We will reconstruct the report instead of using combinedReportText
-        // to account for Section 34 overrides.
+        final b13 = s.bolum13;
         List<String> reportParts = [];
-
-        // areTicariCikisSame: tüm katlar için tek cevap → hangi alanda saklandığına
-        // bakılmaksızın paylaşımlı seçimi al; aksi hâlde kata özel seçimleri kullan.
-        final ChoiceResult? effectiveB34Zemin;
-        final ChoiceResult? effectiveB34Bodrum;
-        final ChoiceResult? effectiveB34Normal;
-        if (b34?.areTicariCikisSame == true) {
-          final shared = b34?.zemin ?? b34?.bodrum ?? b34?.normal;
-          effectiveB34Zemin = shared;
-          effectiveB34Bodrum = shared;
-          effectiveB34Normal = shared;
-        } else {
-          effectiveB34Zemin = b34?.zemin;
-          effectiveB34Bodrum = b34?.bodrum;
-          effectiveB34Normal = b34?.normal;
-        }
 
         // Helper function to evaluate a floor type
         void evaluateFloor({
@@ -3485,20 +3411,21 @@ class ReportEngine {
           required int? yuk,
           required int? gerekli,
           required int? mevcut,
-          required ChoiceResult? secim34,
+          required ChoiceResult? kapiSecimi,
         }) {
           if (yuk == null || gerekli == null || mevcut == null) return;
 
-          // "-A" ile biten her label "bağımsız çıkış VAR" anlamına gelir
-          // (34-1-A zemin, 34-2-A bodrum, 34-3-A normal).
-          bool hasIndependentExit = secim34?.label.endsWith("-A") ?? false;
+          // Eğer Bölüm 13'te "Geçiş Yok" (13-11-C) seçilmişse, bu alan bağımsız
+          // çıkışlı kabul edilir.
+          bool hasIndependentExit =
+              kapiSecimi?.label.contains("13-11-C") ?? false;
 
           bool isSufficient = (mevcut >= gerekli);
 
           if (hasIndependentExit) {
             // override: POSITIVE because of independent commercial exit
             reportParts.add(
-              "${title.toUpperCase()}:\nOLUMLU: Kattaki kullanıcı yükü $yuk kişi olarak hesaplanmıştır. Normal şartlarda $gerekli adet çıkış gerekmektedir (Mevcut: $mevcut). ANCAK, ticari alanların doğrudan dışarıya açılan bağımsız çıkışları olduğundan (Bölüm 34 beyanı), ticari kullanım kaynaklı yük konut merdiveni hesabına dahil edilmemiştir. Mevcut konut merdivenleri yeterli kabul edilmiştir.",
+              "${title.toUpperCase()}:\nOLUMLU: Kattaki kullanıcı yükü $yuk kişi olarak hesaplanmıştır. Normal şartlarda $gerekli adet çıkış gerekmektedir (Mevcut: $mevcut). ANCAK, ticari alanların doğrudan dışarıya açılan bağımsız çıkışları olduğundan (Bölüm 13 beyanı), ticari kullanım kaynaklı yük konut merdiveni hesabına dahil edilmemiştir. Mevcut konut merdivenleri yeterli kabul edilmiştir.",
             );
           } else {
             // Standard check
@@ -3520,7 +3447,7 @@ class ReportEngine {
           yuk: b33.yukZemin,
           gerekli: b33.gerekliZemin,
           mevcut: b33.mevcutUst,
-          secim34: effectiveB34Zemin,
+          kapiSecimi: b13?.ticariKapiZemin,
         );
 
         // 2. NORMAL KAT DEĞERLENDİRMESİ
@@ -3530,7 +3457,7 @@ class ReportEngine {
             yuk: b33.yukNormal,
             gerekli: b33.gerekliNormal,
             mevcut: b33.mevcutUst,
-            secim34: effectiveB34Normal,
+            kapiSecimi: b13?.ticariKapiNormal,
           );
         }
 
@@ -3541,7 +3468,7 @@ class ReportEngine {
             yuk: b33.yukBodrum,
             gerekli: b33.gerekliBodrum,
             mevcut: b33.mevcutBodrum,
-            secim34: effectiveB34Bodrum,
+            kapiSecimi: b13?.ticariKapiBodrum,
           );
         }
 
@@ -3551,14 +3478,14 @@ class ReportEngine {
 
         String finalReport = reportParts.join("\n\n");
 
-        // Add transparency note about Section 34 override if any independent exit was chosen
+        // Add transparency note about Section 13 override if any independent exit was chosen
         bool hasAnyIndependentExit =
-            (b34?.zemin?.label.contains("34-1-A") ?? false) ||
-            (b34?.bodrum?.label.contains("34-2-A") ?? false) ||
-            (b34?.normal?.label.contains("34-3-A") ?? false);
+            (b13?.ticariKapiZemin?.label.contains("13-11-C") ?? false) ||
+            (b13?.ticariKapiBodrum?.label.contains("13-11-C") ?? false) ||
+            (b13?.ticariKapiNormal?.label.contains("13-11-C") ?? false);
         if (hasAnyIndependentExit) {
           finalReport +=
-              "\n\nNOT: Ticari alanların bağımsız çıkışa sahip olduğu belirtildiğinden, bu alanlar merdiven kapasitesi hesabından otomatik olarak çıkarılmıştır. Yukarıdaki kullanıcı yükü ve çıkış sayıları bu düzeltme yapıldıktan sonraki değerleri yansıtmaktadır.";
+              "\n\nNOT: Ticari alanların bağımsız çıkışa sahip olduğu (Bölüm 13 beyanı) belirtildiğinden, bu alanlar merdiven kapasitesi hesabından otomatik olarak çıkarılmıştır. Yukarıdaki kullanıcı yükü ve çıkış sayıları bu düzeltme yapıldıktan sonraki değerleri yansıtmaktadır.";
         }
 
         if (finalReport.contains("OLUMLU")) {
@@ -3569,29 +3496,11 @@ class ReportEngine {
       }
     }
 
-    // Bölüm 34: Karşı Üst Kat ve Bodrum Karakteristiği
+    // Bölüm 34: Ticari Alanlar
     if (id == 34) {
       final b34 = s.bolum34;
       if (b34 != null) {
         List<String> parts = [];
-        if (b34.areTicariCikisSame) {
-          final choice = b34.zemin ?? b34.bodrum ?? b34.normal;
-          if (choice != null)
-            parts.add(
-              "Tüm Ticari Alanların Bağımsız Çıkışı: ${choice.reportText}",
-            );
-        } else {
-          if (b34.zemin != null)
-            parts.add("Zemin Kat Ticari Alan Çıkışı: ${b34.zemin!.reportText}");
-          if (b34.bodrum != null)
-            parts.add(
-              "Bodrum Kat Ticari Alan Çıkışı: ${b34.bodrum!.reportText}",
-            );
-          if (b34.normal != null)
-            parts.add(
-              "Normal Kat Ticari Alan Çıkışı: ${b34.normal!.reportText}",
-            );
-        }
         if (b34.mutfakBacasi != null)
           parts.add("Mutfak Bacası: ${b34.mutfakBacasi!.reportText}");
         if (parts.isNotEmpty) return parts.join("\n\n");
@@ -3895,7 +3804,7 @@ class ReportEngine {
         _addDetail(
           details,
           label:
-              'Bodrum katlardaki depolama alanlarının toplamı kaç metrekare?',
+              'Binadaki (eşya vb.) depolama alanlarının toplamı kaç metrekare?',
           value: b13.depoBodrumAlan!.uiTitle,
           report:
               "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
@@ -4120,20 +4029,20 @@ class ReportEngine {
     // 1. Yapı Yüksekliği > 51.50m (Madde 89)
     if (hYapi >= (51.50 - 0.001)) {
       reasons.add(
-        "Konut binalarında Yapı Yüksekliği ≥ 51.50 metre olduğu için kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89).",
+        "KRİTİK RİSK: Konut binalarında Yapı Yüksekliği ≥ 51.50 metre olduğu için kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89).",
       );
     }
     // 2. Danışmanlık Notu: 30.50m - 51.50m
     else if (hYapi > (30.50 - 0.001)) {
       reasons.add(
-        "Yapı yüksekliği 30.50 m - 51.50 m arasında olduğunda, merdivenlerde basınçlandırma sistemi tesisi YGH zorunluluğu için muafiyet sağlar (Madde 38/c).",
+        "BİLGİ: Yapı yüksekliği 30.50 m - 51.50 m arasında olduğunda, birbirlerine alternatif, her ikisi de korunumlu ve en az birinde yangın güvenlik holü düzenlenmiş veya basınçlandırma uygulanmış 2 kaçış merdiveni yapılması mecburidir. Kattaki konutların her birinin içinden bir yangın güvenlik holünden geçilerek yangın merdivenine ulaşılıyor ise binanın genel merdiveninin korunumlu olması gerekli değildir. (Yönetmelik Madde 38/c).",
       );
     }
 
     // 3. Bodrum Kat Sayısı > 4 (Madde 89/2)
     if (bodrumKatSayisi > 4) {
       reasons.add(
-        "Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89/2).",
+        "KRİTİK RİSK: Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren kaçış merdivenlerinin basınçlandırılması zorunludur (Madde 89/2).",
       );
     }
 
@@ -4447,12 +4356,15 @@ class ReportEngine {
   static int calculateMaxYuk(BinaStore s) {
     int maxYuk = 0;
     final b33 = s.bolum33;
-    final b34 = s.bolum34;
     if (b33 != null) {
-      // Sadece 34-X-A (Evet, var) seçilirse bağımsız sayıyoruz. (C - Bilmiyorum seçilirse yük dahil edilir).
-      bool zeminIndependent = b34?.zemin?.label.contains("34-1-A") ?? false;
-      bool bodrumIndependent = b34?.bodrum?.label.contains("34-2-A") ?? false;
-      bool normalIndependent = b34?.normal?.label.contains("34-3-A") ?? false;
+      final b13 = s.bolum13;
+      // Eğer Bölüm 13'te "Geçiş Yok" (13-11-C) seçilmişse bağımsız sayıyoruz.
+      bool zeminIndependent =
+          b13?.ticariKapiZemin?.label.contains("13-11-C") ?? false;
+      bool bodrumIndependent =
+          b13?.ticariKapiBodrum?.label.contains("13-11-C") ?? false;
+      bool normalIndependent =
+          b13?.ticariKapiNormal?.label.contains("13-11-C") ?? false;
 
       int yukZemin = zeminIndependent ? 0 : (b33.yukZemin ?? 0);
       int yukBodrum = bodrumIndependent ? 0 : (b33.yukBodrum ?? 0);

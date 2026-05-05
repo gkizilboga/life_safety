@@ -3,6 +3,7 @@ import 'package:life_safety/data/bina_store.dart';
 import 'package:life_safety/logic/report_engine.dart';
 import 'package:life_safety/models/bolum_33_model.dart';
 import 'package:life_safety/models/bolum_34_model.dart';
+import 'package:life_safety/models/bolum_13_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 
 void main() {
@@ -15,21 +16,23 @@ void main() {
     });
 
     test('Scenario: Independent Zemin exit, dependent Normal floor exit', () {
-      // Zemin has independent commercial exit
-      store.bolum34 = Bolum34Model(
-        zemin: ChoiceResult(
-          label: "34-1-A",
-          uiTitle: "Evet, bağımsız çıkış var",
+      // Zemin has independent commercial exit (via Section 13)
+      store.bolum13 = Bolum13Model(
+        ticariKapiZemin: ChoiceResult(
+          label: "13-11-C",
+          uiTitle: "Hiçbir ticari alandan binaya geçiş yok",
           uiSubtitle: "",
           reportText: "",
         ),
-        normal: ChoiceResult(
-          label: "34-3-B",
-          uiTitle: "Hayır, ortak kullanıyor",
+        ticariKapiNormal: ChoiceResult(
+          label: "13-11-A",
+          uiTitle: "Geçiş var",
           uiSubtitle: "",
           reportText: "",
         ),
       );
+      
+      store.bolum34 = Bolum34Model(); // Minimal model
 
       // High user load on both
       store.bolum33 = Bolum33Model(
@@ -53,26 +56,27 @@ void main() {
     });
 
     test('Scenario: All floors have independent exits', () {
-      store.bolum34 = Bolum34Model(
-        zemin: ChoiceResult(
-          label: "34-1-A",
-          uiTitle: "Evet",
+      store.bolum13 = Bolum13Model(
+        ticariKapiZemin: ChoiceResult(
+          label: "13-11-C",
+          uiTitle: "Hiçbir ticari alandan binaya geçiş yok",
           uiSubtitle: "",
           reportText: "",
         ),
-        normal: ChoiceResult(
-          label: "34-3-A",
-          uiTitle: "Evet",
+        ticariKapiNormal: ChoiceResult(
+          label: "13-11-C",
+          uiTitle: "Hiçbir ticari alandan binaya geçiş yok",
           uiSubtitle: "",
           reportText: "",
         ),
-        bodrum: ChoiceResult(
-          label: "34-2-A",
-          uiTitle: "Evet",
+        ticariKapiBodrum: ChoiceResult(
+          label: "13-11-C",
+          uiTitle: "Hiçbir ticari alandan binaya geçiş yok",
           uiSubtitle: "",
           reportText: "",
         ),
       );
+      store.bolum34 = Bolum34Model();
 
       store.bolum33 = Bolum33Model(
         yukZemin: 500,

@@ -190,6 +190,8 @@ class Bolum13Model {
         Bolum13Content.otoparkAlanOptionA,
         Bolum13Content.otoparkAlanOptionB,
         Bolum13Content.otoparkAlanOptionC,
+        Bolum13Content.otoparkAlanOptionD,
+        Bolum13Content.otoparkAlanOptionE,
       ]),
       kazanAlan: find(map['kazanAlan_label'], [
         Bolum13Content.kazanAlanOptionA,

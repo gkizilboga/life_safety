@@ -303,26 +303,51 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                 ),
               ),
 
-            if (!isTekKatli && !context.select((Bolum20Provider p) => p.hideHavalandirma))
+            if (!isTekKatli &&
+                !context.select((Bolum20Provider p) => p.hideHavalandirma)) ...[
+              // Kullanıcıyı basınçlandırma ve havalandırma arasındaki ilişki konusunda bilgilendiren dinamik yapı
+              if (context.select(
+                (Bolum20Provider p) =>
+                    p.model.basinclandirma?.label ==
+                    Bolum20Content.basYghOptionA.label,
+              ))
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: CustomInfoNote(
+                    type: InfoNoteType.info,
+                    text:
+                        "Basınçlandırma sistemi olan merdivenler, yönetmeliğin havalandırma şartını sağlamış kabul edilir. Bu soruda varsa basınçlandırma sistemi olmayan diğer merdivenleri değerlendiriniz; tüm merdivenleriniz basınçlandırmalı ise 'Var' seçeneğini işaretleyebilirsiniz.",
+                    icon: Icons.info_outline,
+                  ),
+                ),
               Selector<Bolum20Provider, ChoiceResult?>(
                 selector: (_, p) => p.model.havalandirma,
-                builder: (context, val, _) => StairQuestion(
-                  key: const ValueKey('havalandirma_q'),
-                  provider: provider,
-                  title: "Merdivenlerde doğal havalandırma var mı?",
-                  definition: AppDefinitions
-                      .havalandirma, // In AppDefinitions (inside app_content)
-                  term: "Havalandırma",
-                  keyParam: 'havalandirma',
-                  options: [
-                    Bolum20Content.havalandirmaOptionA,
-                    Bolum20Content.havalandirmaOptionB,
-                    Bolum20Content.havalandirmaOptionC,
-                    Bolum20Content.havalandirmaOptionD,
-                  ],
-                  selected: val,
-                ),
+                builder: (context, val, _) {
+                  final hasBas =
+                      provider.model.basinclandirma?.label ==
+                      Bolum20Content.basYghOptionA.label;
+                  final qTitle = hasBas
+                      ? "(Basınçlandırma sistemi bulunmayan merdivenlerde) Doğal havalandırma (pencere/menfez) var mı?"
+                      : "Merdivenlerde doğal havalandırma (pencere/menfez) var mı?";
+
+                  return StairQuestion(
+                    key: const ValueKey('havalandirma_q'),
+                    provider: provider,
+                    title: qTitle,
+                    definition: AppDefinitions.havalandirma,
+                    term: "Havalandırma",
+                    keyParam: 'havalandirma',
+                    options: [
+                      Bolum20Content.havalandirmaOptionA,
+                      Bolum20Content.havalandirmaOptionB,
+                      Bolum20Content.havalandirmaOptionC,
+                      Bolum20Content.havalandirmaOptionD,
+                    ],
+                    selected: val,
+                  );
+                },
               ),
+            ],
           ],
         ),
       ),
@@ -449,7 +474,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
     final hasSprinkler = BinaStore.instance.bolum9?.secim?.label == "9-1-A";
     final limit = hasSprinkler ? 15 : 10;
 
-    final cikisKatiRes = BinaStore.instance.bolum36?.cikisKati;
+    final cikisKatiRes = BinaStore.instance.bolum33?.cikisKati;
     String katIsmi = "Çıkış";
     if (cikisKatiRes != null) {
       if (cikisKatiRes.label.contains("-A")) katIsmi = "Zemin";
@@ -470,8 +495,10 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
         ChoiceResult finalize(ChoiceResult original) {
           return original.copyWith(
             uiTitle: original.uiTitle.replaceAll("[LIMIT]", limit.toString()),
-            uiSubtitle:
-                original.uiSubtitle.replaceAll("[LIMIT]", limit.toString()),
+            uiSubtitle: original.uiSubtitle.replaceAll(
+              "[LIMIT]",
+              limit.toString(),
+            ),
           );
         }
 
@@ -520,7 +547,8 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
               const SizedBox(height: 16),
               SelectableCard(
                 choice: finalize(Bolum20Content.madde41MesafeAltinda),
-                isSelected: currentSelection?.label ==
+                isSelected:
+                    currentSelection?.label ==
                     Bolum20Content.madde41MesafeAltinda.label,
                 onTap: () {
                   provider.handleSelection(
@@ -531,7 +559,8 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
               ),
               SelectableCard(
                 choice: finalize(Bolum20Content.madde41MesafeUstunde),
-                isSelected: currentSelection?.label ==
+                isSelected:
+                    currentSelection?.label ==
                     Bolum20Content.madde41MesafeUstunde.label,
                 onTap: () {
                   provider.handleSelection(
@@ -542,7 +571,8 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
               ),
               SelectableCard(
                 choice: finalize(Bolum20Content.madde41MesafeBilmiyorum),
-                isSelected: currentSelection?.label ==
+                isSelected:
+                    currentSelection?.label ==
                     Bolum20Content.madde41MesafeBilmiyorum.label,
                 onTap: () {
                   provider.handleSelection(

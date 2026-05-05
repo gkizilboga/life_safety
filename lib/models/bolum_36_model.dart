@@ -2,7 +2,6 @@ import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum36Model {
-  final ChoiceResult? cikisKati;
   final ChoiceResult? disMerd;
   final ChoiceResult? konum;
 
@@ -24,7 +23,6 @@ class Bolum36Model {
   final String? merdivenDegerlendirme;
 
   Bolum36Model({
-    this.cikisKati,
     this.disMerd,
     this.konum,
     this.genislikKorunumlu,
@@ -39,7 +37,6 @@ class Bolum36Model {
   });
 
   Bolum36Model copyWith({
-    ChoiceResult? cikisKati,
     ChoiceResult? disMerd,
     ChoiceResult? konum,
     ChoiceResult? genislikKorunumlu,
@@ -53,7 +50,6 @@ class Bolum36Model {
     bool? areWidthsSame,
   }) {
     return Bolum36Model(
-      cikisKati: cikisKati ?? this.cikisKati,
       disMerd: disMerd ?? this.disMerd,
       konum: konum ?? this.konum,
       genislikKorunumlu: genislikKorunumlu ?? this.genislikKorunumlu,
@@ -75,7 +71,6 @@ class Bolum36Model {
 
   Map<String, dynamic> toMap() {
     return {
-      'cikisKati_label': cikisKati?.label,
       'disMerd_label': disMerd?.label,
       'konum_label': konum?.label,
       'genislikKorunumlu_label': genislikKorunumlu?.label,
@@ -119,12 +114,6 @@ class Bolum36Model {
       Bolum36Content.kapiTipiOptionC,
     ];
 
-    final cikisKatiOptions = [
-      Bolum36Content.cikisKatiOptionA,
-      Bolum36Content.cikisKatiOptionB,
-      Bolum36Content.cikisKatiOptionC,
-    ];
-
     final disMerdOptions = [
       Bolum36Content.disMerdOptionA,
       Bolum36Content.disMerdOptionB,
@@ -155,7 +144,6 @@ class Bolum36Model {
     ];
 
     return Bolum36Model(
-      cikisKati: findChoice(map['cikisKati_label'], cikisKatiOptions),
       disMerd: findChoice(map['disMerd_label'], disMerdOptions),
       konum: findChoice(map['konum_label'], konumOptions),
       kapiTipi: findChoice(map['kapiTipi_label'], kapiTipiOptions),

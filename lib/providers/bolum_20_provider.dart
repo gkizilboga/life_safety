@@ -168,7 +168,7 @@ class Bolum20Provider extends ChangeNotifier {
     String? error = InputValidator.validateNumber(
       value,
       min: 0,
-      max: 6,
+      max: 10,
       unit: "adet",
       isRequired: false,
     );

@@ -13,6 +13,8 @@ class Bolum33Model {
   final int? gerekliBodrum;
   final int? mevcutUst;
   final int? mevcutBodrum;
+  final ChoiceResult? cikisKati;
+  final int? cikisSayisi;
 
   Bolum33Model({
     this.alanZemin,
@@ -26,6 +28,8 @@ class Bolum33Model {
     this.gerekliBodrum,
     this.mevcutUst,
     this.mevcutBodrum,
+    this.cikisKati,
+    this.cikisSayisi,
   });
 
   ChoiceResult? get normalKatSonuc {
@@ -129,6 +133,8 @@ class Bolum33Model {
     int? gerekliBodrum,
     int? mevcutUst,
     int? mevcutBodrum,
+    ChoiceResult? cikisKati,
+    int? cikisSayisi,
   }) {
     return Bolum33Model(
       alanZemin: alanZemin ?? this.alanZemin,
@@ -142,6 +148,8 @@ class Bolum33Model {
       gerekliBodrum: gerekliBodrum ?? this.gerekliBodrum,
       mevcutUst: mevcutUst ?? this.mevcutUst,
       mevcutBodrum: mevcutBodrum ?? this.mevcutBodrum,
+      cikisKati: cikisKati ?? this.cikisKati,
+      cikisSayisi: cikisSayisi ?? this.cikisSayisi,
     );
   }
 
@@ -158,6 +166,8 @@ class Bolum33Model {
       'gerekliBodrum': gerekliBodrum,
       'mevcutUst': mevcutUst,
       'mevcutBodrum': mevcutBodrum,
+      'cikisKati_label': cikisKati?.label,
+      'cikisSayisi': cikisSayisi,
     };
   }
 
@@ -174,6 +184,16 @@ class Bolum33Model {
       gerekliBodrum: map['gerekliBodrum'],
       mevcutUst: map['mevcutUst'],
       mevcutBodrum: map['mevcutBodrum'],
+      cikisSayisi: map['cikisSayisi'],
+      cikisKati: (() {
+        final l = map['cikisKati_label'];
+        if (l == null) return null;
+        return [
+          Bolum36Content.cikisKatiOptionA,
+          Bolum36Content.cikisKatiOptionB,
+          Bolum36Content.cikisKatiOptionC,
+        ].firstWhere((e) => e.label == l, orElse: () => Bolum36Content.cikisKatiOptionA);
+      })(),
     );
   }
 }

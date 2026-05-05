@@ -60,12 +60,13 @@ class Section27Handler {
         );
       }
 
+      final b13 = _store.bolum13;
       final bool zeminIndependent =
-          _store.bolum34?.zemin?.label.contains("34-1-A") ?? false;
+          b13?.ticariKapiZemin?.label.contains("13-11-C") ?? false;
       final bool bodrumIndependent =
-          _store.bolum34?.bodrum?.label.contains("34-2-A") ?? false;
+          b13?.ticariKapiBodrum?.label.contains("13-11-C") ?? false;
       final bool normalIndependent =
-          _store.bolum34?.normal?.label.contains("34-3-A") ?? false;
+          b13?.ticariKapiNormal?.label.contains("13-11-C") ?? false;
 
       final int yukZemin = zeminIndependent
           ? 0
