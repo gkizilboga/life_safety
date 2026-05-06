@@ -165,10 +165,11 @@ class Bolum20Provider extends ChangeNotifier {
   }
 
   void updateController(String key, String value) {
+    final bool isDirect = key == 'toplamDirect' || key == 'bodToplamDirect';
     String? error = InputValidator.validateNumber(
       value,
       min: 0,
-      max: 10,
+      max: isDirect ? 75 : 60,
       unit: "adet",
       isRequired: false,
     );
@@ -241,11 +242,11 @@ class Bolum20Provider extends ChangeNotifier {
         _model = _model.copyWith(bodrumDengelenmisMerdivenSayisi: numericVal);
         break;
       case 'toplamDirect':
-        toplamDirectErr = _validateDirectCount(numericVal, totalMainStairs);
+        toplamDirectErr = error ?? _validateDirectCount(numericVal, totalMainStairs);
         _model = _model.copyWith(toplamDisariAcilanMerdivenSayisi: numericVal);
         break;
       case 'bodToplamDirect':
-        bodToplamDirectErr = _validateDirectCount(
+        bodToplamDirectErr = error ?? _validateDirectCount(
           numericVal,
           totalBasementStairs,
         );
@@ -296,13 +297,16 @@ class Bolum20Provider extends ChangeNotifier {
 
     bool newShowBasinclandirma = (ic >= 1 || dis >= 1 || bIc >= 1 || bDis >= 1);
 
+    bool stateChanged = false;
     if (_showBasinclandirma != newShowBasinclandirma) {
       _showBasinclandirma = newShowBasinclandirma;
       if (!_showBasinclandirma) {
         _model = _model.copyWith(basinclandirma: null);
       }
-      if (shouldNotify) notifyListeners();
-    } else if (shouldNotify) {
+      stateChanged = true;
+    }
+
+    if (shouldNotify) {
       // Defensive check: Only notify if errors or dependencies changed
       final newTDE = _validateDirectCount(
         int.tryParse(toplamDirectCtrl.text) ?? 0,
@@ -340,7 +344,7 @@ class Bolum20Provider extends ChangeNotifier {
         changed = true;
       }
 
-      if (changed) notifyListeners();
+      if (changed || stateChanged) notifyListeners();
     }
   }
 

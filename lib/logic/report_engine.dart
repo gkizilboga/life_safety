@@ -982,7 +982,7 @@ class ReportEngine {
             } else {
               final hYapi = _getHYapi(s);
               finalReportText =
-                  "BİLGİ: Binada İtfaiye Asansörü bulunmamaktadır (Yükseklik: ${InputValidator.formatArea(hYapi)}m < 51.50m).";
+                  "BİLGİ: Binada itfaiye asansörü bulunmamaktadır. Yapı yüksekliğinin 51,5 metrenin altında kalması sebebiyle zorunlu değildir. (Yükseklik: ${InputValidator.formatArea(hYapi)}m < 51.50m).";
             }
           }
 
@@ -1994,22 +1994,41 @@ class ReportEngine {
 
         final status = anyFail ? ReportStatus.risk : ReportStatus.compliant;
 
+        // 0. Çıkış Katı Sorusu
+        if (b33.cikisKati != null) {
+          _addDetail(
+            details,
+            label: 'Binadan dış havaya (atmosfere) çıktığınız kat hangisidir?',
+            value: b33.cikisKati!.uiTitle,
+            report: b33.cikisKati!.reportText,
+          );
+        }
+        if (b33.cikisSayisi != null && b33.cikisSayisi! > 0) {
+          _addDetail(
+            details,
+            label:
+                'Binadan çıkış katında toplam kaç adet dışarı çıkış kapısı var?',
+            value: '${b33.cikisSayisi} Adet',
+            report: '',
+          );
+        }
+
         // 1. Özet Değerlendirme
         _addDetail(
           details,
           label: 'Kullanıcı Yükü ve Çıkış Kapasitesi Analizi',
           value: '',
-          report:
-              report, // Use raw report to preserve "OLUMLU/BİLGİ" prefixes on new lines
+          report: report,
           status: status,
         );
 
-        // 2. Tablo Verileri (Kurumsal indigo tablo tasarımı için PdfService tarafından işlenecek)
-        // Başlık Satırı
+        // 2. Tablo Verileri
+        // Başlık Satırı - (Tahmini) etiketi içeriyor
         _addDetail(
           details,
           label: 'KAT TİPİ',
-          value: 'KULLANICI YÜKÜ|GEREKEN ÇIKIŞ|MEVCUT ÇIKIŞ',
+          value:
+              'KULLANICI YÜKÜ\n(Tahmini)|GEREKEN ÇIKIŞ\n(Tahmini)|MEVCUT ÇIKIŞ',
           report: '',
           isTable: true,
         );
@@ -2020,7 +2039,7 @@ class ReportEngine {
             label: 'Normal Katlar (En Yoğun)',
             value: b33.yukNormal == 0
                 ? 'Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.|-|-'
-                : '${b33.yukNormal}|${b33.gerekliNormal} Adet|${b33.mevcutUst} Adet',
+                : '${b33.yukNormal}|${b33.gerekliNormal} Adet|${b33.mevcutNormal} Adet',
             report: '',
             isTable: true,
           );
@@ -2031,7 +2050,7 @@ class ReportEngine {
             label: 'Zemin Kat',
             value: b33.yukZemin == 0
                 ? 'Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.|-|-'
-                : '${b33.yukZemin}|${b33.gerekliZemin} Adet|${b33.mevcutUst} Adet',
+                : '${b33.yukZemin}|${b33.gerekliZemin} Adet|${b33.mevcutZemin} Adet',
             report: '',
             isTable: true,
           );
@@ -2047,6 +2066,37 @@ class ReportEngine {
             isTable: true,
           );
         }
+
+        // Tablo altı not: Hesaplamada kullanılan minimum genişlikler
+        if (b33.minMerdivGenisligi != null) {
+          final minMStr = b33.minMerdivGenisligi!.toStringAsFixed(2);
+          _addDetail(
+            details,
+            label:
+                '(*) 1 adet merdiven genişliği (min.): $minMStr m (hesaplamada kullanılan)',
+            value: '',
+            report: '',
+            isTable: true,
+          );
+          _addDetail(
+            details,
+            label:
+                '(*) 1 adet dışarı çıkış kapısı genişliği (min.): 0.90 m (90 cm) olarak kabul edilmiştir.',
+            value: '',
+            report: '',
+            isTable: true,
+          );
+        }
+
+        // Tablo altı uyarı notu: Hesaplamanın tahmini niteliği
+        _addDetail(
+          details,
+          label:
+              '(*) Bu tablodaki kullanıcı yükü ve çıkış adetleri, beyan edilen bina bilgilerinden yola çıkılarak TAHMİNİ olarak hesaplanmıştır. Kesin değerlerin tespiti için mimari proje üzerinde veya yerinde uzman incelemesi yapılması gereklidir.',
+          value: '',
+          report: '',
+          isTable: true,
+        );
         handled = true;
       }
     }
@@ -3581,7 +3631,7 @@ class ReportEngine {
             (b33.bodrumKatSonuc?.label.contains("-FAIL") == true);
 
         if (anyFail) {
-          return "KRİTİK RİSK: Hesaplanan (tahmini) kullanıcı yükü için mevcut çıkış sayısı yetersiz olduğu tespit edilmiştir. Detaylar bu dokümandaki Bölüm-33 'te yer almaktadır.";
+          return "KRİTİK RİSK: Hesaplanan (tahmini) kullanıcı yükü için mevcut çıkış sayısının yetersiz olduğu tespit edilmiştir. Detaylar bu dokümandaki Bölüm-33 içerisinde yer almaktadır.";
         }
       }
     }
@@ -3591,7 +3641,7 @@ class ReportEngine {
       if (s.bolum36 != null) {
         final fullReport = Section36Handler(s).getFullReport();
         if (fullReport.contains("KRİTİK RİSK")) {
-          return "KRİTİK RİSK: Kaçış yollarında (genişlik, tahliye mesafesi vb.) Yönetmeliğe göre uygunsuzluklar tespit edilmiştir. Detaylar bu dokümandaki Bölüm-36 'te yer almaktadır.";
+          return "KRİTİK RİSK: Kaçış yollarında (genişlik, tahliye mesafesi vb.) Yönetmeliğe göre uygunsuzluklar tespit edilmiştir. Detaylar bu dokümandaki Bölüm-36 içerisinde yer almaktadır.";
         }
       }
     }
@@ -3851,7 +3901,7 @@ class ReportEngine {
           _addDetail(
             details,
             label:
-                'Tüm ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
+                'Tüm ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
             value: choice.uiTitle,
             subtitle: choice.uiSubtitle,
             report: choice.reportText,
@@ -3864,7 +3914,7 @@ class ReportEngine {
           _addDetail(
             details,
             label:
-                'Zemin kattaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
+                'Zemin kattaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
             value: b13.ticariKapiZemin!.uiTitle,
             subtitle: b13.ticariKapiZemin!.uiSubtitle,
             report: b13.ticariKapiZemin!.reportText,
@@ -3876,7 +3926,7 @@ class ReportEngine {
           _addDetail(
             details,
             label:
-                'Normal katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
+                'Normal katlardaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
             value: b13.ticariKapiNormal!.uiTitle,
             subtitle: b13.ticariKapiNormal!.uiSubtitle,
             report: b13.ticariKapiNormal!.reportText,
@@ -3888,7 +3938,7 @@ class ReportEngine {
           _addDetail(
             details,
             label:
-                'Bodrum katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?',
+                'Bodrum katlardaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
             value: b13.ticariKapiBodrum!.uiTitle,
             subtitle: b13.ticariKapiBodrum!.uiSubtitle,
             report: b13.ticariKapiBodrum!.reportText,
@@ -4135,7 +4185,7 @@ class ReportEngine {
     // 1. Yapı Yüksekliği >= 51.50m (Konutlarda Üst Eşik)
     if (hYapi >= (51.50 - 0.001)) {
       reasons.add(
-        "Yapı Yüksekliği 51.50 metrenin üzerinde olması sebebiyle hem zorunlu itfaiye asansörü (Md. 63) hem de genel kaçış güvenliği için YGH zorunludur.",
+        "Yapı Yüksekliği 51.50 metrenin üzerinde olması sebebiyle hem itfaiye asansörü hem de genel kaçış güvenliği açısından YGH zorunludur.",
       );
     }
     // 2. Yapı Yüksekliği > 30.50m (Konutlarda Yüksek Bina Eşiği)

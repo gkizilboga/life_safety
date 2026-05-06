@@ -11,10 +11,13 @@ class Bolum33Model {
   final int? gerekliZemin;
   final int? gerekliNormal;
   final int? gerekliBodrum;
+  /// Toplam merdiven sayısı (tüm kat tipleri için baz değer)
   final int? mevcutUst;
   final int? mevcutBodrum;
   final ChoiceResult? cikisKati;
   final int? cikisSayisi;
+  /// Hesaplamada kullanılan minimum merdiven genişliği (metre). En yüksek kat yüküne göre seçilir.
+  final double? minMerdivGenisligi;
 
   Bolum33Model({
     this.alanZemin,
@@ -30,7 +33,30 @@ class Bolum33Model {
     this.mevcutBodrum,
     this.cikisKati,
     this.cikisSayisi,
+    this.minMerdivGenisligi,
   });
+
+  /// Zemin katın gerçek mevcut çıkış sayısı.
+  /// Çıkış katı Zemin (36-0-A) ise kullanıcının girdiği cikisSayisi,
+  /// aksi halde toplam merdiven sayısı olan mevcutUst kullanılır.
+  int? get mevcutZemin {
+    final label = cikisKati?.label ?? '';
+    if (label == '36-0-A') {
+      return cikisSayisi;
+    }
+    return mevcutUst;
+  }
+
+  /// Normal katların gerçek mevcut çıkış sayısı.
+  /// Çıkış katı Normal Kat (36-0-B) ise kullanıcının girdiği cikisSayisi,
+  /// aksi halde toplam merdiven sayısı olan mevcutUst kullanılır.
+  int? get mevcutNormal {
+    final label = cikisKati?.label ?? '';
+    if (label == '36-0-B') {
+      return cikisSayisi;
+    }
+    return mevcutUst;
+  }
 
   ChoiceResult? get normalKatSonuc {
     if (yukNormal == 0) return ChoiceResult(
@@ -40,8 +66,9 @@ class Bolum33Model {
       reportText: "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
       level: RiskLevel.info,
     );
-    if (mevcutUst == null || gerekliNormal == null) return null;
-    return (mevcutUst! >= gerekliNormal!)
+    final mNormal = mevcutNormal;
+    if (mNormal == null || gerekliNormal == null) return null;
+    return (mNormal >= gerekliNormal!)
         ? Bolum33Content.normalKatYeterli
         : Bolum33Content.normalKatYetersiz;
   }
@@ -54,8 +81,9 @@ class Bolum33Model {
       reportText: "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
       level: RiskLevel.info,
     );
-    if (mevcutUst == null || gerekliZemin == null) return null;
-    return (mevcutUst! >= gerekliZemin!)
+    final mZemin = mevcutZemin;
+    if (mZemin == null || gerekliZemin == null) return null;
+    return (mZemin >= gerekliZemin!)
         ? Bolum33Content.zeminKatYeterli
         : Bolum33Content.zeminKatYetersiz;
   }
@@ -86,12 +114,9 @@ class Bolum33Model {
 
     if (currentResults.isEmpty) return "Bölüm 33 hesaplaması yapılmamış.";
 
-    // Check if everything is sufficient
     bool allOk = currentResults.every((r) => r.label.contains("-OK"));
-    // Check if everything is insufficient
     bool allFail = currentResults.every((r) => r.label.contains("-FAIL"));
 
-    // Consolidate if everything matches and there is more than 1 floor type
     if (allOk && currentResults.length > 1) {
       return Bolum33Content.allKatlarYeterli.reportText;
     }
@@ -100,23 +125,9 @@ class Bolum33Model {
     }
 
     List<String> parts = [];
-    // Zemin Kat
-    if (resZemin != null) {
-      String text = resZemin.reportText;
-      parts.add("ZEMİN KAT:\n$text");
-    }
-
-    // Normal Kat
-    if (resNormal != null) {
-      String text = resNormal.reportText;
-      parts.add("NORMAL KATLAR (En Yoğun Kat):\n$text");
-    }
-
-    // Bodrum Kat
-    if (resBodrum != null) {
-      String text = resBodrum.reportText;
-      parts.add("BODRUM KATLAR (En Yoğun Kat):\n$text");
-    }
+    if (resZemin != null) parts.add("ZEMİN KAT:\n${resZemin.reportText}");
+    if (resNormal != null) parts.add("NORMAL KATLAR (En Yoğun Kat):\n${resNormal.reportText}");
+    if (resBodrum != null) parts.add("BODRUM KATLAR (En Yoğun Kat):\n${resBodrum.reportText}");
 
     return parts.join("\n\n");
   }
@@ -135,6 +146,7 @@ class Bolum33Model {
     int? mevcutBodrum,
     ChoiceResult? cikisKati,
     int? cikisSayisi,
+    double? minMerdivGenisligi,
   }) {
     return Bolum33Model(
       alanZemin: alanZemin ?? this.alanZemin,
@@ -150,6 +162,7 @@ class Bolum33Model {
       mevcutBodrum: mevcutBodrum ?? this.mevcutBodrum,
       cikisKati: cikisKati ?? this.cikisKati,
       cikisSayisi: cikisSayisi ?? this.cikisSayisi,
+      minMerdivGenisligi: minMerdivGenisligi ?? this.minMerdivGenisligi,
     );
   }
 
@@ -168,6 +181,7 @@ class Bolum33Model {
       'mevcutBodrum': mevcutBodrum,
       'cikisKati_label': cikisKati?.label,
       'cikisSayisi': cikisSayisi,
+      'minMerdivGenisligi': minMerdivGenisligi,
     };
   }
 
@@ -185,6 +199,7 @@ class Bolum33Model {
       mevcutUst: map['mevcutUst'],
       mevcutBodrum: map['mevcutBodrum'],
       cikisSayisi: map['cikisSayisi'],
+      minMerdivGenisligi: map['minMerdivGenisligi'],
       cikisKati: (() {
         final l = map['cikisKati_label'];
         if (l == null) return null;

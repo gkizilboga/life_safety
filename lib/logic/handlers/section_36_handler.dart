@@ -596,21 +596,6 @@ class Section36Handler {
       );
 
       // 3. Özel Durumlar ve Beyanlar
-      final cikisKati = _store.bolum33?.cikisKati;
-      if (cikisKati != null)
-        _addDetail(
-          details,
-          label: Bolum36Content.questionCikisKati,
-          value: cikisKati.uiTitle,
-          subtitle: cikisKati.uiSubtitle,
-          report: cikisKati.reportText,
-          advice: cikisKati.adviceText,
-          status: cikisKati.level == RiskLevel.critical
-              ? ReportStatus.risk
-              : (cikisKati.level == RiskLevel.positive
-                    ? ReportStatus.compliant
-                    : ReportStatus.warning),
-        );
 
       final disMerd = b36.disMerd;
       if (disMerd != null)

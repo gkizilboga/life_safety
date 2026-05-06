@@ -27,11 +27,30 @@ class Bolum33Screen extends StatefulWidget {
     return 20.0;
   }
 
-  static int hesaplaGerekliCikis(int kisi) {
-    if (kisi <= 50) return 1;
-    if (kisi <= 500) return 2;
-    if (kisi <= 1000) return 3;
-    return 4 + ((kisi - 1000) / 500).ceil();
+  /// Kullanıcı yüküne göre minimum merdiven genişliğini döner (metre).
+  static double minMerdivGenisligi(int yuk) {
+    if (yuk <= 50) return 0.90;
+    if (yuk <= 500) return 1.20;
+    if (yuk <= 2000) return 1.50;
+    return 2.00;
+  }
+
+  /// Merdiven gerektiren katlar için gerekli merdiven adedini hesaplar.
+  /// BYKHY: Gerekli toplam genişlik (m) = yük × 0.5 / 60
+  /// Merdiven adedi = ⌈ toplam genişlik / min. merdiven genişliği ⌉
+  static int hesaplaMerdivenSayisi(int yuk) {
+    if (yuk <= 0) return 0;
+    final double totalWidth = yuk * 0.5 / 60.0;
+    final double minWidth = minMerdivGenisligi(yuk);
+    return (totalWidth / minWidth).ceil();
+  }
+
+  /// Doğrudan dışarıya çıkış olan katlar için gerekli kapı adedini hesaplar.
+  /// BYKHY: Gerekli toplam genişlik (m) = yük × 0.5 / 100
+  /// Kapı adedi = ⌈ toplam genişlik / 0.9 m ⌉  (her kapı = 0.9 m)
+  static int hesaplaKapiSayisi(int yuk) {
+    if (yuk <= 0) return 0;
+    return (yuk * 0.5 / 90.0).ceil();
   }
 
   static void recalculateAndSaveUserLoads(BinaStore store) {
@@ -45,6 +64,9 @@ class Bolum33Screen extends StatefulWidget {
     bool hasBodrum = (b3?.bodrumKatSayisi ?? 0) >= 1;
     double hYapi = b3?.hYapi ?? 0.0;
 
+    // Çıkış katı etiketi — hangi katın dışarıya doğrudan çıkışı olduğunu belirler
+    final String cikisKatiLabel = (store.bolum33?.cikisKati?.label) ?? '';
+
     bool isExcluded(ChoiceResult? choice, ChoiceResult? kapiSecimi) {
       if (choice == null) return false;
       bool isTicari =
@@ -52,9 +74,6 @@ class Bolum33Screen extends StatefulWidget {
           choice.label.startsWith("10-C") ||
           choice.label.startsWith("10-D");
       if (!isTicari) return false;
-
-      // Eğer Bölüm 13'te "Geçiş Yok" (13-11-C) seçilmişse, bu alan bağımsız
-      // çıkışlı kabul edilir ve konut merdiveni yüküne dahil edilmez.
       return kapiSecimi?.label.contains("13-11-C") ?? false;
     }
 
@@ -68,8 +87,11 @@ class Bolum33Screen extends StatefulWidget {
     } else {
       double kZemin = getKatsayi(b10?.zemin);
       yukZemin = (alanZemin / kZemin).ceil();
-      int gZeminLoad = hesaplaGerekliCikis(yukZemin);
-      gZemin = (hYapi >= 21.50) ? math.max(gZeminLoad, 2) : gZeminLoad;
+      // Zemin dışarıya çıkış katıysa kapı formülü, değilse merdiven formülü
+      final int gZeminRaw = (cikisKatiLabel == '36-0-A')
+          ? hesaplaKapiSayisi(yukZemin)
+          : hesaplaMerdivenSayisi(yukZemin);
+      gZemin = (hYapi >= 21.50) ? math.max(gZeminRaw, 2) : gZeminRaw;
     }
 
     // 2. NORMAL KAT
@@ -87,8 +109,11 @@ class Bolum33Screen extends StatefulWidget {
     }
     int gNormal = 0;
     if (yukNormal > 0) {
-      int gNormalLoad = hesaplaGerekliCikis(yukNormal);
-      gNormal = (hYapi >= 21.50) ? math.max(gNormalLoad, 2) : gNormalLoad;
+      // Normal kattan dışarıya çıkış varsa kapı formülü, yoksa merdiven formülü
+      final int gNormalRaw = (cikisKatiLabel == '36-0-B')
+          ? hesaplaKapiSayisi(yukNormal)
+          : hesaplaMerdivenSayisi(yukNormal);
+      gNormal = (hYapi >= 21.50) ? math.max(gNormalRaw, 2) : gNormalRaw;
     }
 
     // 3. BODRUM KAT
@@ -106,8 +131,11 @@ class Bolum33Screen extends StatefulWidget {
     }
     int gBodrum = 0;
     if (yukBodrum > 0) {
-      int gBodrumLoad = hesaplaGerekliCikis(yukBodrum);
-      gBodrum = (hYapi >= 21.50) ? math.max(gBodrumLoad, 2) : gBodrumLoad;
+      // Bodrum dışarıya çıkış katıysa kapı formülü, yoksa merdiven formülü
+      final int gBodrumRaw = (cikisKatiLabel == '36-0-C')
+          ? hesaplaKapiSayisi(yukBodrum)
+          : hesaplaMerdivenSayisi(yukBodrum);
+      gBodrum = (hYapi >= 21.50) ? math.max(gBodrumRaw, 2) : gBodrumRaw;
     }
 
     // 4. MEVCUT ÇIKIŞ SAYILARI
@@ -137,11 +165,20 @@ class Bolum33Screen extends StatefulWidget {
           : 0;
     }
 
+    // 5. Hesaplamada kullanılan min. merdiven genişliği (en yüksek yük baz alınır)
+    final int maxYuk = [
+      yukZemin,
+      if (hasNormal) yukNormal,
+      if (hasBodrum) yukBodrum,
+    ].fold(0, math.max);
+    final double modelMinMerdivGen = minMerdivGenisligi(
+      maxYuk > 0 ? maxYuk : 1,
+    );
+
     var newModel = store.bolum33 ?? Bolum33Model();
     final ChoiceResult? cikisKati = newModel.cikisKati;
     final int cikisSayisi = newModel.cikisSayisi ?? 0;
 
-    // Sonuçları modele ata
     store.bolum33 = newModel.copyWith(
       alanZemin: alanZemin,
       alanNormal: hasNormal ? alanNormal : null,
@@ -152,13 +189,13 @@ class Bolum33Screen extends StatefulWidget {
       gerekliZemin: gZemin,
       gerekliNormal: hasNormal ? gNormal : null,
       gerekliBodrum: hasBodrum ? gBodrum : null,
-      // Çıkış katı ise manuel girişi, değilse merdiven sayısını baz al
-      mevcutUst: (cikisKati?.label == "36-0-A" || cikisKati?.label == "36-0-B")
-          ? cikisSayisi
-          : mevcutUst,
+      mevcutUst: mevcutUst,
       mevcutBodrum: hasBodrum
-          ? ((cikisKati?.label == "36-0-C") ? cikisSayisi : mevcutBodrum)
+          ? ((cikisKati?.label == '36-0-C') ? cikisSayisi : mevcutBodrum)
           : null,
+      cikisKati: cikisKati,
+      cikisSayisi: cikisSayisi,
+      minMerdivGenisligi: modelMinMerdivGen,
     );
   }
 }
@@ -191,11 +228,18 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
 
     _cikisSayisiCtrl.addListener(() {
       final val = int.tryParse(_cikisSayisiCtrl.text);
-      if (val != null && val >= 0 && val <= 20) {
+      // Limit check is removed from logic to prevent blocking, but UI warning remains
+      if (val != null && val >= 0) {
         setState(() {
           _isConfirmed = false;
+          _model = _model.copyWith(cikisSayisi: val);
         });
-        _model = _model.copyWith(cikisSayisi: val);
+        _hesapla();
+      } else if (_cikisSayisiCtrl.text.isEmpty) {
+        setState(() {
+          _isConfirmed = false;
+          _model = _model.copyWith(cikisSayisi: 0);
+        });
         _hesapla();
       }
     });
@@ -209,7 +253,8 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
 
   void _hesapla() {
     final store = BinaStore.instance;
-    // Arka plan fonksiyonumuzu çağırıp State'i güncelliyoruz
+    // CRITICAL FIX: Sync _model to store BEFORE calculation to ensure the engine sees the latest inputs
+    store.bolum33 = _model;
     Bolum33Screen.recalculateAndSaveUserLoads(store);
 
     // UI state'i güncelle
@@ -244,7 +289,8 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
       isNextEnabled:
           _isConfirmed &&
           _model.cikisKati != null &&
-          _model.cikisSayisi != null,
+          _model.cikisSayisi != null &&
+          _model.cikisSayisi! > 0,
       customWarningText:
           "Lütfen çıkış katını ve kattaki toplam çıkış sayısını girerek hesaplamaları onaylayınız.",
       onNext: () {
@@ -265,7 +311,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Binadan dış havaya çıktığınız kat hangisidir?",
+                  "Binadan dış havaya (atmosfere) çıktığınız kat hangisidir?",
                   style: AppStyles.questionTitle,
                 ),
                 const SizedBox(height: 12),
@@ -293,7 +339,11 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
                 const SizedBox(height: 16),
                 const Text(
                   "Binadan çıkış katında toplam kaç adet dışarı çıkış kapısı var?",
-                  style: AppStyles.questionTitle,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1A237E), // Dark Purple/Navy
+                  ),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
@@ -306,10 +356,10 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
                     color: AppColors.primaryBlue,
                   ),
                   decoration: InputDecoration(
-                    hintText: "0-20 arası",
-                    hintStyle: const TextStyle(
+                    hintText: "0",
+                    hintStyle: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey,
+                      color: Colors.grey.shade400,
                     ),
                     filled: true,
                     fillColor: Colors.white,
@@ -335,27 +385,44 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
                     ),
                   ),
                 ),
-                if (_cikisSayisiCtrl.text.isNotEmpty &&
-                    (int.tryParse(_cikisSayisiCtrl.text) ?? -1) > 20)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 4),
-                    child: Text(
-                      "Sayı 20'den büyük olamaz.",
-                      style: TextStyle(color: Colors.red, fontSize: 12),
+                if (_cikisSayisiCtrl.text.isNotEmpty) ...[
+                  if ((int.tryParse(_cikisSayisiCtrl.text) ?? 0) > 75)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8, left: 2),
+                      child: Text(
+                        "Maks. 75 adet girilebilir.",
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    )
+                  else if ((int.tryParse(_cikisSayisiCtrl.text) ?? 0) > 20)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 4),
+                      child: Text(
+                        "Uyarı: Bir katta 20'den fazla bağımsız çıkış kapısı olması nadir bir durumdur. Lütfen kontrol ediniz.",
+                        style: TextStyle(color: Colors.orange, fontSize: 12),
+                      ),
                     ),
-                  ),
+                ],
               ],
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
                 child: Text(
                   "Katlardaki kullanıcı yükleri (tahmini)",
-                  style: AppStyles.questionTitle,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1A237E), // Dark Purple/Navy
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -370,7 +437,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
             "ZEMİN KAT",
             _model.yukZemin,
             _model.gerekliZemin,
-            _model.mevcutUst,
+            _model.mevcutZemin, // computed getter: zemin'e özel mevcut çıkış
             _model.zeminKatSonuc,
           ),
           if (_hasNormal)
@@ -378,7 +445,8 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
               "NORMAL KATLAR",
               _model.yukNormal,
               _model.gerekliNormal,
-              _model.mevcutUst,
+              _model
+                  .mevcutNormal, // computed getter: normal'e özel mevcut çıkış
               _model.normalKatSonuc,
             ),
           if (_hasBodrum)
@@ -420,16 +488,23 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: AppStyles.questionTitle),
-          const Divider(),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryBlue,
+            ),
+          ),
+          const SizedBox(height: 8),
           _buildRow("Kullanıcı Yükü:", "$yuk Kişi"),
           _buildRow("Gereken Çıkış:", "$gerekli Adet"),
           _buildRow("Mevcut Çıkış:", "$mevcut Adet"),

@@ -1180,6 +1180,7 @@ class BinaStore {
           uiSubtitle: "",
           reportText: _bolum33!.combinedReportText,
           adviceText: _joinAdvice([
+            _bolum33?.cikisKati,
             _bolum33!.normalKatSonuc,
             _bolum33!.zeminKatSonuc,
             _bolum33!.bodrumKatSonuc,
@@ -1219,7 +1220,6 @@ class BinaStore {
           uiSubtitle: "",
           reportText: m.merdivenDegerlendirme ?? "Değerlendirme yapılamadı.",
           adviceText: _joinAdvice([
-            _bolum33?.cikisKati,
             m.disMerd,
             m.konum,
             m.kapiTipi,

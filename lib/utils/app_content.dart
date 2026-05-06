@@ -979,7 +979,7 @@ class Bolum13Content {
 
   static final ticariOptionA = ChoiceResult(
     label: "13-11-A (Ticari)",
-    uiTitle: "Evet.",
+    uiTitle: "Evet, dayanımlı.",
     uiSubtitle:
         "Yangına dayanıklı, duman sızdırmaz, bırakınca kendiliğinden kapanıyor.",
     reportText:
@@ -989,7 +989,7 @@ class Bolum13Content {
 
   static final ticariOptionB = ChoiceResult(
     label: "13-11-B (Ticari)",
-    uiTitle: "Hayır.",
+    uiTitle: "Hayır, dayanımsız.",
     uiSubtitle:
         "Yangın dayanımsız (sac, demir, plastik, aluminyum, ahşap, cam).",
     reportText:
@@ -999,10 +999,11 @@ class Bolum13Content {
 
   static final ticariOptionC = ChoiceResult(
     label: "13-11-C (Ticari)",
-    uiTitle: "Hiçbir ticari alandan binaya geçiş yok.",
-    uiSubtitle: "Arada kapı, merdiven, pencere vs. kesinlikle olmayacak.",
+    uiTitle: "Kattaki işyerlerinden ana binaya geçiş yok.",
+    uiSubtitle: "İşyerlerinin kendilerine ait çıkışları var.",
     reportText:
-        "OLUMLU: Ticari alan ile konut arasında doğrudan içeriden geçiş bulunmamaktadır. Bu durumda ticari alanların kullanıcı yükü binanın kullanıcı yükü hesabına katılmayacaktır. Ticari alanların içerisindeki kaçış yollarının hususi olarak değerlendirmesi bu Uygulama 'nın kapsamı dışındadır.",
+        ""
+        "OLUMLU: Ticari alan(lar) ile konut arasında doğrudan geçiş bulunmamaktadır. Bu durumda ticari alanların kullanıcı yükü ana binanın kullanıcı yüküne katılmayacaktır. Ticari alanların içerisindeki kaçış yollarının değerlendirmesi bu Uygulama'nın kapsamı dışındadır.",
     level: RiskLevel.positive,
   );
 

@@ -411,7 +411,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
           if (_activeTicariFloorCount == 1) ...[
             if (_askTicariZemin)
               _buildSoru(
-                "Zemin kattaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                "Zemin kattaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?",
                 'ticariZemin',
                 [
                   Bolum13Content.ticariOptionA,
@@ -423,7 +423,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               ),
             if (_askTicariNormal)
               _buildSoru(
-                "Normal katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                "Normal katlardaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?",
                 'ticariNormal',
                 [
                   Bolum13Content.ticariOptionA,
@@ -435,7 +435,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               ),
             if (_askTicariBodrum)
               _buildSoru(
-                "Bodrum katlardaki ticari alanlardan konut merdivenine geçiş yangın dayanımlı mı?",
+                "Bodrum katlardaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?",
                 'ticariBodrum',
                 [
                   Bolum13Content.ticariOptionA,

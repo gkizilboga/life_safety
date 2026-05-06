@@ -615,75 +615,79 @@ class StairInputGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestionCard(
-      child: Column(
-        children: [
-          _StairInputRow(
-            key: const ValueKey('n_normal'),
-            label: Bolum20Content.cokKatOption1.uiTitle,
-            ctrl: provider.normalCtrl,
-            error: context.select((Bolum20Provider p) => p.normalErr),
-            assetPath: AppAssets.section20Normal,
-            onChange: (val) => provider.updateController('normal', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('n_ic_kapali'),
-            label: Bolum20Content.cokKatOption2.uiTitle,
-            ctrl: provider.icKapaliCtrl,
-            error: context.select((Bolum20Provider p) => p.icKapaliErr),
-            assetPath: AppAssets.section20IcKapali,
-            onChange: (val) => provider.updateController('icKapali', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('n_dis_kapali'),
-            label: Bolum20Content.cokKatOption3.uiTitle,
-            ctrl: provider.disKapaliCtrl,
-            error: context.select((Bolum20Provider p) => p.disKapaliErr),
-            assetPath: AppAssets.section20DisKapali,
-            onChange: (val) => provider.updateController('disKapali', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('n_dis_acik'),
-            label: Bolum20Content.cokKatOption4.uiTitle,
-            ctrl: provider.disAcikCtrl,
-            error: context.select((Bolum20Provider p) => p.disAcikErr),
-            assetPaths: const [
-              AppAssets.section20DisAcik2,
-              AppAssets.section20DisAcik3,
+    return Consumer<Bolum20Provider>(
+      builder: (context, p, child) {
+        return QuestionCard(
+          child: Column(
+            children: [
+              _StairInputRow(
+                key: const ValueKey('n_normal'),
+                label: Bolum20Content.cokKatOption1.uiTitle,
+                ctrl: p.normalCtrl,
+                error: p.normalErr,
+                assetPath: AppAssets.section20Normal,
+                onChange: (val) => p.updateController('normal', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('n_ic_kapali'),
+                label: Bolum20Content.cokKatOption2.uiTitle,
+                ctrl: p.icKapaliCtrl,
+                error: p.icKapaliErr,
+                assetPath: AppAssets.section20IcKapali,
+                onChange: (val) => p.updateController('icKapali', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('n_dis_kapali'),
+                label: Bolum20Content.cokKatOption3.uiTitle,
+                ctrl: p.disKapaliCtrl,
+                error: p.disKapaliErr,
+                assetPath: AppAssets.section20DisKapali,
+                onChange: (val) => p.updateController('disKapali', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('n_dis_acik'),
+                label: Bolum20Content.cokKatOption4.uiTitle,
+                ctrl: p.disAcikCtrl,
+                error: p.disAcikErr,
+                assetPaths: const [
+                  AppAssets.section20DisAcik2,
+                  AppAssets.section20DisAcik3,
+                ],
+                onChange: (val) => p.updateController('disAcik', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('n_doner'),
+                label: Bolum20Content.cokKatOption5.uiTitle,
+                ctrl: p.donerCtrl,
+                error: p.donerErr,
+                assetPath: AppAssets.section20Dairesel,
+                onChange: (val) => p.updateController('doner', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('n_sahanliksiz'),
+                label: Bolum20Content.cokKatOption6.uiTitle,
+                ctrl: p.sahanliksizCtrl,
+                error: p.sahanliksizErr,
+                onChange: (val) => p.updateController('sahanliksiz', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('n_dengelenmis'),
+                label: Bolum20Content.cokKatOption7.uiTitle,
+                ctrl: p.dengelenmisCtrl,
+                error: p.dengelenmisErr,
+                assetPath: AppAssets.section20Dengelenmis,
+                onChange: (val) => p.updateController('dengelenmis', val),
+              ),
             ],
-            onChange: (val) => provider.updateController('disAcik', val),
           ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('n_doner'),
-            label: Bolum20Content.cokKatOption5.uiTitle,
-            ctrl: provider.donerCtrl,
-            error: context.select((Bolum20Provider p) => p.donerErr),
-            assetPath: AppAssets.section20Dairesel,
-            onChange: (val) => provider.updateController('doner', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('n_sahanliksiz'),
-            label: Bolum20Content.cokKatOption6.uiTitle,
-            ctrl: provider.sahanliksizCtrl,
-            error: context.select((Bolum20Provider p) => p.sahanliksizErr),
-            onChange: (val) => provider.updateController('sahanliksiz', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('n_dengelenmis'),
-            label: Bolum20Content.cokKatOption7.uiTitle,
-            ctrl: provider.dengelenmisCtrl,
-            error: context.select((Bolum20Provider p) => p.dengelenmisErr),
-            assetPath: AppAssets.section20Dengelenmis,
-            onChange: (val) => provider.updateController('dengelenmis', val),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -694,66 +698,79 @@ class BasementStairInputGroupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QuestionCard(
-      child: Column(
-        children: [
-          _StairInputRow(
-            key: const ValueKey('b_normal'),
-            label: "Bodrum: ${Bolum20Content.cokKatOption1.uiTitle}",
-            ctrl: provider.bodNormalCtrl,
-            error: context.select((Bolum20Provider p) => p.bodNormalErr),
-            onChange: (val) => provider.updateController('bodNormal', val),
+    return Consumer<Bolum20Provider>(
+      builder: (context, p, child) {
+        return QuestionCard(
+          child: Column(
+            children: [
+              _StairInputRow(
+                key: const ValueKey('b_normal'),
+                label: "Bodrum: ${Bolum20Content.cokKatOption1.uiTitle}",
+                ctrl: p.bodNormalCtrl,
+                error: p.bodNormalErr,
+                assetPath: AppAssets.section20Normal,
+                onChange: (val) => p.updateController('bodNormal', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('b_ic_kapali'),
+                label: "Bodrum: ${Bolum20Content.cokKatOption2.uiTitle}",
+                ctrl: p.bodIcKapaliCtrl,
+                error: p.bodIcKapaliErr,
+                assetPath: AppAssets.section20IcKapali,
+                onChange: (val) => p.updateController('bodIcKapali', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('b_dis_kapali'),
+                label: "Bodrum: ${Bolum20Content.cokKatOption3.uiTitle}",
+                ctrl: p.bodDisKapaliCtrl,
+                error: p.bodDisKapaliErr,
+                assetPath: AppAssets.section20DisKapali,
+                onChange: (val) => p.updateController('bodDisKapali', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('b_dis_acik'),
+                label: "Bodrum: ${Bolum20Content.cokKatOption4.uiTitle}",
+                ctrl: p.bodDisAcikCtrl,
+                error: p.bodDisAcikErr,
+                assetPaths: const [
+                  AppAssets.section20DisAcik2,
+                  AppAssets.section20DisAcik3,
+                ],
+                onChange: (val) => p.updateController('bodDisAcik', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('b_doner'),
+                label: "Bodrum: ${Bolum20Content.cokKatOption5.uiTitle}",
+                ctrl: p.bodDonerCtrl,
+                error: p.bodDonerErr,
+                assetPath: AppAssets.section20Dairesel,
+                onChange: (val) => p.updateController('bodDoner', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('b_sahanliksiz'),
+                label: "Bodrum: ${Bolum20Content.cokKatOption6.uiTitle}",
+                ctrl: p.bodSahanliksizCtrl,
+                error: p.bodSahanliksizErr,
+                onChange: (val) => p.updateController('bodSahanliksiz', val),
+              ),
+              const Divider(height: 16),
+              _StairInputRow(
+                key: const ValueKey('b_dengelenmis'),
+                label: "Bodrum: ${Bolum20Content.cokKatOption7.uiTitle}",
+                ctrl: p.bodDengelenmisCtrl,
+                error: p.bodDengelenmisErr,
+                assetPath: AppAssets.section20Dengelenmis,
+                onChange: (val) => p.updateController('bodDengelenmis', val),
+              ),
+            ],
           ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('b_ic_kapali'),
-            label: "Bodrum: ${Bolum20Content.cokKatOption2.uiTitle}",
-            ctrl: provider.bodIcKapaliCtrl,
-            error: context.select((Bolum20Provider p) => p.bodIcKapaliErr),
-            onChange: (val) => provider.updateController('bodIcKapali', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('b_dis_kapali'),
-            label: "Bodrum: ${Bolum20Content.cokKatOption3.uiTitle}",
-            ctrl: provider.bodDisKapaliCtrl,
-            error: context.select((Bolum20Provider p) => p.bodDisKapaliErr),
-            onChange: (val) => provider.updateController('bodDisKapali', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('b_dis_acik'),
-            label: "Bodrum: ${Bolum20Content.cokKatOption4.uiTitle}",
-            ctrl: provider.bodDisAcikCtrl,
-            error: context.select((Bolum20Provider p) => p.bodDisAcikErr),
-            onChange: (val) => provider.updateController('bodDisAcik', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('b_doner'),
-            label: "Bodrum: ${Bolum20Content.cokKatOption5.uiTitle}",
-            ctrl: provider.bodDonerCtrl,
-            error: context.select((Bolum20Provider p) => p.bodDonerErr),
-            onChange: (val) => provider.updateController('bodDoner', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('b_sahanliksiz'),
-            label: "Bodrum: ${Bolum20Content.cokKatOption6.uiTitle}",
-            ctrl: provider.bodSahanliksizCtrl,
-            error: context.select((Bolum20Provider p) => p.bodSahanliksizErr),
-            onChange: (val) => provider.updateController('bodSahanliksiz', val),
-          ),
-          const Divider(height: 16),
-          _StairInputRow(
-            key: const ValueKey('b_dengelenmis'),
-            label: "Bodrum: ${Bolum20Content.cokKatOption7.uiTitle}",
-            ctrl: provider.bodDengelenmisCtrl,
-            error: context.select((Bolum20Provider p) => p.bodDengelenmisErr),
-            onChange: (val) => provider.updateController('bodDengelenmis', val),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

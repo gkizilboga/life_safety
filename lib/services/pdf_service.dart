@@ -1100,13 +1100,16 @@ class PdfService {
                               style: pw.TextStyle(
                                 font: ttfBold,
                                 fontSize: 9,
-                                color: PdfColors.indigo900,
+                                fontStyle: pw.FontStyle.italic,
+                                color: PdfColors.blue900,
                               ),
                             ),
-                            pw.SizedBox(height: 1),
-                            pw.Text(
-                              "Merdiven Uygunluk Değerlendirmesi",
-                              style: pw.TextStyle(font: ttf, fontSize: 9),
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(left: 6),
+                              child: pw.Text(
+                                "Merdiven Uygunluk Değerlendirmesi",
+                                style: pw.TextStyle(font: ttf, fontSize: 9),
+                              ),
                             ),
                             pw.SizedBox(height: 5),
                             pw.Text(
@@ -1114,7 +1117,8 @@ class PdfService {
                               style: pw.TextStyle(
                                 font: ttfBold,
                                 fontSize: 9,
-                                color: PdfColors.indigo900,
+                                fontStyle: pw.FontStyle.italic,
+                                color: PdfColors.blue900,
                               ),
                             ),
                             pw.SizedBox(height: 3),
@@ -1164,13 +1168,16 @@ class PdfService {
                           style: pw.TextStyle(
                             font: ttfBold,
                             fontSize: 9,
-                            color: PdfColors.indigo900,
+                            fontStyle: pw.FontStyle.italic,
+                            color: PdfColors.blue900,
                           ),
                         ),
-                        pw.SizedBox(height: 1),
-                        pw.Text(
-                          "Merdiven Uygunluk Değerlendirmesi",
-                          style: pw.TextStyle(font: ttf, fontSize: 9),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.only(left: 6),
+                          child: pw.Text(
+                            "Merdiven Uygunluk Değerlendirmesi",
+                            style: pw.TextStyle(font: ttf, fontSize: 9),
+                          ),
                         ),
                         pw.SizedBox(height: 5),
                         pw.Text(
@@ -1178,15 +1185,16 @@ class PdfService {
                           style: pw.TextStyle(
                             font: ttfBold,
                             fontSize: 9,
-                            color: PdfColors.indigo900,
+                            fontStyle: pw.FontStyle.italic,
+                            color: PdfColors.blue900,
                           ),
                         ),
                         pw.SizedBox(height: 3),
                       ],
                     ),
                   );
-                  isFirstTableFor36 = false;
-                }
+                isFirstTableFor36 = false;
+              }
                 itemsWidgets.add(
                   _buildInfoTable(
                     tableGroup,
@@ -1523,9 +1531,17 @@ class PdfService {
     PdfColor sectionColor, {
     String subjectLabel = "Konu",
   }) {
+    // Footnote satırlarını tablodan ayır (* ile başlayan label'lar)
+    final footnoteItems = items
+        .where((item) => (item['label'] ?? '').toString().startsWith('(*)'))
+        .toList();
+    final tableItems = items
+        .where((item) => !(item['label'] ?? '').toString().startsWith('(*)'))
+        .toList();
+
     // Determine max columns (usually 2, but 4 for Section 33)
     int maxCols = 2;
-    for (var item in items) {
+    for (var item in tableItems) {
       final value = (item['value'] ?? '').toString();
       if (value.contains('|')) {
         int partsCount = value.split('|').length + 1;
@@ -1621,7 +1637,7 @@ class PdfService {
               ),
             ],
           ),
-        ...items.asMap().entries.map((entry) {
+        ...tableItems.asMap().entries.map((entry) {
           final i = entry.key;
           final item = entry.value;
           final String label = (item['label'] ?? '').toString();
@@ -1722,17 +1738,37 @@ class PdfService {
                     padding: const pw.EdgeInsets.all(5),
                     child: pw.Container(
                       constraints: pw.BoxConstraints(maxWidth: maxCols == 3 ? 240.0 : 120.0),
-                      child: pw.Text(
-                        _cleanEmojis(p),
-                        textAlign: pw.TextAlign.left,
-                        style: pw.TextStyle(
-                          font: (isSubHeader || shouldBold) ? fontBold : font,
-                          fontSize: 8.5,
-                          color: isSubHeader
-                              ? PdfColors.indigo900
-                              : PdfColors.black,
-                        ),
-                      ),
+                      // isSubHeader satırlarında \n varsa: ilk satır bold, sonraki satır non-bold italic
+                      child: isSubHeader && p.contains('\n')
+                          ? pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: p.split('\n').asMap().entries.map((e) {
+                                final isFirstLine = e.key == 0;
+                                return pw.Text(
+                                  _cleanEmojis(e.value),
+                                  textAlign: pw.TextAlign.left,
+                                  style: pw.TextStyle(
+                                    font: isFirstLine ? fontBold : font,
+                                    fontSize: isFirstLine ? 8.5 : 7.5,
+                                    fontStyle: isFirstLine
+                                        ? pw.FontStyle.normal
+                                        : pw.FontStyle.italic,
+                                    color: PdfColors.indigo900,
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : pw.Text(
+                              _cleanEmojis(p),
+                              textAlign: pw.TextAlign.left,
+                              style: pw.TextStyle(
+                                font: (isSubHeader || shouldBold) ? fontBold : font,
+                                fontSize: 8.5,
+                                color: isSubHeader
+                                    ? PdfColors.indigo900
+                                    : PdfColors.black,
+                              ),
+                            ),
                     ),
                   ),
                 // Boş kalan kolonları doldur
@@ -1748,6 +1784,30 @@ class PdfService {
       ],
     );
 
+    // Footnote satırlarını tablonun altına küçük italik yazı olarak ekle
+    pw.Widget buildTableWithFootnotes(pw.Widget tableWidget) {
+      if (footnoteItems.isEmpty) return tableWidget;
+      return pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          tableWidget,
+          pw.SizedBox(height: 3),
+          ...footnoteItems.map((note) => pw.Padding(
+            padding: const pw.EdgeInsets.only(left: 2, top: 1),
+            child: pw.Text(
+              (note['label'] ?? '').toString(),
+              style: pw.TextStyle(
+                font: font,
+                fontSize: 7,
+                fontStyle: pw.FontStyle.italic,
+                color: PdfColors.grey600,
+              ),
+            ),
+          )),
+        ],
+      );
+    }
+
     final tableWithAlign = pw.Align(
       alignment: pw.Alignment.centerLeft,
       child: pw.ConstrainedBox(
@@ -1759,7 +1819,7 @@ class PdfService {
     );
 
     if (sectionColor.alpha == 0) {
-      return tableWithAlign;
+      return buildTableWithFootnotes(tableWithAlign);
     }
 
     return pw.Container(
@@ -1767,7 +1827,7 @@ class PdfService {
         border: pw.Border(left: pw.BorderSide(color: sectionColor, width: 3)),
       ),
       padding: const pw.EdgeInsets.only(left: 8),
-      child: tableWithAlign,
+      child: buildTableWithFootnotes(tableWithAlign),
     );
   }
 
