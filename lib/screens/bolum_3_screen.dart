@@ -238,13 +238,13 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
                       imageTitle: "Kat tanımı",
                     ),
                     _buildInput(
-                      "Normal (zemin ÜSTÜ) kat adedi giriniz.",
+                      "Normal (zemin üstü) kat adedi giriniz.",
                       _normalCountCtrl,
                       hint: "0 - 20",
                       error: _normalCountErr,
                     ),
                     _buildInput(
-                      "Bodrum (zemin ALTI) kat adedi giriniz.",
+                      "Bodrum (zemin altı) kat adedi giriniz.",
                       _bodrumCountCtrl,
                       hint: "0 - 10",
                       error: _bodrumCountErr,

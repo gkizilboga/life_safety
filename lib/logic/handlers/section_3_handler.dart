@@ -74,13 +74,13 @@ class Section3Handler {
 
     // Bina ve yapı yükseklikleri
     details.add({
-      'label': 'Bina Yüksekliği (hBina)',
+      'label': 'Bina Yüksekliği',
       'value': '${b3.hBina?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
       'status': ReportStatus.info,
     });
     details.add({
-      'label': 'Yapı Yüksekliği (hYapı)',
+      'label': 'Yapı Yüksekliği',
       'value': '${b3.hYapi?.toStringAsFixed(2) ?? "-"} m',
       'report': '',
       'status': ReportStatus.info,
@@ -90,7 +90,7 @@ class Section3Handler {
     final bool isYuksek = b3.isYuksekBina;
     details.add({
       'label': 'Yüksek Bina Statüsü',
-      'value': isYuksek ? 'YÜKSEK BİNA' : 'Yüksek Olmayan Bina',
+      'value': isYuksek ? 'Yüksek Bina' : 'Yüksek Olmayan Bina',
       'report': '',
       'status': ReportStatus.info,
     });

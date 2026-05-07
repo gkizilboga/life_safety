@@ -149,10 +149,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
           ? totalBodrumDepoAlan
           : null;
 
-      _askDepoBodrumAlan =
-          _askDepo ||
-          ((b5?.bodrumKatAlani ?? 0) > 2000) ||
-          totalBodrumDepoAlan > 0;
+      _askDepoBodrumAlan = _askDepo;
 
       if (_hesaplananDepoBodrumAlani != null &&
           BinaStore.instance.bolum13?.depoBodrumAlan == null) {
@@ -371,9 +368,9 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               ],
               _model.depoKapi,
             ),
+            // ALT SORU: Depo Alanı
+            if (_askDepoBodrumAlan) _buildSoruDepoBodrumAlan(),
           ],
-
-          if (_askDepoBodrumAlan) ...[_buildSoruDepoBodrumAlan()],
 
           if (_askCop)
             _buildSoru(

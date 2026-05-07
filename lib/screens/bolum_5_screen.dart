@@ -328,22 +328,6 @@ class _Bolum5ScreenState extends State<Bolum5Screen>
                           ),
                         ),
 
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          child: Divider(
-                            thickness: 1,
-                            color: Color(0xFFECEFF1),
-                          ),
-                        ),
-
-                        _buildNumberInput(
-                          _toplamCtrl,
-                          Bolum5Content.toplamInsaat,
-                          isBold: true,
-                          readOnly: true,
-                          error: _toplamError,
-                        ),
-
                         if (_isCalculated) _buildSummaryCard(),
 
                         const SizedBox(height: 12),

@@ -374,11 +374,11 @@ void main() {
       );
     });
 
-    test('Bölüm 36 Merdiven Analizi Etiketi Doğru Gelmeli', () {
+    test('Bölüm 33 ve 36 Değerlendirme Etiketleri Doğru Gelmeli', () {
       store.bolum33 = Bolum33Model(
         cikisKati: ChoiceResult(
-          label: "36-1-A",
-          uiTitle: "Zemin",
+          label: "33-CK-A",
+          uiTitle: "Zemin Kat",
           uiSubtitle: "",
           reportText: "",
         ),
@@ -386,17 +386,17 @@ void main() {
       store.bolum36 = Bolum36Model(
         merdivenDegerlendirme: "Test Analizi",
       );
-      store.bolum20 = Bolum20Model();
-      final details = ReportEngine.getSectionDetailedReport(36, store: store);
+      store.bolum20 = Bolum20Model(normalMerdivenSayisi: 1);
+      
+      final det33 = ReportEngine.getSectionDetailedReport(33, store: store);
+      final det36 = ReportEngine.getSectionDetailedReport(36, store: store);
 
       expect(
-        details.any((d) => d['label'].contains('dış havaya')),
+        det33.any((d) => d['label'].contains('dış havaya')),
         true,
       );
       expect(
-        details.any(
-          (d) => d['label'].contains('Normal Merdiven'),
-        ),
+        det36.any((d) => d['label'].contains('Normal Merdiven')),
         true,
       );
     });

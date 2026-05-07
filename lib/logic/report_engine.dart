@@ -8,8 +8,8 @@ import 'handlers/section_3_handler.dart';
 import 'handlers/section_36_handler.dart';
 import 'handlers/section_21_handler.dart';
 import 'handlers/section_27_handler.dart';
-import 'handlers/risk_calculator.dart';
 import '../utils/input_validator.dart';
+import '../utils/app_progress.dart';
 
 enum ReportModule {
   binaBilgileri(
@@ -90,7 +90,63 @@ class ReportEngine {
 
   static Map<String, dynamic> calculateRiskMetrics({BinaStore? store}) {
     final s = _getStore(store);
-    return RiskCalculator(s).calculateMetrics();
+
+    int criticalRisks = 0;
+    int warnings = 0;
+    int unknowns = 0;
+    List<String> criticalTitles = [];
+
+    // Logic Desync Guard: Section 5 vs Section 33 Area mismatch
+    final b5 = s.bolum5;
+    final b33 = s.bolum33;
+    if (b5 != null && b33 != null) {
+      bool isStale =
+          (b33.alanZemin != b5.tabanAlani) ||
+          (b33.alanNormal != b5.normalKatAlani) ||
+          (b33.alanBodrumMax != b5.bodrumKatAlani);
+
+      if (isStale) {
+        criticalRisks++;
+        criticalTitles.add("Bölüm 33 (VERİ UYUMSUZLUĞU)");
+      }
+    }
+
+    // Main section loop
+    for (int i = 1; i <= 36; i++) {
+      if (AppProgress.isSectionActive(i, s)) {
+        final details = getSectionDetailedReport(i, store: s);
+        bool hasCritical = false;
+
+        for (var item in details) {
+          final status = item['status'] as ReportStatus?;
+          if (status == ReportStatus.risk) {
+            criticalRisks++;
+            hasCritical = true;
+          } else if (status == ReportStatus.warning) {
+            warnings++;
+          } else if (status == ReportStatus.unknown) {
+            unknowns++;
+          }
+        }
+
+        if (hasCritical && i > 10 && !criticalTitles.contains("Bölüm $i")) {
+          criticalTitles.add("Bölüm $i");
+        }
+      }
+    }
+
+    // Scoring formula (Base 100, weights: -3, -2, -1)
+    double score =
+        100.0 - (criticalRisks * 3.0) - (warnings * 2.0) - (unknowns * 1.0);
+
+    return {
+      'score': score.toInt().clamp(0, 100),
+      'criticalCount': criticalRisks,
+      'warningCount': warnings,
+      'unknownCount': unknowns,
+      'completion': AppProgress.getAnalysisProgress(s).percentage,
+      'criticals': criticalTitles.take(3).toList(),
+    };
   }
 
   static ReportStatus getSectionStatus(int id, {BinaStore? store}) {
@@ -136,10 +192,12 @@ class ReportEngine {
 
     String hReport = b20.havalandirma!.reportText;
     final String bLabel = b20.basinclandirma?.label ?? "";
+    final bool isHighRise = hYapi >= (51.50 - 0.001);
 
-    // Kullanıcı basınçlandırma sorusunda "Var" derse (20-BAS-A)
+    // Kullanıcı basınçlandırma sorusunda "Var" derse (20-BAS-A) 
+    // veya bina yüksekliği 51.5m üzerindeyse (zorunlu basınçlandırma context'i)
     // havalandırma sorusunun başına ekleme yapıyoruz.
-    if (bLabel == "20-BAS-A") {
+    if (bLabel == "20-BAS-A" || isHighRise) {
       hReport = "(Basınçlandırma olmayan merdivenlerde) $hReport";
     }
     return hReport;
@@ -312,8 +370,8 @@ class ReportEngine {
             level: b6.buyukRestoran!.level,
           );
         }
-        // Otopark tipi (eğer seçildiyse)
-        if (b6.otoparkTipi != null)
+        // Otopark tipi (eğer otopark varsa ve seçildiyse)
+        if (b6.hasOtopark && b6.otoparkTipi != null)
           _addDetail(
             details,
             label: 'Otopark tipi nedir?',
@@ -323,8 +381,8 @@ class ReportEngine {
             advice: b6.otoparkTipi!.adviceText,
             level: b6.otoparkTipi!.level,
           );
-        // Kapalı otopark alanı (eğer girilmişse)
-        if (b6.kapaliOtoparkAlani != null)
+        // Kapalı otopark alanı (eğer otopark varsa ve girilmişse)
+        if (b6.hasOtopark && b6.kapaliOtoparkAlani != null)
           _addDetail(
             details,
             label: 'Kapalı Otopark Alanı',
@@ -1460,10 +1518,20 @@ class ReportEngine {
             level: RiskLevel.info,
           );
         }
+
+
         // YGH Basınçlandırma (Kullanıcıdan alınan bilgi)
         // Dinamik Basınçlandırma Analizi
         final basincReasons = evaluateBasincRequirementForStairs(store: s);
-        final bool isMandatory = basincReasons.isNotEmpty;
+        final double hYapi = _getHYapi(s);
+        final int bodrumKatSayisi = s.bolum3?.bodrumKatSayisi ?? 0;
+        final bool isStrictlyMandatory =
+            hYapi >= (51.50 - 0.001) || bodrumKatSayisi > 4;
+        final bool isConditionallyMandatory =
+            !isStrictlyMandatory && hYapi > (30.50 - 0.001);
+        final bool isMandatory =
+            isStrictlyMandatory || isConditionallyMandatory;
+
         final bool userHasBasinc =
             b20.basinclandirma?.label.contains("20-BAS-A") == true;
 
@@ -1472,13 +1540,21 @@ class ReportEngine {
           String dynamicBasincReport = _addSection20DynamicBasinc(b20);
           RiskLevel dynamicLevel = b20.basinclandirma!.level;
 
-          // Eğer basınçlandırma YOKSA ve ZORUNLUYSA, ilk soruyu da KRİTİK RİSK yapıyoruz!
+          // Eğer basınçlandırma YOKSA ve ZORUNLUYSA, ilk soruyu da risk/uyarı yapıyoruz!
           if (b20.basinclandirma!.label == "20-BAS-B" && isMandatory) {
-            dynamicBasincReport = dynamicBasincReport.replaceAll(
-              "BİLGİ:",
-              "KRİTİK RİSK:",
-            );
-            dynamicLevel = RiskLevel.critical;
+            if (isStrictlyMandatory) {
+              dynamicBasincReport = dynamicBasincReport.replaceAll(
+                "BİLGİ:",
+                "KRİTİK RİSK:",
+              );
+              dynamicLevel = RiskLevel.critical;
+            } else if (isConditionallyMandatory) {
+              dynamicBasincReport = dynamicBasincReport.replaceAll(
+                "BİLGİ:",
+                "UYARI:",
+              );
+              dynamicLevel = RiskLevel.warning;
+            }
           }
 
           _addDetail(
@@ -1499,16 +1575,22 @@ class ReportEngine {
 
           if (userHasBasinc) {
             evalReport =
-                'OLUMLU: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi zorunluluğu bulunmaktadır ve binada tesis edilmiştir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+                'OLUMLU: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi gereksinimi karşılanmıştır.\n\nGerekçe:\n${basincReasons.join("\n")}';
             evalLevel = RiskLevel.positive;
           } else if (isUnknown) {
             evalReport =
-                'BİLİNMİYOR: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi ZORUNLUDUR, ancak binadaki durumu bilinmemektedir. Sistem yerinde kontrol edilmelidir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+                'BİLİNMİYOR: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi ihtiyacı bulunmaktadır, ancak binadaki durumu bilinmemektedir. Sistem yerinde kontrol edilmelidir.\n\nGerekçe:\n${basincReasons.join("\n")}';
             evalLevel = RiskLevel.unknown;
           } else {
-            evalReport =
-                'KRİTİK RİSK: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi ZORUNLUDUR, ancak binada tesis edilmediği tespit edilmiştir.\n\nGerekçe:\n${basincReasons.join("\n")}';
-            evalLevel = RiskLevel.critical;
+            if (isStrictlyMandatory) {
+              evalReport =
+                  'KRİTİK RİSK: Bina verilerine göre kapalı yangın merdivenlerinde basınçlandırma sistemi ZORUNLUDUR, ancak binada tesis edilmediği tespit edilmiştir.\n\nGerekçe:\n${basincReasons.join("\n")}';
+              evalLevel = RiskLevel.critical;
+            } else {
+              evalReport =
+                  'UYARI: Bina yüksekliği 30.50m - 51.50m arasındadır. Merdivenlerde basınçlandırma sistemi YOK ise, merdiven önlerinde Yangın Güvenlik Holü (YGH) bulunması zorunludur. Eğer YGH varsa basınçlandırma yapılması zorunluluğu ortadan kalkar.\n\nGerekçe:\n${basincReasons.join("\n")}';
+              evalLevel = RiskLevel.warning;
+            }
           }
 
           _addDetail(
@@ -2045,12 +2127,15 @@ class ReportEngine {
           );
         }
         if (b33.yukZemin != null) {
+          final bool zeminTransfer = (b33.yukZemin == 0) && ((b33.gerekliZemin ?? 0) > 0);
           _addDetail(
             details,
             label: 'Zemin Kat',
-            value: b33.yukZemin == 0
+            value: (b33.yukZemin == 0 && !zeminTransfer)
                 ? 'Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.|-|-'
-                : '${b33.yukZemin}|${b33.gerekliZemin} Adet|${b33.mevcutZemin} Adet',
+                : zeminTransfer
+                    ? '0 (Üst/Alt katlardan tahliye geçişi)|${b33.gerekliZemin} Adet|${b33.mevcutZemin} Adet'
+                    : '${b33.yukZemin}|${b33.gerekliZemin} Adet|${b33.mevcutZemin} Adet',
             report: '',
             isTable: true,
           );
@@ -2067,21 +2152,49 @@ class ReportEngine {
           );
         }
 
-        // Tablo altı not: Hesaplamada kullanılan minimum genişlikler
-        if (b33.minMerdivGenisligi != null) {
-          final minMStr = b33.minMerdivGenisligi!.toStringAsFixed(2);
+        // Tablo altı notlar: Yük eşiğine göre koşullu
+        final int maxYuk33 = [
+          b33.yukZemin ?? 0,
+          b33.yukNormal ?? 0,
+          b33.yukBodrum ?? 0,
+        ].fold(0, (a, b) => a > b ? a : b);
+
+        if (maxYuk33 > 1500) {
+          // 1500'ü aşan yüklerde genişlik bazlı formül kullanıldığından
+          // min. genişlik değerlerini göster.
+          if (b33.minMerdivGenisligi != null) {
+            final minMStr = b33.minMerdivGenisligi!.toStringAsFixed(2);
+            _addDetail(
+              details,
+              label:
+                  '(*) 1 adet merdiven genişliği (min.): $minMStr m (En yoğun katın kullanıcı yüküne göre, Madde 33)',
+              value: '',
+              report: '',
+              isTable: true,
+            );
+            _addDetail(
+              details,
+              label:
+                  '(*) 1 adet dışarı çıkış kapısı genişliği (min.): 0.90 m (90 cm) olarak kabul edilmiştir.',
+              value: '',
+              report: '',
+              isTable: true,
+            );
+            _addDetail(
+              details,
+              label:
+                  '(*) Kullanıcı yükü 1500 kişiyi aştığından, gereken çıkış adedi BYKHY Madde 33 uyarınca genişlik bazlı formül ile hesaplanmıştır: Toplam Genişlik = Kişi Sayısı × 0.5 / 60 (merdivenler) veya × 0.5 / 100 (direkt çıkış kapıları). Çıkış adedi = Toplam Genişlik / Asgari Kaçış Yolu Genişliği.',
+              value: '',
+              report: '',
+              isTable: true,
+            );
+          }
+        } else {
+          // 1500 ve altındaki yüklerde Madde 39 barem tablosu kullanılmıştır.
           _addDetail(
             details,
             label:
-                '(*) 1 adet merdiven genişliği (min.): $minMStr m (hesaplamada kullanılan)',
-            value: '',
-            report: '',
-            isTable: true,
-          );
-          _addDetail(
-            details,
-            label:
-                '(*) 1 adet dışarı çıkış kapısı genişliği (min.): 0.90 m (90 cm) olarak kabul edilmiştir.',
+                '(*) Gereken çıkış adetleri, BYKHY Madde 39 uyarınca kişi sayısına göre belirlenmiştir (≤500: 2, ≤1000: 3, ≤1500: 4). Çıkışların toplam genişliklerinin Madde 33 kapasite hesaplarını karşılayıp karşılamadığı, projedeki net ölçüler üzerinden ayrıca teyit edilmelidir.',
             value: '',
             report: '',
             isTable: true,
@@ -2092,7 +2205,7 @@ class ReportEngine {
         _addDetail(
           details,
           label:
-              '(*) Bu tablodaki kullanıcı yükü ve çıkış adetleri, beyan edilen bina bilgilerinden yola çıkılarak TAHMİNİ olarak hesaplanmıştır. Kesin değerlerin tespiti için mimari proje üzerinde veya yerinde uzman incelemesi yapılması gereklidir.',
+              '(*) Bu tablodaki bilgiler TAHMİNİ olarak hesaplanmıştır. Kesin değerlerin tespiti için Yangın Güvenlik Uzmanı tarafından mimari proje üzerinde veya yerinde incelenmesi gereklidir.',
           value: '',
           report: '',
           isTable: true,
@@ -3462,8 +3575,24 @@ class ReportEngine {
           required int? gerekli,
           required int? mevcut,
           required ChoiceResult? kapiSecimi,
+          bool isDischargeTransfer = false,
         }) {
           if (yuk == null || gerekli == null || mevcut == null) return;
+          // Zemin kattaki ticari alan bağımsız çıkışlı ve bu kat tahliye katı (discharge level)
+          // olduğu için üst katlardan kapasite transferi yapılmıştır.
+          if (isDischargeTransfer) {
+            bool isSufficient = (mevcut >= gerekli);
+            if (isSufficient) {
+              reportParts.add(
+                "${title.toUpperCase()}:\nOLUMLU: Bu kat, üst/alt katlardan boşaltılan kişilerin dışarı çıktığı tahliye katıdır (Discharge Level). Katın kendi kullanıcı yükü hesaba katılmamış olsa da, buraya dökülen katların tahliyesi için $gerekli adet dışarı çıkış bulunması zorunludur. Mevcut $mevcut adet çıkış bu gereksinimi karşılamaktadır.",
+              );
+            } else {
+              reportParts.add(
+                "${title.toUpperCase()}:\nKRİTİK RİSK: Bu kat, üst/alt katlardan boşaltılan kişilerin dışarı çıktığı tahliye katıdır (Discharge Level). Buraya dökülen katların tahliyesi için en az $gerekli adet dışarı çıkış bulunması zorunludur ancak mevcut $mevcut adet çıkış bu gereksinimi karşılamamaktadır. Tahliye güvenliği tehlikede olabilir.",
+              );
+            }
+            return;
+          }
 
           // Eğer Bölüm 13'te "Geçiş Yok" (13-11-C) seçilmişse, bu alan bağımsız
           // çıkışlı kabul edilir.
@@ -3492,12 +3621,16 @@ class ReportEngine {
         }
 
         // 1. ZEMİN KAT DEĞERLENDİRMESİ
+        // Transfer durumu: zemin katın kendi yükü 0 ama gerekliZemin > 0 (üst katlardan devralındı)
+        final bool isZeminDischargeTransfer =
+            (b33.yukZemin == 0) && ((b33.gerekliZemin ?? 0) > 0);
         evaluateFloor(
           title: "Zemin Kat",
           yuk: b33.yukZemin,
           gerekli: b33.gerekliZemin,
-          mevcut: b33.mevcutUst,
+          mevcut: b33.mevcutZemin,
           kapiSecimi: b13?.ticariKapiZemin,
+          isDischargeTransfer: isZeminDischargeTransfer,
         );
 
         // 2. NORMAL KAT DEĞERLENDİRMESİ
@@ -3733,231 +3866,278 @@ class ReportEngine {
     BinaStore s,
   ) {
     final b13 = s.bolum13;
-    if (b13 != null) {
-      if (b13.otoparkKapi != null) {
-        _addDetail(
-          details,
-          label: 'Otoparktan bina içine açılan kapının özelliği nedir?',
-          value: b13.otoparkKapi!.uiTitle,
-          subtitle: b13.otoparkKapi!.uiSubtitle,
-          report: b13.otoparkKapi!.reportText,
-          advice: b13.otoparkKapi!.adviceText,
-          level: b13.otoparkKapi!.level,
-        );
-      }
-      // Otopark Alan Alt Sorusu
-      if (b13.otoparkAlan != null) {
-        _addDetail(
-          details,
-          label: 'Otopark alanları tüm katlarda toplam kaç metrekare?',
-          value: b13.otoparkAlan!.uiTitle,
-          report:
-              "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
-          level: RiskLevel.info,
-        );
-      }
-      if (b13.kazanKapi != null) {
-        _addDetail(
-          details,
-          label: 'Kazan dairesinin duvarları ve kapısı yangın dayanımlı mı?',
-          value: b13.kazanKapi!.uiTitle,
-          subtitle: b13.kazanKapi!.uiSubtitle,
-          report: b13.kazanKapi!.reportText,
-          advice: b13.kazanKapi!.adviceText,
-          level: b13.kazanKapi!.level,
-        );
-      }
-      // Kazan Dairesi Alan Alt Sorusu
-      if (b13.kazanAlan != null) {
-        _addDetail(
-          details,
-          label: 'Kazan dairesi kaç metrekare?',
-          value: b13.kazanAlan!.uiTitle,
-          report:
-              "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
-          level: RiskLevel.info,
-        );
-      }
-      if (b13.asansorKapi != null) {
-        // MRL filtresi: Kullanıcı 29-4-C (makine dairesi yok) seçtiyse
-        // rapor metnindeki "makine dairesi varsa" cümlesini kaldır.
-        final bool isMrl = s.bolum29?.asansor?.label == '29-4-C';
-        final String rawReport = b13.asansorKapi!.reportText;
-        final String filteredReport = isMrl
-            ? rawReport
-                  .replaceAll(
-                    RegExp(
-                      r'\s*asansör makine dairesi varsa[^.]*\.',
-                      caseSensitive: false,
-                    ),
-                    '',
-                  )
-                  .trim()
-            : rawReport;
+    final b6 = s.bolum6;
+    final b7 = s.bolum7;
 
-        _addDetail(
-          details,
-          label: 'Asansör kapısı yangın dayanımlı mı?',
-          value: b13.asansorKapi!.uiTitle,
-          subtitle: b13.asansorKapi!.uiSubtitle,
-          report: filteredReport,
-          advice: b13.asansorKapi!.adviceText,
-          level: b13.asansorKapi!.level,
-        );
-      }
-      if (b13.jeneratorKapi != null) {
-        _addDetail(
-          details,
-          label: 'Jeneratör odasının duvarı ve kapısı yangın dayanımlı mı?',
-          value: b13.jeneratorKapi!.uiTitle,
-          subtitle: b13.jeneratorKapi!.uiSubtitle,
-          report: b13.jeneratorKapi!.reportText,
-          advice: b13.jeneratorKapi!.adviceText,
-          level: b13.jeneratorKapi!.level,
-        );
-      }
-      if (b13.elektrikKapi != null) {
-        _addDetail(
-          details,
-          label: 'Elektrik odasının duvarı ve kapısı yangın dayanımlı mı?',
-          value: b13.elektrikKapi!.uiTitle,
-          subtitle: b13.elektrikKapi!.uiSubtitle,
-          report: b13.elektrikKapi!.reportText,
-          advice: b13.elektrikKapi!.adviceText,
-          level: b13.elektrikKapi!.level,
-        );
-      }
-      if (b13.trafoKapi != null) {
-        _addDetail(
-          details,
-          label: 'Trafo odasının duvarı ve kapısı yangın dayanımlı mı?',
-          value: b13.trafoKapi!.uiTitle,
-          subtitle: b13.trafoKapi!.uiSubtitle,
-          report: b13.trafoKapi!.reportText,
-          advice: b13.trafoKapi!.adviceText,
-          level: b13.trafoKapi!.level,
-        );
-      }
-      if (b13.depoKapi != null) {
-        _addDetail(
-          details,
-          label: 'Eşya deposunun duvarı ve kapısı yangın dayanımlı mı?',
-          value: b13.depoKapi!.uiTitle,
-          subtitle: b13.depoKapi!.uiSubtitle,
-          report: b13.depoKapi!.reportText,
-          advice: b13.depoKapi!.adviceText,
-          level: b13.depoKapi!.level,
-        );
-      }
-      // Depo Alan Alt Sorusu
-      if (b13.depoBodrumAlan != null) {
-        _addDetail(
-          details,
-          label:
-              'Binadaki (eşya vb.) depolama alanlarının toplamı kaç metrekare?',
-          value: b13.depoBodrumAlan!.uiTitle,
-          report:
-              "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
-          level: RiskLevel.info,
-        );
-      }
-      if (b13.copKapi != null) {
-        _addDetail(
-          details,
-          label: 'Çöp toplama odasının duvarı ve kapısı yangın dayanımlı mı?',
-          value: b13.copKapi!.uiTitle,
-          subtitle: b13.copKapi!.uiSubtitle,
-          report: b13.copKapi!.reportText,
-          advice: b13.copKapi!.adviceText,
-          level: b13.copKapi!.level,
-        );
-      }
-      if (b13.ortakDuvar != null) {
-        _addDetail(
-          details,
-          label: 'Yan bina ile ortak kullandığınız duvarın özelliği nedir?',
-          value: b13.ortakDuvar!.uiTitle,
-          subtitle: b13.ortakDuvar!.uiSubtitle,
-          report: b13.ortakDuvar!.reportText,
-          advice: b13.ortakDuvar!.adviceText,
-          level: b13.ortakDuvar!.level,
-        );
-      }
-      // Sığınak Alan Alt Sorusu
-      if (b13.siginakAlan != null) {
-        _addDetail(
-          details,
-          label: 'Sığınak kaç metrekare?',
-          value: b13.siginakAlan!.uiTitle,
-          report:
-              "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
-          level: RiskLevel.info,
-        );
-      }
-      if (b13.areTicariKapiSame) {
-        final choice =
-            b13.ticariKapiZemin ?? b13.ticariKapiNormal ?? b13.ticariKapiBodrum;
-        if (choice != null) {
+    if (b13 != null) {
+      // 1. Otopark
+      if (b6?.hasOtopark == true) {
+        if (b13.otoparkKapi != null) {
           _addDetail(
             details,
-            label:
-                'Tüm ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
-            value: choice.uiTitle,
-            subtitle: choice.uiSubtitle,
-            report: choice.reportText,
-            advice: choice.adviceText,
-            level: choice.level,
+            label: 'Otoparktan bina içine açılan kapının özelliği nedir?',
+            value: b13.otoparkKapi!.uiTitle,
+            subtitle: b13.otoparkKapi!.uiSubtitle,
+            report: b13.otoparkKapi!.reportText,
+            advice: b13.otoparkKapi!.adviceText,
+            level: b13.otoparkKapi!.level,
           );
         }
-      } else {
-        if (b13.ticariKapiZemin != null) {
+        if (b13.otoparkAlan != null) {
           _addDetail(
             details,
-            label:
-                'Zemin kattaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
-            value: b13.ticariKapiZemin!.uiTitle,
-            subtitle: b13.ticariKapiZemin!.uiSubtitle,
-            report: b13.ticariKapiZemin!.reportText,
-            advice: b13.ticariKapiZemin!.adviceText,
-            level: b13.ticariKapiZemin!.level,
-          );
-        }
-        if (b13.ticariKapiNormal != null) {
-          _addDetail(
-            details,
-            label:
-                'Normal katlardaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
-            value: b13.ticariKapiNormal!.uiTitle,
-            subtitle: b13.ticariKapiNormal!.uiSubtitle,
-            report: b13.ticariKapiNormal!.reportText,
-            advice: b13.ticariKapiNormal!.adviceText,
-            level: b13.ticariKapiNormal!.level,
-          );
-        }
-        if (b13.ticariKapiBodrum != null) {
-          _addDetail(
-            details,
-            label:
-                'Bodrum katlardaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
-            value: b13.ticariKapiBodrum!.uiTitle,
-            subtitle: b13.ticariKapiBodrum!.uiSubtitle,
-            report: b13.ticariKapiBodrum!.reportText,
-            advice: b13.ticariKapiBodrum!.adviceText,
-            level: b13.ticariKapiBodrum!.level,
+            label: 'Otopark alanları tüm katlarda toplam kaç metrekare?',
+            value: b13.otoparkAlan!.uiTitle,
+            report:
+                "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+            level: RiskLevel.info,
           );
         }
       }
-      if (b13.endustriyelMutfakKapi != null) {
-        _addDetail(
-          details,
-          label:
-              'Büyük restoran mutfağının kapısı ve duvarları yangın dayanımlı mı?',
-          value: b13.endustriyelMutfakKapi!.uiTitle,
-          subtitle: b13.endustriyelMutfakKapi!.uiSubtitle,
-          report: b13.endustriyelMutfakKapi!.reportText,
-          advice: b13.endustriyelMutfakKapi!.adviceText,
-          level: b13.endustriyelMutfakKapi!.level,
-        );
+
+      // 2. Kazan Dairesi
+      if (b7?.hasKazan == true) {
+        if (b13.kazanKapi != null) {
+          _addDetail(
+            details,
+            label: 'Kazan dairesinin duvarları ve kapısı yangın dayanımlı mı?',
+            value: b13.kazanKapi!.uiTitle,
+            subtitle: b13.kazanKapi!.uiSubtitle,
+            report: b13.kazanKapi!.reportText,
+            advice: b13.kazanKapi!.adviceText,
+            level: b13.kazanKapi!.level,
+          );
+        }
+        if (b13.kazanAlan != null) {
+          _addDetail(
+            details,
+            label: 'Kazan dairesi kaç metrekare?',
+            value: b13.kazanAlan!.uiTitle,
+            report:
+                "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+            level: RiskLevel.info,
+          );
+        }
+      }
+
+      // 3. Asansör
+      if (b7?.hasAsansor == true) {
+        if (b13.asansorKapi != null) {
+          final bool isMrl = s.bolum29?.asansor?.label == '29-4-C';
+          final String rawReport = b13.asansorKapi!.reportText;
+          final String filteredReport = isMrl
+              ? rawReport
+                    .replaceAll(
+                      RegExp(
+                        r'\s*asansör makine dairesi varsa[^.]*\.',
+                        caseSensitive: false,
+                      ),
+                      '',
+                    )
+                    .trim()
+              : rawReport;
+
+          _addDetail(
+            details,
+            label: 'Asansör kapısı yangın dayanımlı mı?',
+            value: b13.asansorKapi!.uiTitle,
+            subtitle: b13.asansorKapi!.uiSubtitle,
+            report: filteredReport,
+            advice: b13.asansorKapi!.adviceText,
+            level: b13.asansorKapi!.level,
+          );
+        }
+      }
+
+      // 4. Jeneratör
+      if (b7?.hasJenerator == true) {
+        if (b13.jeneratorKapi != null) {
+          _addDetail(
+            details,
+            label: 'Jeneratör odasının duvarı ve kapısı yangın dayanımlı mı?',
+            value: b13.jeneratorKapi!.uiTitle,
+            subtitle: b13.jeneratorKapi!.uiSubtitle,
+            report: b13.jeneratorKapi!.reportText,
+            advice: b13.jeneratorKapi!.adviceText,
+            level: b13.jeneratorKapi!.level,
+          );
+        }
+      }
+
+      // 5. Elektrik Odası
+      if (b7?.hasElektrik == true) {
+        if (b13.elektrikKapi != null) {
+          _addDetail(
+            details,
+            label: 'Elektrik odasının duvarı ve kapısı yangın dayanımlı mı?',
+            value: b13.elektrikKapi!.uiTitle,
+            subtitle: b13.elektrikKapi!.uiSubtitle,
+            report: b13.elektrikKapi!.reportText,
+            advice: b13.elektrikKapi!.adviceText,
+            level: b13.elektrikKapi!.level,
+          );
+        }
+      }
+
+      // 6. Trafo
+      if (b7?.hasTrafo == true) {
+        if (b13.trafoKapi != null) {
+          _addDetail(
+            details,
+            label: 'Trafo odasının duvarı ve kapısı yangın dayanımlı mı?',
+            value: b13.trafoKapi!.uiTitle,
+            subtitle: b13.trafoKapi!.uiSubtitle,
+            report: b13.trafoKapi!.reportText,
+            advice: b13.trafoKapi!.adviceText,
+            level: b13.trafoKapi!.level,
+          );
+        }
+      }
+
+      // 7. Depo
+      if (b7?.hasDepo == true) {
+        if (b13.depoKapi != null) {
+          _addDetail(
+            details,
+            label: 'Eşya deposunun duvarı ve kapısı yangın dayanımlı mı?',
+            value: b13.depoKapi!.uiTitle,
+            subtitle: b13.depoKapi!.uiSubtitle,
+            report: b13.depoKapi!.reportText,
+            advice: b13.depoKapi!.adviceText,
+            level: b13.depoKapi!.level,
+          );
+        }
+        if (b13.depoBodrumAlan != null) {
+          _addDetail(
+            details,
+            label:
+                'Binadaki (eşya vb.) depolama alanlarının toplamı kaç metrekare?',
+            value: b13.depoBodrumAlan!.uiTitle,
+            report:
+                "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+            level: RiskLevel.info,
+          );
+        }
+      }
+
+      // 8. Çöp Odası
+      if (b7?.hasCop == true) {
+        if (b13.copKapi != null) {
+          _addDetail(
+            details,
+            label: 'Çöp toplama odasının duvarı ve kapısı yangın dayanımlı mı?',
+            value: b13.copKapi!.uiTitle,
+            subtitle: b13.copKapi!.uiSubtitle,
+            report: b13.copKapi!.reportText,
+            advice: b13.copKapi!.adviceText,
+            level: b13.copKapi!.level,
+          );
+        }
+      }
+
+      // 9. Ortak Duvar
+      if (b7?.hasDuvar == true) {
+        if (b13.ortakDuvar != null) {
+          _addDetail(
+            details,
+            label: 'Yan bina ile ortak kullandığınız duvarın özelliği nedir?',
+            value: b13.ortakDuvar!.uiTitle,
+            subtitle: b13.ortakDuvar!.uiSubtitle,
+            report: b13.ortakDuvar!.reportText,
+            advice: b13.ortakDuvar!.adviceText,
+            level: b13.ortakDuvar!.level,
+          );
+        }
+      }
+
+      // 10. Sığınak
+      if (b7?.hasSiginak == true) {
+        if (b13.siginakAlan != null) {
+          _addDetail(
+            details,
+            label: 'Sığınak kaç metrekare?',
+            value: b13.siginakAlan!.uiTitle,
+            report:
+                "Bu Uygulama'da yer alan 'Aktif Sistem Gereksinimleri' dokümanı içerisinde bu yanıttan faydalanılmıştır.",
+            level: RiskLevel.info,
+          );
+        }
+      }
+
+      // 11. Ticari Kapılar
+      if (b6?.hasTicari == true) {
+        if (b13.areTicariKapiSame) {
+          final choice =
+              b13.ticariKapiZemin ??
+              b13.ticariKapiNormal ??
+              b13.ticariKapiBodrum;
+          if (choice != null) {
+            _addDetail(
+              details,
+              label:
+                  'Tüm ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
+              value: choice.uiTitle,
+              subtitle: choice.uiSubtitle,
+              report: choice.reportText,
+              advice: choice.adviceText,
+              level: choice.level,
+            );
+          }
+        } else {
+          if (b13.ticariKapiZemin != null) {
+            _addDetail(
+              details,
+              label:
+                  'Zemin kattaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
+              value: b13.ticariKapiZemin!.uiTitle,
+              subtitle: b13.ticariKapiZemin!.uiSubtitle,
+              report: b13.ticariKapiZemin!.reportText,
+              advice: b13.ticariKapiZemin!.adviceText,
+              level: b13.ticariKapiZemin!.level,
+            );
+          }
+          if (b13.ticariKapiNormal != null) {
+            _addDetail(
+              details,
+              label:
+                  'Normal katlardaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
+              value: b13.ticariKapiNormal!.uiTitle,
+              subtitle: b13.ticariKapiNormal!.uiSubtitle,
+              report: b13.ticariKapiNormal!.reportText,
+              advice: b13.ticariKapiNormal!.adviceText,
+              level: b13.ticariKapiNormal!.level,
+            );
+          }
+          if (b13.ticariKapiBodrum != null) {
+            _addDetail(
+              details,
+              label:
+                  'Bodrum katlardaki ticari alanlardan konut merdivenine geçiş (kapısı) yangın dayanımlı mı?',
+              value: b13.ticariKapiBodrum!.uiTitle,
+              subtitle: b13.ticariKapiBodrum!.uiSubtitle,
+              report: b13.ticariKapiBodrum!.reportText,
+              advice: b13.ticariKapiBodrum!.adviceText,
+              level: b13.ticariKapiBodrum!.level,
+            );
+          }
+        }
+      }
+
+      // 12. Endüstriyel Mutfak
+      if (b6?.hasTicari == true &&
+          b6?.buyukRestoran?.label == "6-3-A (Büyük Restoran)") {
+        if (b13.endustriyelMutfakKapi != null) {
+          _addDetail(
+            details,
+            label:
+                'Büyük restoran mutfağının kapısı ve duvarları yangın dayanımlı mı?',
+            value: b13.endustriyelMutfakKapi!.uiTitle,
+            subtitle: b13.endustriyelMutfakKapi!.uiSubtitle,
+            report: b13.endustriyelMutfakKapi!.reportText,
+            advice: b13.endustriyelMutfakKapi!.adviceText,
+            level: b13.endustriyelMutfakKapi!.level,
+          );
+        }
       }
     }
   }

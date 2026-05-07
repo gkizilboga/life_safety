@@ -36,20 +36,36 @@ class Bolum33Screen extends StatefulWidget {
   }
 
   /// Merdiven gerektiren katlar için gerekli merdiven adedini hesaplar.
-  /// BYKHY: Gerekli toplam genişlik (m) = yük × 0.5 / 60
-  /// Merdiven adedi = ⌈ toplam genişlik / min. merdiven genişliği ⌉
+  /// BYKHY Madde 39: 50 kişiye kadar 1, 51-500: 2, 501-1000: 3, 1001-1500: 4
+  /// 1500 kişiden fazla ise Genişlik bazlı formül kullanılır.
   static int hesaplaMerdivenSayisi(int yuk) {
     if (yuk <= 0) return 0;
+    
+    if (yuk <= 1500) {
+      if (yuk <= 50) return 1; // Binanın yüksekliği vb. diğer parametreler bunu 2'ye zorlayabilir.
+      if (yuk <= 500) return 2;
+      if (yuk <= 1000) return 3;
+      return 4;
+    }
+    
+    // 1500'ü aşan yüklerde genişlik bazlı hesaplama devreye girer:
     final double totalWidth = yuk * 0.5 / 60.0;
     final double minWidth = minMerdivGenisligi(yuk);
     return (totalWidth / minWidth).ceil();
   }
 
   /// Doğrudan dışarıya çıkış olan katlar için gerekli kapı adedini hesaplar.
-  /// BYKHY: Gerekli toplam genişlik (m) = yük × 0.5 / 100
-  /// Kapı adedi = ⌈ toplam genişlik / 0.9 m ⌉  (her kapı = 0.9 m)
   static int hesaplaKapiSayisi(int yuk) {
     if (yuk <= 0) return 0;
+    
+    if (yuk <= 1500) {
+      if (yuk <= 50) return 1;
+      if (yuk <= 500) return 2;
+      if (yuk <= 1000) return 3;
+      return 4;
+    }
+    
+    // 1500'ü aşan yükler için genişlik bazlı hesap (her kapı min 0.9m)
     return (yuk * 0.5 / 90.0).ceil();
   }
 
@@ -165,6 +181,28 @@ class Bolum33Screen extends StatefulWidget {
           : 0;
     }
 
+    // 5. ÇIKIŞ KATI (DISCHARGE LEVEL) KAPASİTE TRANSFERİ
+    // BYKHY: Tahliye katının çıkış kapasitesi, kendisine dökülen üst/alt katların 
+    // tahliye ihtiyacından (Gereken Çıkış) daha az olamaz.
+    if (cikisKatiLabel == '36-0-A') { // Zemin Kat
+      int requiredFromAbove = (hasNormal) ? gNormal : 0;
+      int requiredFromBelow = (hasBodrum) ? gBodrum : 0;
+      int maxDischarging = math.max(requiredFromAbove, requiredFromBelow);
+      if (maxDischarging > gZemin) {
+        gZemin = maxDischarging;
+      }
+    } else if (cikisKatiLabel == '36-0-B') { // Normal Kat
+      int requiredFromBelow = math.max(gZemin, (hasBodrum ? gBodrum : 0)); 
+      if (requiredFromBelow > gNormal) {
+        gNormal = requiredFromBelow;
+      }
+    } else if (cikisKatiLabel == '36-0-C') { // Bodrum Kat
+      int requiredFromAbove = math.max(gNormal, gZemin);
+      if (requiredFromAbove > gBodrum) {
+        gBodrum = requiredFromAbove;
+      }
+    }
+
     // 5. Hesaplamada kullanılan min. merdiven genişliği (en yüksek yük baz alınır)
     final int maxYuk = [
       yukZemin,
@@ -274,7 +312,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
                 "Normal kat alanı belli büyüklüğün üzerindedir. Bu sebeple, binada sprinkler olsa bile tek yön kaçış mesafesinin (30m) aşılma ihtimali var. İkinci çıkış gereksinimi doğabilir. Uzman kontrolü tavsiye edilir.";
           } else if (!hasSprinkler && alanNormal > 600) {
             _specialWarning =
-                "Normal kat alanı belli büyüklüğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. 2. çıkış gerekebilir.";
+                "Normal kat alanı belli büyüklüğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. İkinci çıkış gerekebilir.";
           }
         }
       });
@@ -338,7 +376,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  "Binadan çıkış katında toplam kaç adet dışarı çıkış kapısı var?",
+                  "Binadan dışarıya çıkışın bulunduğu katta kaç adet çıkış kapısı var?",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -396,14 +434,6 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
                           color: Colors.red,
                           fontWeight: FontWeight.w500,
                         ),
-                      ),
-                    )
-                  else if ((int.tryParse(_cikisSayisiCtrl.text) ?? 0) > 20)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 4),
-                      child: Text(
-                        "Uyarı: Bir katta 20'den fazla bağımsız çıkış kapısı olması nadir bir durumdur. Lütfen kontrol ediniz.",
-                        style: TextStyle(color: Colors.orange, fontSize: 12),
                       ),
                     ),
                 ],

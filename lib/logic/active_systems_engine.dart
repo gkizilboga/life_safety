@@ -307,14 +307,15 @@ class ActiveSystemsEngine {
     }
 
     // 10. Sprinkler Sistemi
-    bool sprinklerZorunlu = false;
+    bool buildingMandatory = false;
+    bool otoparkMandatory = false;
     List<String> sprinklerReasons = [];
     bool sprinklerBilmiyorum = false;
     String? otoparkSpecificReason;
     String? otoparkSpecificNote;
 
     if (hYapi >= 51.50) {
-      sprinklerZorunlu = true;
+      buildingMandatory = true;
       sprinklerReasons.add("Yapı Yüksekliği ≥ 51.50m");
     }
 
@@ -323,7 +324,7 @@ class ActiveSystemsEngine {
       if (otoparkAlanLabel.contains("13-1-ALT-B") ||
           otoparkAlanLabel.contains("13-1-ALT-C") ||
           otoparkAlanLabel.contains("13-1-ALT-D")) {
-        sprinklerZorunlu = true;
+        otoparkMandatory = true;
         sprinklerReasons.add("Kapalı Otopark Alanı > 600 m²");
       } else if (otoparkAlanLabel.contains("13-1-ALT-A")) {
         // < 600 m2
@@ -333,19 +334,27 @@ class ActiveSystemsEngine {
         // Bilmiyorum
         sprinklerBilmiyorum = true;
         otoparkSpecificReason =
-            "Eğer binanızdaki otopark alanları toplamı 600 m²'nin üzerindeyse otopark alanlarında sprinkler sistemi zorunludur.";
+            "Eğer binanızdaki otopark alanları toplamı 600 m²'nin üzerindeyse otopark alanlarında sprinkler sistemi zorunludur. 600 m2 'nin altında ise kaçış mesafeleri ve diğer koşulların Yönetmelik sınırlarını aşmadığı durumda sprinkler sistemi zorunlu değildir.";
         otoparkSpecificNote = "";
       }
     }
 
     // Nihai Durum Kararı (Sprinkler)
+    bool sprinklerZorunlu = buildingMandatory || otoparkMandatory;
+
     if (sprinklerZorunlu) {
+      String finalNote = otoparkSpecificNote ?? "";
+      if (otoparkMandatory && !buildingMandatory) {
+        finalNote =
+            "Bu zorunluluk sadece kapalı otopark alanları için geçerlidir; binanın konut bölümlerinde (yükseklik sınırının altında kalındığı için) sprinkler sistemi zorunlu değildir.";
+      }
+      
       requirements.add(
         ActiveSystemRequirement(
           name: "Otomatik Sprinkler Sistemi",
           isMandatory: true,
           reason: "Zorunluluk Sebebi: ${sprinklerReasons.join(', ')}.",
-          note: otoparkSpecificNote ?? "",
+          note: finalNote,
         ),
       );
     } else if (sprinklerBilmiyorum) {
@@ -553,17 +562,37 @@ class ActiveSystemsEngine {
     // 13. Basınçlandırma Sistemi
     List<String> basincLocations = [];
     bool basincBilmiyor = false;
+    String? customReason;
+    String? customNote;
 
+    // 13.1 Merdiven Basınçlandırma (Yüksekliğe Bağlı)
     if (hYapi >= 30.50 && hYapi < 51.50) {
-      if (store.bolum21?.varlik?.label.contains("21-1-B") == true) {
+      final hasYgh = store.bolum21?.varlik?.label.contains("21-1-A") == true;
+      final noYgh = store.bolum21?.varlik?.label.contains("21-1-B") == true;
+
+      if (noYgh) {
         basincLocations.add("Merdivenlerin en az birinde");
+        customReason =
+            "Yapı yüksekliği 30.50m - 51.50m aralığında olduğu ve kaçış merdivenlerinde Yangın Güvenlik Holü (YGH) bulunmadığı için basınçlandırma zorunludur.";
+      } else if (hasYgh) {
+        customReason =
+            "Yapı yüksekliği 30.50m - 51.50m aralığında olmasına rağmen, merdiven girişlerinde Yangın Güvenlik Holü (YGH) bulunduğu için basınçlandırma sistemi zorunlu değildir.";
+        customNote =
+            "Ancak kaçış güvenliğinin artırılması adına en az bir merdivende basınçlandırma yapılması önerilir.";
+      }
+    } else if (hYapi >= 51.50) {
+      basincLocations.add("Merdivenlerin en az ikisinde");
+      final noYgh = store.bolum21?.varlik?.label.contains("21-1-B") == true;
+      
+      customReason =
+          "Yapı yüksekliği 51.50m ve üzerinde olduğu için en az iki kaçış merdiveninde basınçlandırma sistemi ve Yangın Güvenlik Holü (YGH) tesis edilmesi zorunludur.";
+      
+      if (noYgh) {
+        customNote = "KRİTİK UYARI: Binada Yangın Güvenlik Holü (YGH) bulunmadığı beyan edilmiştir. Yönetmelik gereği 51.50m üzerindeki yapılarda hem basınçlandırma hem de YGH tesis edilmesi şarttır.";
       }
     }
 
-    if (hYapi >= 51.50) {
-      basincLocations.add("Merdivenlerin en az ikisinde");
-    }
-
+    // 13.2 Asansör Kuyusu Basınçlandırma
     if (store.bolum23?.havalandirma?.label.contains("23-5-B") == true) {
       basincLocations.add("Normal (İnsan) asansör kuyusunda");
     } else if (store.bolum23?.havalandirma?.label.contains("23-5-C") == true) {
@@ -578,19 +607,21 @@ class ActiveSystemsEngine {
       basincLocations.add("Bodrum kata hizmet veren kaçış merdivenlerinde");
     }
 
+    // Nihai Değerlendirme
     if (basincLocations.isNotEmpty) {
       String noteText = basincLocations.join(", ");
       if (basincBilmiyor) {
         noteText +=
-            ". Ayrıca asansör kuyusunda mimari proje üzerinde veya Yangın Güvenlik Mühendisi tarafından yerinde inceleme yapılması gereklidir.";
+            ". Ayrıca asansör kuyusunda mimari proje üzerinde veya uzman incelemesi yapılması gereklidir.";
       }
 
       requirements.add(
         ActiveSystemRequirement(
           name: "Basınçlandırma Sistemi",
           isMandatory: true,
-          reason: "Aşağıdaki alanlarda basınçlandırma yapılması ZORUNLUDUR:",
-          note: "$noteText.",
+          reason: customReason ??
+              "Aşağıdaki alanlarda basınçlandırma yapılması ZORUNLUDUR:",
+          note: customNote ?? "$noteText.",
         ),
       );
     } else if (basincBilmiyor) {
@@ -609,7 +640,9 @@ class ActiveSystemsEngine {
         ActiveSystemRequirement(
           name: "Basınçlandırma Sistemi",
           isMandatory: false,
-          reason: "Basınçlandırma gerektiren bir durum tespit edilmemiştir.",
+          reason: customReason ??
+              "Basınçlandırma gerektiren bir durum tespit edilmemiştir.",
+          note: customNote ?? "",
         ),
       );
     }
@@ -618,7 +651,7 @@ class ActiveSystemsEngine {
     if (sprinklerZorunlu) {
       requirements.add(
         ActiveSystemRequirement(
-          name: "Sismik Askılama (Depreme Karşı Tesisat Koruma) Sistemleri",
+          name: "Sismik Askılama Sistemi",
           isMandatory: false,
           isWarning: true,
           reason:
@@ -630,7 +663,7 @@ class ActiveSystemsEngine {
     } else {
       requirements.add(
         ActiveSystemRequirement(
-          name: "Sismik Askılama Sistemleri",
+          name: "Sismik Askılama Sistemi",
           isMandatory: false,
           reason: "Sprinkler sistemi zorunlu olmadığı için öncelikli değildir.",
         ),
@@ -755,9 +788,7 @@ class ActiveSystemsEngine {
     requirements.removeWhere((r) {
       if (r.name == "Atrium Duman Kontrolü" ||
           r.name == "Gaz Algılama Sistemi" ||
-          r.name ==
-              "Sismik Askılama (Depreme Karşı Tesisat Koruyucu) Sistemler" ||
-          r.name == "Sismik Askılama Sistemleri") {
+          r.name == "Sismik Askılama Sistemi") {
         specialLast.add(r);
         return true;
       }

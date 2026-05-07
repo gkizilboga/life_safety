@@ -13,6 +13,7 @@ import 'package:life_safety/models/bolum_12_model.dart';
 import 'package:life_safety/models/bolum_16_model.dart';
 import 'package:life_safety/models/bolum_20_model.dart';
 import 'package:life_safety/models/bolum_33_model.dart';
+import 'package:life_safety/models/bolum_36_model.dart';
 import 'package:life_safety/models/bolum_2_model.dart';
 import 'package:life_safety/models/choice_result.dart';
 import 'package:life_safety/utils/app_content.dart';
@@ -148,6 +149,9 @@ void main() {
           gerekliNormal: 67, 
           mevcutUst: 1,
         );
+
+        // Required to trigger Section 36 staircase type analysis in score calculation
+        store.bolum36 = Bolum36Model();
 
         final metrics = ReportEngine.calculateRiskMetrics(store: store);
         final activeSystems = ActiveSystemsEngine.calculateRequirements(store);

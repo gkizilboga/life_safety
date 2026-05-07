@@ -11,11 +11,13 @@ class Bolum33Model {
   final int? gerekliZemin;
   final int? gerekliNormal;
   final int? gerekliBodrum;
+
   /// Toplam merdiven sayısı (tüm kat tipleri için baz değer)
   final int? mevcutUst;
   final int? mevcutBodrum;
   final ChoiceResult? cikisKati;
   final int? cikisSayisi;
+
   /// Hesaplamada kullanılan minimum merdiven genişliği (metre). En yüksek kat yüküne göre seçilir.
   final double? minMerdivGenisligi;
 
@@ -59,13 +61,15 @@ class Bolum33Model {
   }
 
   ChoiceResult? get normalKatSonuc {
-    if (yukNormal == 0) return ChoiceResult(
-      label: "33-N-EXCLUDED",
-      uiTitle: "Hesaplanmadı",
-      uiSubtitle: "",
-      reportText: "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
-      level: RiskLevel.info,
-    );
+    if (yukNormal == 0)
+      return ChoiceResult(
+        label: "33-N-EXCLUDED",
+        uiTitle: "Hesaplanmadı",
+        uiSubtitle: "",
+        reportText:
+            "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
+        level: RiskLevel.info,
+      );
     final mNormal = mevcutNormal;
     if (mNormal == null || gerekliNormal == null) return null;
     return (mNormal >= gerekliNormal!)
@@ -74,13 +78,18 @@ class Bolum33Model {
   }
 
   ChoiceResult? get zeminKatSonuc {
-    if (yukZemin == 0) return ChoiceResult(
-      label: "33-Z-EXCLUDED",
-      uiTitle: "Hesaplanmadı",
-      uiSubtitle: "",
-      reportText: "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
-      level: RiskLevel.info,
-    );
+    // yukZemin == 0 ama gerekliZemin > 0: Tahliye katı transferi yapılmış demektir.
+    // Bu durumda zemin katı "Hesaplanmadı" yerine kapasite transferiyle değerlendir.
+    if (yukZemin == 0 && (gerekliZemin == null || gerekliZemin == 0)) {
+      return ChoiceResult(
+        label: "33-Z-EXCLUDED",
+        uiTitle: "Hesaplanmadı",
+        uiSubtitle: "",
+        reportText:
+            "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
+        level: RiskLevel.info,
+      );
+    }
     final mZemin = mevcutZemin;
     if (mZemin == null || gerekliZemin == null) return null;
     return (mZemin >= gerekliZemin!)
@@ -89,13 +98,15 @@ class Bolum33Model {
   }
 
   ChoiceResult? get bodrumKatSonuc {
-    if (yukBodrum == 0) return ChoiceResult(
-      label: "33-B-EXCLUDED",
-      uiTitle: "Hesaplanmadı",
-      uiSubtitle: "",
-      reportText: "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
-      level: RiskLevel.info,
-    );
+    if (yukBodrum == 0)
+      return ChoiceResult(
+        label: "33-B-EXCLUDED",
+        uiTitle: "Hesaplanmadı",
+        uiSubtitle: "",
+        reportText:
+            "BİLGİ: Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.",
+        level: RiskLevel.info,
+      );
     if (mevcutBodrum == null || gerekliBodrum == null) return null;
     return (mevcutBodrum! >= gerekliBodrum!)
         ? Bolum33Content.bodrumKatYeterli
@@ -107,29 +118,62 @@ class Bolum33Model {
     final resNormal = normalKatSonuc;
     final resBodrum = bodrumKatSonuc;
 
-    List<ChoiceResult> currentResults = [];
-    if (resZemin != null) currentResults.add(resZemin);
-    if (resNormal != null) currentResults.add(resNormal);
-    if (resBodrum != null) currentResults.add(resBodrum);
+    Map<String, List<String>> groups = {};
 
-    if (currentResults.isEmpty) return "Bölüm 33 hesaplaması yapılmamış.";
-
-    bool allOk = currentResults.every((r) => r.label.contains("-OK"));
-    bool allFail = currentResults.every((r) => r.label.contains("-FAIL"));
-
-    if (allOk && currentResults.length > 1) {
-      return Bolum33Content.allKatlarYeterli.reportText;
-    }
-    if (allFail && currentResults.length > 1) {
-      return Bolum33Content.allKatlarYetersiz.reportText;
+    void addToGroup(String label, ChoiceResult? res) {
+      if (res == null) return;
+      final text = res.reportText;
+      if (!groups.containsKey(text)) {
+        groups[text] = [];
+      }
+      groups[text]!.add(label);
     }
 
-    List<String> parts = [];
-    if (resZemin != null) parts.add("ZEMİN KAT:\n${resZemin.reportText}");
-    if (resNormal != null) parts.add("NORMAL KATLAR (En Yoğun Kat):\n${resNormal.reportText}");
-    if (resBodrum != null) parts.add("BODRUM KATLAR (En Yoğun Kat):\n${resBodrum.reportText}");
+    addToGroup("ZEMİN KAT", resZemin);
+    addToGroup("NORMAL KATLAR (En Yoğun Kat)", resNormal);
+    addToGroup("BODRUM KATLAR (En Yoğun Kat)", resBodrum);
 
-    return parts.join("\n\n");
+    if (groups.isEmpty) return "Bölüm 33 hesaplaması yapılmamış.";
+
+    // Eğer her şey aynıysa (ve birden fazla kategori varsa) özel "Tüm Katlar" mesajını döndür
+    bool allSame = groups.length == 1;
+    int totalResCount =
+        (resZemin != null ? 1 : 0) +
+        (resNormal != null ? 1 : 0) +
+        (resBodrum != null ? 1 : 0);
+
+    if (allSame && totalResCount > 1) {
+      final text = groups.keys.first;
+      if (text.contains("yeterlidir")) {
+        return Bolum33Content.allKatlarYeterli.reportText;
+      } else if (text.contains("yetersizdir")) {
+        return Bolum33Content.allKatlarYetersiz.reportText;
+      }
+    }
+
+    List<String> finalParts = [];
+    groups.forEach((text, labels) {
+      String groupLabel = labels.join(" VE ");
+      // "VE" eklemesi sonrası güzelleştirme: "NORMAL KATLAR VE BODRUM KATLAR" -> "NORMAL VE BODRUM KATLAR"
+      if (labels.length > 1) {
+        if (labels.contains("NORMAL KATLAR (En Yoğun Kat)") &&
+            labels.contains("BODRUM KATLAR (En Yoğun Kat)")) {
+          groupLabel = "NORMAL VE BODRUM KATLAR (En Yoğun Kat)";
+          if (labels.contains("ZEMİN KAT"))
+            groupLabel = "ZEMİN, NORMAL VE BODRUM KATLAR";
+        } else if (labels.contains("ZEMİN KAT") &&
+            labels.contains("NORMAL KATLAR (En Yoğun Kat)")) {
+          groupLabel = "ZEMİN VE NORMAL KATLAR";
+        } else if (labels.contains("ZEMİN KAT") &&
+            labels.contains("BODRUM KATLAR (En Yoğun Kat)")) {
+          groupLabel = "ZEMİN VE BODRUM KATLAR";
+        }
+      }
+
+      finalParts.add("$groupLabel:\n$text");
+    });
+
+    return finalParts.join("\n\n");
   }
 
   Bolum33Model copyWith({
@@ -207,7 +251,10 @@ class Bolum33Model {
           Bolum36Content.cikisKatiOptionA,
           Bolum36Content.cikisKatiOptionB,
           Bolum36Content.cikisKatiOptionC,
-        ].firstWhere((e) => e.label == l, orElse: () => Bolum36Content.cikisKatiOptionA);
+        ].firstWhere(
+          (e) => e.label == l,
+          orElse: () => Bolum36Content.cikisKatiOptionA,
+        );
       })(),
     );
   }

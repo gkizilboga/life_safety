@@ -37,9 +37,9 @@ void main() {
       expect(details.length, 10); // Expected fields
 
       // Validate core elements
-      expect(details[0]['label'], 'Normal Kat Sayısı (Zemin Üstü)');
-      expect(details[0]['value'], '5 adet');
-      expect(details[8]['label'], 'Yapı Yüksekliği (hYapı)');
+      expect(details[7]['label'], 'Bina Yüksekliği');
+      expect(details[7]['value'], '19.00 m');
+      expect(details[8]['label'], 'Yapı Yüksekliği');
       expect(details[8]['value'], '26.00 m');
     });
 

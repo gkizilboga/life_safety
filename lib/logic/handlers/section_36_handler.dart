@@ -886,9 +886,9 @@ class Section36Handler {
 
   void _checkWidth(
     String prefix,
-    dynamic sChoice,
-    dynamic cChoice,
-    dynamic kapiChoice, {
+    ChoiceResult? sChoice,
+    ChoiceResult? cChoice,
+    ChoiceResult? kapiChoice, {
     required double minMerd,
     required double minKori,
     required List<String> analysisParts,
@@ -900,7 +900,7 @@ class Section36Handler {
     try {
       List<String> violations = [];
 
-      if (sChoice is ChoiceResult) {
+      if (sChoice != null) {
         final String label = sChoice.label;
         final range = _getRangeForLabel(label);
         if (range != null && range.length >= 2) {
@@ -913,7 +913,7 @@ class Section36Handler {
         }
       }
 
-      if (cChoice is ChoiceResult) {
+      if (cChoice != null) {
         final String label = cChoice.label;
         final range = _getRangeForLabel(label);
         if (range != null && range.isNotEmpty) {
@@ -925,7 +925,7 @@ class Section36Handler {
         }
       }
 
-      if (kapiChoice is ChoiceResult && kapiChoice.label == "36-Kapi-A") {
+      if (kapiChoice != null && kapiChoice.label == "36-Kapi-A") {
         violations.add(
           "Kapı temiz geçiş genişliği YETERSİZ (Gereken: En az 80 cm olmalı, Mevcut: ${kapiChoice.uiTitle})",
         );

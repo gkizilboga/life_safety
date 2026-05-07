@@ -101,6 +101,13 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
     return false;
   }
 
+  bool _hasOtoparkSelection() {
+    if (_model.zemin?.label == Bolum10Content.teknikDepo.label) return true;
+    if (_model.bodrumlar.any((e) => e?.label == Bolum10Content.teknikDepo.label)) return true;
+    if (_model.normaller.any((e) => e?.label == Bolum10Content.teknikDepo.label)) return true;
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
@@ -119,6 +126,29 @@ class _Bolum10ScreenState extends State<Bolum10Screen> {
             iconColor: Colors.red,
           );
           return;
+        }
+
+        final b6 = BinaStore.instance.bolum6;
+        if (b6 != null && b6.needsKapaliOtoparkAlani) {
+          if (!_hasOtoparkSelection()) {
+            String typeText = "otopark";
+            if (b6.otoparkTipi?.label == Bolum6Content.otoparkKapali.label) {
+              typeText = "Kapalı Otopark";
+            } else if (b6.otoparkTipi?.label == Bolum6Content.otoparkYariAcik.label) {
+              typeText = "Yarı Açık Otopark";
+            }
+
+            showCustomDialog(
+              context: context,
+              title: "Otopark Katı Eksik",
+              content:
+                  "Önceki bölümlerde binanızda $typeText bulunduğunu belirttiniz. Lütfen katlardan en az biri için 'Depo, teknik hacim, otopark' seçeneğini işaretleyiniz.",
+              confirmText: "Tamam",
+              icon: Icons.warning_amber_rounded,
+              iconColor: Colors.orange,
+            );
+            return;
+          }
         }
 
         BinaStore.instance.bolum10 = _model;

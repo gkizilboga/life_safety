@@ -305,12 +305,11 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
 
             if (!isTekKatli &&
                 !context.select((Bolum20Provider p) => p.hideHavalandirma)) ...[
-              // Kullanıcıyı basınçlandırma ve havalandırma arasındaki ilişki konusunda bilgilendiren dinamik yapı
-              if (context.select(
-                (Bolum20Provider p) =>
-                    p.model.basinclandirma?.label ==
-                    Bolum20Content.basYghOptionA.label,
-              ))
+              if (context.select((Bolum20Provider p) {
+                final hasBas = p.model.basinclandirma?.label == Bolum20Content.basYghOptionA.label;
+                final hYapi = BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? BinaStore.instance.bolum3?.hYapi ?? 0;
+                return hasBas || hYapi >= 51.50;
+              }))
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: CustomInfoNote(
@@ -326,7 +325,12 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                   final hasBas =
                       provider.model.basinclandirma?.label ==
                       Bolum20Content.basYghOptionA.label;
-                  final qTitle = hasBas
+                      
+                  final hYapi = BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? 
+                                BinaStore.instance.bolum3?.hYapi ?? 0;
+                  final isHighRise = hYapi >= 51.50;
+
+                  final qTitle = (hasBas || isHighRise)
                       ? "(Basınçlandırma sistemi bulunmayan merdivenlerde) Doğal havalandırma (pencere/menfez) var mı?"
                       : "Merdivenlerde doğal havalandırma (pencere/menfez) var mı?";
 

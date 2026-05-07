@@ -4055,7 +4055,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Normal katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Kata hitap eden mevcut merdiven ADEDİ, hesaplanan tahmini kullanıcı yükü bakımından yeterlidir. Bununla birlikte bu dokümandaki Bölüm-36 da incelenmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4064,7 +4064,7 @@ class Bolum33Content {
     uiTitle: "Yetersiz",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Normal katlara hitap eden mevcut merdiven ADEDİ, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış gereklidir.",
+        "KRİTİK RİSK: Kata hitap eden mevcut merdiven ADEDİ, hesaplanan kullanıcı yükü bakımından yetersizdir. İlave çıkış gereklidir.",
     adviceText:
         "Kullanıcı yükü kapasiteyi aştığı için binaya yönetmelik limitleri çerçevesinde ilave kaçış merdiveni eklenmesi, yatay tahliye koridoru oluşturulması veya kat alanlarının yangın kompartımanlarına bölünerek her bölge için ayrı çıkış tasarlanması yöntemlerinden biri veya birkaçı uygulanarak sorunun çözülmesi gerekmektedir.",
     level: RiskLevel.critical,
@@ -4075,7 +4075,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Zemin katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Kata hitap eden mevcut merdiven ADEDİ, hesaplanan tahmini kullanıcı yükü bakımından yeterlidir. Bununla birlikte bu dokümandaki Bölüm-36 da incelenmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4084,7 +4084,7 @@ class Bolum33Content {
     uiTitle: "Yetersiz",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Zemin kata hitap eden mevcut merdiven ADEDİ, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış gereklidir.",
+        "KRİTİK RİSK: Kata hitap eden mevcut merdiven ADEDİ, hesaplanan kullanıcı yükü bakımından yetersizdir. İlave çıkış gereklidir.",
     adviceText:
         "Kullanıcı yükü kapasiteyi aştığı için binaya yönetmelik limitleri çerçevesinde ilave kaçış merdiveni eklenmesi, yatay tahliye koridoru oluşturulması veya kat alanlarının yangın kompartımanlarına bölünerek her bölge için ayrı çıkış tasarlanması yöntemlerinden biri veya birkaçı uygulanarak sorunun çözülmesi gerekmektedir.",
     level: RiskLevel.critical,
@@ -4095,7 +4095,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Bodrum katlara hitap eden merdivenler ADET bakımından yeterli olabilir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Kata hitap eden mevcut merdiven ADEDİ, hesaplanan tahmini kullanıcı yükü bakımından yeterlidir. Bununla birlikte bu dokümandaki Bölüm-36 da incelenmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4104,7 +4104,7 @@ class Bolum33Content {
     uiTitle: "Yetersiz",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Bodrum katlara hitap eden mevcut merdiven ADEDİ, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış gereklidir.",
+        "KRİTİK RİSK: Kata hitap eden mevcut merdiven ADEDİ, hesaplanan kullanıcı yükü bakımından yetersizdir. İlave çıkış gereklidir.",
     adviceText:
         "Kullanıcı yükü kapasiteyi aştığı için binaya yönetmelik limitleri çerçevesinde ilave kaçış merdiveni eklenmesi, yatay tahliye koridoru oluşturulması veya kat alanlarının yangın kompartımanlarına bölünerek her bölge için ayrı çıkış tasarlanması yöntemlerinden biri veya birkaçı uygulanarak sorunun çözülmesi gerekmektedir.",
     level: RiskLevel.critical,
@@ -4115,7 +4115,7 @@ class Bolum33Content {
     uiTitle: "Yeterli",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Bina genelindeki tüm katlar için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü kapasitesi için yeterlidir. Merdiven tiplerinin uygunluk kontrolü için Bölüm-36 'ya bakınız. Kaçış mesafeleri ve çıkmaz koridor uzunlukları mimari proje üzerinde veya yerinde ayrıca kontrol edilmelidir.",
+        "OLUMLU: Bina genelindeki tüm katlar için mevcut kaçış merdiveni ADEDİ, hesaplanan tahmini kullanıcı yükü bakımından yeterlidir. Bununla birlikte bu dokümandaki Bölüm-36 da incelenmelidir.",
     level: RiskLevel.positive,
   );
 
@@ -4124,7 +4124,7 @@ class Bolum33Content {
     uiTitle: "Yetersiz",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Bina genelindeki tüm katlar için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü için yetersizdir. İlave çıkış veya kapasite artırımı gereklidir.",
+        "KRİTİK RİSK: Bina genelindeki tüm katlar için mevcut kaçış merdiveni ADEDİ, hesaplanan kullanıcı yükü bakımından yetersizdir. İlave çıkış veya kapasite artırımı gereklidir.",
     adviceText:
         "Kullanıcı yükü kapasiteyi aştığı için binaya yönetmelik limitleri çerçevesinde ilave kaçış merdiveni eklenmesi, yatay tahliye koridoru oluşturulması veya kat alanlarının yangın kompartımanlarına bölünerek her bölge için ayrı çıkış tasarlanması yöntemlerinden biri veya birkaçı uygulanarak sorunun çözülmesi gerekmektedir.",
     level: RiskLevel.critical,

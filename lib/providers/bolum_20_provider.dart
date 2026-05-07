@@ -295,7 +295,12 @@ class Bolum20Provider extends ChangeNotifier {
     int bIc = int.tryParse(bodIcKapaliCtrl.text) ?? 0;
     int bDis = int.tryParse(bodDisKapaliCtrl.text) ?? 0;
 
-    bool newShowBasinclandirma = (ic >= 1 || dis >= 1 || bIc >= 1 || bDis >= 1);
+    final double hYapi = BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? BinaStore.instance.bolum3?.hYapi ?? 0.0;
+    
+    // Basınçlandırma sorusu: 
+    // 1. Herhangi bir korunumlu merdiven girildiyse VEYA
+    // 2. Yapı yüksekliği 30.5m üzerindeyse (zorunluluk sınırı başladığı için) gösterilmelidir.
+    bool newShowBasinclandirma = (ic >= 1 || dis >= 1 || bIc >= 1 || bDis >= 1) || hYapi >= 30.5;
 
     bool stateChanged = false;
     if (_showBasinclandirma != newShowBasinclandirma) {
