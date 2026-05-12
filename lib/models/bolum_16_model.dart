@@ -3,7 +3,8 @@ import '../utils/app_content.dart';
 
 class Bolum16Model {
   final ChoiceResult? mantolama;
-  final bool? giydirmeBoslukYalitim;
+  final ChoiceResult? giydirmeCepheMalzemesi;
+  final ChoiceResult? giydirmeYalitimMalzemesi;
   final ChoiceResult? sagirYuzey;
   final bool? sagirYuzeySprinkler;
   final ChoiceResult? bitisikNizam;
@@ -17,7 +18,8 @@ class Bolum16Model {
 
   Bolum16Model({
     this.mantolama,
-    this.giydirmeBoslukYalitim,
+    this.giydirmeCepheMalzemesi,
+    this.giydirmeYalitimMalzemesi,
     this.sagirYuzey,
     this.sagirYuzeySprinkler,
     this.bitisikNizam,
@@ -29,7 +31,8 @@ class Bolum16Model {
 
   Bolum16Model copyWith({
     ChoiceResult? mantolama,
-    bool? giydirmeBoslukYalitim,
+    ChoiceResult? giydirmeCepheMalzemesi,
+    ChoiceResult? giydirmeYalitimMalzemesi,
     ChoiceResult? sagirYuzey,
     bool? sagirYuzeySprinkler,
     ChoiceResult? bitisikNizam,
@@ -40,8 +43,10 @@ class Bolum16Model {
   }) {
     return Bolum16Model(
       mantolama: mantolama ?? this.mantolama,
-      giydirmeBoslukYalitim:
-          giydirmeBoslukYalitim ?? this.giydirmeBoslukYalitim,
+      giydirmeCepheMalzemesi:
+          giydirmeCepheMalzemesi ?? this.giydirmeCepheMalzemesi,
+      giydirmeYalitimMalzemesi:
+          giydirmeYalitimMalzemesi ?? this.giydirmeYalitimMalzemesi,
       sagirYuzey: sagirYuzey ?? this.sagirYuzey,
       sagirYuzeySprinkler: sagirYuzeySprinkler ?? this.sagirYuzeySprinkler,
       bitisikNizam: bitisikNizam ?? this.bitisikNizam,
@@ -55,7 +60,8 @@ class Bolum16Model {
   Map<String, dynamic> toMap() {
     return {
       'mantolama_label': mantolama?.label,
-      'giydirmeBoslukYalitim': giydirmeBoslukYalitim,
+      'giydirmeCepheMalzemesi_label': giydirmeCepheMalzemesi?.label,
+      'giydirmeYalitimMalzemesi_label': giydirmeYalitimMalzemesi?.label,
       'sagirYuzey_label': sagirYuzey?.label,
       'sagirYuzeySprinkler': sagirYuzeySprinkler,
       'bitisikNizam_label': bitisikNizam?.label,
@@ -84,7 +90,16 @@ class Bolum16Model {
         Bolum16Content.mantolamaOptionD,
         Bolum16Content.mantolamaOptionE,
       ]),
-      giydirmeBoslukYalitim: map['giydirmeBoslukYalitim'],
+      giydirmeCepheMalzemesi: find(map['giydirmeCepheMalzemesi_label'], [
+        Bolum16Content.giydirmeCepheA,
+        Bolum16Content.giydirmeCepheB,
+        Bolum16Content.giydirmeCepheC,
+      ]),
+      giydirmeYalitimMalzemesi: find(map['giydirmeYalitimMalzemesi_label'], [
+        Bolum16Content.giydirmeYalitimA,
+        Bolum16Content.giydirmeYalitimB,
+        Bolum16Content.giydirmeYalitimC,
+      ]),
       sagirYuzey: find(map['sagirYuzey_label'], [
         Bolum16Content.sagirYuzeyOptionA,
         Bolum16Content.sagirYuzeyOptionB,

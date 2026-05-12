@@ -204,6 +204,14 @@ class _Bolum6ScreenState extends State<Bolum6Screen> {
                       onTap: () =>
                           _handleOtoparkTipi(Bolum6Content.otoparkYariAcik),
                     ),
+                    SelectableCard(
+                      choice: Bolum6Content.otoparkTamamenAcik,
+                      isSelected:
+                          _model.otoparkTipi?.label ==
+                          Bolum6Content.otoparkTamamenAcik.label,
+                      onTap: () =>
+                          _handleOtoparkTipi(Bolum6Content.otoparkTamamenAcik),
+                    ),
                   ],
 
                   // TİCARİ ALAN DETAYI (Sadece Ticari Varsa)

@@ -24,6 +24,13 @@ class Bolum6Model {
     this.buyukRestoran,
   });
 
+  // Bina ile yapısal ilişiği olan (kapalı, yarı açık veya karşılıklı açık) otopark var mı?
+  // "Tamamen Açık Otopark" (D şıkkı) seçildiğinde binada hiç otopark yokmuş gibi davranılır.
+  bool get hasIntegratedOtopark =>
+      hasOtopark &&
+      otoparkTipi != null &&
+      otoparkTipi!.label != Bolum6Content.otoparkTamamenAcik.label;
+
   Bolum6Model copyWith({
     bool? hasOtopark,
     bool? hasTicari,
@@ -73,10 +80,13 @@ class Bolum6Model {
 
     if (label == Bolum6Content.otoparkKapali.label) {
       otoparkSecim = Bolum6Content.otoparkKapali;
-    } else if (label == Bolum6Content.otoparkAcik.label)
+    } else if (label == Bolum6Content.otoparkAcik.label) {
       otoparkSecim = Bolum6Content.otoparkAcik;
-    else if (label == Bolum6Content.otoparkYariAcik.label)
+    } else if (label == Bolum6Content.otoparkYariAcik.label) {
       otoparkSecim = Bolum6Content.otoparkYariAcik;
+    } else if (label == Bolum6Content.otoparkTamamenAcik.label) {
+      otoparkSecim = Bolum6Content.otoparkTamamenAcik;
+    }
 
     ChoiceResult? restoranSecim;
     final rLabel = map['buyukRestoran_label'];

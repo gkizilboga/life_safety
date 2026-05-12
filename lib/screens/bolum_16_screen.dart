@@ -64,7 +64,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
         );
       }
       if (choice.label != Bolum16Content.giydirmeOptionC.label) {
-        _model = _model.copyWith(giydirmeBoslukYalitim: null);
+        _model = _model.copyWith(
+          giydirmeCepheMalzemesi: null,
+          giydirmeYalitimMalzemesi: null,
+        );
       }
     });
   }
@@ -79,7 +82,8 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
         return false;
     }
     if (_model.mantolama?.label == Bolum16Content.giydirmeOptionC.label &&
-        _model.giydirmeBoslukYalitim == null)
+        (_model.giydirmeCepheMalzemesi == null ||
+            _model.giydirmeYalitimMalzemesi == null))
       return false;
     if (_model.sagirYuzey == null) return false;
     if (_model.sagirYuzey?.label == Bolum16Content.sagirYuzeyOptionB.label &&
@@ -215,16 +219,46 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
 
             if (_model.mantolama?.label ==
                 Bolum16Content.giydirmeOptionC.label) ...[
-              CustomInfoNote(
-                type: InfoNoteType.info,
-                text: "Lütfen alttaki soruyu yanıtlayınız.",
-                icon: Icons.arrow_downward,
-              ),
-              _buildSubQuestionRadio(
-                "Cephe ile döşeme arasındaki boşluklar yalıtılmış mı?",
-                _model.giydirmeBoslukYalitim,
-                (v) => setState(
-                  () => _model = _model.copyWith(giydirmeBoslukYalitim: v),
+              QuestionCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CustomInfoNote(
+                      type: InfoNoteType.info,
+                      text: "Lütfen cephe ve yalıtım malzemelerini seçiniz.",
+                      icon: Icons.arrow_downward,
+                    ),
+                    const SizedBox(height: 12),
+                    const SubQuestionTitle(
+                        "Giydirme cephe malzemesi nedir?"),
+                    const SizedBox(height: 8),
+                    ...[
+                      Bolum16Content.giydirmeCepheA,
+                      Bolum16Content.giydirmeCepheB,
+                      Bolum16Content.giydirmeCepheC,
+                    ].map((opt) => SelectableCard(
+                          choice: opt,
+                          isSelected:
+                              _model.giydirmeCepheMalzemesi?.label == opt.label,
+                          onTap: () => setState(() => _model =
+                              _model.copyWith(giydirmeCepheMalzemesi: opt)),
+                        )),
+                    const SizedBox(height: 16),
+                    const SubQuestionTitle(
+                        "Giydirme cephe ARKASINDAKİ (yalıtım) malzemesi nedir?"),
+                    const SizedBox(height: 8),
+                    ...[
+                      Bolum16Content.giydirmeYalitimA,
+                      Bolum16Content.giydirmeYalitimB,
+                      Bolum16Content.giydirmeYalitimC,
+                    ].map((opt) => SelectableCard(
+                          choice: opt,
+                          isSelected: _model.giydirmeYalitimMalzemesi?.label ==
+                              opt.label,
+                          onTap: () => setState(() => _model =
+                              _model.copyWith(giydirmeYalitimMalzemesi: opt)),
+                        )),
+                  ],
                 ),
               ),
             ],
@@ -357,6 +391,12 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                     if (opt.label != Bolum16Content.sagirYuzeyOptionB.label) {
                       _model = _model.copyWith(sagirYuzeySprinkler: null);
                     }
+                  }
+                  if (k == 'giydirmeCephe') {
+                    _model = _model.copyWith(giydirmeCepheMalzemesi: opt);
+                  }
+                  if (k == 'giydirmeYalitim') {
+                    _model = _model.copyWith(giydirmeYalitimMalzemesi: opt);
                   }
                   if (k == 'bitisik') {
                     _model = _model.copyWith(bitisikNizam: opt);

@@ -44,7 +44,7 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
     final b6 = BinaStore.instance.bolum6;
     setState(() {
       _model = _model.copyWith(
-        hasOtopark: b6?.hasOtopark ?? false,
+        hasOtopark: b6?.hasIntegratedOtopark ?? false,
         hasDepo: b6?.hasDepo ?? false,
       );
     });

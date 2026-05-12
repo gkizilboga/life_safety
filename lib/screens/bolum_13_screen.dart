@@ -122,7 +122,7 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     final b7 = BinaStore.instance.bolum7;
 
     setState(() {
-      _askOtopark = b6?.hasOtopark ?? false;
+      _askOtopark = b6?.hasIntegratedOtopark ?? false;
       _askKazan = b7?.hasKazan ?? false;
       _askAsansor = b7?.hasAsansor ?? false;
       _askJenerator = b7?.hasJenerator ?? false;
@@ -212,8 +212,12 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
     setState(() {
       if (type == 'otopark')
         _model = _model.copyWith(otoparkKapi: choice);
-      else if (type == 'kazan')
+      else if (type == 'kazan') {
         _model = _model.copyWith(kazanKapi: choice);
+        if (choice.label == Bolum13Content.kazanOptionC.label) {
+          _model = _model.copyWith(kazanAlan: null);
+        }
+      }
       else if (type == 'asansor')
         _model = _model.copyWith(asansorKapi: choice);
       else if (type == 'jenerator')
@@ -307,11 +311,12 @@ class _Bolum13ScreenState extends State<Bolum13Screen> {
               _model.kazanKapi,
             ),
             // ALT SORU: Kazan Dairesi Alanı
-            _buildSoru("Kazan dairesi kaç metrekare?", 'kazanAlan', [
-              Bolum13Content.kazanAlanOptionA,
-              Bolum13Content.kazanAlanOptionB,
-              Bolum13Content.kazanAlanOptionC,
-            ], _model.kazanAlan),
+            if (_model.isKazanBinada)
+              _buildSoru("Kazan dairesi kaç metrekare?", 'kazanAlan', [
+                Bolum13Content.kazanAlanOptionA,
+                Bolum13Content.kazanAlanOptionB,
+                Bolum13Content.kazanAlanOptionC,
+              ], _model.kazanAlan),
           ],
 
           if (_askAsansor)

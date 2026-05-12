@@ -696,7 +696,7 @@ class BinaStore {
         final b6 = _bolum6;
 
         String otoparkText = "Otopark bulunmamaktadır.";
-        if (b6?.hasOtopark == true) {
+        if (b6?.hasIntegratedOtopark == true) {
           if (b6?.otoparkTipi?.label.contains("Kapalı") == true) {
             otoparkText = "Binada Kapalı Otopark mevcuttur.";
           } else if (b6?.otoparkTipi?.label.contains("Yarı") == true) {
@@ -704,6 +704,10 @@ class BinaStore {
           } else {
             otoparkText = "Binada Açık Otopark mevcuttur.";
           }
+        } else if (b6?.hasOtopark == true &&
+            b6?.otoparkTipi?.label == Bolum6Content.otoparkTamamenAcik.label) {
+          otoparkText =
+              "Binada tamamen açık otopark (bina dışı alan) mevcuttur. Yapısal bir risk oluşturmadığı için otopark yokmuş gibi değerlendirilmiştir.";
         }
 
         List<String> riskler = [];
@@ -723,7 +727,7 @@ class BinaStore {
           fullReport +=
               " Ayrıca binada tespit edilen diğer teknik hacimler: ${riskler.join(', ')}.";
         } else {
-          if (b6?.hasOtopark == true) {
+          if (b6?.hasIntegratedOtopark == true) {
             fullReport +=
                 " Otopark haricinde binada başka bir özel teknik hacim veya riskli alan tespit edilmemiştir.";
           } else {
@@ -831,10 +835,12 @@ class BinaStore {
       case 13:
         if (_bolum13 == null) return null;
         final m13 = _bolum13!;
+        final b6 = _bolum6;
+        final bool hasIntegratedOtopark = b6?.hasIntegratedOtopark ?? false;
         List<String> parts = [];
 
         // Kapı Dayanımları
-        if (m13.otoparkKapi != null)
+        if (hasIntegratedOtopark && m13.otoparkKapi != null)
           parts.add("Otopark Kapısı: ${m13.otoparkKapi!.reportText}");
         if (m13.kazanKapi != null)
           parts.add("Kazan Dairesi Kapısı: ${m13.kazanKapi!.reportText}");
@@ -859,16 +865,24 @@ class BinaStore {
             "Ortak Duvar Yangın Dayanımı: ${m13.ortakDuvar!.reportText}",
           );
         if (m13.areTicariKapiSame) {
-          final choice = m13.ticariKapiZemin ?? m13.ticariKapiNormal ?? m13.ticariKapiBodrum;
-          if (choice != null) parts.add("Tüm Ticari Alanların Kapıları: ${choice.reportText}");
+          final choice =
+              m13.ticariKapiZemin ?? m13.ticariKapiNormal ?? m13.ticariKapiBodrum;
+          if (choice != null)
+            parts.add("Tüm Ticari Alanların Kapıları: ${choice.reportText}");
         } else {
-          if (m13.ticariKapiZemin != null) parts.add("Zemin Kat Ticari Alan Kapısı: ${m13.ticariKapiZemin!.reportText}");
-          if (m13.ticariKapiNormal != null) parts.add("Normal Kat Ticari Alan Kapısı: ${m13.ticariKapiNormal!.reportText}");
-          if (m13.ticariKapiBodrum != null) parts.add("Bodrum Kat Ticari Alan Kapısı: ${m13.ticariKapiBodrum!.reportText}");
+          if (m13.ticariKapiZemin != null)
+            parts.add(
+                "Zemin Kat Ticari Alan Kapısı: ${m13.ticariKapiZemin!.reportText}");
+          if (m13.ticariKapiNormal != null)
+            parts.add(
+                "Normal Kat Ticari Alan Kapısı: ${m13.ticariKapiNormal!.reportText}");
+          if (m13.ticariKapiBodrum != null)
+            parts.add(
+                "Bodrum Kat Ticari Alan Kapısı: ${m13.ticariKapiBodrum!.reportText}");
         }
 
         // Duman Tahliye Sistemleri
-        if (m13.otoparkAlan != null)
+        if (hasIntegratedOtopark && m13.otoparkAlan != null)
           parts.add("Otopark Duman Tahliyesi: ${m13.otoparkAlan!.uiTitle}");
         if (m13.kazanAlan != null)
           parts.add("Kazan Dairesi Duman Tahliyesi: ${m13.kazanAlan!.uiTitle}");
@@ -937,6 +951,8 @@ class BinaStore {
           reportText: "Mantolama ve cephe güvenliği analizi.",
           adviceText: _joinAdvice([
             _bolum16!.mantolama,
+            _bolum16!.giydirmeCepheMalzemesi,
+            _bolum16!.giydirmeYalitimMalzemesi,
             _bolum16!.sagirYuzey,
             _bolum16!.bitisikNizam,
           ]),
@@ -1075,7 +1091,7 @@ class BinaStore {
             _bolum26!.varlik,
             _bolum26!.egim,
             _bolum26!.sahanlik,
-            _bolum26!.otopark,
+            if (_bolum6?.hasIntegratedOtopark == true) _bolum26!.otopark,
           ]),
         );
       case 27:
@@ -1115,8 +1131,8 @@ class BinaStore {
           uiSubtitle: "",
           reportText: "Depolama ve yerleşim hataları analizi.",
           adviceText: _joinAdvice([
-            _bolum29!.otopark,
-            _bolum29!.kazan,
+            if (_bolum6?.hasIntegratedOtopark == true) _bolum29!.otopark,
+            if (_bolum13?.isKazanBinada == true) _bolum29!.kazan,
             _bolum29!.cati,
             _bolum29!.asansor,
             _bolum29!.jenerator,
@@ -1128,7 +1144,7 @@ class BinaStore {
           ]),
         );
       case 30:
-        if (_bolum30 == null) return null;
+        if (_bolum30 == null || _bolum13?.isKazanBinada == false) return null;
         return ChoiceResult(
           label: "30",
           uiTitle: "Kazan Dairesi",

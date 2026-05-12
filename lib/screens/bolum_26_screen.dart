@@ -31,7 +31,7 @@ class _Bolum26ScreenState extends State<Bolum26Screen> {
     }
     // Bölüm 6'daki otopark varlığına göre şalteri ayarla
     final b6 = BinaStore.instance.bolum6;
-    if (b6?.hasOtopark == true) {
+    if (b6?.hasIntegratedOtopark == true) {
       _askOtopark = true;
     }
   }

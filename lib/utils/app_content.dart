@@ -235,6 +235,15 @@ class Bolum6Content {
     level: RiskLevel.info,
   );
 
+  static final otoparkTamamenAcik = ChoiceResult(
+    label: "6-2-D (Otopark Tipi)",
+    uiTitle: "Tamamen açık otopark.",
+    uiSubtitle: "Cephesi yok.",
+    reportText:
+        "BİLGİ: (TAMAMEN AÇIK OTOPARK): Otoparkın bina ile yapısal bir ilişiği olmadığı (duvarsız, açık alan) beyan edilmiştir. Bu durum yangın güvenliği açısından risk oluşturmadığından, binada otopark yokmuş gibi değerlendirme yapılmıştır.",
+    level: RiskLevel.info,
+  );
+
   static final buyukRestoranVar = ChoiceResult(
     label: "6-3-A (Büyük Restoran)",
     uiTitle: "Var.",
@@ -1498,6 +1507,62 @@ class Bolum16Content {
     level: RiskLevel.unknown,
   );
 
+  // --- GİYDİRME CEPHE ALT SORULAR ---
+  // CEPHE MALZEMESİ
+  static final giydirmeCepheA = ChoiceResult(
+    label: "16-1-ALT-A1",
+    uiTitle: "A1, A2 sınıfı malzeme.",
+    uiSubtitle: "Taşyünü, cam yünü vb.",
+    reportText:
+        "OLUMLU: Giydirme cephe malzemesi (A1 veya A2 sınıfı) yanmaz / zor yanıcı malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır. ",
+    level: RiskLevel.positive,
+  );
+  static final giydirmeCepheB = ChoiceResult(
+    label: "16-1-ALT-A2",
+    uiTitle: "Yanıcı malzeme.",
+    uiSubtitle: "Aluminyum kompozit vb.",
+    reportText:
+        "KRİTİK RİSK: Giydirme cephe malzemesi olarak A1 veya A2 sınıfı haricinde yanıcı malzeme kullanılmıştır. Bu durum yangının cephe boyunca hızla yayılmasına neden olabilir.",
+    adviceText: "",
+    level: RiskLevel.critical,
+  );
+  static final giydirmeCepheC = ChoiceResult(
+    label: "16-1-ALT-A3",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: Giydirme cephe malzemesinin yangına tepki sınıfı bilinmiyor. Malzemeye ait akredite test raporları üzerinden kontrol edilmelidir.",
+    level: RiskLevel.unknown,
+  );
+
+  // YALITIM MALZEMESİ
+  static final giydirmeYalitimA = ChoiceResult(
+    label: "16-1-ALT-B1",
+    uiTitle: "A1, A2 sınıfı malzeme.",
+    uiSubtitle: "Taşyünü vb.",
+    reportText:
+        "OLUMLU: Giydirme cephe arkasındaki ısı yalıtım malzemesi (A1 veya A2 sınıfı) yanmaz malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır.",
+    level: RiskLevel.positive,
+  );
+  static final giydirmeYalitimB = ChoiceResult(
+    label: "16-1-ALT-B2",
+    uiTitle: "Yanıcı malzeme.",
+    uiSubtitle: "EPS, XPS, Poliüretan vb.",
+    reportText:
+        "KRİTİK RİSK: Giydirme cephe arkasındaki yalıtım malzemesi yanıcıdır. Bacalanma etkisiyle yangın cephe boşluğunda çok hızlı ilerleyebilir.",
+    adviceText:
+        "Giydirme cephe arkasındaki yalıtımın 'Hiç Yanmaz' (A1 sınıfı) taşyünü gibi malzemelerden oluşması hayati önem taşır. Yanıcı yalıtım malzemelerinin kullanımı, özellikle yüksek binalarda cephe yangınlarının kontrol altına alınmasını imkansız hale getirebilir.",
+    level: RiskLevel.critical,
+  );
+  static final giydirmeYalitimC = ChoiceResult(
+    label: "16-1-ALT-B3",
+    uiTitle: "Bilmiyorum.",
+    uiSubtitle: "",
+    reportText:
+        "BİLİNMİYOR: Giydirme cephe arkasındaki ısı yalıtım malzemesinin yangına tepki sınıfı bilinmiyor. Malzemeye ait akredite test raporları üzerinden kontrol edilmelidir.",
+    level: RiskLevel.unknown,
+  );
+
   // En uzun cephe uzunluğu — sayısal değer girildiğinde (≤ 75m): bilgi notu
   static final cepheUzunluguOlumlu = ChoiceResult(
     label: "16-4-A (Cephe)",
@@ -2486,7 +2551,7 @@ class Bolum23Content {
 
   static final bodrumOptionB = ChoiceResult(
     label: "23-1-B (Bodrum)",
-    uiTitle: "İniyor ve bodrum katta kapısını korunumlu bir HOLE açıyor.",
+    uiTitle: "İniyor ve bodrum katta kapısını KORUNUMLU bir HOLE açıyor.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Asansör bodrum katta yangın güvenlik holüne açılmaktadır. Yönetmelik talebi karşılanmaktadır. ",
@@ -2496,7 +2561,7 @@ class Bolum23Content {
   static final bodrumOptionC = ChoiceResult(
     label: "23-1-C (Bodrum)",
     uiTitle:
-        "İniyor ancak HOLSÜZ biçimde DİREKT otoparka, depoya veya ticari alanlara açılıyor.",
+        "İniyor ancak korunumlu HOLSÜZ biçimde DİREKT otoparka, depoya veya ticari alanlara açılıyor.",
     uiSubtitle: "Asansörün bodrum kata çıktığı noktada bir YGH yok.",
     reportText:
         "KRİTİK RİSK: Asansör kuyuları yangın anında baca görevi görür. Bodrum katlarda yangın güvenlik holü olmayan asansör boşlukları dumanın üst katlara taşınmasına neden olur.",

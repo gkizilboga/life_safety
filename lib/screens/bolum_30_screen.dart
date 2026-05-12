@@ -33,7 +33,6 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
       _model = _model.copyWith(
         yakit: Bolum30Content.yakitOptionA, // Doğalgaz
         hava: Bolum30Content.havaOptionA, // Havalandırma var
-        tup: Bolum30Content.tupOptionD, // Tüp/LPG yok
       );
     }
     _checkKazanAndRedirect();
@@ -41,7 +40,9 @@ class _Bolum30ScreenState extends State<Bolum30Screen> {
 
   void _checkKazanAndRedirect() {
     final b7 = BinaStore.instance.bolum7;
-    if (b7?.hasKazan == true) {
+    final bool isOutside = BinaStore.instance.bolum13?.isKazanBinada == false;
+
+    if (b7?.hasKazan == true && !isOutside) {
       setState(() => _hasKazan = true);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -29,6 +29,9 @@ class ActiveSystemsEngine {
         (store.bolum33?.yukBodrum ?? 0);
 
     final cikisSayisi = store.bolum33?.mevcutUst ?? 0;
+    final b6 = store.bolum6;
+    final bool hasIntegratedOtopark = b6?.hasIntegratedOtopark ?? false;
+    final bool hasKazanInBuilding = store.bolum13?.isKazanBinada ?? true;
 
     // 1. Yangın Senaryosu ve Matris
     requirements.add(
@@ -189,7 +192,8 @@ class ActiveSystemsEngine {
       dolapReasons.add("Yapı Yüksekliği ≥ 21.50m");
     }
 
-    final otoparkAlanLabel = store.bolum13?.otoparkAlan?.label;
+    final otoparkAlanLabel =
+        hasIntegratedOtopark ? store.bolum13?.otoparkAlan?.label : null;
     // Otopark > 600 m2 (B, C, D)
     if (otoparkAlanLabel != null &&
         (otoparkAlanLabel.contains("13-1-ALT-B") ||
@@ -436,7 +440,7 @@ class ActiveSystemsEngine {
 
     // KAZAN DAİRESİ KONTROLÜ (Bölüm 13)
     final kazanAlan = store.bolum13?.kazanAlan?.label;
-    if (kazanAlan != null) {
+    if (kazanAlan != null && hasKazanInBuilding) {
       if (kazanAlan.contains("13-2-ALT-B")) {
         // > 2000 m2
         dumanZorunlu = true;
@@ -516,7 +520,7 @@ class ActiveSystemsEngine {
             "Otopark alanlarının toplamda 2000 m² veya altında olduğu beyan edildiğinden bu alanda duman tahliye sistemi kurulması zorunlu değildir.",
           );
         }
-        if (kazanAlan != null && kazanAlan.contains("13-2-ALT-A")) {
+        if (kazanAlan != null && kazanAlan.contains("13-2-ALT-A") && hasKazanInBuilding) {
           positiveNotes.add(
             "Kazan dairesinin toplamda 2000 m² veya altında olduğu beyan edildiğinden bu alanda duman tahliye sistemi kurulması zorunlu değildir.",
           );
@@ -683,12 +687,8 @@ class ActiveSystemsEngine {
     );
 
     // 16. Gaz Algılayıcı (Dinamik Kontrol)
-    final bool hasKazan =
-        store.bolum30 != null || (store.bolum13?.kazanAlan != null);
-    final bool hasOtopark =
-        (store.bolum13?.otoparkAlan != null) ||
-        (store.bolum29?.otopark != null) ||
-        (store.bolum6?.hasOtopark == true);
+    final bool hasKazan = (hasKazanInBuilding && (store.bolum30 != null || store.bolum13?.kazanAlan != null));
+    final bool hasOtopark = hasIntegratedOtopark;
     final bool hasTicariMutfak =
         (store.bolum34?.mutfakBacasi?.label.contains("34-4-A") == true) ||
         (store.bolum6?.hasTicari == true) ||

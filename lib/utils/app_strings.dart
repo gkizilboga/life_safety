@@ -1,5 +1,5 @@
 class AppStrings {
-  static const String appName = "BinaMuayene";
+  static const String appName = "Yangın Muayene";
   static const String stepLabel = "Adım";
   static const String completeLabel = "Tamamlandı";
   static const String nextButton = "DEVAM ET";
@@ -43,6 +43,7 @@ Kod, algoritma ve rapor şablonları 5846 sayılı FSEK kapsamında korunmaktad�
   static const String legislationTitle = "Mevzuat";
   static const String legislationSubtitle =
       "Resmi dokümanlar ve teknik rehberler";
+
 
   // QR Kod ve Tanıtım Linkleri (Market linkleri buraya gelecek)
   static const String qrDownloadUrl = "https://lifesafety.app/download"; 

@@ -216,4 +216,7 @@ class Bolum13Model {
       ]),
     );
   }
+  bool get isKazanBinada =>
+      kazanKapi == null ||
+      kazanKapi!.label != Bolum13Content.kazanOptionC.label;
 }

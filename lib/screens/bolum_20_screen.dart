@@ -306,8 +306,13 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
             if (!isTekKatli &&
                 !context.select((Bolum20Provider p) => p.hideHavalandirma)) ...[
               if (context.select((Bolum20Provider p) {
-                final hasBas = p.model.basinclandirma?.label == Bolum20Content.basYghOptionA.label;
-                final hYapi = BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? BinaStore.instance.bolum3?.hYapi ?? 0;
+                final hasBas =
+                    p.model.basinclandirma?.label ==
+                    Bolum20Content.basYghOptionA.label;
+                final hYapi =
+                    BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ??
+                    BinaStore.instance.bolum3?.hYapi ??
+                    0;
                 return hasBas || hYapi >= 51.50;
               }))
                 Padding(
@@ -325,9 +330,11 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
                   final hasBas =
                       provider.model.basinclandirma?.label ==
                       Bolum20Content.basYghOptionA.label;
-                      
-                  final hYapi = BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ?? 
-                                BinaStore.instance.bolum3?.hYapi ?? 0;
+
+                  final hYapi =
+                      BinaStore.instance.bolum4?.hesaplananYapiYuksekligi ??
+                      BinaStore.instance.bolum3?.hYapi ??
+                      0;
                   final isHighRise = hYapi >= 51.50;
 
                   final qTitle = (hasBas || isHighRise)
@@ -386,7 +393,7 @@ class _TotalDirectInputWidget extends StatelessWidget {
             ? "Bodrum Kat: Doğrudan Dışarıya Açılan Merdivenler"
             : "Doğrudan Dışarıya Açılan Merdivenler";
         String desc =
-            "Bu $total adet merdivenden kaç tanesi doğrudan dışarı (bina dışına) açılmaktadır?";
+            "Bu $total adet merdiven(ler)den kaç tanesi doğrudan dışarı (bina dışına) açılmaktadır?";
 
         return Container(
           padding: const EdgeInsets.all(16),
@@ -490,7 +497,7 @@ class _LobbyDistanceInputWidget extends StatelessWidget {
         ? "Bodrum Kat: $katIsmi Katı Tahliye Mesafesi"
         : "$katIsmi Katı Tahliye Mesafesi";
     final question =
-        "$katIsmi katında merdivenden çıkınca binanın dış kapısına ulaşmak için kaç metre yürünüyor?";
+        "$katIsmi katında merdiven(ler)den çıkınca binanın dış kapısına ulaşmak için kaç metre yürünüyor?";
 
     return Selector<Bolum20Provider, ChoiceResult?>(
       selector: (_, p) =>

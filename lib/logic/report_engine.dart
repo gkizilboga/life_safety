@@ -194,7 +194,7 @@ class ReportEngine {
     final String bLabel = b20.basinclandirma?.label ?? "";
     final bool isHighRise = hYapi >= (51.50 - 0.001);
 
-    // Kullanıcı basınçlandırma sorusunda "Var" derse (20-BAS-A) 
+    // Kullanıcı basınçlandırma sorusunda "Var" derse (20-BAS-A)
     // veya bina yüksekliği 51.5m üzerindeyse (zorunlu basınçlandırma context'i)
     // havalandırma sorusunun başına ekleme yapıyoruz.
     if (bLabel == "20-BAS-A" || isHighRise) {
@@ -344,9 +344,9 @@ class ReportEngine {
         _addDetail(
           details,
           label: 'Kapalı Otopark',
-          value: b6.hasOtopark ? 'Mevcut' : 'Yok',
+          value: b6.hasIntegratedOtopark ? 'Mevcut' : 'Yok',
           report: '',
-          isBold: b6.hasOtopark,
+          isBold: b6.hasIntegratedOtopark,
         );
         details.last['isTable'] = true;
         _addDetail(
@@ -382,7 +382,7 @@ class ReportEngine {
             level: b6.otoparkTipi!.level,
           );
         // Kapalı otopark alanı (eğer otopark varsa ve girilmişse)
-        if (b6.hasOtopark && b6.kapaliOtoparkAlani != null)
+        if (b6.hasIntegratedOtopark && b6.kapaliOtoparkAlani != null)
           _addDetail(
             details,
             label: 'Kapalı Otopark Alanı',
@@ -799,6 +799,30 @@ class ReportEngine {
           );
         }
 
+        // Giydirme Cephe Alt Soruları
+        if (b16.mantolama?.label == Bolum16Content.giydirmeOptionC.label) {
+          if (b16.giydirmeCepheMalzemesi != null) {
+            _addDetail(
+              details,
+              label: 'Giydirme cephe malzemesi nedir?',
+              value: b16.giydirmeCepheMalzemesi!.uiTitle,
+              report: b16.giydirmeCepheMalzemesi!.reportText,
+              advice: b16.giydirmeCepheMalzemesi!.adviceText,
+              level: b16.giydirmeCepheMalzemesi!.level,
+            );
+          }
+          if (b16.giydirmeYalitimMalzemesi != null) {
+            _addDetail(
+              details,
+              label: 'Giydirme cephe arkasındaki (yalıtım) malzemesi nedir?',
+              value: b16.giydirmeYalitimMalzemesi!.uiTitle,
+              report: b16.giydirmeYalitimMalzemesi!.reportText,
+              advice: b16.giydirmeYalitimMalzemesi!.adviceText,
+              level: b16.giydirmeYalitimMalzemesi!.level,
+            );
+          }
+        }
+
         if (b16.mantolama?.label.contains("16-1-A") == true) {
           double hBina = s.bolum3?.hBina ?? 0;
           if (hBina <= 28.50) {
@@ -846,20 +870,7 @@ class ReportEngine {
           }
         }
 
-        if (b16.mantolama?.label == Bolum16Content.giydirmeOptionC.label) {
-          if (b16.giydirmeBoslukYalitim != null) {
-            details.add({
-              'label': 'Cephe ile döşeme arasındaki boşluklar yalıtılmış mı?',
-              'value': b16.giydirmeBoslukYalitim == true ? "Evet" : "Hayır",
-              'report': b16.giydirmeBoslukYalitim == true
-                  ? "OLUMLU: Cephe kaplaması ile döşeme arasındaki boşluklar uygun malzemelerle yalıtılmıştır."
-                  : "KRİTİK RİSK: Cephe kaplaması ile bina döşemesi arasındaki boşluklar yalıtılmamıştır.",
-              'advice': b16.giydirmeBoslukYalitim == false
-                  ? "Cephe ile döşeme arasındaki boşluklar taşyünü gibi yanmaz malzemelerle sıkıca kapatılmalıdır."
-                  : "",
-            });
-          }
-        }
+
 
         if (b16.sagirYuzey != null) {
           _addDetail(
@@ -1519,7 +1530,6 @@ class ReportEngine {
           );
         }
 
-
         // YGH Basınçlandırma (Kullanıcıdan alınan bilgi)
         // Dinamik Basınçlandırma Analizi
         final basincReasons = evaluateBasincRequirementForStairs(store: s);
@@ -2127,15 +2137,16 @@ class ReportEngine {
           );
         }
         if (b33.yukZemin != null) {
-          final bool zeminTransfer = (b33.yukZemin == 0) && ((b33.gerekliZemin ?? 0) > 0);
+          final bool zeminTransfer =
+              (b33.yukZemin == 0) && ((b33.gerekliZemin ?? 0) > 0);
           _addDetail(
             details,
             label: 'Zemin Kat',
             value: (b33.yukZemin == 0 && !zeminTransfer)
                 ? 'Kattaki ticari alanlarla bina arasında geçiş olmadığından kullanıcı yükü hesaplanmamıştır.|-|-'
                 : zeminTransfer
-                    ? '0 (Üst/Alt katlardan tahliye geçişi)|${b33.gerekliZemin} Adet|${b33.mevcutZemin} Adet'
-                    : '${b33.yukZemin}|${b33.gerekliZemin} Adet|${b33.mevcutZemin} Adet',
+                ? '0 (Üst/Alt katlardan tahliye geçişi)|${b33.gerekliZemin} Adet|${b33.mevcutZemin} Adet'
+                : '${b33.yukZemin}|${b33.gerekliZemin} Adet|${b33.mevcutZemin} Adet',
             report: '',
             isTable: true,
           );
@@ -2457,20 +2468,45 @@ class ReportEngine {
           }
         }
 
-        // Bariyer bool alanları → critical = 0, warning = 2 (olumsuz)
+        // Bariyer ve Giydirme seviyelerini belirle
         final bariyerLevels = <RiskLevel?>[
           mantolamaLevel,
+          b?.giydirmeCepheMalzemesi?.level,
+          b?.giydirmeYalitimMalzemesi?.level,
           b?.sagirYuzey?.level,
           b?.bitisikNizam?.level,
-          if (b?.giydirmeBoslukYalitim == false) RiskLevel.critical,
-          if (b?.bariyerYan != null && b!.bariyerYan != 1) RiskLevel.critical,
-          if (b?.bariyerUst != null && b!.bariyerUst != 1) RiskLevel.critical,
-          if (b?.bariyerZemin != null && b!.bariyerZemin != 1)
-            RiskLevel.critical,
-          if (b?.sagirYuzeySprinkler == false) RiskLevel.warning,
-          // Cephe uzunluğu level
-          b?.cepheUzunlugu?.level,
         ];
+
+        // Bariyer alanları (Mantolama A durumu)
+        if (b?.mantolama?.label.contains("16-1-A") == true) {
+          final hBina = _getHBina(s);
+          final isLowRise = hBina <= 28.50;
+
+          // Yan bariyer
+          if (b?.bariyerYan == 0) {
+            bariyerLevels.add(isLowRise ? RiskLevel.warning : RiskLevel.critical);
+          } else if (b?.bariyerYan == 2) {
+            bariyerLevels.add(RiskLevel.unknown);
+          }
+
+          // Üst bariyer
+          if (b?.bariyerUst == 0) {
+            bariyerLevels.add(isLowRise ? RiskLevel.warning : RiskLevel.critical);
+          } else if (b?.bariyerUst == 2) {
+            bariyerLevels.add(RiskLevel.unknown);
+          }
+
+          // Zemin bariyer
+          if (b?.bariyerZemin == 0) {
+            bariyerLevels.add(isLowRise ? RiskLevel.warning : RiskLevel.critical);
+          } else if (b?.bariyerZemin == 2) {
+            bariyerLevels.add(RiskLevel.unknown);
+          }
+        }
+
+        if (b?.sagirYuzeySprinkler == false) bariyerLevels.add(RiskLevel.warning);
+        bariyerLevels.add(b?.cepheUzunlugu?.level);
+
         return _maxLevel(bariyerLevels);
       case 17:
         final b = s.bolum17;
@@ -2631,9 +2667,10 @@ class ReportEngine {
         ]);
       case 29:
         final b = s.bolum29;
+        final bool skipKazan = s.bolum13?.isKazanBinada == false;
         return _maxLevel([
           b?.otopark?.level,
-          b?.kazan?.level,
+          if (!skipKazan) b?.kazan?.level,
           b?.cati?.level,
           b?.asansor?.level,
           b?.jenerator?.level,
@@ -2644,6 +2681,7 @@ class ReportEngine {
           b?.siginak?.level,
         ]);
       case 30:
+        if (s.bolum13?.isKazanBinada == false) return RiskLevel.positive;
         final b = s.bolum30;
         return _maxLevel([
           b?.konum?.level,
@@ -2833,11 +2871,12 @@ class ReportEngine {
     final b16 = s.bolum16;
     if (b16 != null) {
       add(b16.mantolama);
+      add(b16.giydirmeCepheMalzemesi);
+      add(b16.giydirmeYalitimMalzemesi);
       add(b16.sagirYuzey);
       add(b16.bitisikNizam);
       add(b16.cepheUzunlugu); // corrected from cepheUzlugu
       // Hidden Risks (bools)
-      if (b16.giydirmeBoslukYalitim == false) addLevel(RiskLevel.critical);
       if (b16.bariyerYan != null && b16.bariyerYan != 1)
         addLevel(RiskLevel.critical);
       if (b16.bariyerUst != null && b16.bariyerUst != 1)
@@ -3047,8 +3086,9 @@ class ReportEngine {
     // --- BÖLÜM 29 (Hatalar) ---
     final b29 = s.bolum29;
     if (b29 != null) {
+      final bool skipKazan = s.bolum13?.isKazanBinada == false;
       add(b29.otopark);
-      add(b29.kazan);
+      if (!skipKazan) add(b29.kazan);
       add(b29.cati);
       add(b29.asansor);
       add(b29.jenerator);
@@ -3061,7 +3101,7 @@ class ReportEngine {
 
     // --- BÖLÜM 30 (Kazan) ---
     final b30 = s.bolum30;
-    if (b30 != null) {
+    if (b30 != null && s.bolum13?.isKazanBinada != false) {
       add(b30.konum);
       add(b30.kapi);
       add(b30.hava);
@@ -3871,7 +3911,7 @@ class ReportEngine {
 
     if (b13 != null) {
       // 1. Otopark
-      if (b6?.hasOtopark == true) {
+      if (b6?.hasIntegratedOtopark == true) {
         if (b13.otoparkKapi != null) {
           _addDetail(
             details,

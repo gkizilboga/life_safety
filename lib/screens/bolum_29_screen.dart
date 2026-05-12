@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../data/bina_store.dart';
 import '../../models/bolum_29_model.dart';
 import 'bolum_30_screen.dart';
+import 'bolum_31_screen.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
@@ -45,7 +46,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
       if (!_shouldShowAnyQuestion()) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Bolum30Screen()),
+          MaterialPageRoute(builder: (context) => _getNextScreen()),
         );
       }
     });
@@ -69,8 +70,9 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
     final b7 = BinaStore.instance.bolum7;
 
     setState(() {
-      _askOtopark = b6?.hasOtopark ?? false;
-      _askKazan = b7?.hasKazan ?? false;
+      _askOtopark = b6?.hasIntegratedOtopark ?? false;
+      _askKazan = (b7?.hasKazan ?? false) &&
+          (BinaStore.instance.bolum13?.isKazanBinada ?? true);
       _askCati = b7?.hasCati ?? false;
       _askAsansor =
           b7?.hasAsansor ?? false; // KRİTİK: Burası asansör varlığına bakıyor
@@ -138,7 +140,7 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
         BinaStore.instance.bolum29 = _model;
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const Bolum30Screen()),
+          MaterialPageRoute(builder: (context) => _getNextScreen()),
         );
       },
       child: Column(
@@ -281,5 +283,13 @@ class _Bolum29ScreenState extends State<Bolum29Screen> {
         ],
       ),
     );
+  }
+
+  Widget _getNextScreen() {
+    final bool skipKazan = BinaStore.instance.bolum13?.isKazanBinada == false;
+    if (skipKazan) {
+      return const Bolum31Screen();
+    }
+    return const Bolum30Screen();
   }
 }

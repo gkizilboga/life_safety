@@ -61,7 +61,7 @@ class BinaYanginRiskAnaliziApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BinaMuayene: Yangın Risk Analizi',
+      title: 'Yangın Muayene',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: AppColors.primaryBlue,
