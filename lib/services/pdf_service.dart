@@ -1131,13 +1131,43 @@ class PdfService {
               final dividerWidget = pw.Divider(thickness: 0.8, color: PdfColors.indigo100);
 
               if (itemsWidgets.isNotEmpty) {
-                sectionWidgets.add(pw.Container(child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [headerWidget, dividerWidget, itemsWidgets.first])));
-                if (itemsWidgets.length > 1) {
-                  sectionWidgets.addAll(itemsWidgets.sublist(1));
+                if (id == 10) {
+                  // Bölüm 10: Başlık ve ilk maddeyi "asla ayrılmaz" yap, geri kalanları bölünebilir bırak
+                  sectionWidgets.add(
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        headerWidget,
+                        dividerWidget,
+                        itemsWidgets.first,
+                      ],
+                    ),
+                  );
+                  if (itemsWidgets.length > 1) {
+                    sectionWidgets.addAll(itemsWidgets.sublist(1));
+                  }
+                } else {
+                  // Diğer Bölümler: Başlık ve tüm içeriği tek bir blokta topla (Eski Kural)
+                  // Eğer içerik bir sayfadan uzunsa otomatik bölünür (Overflow korumalı Column)
+                  sectionWidgets.add(
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        headerWidget,
+                        dividerWidget,
+                        ...itemsWidgets,
+                      ],
+                    ),
+                  );
                 }
               } else {
-                sectionWidgets.add(headerWidget);
-                sectionWidgets.add(dividerWidget);
+                // Veri yoksa sadece başlık ve çizgi
+                sectionWidgets.add(
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [headerWidget, dividerWidget],
+                  ),
+                );
               }
               sectionWidgets.add(pw.SizedBox(height: 8));
             }
@@ -1213,35 +1243,43 @@ class PdfService {
         ),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
+          // Giriş metni ve ilk maddeyi bir arada tut (Header ayrılmasın)
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              _buildBulletPoint(
-                "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup, KONUT ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını belirlemektedir.",
-                ttfBold,
+              pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  _buildBulletPoint(
+                    "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup, KONUT ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını belirlemektedir.",
+                    ttfBold,
+                  ),
+                  _buildBulletPoint(
+                    "Bina içerisinde ticari işletmeler (işyeri) varsa bu çalışma, ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir.",
+                    ttfBold,
+                  ),
+                  _buildBulletPoint(
+                    "Ticari işletmelerde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
+                    ttfBold,
+                  ),
+                ],
               ),
-              _buildBulletPoint(
-                "Bina içerisinde ticari işletmeler (işyeri) varsa bu çalışma, ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir.",
-                ttfBold,
-              ),
-              _buildBulletPoint(
-                "Ticari işletmelerde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
-                ttfBold,
+              pw.SizedBox(height: 8),
+              pw.Text(
+                "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
+                style: pw.TextStyle(
+                  fontSize: 9,
+                  fontWeight: pw.FontWeight.bold,
+                  color: PdfColors.blueGrey700,
+                  lineSpacing: 2.2,
+                ),
               ),
             ],
           ),
-          pw.SizedBox(height: 8),
-          pw.Text(
-            "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
-            style: pw.TextStyle(
-              fontSize: 9,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.blueGrey700,
-              lineSpacing: 2.2,
-            ),
-          ),
           pw.SizedBox(height: 20),
 
+          // Gereksinim maddelerini serbest bırak (MultiPage bölünmeye izin verir)
+          // Her bir madde (Container) zaten kendi içinde bölünmezdir.
           ...activeSystems.map((req) {
             // Redundant prefix cleaning is no longer needed
             String cleanReason = _cleanEmojis(req.reason).trim();
@@ -1360,6 +1398,7 @@ class PdfService {
     final footnoteItems = items.where((item) => (item['label'] ?? '').toString().startsWith('(*)')).toList();
     final tableItems = items.where((item) => !(item['label'] ?? '').toString().startsWith('(*)')).toList();
 
+    // --- AKILLI DİNAMİK GENİŞLİK HESABI (Multi-line ve Taşma Korumalı) ---
     int maxCols = 2;
     for (var item in tableItems) {
       final value = (item['value'] ?? '').toString();
@@ -1369,12 +1408,70 @@ class PdfService {
       }
     }
 
-    // Fixed Column Widths for alignment across split tables
-    final Map<int, pw.TableColumnWidth> columnWidths = maxCols == 2
-        ? {0: const pw.FixedColumnWidth(160), 1: const pw.FixedColumnWidth(320)}
-        : (maxCols == 3
-            ? {0: const pw.FixedColumnWidth(130), 1: const pw.FixedColumnWidth(100), 2: const pw.FixedColumnWidth(240)}
-            : {0: const pw.FixedColumnWidth(90), 1: const pw.FixedColumnWidth(125), 2: const pw.FixedColumnWidth(125), 3: const pw.FixedColumnWidth(125)});
+    final double maxPageWidth = 480.0;
+    List<double> calculatedWidths = List.filled(maxCols, 0.0);
+    final dummyDoc = pw.Document();
+    final pFont = font.getFont(pw.Context(document: dummyDoc.document));
+    final pFontBold = fontBold.getFont(pw.Context(document: dummyDoc.document));
+
+    // Yardımcı Ölçüm Fonksiyonu
+    double measure(String text, bool isBold, double size) {
+      if (text.isEmpty) return 0;
+      final f = isBold ? pFontBold : pFont;
+      double maxLineW = 0;
+      // Çok satırlı metinlerde her satırı ölç ve en genişini al
+      for (var line in text.split('\n')) {
+        final w = f.stringSize(line).x * size;
+        if (w > maxLineW) maxLineW = w;
+      }
+      return maxLineW;
+    }
+
+    // 1. Başlıkları Ölç
+    if (maxCols == 2) {
+      calculatedWidths[0] = measure(subjectLabel, true, 9) + 15;
+      calculatedWidths[1] = measure("Yanıt / Durum", true, 9) + 15;
+    } else if (maxCols == 3) {
+      calculatedWidths[0] = measure("Kat/Konum", true, 9) + 15;
+      calculatedWidths[1] = measure("Kullanım Amacı", true, 9) + 15;
+      calculatedWidths[2] = measure("Değerlendirme / Durum", true, 9) + 15;
+    }
+
+    // 2. İçerik Satırlarını Ölç
+    for (var item in tableItems) {
+      final label = (item['label'] ?? '').toString();
+      final valueRaw = (item['value'] ?? '').toString();
+      final List<String> parts = valueRaw.split('|');
+      final bool isSubHeader = label == "KAT TİPİ";
+      final bool isBold = item['isBold'] == true || isSubHeader;
+      
+      double lW = measure(label, isBold, 8.5) + 15;
+      if (lW > calculatedWidths[0]) calculatedWidths[0] = lW;
+
+      for (int i = 0; i < parts.length; i++) {
+        if (i + 1 >= maxCols) break;
+        double pW = measure(parts[i], isBold, 8.5) + 15;
+        if (pW > calculatedWidths[i + 1]) calculatedWidths[i + 1] = pW;
+      }
+    }
+
+    // 3. Güvenlik ve Hizalama Kontrolleri
+    // Etiket sütununu (Col 0) çok genişlememesi için sınırla (%45)
+    if (calculatedWidths[0] > maxPageWidth * 0.45) calculatedWidths[0] = maxPageWidth * 0.45;
+
+    double currentTotal = calculatedWidths.reduce((a, b) => a + b);
+    if (currentTotal > maxPageWidth) {
+      // Sayfa sınırını aşıyorsa orantılı küçült
+      double scale = maxPageWidth / currentTotal;
+      for (int i = 0; i < maxCols; i++) calculatedWidths[i] *= scale;
+    } else if (currentTotal < maxPageWidth) {
+      // Sayfadan darsa, son sütunu genişleterek sayfayı doldur
+      calculatedWidths[maxCols - 1] += (maxPageWidth - currentTotal);
+    }
+
+    final Map<int, pw.TableColumnWidth> columnWidths = {
+      for (int i = 0; i < maxCols; i++) i: pw.FixedColumnWidth(calculatedWidths[i])
+    };
 
     final List<pw.Widget> rows = [];
 
@@ -1409,21 +1506,8 @@ class PdfService {
         ],
       ));
     } else if (maxCols == 4) {
-      rows.add(pw.Table(
-        border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
-        columnWidths: columnWidths,
-        children: [
-          pw.TableRow(
-            decoration: const pw.BoxDecoration(color: PdfColors.indigo50),
-            children: [
-              pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text("Bölge", style: pw.TextStyle(font: fontBold, fontSize: 8.5, color: PdfColors.indigo900))),
-              pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text("Birim Yük", style: pw.TextStyle(font: fontBold, fontSize: 8.5, color: PdfColors.indigo900))),
-              pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text("Min.Gereken", style: pw.TextStyle(font: fontBold, fontSize: 8.5, color: PdfColors.indigo900))),
-              pw.Padding(padding: const pw.EdgeInsets.all(5), child: pw.Text("Mevcut Kapasite", style: pw.TextStyle(font: fontBold, fontSize: 8.5, color: PdfColors.indigo900))),
-            ],
-          ),
-        ],
-      ));
+      // Bölüm 33 için en üstteki 'Bölge | Birim Yük...' satırı gereksiz bulunduğu için kaldırıldı.
+      // Tablo doğrudan 'KAT TİPİ' satırı ile başlayacak.
     }
 
     // 2. Data Rows (Each as a separate table for splitting)

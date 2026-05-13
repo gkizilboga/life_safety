@@ -292,31 +292,33 @@ class ReportEngine {
     // Bölüm 5: Brüt Alan Girişi
     if (id == 5) {
       final b5 = s.bolum5;
+      final b3 = s.bolum3;
       if (b5 != null) {
-        if (b5.tabanAlani != null)
-          details.add({
-            'label': 'Zemin Kat Taban Alanı',
-            'value': '${InputValidator.formatArea(b5.tabanAlani!)} m²',
-            'report': '',
-          });
-        if (b5.normalKatAlani != null)
-          details.add({
-            'label': 'Normal Kat Alanı',
-            'value': '${InputValidator.formatArea(b5.normalKatAlani!)} m²',
-            'report': '',
-          });
-        if (b5.bodrumKatAlani != null)
-          details.add({
-            'label': 'Bodrum Kat Alanı',
-            'value': '${InputValidator.formatArea(b5.bodrumKatAlani!)} m²',
-            'report': '',
-          });
-        if (b5.toplamInsaatAlani != null)
-          details.add({
-            'label': 'Toplam İnşaat Alanı',
-            'value': '${InputValidator.formatArea(b5.toplamInsaatAlani!)} m²',
-            'report': '',
-          });
+        final double zemin = b5.tabanAlani ?? 0;
+        final double normal = b5.normalKatAlani ?? 0;
+        final double bodrum = b5.bodrumKatAlani ?? 0;
+        final int nKat = b3?.normalKatSayisi ?? 0;
+        final int bKat = b3?.bodrumKatSayisi ?? 0;
+
+        // Hesaplanan veya girilen toplam alanı al
+        double totalArea = b5.toplamInsaatAlani ?? 0;
+        if (totalArea <= 0) {
+          totalArea = zemin + (normal * nKat) + (bodrum * bKat);
+        }
+
+        if (b5.tabanAlani != null) {
+          _addDetail(details, label: 'Zemin Kat Taban Alanı', value: '${InputValidator.formatArea(zemin)} m²', report: '', isTable: true);
+        }
+        if (b5.normalKatAlani != null && nKat > 0) {
+          _addDetail(details, label: 'Normal Kat Alanı', value: '${InputValidator.formatArea(normal)} m²', report: '', isTable: true);
+        }
+        if (b5.bodrumKatAlani != null && bKat > 0) {
+          _addDetail(details, label: 'Bodrum Kat Alanı', value: '${InputValidator.formatArea(bodrum)} m²', report: '', isTable: true);
+        }
+
+        // Toplam İnşaat Alanını her zaman en sona ekle
+        _addDetail(details, label: 'Toplam İnşaat Alanı', value: '${InputValidator.formatArea(totalArea)} m²', report: '', isTable: true);
+
         handled = true;
       }
     }
@@ -397,7 +399,7 @@ class ReportEngine {
     if (id == 10) {
       final b10 = s.bolum10;
       if (b10 != null) {
-        // Zemin kat
+        // Zemin kat (Her zaman tekildir)
         if (b10.zemin != null) {
           details.add({
             'label': 'Zemin Kat',
@@ -405,55 +407,48 @@ class ReportEngine {
             'isTable': true,
           });
         }
-        // Bodrum katlar
-        if (b10.bodrumlar.isNotEmpty) {
-          if (b10.bodrumlarAyni && b10.bodrumlar[0] != null) {
-            final int len = b10.bodrumlar.length;
+
+        // Akıllı Gruplama Fonksiyonu
+        void addGroupedFloors(List<ChoiceResult?> floors, String baseName) {
+          if (floors.isEmpty) return;
+          int start = 0;
+          while (start < floors.length) {
+            if (floors[start] == null) {
+              start++;
+              continue;
+            }
+            int end = start;
+            // Ardışık aynı kullanımları bul
+            while (end + 1 < floors.length &&
+                floors[end + 1]?.label == floors[start]?.label) {
+              end++;
+            }
+
+            String labelText;
+            if (start == end) {
+              labelText = "${start + 1}. $baseName";
+            } else {
+              labelText = "${start + 1}. - ${end + 1}. ${baseName}lar";
+            }
+
             details.add({
-              'label': len == 1 ? 'Bodrum Kat' : '1. - $len. Bodrum Katlar',
+              'label': labelText,
               'value':
-                  "${b10.bodrumlar[0]!.uiTitle} | ${b10.bodrumlar[0]!.reportText}",
+                  "${floors[start]!.uiTitle} | ${floors[start]!.reportText}",
               'isTable': true,
             });
-          } else {
-            for (int i = 0; i < b10.bodrumlar.length; i++) {
-              if (b10.bodrumlar[i] != null) {
-                details.add({
-                  'label': b10.bodrumlar.length == 1
-                      ? 'Bodrum Kat'
-                      : '${i + 1}. Bodrum Kat',
-                  'value':
-                      "${b10.bodrumlar[i]!.uiTitle} | ${b10.bodrumlar[i]!.reportText}",
-                  'isTable': true,
-                });
-              }
-            }
+            start = end + 1;
           }
         }
-        // Normal katlar
+
+        // Bodrum katlar (Ardışık aynı olanları grupla)
+        if (b10.bodrumlar.isNotEmpty) {
+          addGroupedFloors(b10.bodrumlar, "Bodrum Kat");
+        }
+
+        // Normal katlar (Ardışık aynı olanları grupla)
         if (b10.normaller.isNotEmpty) {
-          if (b10.normallerAyni && b10.normaller[0] != null) {
-            final int len = b10.normaller.length;
-            details.add({
-              'label': len == 1 ? 'Normal Kat' : '1. - $len. Normal Katlar',
-              'value':
-                  "${b10.normaller[0]!.uiTitle} | ${b10.normaller[0]!.reportText}",
-              'isTable': true,
-            });
-          } else {
-            for (int i = 0; i < b10.normaller.length; i++) {
-              if (b10.normaller[i] != null) {
-                details.add({
-                  'label': b10.normaller.length == 1
-                      ? 'Normal Kat'
-                      : '${i + 1}. Normal Kat',
-                  'value':
-                      "${b10.normaller[i]!.uiTitle} | ${b10.normaller[i]!.reportText}",
-                  'isTable': true,
-                });
-              }
-            }
-          }
+          addGroupedFloors(b10.normaller, "Normal Kat");
         }
         handled = true;
       }
@@ -2187,14 +2182,6 @@ class ReportEngine {
               details,
               label:
                   '(*) 1 adet dışarı çıkış kapısı genişliği (min.): 0.90 m (90 cm) olarak kabul edilmiştir.',
-              value: '',
-              report: '',
-              isTable: true,
-            );
-            _addDetail(
-              details,
-              label:
-                  '(*) Kullanıcı yükü 1500 kişiyi aştığından, gereken çıkış adedi BYKHY Madde 33 uyarınca genişlik bazlı formül ile hesaplanmıştır: Toplam Genişlik = Kişi Sayısı × 0.5 / 60 (merdivenler) veya × 0.5 / 100 (direkt çıkış kapıları). Çıkış adedi = Toplam Genişlik / Asgari Kaçış Yolu Genişliği.',
               value: '',
               report: '',
               isTable: true,

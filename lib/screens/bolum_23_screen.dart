@@ -76,8 +76,10 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
     if (_model.konum == null) return false;
     if (_model.levha == null) return false;
     if (_model.havalandirma == null) return false;
-    if (_model.havalandirma?.label == Bolum23Content.havalandirmaOptionB.label ||
-        _model.havalandirma?.label == Bolum23Content.havalandirmaOptionC.label) {
+    if (_model.havalandirma?.label ==
+            Bolum23Content.havalandirmaOptionB.label ||
+        _model.havalandirma?.label ==
+            Bolum23Content.havalandirmaOptionC.label) {
       if (_model.basinc == null) return false;
     }
     return true;
@@ -146,7 +148,7 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
           ),
 
           _buildSoru(
-            "Asansör kuyusunun tepesinde havalandırma penceresi var mı?",
+            "Normal asansör kuyusunun tepesinde havalandırma penceresi var mı?",
             'havalandirma',
             [
               Bolum23Content.havalandirmaOptionA,
@@ -156,8 +158,10 @@ class _Bolum23ScreenState extends State<Bolum23Screen> {
             _model.havalandirma,
           ),
 
-          if (_model.havalandirma?.label == Bolum23Content.havalandirmaOptionB.label ||
-              _model.havalandirma?.label == Bolum23Content.havalandirmaOptionC.label)
+          if (_model.havalandirma?.label ==
+                  Bolum23Content.havalandirmaOptionB.label ||
+              _model.havalandirma?.label ==
+                  Bolum23Content.havalandirmaOptionC.label)
             _buildSoru(
               "Normal asansör kuyusunda basınçlandırma sistemi var mı?",
               'basinc',

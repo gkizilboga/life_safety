@@ -3,6 +3,7 @@ import '../models/active_system_requirement.dart';
 import '../models/bolum_6_model.dart';
 import '../models/bolum_35_model.dart';
 import '../utils/app_content.dart';
+import '../utils/input_validator.dart';
 
 class ActiveSystemsEngine {
   static List<ActiveSystemRequirement> calculateRequirements(BinaStore store) {
@@ -21,7 +22,19 @@ class ActiveSystemsEngine {
     final hBina =
         store.bolum4?.hesaplananBinaYuksekligi ?? store.bolum3?.hBina ?? 0;
     final tabanAlani = store.bolum5?.tabanAlani ?? 0;
-    final toplamInsaat = store.bolum5?.toplamInsaatAlani ?? 0;
+    double toplamInsaat = store.bolum5?.toplamInsaatAlani ?? 0;
+
+    // Fallback calculation: If the total area field is missing or zero, calculate it from floor data
+    if (toplamInsaat <= 0 && store.bolum5 != null) {
+      final b3 = store.bolum3;
+      final b5 = store.bolum5!;
+      final double zemin = b5.tabanAlani ?? 0;
+      final double normal = b5.normalKatAlani ?? 0;
+      final double bodrum = b5.bodrumKatAlani ?? 0;
+      final int nKat = b3?.normalKatSayisi ?? 0;
+      final int bKat = b3?.bodrumKatSayisi ?? 0;
+      toplamInsaat = zemin + (normal * nKat) + (bodrum * bKat);
+    }
 
     final yukToplam =
         (store.bolum33?.yukZemin ?? 0) +
@@ -682,7 +695,7 @@ class ActiveSystemsEngine {
         isMandatory: true,
         reason: "Her yapıda zorunludur.",
         note:
-            "Toplam İnşaat Alanı ($toplamInsaat m²) hesabına göre binada en az ${neededExtinguishers.toInt()} adet 6kg Kuru Kimyevi Tozlu (KKT) Yangın Söndürme Cihazı bulunmalıdır.",
+            "Toplam İnşaat Alanı (${InputValidator.formatArea(toplamInsaat)} m²) hesabına göre binada en az ${neededExtinguishers.toInt()} adet 6kg Kuru Kimyevi Tozlu (KKT) Yangın Söndürme Cihazı bulunmalıdır.",
       ),
     );
 
