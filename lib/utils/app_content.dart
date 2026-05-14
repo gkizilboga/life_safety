@@ -139,17 +139,17 @@ class Bolum5Content {
 
   static final normalKatAlani = ChoiceResult(
     label: "5-2 (Normal)",
-    uiTitle: "Normal (Zemin Üstü) Kat Alanı",
+    uiTitle: "Bir Normal Kat Alanı (Zemin Üstü)",
     uiSubtitle: "",
-    reportText: "Normal (Zemin Üstü) Kat Alanı:",
+    reportText: "Bir Normal Kat Alanı (Zemin Üstü):",
     level: RiskLevel.info,
   );
 
   static final bodrumKatAlani = ChoiceResult(
     label: "5-3 (Bodrum)",
-    uiTitle: "Bodrum (Zemin Altı) Kat Alanı",
+    uiTitle: "Bir Bodrum Kat Alanı (Zemin Altı)",
     uiSubtitle: "",
-    reportText: "Bodrum (Zemin Altı) Kat Alanı:",
+    reportText: "Bir Bodrum Kat Alanı (Zemin Altı):",
     level: RiskLevel.info,
   );
 
