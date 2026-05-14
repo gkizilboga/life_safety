@@ -555,6 +555,73 @@ class PdfService {
     ];
   }
 
+  // --- KAPSAM VE SIK SORULAN SORULAR SAYFASI ---
+  // Risk Analizi ve Aktif Sistem PDF'lerinde ortak kullanılır.
+  static pw.Page _buildFaqPage({
+    required pw.PageTheme pageTheme,
+    required pw.Font ttf,
+    required pw.Font ttfBold,
+    required String docNo,
+    required String headerTitle,
+    required List<Map<String, String>> faqs,
+  }) {
+    const navyBlue = PdfColor.fromInt(0xFF1a365d);
+    const lightBlue = PdfColor.fromInt(0xFFe8eef7);
+
+    return pw.Page(
+      pageTheme: pageTheme,
+      build: (context) {
+        return pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            // Sayfa Başlığı
+            pw.Container(
+              width: double.infinity,
+              padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: const pw.BoxDecoration(color: navyBlue),
+              child: pw.Text(
+                "KAPSAM VE SIK SORULAN SORULAR",
+                style: pw.TextStyle(font: ttfBold, fontSize: 13, color: PdfColors.white, letterSpacing: 0.5),
+              ),
+            ),
+            pw.SizedBox(height: 16),
+            // SSS Kartları
+            ...faqs.map((faq) => pw.Container(
+              margin: const pw.EdgeInsets.only(bottom: 12),
+              decoration: pw.BoxDecoration(
+                border: pw.Border(left: const pw.BorderSide(color: navyBlue, width: 3)),
+                color: PdfColors.white,
+              ),
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  // Soru
+                  pw.Container(
+                    width: double.infinity,
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    color: lightBlue,
+                    child: pw.Text(
+                      faq['q'] ?? '',
+                      style: pw.TextStyle(font: ttfBold, fontSize: 10, color: navyBlue),
+                    ),
+                  ),
+                  // Cevap
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.fromLTRB(10, 6, 10, 8),
+                    child: pw.Text(
+                      faq['a'] ?? '',
+                      style: pw.TextStyle(font: ttf, fontSize: 9, color: PdfColors.grey800, lineSpacing: 2.0),
+                    ),
+                  ),
+                ],
+              ),
+            )),
+          ],
+        );
+      },
+    );
+  }
+
   static pw.Page _buildLegalPage(
     pw.PageTheme pageTheme,
     pw.Font font,
@@ -937,7 +1004,42 @@ class PdfService {
       pdf.addPage(page);
     }
 
-    // 3. Risk Analizi ve Bölümler
+    // 3. Kapsam ve Sık Sorulan Sorular
+    pdf.addPage(_buildFaqPage(
+      pageTheme: pageTheme,
+      ttf: ttf,
+      ttfBold: ttfBold,
+      docNo: docNo,
+      headerTitle: "YANGIN RİSK ANALİZİ",
+      faqs: [
+        {
+          'q': 'Hangi binalar için uygundur?',
+          'a': 'Bu çalışma yalnızca 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binanın merdivenleri, kaçış yolları ve kapıları gibi yapısal (mimari) özelliklerine odaklanır.',
+        },
+        {
+          'q': 'İş yerleri için geçerli mi?',
+          'a': 'Bina altındaki dükkan veya ofisler bu kapsamın dışındadır. Ticari işletmelerin yangın güvenliği ve ruhsat süreçleri için özel bir mühendislik incelemesi yaptırılmalıdır.',
+        },
+        {
+          'q': 'Sistem gereksinimleri hakkında ne bilinmeli?',
+          'a': 'Bu analiz yalnızca binanın fiziksel (mimari) yapısını inceler. Alarm, söndürme ve duman tahliye sistemleri için bu uygulamadaki "Aktif Sistem Gereksinimleri" çalışmasını da incelemenizi öneririz.',
+        },
+        {
+          'q': 'Puanlama sistemi ne anlama gelir?',
+          'a': 'Raporunuzdaki kırmızı (Kritik Risk), sarı (Uyarı) ve yeşil (Olumlu) renkler, o konudaki risk seviyesini gösterir. Puanlar yalnızca bu uygulama içindeki göreli değerlendirmedir; herhangi bir resmi belge veya sertifika niteliği taşımaz.',
+        },
+        {
+          'q': 'Bu belgenin geçerlilik süresi var mı?',
+          'a': 'Binanızda yapılan tadilat veya değişiklikler sonucunda analizin güncellenmesi önerilir. Belge, üretildiği tarihteki beyan edilen bilgilere dayanır.',
+        },
+        {
+          'q': 'Önemli Uyarı',
+          'a': 'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Tam kapsamlı bir güvenlik analizi için yetkin bir Yangın Mühendisi tarafından yerinde inceleme yapılması şarttır.',
+        },
+      ],
+    ));
+
+    // 4. Risk Analizi ve Bölümler
     pdf.addPage(
       pw.MultiPage(
         maxPages: 2000,
@@ -1229,6 +1331,37 @@ class PdfService {
     final now = DateTime.now();
     final docNo =
         "LS-ASG-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
+
+    // 2. Kapsam ve Sık Sorulan Sorular
+    pdf.addPage(_buildFaqPage(
+      pageTheme: pageTheme,
+      ttf: ttf,
+      ttfBold: ttfBold,
+      docNo: docNo,
+      headerTitle: "AKTİF SİSTEM GEREKSİNİMLERİ",
+      faqs: [
+        {
+          'q': 'Hangi binalar için uygundur?',
+          'a': 'Bu çalışma yalnızca 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerlidir. KONUT ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını belirlemektedir.',
+        },
+        {
+          'q': 'İş yerleri için geçerli mi?',
+          'a': 'Bina içerisindeki ticari işletmeler (işyeri) bu kapsamın dışındadır. Ticari işletmelerde alınacak yangın güvenlik tedbirleri ve ilgili ruhsat süreçleri hususi olarak değerlendirilmelidir.',
+        },
+        {
+          'q': 'Bu belge mimari analizi de kapsar mı?',
+          'a': 'Bu çalışma yalnızca binanın ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını (alarm, söndürme, duman tahliyesi vb.) ele alır. Mimari (yapısal) risk analizi için uygulamadaki "Yangın Risk Analizi" çalışmasını da incelemenizi öneririz.',
+        },
+        {
+          'q': 'Puanlama sistemi ne anlama gelir?',
+          'a': 'Listenizdeki kırmızı (Zorunlu) ve sarı (Önerilen) ifadeler, sistemin binanızdaki gerekliliğini gösterir. Bu değerlendirme yalnızca uygulama içindeki göreli bir öneri niteliği taşır; resmi belge veya sertifika yerine geçmez.',
+        },
+        {
+          'q': 'Önemli Uyarı',
+          'a': 'Bu uygulama bir "ön değerlendirme" aracıdır. Sistem gereksinimlerinin kesin tespiti için yetkin bir Yangın Mühendisi tarafından binanın teknik projesi ve sahası üzerinde detaylı inceleme yapılması şarttır.',
+        },
+      ],
+    ));
 
     // 3. Aktif Sistem Listesi
     pdf.addPage(
