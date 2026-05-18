@@ -658,42 +658,42 @@ class PdfService {
         'title': '1. Önlemler & Hazırlık',
         'color': PdfColor.fromInt(0xFF1B5E20), // Dark Green
         'items': [
-          'Duman Dedektörü: Evinize duman dedektörü takın.',
-          'Yangın Söndürücü: Evinizde küçük bir yangın söndürme tüpü bulundurmanız hayat kurtarır. Eğer yoksa, kat koridorunuzdaki büyük yangın tüplerinin ve dolaplarının tam yerini önceden mutlaka öğrenin.',
-          'Çıkış Kapıları: Binanızdaki elektrikli veya şifreli kapıların elektrik kesildiğinde otomatik açıldığını yönetimden teyit edin.',
-          'Kaçış Planı: Ailenizle kaçış planı yapın. Dış kapı anahtarlarını kapı yakınında sabit bir yerde tutun.',
+          'Duman Dedektörü: Evinize <b>duman dedektörü</b> takın.',
+          'Yangın Söndürücü: Evinizde <b>küçük bir yangın söndürme tüpü</b> bulundurmanız hayat kurtarır. Eğer yoksa, kat koridorunuzdaki <b>büyük yangın tüplerinin ve dolaplarının yerini</b> önceden mutlaka öğrenin ve kullanım talimatlarını okuyun.',
+          'Çıkış Kapıları: Binanızdaki <b>elektrikli veya şifreli kapıların</b> elektrik kesildiğinde <b>otomatik açıldığını</b> yönetimden teyit edin.',
+          'Kaçış Planı: Ailenizle <b>kaçış planı</b> yapın. Dış kapı anahtarlarını kapı yakınında <b>sabit bir yerde</b> tutun.',
         ],
       },
       {
         'title': '2. Yangın Anında Ne Yapmalı?',
         'color': PdfColor.fromInt(0xFFE65100), // Dark Orange
         'items': [
-          'Müdahale veya Çıkış: Yangın çok küçükse (başlangıç aşamasında) tüp/battaniye ile müdahale edin. Ateş büyümüşse eşyaları bırakıp hemen dışarı çıkın.',
-          'Eğilin: Dumandan korunmak için emekleyerek veya yere yakın ilerleyin.',
-          'Kapıları Kapatın: Çıkarken arkanızdan geçtiğiniz tüm kapıları kapatın.',
-          'Asansör Yasağı: Sadece yangın merdivenini veya normal merdivenleri kullanın; asansörü KULLANMAYIN.',
-          '112\'yi Arayın: Güvenli bir yere ulaştığınızda 112\'yi arayıp itfaiye isteyin.',
+          'Müdahale veya Çıkış: Yangın çok küçükse (başlangıç aşamasında) tüp/battaniye ile müdahale edin. <b>Ateş büyümüşse eşyaları bırakıp hemen dışarı çıkın!</b>',
+          'Eğilin: Dumandan korunmak için <b>emekleyerek veya yere yakın</b> ilerleyin.',
+          'Kapıları Kapatın: Çıkarken arkanızdan geçtiğiniz <b>tüm kapıları kapatın</b> (yangının yayılmasını yavaşlatır).',
+          'Asansör Yasağı: Sadece yangın merdivenini veya normal merdivenleri kullanın; <b>asansörü KESİNLİKLE KULLANMAYIN.</b>',
+          '112\'yi Arayın: Güvenli bir yere ulaştığınızda <b>hemen 112\'yi arayıp</b> itfaiye isteyin.',
         ],
       },
       {
         'title': '3. Evde Mahsur Kalırsanız',
         'color': PdfColor.fromInt(0xFFB71C1C), // Dark Red
         'items': [
-          'Odaya Sığının: Pencereli ve dışarıya/caddeye bakan bir odaya geçip kapıyı kapatın.',
-          'Dumanı Kesin: Kapı altlarını ve kenarlarını ıslak havlu veya bez ile sıkıca tıkayın.',
-          'Yardım İsteyin: Pencereden dikkat çekin, 112\'ye bulunduğunuz odanın tam yerini bildirin.',
+          'Odaya Sığının: Pencereli ve dışarıya/caddeye bakan bir odaya geçip <b>kapıyı kapatın</b>.',
+          'Dumanı Kesin: Kapı altlarını ve kenarlarını <b>ıslak havlu veya bez</b> ile sıkıca tıkayın.',
+          'Yardım İsteyin: Pencereden dikkat çekin, 112\'ye bulunduğunuz odanın <b>tam yerini (kat/oda)</b> bildirin.',
         ],
       },
       {
         'title': '4. Yangın Tipleri & Söndürme Yöntemleri',
         'color': PdfColor.fromInt(0xFF0D47A1), // Dark Blue
         'items': [
-          'Katı: Su dökerek soğutun veya yangın tüpü kullanın.',
-          'Sıvı: KESİNLİKLE SU DÖKMEYİN (alevleri yayar). Üzerini kum, toprak veya nemli örtüyle kapatarak havayı kesin ya da yangın tüpü kullanın.',
-          'Mutfak Yağı (Tava): KESİNLİKLE SU DÖKMEYİN! Ateşin üstünü metal kapak, yangın battaniyesi veya sıkıca sıkılmış nemli büyük bir havlu ile tamamen kapatıp ocağı söndürün.',
-          'Gaz: Gazı kapatmadan alevi SÖNDÜRMEYİN (patlar). Önce vanayı kapatın, alev kendiliğinden sönecektir.',
-          'Elektrik: KESİNLİKLE SU DÖKMEYİN (çarpılırsınız). Önce şalteri indirin, sadece kuru kimyevi toz veya CO2 söndürücü kullanın.',
-          'E-Bisiklet: Şarjı gözetimsiz/uyurken yapmayın. Koridoru kapatmayın. Batarya yangınlarına asla suyla veya normal tüple müdahale edilemez, hemen kaçıp 112\'yi arayın.',
+          'Katı (Ahşap, Tekstil, Kağıt): <b>Su dökerek soğutun</b> veya yangın tüpü kullanın.',
+          'Sıvı (Kolonya, Alkol, Tiner, Benzin): <b>KESİNLİKLE SU DÖKMEYİN</b> (alevleri yayar). Üzerini kum, toprak veya nemli örtüyle kapatarak havayı kesin ya da yangın tüpü kullanın.',
+          'Mutfak Yağı (Tava Yangınları): <b>KESİNLİKLE SU DÖKMEYİN!</b> Ateşin üstünü metal kapak, yangın battaniyesi veya <b>sıkıca sıkılmış nemli büyük bir havlu</b> ile tamamen kapatıp ocağı söndürün.',
+          'Gaz (Tüp, LPG, Doğalgaz): <b>Gazı kapatmadan alevi SÖNDÜRMEYİN</b> (gaz birikir ve patlar). Önce mutlaka vanayı kapatın, alev kendiliğinden sönecektir.',
+          'Elektrik (Priz, Cihaz, Kablo): <b>KESİNLİKLE SU DÖKMEYİN!</b> Önce <b>şalteri indirin</b>, sadece kuru kimyevi toz (KKT) veya CO2 söndürücü kullanın.',
+          'E-Bisiklet / E-Scooter: Evde yoksanız veya uyuyorsanız <b>şarj ETMEYİN</b>. Kaçış yolunu (koridor) kapatmayın. Batarya yangınlarına <b>asla suyla veya normal tüple müdahale etmeyin, söndürülemez!</b> Hemen kaçıp 112\'yi arayın.',
         ],
       },
     ];
@@ -766,6 +766,53 @@ class PdfService {
         );
       },
     );
+  }
+
+  static List<pw.InlineSpan> _buildPdfLifeSavingRichSpans(
+    String text,
+    pw.Font font,
+    pw.Font fontBold,
+    PdfColor titleColor,
+  ) {
+    final List<pw.InlineSpan> spans = [];
+    final RegExp regExp = RegExp(r'<b>(.*?)</b>', dotAll: true);
+    final matches = regExp.allMatches(text);
+
+    if (matches.isEmpty) {
+      spans.add(pw.TextSpan(text: text));
+      return spans;
+    }
+
+    int lastMatchEnd = 0;
+    for (final match in matches) {
+      if (match.start > lastMatchEnd) {
+        spans.add(pw.TextSpan(text: text.substring(lastMatchEnd, match.start)));
+      }
+      final String groupVal = match.group(1) ?? '';
+      final bool isWarningText = groupVal.contains('SU DÖKMEYİN') || 
+                                 groupVal.contains('SÖNDÜRMEYİN') || 
+                                 groupVal.contains('şarj etmeyin') ||
+                                 groupVal.contains('şarj ETMEYİN') ||
+                                 groupVal.contains('KULLANMAYIN') ||
+                                 groupVal.contains('müdahale etmeyin');
+      
+      spans.add(
+        pw.TextSpan(
+          text: groupVal,
+          style: pw.TextStyle(
+            font: fontBold,
+            color: isWarningText ? PdfColors.red800 : titleColor,
+          ),
+        ),
+      );
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < text.length) {
+      spans.add(pw.TextSpan(text: text.substring(lastMatchEnd)));
+    }
+
+    return spans;
   }
 
   static pw.Widget _buildPdfSectionBox(
@@ -844,7 +891,7 @@ class PdfService {
                                   text: "$boldPart: ",
                                   style: pw.TextStyle(font: fontBold),
                                 ),
-                              pw.TextSpan(text: normalPart),
+                              ..._buildPdfLifeSavingRichSpans(normalPart, font, fontBold, titleColor),
                             ],
                           ),
                         ),
