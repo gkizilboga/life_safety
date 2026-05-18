@@ -6,32 +6,32 @@ class UserGuideScreen extends StatelessWidget {
 
   static const List<Map<String, String>> guideFaqs = [
     {
-      'q': 'Bu Uygulamayı Nasıl Kullanmalıyım?',
+      'q': 'Bu uygulamayı nasıl kullanmalıyım?',
       'a':
           'Uygulama, binanızın yangın güvenliği durumunu <b>adım adım analiz etmenizi</b> sağlar. Karşınıza çıkan soruları yanıtlarken, binanızın mevcut durumunu (örneğin <b>merdiven genişlikleri</b>, <b>kapı yönleri</b>, <b>yangın dolaplarının varlığı</b> vb.) göz önünde bulundurmalısınız. Yanıtlarınızı verirken olabildiğince <b>dürüst ve objektif</b> olmanız, risk analizinin doğruluğu için çok önemlidir.',
     },
     {
-      'q': 'Soruların Yanıtlarını Bilmiyorsam Ne Yapmalıyım?',
+      'q': 'Soruların yanıtlarını bilmiyorsam ne yapmalıyım?',
       'a':
           'Bazı teknik detayları (örneğin yangın merdiveninin basınçlandırılması, yangın algılama sisteminin özellikleri) bilmiyor olabilirsiniz. Bu durumda, soruların altındaki <b>"Emin Değilim"</b> veya <b>"Bilmiyorum"</b> seçeneklerini kullanabilirsiniz. Ancak en doğru sonuç için binanızın <b>apartman veya site yöneticisine</b>, <b>güvenlik görevlilerine</b> veya <b>teknik personeline</b> danışarak doğru bilgileri öğrenmeniz tavsiye edilir.',
     },
     {
-      'q': 'Hiçbir Bilgim Yoksa Testi Başkasına Çözdürebilir miyim?',
+      'q': 'Hiçbir bilgim yoksa testi başkasına çözdürebilir miyim?',
       'a':
           'Evet! Eğer binanızın mimari veya teknik detaylarına hakim değilseniz, uygulamayı binanızın <b>yönetim kuruluna</b>, <b>site müdürüne</b> veya binanızdaki <b>teknik personele</b> önerebilirsiniz. Kendi dairenize ait analizleri yapmak yerine, yetkili kişilerin bu uygulamayı kullanarak tüm bina için ortak bir analiz yapmasını sağlayabilirsiniz. Dilerseniz, ana ekrandaki <b>"Paylaşım ve Transfer"</b> bölümünden yarım kalmış analizi dosya olarak <b>dışa aktarıp (export)</b> yöneticinize gönderebilirsiniz. Onlar kendi telefonlarına bu dosyayı <b>içe aktararak (import)</b> analizi kaldığı yerden tamamlayabilirler!',
     },
     {
-      'q': 'Promo Kod "Al" ve "Gönder" Ne Anlama Gelir?',
+      'q': 'Promo kod "Al" ve "Gönder" ne anlama gelir?',
       'a':
           'Ana ekranda yer alan <b>"Promosyon İşlemleri"</b> bölümündeki bu iki buton, analizinizi başkalarıyla paylaşmanın ve transfer etmenin en kolay yoludur:\n\n• <b>Promo Kod Gönder:</b> Kendi telefonunuzda başlattığınız veya tamamladığınız bir analizi, binanızdaki başka bir komşunuza veya yöneticinize aktarmak için bir paylaşım kodu oluşturur. Bu kodu gönderdiğiniz kişi analizinizi kendi telefonuna yükleyebilir.\n\n• <b>Promo Kod Al:</b> Yöneticinizden veya başka bir komşunuzdan aldığınız promosyon kodunu buraya girerek, onların başlattığı analizi ve tüm yanıtları kendi telefonunuza anında yükleyebilir, kaldığı yerden devam ettirebilirsiniz.',
     },
     {
-      'q': 'Uygulamadaki Puanlar ve Renk Kodları Ne Anlama Geliyor?',
+      'q': 'Uygulamadaki puanlar ve renk kodları ne anlama geliyor?',
       'a':
           'Dokümanınızdaki veya soru ekranlarındaki renkler risk düzeyini belirtir:\n\n• <b>Kritik Risk (Kırmızı):</b> Yönetmeliğe aykırı olan ve acilen düzeltilmesi gereken can güvenliği açıklarını temsil eder.\n\n• <b>Uyarı (Sarı):</b> İyileştirilmesi gereken hususları gösterir.\n\n• <b>Olumlu (Yeşil):</b> Yönetmeliğe tam uyumlu, güvenli alanları ifade eder.',
     },
     {
-      'q': 'Sonuç Dokümanını (PDF) Ne Yapmalıyım?',
+      'q': 'Sonuç dokümanını (PDF) ne yapmalıyım?',
       'a':
           'Tüm soruları yanıtladıktan sonra uygulama size detaylı bir <b>PDF dokümanı</b> sunar. Bu dokümanı telefonunuza indirebilir ve binanızın <b>WhatsApp veya Telegram</b> grubunda komşularınızla paylaşabilir, veya <b>site yönetimine sunarak</b> binanızdaki olası yangın risklerinin giderilmesi için bir <b>farkındalık ve aksiyon</b> başlatabilirsiniz.',
     },
