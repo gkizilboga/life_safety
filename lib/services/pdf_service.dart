@@ -1060,7 +1060,7 @@ class PdfService {
           {
             'q': 'Önemli Uyarı',
             'a':
-                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksizsiz analiz için binanın, yetkin bir Yangın Mühendisi tarafından proje üzerinde veya yerinde incelenmesi şarttır.',
+                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksizsiz analiz için binanın, yetkin bir Yangın Mühendisi tarafından proje üzerinde ve yerinde incelenmesi şarttır.',
           },
         ],
       ),
@@ -1339,7 +1339,6 @@ class PdfService {
                   );
                 }
               }
-
 
               final headerWidget = pw.Container(
                 margin: const pw.EdgeInsets.only(top: 10, bottom: 4),
