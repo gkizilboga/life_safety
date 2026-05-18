@@ -16,37 +16,7 @@ class PdfService {
   // Defined once here and used by both _buildHighlightedText and _buildRichText.
   static const _highlightKeywords = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
 
-  static pw.Widget _buildBulletPoint(String text, pw.Font font) {
-    return pw.Padding(
-      padding: const pw.EdgeInsets.only(bottom: 2),
-      child: pw.Row(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Container(
-            margin: const pw.EdgeInsets.only(top: 2, right: 6),
-            width: 3,
-            height: 3,
-            decoration: const pw.BoxDecoration(
-              color: PdfColors.blueGrey700,
-              shape: pw.BoxShape.circle,
-            ),
-          ),
-          pw.Expanded(
-            child: pw.Text(
-              text,
-              style: pw.TextStyle(
-                font: font,
-                fontSize: 9,
-                fontWeight: pw.FontWeight.bold,
-                color: PdfColors.blueGrey700,
-                lineSpacing: 2.0,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   static pw.Widget _buildLegendItem(PdfColor color, String label, String desc) {
     return pw.Row(
@@ -1338,34 +1308,12 @@ class PdfService {
         build: (context) => [
           pw.SizedBox(height: 12),
           pw.Text(
-            "DEĞERLENDİRME NOTLARI",
+            "RENK KODLARI VE ANLAMLARI",
             style: pw.TextStyle(
               font: ttfBold,
               fontSize: 13,
               color: PdfColor.fromInt(0xFF1a365d),
             ),
-          ),
-          pw.SizedBox(height: 12),
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              _buildBulletPoint(
-                "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup, konut ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) MİMARİ yangın güvenliği ihtiyaçlarına odaklanmaktadır.",
-                ttfBold,
-              ),
-              _buildBulletPoint(
-                "Bina içerisinde ticari işletme (işyeri) varsa bu çalışma, ticari işletmeye ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir. Ticari işletmelerde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
-                ttfBold,
-              ),
-              _buildBulletPoint(
-                "Bu dokümanda, binanın mimari özellikleri analiz edilmekte olup, elektromekanik yangın güvenliği ihtiyaçlarıyla ilgili yine bu Uygulama'da sunulan 'Aktif Sistem Gereksinimleri' çalışmasını da telefonunuza indirmeniz önerilir.",
-                ttfBold,
-              ),
-              _buildBulletPoint(
-                "Bu analiz, bir binanın yangın risklerinin %100'ünü tespit etmez; yalnızca kullanıcının yanıtlayabileceği ve bu yanıtlara göre uygulama tarafından değerlendirilebilecek başlıkları içerir. Mevcut binada yalnızca sahada veya proje üzerinde yapılabilecek detaylı incelemeler bu uygulamada yer almayabilir. Tam kapsamlı bir risk analizi için yetkin bir Yangın Mühendisi'nin binaya özgü çalışma yapması şarttır.",
-                ttfBold,
-              ),
-            ],
           ),
           pw.SizedBox(height: 8),
           pw.Text(
@@ -1773,24 +1721,7 @@ class PdfService {
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  _buildBulletPoint(
-                    "Bu çalışma yalnızca 19.12.2007 ve sonrasında yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerli olup, KONUT ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını belirlemektedir.",
-                    ttfBold,
-                  ),
-                  _buildBulletPoint(
-                    "Bina içerisinde ticari işletmeler (işyeri) varsa bu çalışma, ticari işletmelere ait işyeri açma ve çalışma ruhsatı süreçleriyle ilişkilendirilmemelidir.",
-                    ttfBold,
-                  ),
-                  _buildBulletPoint(
-                    "Ticari işletmelerde alınacak yangın güvenlik tedbirleri hususi olarak değerlendirilmelidir.",
-                    ttfBold,
-                  ),
-                ],
-              ),
-              pw.SizedBox(height: 8),
+
               pw.Text(
                 "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
                 style: pw.TextStyle(
