@@ -28,12 +28,12 @@ class UserGuideScreen extends StatelessWidget {
     {
       'q': 'Uygulamadaki Puanlar ve Renk Kodları Ne Anlama Geliyor?',
       'a':
-          'Raporunuzdaki veya soru ekranlarındaki renkler risk düzeyini belirtir:\n\n• <b>Kritik Risk (Kırmızı):</b> Yönetmeliğe aykırı olan ve acilen düzeltilmesi gereken can güvenliği açıklarını temsil eder.\n\n• <b>Uyarı (Sarı):</b> İyileştirilmesi gereken hususları gösterir.\n\n• <b>Olumlu (Yeşil):</b> Yönetmeliğe tam uyumlu, güvenli alanları ifade eder.',
+          'Dokümanınızdaki veya soru ekranlarındaki renkler risk düzeyini belirtir:\n\n• <b>Kritik Risk (Kırmızı):</b> Yönetmeliğe aykırı olan ve acilen düzeltilmesi gereken can güvenliği açıklarını temsil eder.\n\n• <b>Uyarı (Sarı):</b> İyileştirilmesi gereken hususları gösterir.\n\n• <b>Olumlu (Yeşil):</b> Yönetmeliğe tam uyumlu, güvenli alanları ifade eder.',
     },
     {
-      'q': 'Sonuç Raporunu (PDF) Ne Yapmalıyım?',
+      'q': 'Sonuç Dokümanını (PDF) Ne Yapmalıyım?',
       'a':
-          'Tüm soruları yanıtladıktan sonra uygulama size detaylı bir <b>PDF raporu</b> sunar. Bu raporu telefonunuza indirebilir ve binanızın <b>WhatsApp veya Telegram</b> grubunda komşularınızla paylaşabilir, veya <b>site yönetimine sunarak</b> binanızdaki olası yangın risklerinin giderilmesi için bir <b>farkındalık ve aksiyon</b> başlatabilirsiniz.',
+          'Tüm soruları yanıtladıktan sonra uygulama size detaylı bir <b>PDF dokümanı</b> sunar. Bu dokümanı telefonunuza indirebilir ve binanızın <b>WhatsApp veya Telegram</b> grubunda komşularınızla paylaşabilir, veya <b>site yönetimine sunarak</b> binanızdaki olası yangın risklerinin giderilmesi için bir <b>farkındalık ve aksiyon</b> başlatabilirsiniz.',
     },
   ];
 
