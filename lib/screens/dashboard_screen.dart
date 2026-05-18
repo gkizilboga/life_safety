@@ -46,6 +46,7 @@ import 'archive_screen.dart';
 import 'building_setup_screen.dart';
 import 'legislation_library_screen.dart';
 import 'legal_text_screen.dart';
+import 'scope_screen.dart';
 import 'report_summary_screen.dart';
 import '../../data/bina_store.dart';
 import '../services/pdf_service.dart';
@@ -108,7 +109,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(height: 20),
                 ],
                 _buildSectionLabel("Bilgiler ve Ayarlar"),
-                _buildScopeInfoCard(),
                 _buildSecondaryMenu(context),
                 const SizedBox(height: 25),
                 _buildSectionLabel("Destek ve İletişim"),
@@ -491,116 +491,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildScopeInfoCard() {
-    const faqs = [
-      {
-        'q': 'Hangi binalar için uygundur?',
-        'a':
-            'Bu uygulama, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
-      },
-      {
-        'q': 'Puanlama sistemi ne anlama gelir?',
-        'a':
-            'Raporunuzdaki kırmızı (Kritik Risk), sarı (Uyarı) ve yeşil (Olumlu) renkler, o konudaki risk seviyesini gösterir. Puanlar yalnızca bu uygulama içindeki göreli değerlendirmedir; herhangi bir resmi belge veya sertifika niteliği taşımaz.',
-      },
-      {
-        'q': 'Bu belgenin geçerlilik süresi var mı?',
-        'a':
-            'Binanızda yapılan tadilat veya değişiklikler sonucunda analizin güncellenmesi önerilir. Belge, üretildiği tarihteki beyan edilen bilgilere dayanır.',
-      },
-      {
-        'q': 'Önemli Uyarı',
-        'a':
-            'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Tam kapsamlı bir güvenlik analizi için yetkin bir Yangın Mühendisi tarafından yerinde inceleme yapılması şarttır.',
-      },
-    ];
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF1a365d).withOpacity(0.15)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-          leading: const Icon(
-            Icons.info_outline_rounded,
-            color: Color(0xFF1a365d),
-            size: 22,
-          ),
-          title: const Text(
-            "Sık Sorulan Sorular",
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 14,
-              color: Color(0xFF1a365d),
-            ),
-          ),
-          iconColor: const Color(0xFF1a365d),
-          collapsedIconColor: const Color(0xFF1a365d),
-          children: faqs
-              .map(
-                (faq) => Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xFFf0f4fb),
-                      border: const Border(
-                        left: BorderSide(color: Color(0xFF1a365d), width: 3),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
-                          child: Text(
-                            faq['q']!,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 13,
-                              color: Color(0xFF1a365d),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-                          child: Text(
-                            faq['a']!,
-                            style: const TextStyle(
-                              fontSize: 12.5,
-                              color: Color(0xFF4a5568),
-                              height: 1.5,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-      ),
-    );
-  }
-
   Widget _buildSecondaryMenu(BuildContext context) {
     return Column(
       children: [
+        _buildMenuTile(
+          Icons.info_outline_rounded,
+          "Kapsam ve SSS",
+          "",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ScopeScreen()),
+          ),
+        ),
         _buildMenuTile(
           Icons.collections_bookmark_outlined,
           "Terimler Sözlüğü",
