@@ -1048,9 +1048,9 @@ class PdfService {
                 'Bu analiz yalnızca binanın fiziksel (mimari) yapısını inceler. Alarm, söndürme ve duman tahliye sistemleri için bu uygulamadaki "Aktif Sistem Gereksinimleri" çalışmasını da incelemenizi öneririz.',
           },
           {
-            'q': 'Puanlama sistemi ne anlama gelir?',
+            'q': 'Puanlama ve Risk Seviyeleri ne anlama gelir?',
             'a':
-                'Raporunuzdaki kırmızı (Kritik Risk), sarı (Uyarı) ve yeşil (Olumlu) renkler, o konudaki risk seviyesini gösterir. Puanlar yalnızca bu uygulama içindeki göreli değerlendirmedir; herhangi bir resmi belge veya sertifika niteliği taşımaz.',
+                'Raporlardaki kırmızı (kritik risk / zorunlu), sarı (uyarı) ve yeşil (olumlu) renkler, o konudaki risk veya gereklilik seviyesini gösterir. Puanlar ve değerlendirmeler yalnızca bu uygulama içindeki göreli bir ön değerlendirmedir; resmi evrak niteliği taşımaz.',
           },
           {
             'q': 'Bu belgenin geçerlilik süresi var mı?',
@@ -1060,7 +1060,7 @@ class PdfService {
           {
             'q': 'Önemli Uyarı',
             'a':
-                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Tam kapsamlı bir güvenlik analizi için yetkin bir Yangın Mühendisi tarafından yerinde inceleme yapılması şarttır.',
+                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksizsiz analiz için binanın, yetkin bir Yangın Mühendisi tarafından proje üzerinde veya yerinde incelenmesi şarttır.',
           },
         ],
       ),
@@ -1480,19 +1480,14 @@ class PdfService {
                 'Bu çalışma yalnızca binanın ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını (alarm, söndürme, duman tahliyesi vb.) ele alır. Mimari (yapısal) risk analizi için uygulamadaki "Yangın Risk Analizi" çalışmasını da incelemenizi öneririz.',
           },
           {
-            'q': 'Puanlama sistemi ne anlama gelir?',
+            'q': 'Binanızda periyodik testler zorunlu mu?',
             'a':
-                'Listenizdeki kırmızı (Zorunlu) ve sarı (Önerilen) ifadeler, sistemin binanızdaki gerekliliğini gösterir. Bu değerlendirme yalnızca uygulama içindeki göreli bir öneri niteliği taşır; resmi belge veya sertifika yerine geçmez.',
-          },
-          {
-            'q': 'Periyodik Testler ve Bakım',
-            'a':
-                'Bu raporda zorunlu veya önerilen olarak belirlenen sistemlerin kurulumunun ardından periyodik olarak test edilmesi ve bakımının yaptırılması zorunludur. Yangın alarm sistemi, sprinkler, duman tahliye, acil aydınlatma ve yangın söndürme sistemleri için Binaların Yangından Korunması Hakkında Yönetmeliği ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşlarınca en az yılda bir kez bakım ve test yaptırılmalıdır. Yangın tüpleri ve yangın dolapları için ise 6 ayda bir kontrol önerilmektedir. Bu sorumluluk bina yönetimi veya kat malikleri kuruluna aittir.',
+                'Evet. Kurulumu yapılan yangın alarm, sprinkler, duman tahliye, acil aydınlatma ve söndürme sistemlerinin Binaların Yangından Korunması Hakkında Yönetmeliği ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşlarınca YILDA EN AZ BİR KEZ periyodik test ve bakımlarının yapılması yasal zorunluluktur. Yangın tüpleri ve yangın dolapları için ise 6 ayda bir kontrol önerilir. Bu sorumluluk bina yönetimine aittir.',
           },
           {
             'q': 'Önemli Uyarı',
             'a':
-                'Bu uygulama bir "ön değerlendirme" aracıdır. Sistem gereksinimlerinin kesin tespiti için yetkin bir Yangın Mühendisi tarafından binanın teknik projesi ve sahası üzerinde detaylı inceleme yapılması şarttır.',
+                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksizsiz analiz için binanın, yetkin bir Yangın Mühendisi tarafından proje üzerinde veya yerinde incelenmesi şarttır.',
           },
         ],
       ),
