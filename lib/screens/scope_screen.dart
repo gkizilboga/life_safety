@@ -56,6 +56,7 @@ class ScopeScreen extends StatelessWidget {
 
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
+                  clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     color: isWarning ? const Color(0xFFFFF8E1) : Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -76,9 +77,7 @@ class ScopeScreen extends StatelessWidget {
                   child: Theme(
                     data: theme.copyWith(dividerColor: Colors.transparent),
                     child: ExpansionTile(
-                      initiallyExpanded:
-                          index == 0 ||
-                          isWarning, // Hangi binalar ve Önemli uyarı default açık olsun
+                      initiallyExpanded: index == 0 || isWarning,
                       leading: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
@@ -101,7 +100,7 @@ class ScopeScreen extends StatelessWidget {
                         faq['q']!,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                          fontSize: 14.5,
                           color: isWarning
                               ? const Color(0xFFD84315)
                               : const Color(0xFF1a365d),
@@ -114,16 +113,28 @@ class ScopeScreen extends StatelessWidget {
                           ? const Color(0xFFFFA000)
                           : Colors.grey,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: isWarning ? const Color(0xFFFFF8E1) : Colors.grey[50],
+                            border: Border(
+                              top: BorderSide(
+                                color: isWarning ? const Color(0xFFFFE082) : const Color(0xFFEEEEEE), 
+                                width: 0.5,
+                              ),
+                              left: BorderSide(
+                                color: isWarning ? const Color(0xFFD84315) : const Color(0xFF1a365d), 
+                                width: 4,
+                              ),
+                            ),
+                          ),
                           child: Text(
                             faq['a']!,
                             style: TextStyle(
                               fontSize: 13.5,
-                              color: isWarning
-                                  ? const Color(0xFF5D4037)
-                                  : Colors.grey[800],
-                              height: 1.55,
+                              color: isWarning ? const Color(0xFF5D4037) : Colors.grey[800],
+                              height: 1.6,
                             ),
                           ),
                         ),

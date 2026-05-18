@@ -93,12 +93,13 @@ class _TerminologyScreenState extends State<TerminologyScreen> {
                       final term = _filteredTerms[index];
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
+                        clipBehavior: Clip.antiAlias,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: Colors.black.withValues(alpha: 0.03),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -106,22 +107,18 @@ class _TerminologyScreenState extends State<TerminologyScreen> {
                           border: Border.all(color: Colors.grey.shade100),
                         ),
                         child: Theme(
-                          data: Theme.of(
-                            context,
-                          ).copyWith(dividerColor: Colors.transparent),
+                          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                           child: ExpansionTile(
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFF1A237E,
-                                ).withOpacity(0.05),
+                                color: const Color(0xFF1a365d).withValues(alpha: 0.05),
                                 shape: BoxShape.circle,
                               ),
                               child: Text(
                                 term.title[0].toUpperCase(),
                                 style: const TextStyle(
-                                  color: Color(0xFF1A237E),
+                                  color: Color(0xFF1a365d),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                 ),
@@ -131,26 +128,29 @@ class _TerminologyScreenState extends State<TerminologyScreen> {
                               term.title,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                                color: Color(0xFF263238),
+                                fontSize: 14.5,
+                                color: Color(0xFF1a365d),
                               ),
                             ),
-                            iconColor: const Color(0xFF1A237E),
+                            iconColor: const Color(0xFF1a365d),
                             collapsedIconColor: Colors.grey,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  16,
-                                  0,
-                                  16,
-                                  16,
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[50],
+                                  border: const Border(
+                                    top: BorderSide(color: Color(0xFFEEEEEE), width: 0.5),
+                                    left: BorderSide(color: Color(0xFF1a365d), width: 4),
+                                  ),
                                 ),
                                 child: Text(
                                   term.definition,
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 13.5,
                                     color: Colors.grey[800],
-                                    height: 1.5,
+                                    height: 1.6,
                                   ),
                                 ),
                               ),
