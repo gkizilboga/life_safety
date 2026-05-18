@@ -21,7 +21,7 @@ class UserGuideScreen extends StatelessWidget {
           'Evet! Eğer binanızın mimari veya teknik detaylarına hakim değilseniz, uygulamayı binanızın <b>yönetim kuruluna</b>, <b>site müdürüne</b> veya binanızdaki <b>teknik personele</b> önerebilirsiniz. Kendi dairenize ait analizleri yapmak yerine, yetkili kişilerin bu uygulamayı kullanarak tüm bina için ortak bir analiz yapmasını sağlayabilirsiniz. Dilerseniz, ana ekrandaki <b>"Paylaşım ve Transfer"</b> bölümünden yarım kalmış analizi dosya olarak <b>dışa aktarıp (export)</b> yöneticinize gönderebilirsiniz. Onlar kendi telefonlarına bu dosyayı <b>içe aktararak (import)</b> analizi kaldığı yerden tamamlayabilirler!',
     },
     {
-      'q': 'Promo kod "Al" ve "Gönder" ne anlama gelir?',
+      'q': 'Promo Kod "Al" ve "Gönder" ne anlama gelir?',
       'a':
           'Ana ekranda yer alan <b>"Promosyon İşlemleri"</b> bölümündeki bu iki buton, analizinizi başkalarıyla paylaşmanın ve transfer etmenin en kolay yoludur:\n\n• <b>Promo Kod Gönder:</b> Kendi telefonunuzda başlattığınız veya tamamladığınız bir analizi, binanızdaki başka bir komşunuza veya yöneticinize aktarmak için bir paylaşım kodu oluşturur. Bu kodu gönderdiğiniz kişi analizinizi kendi telefonuna yükleyebilir.\n\n• <b>Promo Kod Al:</b> Yöneticinizden veya başka bir komşunuzdan aldığınız promosyon kodunu buraya girerek, onların başlattığı analizi ve tüm yanıtları kendi telefonunuza anında yükleyebilir, kaldığı yerden devam ettirebilirsiniz.',
     },
@@ -53,7 +53,7 @@ class UserGuideScreen extends StatelessWidget {
         spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
       }
       final String groupVal = match.group(1) ?? '';
-      
+
       // Determine colors based on specific key terms for visual guidance
       Color textColor = primaryColor;
       if (groupVal.contains('Kritik Risk') || groupVal.contains('Kırmızı')) {
@@ -67,10 +67,7 @@ class UserGuideScreen extends StatelessWidget {
       spans.add(
         TextSpan(
           text: groupVal,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
         ),
       );
       lastMatchEnd = match.end;
@@ -92,17 +89,21 @@ class UserGuideScreen extends StatelessWidget {
       backgroundColor: Colors.grey[50],
       body: Column(
         children: [
-          const ModernHeader(title: "Kullanım Kılavuzu", screenType: UserGuideScreen),
+          const ModernHeader(
+            title: "Kullanım Kılavuzu",
+            screenType: UserGuideScreen,
+          ),
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
               itemCount: guideFaqs.length,
               itemBuilder: (context, index) {
                 final faq = guideFaqs[index];
-                
+
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
-                  clipBehavior: Clip.antiAlias, // Ensures the inner background color is clipped to the card's rounded corners
+                  clipBehavior: Clip
+                      .antiAlias, // Ensures the inner background color is clipped to the card's rounded corners
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -113,10 +114,7 @@ class UserGuideScreen extends StatelessWidget {
                         offset: const Offset(0, 4),
                       ),
                     ],
-                    border: Border.all(
-                      color: Colors.grey.shade100,
-                      width: 1,
-                    ),
+                    border: Border.all(color: Colors.grey.shade100, width: 1),
                   ),
                   child: Theme(
                     data: theme.copyWith(dividerColor: Colors.transparent),
@@ -147,10 +145,17 @@ class UserGuideScreen extends StatelessWidget {
                           width: double.infinity,
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            color: Colors.grey[50], // Soft grey background for clear separation
+                            color: Colors
+                                .grey[50], // Soft grey background for clear separation
                             border: const Border(
-                              top: BorderSide(color: Color(0xFFEEEEEE), width: 0.5),
-                              left: BorderSide(color: primaryColor, width: 4), // Solid blue vertical accent line
+                              top: BorderSide(
+                                color: Color(0xFFEEEEEE),
+                                width: 0.5,
+                              ),
+                              left: BorderSide(
+                                color: primaryColor,
+                                width: 4,
+                              ), // Solid blue vertical accent line
                             ),
                           ),
                           child: RichText(
@@ -159,9 +164,13 @@ class UserGuideScreen extends StatelessWidget {
                                 fontSize: 13.5,
                                 color: Colors.grey[800],
                                 height: 1.6,
-                                fontFamily: theme.textTheme.bodyMedium?.fontFamily,
+                                fontFamily:
+                                    theme.textTheme.bodyMedium?.fontFamily,
                               ),
-                              children: _buildRichSpans(faq['a']!, primaryColor),
+                              children: _buildRichSpans(
+                                faq['a']!,
+                                primaryColor,
+                              ),
                             ),
                           ),
                         ),
