@@ -55,6 +55,7 @@ import 'paywall_screen.dart';
 import '../logic/report_engine.dart';
 import '../utils/app_theme.dart';
 import '../services/analysis_file_service.dart';
+import 'user_guide_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -495,6 +496,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _buildSecondaryMenu(BuildContext context) {
     return Column(
       children: [
+        _buildMenuTile(
+          Icons.help_center_outlined,
+          "Kullanım Kılavuzu",
+          "",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const UserGuideScreen()),
+          ),
+        ),
         _buildMenuTile(
           Icons.info_outline_rounded,
           "Kapsam ve SSS",
