@@ -11,7 +11,7 @@ class LifeSavingInfoScreen extends StatelessWidget {
       'color': Color(0xFF1B5E20), // Dark Green
       'bgColor': Color(0xFFE8F5E9), // Light Green
       'items': [
-        'Duman Dedektörü (Pilli): Kablo tesisatı gerektirmeyen, pille çalışan <b>portatif duman dedektörleri</b> alarak evinizde (özellikle koridor ve yatak odası girişlerine) çift taraflı bantla veya vida ile kolayca tavana monte edin. Piyasadan alacağınız cihazın mutlaka <b>CE işaretli ve TS EN 14604 sertifikalı</b> olmasına dikkat edin.',
+        'Duman Dedektörü (Pilli): Kablo tesisatı gerektirmeyen, pille çalışan <b>portatif duman dedektörleri</b> alarak evinizde (özellikle koridor ve yatak odası girişlerine) çift taraflı bantla veya vida ile tavana monte edin. Piyasadan alacağınız cihazın mutlaka <b>CE işaretli ve TS EN 14604 sertifikalı</b> olmasına dikkat edin.',
         'Yangın Söndürücü: Evinizde <b>küçük bir yangın söndürme tüpü</b> bulundurmanız hayat kurtarır. Eğer yoksa, kat koridorunuzdaki <b>büyük yangın tüplerinin ve dolaplarının yerini</b> önceden mutlaka öğrenin ve kullanım talimatlarını okuyun.',
         'Çıkış Kapıları: Binanızdaki <b>elektrikli veya şifreli kapıların</b> elektrik kesildiğinde <b>otomatik açıldığını</b> yönetimden teyit edin.',
         'Kaçış Planı: Ailenizle <b>kaçış planı</b> yapın. Dış kapı anahtarlarını kapı yakınında <b>sabit bir yerde</b> tutun.',
@@ -73,13 +73,14 @@ class LifeSavingInfoScreen extends StatelessWidget {
         spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
       }
       final String groupVal = match.group(1) ?? '';
-      final bool isWarningText = groupVal.contains('SU DÖKMEYİN') || 
-                                 groupVal.contains('SÖNDÜRMEYİN') || 
-                                 groupVal.contains('şarj etmeyin') ||
-                                 groupVal.contains('şarj ETMEYİN') ||
-                                 groupVal.contains('KULLANMAYIN') ||
-                                 groupVal.contains('müdahale etmeyin');
-      
+      final bool isWarningText =
+          groupVal.contains('SU DÖKMEYİN') ||
+          groupVal.contains('SÖNDÜRMEYİN') ||
+          groupVal.contains('şarj etmeyin') ||
+          groupVal.contains('şarj ETMEYİN') ||
+          groupVal.contains('KULLANMAYIN') ||
+          groupVal.contains('müdahale etmeyin');
+
       spans.add(
         TextSpan(
           text: groupVal,
@@ -153,11 +154,7 @@ class LifeSavingInfoScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            Icon(
-                              section['icon'],
-                              color: themeColor,
-                              size: 24,
-                            ),
+                            Icon(section['icon'], color: themeColor, size: 24),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
@@ -176,55 +173,58 @@ class LifeSavingInfoScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
-                          children: (section['items'] as List<String>)
-                              .map(
-                                (item) {
-                                  final parts = item.split(': ');
-                                  final hasPrefix = parts.length > 1;
-                                  final String boldPart = hasPrefix ? parts[0] : '';
-                                  final String normalPart = hasPrefix ? parts.sublist(1).join(': ') : item;
+                          children: (section['items'] as List<String>).map((
+                            item,
+                          ) {
+                            final parts = item.split(': ');
+                            final hasPrefix = parts.length > 1;
+                            final String boldPart = hasPrefix ? parts[0] : '';
+                            final String normalPart = hasPrefix
+                                ? parts.sublist(1).join(': ')
+                                : item;
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(top: 6),
-                                          child: Icon(
-                                            Icons.fiber_manual_record,
-                                            size: 8,
-                                            color: themeColor,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: RichText(
-                                            text: TextSpan(
-                                              style: TextStyle(
-                                                fontSize: 13.5,
-                                                color: Colors.grey[850],
-                                                height: 1.5,
-                                              ),
-                                              children: [
-                                                if (boldPart.isNotEmpty)
-                                                  TextSpan(
-                                                    text: "$boldPart: ",
-                                                    style: const TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ..._buildRichSpans(normalPart, themeColor),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 6),
+                                    child: Icon(
+                                      Icons.fiber_manual_record,
+                                      size: 8,
+                                      color: themeColor,
                                     ),
-                                  );
-                                },
-                              )
-                              .toList(),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                          fontSize: 13.5,
+                                          color: Colors.grey[850],
+                                          height: 1.5,
+                                        ),
+                                        children: [
+                                          if (boldPart.isNotEmpty)
+                                            TextSpan(
+                                              text: "$boldPart: ",
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ..._buildRichSpans(
+                                            normalPart,
+                                            themeColor,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ),
                     ],
