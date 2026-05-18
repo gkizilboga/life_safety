@@ -1040,12 +1040,7 @@ class PdfService {
           {
             'q': 'Hangi binalar için uygundur?',
             'a':
-                'Bu çalışma yalnızca 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binanın merdivenleri, kaçış yolları ve kapıları gibi yapısal (mimari) özelliklerine odaklanır.',
-          },
-          {
-            'q': 'İş yerleri için geçerli mi?',
-            'a':
-                'Bina altındaki dükkan veya ofisler bu kapsamın dışındadır. Ticari işletmelerin yangın güvenliği ve ruhsat süreçleri için özel bir mühendislik incelemesi yaptırılmalıdır.',
+                'Bu çalışma, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
           },
           {
             'q': 'Sistem gereksinimleri hakkında ne bilinmeli?',
@@ -1477,12 +1472,7 @@ class PdfService {
           {
             'q': 'Hangi binalar için uygundur?',
             'a':
-                'Bu çalışma yalnızca 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT ve KONUT+TİCARET amaçlı yapılar için geçerlidir. KONUT ve konut ile ilgili kullanım alanlarının (otopark, teknik hacimler vb.) ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını belirlemektedir.',
-          },
-          {
-            'q': 'İş yerleri için geçerli mi?',
-            'a':
-                'Bina içerisindeki ticari işletmeler (işyeri) bu kapsamın dışındadır. Ticari işletmelerde alınacak yangın güvenlik tedbirleri ve ilgili ruhsat süreçleri hususi olarak değerlendirilmelidir.',
+                'Bu çalışma, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
           },
           {
             'q': 'Bu belge mimari analizi de kapsar mı?',
@@ -1493,6 +1483,11 @@ class PdfService {
             'q': 'Puanlama sistemi ne anlama gelir?',
             'a':
                 'Listenizdeki kırmızı (Zorunlu) ve sarı (Önerilen) ifadeler, sistemin binanızdaki gerekliliğini gösterir. Bu değerlendirme yalnızca uygulama içindeki göreli bir öneri niteliği taşır; resmi belge veya sertifika yerine geçmez.',
+          },
+          {
+            'q': 'Periyodik Testler ve Bakım',
+            'a':
+                'Bu raporda zorunlu veya önerilen olarak belirlenen sistemlerin kurulumunun ardından periyodik olarak test edilmesi ve bakımının yaptırılması zorunludur. Yangın alarm sistemi, sprinkler, duman tahliye, acil aydınlatma ve yangın söndürme sistemleri için Binaların Yangından Korunması Hakkında Yönetmeliği ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşlarınca en az yılda bir kez bakım ve test yaptırılmalıdır. Yangın tüpleri ve yangın dolapları için ise 6 ayda bir kontrol önerilmektedir. Bu sorumluluk bina yönetimi veya kat malikleri kuruluna aittir.',
           },
           {
             'q': 'Önemli Uyarı',

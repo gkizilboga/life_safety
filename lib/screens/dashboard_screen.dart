@@ -496,12 +496,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       {
         'q': 'Hangi binalar için uygundur?',
         'a':
-            'Bu uygulama yalnızca 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binanın merdivenleri, kaçış yolları ve kapıları gibi yapısal (mimari) özellikleri ile elektromekanik yangın güvenliği ihtiyaçları analiz edilmektedir.',
-      },
-      {
-        'q': 'İş yerleri için geçerli mi?',
-        'a':
-            'Bina altındaki dükkan veya ofisler bu kapsamın dışındadır. Ticari işletmelerin yangın güvenliği ve ruhsat süreçleri için özel bir mühendislik incelemesi yaptırılmalıdır.',
+            'Bu uygulama, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
       },
       {
         'q': 'Puanlama sistemi ne anlama gelir?',
