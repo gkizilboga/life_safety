@@ -11,7 +11,7 @@ class LifeSavingInfoScreen extends StatelessWidget {
       'color': Color(0xFF1B5E20), // Dark Green
       'bgColor': Color(0xFFE8F5E9), // Light Green
       'items': [
-        'Duman Dedektörü: Evinize <b>duman dedektörü</b> takın.',
+        'Duman Dedektörü (Pilli): Kablo tesisatı gerektirmeyen, pille çalışan <b>portatif duman dedektörleri</b> alarak evinizde (özellikle koridor ve yatak odası girişlerine) çift taraflı bantla veya vida ile kolayca tavana monte edin. Piyasadan alacağınız cihazın mutlaka <b>CE işaretli ve TS EN 14604 sertifikalı</b> olmasına dikkat edin.',
         'Yangın Söndürücü: Evinizde <b>küçük bir yangın söndürme tüpü</b> bulundurmanız hayat kurtarır. Eğer yoksa, kat koridorunuzdaki <b>büyük yangın tüplerinin ve dolaplarının yerini</b> önceden mutlaka öğrenin ve kullanım talimatlarını okuyun.',
         'Çıkış Kapıları: Binanızdaki <b>elektrikli veya şifreli kapıların</b> elektrik kesildiğinde <b>otomatik açıldığını</b> yönetimden teyit edin.',
         'Kaçış Planı: Ailenizle <b>kaçış planı</b> yapın. Dış kapı anahtarlarını kapı yakınında <b>sabit bir yerde</b> tutun.',
