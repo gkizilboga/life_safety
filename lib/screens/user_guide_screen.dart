@@ -102,6 +102,7 @@ class UserGuideScreen extends StatelessWidget {
                 
                 return Container(
                   margin: const EdgeInsets.only(bottom: 16),
+                  clipBehavior: Clip.antiAlias, // Ensures the inner background color is clipped to the card's rounded corners
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -142,8 +143,16 @@ class UserGuideScreen extends StatelessWidget {
                         ),
                       ),
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50], // Soft grey background for clear separation
+                            border: const Border(
+                              top: BorderSide(color: Color(0xFFEEEEEE), width: 0.5),
+                              left: BorderSide(color: primaryColor, width: 4), // Solid blue vertical accent line
+                            ),
+                          ),
                           child: RichText(
                             text: TextSpan(
                               style: TextStyle(
