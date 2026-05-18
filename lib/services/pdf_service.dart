@@ -646,6 +646,220 @@ class PdfService {
     );
   }
 
+  static pw.Page _buildLifeSavingInfoPage(
+    pw.PageTheme pageTheme,
+    pw.Font font,
+    pw.Font fontBold,
+  ) {
+    const navyBlue = PdfColor.fromInt(0xFF1a365d);
+    
+    final List<Map<String, dynamic>> sections = [
+      {
+        'title': '1. Önlemler & Hazırlık',
+        'color': PdfColor.fromInt(0xFF1B5E20), // Dark Green
+        'items': [
+          'Duman Dedektörü: Evinize duman dedektörü takın.',
+          'Yangın Söndürücü: Evinizde küçük bir yangın söndürme tüpü bulundurmanız hayat kurtarır. Eğer yoksa, kat koridorunuzdaki büyük yangın tüplerinin ve dolaplarının tam yerini önceden mutlaka öğrenin.',
+          'Çıkış Kapıları: Binanızdaki elektrikli veya şifreli kapıların elektrik kesildiğinde otomatik açıldığını yönetimden teyit edin.',
+          'Kaçış Planı: Ailenizle kaçış planı yapın. Dış kapı anahtarlarını kapı yakınında sabit bir yerde tutun.',
+        ],
+      },
+      {
+        'title': '2. Yangın Anında Ne Yapmalı?',
+        'color': PdfColor.fromInt(0xFFE65100), // Dark Orange
+        'items': [
+          'Müdahale veya Çıkış: Yangın çok küçükse (başlangıç aşamasında) tüp/battaniye ile müdahale edin. Ateş büyümüşse eşyaları bırakıp hemen dışarı çıkın.',
+          'Eğilin: Dumandan korunmak için emekleyerek veya yere yakın ilerleyin.',
+          'Kapıları Kapatın: Çıkarken arkanızdan geçtiğiniz tüm kapıları kapatın.',
+          'Asansör Yasağı: Sadece yangın merdivenini veya normal merdivenleri kullanın; asansörü KULLANMAYIN.',
+          '112\'yi Arayın: Güvenli bir yere ulaştığınızda 112\'yi arayıp itfaiye isteyin.',
+        ],
+      },
+      {
+        'title': '3. Evde Mahsur Kalırsanız',
+        'color': PdfColor.fromInt(0xFFB71C1C), // Dark Red
+        'items': [
+          'Odaya Sığının: Pencereli ve dışarıya/caddeye bakan bir odaya geçip kapıyı kapatın.',
+          'Dumanı Kesin: Kapı altlarını ve kenarlarını ıslak havlu veya bez ile sıkıca tıkayın.',
+          'Yardım İsteyin: Pencereden dikkat çekin, 112\'ye bulunduğunuz odanın tam yerini bildirin.',
+        ],
+      },
+      {
+        'title': '4. Yangın Tipleri & Söndürme Yöntemleri',
+        'color': PdfColor.fromInt(0xFF0D47A1), // Dark Blue
+        'items': [
+          'Katı: Su dökerek soğutun veya yangın tüpü kullanın.',
+          'Sıvı: KESİNLİKLE SU DÖKMEYİN (alevleri yayar). Üzerini kum, toprak veya nemli örtüyle kapatarak havayı kesin ya da yangın tüpü kullanın.',
+          'Mutfak Yağı (Tava): KESİNLİKLE SU DÖKMEYİN! Ateşin üstünü metal kapak, yangın battaniyesi veya sıkıca sıkılmış nemli büyük bir havlu ile tamamen kapatıp ocağı söndürün.',
+          'Gaz: Gazı kapatmadan alevi SÖNDÜRMEYİN (patlar). Önce vanayı kapatın, alev kendiliğinden sönecektir.',
+          'Elektrik: KESİNLİKLE SU DÖKMEYİN (çarpılırsınız). Önce şalteri indirin, sadece kuru kimyevi toz veya CO2 söndürücü kullanın.',
+          'E-Bisiklet: Şarjı gözetimsiz/uyurken yapmayın. Koridoru kapatmayın. Batarya yangınlarına asla suyla veya normal tüple müdahale edilemez, hemen kaçıp 112\'yi arayın.',
+        ],
+      },
+    ];
+
+    return pw.Page(
+      pageTheme: pageTheme,
+      build: (context) {
+        return pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            // Sayfa Başlığı
+            pw.Container(
+              width: double.infinity,
+              padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: const pw.BoxDecoration(color: navyBlue),
+              child: pw.Text(
+                "HAYAT KURTARICI BİLGİLER",
+                style: pw.TextStyle(
+                  font: fontBold,
+                  fontSize: 12,
+                  color: PdfColors.white,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+            pw.SizedBox(height: 12),
+            pw.Text(
+              "Konutlarda yaşayan bireylerin yangın öncesinde, esnasında ve sonrasında kendi güvenliklerini sağlamaları adına hayati önem taşıyan pratik rehber aşağıda özetlenmiştir.",
+              style: pw.TextStyle(
+                font: font,
+                fontSize: 8.5,
+                color: PdfColors.grey700,
+                lineSpacing: 1.5,
+              ),
+            ),
+            pw.SizedBox(height: 12),
+            
+            // 2 Sütunlu Grid Layout (Sayfaya mükemmel sığması için)
+            pw.Row(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                // Sol Sütun (1 & 2)
+                pw.Expanded(
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      _buildPdfSectionBox(sections[0], font, fontBold),
+                      pw.SizedBox(height: 12),
+                      _buildPdfSectionBox(sections[1], font, fontBold),
+                    ],
+                  ),
+                ),
+                pw.SizedBox(width: 15),
+                // Sağ Sütun (3 & 4)
+                pw.Expanded(
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      _buildPdfSectionBox(sections[2], font, fontBold),
+                      pw.SizedBox(height: 12),
+                      _buildPdfSectionBox(sections[3], font, fontBold),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            pw.Spacer(),
+            _buildFooter(context, font, fontBold),
+          ],
+        );
+      },
+    );
+  }
+
+  static pw.Widget _buildPdfSectionBox(
+    Map<String, dynamic> section,
+    pw.Font font,
+    pw.Font fontBold,
+  ) {
+    final titleColor = section['color'] as PdfColor;
+    final List<String> items = section['items'];
+
+    return pw.Container(
+      decoration: pw.BoxDecoration(
+        color: PdfColors.white,
+        border: pw.Border.all(color: PdfColors.grey200, width: 0.5),
+        borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6)),
+      ),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          // Bölüm Başlığı
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            decoration: pw.BoxDecoration(
+              color: PdfColors.grey50,
+              border: pw.Border(bottom: pw.BorderSide(color: PdfColors.grey200, width: 0.5)),
+            ),
+            child: pw.Text(
+              section['title'],
+              style: pw.TextStyle(
+                font: fontBold,
+                fontSize: 9,
+                color: titleColor,
+              ),
+            ),
+          ),
+          // Maddeler
+          pw.Padding(
+            padding: const pw.EdgeInsets.all(8),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: items.map((item) {
+                final parts = item.split(': ');
+                final hasPrefix = parts.length > 1;
+                final String boldPart = hasPrefix ? parts[0] : '';
+                final String normalPart = hasPrefix ? parts.sublist(1).join(': ') : item;
+
+                return pw.Padding(
+                  padding: const pw.EdgeInsets.only(bottom: 6),
+                  child: pw.Row(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.only(top: 3, right: 6),
+                        child: pw.Container(
+                          width: 3.5,
+                          height: 3.5,
+                          decoration: pw.BoxDecoration(
+                            color: titleColor,
+                            shape: pw.BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      pw.Expanded(
+                        child: pw.RichText(
+                          text: pw.TextSpan(
+                            style: pw.TextStyle(
+                              font: font,
+                              fontSize: 7.5,
+                              color: PdfColors.grey900,
+                              lineSpacing: 1.3,
+                            ),
+                            children: [
+                              if (boldPart.isNotEmpty)
+                                pw.TextSpan(
+                                  text: "$boldPart: ",
+                                  style: pw.TextStyle(font: fontBold),
+                                ),
+                              pw.TextSpan(text: normalPart),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   static pw.Page _buildLegalPage(
     pw.PageTheme pageTheme,
     pw.Font font,
@@ -1409,6 +1623,9 @@ class PdfService {
         ],
       ),
     );
+
+    // Hayat Kurtarıcı Bilgiler
+    pdf.addPage(_buildLifeSavingInfoPage(pageTheme, ttf, ttfBold));
 
     // Yasal (En Sona Taşındı)
     pdf.addPage(_buildLegalPage(pageTheme, ttf, ttfBold));

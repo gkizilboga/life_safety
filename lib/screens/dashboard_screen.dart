@@ -47,6 +47,7 @@ import 'building_setup_screen.dart';
 import 'legislation_library_screen.dart';
 import 'legal_text_screen.dart';
 import 'scope_screen.dart';
+import 'life_saving_info_screen.dart';
 import 'report_summary_screen.dart';
 import '../../data/bina_store.dart';
 import '../services/pdf_service.dart';
@@ -501,6 +502,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           () => Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const ScopeScreen()),
+          ),
+        ),
+        _buildMenuTile(
+          Icons.health_and_safety_outlined,
+          "Hayat Kurtarıcı Bilgiler",
+          "",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LifeSavingInfoScreen()),
           ),
         ),
         _buildMenuTile(
