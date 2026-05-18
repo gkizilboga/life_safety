@@ -8,38 +8,85 @@ class UserGuideScreen extends StatelessWidget {
     {
       'q': 'Bu Uygulamayı Nasıl Kullanmalıyım?',
       'a':
-          'Uygulama, binanızın yangın güvenliği durumunu adım adım analiz etmenizi sağlar. Karşınıza çıkan soruları yanıtlarken, binanızın mevcut durumunu (örneğin merdiven genişlikleri, kapı yönleri, yangın dolaplarının varlığı vb.) göz önünde bulundurmalısınız. Yanıtlarınızı verirken olabildiğince dürüst ve objektif olmanız, risk analizinin doğruluğu için çok önemlidir.',
+          'Uygulama, binanızın yangın güvenliği durumunu <b>adım adım analiz etmenizi</b> sağlar. Karşınıza çıkan soruları yanıtlarken, binanızın mevcut durumunu (örneğin <b>merdiven genişlikleri</b>, <b>kapı yönleri</b>, <b>yangın dolaplarının varlığı</b> vb.) göz önünde bulundurmalısınız. Yanıtlarınızı verirken olabildiğince <b>dürüst ve objektif</b> olmanız, risk analizinin doğruluğu için çok önemlidir.',
     },
     {
       'q': 'Soruların Yanıtlarını Bilmiyorsam Ne Yapmalıyım?',
       'a':
-          'Bazı teknik detayları (örneğin yangın merdiveninin basınçlandırılması, yangın algılama sisteminin özellikleri) bilmiyor olabilirsiniz. Bu durumda, soruların altındaki "Emin Değilim" veya "Bilmiyorum" seçeneklerini kullanabilirsiniz. Ancak en doğru sonuç için binanızın apartman veya site yöneticisine, güvenlik görevlilerine veya teknik personeline danışarak doğru bilgileri öğrenmeniz tavsiye edilir.',
+          'Bazı teknik detayları (örneğin yangın merdiveninin basınçlandırılması, yangın algılama sisteminin özellikleri) bilmiyor olabilirsiniz. Bu durumda, soruların altındaki <b>"Emin Değilim"</b> veya <b>"Bilmiyorum"</b> seçeneklerini kullanabilirsiniz. Ancak en doğru sonuç için binanızın <b>apartman veya site yöneticisine</b>, <b>güvenlik görevlilerine</b> veya <b>teknik personeline</b> danışarak doğru bilgileri öğrenmeniz tavsiye edilir.',
     },
     {
       'q': 'Hiçbir Bilgim Yoksa Testi Başkasına Çözdürebilir miyim?',
       'a':
-          'Evet! Eğer binanızın mimari veya teknik detaylarına hakim değilseniz, uygulamayı binanızın yönetim kuruluna, site müdürüne veya binanızdaki teknik personele önerebilirsiniz. Kendi dairenize ait analizleri yapmak yerine, yetkili kişilerin bu uygulamayı kullanarak tüm bina için ortak bir analiz yapmasını sağlayabilirsiniz. Dilerseniz, ana ekrandaki "Paylaşım ve Transfer" bölümünden yarım kalmış analizi dosya olarak dışa aktarıp (export) yöneticinize gönderebilirsiniz. Onlar kendi telefonlarına bu dosyayı içe aktararak (import) analizi kaldığı yerden tamamlayabilirler!',
+          'Evet! Eğer binanızın mimari veya teknik detaylarına hakim değilseniz, uygulamayı binanızın <b>yönetim kuruluna</b>, <b>site müdürüne</b> veya binanızdaki <b>teknik personele</b> önerebilirsiniz. Kendi dairenize ait analizleri yapmak yerine, yetkili kişilerin bu uygulamayı kullanarak tüm bina için ortak bir analiz yapmasını sağlayabilirsiniz. Dilerseniz, ana ekrandaki <b>"Paylaşım ve Transfer"</b> bölümünden yarım kalmış analizi dosya olarak <b>dışa aktarıp (export)</b> yöneticinize gönderebilirsiniz. Onlar kendi telefonlarına bu dosyayı <b>içe aktararak (import)</b> analizi kaldığı yerden tamamlayabilirler!',
     },
     {
       'q': 'Promo Kod "Al" ve "Gönder" Ne Anlama Gelir?',
       'a':
-          'Ana ekranda yer alan "Promosyon İşlemleri" bölümündeki bu iki buton, analizinizi başkalarıyla paylaşmanın ve transfer etmenin en kolay yoludur:\n\n• Promo Kod Gönder: Kendi telefonunuzda başlattığınız veya tamamladığınız bir analizi, binanızdaki başka bir komşunuza veya yöneticinize aktarmak için bir paylaşım kodu oluşturur. Bu kodu gönderdiğiniz kişi analizinizi kendi telefonuna yükleyebilir.\n\n• Promo Kod Al: Yöneticinizden veya başka bir komşunuzdan aldığınız promosyon kodunu buraya girerek, onların başlattığı analizi ve tüm yanıtları kendi telefonunuza anında yükleyebilir, kaldığı yerden devam ettirebilirsiniz.',
+          'Ana ekranda yer alan <b>"Promosyon İşlemleri"</b> bölümündeki bu iki buton, analizinizi başkalarıyla paylaşmanın ve transfer etmenin en kolay yoludur:\n\n• <b>Promo Kod Gönder:</b> Kendi telefonunuzda başlattığınız veya tamamladığınız bir analizi, binanızdaki başka bir komşunuza veya yöneticinize aktarmak için bir paylaşım kodu oluşturur. Bu kodu gönderdiğiniz kişi analizinizi kendi telefonuna yükleyebilir.\n\n• <b>Promo Kod Al:</b> Yöneticinizden veya başka bir komşunuzdan aldığınız promosyon kodunu buraya girerek, onların başlattığı analizi ve tüm yanıtları kendi telefonunuza anında yükleyebilir, kaldığı yerden devam ettirebilirsiniz.',
     },
     {
       'q': 'Uygulamadaki Puanlar ve Renk Kodları Ne Anlama Geliyor?',
       'a':
-          'Raporunuzdaki veya soru ekranlarındaki renkler risk düzeyini belirtir:\n\n• Kırmızı (Kritik Risk): Yönetmeliğe aykırı olan ve acilen düzeltilmesi gereken can güvenliği açıklarını temsil eder.\n\n• Sarı (Uyarı): İyileştirilmesi gereken hususları gösterir.\n\n• Yeşil (Olumlu): Yönetmeliğe tam uyumlu, güvenli alanları ifade eder.',
+          'Raporunuzdaki veya soru ekranlarındaki renkler risk düzeyini belirtir:\n\n• <b>Kritik Risk (Kırmızı):</b> Yönetmeliğe aykırı olan ve acilen düzeltilmesi gereken can güvenliği açıklarını temsil eder.\n\n• <b>Uyarı (Sarı):</b> İyileştirilmesi gereken hususları gösterir.\n\n• <b>Olumlu (Yeşil):</b> Yönetmeliğe tam uyumlu, güvenli alanları ifade eder.',
     },
     {
       'q': 'Sonuç Raporunu (PDF) Ne Yapmalıyım?',
       'a':
-          'Tüm soruları yanıtladıktan sonra uygulama size detaylı bir PDF raporu sunar. Bu raporu telefonunuza indirebilir ve binanızın WhatsApp veya Telegram grubunda komşularınızla paylaşabilir, veya site yönetimine sunarak binanızdaki olası yangın risklerinin giderilmesi için bir farkındalık ve aksiyon başlatabilirsiniz.',
+          'Tüm soruları yanıtladıktan sonra uygulama size detaylı bir <b>PDF raporu</b> sunar. Bu raporu telefonunuza indirebilir ve binanızın <b>WhatsApp veya Telegram</b> grubunda komşularınızla paylaşabilir, veya <b>site yönetimine sunarak</b> binanızdaki olası yangın risklerinin giderilmesi için bir <b>farkındalık ve aksiyon</b> başlatabilirsiniz.',
     },
   ];
+
+  static List<TextSpan> _buildRichSpans(String text, Color primaryColor) {
+    final List<TextSpan> spans = [];
+    final RegExp regExp = RegExp(r'<b>(.*?)</b>', dotAll: true);
+    final matches = regExp.allMatches(text);
+
+    if (matches.isEmpty) {
+      spans.add(TextSpan(text: text));
+      return spans;
+    }
+
+    int lastMatchEnd = 0;
+    for (final match in matches) {
+      if (match.start > lastMatchEnd) {
+        spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
+      }
+      final String groupVal = match.group(1) ?? '';
+      
+      // Determine colors based on specific key terms for visual guidance
+      Color textColor = primaryColor;
+      if (groupVal.contains('Kritik Risk') || groupVal.contains('Kırmızı')) {
+        textColor = const Color(0xFFC62828); // Red
+      } else if (groupVal.contains('Uyarı') || groupVal.contains('Sarı')) {
+        textColor = const Color(0xFFF57C00); // Amber/Orange
+      } else if (groupVal.contains('Olumlu') || groupVal.contains('Yeşil')) {
+        textColor = const Color(0xFF2E7D32); // Green
+      }
+
+      spans.add(
+        TextSpan(
+          text: groupVal,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: textColor,
+          ),
+        ),
+      );
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(text: text.substring(lastMatchEnd)));
+    }
+
+    return spans;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    const primaryColor = Color(0xFF1a365d);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -77,12 +124,12 @@ class UserGuideScreen extends StatelessWidget {
                       leading: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1a365d).withValues(alpha: 0.05),
+                          color: primaryColor.withValues(alpha: 0.05),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
                           Icons.help_outline_rounded,
-                          color: Color(0xFF1a365d),
+                          color: primaryColor,
                           size: 20,
                         ),
                       ),
@@ -91,18 +138,21 @@ class UserGuideScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14.5,
-                          color: Color(0xFF1a365d),
+                          color: primaryColor,
                         ),
                       ),
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                          child: Text(
-                            faq['a']!,
-                            style: TextStyle(
-                              fontSize: 13.5,
-                              color: Colors.grey[700],
-                              height: 1.6,
+                          child: RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                color: Colors.grey[800],
+                                height: 1.6,
+                                fontFamily: theme.textTheme.bodyMedium?.fontFamily,
+                              ),
+                              children: _buildRichSpans(faq['a']!, primaryColor),
                             ),
                           ),
                         ),
