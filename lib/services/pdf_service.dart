@@ -1308,7 +1308,7 @@ class PdfService {
         build: (context) => [
           pw.SizedBox(height: 12),
           pw.Text(
-            "RENK KODLARI VE ANLAMLARI",
+            "DEĞERLENDİRME NOTLARI",
             style: pw.TextStyle(
               font: ttfBold,
               fontSize: 13,
