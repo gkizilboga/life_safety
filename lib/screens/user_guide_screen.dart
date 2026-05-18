@@ -18,12 +18,17 @@ class UserGuideScreen extends StatelessWidget {
     {
       'q': 'Hiçbir Bilgim Yoksa Testi Başkasına Çözdürebilir miyim?',
       'a':
-          'Evet! Eğer binanızın mimari veya teknik detaylarına hakim değilseniz, uygulamayı binanızın yönetim kuruluna, site müdürüne veya binanızdaki teknik personele önerebilirsiniz. Kendi dairenize ait analizleri yapmak yerine, yetkili kişilerin bu uygulamayı kullanarak tüm bina için ortak bir analiz yapmasını sağlayabilirsiniz.',
+          'Evet! Eğer binanızın mimari veya teknik detaylarına hakim değilseniz, uygulamayı binanızın yönetim kuruluna, site müdürüne veya binanızdaki teknik personele önerebilirsiniz. Kendi dairenize ait analizleri yapmak yerine, yetkili kişilerin bu uygulamayı kullanarak tüm bina için ortak bir analiz yapmasını sağlayabilirsiniz. Dilerseniz, ana ekrandaki "Paylaşım ve Transfer" bölümünden yarım kalmış analizi dosya olarak dışa aktarıp (export) yöneticinize gönderebilirsiniz. Onlar kendi telefonlarına bu dosyayı içe aktararak (import) analizi kaldığı yerden tamamlayabilirler!',
     },
     {
-      'q': 'Promosyon Kodları Ne İşe Yarar?',
+      'q': 'Promo Kod "Al" ve "Gönder" Ne Anlama Gelir?',
       'a':
-          'Analizi tamamladığınızda, eğer bir Yangın Mühendisliği ve Danışmanlık firmasından ücretsiz ön görüşme, keşif veya profesyonel yangın risk değerlendirme raporu indirimleri kazanmak isterseniz promosyon kodlarını kullanabilirsiniz. "Promosyon İşlemleri" bölümünden alacağınız kodu ilgili danışmanlık firmasına ileterek, binanızın profesyonel yangın güvenliği süreçleri için size özel sağlanan avantajlardan (indirim, ücretsiz danışmanlık vb.) faydalanabilirsiniz.',
+          'Ana ekranda yer alan "Promosyon İşlemleri" bölümündeki bu iki buton, analizinizi başkalarıyla paylaşmanın ve transfer etmenin en kolay yoludur:\n\n• Promo Kod Gönder: Kendi telefonunuzda başlattığınız veya tamamladığınız bir analizi, binanızdaki başka bir komşunuza veya yöneticinize aktarmak için bir paylaşım kodu oluşturur. Bu kodu gönderdiğiniz kişi analizinizi kendi telefonuna yükleyebilir.\n\n• Promo Kod Al: Yöneticinizden veya başka bir komşunuzdan aldığınız promosyon kodunu buraya girerek, onların başlattığı analizi ve tüm yanıtları kendi telefonunuza anında yükleyebilir, kaldığı yerden devam ettirebilirsiniz.',
+    },
+    {
+      'q': 'Uygulamadaki Puanlar ve Renk Kodları Ne Anlama Geliyor?',
+      'a':
+          'Raporunuzdaki veya soru ekranlarındaki renkler risk düzeyini belirtir:\n\n• Kırmızı (Kritik Risk): Yönetmeliğe aykırı olan ve acilen düzeltilmesi gereken can güvenliği açıklarını temsil eder.\n\n• Sarı (Uyarı): İyileştirilmesi gereken hususları gösterir.\n\n• Yeşil (Olumlu): Yönetmeliğe tam uyumlu, güvenli alanları ifade eder.',
     },
     {
       'q': 'Sonuç Raporunu (PDF) Ne Yapmalıyım?',
