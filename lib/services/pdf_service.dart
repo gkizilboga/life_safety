@@ -602,7 +602,7 @@ class PdfService {
                         faq['q'] ?? '',
                         style: pw.TextStyle(
                           font: ttfBold,
-                          fontSize: 10,
+                          fontSize: 9,
                           color: navyBlue,
                         ),
                       ),
@@ -614,9 +614,9 @@ class PdfService {
                         faq['a'] ?? '',
                         style: pw.TextStyle(
                           font: ttf,
-                          fontSize: 9,
+                          fontSize: 8,
                           color: PdfColors.grey800,
-                          lineSpacing: 2.0,
+                          lineSpacing: 1.5,
                         ),
                       ),
                     ),
@@ -1435,55 +1435,120 @@ class PdfService {
                     tableGroup.add(item);
                   } else {
                     if (tableGroup.isNotEmpty) {
-                      if (id == 36 && isFirstTableFor36) {
-                        itemsWidgets.add(
-                          pw.Column(
-                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                            children: [
-                              pw.Text(
-                                "Konu:",
+                      if (id == 36) {
+                        if (isFirstTableFor36) {
+                          itemsWidgets.add(
+                            pw.Column(
+                              crossAxisAlignment: pw.CrossAxisAlignment.start,
+                              children: [
+                                pw.Text(
+                                  "Konu:",
+                                  style: pw.TextStyle(
+                                    font: ttfBold,
+                                    fontSize: 9,
+                                    fontStyle: pw.FontStyle.italic,
+                                    color: PdfColors.blue900,
+                                  ),
+                                ),
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.only(left: 6),
+                                  child: pw.Text(
+                                    "Merdiven Uygunluk Değerlendirmesi",
+                                    style: pw.TextStyle(font: ttf, fontSize: 9),
+                                  ),
+                                ),
+                                pw.SizedBox(height: 5),
+                                pw.Text(
+                                  "Kullanıcı Yanıtı:",
+                                  style: pw.TextStyle(
+                                    font: ttfBold,
+                                    fontSize: 9,
+                                    fontStyle: pw.FontStyle.italic,
+                                    color: PdfColors.blue900,
+                                  ),
+                                ),
+                                pw.SizedBox(height: 3),
+                              ],
+                            ),
+                          );
+                          isFirstTableFor36 = false;
+                        }
+
+                        final zeminUpperGroup = tableGroup.where((item) {
+                          final lbl = (item['label'] ?? '').toString();
+                          return !lbl.startsWith("Bodrum") && !lbl.startsWith("BODRUM");
+                        }).toList();
+
+                        final bodrumGroup = tableGroup.where((item) {
+                          final lbl = (item['label'] ?? '').toString();
+                          return lbl.startsWith("Bodrum") || lbl.startsWith("BODRUM");
+                        }).toList();
+
+                        if (zeminUpperGroup.isNotEmpty) {
+                          itemsWidgets.add(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(bottom: 4, top: 2),
+                              child: pw.Text(
+                                "Zemin ve Üst Katlar:",
                                 style: pw.TextStyle(
                                   font: ttfBold,
-                                  fontSize: 9,
-                                  fontStyle: pw.FontStyle.italic,
-                                  color: PdfColors.blue900,
+                                  fontSize: 8.5,
+                                  color: PdfColors.blue800,
                                 ),
                               ),
-                              pw.Padding(
-                                padding: const pw.EdgeInsets.only(left: 6),
-                                child: pw.Text(
-                                  "Merdiven Uygunluk Değerlendirmesi",
-                                  style: pw.TextStyle(font: ttf, fontSize: 9),
-                                ),
-                              ),
-                              pw.SizedBox(height: 5),
-                              pw.Text(
-                                "Kullanıcı Yanıtı:",
+                            ),
+                          );
+                          itemsWidgets.addAll(
+                            _buildInfoTable(
+                              zeminUpperGroup,
+                              ttf,
+                              ttfBold,
+                              const PdfColor.fromInt(0x00000000),
+                              subjectLabel: "Merdiven Tipleri",
+                            ),
+                          );
+                          itemsWidgets.add(pw.SizedBox(height: 8));
+                        }
+
+                        if (bodrumGroup.isNotEmpty) {
+                          itemsWidgets.add(
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
+                              child: pw.Text(
+                                "Bodrum Katlar:",
                                 style: pw.TextStyle(
                                   font: ttfBold,
-                                  fontSize: 9,
-                                  fontStyle: pw.FontStyle.italic,
-                                  color: PdfColors.blue900,
+                                  fontSize: 8.5,
+                                  color: PdfColors.blue800,
                                 ),
                               ),
-                              pw.SizedBox(height: 3),
-                            ],
+                            ),
+                          );
+                          itemsWidgets.addAll(
+                            _buildInfoTable(
+                              bodrumGroup,
+                              ttf,
+                              ttfBold,
+                              const PdfColor.fromInt(0x00000000),
+                              subjectLabel: "Merdiven Tipleri",
+                            ),
+                          );
+                          itemsWidgets.add(pw.SizedBox(height: 8));
+                        }
+                      } else {
+                        itemsWidgets.addAll(
+                          _buildInfoTable(
+                            tableGroup,
+                            ttf,
+                            ttfBold,
+                            (id <= 10 || id == 33)
+                                ? const PdfColor.fromInt(0x00000000)
+                                : effectiveSectionRiskColor,
+                            subjectLabel: "Konu",
                           ),
                         );
-                        isFirstTableFor36 = false;
+                        itemsWidgets.add(pw.SizedBox(height: 10));
                       }
-                      itemsWidgets.addAll(
-                        _buildInfoTable(
-                          tableGroup,
-                          ttf,
-                          ttfBold,
-                          (id <= 10 || id == 33 || id == 36)
-                              ? const PdfColor.fromInt(0x00000000)
-                              : effectiveSectionRiskColor,
-                          subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
-                        ),
-                      );
-                      itemsWidgets.add(pw.SizedBox(height: 10));
                       tableGroup = [];
                     }
                     itemsWidgets.add(
@@ -1503,54 +1568,119 @@ class PdfService {
                   }
                 }
                 if (tableGroup.isNotEmpty) {
-                  if (id == 36 && isFirstTableFor36) {
-                    itemsWidgets.add(
-                      pw.Column(
-                        crossAxisAlignment: pw.CrossAxisAlignment.start,
-                        children: [
-                          pw.Text(
-                            "Konu:",
+                  if (id == 36) {
+                    if (isFirstTableFor36) {
+                      itemsWidgets.add(
+                        pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text(
+                              "Konu:",
+                              style: pw.TextStyle(
+                                font: ttfBold,
+                                fontSize: 9,
+                                fontStyle: pw.FontStyle.italic,
+                                color: PdfColors.blue900,
+                              ),
+                            ),
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.only(left: 6),
+                              child: pw.Text(
+                                "Merdiven Uygunluk Değerlendirmesi",
+                                style: pw.TextStyle(font: ttf, fontSize: 9),
+                              ),
+                            ),
+                            pw.SizedBox(height: 5),
+                            pw.Text(
+                              "Kullanıcı Yanıtı:",
+                              style: pw.TextStyle(
+                                font: ttfBold,
+                                fontSize: 9,
+                                fontStyle: pw.FontStyle.italic,
+                                color: PdfColors.blue900,
+                              ),
+                            ),
+                            pw.SizedBox(height: 3),
+                          ],
+                        ),
+                      );
+                      isFirstTableFor36 = false;
+                    }
+
+                    final zeminUpperGroup = tableGroup.where((item) {
+                      final lbl = (item['label'] ?? '').toString();
+                      return !lbl.startsWith("Bodrum") && !lbl.startsWith("BODRUM");
+                    }).toList();
+
+                    final bodrumGroup = tableGroup.where((item) {
+                      final lbl = (item['label'] ?? '').toString();
+                      return lbl.startsWith("Bodrum") || lbl.startsWith("BODRUM");
+                    }).toList();
+
+                    if (zeminUpperGroup.isNotEmpty) {
+                      itemsWidgets.add(
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.only(bottom: 4, top: 2),
+                          child: pw.Text(
+                            "Zemin ve Üst Katlar:",
                             style: pw.TextStyle(
                               font: ttfBold,
-                              fontSize: 9,
-                              fontStyle: pw.FontStyle.italic,
-                              color: PdfColors.blue900,
+                              fontSize: 8.5,
+                              color: PdfColors.blue800,
                             ),
                           ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.only(left: 6),
-                            child: pw.Text(
-                              "Merdiven Uygunluk Değerlendirmesi",
-                              style: pw.TextStyle(font: ttf, fontSize: 9),
-                            ),
-                          ),
-                          pw.SizedBox(height: 5),
-                          pw.Text(
-                            "Kullanıcı Yanıtı:",
+                        ),
+                      );
+                      itemsWidgets.addAll(
+                        _buildInfoTable(
+                          zeminUpperGroup,
+                          ttf,
+                          ttfBold,
+                          const PdfColor.fromInt(0x00000000),
+                          subjectLabel: "Merdiven Tipleri",
+                        ),
+                      );
+                      itemsWidgets.add(pw.SizedBox(height: 8));
+                    }
+
+                    if (bodrumGroup.isNotEmpty) {
+                      itemsWidgets.add(
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
+                          child: pw.Text(
+                            "Bodrum Katlar:",
                             style: pw.TextStyle(
                               font: ttfBold,
-                              fontSize: 9,
-                              fontStyle: pw.FontStyle.italic,
-                              color: PdfColors.blue900,
+                              fontSize: 8.5,
+                              color: PdfColors.blue800,
                             ),
                           ),
-                          pw.SizedBox(height: 3),
-                        ],
+                        ),
+                      );
+                      itemsWidgets.addAll(
+                        _buildInfoTable(
+                          bodrumGroup,
+                          ttf,
+                          ttfBold,
+                          const PdfColor.fromInt(0x00000000),
+                          subjectLabel: "Merdiven Tipleri",
+                        ),
+                      );
+                      itemsWidgets.add(pw.SizedBox(height: 8));
+                    }
+                  } else {
+                    itemsWidgets.addAll(
+                      _buildInfoTable(
+                        tableGroup,
+                        ttf,
+                        ttfBold,
+                        (id <= 10 || id == 33)
+                            ? const PdfColor.fromInt(0x00000000)
+                            : effectiveSectionRiskColor,
+                        subjectLabel: "Konu",
                       ),
                     );
-                    isFirstTableFor36 = false;
                   }
-                  itemsWidgets.addAll(
-                    _buildInfoTable(
-                      tableGroup,
-                      ttf,
-                      ttfBold,
-                      (id <= 10 || id == 33 || id == 36)
-                          ? const PdfColor.fromInt(0x00000000)
-                          : effectiveSectionRiskColor,
-                      subjectLabel: id == 36 ? "Merdiven Tipleri" : "Konu",
-                    ),
-                  );
                 }
               }
 

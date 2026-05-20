@@ -495,22 +495,22 @@ class Section36Handler {
         isBold: true,
       );
     } else {
-      add("Bodrum Normal Merdiven", b.bodrumNormalMerdivenSayisi);
+      add("Normal Merdiven", b.bodrumNormalMerdivenSayisi);
       add(
-        "Bodrum Bina İçi Yangın Merdiveni",
+        "Bina İçi Yangın Merdiveni",
         b.bodrumBinaIciYanginMerdiveniSayisi,
       );
       add(
-        "Bodrum Bina Dışı Kapalı Yangın Merdiveni",
+        "Bina Dışı Kapalı Yangın Merdiveni",
         b.bodrumBinaDisiKapaliYanginMerdiveniSayisi,
       );
       add(
-        "Bodrum Bina Dışı Açık Yangın Merdiveni",
+        "Bina Dışı Açık Yangın Merdiveni",
         b.bodrumBinaDisiAcikYanginMerdiveniSayisi,
       );
-      add("Bodrum Dairesel Merdiven", b.bodrumDonerMerdivenSayisi);
-      add("Bodrum Sahanlıksız Merdiven", b.bodrumSahanliksizMerdivenSayisi);
-      add("Bodrum Dengelenmiş Merdiven", b.bodrumDengelenmisMerdivenSayisi);
+      add("Dairesel Merdiven", b.bodrumDonerMerdivenSayisi);
+      add("Sahanlıksız Merdiven", b.bodrumSahanliksizMerdivenSayisi);
+      add("Dengelenmiş Merdiven", b.bodrumDengelenmisMerdivenSayisi);
 
       final int totalBod =
           b.bodrumNormalMerdivenSayisi +
