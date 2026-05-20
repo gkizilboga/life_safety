@@ -1635,6 +1635,18 @@ class ReportEngine {
         }
 
         // Madde 41 Tahliye Mesafesi (Lobi) - Bölüm 36 analiz notunda merkezileştirildiği için buradan kaldırıldı.
+        if (b20.sahanliksizMerdivenSayisi > 0) {
+          _addDetail(
+            details,
+            label: 'Sahanlıksız (Düz) Merdiven Var Mı?',
+            value: '${b20.sahanliksizMerdivenSayisi} Adet',
+            report:
+                'KRİTİK RİSK: Bina merdivenlerinde sahanlıksız (düz) merdiven bulunduğu beyan edilmiştir. Yangın kaçış merdivenlerinde kesintisiz (sahanlıksız) yükseklik sınırları aşılmamalıdır; aksi takdirde düşme ve tahliye sırasında yaralanma riski son derece yüksektir.',
+            advice:
+                'Sahanlıksız merdivenler acilen standartlara uygun hale getirilmeli veya alternatif güvenli kaçış yolları planlanmalıdır.',
+            level: RiskLevel.critical,
+          );
+        }
 
         handled = true;
       }

@@ -55,8 +55,32 @@ void main() async {
   );
 }
 
-class BinaYanginRiskAnaliziApp extends StatelessWidget {
+class BinaYanginRiskAnaliziApp extends StatefulWidget {
   const BinaYanginRiskAnaliziApp({super.key});
+
+  @override
+  State<BinaYanginRiskAnaliziApp> createState() => _BinaYanginRiskAnaliziAppState();
+}
+
+class _BinaYanginRiskAnaliziAppState extends State<BinaYanginRiskAnaliziApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+      BinaStore.instance.saveToDisk(immediate: true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,3 +109,4 @@ class BinaYanginRiskAnaliziApp extends StatelessWidget {
     return const DashboardScreen();
   }
 }
+

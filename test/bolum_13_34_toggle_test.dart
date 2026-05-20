@@ -6,6 +6,7 @@ import 'package:life_safety/data/bina_store.dart';
 import 'package:life_safety/models/bolum_13_model.dart';
 import 'package:life_safety/models/bolum_34_model.dart';
 import 'package:life_safety/models/choice_result.dart';
+import 'package:life_safety/models/bolum_6_model.dart';
 import 'package:life_safety/utils/app_content.dart';
 
 // ---------------------------------------------------------------------------
@@ -190,6 +191,10 @@ void main() {
   // GRUP 6: getSectionDetailedReport — Bölüm 13 Toggle Doğrulaması
   // =========================================================================
   group('getSectionDetailedReport — Bölüm 13 Toggle Doğrulaması', () {
+    setUp(() {
+      BinaStore.instance.bolum6 = Bolum6Model(hasTicari: true);
+    });
+
     test('Bölüm 13 Toggle ON: detaylı raporda "Tüm ticari alanlardan" etiketi gelmeli', () {
       final good = Bolum13Content.ticariOptionA;
       BinaStore.instance.bolum13 = Bolum13Model(

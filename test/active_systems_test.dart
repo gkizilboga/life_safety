@@ -44,6 +44,10 @@ void main() {
 
     test('Sprinkler: Otopark < 600 -> Zorunlu Değil (13-1-ALT-A)', () {
       store.bolum3 = Bolum3Model(hYapi: 10.0);
+      store.bolum6 = Bolum6Model(
+        hasOtopark: true,
+        otoparkTipi: Bolum6Content.otoparkKapali,
+      );
       store.bolum13 = Bolum13Model(
         otoparkAlan: ChoiceResult(
           label: "13-1-ALT-A",
@@ -56,13 +60,17 @@ void main() {
       final item = reqs.firstWhere((e) => e.name.contains("Sprinkler"));
       expect(item.isMandatory, false);
       expect(
-        item.reason.contains("limitle"),
+        item.reason.contains("limitlerinin"),
         true,
       ); // Check for the specific reasoning text
     });
 
     test('Sprinkler: Otopark Bilmiyorum -> Uyarı (13-1-ALT-E)', () {
       store.bolum3 = Bolum3Model(hYapi: 10.0);
+      store.bolum6 = Bolum6Model(
+        hasOtopark: true,
+        otoparkTipi: Bolum6Content.otoparkKapali,
+      );
       store.bolum13 = Bolum13Model(
         otoparkAlan: ChoiceResult(
           label: "13-1-ALT-E",

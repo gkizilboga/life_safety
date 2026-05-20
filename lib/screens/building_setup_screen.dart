@@ -21,6 +21,12 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   bool _isAgreed = true;
 
   @override
+  void dispose() {
+    _nameCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     // Load existing data if we are editing or going back

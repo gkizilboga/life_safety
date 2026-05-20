@@ -13,6 +13,12 @@ class _TerminologyScreenState extends State<TerminologyScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<Term> _filteredTerms = terminologyData;
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   void _filterTerms(String query) {
     setState(() {
       _filteredTerms = terminologyData

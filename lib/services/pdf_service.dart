@@ -12,6 +12,20 @@ import 'package:flutter/material.dart';
 import '../screens/pdf_preview_screen.dart';
 
 class PdfService {
+  static ByteData? _fontData;
+  static ByteData? _fontDataBold;
+  static ByteData? _fontDataItalic;
+  static ByteData? _fontDataBoldItalic;
+  static ByteData? _logoData;
+
+  static Future<void> _ensureAssetsLoaded() async {
+    _fontData ??= await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
+    _fontDataBold ??= await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
+    _fontDataItalic ??= await rootBundle.load("assets/fonts/Roboto-Italic.ttf");
+    _fontDataBoldItalic ??= await rootBundle.load("assets/fonts/Roboto-BoldItalic.ttf");
+    _logoData ??= await rootBundle.load("assets/images/ui/logo3.webp");
+  }
+
   // Keywords that get bold+red highlighting in PDF output.
   // Defined once here and used by both _buildHighlightedText and _buildRichText.
   static const _highlightKeywords = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
@@ -1205,24 +1219,15 @@ class PdfService {
   static Future<pw.Document> _buildRiskAnalysisDocument({
     BinaStore? providedStore,
   }) async {
+    await _ensureAssetsLoaded();
     final pdf = pw.Document();
-    // Bundle edilmiş Roboto fontları - offline çalışır, Türkçe karakterleri destekler
-    final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
-    final fontDataBold = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
-    final fontDataItalic = await rootBundle.load(
-      "assets/fonts/Roboto-Italic.ttf",
-    );
-    final fontDataBoldItalic = await rootBundle.load(
-      "assets/fonts/Roboto-BoldItalic.ttf",
-    );
 
-    final ttf = pw.Font.ttf(fontData);
-    final ttfBold = pw.Font.ttf(fontDataBold);
-    final ttfItalic = pw.Font.ttf(fontDataItalic);
-    final ttfBoldItalic = pw.Font.ttf(fontDataBoldItalic);
+    final ttf = pw.Font.ttf(_fontData!);
+    final ttfBold = pw.Font.ttf(_fontDataBold!);
+    final ttfItalic = pw.Font.ttf(_fontDataItalic!);
+    final ttfBoldItalic = pw.Font.ttf(_fontDataBoldItalic!);
 
-    final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
-    final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
+    final logoImage = pw.MemoryImage(_logoData!.buffer.asUint8List());
 
     final store = providedStore ?? BinaStore.instance;
     final metrics = ReportEngine.calculateRiskMetrics(store: store);
@@ -1631,23 +1636,14 @@ class PdfService {
   // --- 2. AKTİF SİSTEM GEREKSİNİMLERİ RAPORU ---
   static Future<void> generateActiveSystemsPdf(BuildContext context) async {
     final pdf = pw.Document();
-    // Bundle edilmiş Roboto fontları - offline çalışır, Türkçe karakterleri destekler
-    final fontData = await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
-    final fontDataBold = await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
-    final fontDataItalic = await rootBundle.load(
-      "assets/fonts/Roboto-Italic.ttf",
-    );
-    final fontDataBoldItalic = await rootBundle.load(
-      "assets/fonts/Roboto-BoldItalic.ttf",
-    );
+    await _ensureAssetsLoaded();
 
-    final ttf = pw.Font.ttf(fontData);
-    final ttfBold = pw.Font.ttf(fontDataBold);
-    final ttfItalic = pw.Font.ttf(fontDataItalic);
-    final ttfBoldItalic = pw.Font.ttf(fontDataBoldItalic);
+    final ttf = pw.Font.ttf(_fontData!);
+    final ttfBold = pw.Font.ttf(_fontDataBold!);
+    final ttfItalic = pw.Font.ttf(_fontDataItalic!);
+    final ttfBoldItalic = pw.Font.ttf(_fontDataBoldItalic!);
 
-    final logoData = await rootBundle.load("assets/images/ui/logo3.webp");
-    final logoImage = pw.MemoryImage(logoData.buffer.asUint8List());
+    final logoImage = pw.MemoryImage(_logoData!.buffer.asUint8List());
 
     final store = BinaStore.instance;
     final activeSystems = ActiveSystemsEngine.calculateRequirements(store);
