@@ -487,18 +487,27 @@ class PdfService {
             _buildHeader(context, docNo, ttfBold, "YANGIN RİSK ANALİZİ"),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
-          pw.Text(
-            "YÖNETİCİ ÖZETİ VE ACİL EYLEM PLANI",
-            style: pw.TextStyle(
-              font: ttfBold,
-              fontSize: 13,
-              color: PdfColor.fromInt(0xFF1a365d),
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
+            child: pw.Text(
+              "YÖNETİCİ ÖZETİ VE ACİL EYLEM PLANI",
+              style: pw.TextStyle(
+                font: ttfBold,
+                fontSize: 11,
+                color: PdfColors.white,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
-          pw.SizedBox(height: 12),
+          pw.SizedBox(height: 16),
           pw.RichText(
             text: pw.TextSpan(
-              style: pw.TextStyle(font: ttf, fontSize: 9.5, lineSpacing: 2.2),
+              style: pw.TextStyle(font: ttf, fontSize: 8.5, lineSpacing: 2.2),
               children: [
                 pw.TextSpan(
                   text:
@@ -524,7 +533,7 @@ class PdfService {
                 text: item,
                 style: pw.TextStyle(
                   font: ttf,
-                  fontSize: 9,
+                  fontSize: 8.5,
                   color: PdfColors.black,
                   lineSpacing: 2.2,
                 ),
@@ -563,14 +572,14 @@ class PdfService {
               width: double.infinity,
               padding: const pw.EdgeInsets.symmetric(
                 horizontal: 12,
-                vertical: 10,
+                vertical: 6,
               ),
               decoration: const pw.BoxDecoration(color: navyBlue),
               child: pw.Text(
                 "KAPSAM",
                 style: pw.TextStyle(
                   font: ttfBold,
-                  fontSize: 13,
+                  fontSize: 11,
                   color: PdfColors.white,
                   letterSpacing: 0.5,
                 ),
@@ -614,9 +623,9 @@ class PdfService {
                         faq['a'] ?? '',
                         style: pw.TextStyle(
                           font: ttf,
-                          fontSize: 8,
+                          fontSize: 8.5,
                           color: PdfColors.grey800,
-                          lineSpacing: 1.5,
+                          lineSpacing: 2.2,
                         ),
                       ),
                     ),
@@ -691,26 +700,29 @@ class PdfService {
             // Sayfa Başlığı
             pw.Container(
               width: double.infinity,
-              padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const pw.EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 6,
+              ),
               decoration: const pw.BoxDecoration(color: navyBlue),
               child: pw.Text(
                 "HAYAT KURTARICI BİLGİLER",
                 style: pw.TextStyle(
                   font: fontBold,
-                  fontSize: 12,
+                  fontSize: 11,
                   color: PdfColors.white,
                   letterSpacing: 0.5,
                 ),
               ),
             ),
-            pw.SizedBox(height: 12),
+            pw.SizedBox(height: 16),
             pw.Text(
               "Konutlarda yaşayan bireylerin yangın öncesinde, esnasında ve sonrasında kendi güvenliklerini sağlamaları adına hayati önem taşıyan pratik rehber aşağıda özetlenmiştir.",
               style: pw.TextStyle(
                 font: font,
                 fontSize: 8.5,
                 color: PdfColors.grey700,
-                lineSpacing: 1.5,
+                lineSpacing: 2.2,
               ),
             ),
             pw.SizedBox(height: 12),
@@ -865,9 +877,9 @@ class PdfService {
                           text: pw.TextSpan(
                             style: pw.TextStyle(
                               font: font,
-                              fontSize: 7.5,
+                              fontSize: 8.5,
                               color: PdfColors.grey900,
-                              lineSpacing: 1.3,
+                              lineSpacing: 2.2,
                             ),
                             children: [
                               if (boldPart.isNotEmpty)
@@ -896,86 +908,57 @@ class PdfService {
     pw.Font font,
     pw.Font fontBold,
   ) {
-    // Split the content manually for the two-column layout
-    final disclaimerParts = AppStrings.legalDisclaimerContent.split('\n\n');
-    // Part 1: İŞBU METİN + 1 + 2 + 3
-    final leftColumnText = disclaimerParts.sublist(0, 4).join('\n\n');
-    // Part 2: 4 + 5 + KVKK
-    final rightColumnText = disclaimerParts.sublist(4).join('\n\n');
-
-    return pw.Page(
-      pageTheme: pageTheme.copyWith(
-        margin: const pw.EdgeInsets.symmetric(horizontal: 25, vertical: 30),
-      ),
-      build: (context) => pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Text(
-            "EK 1: YASAL DAYANAKLAR VE SORUMLULUK REDDİ BEYANI",
-            style: pw.TextStyle(
-              fontSize: 10,
-              fontWeight: pw.FontWeight.bold,
-              color: PdfColors.grey700,
-              letterSpacing: 1.0,
-            ),
+    return pw.MultiPage(
+      pageTheme: pageTheme,
+      header: (context) => pw.Container(
+        width: double.infinity,
+        margin: const pw.EdgeInsets.only(bottom: 16),
+        padding: const pw.EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 6,
+        ),
+        decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
+        child: pw.Text(
+          "EK 1: YASAL DAYANAKLAR VE SORUMLULUK REDDİ BEYANI",
+          style: pw.TextStyle(
+            fontSize: 11,
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.white,
+            letterSpacing: 0.5,
           ),
-          pw.SizedBox(height: 15),
-          pw.Row(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Expanded(
-                child: pw.Text(
-                  leftColumnText,
-                  style: const pw.TextStyle(
-                    fontSize: 8,
-                    color: PdfColors.grey600,
-                    lineSpacing: 1.5,
-                  ),
-                  textAlign: pw.TextAlign.justify,
-                ),
-              ),
-              pw.SizedBox(width: 25),
-              pw.Expanded(
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      rightColumnText,
-                      style: const pw.TextStyle(
-                        fontSize: 8,
-                        color: PdfColors.grey600,
-                        lineSpacing: 1.5,
-                      ),
-                      textAlign: pw.TextAlign.justify,
-                    ),
-                    pw.SizedBox(height: 15),
-                    pw.Text(
-                      AppStrings.kvkkTitle,
-                      style: pw.TextStyle(
-                        fontSize: 8,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.grey700,
-                      ),
-                    ),
-                    pw.SizedBox(height: 5),
-                    pw.Text(
-                      AppStrings.kvkkContent,
-                      style: const pw.TextStyle(
-                        fontSize: 8,
-                        color: PdfColors.grey600,
-                        lineSpacing: 1.5,
-                      ),
-                      textAlign: pw.TextAlign.justify,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          pw.Spacer(),
-          _buildFooter(context, font, fontBold),
-        ],
+        ),
       ),
+      footer: (context) => _buildFooter(context, font, fontBold),
+      build: (context) => [
+        pw.Text(
+          AppStrings.legalDisclaimerContent,
+          style: const pw.TextStyle(
+            fontSize: 8,
+            color: PdfColors.grey600,
+            lineSpacing: 2.2,
+          ),
+          textAlign: pw.TextAlign.justify,
+        ),
+        pw.SizedBox(height: 15),
+        pw.Text(
+          AppStrings.kvkkTitle,
+          style: pw.TextStyle(
+            fontSize: 8,
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.grey700,
+          ),
+        ),
+        pw.SizedBox(height: 5),
+        pw.Text(
+          AppStrings.kvkkContent,
+          style: const pw.TextStyle(
+            fontSize: 8,
+            color: PdfColors.grey600,
+            lineSpacing: 2.2,
+          ),
+          textAlign: pw.TextAlign.justify,
+        ),
+      ],
     );
   }
 
@@ -1498,7 +1481,7 @@ class PdfService {
                               ),
                             ),
                           );
-                          itemsWidgets.addAll(
+                          itemsWidgets.add(
                             _buildInfoTable(
                               zeminUpperGroup,
                               ttf,
@@ -1524,7 +1507,7 @@ class PdfService {
                               ),
                             ),
                           );
-                          itemsWidgets.addAll(
+                          itemsWidgets.add(
                             _buildInfoTable(
                               bodrumGroup,
                               ttf,
@@ -1536,7 +1519,7 @@ class PdfService {
                           itemsWidgets.add(pw.SizedBox(height: 8));
                         }
                       } else {
-                        itemsWidgets.addAll(
+                        itemsWidgets.add(
                           _buildInfoTable(
                             tableGroup,
                             ttf,
@@ -1631,7 +1614,7 @@ class PdfService {
                           ),
                         ),
                       );
-                      itemsWidgets.addAll(
+                      itemsWidgets.add(
                         _buildInfoTable(
                           zeminUpperGroup,
                           ttf,
@@ -1657,7 +1640,7 @@ class PdfService {
                           ),
                         ),
                       );
-                      itemsWidgets.addAll(
+                      itemsWidgets.add(
                         _buildInfoTable(
                           bodrumGroup,
                           ttf,
@@ -1669,7 +1652,7 @@ class PdfService {
                       itemsWidgets.add(pw.SizedBox(height: 8));
                     }
                   } else {
-                    itemsWidgets.addAll(
+                    itemsWidgets.add(
                       _buildInfoTable(
                         tableGroup,
                         ttf,
@@ -1851,7 +1834,7 @@ class PdfService {
               pw.Text(
                 "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
                 style: pw.TextStyle(
-                  fontSize: 9,
+                  fontSize: 8.5,
                   fontWeight: pw.FontWeight.bold,
                   color: PdfColors.blueGrey700,
                   lineSpacing: 2.2,
@@ -1896,53 +1879,55 @@ class PdfService {
               );
             }
 
-            return pw.Container(
-              margin: const pw.EdgeInsets.only(bottom: 10),
-              padding: const pw.EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 8,
-              ),
-              decoration: boxDecoration,
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                    children: [
-                      pw.Expanded(
-                        child: pw.Text(
-                          _cleanEmojis(req.name),
-                          style: pw.TextStyle(
-                            fontSize: 10,
-                            fontWeight: pw.FontWeight.bold,
-                            color: PdfColors.black,
-                            lineSpacing: 2.2,
+            return pw.KeepTogether(
+              child: pw.Container(
+                margin: const pw.EdgeInsets.only(bottom: 10),
+                padding: const pw.EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
+                decoration: boxDecoration,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Expanded(
+                          child: pw.Text(
+                            _cleanEmojis(req.name),
+                            style: pw.TextStyle(
+                              fontSize: 9.5,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.black,
+                              lineSpacing: 2.2,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  pw.SizedBox(height: 2),
-                  pw.Text(
-                    cleanReason,
-                    style: const pw.TextStyle(
-                      fontSize: 9,
-                      color: PdfColors.black,
-                      lineSpacing: 2.2,
+                      ],
                     ),
-                  ),
-                  if (req.note.isNotEmpty) ...[
                     pw.SizedBox(height: 2),
                     pw.Text(
-                      _cleanEmojis(req.note),
+                      cleanReason,
                       style: const pw.TextStyle(
-                        fontSize: 9,
+                        fontSize: 8.5,
                         color: PdfColors.black,
                         lineSpacing: 2.2,
                       ),
                     ),
+                    if (req.note.isNotEmpty) ...[
+                      pw.SizedBox(height: 2),
+                      pw.Text(
+                        _cleanEmojis(req.note),
+                        style: const pw.TextStyle(
+                          fontSize: 8.5,
+                          color: PdfColors.black,
+                          lineSpacing: 2.2,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
             );
           }),
@@ -1971,7 +1956,7 @@ class PdfService {
     );
   }
 
-  static List<pw.Widget> _buildInfoTable(
+  static pw.Widget _buildInfoTable(
     List<Map<String, dynamic>> items,
     pw.Font font,
     pw.Font fontBold,
@@ -2038,6 +2023,11 @@ class PdfService {
       for (int i = 0; i < parts.length; i++) {
         if (i + 1 >= maxCols) break;
         double pW = measure(parts[i], isBold, 8.5) + 15;
+        // Çok sütunlu tablolarda veri hücrelerinin tek satır genişlik ölçümünü sınırlayarak
+        // çok uzun açıklamaların tablo ölçeğini bozmasını engelliyoruz.
+        if (maxCols >= 3 && pW > 180.0) {
+          pW = 180.0;
+        }
         if (pW > calculatedWidths[i + 1]) calculatedWidths[i + 1] = pW;
       }
     }
@@ -2049,9 +2039,20 @@ class PdfService {
 
     double currentTotal = calculatedWidths.reduce((a, b) => a + b);
     if (currentTotal > maxPageWidth) {
-      // Sayfa sınırını aşıyorsa orantılı küçült
-      double scale = maxPageWidth / currentTotal;
-      for (int i = 0; i < maxCols; i++) calculatedWidths[i] *= scale;
+      // Sayfa sınırını aşıyorsa, ilk sütunu sıkışmaması için koruyup
+      // daraltmayı diğer sütunlara orantılı olarak dağıtıyoruz.
+      double col0Width = calculatedWidths[0];
+      double remainingWidth = maxPageWidth - col0Width;
+      double remainingTotal = 0;
+      for (int i = 1; i < maxCols; i++) {
+        remainingTotal += calculatedWidths[i];
+      }
+      if (remainingTotal > 0 && remainingWidth > 0) {
+        double scale = remainingWidth / remainingTotal;
+        for (int i = 1; i < maxCols; i++) {
+          calculatedWidths[i] *= scale;
+        }
+      }
     } else if (currentTotal < maxPageWidth) {
       // Sayfadan darsa, son sütunu genişleterek sayfayı doldur
       calculatedWidths[maxCols - 1] += (maxPageWidth - currentTotal);
@@ -2318,9 +2319,16 @@ class PdfService {
     }
 
     // Wrap in Container for the side border if sectionColor is provided
-    if (sectionColor.alpha == 0) return rows;
+    if (sectionColor.alpha == 0) {
+      return pw.KeepTogether(
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: rows,
+        ),
+      );
+    }
 
-    return rows
+    final decoratedRows = rows
         .map(
           (r) => pw.Container(
             decoration: pw.BoxDecoration(
@@ -2333,6 +2341,13 @@ class PdfService {
           ),
         )
         .toList();
+
+    return pw.KeepTogether(
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: decoratedRows,
+      ),
+    );
   }
 
   static pw.Widget _buildStandardVerticalItem(
@@ -2469,20 +2484,20 @@ class PdfService {
       ],
     );
 
-    if (riskColor.alpha == 0) {
-      return pw.Padding(
-        padding: const pw.EdgeInsets.only(left: 0),
-        child: content,
-      );
-    }
+    final result = riskColor.alpha == 0
+        ? pw.Padding(
+            padding: const pw.EdgeInsets.only(left: 0),
+            child: content,
+          )
+        : pw.Container(
+            decoration: pw.BoxDecoration(
+              border: pw.Border(left: pw.BorderSide(color: riskColor, width: 4)),
+            ),
+            padding: const pw.EdgeInsets.only(left: 8),
+            child: content,
+          );
 
-    return pw.Container(
-      decoration: pw.BoxDecoration(
-        border: pw.Border(left: pw.BorderSide(color: riskColor, width: 4)),
-      ),
-      padding: const pw.EdgeInsets.only(left: 8),
-      child: content,
-    );
+    return pw.KeepTogether(child: result);
   }
 
   static pw.Widget _buildPromoQRBox(pw.Font font, pw.Font fontBold) {

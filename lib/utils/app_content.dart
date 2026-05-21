@@ -258,7 +258,7 @@ class Bolum6Content {
     uiTitle: "Yok.",
     uiSubtitle: "",
     reportText:
-        "BİLGİ: Binanın ticari alanında büyük restoran (endüstriyel mutfak) bulunmamaktadır. Ekstra önlem alınmasına gerek yoktur.",
+        "BİLGİ: Binanın ticari alanında büyük restoran (endüstriyel mutfak) bulunmamaktadır. Bu konuda ekstra önlem alınmasına gerek yoktur.",
     level: RiskLevel.info,
   );
 
@@ -801,7 +801,7 @@ class Bolum13Content {
     uiTitle: "Hayır.",
     uiSubtitle: "",
     reportText:
-        "UYARI: Asansör kat / kabin kapıları yangına dayanıklı değildir. Makine daireleri yangın riski taşır, kapısı dayanıklı olmalıdır. Ayrıca binada asansör makine dairesi varsa bu odanın duvarları ve kapısı yangın dayanımlı olmalıdır.",
+        "UYARI: Asansör kat / kabin kapılarının yangına dayanıklı olmadığı beyan edilmiştir. Asansörler, binada şaft görevi görmekte, alev ve dumanın diğer katlara taşınmasına sebep olabilmektedir. Bu sebeple asansör kat kapıları yapı yüksekliğine göre 30 veya 60 dk. yangın dayanıma sahip olması yönetmelikçe zorunludur.\nAyrıca binada asansör makine dairesi varsa bu odanın duvarları ve kapısı yangın dayanımlı olmalıdır.",
     level: RiskLevel.warning,
   );
 
@@ -1289,7 +1289,8 @@ class Bolum15Content {
     label: "15-3-A",
     uiTitle: "Hayır, yok.",
     uiSubtitle: "Tavanlar doğrudan beton üzeri sıva + boya.",
-    reportText: "OLUMLU: Tavanlarda asma tavan bulunmamaktadır.",
+    reportText:
+        "OLUMLU: Tavanlarda asma tavan bulunmadığı beyan edildiğinden bu konuda bir önlem alınması gerekmemektedir.",
     level: RiskLevel.positive,
   );
 
@@ -4265,7 +4266,7 @@ class Bolum35Content {
   // --- SENARYO 2: ÇİFT YÖN (EN YAKIN) ---
   static final ciftYonOptionA = ChoiceResult(
     label: "35-2-A",
-    uiTitle: "Tahminen [LIMIT] metreden KISADIR.",
+    uiTitle: "[LIMIT] metreden KISADIR.",
     uiSubtitle: "Mesafe yakın.",
     reportText:
         "OLUMLU: En yakın çıkışa kaçış mesafesi yönetmelik sınırları içerisindedir.",
@@ -4273,7 +4274,7 @@ class Bolum35Content {
   );
   static final ciftYonOptionB = ChoiceResult(
     label: "35-2-B",
-    uiTitle: "Tahminen [LIMIT] metreden UZUNDUR.",
+    uiTitle: "[LIMIT] metreden UZUNDUR.",
     uiSubtitle: "Mesafe uzak.",
     reportText:
         "KRİTİK RİSK: En yakın çıkışa mesafe sınırın üzerindedir. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir.",
@@ -4323,7 +4324,7 @@ class Bolum35Content {
 
   static final cikmazMesafeOptionA = ChoiceResult(
     label: "35-3-C",
-    uiTitle: "Tahminen [LIMIT] metreden KISA.",
+    uiTitle: "[LIMIT] metreden KISA.",
     uiSubtitle: "",
     reportText:
         "OLUMLU: Çıkmaz koridor mesafesi yönetmelik sınırları içerisindedir.",
@@ -4331,7 +4332,7 @@ class Bolum35Content {
   );
   static final cikmazMesafeOptionB = ChoiceResult(
     label: "35-3-D",
-    uiTitle: "Tahminen [LIMIT] metreden UZUN.",
+    uiTitle: "[LIMIT] metreden UZUN.",
     uiSubtitle: "",
     reportText:
         "KRİTİK RİSK: Çıkmaz koridor mesafesi sınırın üzerindedir. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir. bunun için yerinde Uzman kontrolü gereklidir.",
