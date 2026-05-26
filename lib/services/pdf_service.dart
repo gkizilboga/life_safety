@@ -188,18 +188,29 @@ class PdfService {
   static pw.Widget _buildGaugeChart(int score) {
     double angle = -180.0 + (score / 100.0) * 180.0;
 
+    // SVG parser of pdf package has limited support for stroke-dasharray/stroke-dashoffset.
+    // Instead, we use three mathematically calculated arc segments (Red, Orange, Green)
+    // and draw explicit white divider lines. This renders 100% correctly and beautifully on all PDF viewers.
     String svgContent =
         '''
     <svg width="240" height="130" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#10b981" stroke-width="20" />
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f59e0b" stroke-width="20" stroke-dasharray="201.06 251.33" />
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ef4444" stroke-width="20" stroke-dasharray="125.66 251.33" />
+      <!-- Kirmizi Segment (Sol: 180 derece -> 120 derece) -->
+      <path d="M 20 100 A 80 80 0 0 1 60 30.72" fill="none" stroke="#ef4444" stroke-width="20" />
       
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ffffff" stroke-width="22" stroke-dasharray="3 251.33" stroke-dashoffset="-124.66" />
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ffffff" stroke-width="22" stroke-dasharray="3 251.33" stroke-dashoffset="-200.06" />
-
+      <!-- Turuncu Segment (Orta: 120 derece -> 60 derece) -->
+      <path d="M 60 30.72 A 80 80 0 0 1 140 30.72" fill="none" stroke="#f59e0b" stroke-width="20" />
+      
+      <!-- Yesil Segment (Sag: 60 derece -> 0 derece) -->
+      <path d="M 140 30.72 A 80 80 0 0 1 180 100" fill="none" stroke="#10b981" stroke-width="20" />
+      
+      <!-- Beyaz Bolucu Cizgiler (Segmentler arasi sik bosluk hissi) -->
+      <line x1="65" y1="39.38" x2="55" y2="22.06" stroke="#ffffff" stroke-width="3" />
+      <line x1="135" y1="39.38" x2="145" y2="22.06" stroke="#ffffff" stroke-width="3" />
+      
+      <!-- Gosterge Ignesi -->
       <polygon points="100,96 100,104 175,100" fill="#1e293b" transform="rotate($angle 100 100)" />
       
+      <!-- Igne Gobegi -->
       <circle cx="100" cy="100" r="10" fill="#1e293b" />
       <circle cx="100" cy="100" r="4" fill="#ffffff" />
     </svg>
@@ -221,6 +232,7 @@ class PdfService {
     const navyBlue = PdfColor.fromInt(0xFF1a365d);
     const darkNavy = PdfColor.fromInt(0xFF0d2137);
     const softGray = PdfColor.fromInt(0xFF6b7280);
+    const slateGray = PdfColor.fromInt(0xFF334155);
 
     return pw.Page(
       pageTheme: pageTheme,
@@ -249,7 +261,7 @@ class PdfService {
                   "BİNALARIN YANGINDAN KORUNMASI HAKKINDA YÖNETMELİĞİ'NE GÖRE",
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
-                    color: softGray,
+                    color: slateGray,
                     fontSize: 10,
                     letterSpacing: 1.2,
                   ),
@@ -325,7 +337,7 @@ class PdfService {
                     child: pw.Text(
                       subTitle,
                       style: pw.TextStyle(
-                        color: softGray,
+                        color: slateGray,
                         fontSize: 14,
                         letterSpacing: 1.0,
                       ),
