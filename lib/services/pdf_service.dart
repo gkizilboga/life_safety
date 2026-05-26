@@ -1920,7 +1920,7 @@ class PdfService {
             ),
             decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
             child: pw.Text(
-              "AKTİF SİSTEM GEREKSİNİMLERİ",
+              "DEĞERLENDİRME NOTLARI",
               style: pw.TextStyle(
                 font: ttfBold,
                 fontSize: 11,
@@ -1930,11 +1930,35 @@ class PdfService {
             ),
           ),
           pw.SizedBox(height: 8),
-          // Giriş metni ve ilk maddeyi bir arada tut (Header ayrılmasın)
+          pw.Text(
+            "Bu doküman içerisinde (paragrafların hemen solunda yer alan) renk kodları ve anlamları aşağıda açıklanmıştır:",
+            style: const pw.TextStyle(
+              fontSize: 9,
+              color: PdfColors.grey700,
+              lineSpacing: 2.2,
+            ),
+          ),
+          pw.SizedBox(height: 10),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", ""),
+              pw.SizedBox(width: 20),
+              _buildLegendItem(PdfColors.yellow700, "UYARI", ""),
+              pw.SizedBox(width: 20),
+              _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
+              pw.SizedBox(width: 20),
+              _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
+              pw.SizedBox(width: 20),
+              _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", ""),
+            ],
+          ),
+          pw.SizedBox(height: 15),
+          // Giriş metni
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-
               pw.Text(
                 "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
                 style: pw.TextStyle(
