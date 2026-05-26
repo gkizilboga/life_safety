@@ -1040,6 +1040,9 @@ class PdfService {
     pw.Font fontBold,
     String title,
   ) {
+    const slateMavi = PdfColor.fromInt(0xFF64748B); // Premium Slate 500
+    const dividerColor = PdfColor.fromInt(0xFFCBD5E1); // Soft Slate 300
+
     return pw.Container(
       margin: const pw.EdgeInsets.only(bottom: 15),
       child: pw.Column(
@@ -1052,7 +1055,7 @@ class PdfService {
                 style: pw.TextStyle(
                   font: fontBold,
                   fontSize: 8,
-                  color: const PdfColor.fromInt(0xFF1a365d), // Navy blue
+                  color: slateMavi,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -1061,13 +1064,13 @@ class PdfService {
                 style: pw.TextStyle(
                   font: fontBold,
                   fontSize: 8,
-                  color: PdfColors.grey700,
+                  color: slateMavi,
                 ),
               ),
             ],
           ),
           pw.SizedBox(height: 4),
-          pw.Divider(color: const PdfColor.fromInt(0xFF1a365d), thickness: 1),
+          pw.Divider(color: dividerColor, thickness: 1),
         ],
       ),
     );
@@ -1078,11 +1081,14 @@ class PdfService {
     pw.Font font,
     pw.Font fontBold,
   ) {
+    const slateMavi = PdfColor.fromInt(0xFF64748B); // Premium Slate 500
+    const dividerColor = PdfColor.fromInt(0xFFCBD5E1); // Soft Slate 300
+
     return pw.Container(
       margin: const pw.EdgeInsets.only(top: 15),
       child: pw.Column(
         children: [
-          pw.Divider(color: const PdfColor.fromInt(0xFF1a365d), thickness: 0.5),
+          pw.Divider(color: dividerColor, thickness: 0.5),
           pw.SizedBox(height: 4),
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -1106,7 +1112,7 @@ class PdfService {
                 style: pw.TextStyle(
                   font: font,
                   fontSize: 8,
-                  color: const PdfColor.fromInt(0xFF1a365d),
+                  color: slateMavi,
                 ),
               ),
             ],
