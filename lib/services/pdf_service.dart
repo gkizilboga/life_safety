@@ -921,6 +921,7 @@ class PdfService {
         child: pw.Text(
           "EK 1: YASAL DAYANAKLAR VE SORUMLULUK REDDİ BEYANI",
           style: pw.TextStyle(
+            font: fontBold,
             fontSize: 11,
             fontWeight: pw.FontWeight.bold,
             color: PdfColors.white,
@@ -1294,13 +1295,21 @@ class PdfService {
             _buildHeader(context, docNo, ttfBold, "YANGIN RİSK ANALİZİ"),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
-          pw.SizedBox(height: 12),
-          pw.Text(
-            "DEĞERLENDİRME NOTLARI",
-            style: pw.TextStyle(
-              font: ttfBold,
-              fontSize: 13,
-              color: PdfColor.fromInt(0xFF1a365d),
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
+            child: pw.Text(
+              "DEĞERLENDİRME NOTLARI",
+              style: pw.TextStyle(
+                font: ttfBold,
+                fontSize: 11,
+                color: PdfColors.white,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
           pw.SizedBox(height: 8),
@@ -1671,10 +1680,10 @@ class PdfService {
                 margin: const pw.EdgeInsets.only(top: 10, bottom: 4),
                 padding: const pw.EdgeInsets.symmetric(
                   horizontal: 8,
-                  vertical: 6,
+                  vertical: 5,
                 ),
                 decoration: const pw.BoxDecoration(
-                  color: PdfColor.fromInt(0xFF1a365d),
+                  color: PdfColor.fromInt(0xFFf1f5f9), // Slate 100 / soft corporate gray
                 ),
                 child: pw.Row(
                   children: [
@@ -1682,10 +1691,10 @@ class PdfService {
                       child: pw.Text(
                         "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
                         style: pw.TextStyle(
-                          fontSize: 10,
-                          fontWeight: pw.FontWeight.bold,
-                          color: PdfColors.white,
-                          letterSpacing: 0.4,
+                          font: ttfBold,
+                          fontSize: 9.5,
+                          color: const PdfColor.fromInt(0xFF1a365d), // Corporate Navy Blue text
+                          letterSpacing: 0.3,
                         ),
                       ),
                     ),
@@ -1826,6 +1835,24 @@ class PdfService {
         ),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
+          pw.Container(
+            width: double.infinity,
+            padding: const pw.EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
+            child: pw.Text(
+              "AKTİF SİSTEM GEREKSİNİMLERİ",
+              style: pw.TextStyle(
+                font: ttfBold,
+                fontSize: 11,
+                color: PdfColors.white,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 8),
           // Giriş metni ve ilk maddeyi bir arada tut (Header ayrılmasın)
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -1842,7 +1869,7 @@ class PdfService {
               ),
             ],
           ),
-          pw.SizedBox(height: 20),
+          pw.SizedBox(height: 15),
 
           // Gereksinim maddelerini serbest bırak (MultiPage bölünmeye izin verir)
           // Her bir madde (Container) zaten kendi içinde bölünmezdir.
