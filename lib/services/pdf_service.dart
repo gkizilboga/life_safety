@@ -33,37 +33,44 @@ class PdfService {
 
 
   static pw.Widget _buildLegendItem(PdfColor color, String label, String desc) {
-    return pw.Row(
+    final titleRow = pw.Row(
+      crossAxisAlignment: pw.CrossAxisAlignment.center,
       mainAxisSize: pw.MainAxisSize.min,
+      children: [
+        pw.Container(
+          width: 7,
+          height: 7,
+          color: color,
+        ),
+        pw.SizedBox(width: 5),
+        pw.Text(
+          label,
+          style: pw.TextStyle(
+            fontSize: 9,
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.black,
+          ),
+        ),
+      ],
+    );
+
+    if (desc.isEmpty) {
+      return titleRow;
+    }
+
+    return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
+        titleRow,
         pw.Padding(
-          padding: const pw.EdgeInsets.only(
-            top: 2,
-          ), // Align dash with first line
-          child: pw.Container(width: 8, height: 8, color: color),
-        ),
-        pw.SizedBox(width: 4),
-        pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text(
-              label,
-              style: pw.TextStyle(
-                fontSize: 9,
-                fontWeight: pw.FontWeight.bold,
-                color: PdfColors.black,
-              ),
+          padding: const pw.EdgeInsets.only(left: 12),
+          child: pw.Text(
+            desc,
+            style: const pw.TextStyle(
+              fontSize: 7,
+              color: PdfColors.grey700,
             ),
-            if (desc.isNotEmpty)
-              pw.Text(
-                desc,
-                style: const pw.TextStyle(
-                  fontSize: 7,
-                  color: PdfColors.grey700,
-                ),
-              ),
-          ],
+          ),
         ),
       ],
     );
