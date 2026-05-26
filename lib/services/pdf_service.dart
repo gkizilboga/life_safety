@@ -335,46 +335,98 @@ class PdfService {
 
               pw.Spacer(),
 
-              // Alt Bilgi Şeridi - Koyu Lacivert
+              // Alt Bilgi Şeridi - Yönetici Özeti ile Aynı Lacivert Tonu
               pw.Container(
                 width: double.infinity,
                 padding: const pw.EdgeInsets.symmetric(
-                  vertical: 25,
+                  vertical: 20,
                   horizontal: 30,
                 ),
-                color: darkNavy,
+                color: navyBlue,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    // Bina Adı
+                    // Raporlanan Bina Etiketi
+                    pw.Text(
+                      "RAPORLANAN BİNA / YAPI",
+                      style: const pw.TextStyle(
+                        color: PdfColor.fromInt(0xFF93C5FD), // Soft Açık Mavi (#93C5FD)
+                        fontSize: 8,
+                        fontWeight: pw.FontWeight.bold,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    pw.SizedBox(height: 4),
+                    // Bina Adı (14pt Bold)
                     pw.Text(
                       _cleanEmojis(store.currentBinaName).isEmpty
                           ? "Bina Adı Belirtilmemiş"
                           : _cleanEmojis(store.currentBinaName),
                       style: pw.TextStyle(
                         color: PdfColors.white,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: pw.FontWeight.bold,
                       ),
                     ),
-                    pw.SizedBox(height: 8),
-                    // Konum ve Tarih
+                    pw.SizedBox(height: 10),
+                    // İnce Bölücü Çizgi (%20 Şeffaflıkta)
+                    pw.Container(
+                      height: 1,
+                      color: const PdfColor.fromInt(0x33FFFFFF),
+                    ),
+                    pw.SizedBox(height: 10),
+                    // Lokasyon ve Rapor Tarihi Kolonları
                     pw.Row(
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.Text(
-                          "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
-                          style: const pw.TextStyle(
-                            color: PdfColors.white,
-                            fontSize: 12,
-                          ),
+                        // Sol Kolon: Lokasyon
+                        pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text(
+                              "BÖLGE / LOKASYON",
+                              style: const pw.TextStyle(
+                                color: PdfColor.fromInt(0xFF93C5FD),
+                                fontSize: 8,
+                                fontWeight: pw.FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                            pw.SizedBox(height: 4),
+                            pw.Text(
+                              "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
+                              style: const pw.TextStyle(
+                                color: PdfColors.white,
+                                fontSize: 11,
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        pw.Text(
-                          "Oluşturma Tarihi: ${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year} ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
-                          style: const pw.TextStyle(
-                            color: PdfColors.white,
-                            fontSize: 12,
-                          ),
+                        // Sağ Kolon: Rapor Tarihi
+                        pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.end,
+                          children: [
+                            pw.Text(
+                              "RAPOR TARİHİ",
+                              style: const pw.TextStyle(
+                                color: PdfColor.fromInt(0xFF93C5FD),
+                                fontSize: 8,
+                                fontWeight: pw.FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                            pw.SizedBox(height: 4),
+                            pw.Text(
+                              "${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year} - ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
+                              style: const pw.TextStyle(
+                                color: PdfColors.white,
+                                fontSize: 11,
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
