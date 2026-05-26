@@ -1876,24 +1876,19 @@ class PdfService {
         headerTitle: "AKTİF SİSTEM GEREKSİNİMLERİ",
         faqs: [
           {
+            'q': 'Bu doküman neden bahseder?',
+            'a':
+                'Bu çalışma yalnızca binanın ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını (alarm, söndürme, duman tahliyesi vb.) ele alır. Mimari (yapısal) risk analizi için uygulamadaki "Yangın Risk Analizi" çalışmasını da incelemenizi öneririz.',
+          },
+          {
             'q': 'Hangi binalar için uygundur?',
             'a':
                 'Bu çalışma, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
           },
           {
-            'q': 'Bu belge mimari analizi de kapsar mı?',
-            'a':
-                'Bu çalışma yalnızca binanın ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını (alarm, söndürme, duman tahliyesi vb.) ele alır. Mimari (yapısal) risk analizi için uygulamadaki "Yangın Risk Analizi" çalışmasını da incelemenizi öneririz.',
-          },
-          {
             'q': 'Binanızda periyodik testler zorunlu mu?',
             'a':
                 'Evet. Kurulumu yapılan yangın alarm, sprinkler, duman tahliye, acil aydınlatma ve söndürme sistemlerinin Binaların Yangından Korunması Hakkında Yönetmeliği ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşlarınca YILDA EN AZ BİR KEZ periyodik test ve bakımlarının yapılması yasal zorunluluktur. Yangın tüpleri ve yangın dolapları için ise 6 ayda bir kontrol önerilir. Bu sorumluluk bina yönetimine aittir.',
-          },
-          {
-            'q': 'Önemli Uyarı',
-            'a':
-                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksizsiz analiz için binanın, yetkin bir Yangın Mühendisi tarafından proje üzerinde veya yerinde incelenmesi şarttır.',
           },
         ],
       ),
