@@ -16,6 +16,7 @@ class BuildingSetupScreen extends StatefulWidget {
 
 class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   final _nameCtrl = TextEditingController();
+  final _nameFocusNode = FocusNode();
   String? _selectedCity;
   String? _selectedDistrict;
   bool _isAgreed = true;
@@ -23,6 +24,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
   @override
   void dispose() {
     _nameCtrl.dispose();
+    _nameFocusNode.dispose();
     super.dispose();
   }
 
@@ -197,6 +199,7 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
       padding: const EdgeInsets.only(bottom: 20),
       child: TextField(
         controller: ctrl,
+        focusNode: _nameFocusNode,
         maxLength: 40, // Güvenlik: Kaynak tüketimini ve PDF taşmasını önler
         decoration: InputDecoration(
           hintText: hint,
@@ -223,6 +226,8 @@ class _BuildingSetupScreenState extends State<BuildingSetupScreen> {
       onTap: onChanged == null
           ? null
           : () {
+              _nameFocusNode.unfocus(); // Explicitly remove focus from building name text field
+              FocusScope.of(context).unfocus(); // Dismiss keyboard when selecting city/district
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,

@@ -141,7 +141,7 @@ class _Bolum15ScreenState extends State<Bolum15Screen> {
             ),
           ],
 
-          const QuestionTitle("Asma Tavan var mı?"),
+          const QuestionTitle("Konut katlarında asma tavan var mı?"),
           _buildSoru("", 'tavan', [
             Bolum15Content.tavanOptionA,
             Bolum15Content.tavanOptionB,

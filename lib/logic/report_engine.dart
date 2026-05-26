@@ -129,6 +129,12 @@ class ReportEngine {
           }
         }
 
+        // Sahanlıksız merdiven kritik riski Bölüm 20 detay raporundan kaldırıldığı için burada skorlama amacıyla manuel eklenmektedir.
+        if (i == 20 && s.bolum20 != null && s.bolum20!.sahanliksizMerdivenSayisi > 0) {
+          criticalRisks++;
+          hasCritical = true;
+        }
+
         if (hasCritical && i > 10 && !criticalTitles.contains("Bölüm $i")) {
           criticalTitles.add("Bölüm $i");
         }
@@ -717,13 +723,13 @@ class ReportEngine {
           if (b15.tavan!.label == "15-3-B" &&
               b15.tavanMalzeme?.label == "15-3-ALT-A") {
             tavanReport =
-                "OLUMLU: Binada asma tavan bulunmaktadır ancak kullanılan malzemenin (Alçıpanel, metal vb.) yangın performansı yeterlidir.";
+                "OLUMLU: Konut katlarında asma tavan bulunmaktadır ancak kullanılan malzemenin (Alçıpanel, metal vb.) yangın performansı yeterlidir.";
             tavanLevel = RiskLevel.positive;
           }
 
           _addDetail(
             details,
-            label: 'Asma Tavan var mı?',
+            label: 'Konut katlarında asma tavan var mı?',
             value: b15.tavan!.uiTitle,
             report: tavanReport,
             advice: b15.tavan!.adviceText,
@@ -1635,18 +1641,6 @@ class ReportEngine {
         }
 
         // Madde 41 Tahliye Mesafesi (Lobi) - Bölüm 36 analiz notunda merkezileştirildiği için buradan kaldırıldı.
-        if (b20.sahanliksizMerdivenSayisi > 0) {
-          _addDetail(
-            details,
-            label: 'Sahanlıksız (Düz) Merdiven Var Mı?',
-            value: '${b20.sahanliksizMerdivenSayisi} Adet',
-            report:
-                'KRİTİK RİSK: Bina merdivenlerinde sahanlıksız (düz) merdiven bulunduğu beyan edilmiştir. Yangın kaçış merdivenlerinde kesintisiz (sahanlıksız) yükseklik sınırları aşılmamalıdır; aksi takdirde düşme ve tahliye sırasında yaralanma riski son derece yüksektir.',
-            advice:
-                'Sahanlıksız merdivenler acilen standartlara uygun hale getirilmeli veya alternatif güvenli kaçış yolları planlanmalıdır.',
-            level: RiskLevel.critical,
-          );
-        }
 
         handled = true;
       }
@@ -2306,13 +2300,49 @@ class ReportEngine {
               ? limitTekYon
               : limitCiftYon;
           final bool isOk = b35.manuelMesafe! <= limit;
+
+          String labelText = 'Elle Girilen Kaçış Mesafesi';
+          String reportText = '';
+          String adviceText = '';
+
+          final formattedValue = InputValidator.formatArea(b35.manuelMesafe!);
+
+          if (b35.tekYon?.label == "35-1-C") {
+            labelText = 'Elle Girilen Tek Yönlü Kaçış Mesafesi (Daire kapısından en yakın merdivene)';
+            reportText = isOk
+                ? 'OLUMLU: Daire kapısından en yakın merdivene kadar elle girilen tek yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
+                : 'KRİTİK RİSK: Daire kapısından en yakın merdivene kadar elle girilen tek yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. En yakın merdivene ulaşım mesafesi güvenli tahliye sınırlarının üzerindedir.';
+            adviceText = isOk
+                ? ''
+                : 'Tek yönlü kaçış mesafesini azaltmak amacıyla kat holünde alternatif bir acil çıkış kapısı açılmalı veya binadaki diğer güvenlik önlemleri (örneğin sprinkler sistemi vb.) artırılarak Yönetmelik sınırı genişletilmelidir.';
+          } else if (b35.ciftYon?.label == "35-2-C") {
+            labelText = 'Elle Girilen Çift Yönlü Kaçış Mesafesi (Daire kapısından en yakın merdivene)';
+            reportText = isOk
+                ? 'OLUMLU: Daire kapısından en yakın merdivene kadar elle girilen çift yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
+                : 'KRİTİK RİSK: Daire kapısından en yakın merdivene kadar elle girilen çift yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. En yakın merdivene ulaşım mesafesi güvenli tahliye sınırlarının üzerindedir.';
+            adviceText = isOk
+                ? ''
+                : 'Çift yönlü kaçış mesafesini azaltmak amacıyla daha yakın konumda alternatif bir kaçış merdiveni planlanmalı veya sprinkler sistemi gibi aktif söndürme sistemleri kurularak izin verilen Yönetmelik limitinin artırılması değerlendirilmelidir.';
+          } else if (b35.cikmazMesafe?.label == "35-3-E") {
+            labelText = 'Elle Girilen Çıkmaz Koridor Mesafesi';
+            reportText = isOk
+                ? 'OLUMLU: Elle girilen çıkmaz koridor uzunluğu ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
+                : 'KRİTİK RİSK: Elle girilen çıkmaz koridor uzunluğu ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. Koridordaki çıkmaz mesafe uzunluğu, olası bir yangın veya acil durumda sıkışma riskini artıracak düzeyde güvenli tahliye sınırlarının üzerindedir.';
+            adviceText = isOk
+                ? ''
+                : 'Çıkmaz koridor uzunluğunu Yönetmelik sınırlarına çekmek adına çıkmaz koridorun sonundaki daireler için alternatif bir çıkış güzergahı oluşturulmalı veya koridor mimarisi yeniden düzenlenmelidir.';
+          } else {
+            reportText = isOk
+                ? 'OLUMLU: Elle girilen kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
+                : 'KRİTİK RİSK: Elle girilen kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır.';
+          }
+
           _addDetail(
             details,
-            label: 'Elle Girilen Kaçış Mesafesi',
-            value: '${InputValidator.formatArea(b35.manuelMesafe!)} m',
-            report: isOk
-                ? 'OLUMLU: Girilen mesafe Yönetmelik sınırı olan $limit m. nin içerisindedir.'
-                : 'KRİTİK RİSK: Girilen mesafe Yönetmelik sınırı olan $limit m. nin üzerindedir.',
+            label: labelText,
+            value: '$formattedValue m',
+            report: reportText,
+            advice: adviceText,
             status: isOk ? ReportStatus.compliant : ReportStatus.risk,
           );
         }

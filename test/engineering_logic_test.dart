@@ -358,7 +358,7 @@ void main() {
     );
 
     test(
-      'Bölüm 36: Genişlik Aralık Analizi - Bilinmiyor Seçeneği (WARNING)',
+      'Bölüm 36: Genişlik Aralık Analizi - Bilinmiyor Seçeneği (UNKNOWN)',
       () {
         store.bolum4 = Bolum4Model();
         store.bolum33 = Bolum33Model();
@@ -373,7 +373,7 @@ void main() {
           (d) => d['label'] == 'Korunumlu Merdiven Genişliği',
         );
 
-        expect(merdDetail['status'], ReportStatus.warning);
+        expect(merdDetail['status'], ReportStatus.unknown);
         expect(merdDetail['report'].contains("BİLİNMİYOR"), true);
       },
     );

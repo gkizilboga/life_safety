@@ -1879,7 +1879,7 @@ class PdfService {
               );
             }
 
-            return pw.KeepTogether(
+            return pw.Inseparable(
               child: pw.Container(
                 margin: const pw.EdgeInsets.only(bottom: 10),
                 padding: const pw.EdgeInsets.symmetric(
@@ -2320,7 +2320,7 @@ class PdfService {
 
     // Wrap in Container for the side border if sectionColor is provided
     if (sectionColor.alpha == 0) {
-      return pw.KeepTogether(
+      return pw.Inseparable(
         child: pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: rows,
@@ -2342,7 +2342,7 @@ class PdfService {
         )
         .toList();
 
-    return pw.KeepTogether(
+    return pw.Inseparable(
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: decoratedRows,
@@ -2497,7 +2497,7 @@ class PdfService {
             child: content,
           );
 
-    return pw.KeepTogether(child: result);
+    return pw.Inseparable(child: result);
   }
 
   static pw.Widget _buildPromoQRBox(pw.Font font, pw.Font fontBold) {

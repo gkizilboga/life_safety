@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/error_screen.dart';
@@ -10,6 +11,7 @@ void main() async {
   runZonedGuarded<Future<void>>(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      await GoogleSignIn.instance.initialize();
 
       // Flutter framework hatalarını yakala (Render hataları vb.)
       FlutterError.onError = (FlutterErrorDetails details) {

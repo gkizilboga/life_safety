@@ -606,11 +606,7 @@ class Section36Handler {
           subtitle: disMerd.uiSubtitle,
           report: disMerd.reportText,
           advice: disMerd.adviceText,
-          status: disMerd.level == RiskLevel.critical
-              ? ReportStatus.risk
-              : (disMerd.level == RiskLevel.positive
-                    ? ReportStatus.compliant
-                    : ReportStatus.warning),
+          status: ReportStatus.fromRiskLevel(disMerd.level),
         );
 
       // Madde 41 Tahliye Mesafesi (Lobi) - Merkezi raporlama (Bölüm 20 yerine burada)
@@ -630,21 +626,36 @@ class Section36Handler {
           if (cikisKatiRes.label.contains("-C")) katPrefix = "Bodrum";
         }
 
+        String getQuestionLabel(String prefix, {bool isBodrum = false}) {
+          final prefixStr = isBodrum ? "Bodrum Kat: " : "";
+          if (prefix == "Zemin") return "${prefixStr}Zemin kattaki tahliye (lobi) mesafesi uygun mu?";
+          if (prefix == "Normal") return "${prefixStr}Normal kattaki tahliye (lobi) mesafesi uygun mu?";
+          if (prefix == "Bodrum") return "${prefixStr}Bodrum kattaki tahliye (lobi) mesafesi uygun mu?";
+          return "${prefixStr}Çıkış katındaki tahliye (lobi) mesafesi uygun mu?";
+        }
+
+        String getReportWithKat(String text, String prefix) {
+          String katText = "Çıkış katındaki";
+          if (prefix == "Zemin") katText = "Zemin kattaki";
+          if (prefix == "Normal") katText = "Normal kattaki";
+          if (prefix == "Bodrum") katText = "Bodrum kattaki";
+
+          return text
+              .replaceAll("Çıkış katındaki tahliye mesafesi", "$katText tahliye mesafesi")
+              .replaceAll("Çıkış katındaki tahliye mesafeleri", "$katText tahliye mesafeleri");
+        }
+
         final lobi = b20.lobiTahliyeMesafeDurumu;
         final bool showLobby = (directMain < totalMain) && totalMain > 0;
         if (showLobby && lobi != null) {
           _addDetail(
             details,
-            label: '$katPrefix katındaki tahliye (lobi) mesafesi uygun mu?',
+            label: getQuestionLabel(katPrefix),
             value: replaceLobbyLimit(lobi.uiTitle),
             subtitle: replaceLobbyLimit(lobi.uiSubtitle),
-            report: replaceLobbyLimit(lobi.reportText),
+            report: getReportWithKat(replaceLobbyLimit(lobi.reportText), katPrefix),
             advice: replaceLobbyLimit(lobi.adviceText),
-            status: lobi.level == RiskLevel.critical
-                ? ReportStatus.risk
-                : (lobi.level == RiskLevel.positive
-                      ? ReportStatus.compliant
-                      : ReportStatus.warning),
+            status: ReportStatus.fromRiskLevel(lobi.level),
           );
         }
 
@@ -654,17 +665,12 @@ class Section36Handler {
         if (showBodLobby && bodLobi != null) {
           _addDetail(
             details,
-            label:
-                'Bodrum Kat: $katPrefix katındaki tahliye (lobi) mesafesi uygun mu?',
+            label: getQuestionLabel(katPrefix, isBodrum: true),
             value: replaceLobbyLimit(bodLobi.uiTitle),
             subtitle: replaceLobbyLimit(bodLobi.uiSubtitle),
-            report: replaceLobbyLimit(bodLobi.reportText),
+            report: getReportWithKat(replaceLobbyLimit(bodLobi.reportText), katPrefix),
             advice: replaceLobbyLimit(bodLobi.adviceText),
-            status: bodLobi.level == RiskLevel.critical
-                ? ReportStatus.risk
-                : (bodLobi.level == RiskLevel.positive
-                      ? ReportStatus.compliant
-                      : ReportStatus.warning),
+            status: ReportStatus.fromRiskLevel(bodLobi.level),
           );
         }
       }
@@ -678,11 +684,7 @@ class Section36Handler {
           subtitle: konum.uiSubtitle,
           report: konum.reportText,
           advice: konum.adviceText,
-          status: konum.level == RiskLevel.critical
-              ? ReportStatus.risk
-              : (konum.level == RiskLevel.positive
-                    ? ReportStatus.compliant
-                    : ReportStatus.warning),
+          status: ReportStatus.fromRiskLevel(konum.level),
         );
 
       final kapiTipi = b36.kapiTipi;
@@ -694,11 +696,7 @@ class Section36Handler {
           subtitle: kapiTipi.uiSubtitle,
           report: kapiTipi.reportText,
           advice: kapiTipi.adviceText,
-          status: kapiTipi.level == RiskLevel.critical
-              ? ReportStatus.risk
-              : (kapiTipi.level == RiskLevel.positive
-                    ? ReportStatus.compliant
-                    : ReportStatus.warning),
+          status: ReportStatus.fromRiskLevel(kapiTipi.level),
         );
 
       final b4 = _store.bolum4;
@@ -742,7 +740,7 @@ class Section36Handler {
             subtitle: choice.uiSubtitle,
             report:
                 "UYARI: BİLİNMİYOR - Genişlik beyan edilmediği için yeterlilik değerlendirmesi yapılamamıştır.",
-            status: ReportStatus.warning,
+            status: ReportStatus.unknown,
           );
           return;
         }
@@ -797,7 +795,7 @@ class Section36Handler {
                 ? ReportStatus.risk
                 : (b36.kapiGenislikKorunumlu!.label.contains("-B")
                       ? ReportStatus.compliant
-                      : ReportStatus.warning),
+                      : ReportStatus.unknown),
           );
         }
       } else {
@@ -829,7 +827,7 @@ class Section36Handler {
                 ? ReportStatus.risk
                 : (b36.kapiGenislikKorunumlu!.label.contains("-B")
                       ? ReportStatus.compliant
-                      : ReportStatus.warning),
+                      : ReportStatus.unknown),
           );
         }
         evaluateWidth(
@@ -859,7 +857,7 @@ class Section36Handler {
                 ? ReportStatus.risk
                 : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
                       ? ReportStatus.compliant
-                      : ReportStatus.warning),
+                      : ReportStatus.unknown),
           );
         }
       }

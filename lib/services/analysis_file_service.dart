@@ -33,7 +33,7 @@ class AnalysisFileService {
   /// Opens a file picker to select an .lsf file and imports it into BinaStore.
   static Future<bool> importAnalysis(BuildContext context) async {
     try {
-      final result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['lsf'],
       );

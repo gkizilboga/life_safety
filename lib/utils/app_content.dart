@@ -1290,7 +1290,7 @@ class Bolum15Content {
     uiTitle: "Hayır, yok.",
     uiSubtitle: "Tavanlar doğrudan beton üzeri sıva + boya.",
     reportText:
-        "OLUMLU: Tavanlarda asma tavan bulunmadığı beyan edildiğinden bu konuda bir önlem alınması gerekmemektedir.",
+        "OLUMLU: Konut katlarında asma tavan bulunmadığı beyan edildiğinden bu konuda bir önlem alınması gerekmemektedir.",
     level: RiskLevel.positive,
   );
 
@@ -1305,9 +1305,9 @@ class Bolum15Content {
   static final tavanOptionC = ChoiceResult(
     label: "15-3-C",
     uiTitle: "Farklı tavan tipleri mevcut.",
-    uiSubtitle: "",
+    uiSubtitle: "Asma tavan dahil.",
     reportText:
-        "UYARI: Binanın bazı bölümlerinde asma tavan tespit edilmiştir; kullanılan malzemenin yangın performansı ve tavan içi tesisat yalıtımı kontrol edilmelidir.",
+        "UYARI: Binada asma tavan tespit edilmiştir; kullanılan malzemenin yangın performansı ve tavan içi tesisat yalıtımı kontrol edilmelidir.",
     level: RiskLevel.warning,
   );
 
@@ -1316,7 +1316,7 @@ class Bolum15Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Tavan yapısı hakkında bilgi yok. Binadaki tavan tiplerinin incelenmesi gereklidir.",
+        "BİLİNMİYOR: Konut katlarında asma tavan varlığı bilinmemektedir. Tavan tiplerinin yerinde veya proje üzerinde belirlenerek yönetmelik gereksinimlerinin karşılandığı teyit edilmelidir.",
     level: RiskLevel.unknown,
   );
 
@@ -1343,13 +1343,13 @@ class Bolum15Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Asma tavan malzemesinin yanıcılığı bilinmiyor. Asma tavan malzemelerinin yangına tepki test raporları kontrol edildikten sonra Yönetmelik şartlarını karşılayıp karşılamadığına karar verilir.",
+        "BİLİNMİYOR: Asma tavan malzemesinin yanıcılık özelliği bilinmiyor. Asma tavan malzemelerinin yangına tepki test raporları kontrol edildikten sonra Yönetmelik şartlarını karşılayıp karşılamadığına karar verilir.",
     level: RiskLevel.unknown,
   );
   static final tavanMalzemeOptionKarma = ChoiceResult(
     label: "15-3-Alt-D", // D for Mixed (inserted before Unknown C in UI list)
     uiTitle: "Karma.",
-    uiSubtitle: "Kısmen yanıcı kısmen yanmaz.",
+    uiSubtitle: "Kısmen yanıcı, kısmen yanmaz.",
     reportText:
         "UYARI: Asma tavan malzemesi olarak mahal bazlı karma (yanıcı ve yanmaz tipte) ürünler kullanıldığı belirtilmiştir. Özellikle kaçış yolları ve toplanma alanlarında asma tavanların tamamen yanmaz (A1 sınıfı) olması tercih edilir. Mahal bazlı asma tavan malzemelerinin mimari proje üzerinde veya sahada incelenmeleri önerilir.",
     level: RiskLevel.warning,

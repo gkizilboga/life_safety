@@ -80,9 +80,9 @@ class Section27Handler {
 
       if (b27.yon.isNotEmpty) {
         List<String> exceed50List = [];
-        if (yukZemin > 50) exceed50List.add("Zemin Kat ($yukZemin kişi)");
-        if (yukNormal > 50) exceed50List.add("Normal Kat ($yukNormal kişi)");
-        if (yukBodrum > 50) exceed50List.add("Bodrum Kat ($yukBodrum kişi)");
+        if (yukZemin > 50) exceed50List.add("zemin katınızda kullanıcı yükü $yukZemin kişi");
+        if (yukNormal > 50) exceed50List.add("en yoğun normal katınızda kullanıcı yükü $yukNormal kişi");
+        if (yukBodrum > 50) exceed50List.add("en yoğun bodrum katınızda kullanıcı yükü $yukBodrum kişi");
 
         List<String> reports = [];
         List<RiskLevel> levels = [];
@@ -95,7 +95,7 @@ class Section27Handler {
               levels.add(RiskLevel.positive);
             } else {
               reports.add(
-                "KRİTİK RİSK: ${exceed50List.join(", ")} gibi katlarınızda kullanıcı yükü 50 kişiyi aştığı için kapıların içeriye doğru açılması uygun değildir. Kapıların kaçış yönüne (dışarıya) doğru açılması zorunludur.",
+                "KRİTİK RİSK: Binadaki ${exceed50List.join(" ve ")} olup, kullanıcı yükü 50 kişiyi aştığı için kapıların içeriye doğru açılması uygun değildir. Kapıların kaçış yönüne (dışarıya) doğru açılması zorunludur.",
               );
               levels.add(RiskLevel.critical);
             }
@@ -121,9 +121,9 @@ class Section27Handler {
 
       if (b27.kilit.isNotEmpty) {
         List<String> exceed100List = [];
-        if (yukZemin > 100) exceed100List.add("Zemin Kat ($yukZemin kişi)");
-        if (yukNormal > 100) exceed100List.add("Normal Kat ($yukNormal kişi)");
-        if (yukBodrum > 100) exceed100List.add("Bodrum Kat ($yukBodrum kişi)");
+        if (yukZemin > 100) exceed100List.add("zemin katınızda kullanıcı yükü $yukZemin kişi");
+        if (yukNormal > 100) exceed100List.add("en yoğun normal katınızda kullanıcı yükü $yukNormal kişi");
+        if (yukBodrum > 100) exceed100List.add("en yoğun bodrum katınızda kullanıcı yükü $yukBodrum kişi");
 
         List<String> reports = [];
         List<RiskLevel> levels = [];
@@ -136,7 +136,7 @@ class Section27Handler {
               levels.add(RiskLevel.positive);
             } else {
               reports.add(
-                "KRİTİK RİSK: ${exceed100List.join(", ")} gibi katlarınızda kullanıcı yükü 100 kişiyi aştığı için kapılarda Panik Bar mekanizması kullanımı zorunludur. Mevcut kapılardaki kol mekanizması uygun değildir.",
+                "KRİTİK RİSK: Binadaki ${exceed100List.join(" ve ")} olup, kullanıcı yükü 100 kişiyi aştığı için kapılarda Panik Bar mekanizması kullanımı zorunludur. Mevcut kapılardaki kol mekanizması uygun değildir.",
               );
               levels.add(RiskLevel.critical);
             }
@@ -221,14 +221,14 @@ class Section27Handler {
       final yukBodrum = b33.yukBodrum ?? 0;
 
       List<String> exceed50 = [];
-      if (yukZemin > 50) exceed50.add("Zemin Kat ($yukZemin kişi)");
-      if (yukNormal > 50) exceed50.add("Normal Kat ($yukNormal kişi)");
-      if (yukBodrum > 50) exceed50.add("Bodrum Kat ($yukBodrum kişi)");
+      if (yukZemin > 50) exceed50.add("zemin katınızda kullanıcı yükü $yukZemin kişi");
+      if (yukNormal > 50) exceed50.add("en yoğun normal katınızda kullanıcı yükü $yukNormal kişi");
+      if (yukBodrum > 50) exceed50.add("en yoğun bodrum katınızda kullanıcı yükü $yukBodrum kişi");
 
       List<String> exceed100 = [];
-      if (yukZemin > 100) exceed100.add("Zemin Kat ($yukZemin kişi)");
-      if (yukNormal > 100) exceed100.add("Normal Kat ($yukNormal kişi)");
-      if (yukBodrum > 100) exceed100.add("Bodrum Kat ($yukBodrum kişi)");
+      if (yukZemin > 100) exceed100.add("zemin katınızda kullanıcı yükü $yukZemin kişi");
+      if (yukNormal > 100) exceed100.add("en yoğun normal katınızda kullanıcı yükü $yukNormal kişi");
+      if (yukBodrum > 100) exceed100.add("en yoğun bodrum katınızda kullanıcı yükü $yukBodrum kişi");
 
       bool yonRiski =
           b27.yon.any(
@@ -246,13 +246,13 @@ class Section27Handler {
         String context = "";
         if (yonRiski && kilitRiski) {
           context =
-              "${exceed50.join(", ")} gibi katlarınızda kullanıcı yükü 50 ve 100 kişi sınırlarını aşmaktadır.";
+              "Binadaki ${exceed50.join(" ve ")} olup, kullanıcı yükü 50 ve 100 kişi sınırlarını aşmaktadır.";
         } else if (yonRiski) {
           context =
-              "${exceed50.join(", ")} gibi katlarınızda kullanıcı yükü 50 kişi sınırını aşmaktadır.";
+              "Binadaki ${exceed50.join(" ve ")} olup, kullanıcı yükü 50 kişi sınırını aşmaktadır.";
         } else {
           context =
-              "${exceed100.join(", ")} gibi katlarınızda kullanıcı yükü 100 kişi sınırını aşmaktadır.";
+              "Binadaki ${exceed100.join(" ve ")} olup, kullanıcı yükü 100 kişi sınırını aşmaktadır.";
         }
 
         reportParts.add(
