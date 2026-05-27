@@ -8,27 +8,22 @@ class ScopeScreen extends StatelessWidget {
     {
       'q': 'Hangi binalar için uygundur?',
       'a':
-          'Bu uygulama, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
+          'Bu çalışma, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
     },
     {
-      'q': 'Bu uygulama neleri analiz eder?',
+      'q': 'Kapsam nedir?',
       'a':
-          'Uygulama iki ana başlık altında analiz sunar:\n\n1. Yangın Risk Analizi: Binanın merdivenleri, kaçış yolları ve kapıları gibi yapısal (mimari) özelliklerine odaklanır.\n\n2. Aktif Sistem Gereksinimleri: Alarm, söndürme, duman tahliyesi gibi elektromekanik yangın güvenliği ihtiyaçlarını inceler.',
+          'Bu analiz yalnızca binanın fiziksel (mimari) yapısını inceler. Alarm, söndürme ve duman tahliye sistemleri için bu uygulamadaki "Aktif Sistem Gereksinimleri" çalışmasını da incelemenizi öneririz.',
     },
     {
       'q': 'Puanlama ve Risk Seviyeleri ne anlama gelir?',
       'a':
-          'Raporlardaki kırmızı (kritik risk / zorunlu), sarı (uyarı) ve yeşil (olumlu) renkler, o konudaki risk veya gereklilik seviyesini gösterir. Puanlar ve değerlendirmeler yalnızca bu uygulama içindeki göreli bir ön değerlendirmedir; resmi evrak niteliği taşımaz.',
+          'Raporlardaki kırmızı (kritik risk / zorunlu), sarı (uyarı), mavi (bilgi), yeşil (olumlu) ve gri (bilinmiyor) renkler, o konudaki risk veya gereklilik seviyesini gösterir.',
     },
     {
-      'q': 'Binanızda periyodik testler zorunlu mu?',
+      'q': 'Bu dokümanın geçerlilik süresi var mı?',
       'a':
-          'Evet. Kurulumu yapılan yangın alarm, sprinkler, duman tahliye, acil aydınlatma ve söndürme sistemlerinin Binaların Yangından Korunması Hakkında Yönetmeliği ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşlarınca YILDA EN AZ BİR KEZ periyodik test ve bakımlarının yapılması yasal zorunluluktur. Yangın tüpleri ve yangın dolapları için ise 6 ayda bir kontrol önerilir. Bu sorumluluk bina yönetimine aittir.',
-    },
-    {
-      'q': 'Belgenin geçerlilik süresi var mı?',
-      'a':
-          'Binanızda yapılan mimari tadilatlar, kullanım amacı değişiklikleri veya mekanik sistem revizyonları durumunda analizin güncellenmesi önerilir. Rapor, üretildiği tarihteki beyan edilen verilere dayanır.',
+          'Binanızda yapılan tadilat veya değişiklikler sonucunda analizin güncellenmesi önerilir. Doküman, üretildiği tarihteki beyan edilen bilgilere dayanır.',
     },
     {
       'q': 'Önemli Uyarı',
