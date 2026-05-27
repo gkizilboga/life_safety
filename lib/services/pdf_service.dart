@@ -1340,19 +1340,19 @@ class PdfService {
                 'Bu çalışma, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
           },
           {
-            'q': 'Sistem gereksinimleri hakkında ne bilinmeli?',
+            'q': 'Kapsam nedir?',
             'a':
                 'Bu analiz yalnızca binanın fiziksel (mimari) yapısını inceler. Alarm, söndürme ve duman tahliye sistemleri için bu uygulamadaki "Aktif Sistem Gereksinimleri" çalışmasını da incelemenizi öneririz.',
           },
           {
             'q': 'Puanlama ve Risk Seviyeleri ne anlama gelir?',
             'a':
-                'Raporlardaki kırmızı (kritik risk / zorunlu), sarı (uyarı) ve yeşil (olumlu) renkler, o konudaki risk veya gereklilik seviyesini gösterir. Puanlar ve değerlendirmeler yalnızca bu uygulama içindeki göreli bir ön değerlendirmedir; resmi evrak niteliği taşımaz.',
+                'Raporlardaki kırmızı (kritik risk / zorunlu), sarı (uyarı), mavi (bilgi), yeşil (olumlu) ve gri (bilinmiyor) renkler, o konudaki risk veya gereklilik seviyesini gösterir.',
           },
           {
-            'q': 'Bu belgenin geçerlilik süresi var mı?',
+            'q': 'Bu dokümanın geçerlilik süresi var mı?',
             'a':
-                'Binanızda yapılan tadilat veya değişiklikler sonucunda analizin güncellenmesi önerilir. Belge, üretildiği tarihteki beyan edilen bilgilere dayanır.',
+                'Binanızda yapılan tadilat veya değişiklikler sonucunda analizin güncellenmesi önerilir. Doküman, üretildiği tarihteki beyan edilen bilgilere dayanır.',
           },
           {
             'q': 'Önemli Uyarı',
@@ -1876,7 +1876,7 @@ class PdfService {
         headerTitle: "AKTİF SİSTEM GEREKSİNİMLERİ",
         faqs: [
           {
-            'q': 'Bu doküman neden bahseder?',
+            'q': 'Kapsam nedir?',
             'a':
                 'Bu çalışma yalnızca binanın ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını (alarm, söndürme, duman tahliyesi vb.) ele alır. Mimari (yapısal) risk analizi için uygulamadaki "Yangın Risk Analizi" çalışmasını da incelemenizi öneririz.',
           },
@@ -1888,7 +1888,7 @@ class PdfService {
           {
             'q': 'Binanızda periyodik testler zorunlu mu?',
             'a':
-                'Evet. Kurulumu yapılan yangın alarm, sprinkler, duman tahliye, acil aydınlatma ve söndürme sistemlerinin Binaların Yangından Korunması Hakkında Yönetmeliği ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşlarınca YILDA EN AZ BİR KEZ periyodik test ve bakımlarının yapılması yasal zorunluluktur. Yangın tüpleri ve yangın dolapları için ise 6 ayda bir kontrol önerilir. Bu sorumluluk bina yönetimine aittir.',
+                'Evet. Kurulumu yapılan yangın algılama, söndürme, duman tahliye, acil aydınlatma vb. sistemlerin, Binaların Yangından Korunması Hakkında Yönetmeliği ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşları veya yetkin kişiler tarafından YILDA EN AZ BİR KEZ periyodik test ve bakımlarının yapılması yasal zorunluluktur. Yangın tüpleri ve yangın dolapları için 6 ayda bir kontrol önerilebilir. Bu sorumluluk bina yönetimine aittir.',
           },
         ],
       ),
