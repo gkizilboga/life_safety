@@ -467,16 +467,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           () async {
                             final path = await saveAction(context);
                             if (context.mounted) {
-                              final fileName = path.split('/').last;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(
-                                    "Doküman başarıyla kaydedildi:\n$fileName",
-                                    style: const TextStyle(fontSize: 12.5),
+                                  content: const Text(
+                                    "Doküman başarıyla indirildi.",
+                                    style: TextStyle(fontSize: 12.5),
                                   ),
                                   backgroundColor: const Color(0xFF2E7D32),
                                   behavior: SnackBarBehavior.floating,
-                                  duration: const Duration(seconds: 6),
+                                  duration: const Duration(seconds: 5),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
