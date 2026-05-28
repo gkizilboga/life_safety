@@ -1526,7 +1526,7 @@ class ReportEngine {
             label: 'Yönetmelik Madde 48/7 Notu',
             value: 'GEÇERLİ',
             report:
-                'Not: Giriş, çıkış ve şaftları üst katlardan 120 dakika yangına dayanıklı döşeme veya bölme ile ayrılan bodrum katlar, yapı yüksekliğine dâhil edilmez ve yangın güvenlik tedbirleri bakımından ayrı değerlendirilir. Binanızda hem bodrum kat merdivenlerinin ayrıldığı hem de asansörlerin bodruma inmediği beyan edilmiştir. Bu ayrımın 120 dakika yangına dayanımlı olup olmadığı ve bodrumun gerçekten yapı yüksekliğinden muaf tutulup tutulamayacağı hususunda yetkin bir Yangın Mühendisi tarafından sahada detaylı inceleme yapılması gereklidir.',
+                'Not: Giriş, çıkış ve şaftları üst katlardan 120 dakika yangına dayanıklı döşeme veya bölme ile ayrılan bodrum katlar, yapı yüksekliğine dâhil edilmez ve yangın güvenlik tedbirleri bakımından ayrı değerlendirilir. Binanızda hem bodrum kat merdivenlerinin ayrıldığı hem de asansörlerin bodruma inmediği beyan edilmiştir. Bu ayrımın 120 dakika yangına dayanımlı olup olmadığı ve bodrumun gerçekten yapı yüksekliğinden muaf tutulup tutulamayacağı hususunda yetkin bir Yangın Güvenlik Uzmanı tarafından sahada detaylı inceleme yapılması gereklidir.',
             level: RiskLevel.info,
           );
         }
@@ -1599,7 +1599,7 @@ class ReportEngine {
               evalLevel = RiskLevel.critical;
             } else {
               evalReport =
-                  'UYARI: Bina yüksekliği 30.50m - 51.50m arasındadır. Merdivenlerde basınçlandırma sistemi YOK ise, merdiven önlerinde Yangın Güvenlik Holü (YGH) bulunması zorunludur. Eğer YGH varsa basınçlandırma yapılması zorunluluğu ortadan kalkar.\n\nGerekçe:\n${basincReasons.join("\n")}';
+                  'UYARI: Bina yüksekliği 30.50m - 51.50m arasındadır. Merdivenlerde basınçlandırma sistemi YOK ise, merdiven önlerinde Yangın Güvenlik Holü (YGH) bulunması zorunludur. Eğer Yangın Güvenlik Holü (YGH) varsa basınçlandırma yapılması zorunluluğu ortadan kalkar.\n\nGerekçe:\n${basincReasons.join("\n")}';
               evalLevel = RiskLevel.warning;
             }
           }
@@ -4434,7 +4434,7 @@ class ReportEngine {
     // 1. Yapı Yüksekliği >= 51.50m (Konutlarda Üst Eşik)
     if (hYapi >= (51.50 - 0.001)) {
       reasons.add(
-        "Yapı Yüksekliği 51.50 metrenin üzerinde olması sebebiyle hem itfaiye asansörü hem de genel kaçış güvenliği açısından YGH zorunludur.",
+        "Yapı Yüksekliği 51.50 metrenin üzerinde olması sebebiyle hem itfaiye asansörü hem de genel kaçış güvenliği açısından Yangın Güvenlik Holü (YGH) zorunludur.",
       );
     }
     // 2. Yapı Yüksekliği > 30.50m (Konutlarda Yüksek Bina Eşiği)
@@ -4442,7 +4442,7 @@ class ReportEngine {
       if (b20?.basinclandirma?.label.contains("-B") == true) {
         // 20-BAS-B: Hayır
         reasons.add(
-          "Yapı Yüksekliği 30.50m üzeri (Yüksek Bina) olduğu için kaçış merdivenleri önünde YGH zorunludur.",
+          "Yapı Yüksekliği 30.50m üzeri (Yüksek Bina) olduğu için kaçış merdivenleri önünde Yangın Güvenlik Holü (YGH) zorunludur.",
         );
       } else if (b20?.basinclandirma?.label.contains("-A") == true) {
         // MUAFİYET DURUMU (Madde 38/c)
@@ -4466,7 +4466,7 @@ class ReportEngine {
       );
       if (hasNonResInBasement) {
         reasons.add(
-          "Bodrum katlarda otopark harici (ticari/teknik) kullanım alanları olduğundan bu merdivenlerin önünde YGH zorunludur.",
+          "Bodrum katlarda otopark harici (ticari/teknik) kullanım alanları olduğundan bu merdivenlerin önünde Yangın Güvenlik Holü (YGH) zorunludur.",
         );
       }
     }
@@ -4481,14 +4481,14 @@ class ReportEngine {
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "Bodrum katlarda asansör kapılarının binanın diğer bölümlerine açılması durumunda yangın güvenlik holü gereklidir.",
+        "Bodrum katlarda asansör kapılarının binanın diğer bölümlerine açılması durumunda Yangın Güvenlik Holü (YGH) gereklidir.",
       );
     }
 
     // 6. Bodrum kat sayısı > 4
     if (bodrumKatSayisi > 4) {
       reasons.add(
-        "Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren tüm merdivenlerin önünde YGH zorunludur.",
+        "Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren tüm merdivenlerin önünde Yangın Güvenlik Holü (YGH) zorunludur.",
       );
     }
 

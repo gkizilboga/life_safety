@@ -309,7 +309,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
         if (gNormal == 1) {
           if (hasSprinkler && alanNormal > 450) {
             _specialWarning =
-                "Normal kat alanı belli büyüklüğün üzerindedir. Bu sebeple, binada sprinkler olsa bile tek yön kaçış mesafesinin (30m) aşılma ihtimali var. İkinci çıkış gereksinimi doğabilir. Uzman kontrolü tavsiye edilir.";
+                "Normal kat alanı belli büyüklüğün üzerindedir. Bu sebeple, binada sprinkler olsa bile tek yön kaçış mesafesinin (30m) aşılma ihtimali var. İkinci çıkış gereksinimi doğabilir. Yangın Güvenlik Uzmanı kontrolü tavsiye edilir.";
           } else if (!hasSprinkler && alanNormal > 600) {
             _specialWarning =
                 "Normal kat alanı belli büyüklüğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. İkinci çıkış gerekebilir.";

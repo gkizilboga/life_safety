@@ -7,7 +7,6 @@ import '../../widgets/selectable_card.dart';
 import '../../utils/app_content.dart';
 import '../../models/choice_result.dart';
 import 'report_summary_screen.dart';
-import 'module_transition_screen.dart';
 import '../../logic/report_engine.dart';
 import '../../utils/app_theme.dart';
 import '../../utils/app_assets.dart';

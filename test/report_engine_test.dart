@@ -349,7 +349,7 @@ void main() {
       final details = ReportEngine.getSectionDetailedReport(21, store: store);
 
       expect(
-        details.any((d) => d['label'].contains('Yangın Güvenlik Holü var mı?')),
+        details.any((d) => d['label'].contains('Yangın Güvenlik Holü (YGH) var mı?')),
         true,
       );
       expect(
@@ -358,7 +358,7 @@ void main() {
       );
 
       expect(
-        details.any((d) => d['label'] == 'YGH Gereksinimi'),
+        details.any((d) => d['label'] == 'Yangın Güvenlik Holü (YGH) Gereksinimi'),
         true,
       );
     });

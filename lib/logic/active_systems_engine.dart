@@ -649,7 +649,7 @@ class ActiveSystemsEngine {
           isWarning: true,
           reason: "Asansör kuyusunda havalandırma durumu belirsizdir.",
           note:
-              "Asansör kuyusunda mimari proje üzerinde veya Yangın Güvenlik Mühendisi tarafından yerinde inceleme yapılması gereklidir. İnceleme sonucuna göre eğer kuyu tepesinde duman tahliye penceresi/bacası yoksa basınçlandırma sistemi zorunlu hale gelebilir.",
+              "Asansör kuyusunda mimari proje üzerinde veya Yangın Güvenlik Uzmanı tarafından yerinde inceleme yapılması gereklidir. İnceleme sonucuna göre eğer kuyu tepesinde duman tahliye penceresi/bacası yoksa basınçlandırma sistemi zorunlu hale gelebilir.",
         ),
       );
     } else {

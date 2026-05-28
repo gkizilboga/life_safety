@@ -24,5 +24,7 @@
     },
     "java.project.sourcePaths": [
         "assets/images/sections"
-    ]
+    ],
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active"
 }

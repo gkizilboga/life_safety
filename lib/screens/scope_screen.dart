@@ -13,7 +13,7 @@ class ScopeScreen extends StatelessWidget {
     {
       'q': 'Kapsam nedir?',
       'a':
-          'Bu analiz yalnızca binanın fiziksel (mimari) yapısını inceler. Alarm, söndürme ve duman tahliye sistemleri için bu uygulamadaki "Aktif Sistem Gereksinimleri" çalışmasını da incelemenizi öneririz.',
+          'Bu analiz yalnızca binanın fiziksel (mimari) yapısını inceler. Alarm, söndürme ve duman tahliye sistemleri için bu uygulamadaki "Aktif Sistem Gereksinimleri" dokümanının da incelenmesi önerilir.',
     },
     {
       'q': 'Puanlama ve Risk Seviyeleri ne anlama gelir?',
@@ -21,14 +21,24 @@ class ScopeScreen extends StatelessWidget {
           'Raporlardaki kırmızı (kritik risk / zorunlu), sarı (uyarı), mavi (bilgi), yeşil (olumlu) ve gri (bilinmiyor) renkler, o konudaki risk veya gereklilik seviyesini gösterir.',
     },
     {
-      'q': 'Bu dokümanın geçerlilik süresi var mı?',
+      'q': '"Konu", "Kullanıcı Yanıtı" ve "Değerlendirme" neyi ifade eder?',
+      'a':
+          'Konu: İncelenen yangın güvenliği başlığını belirtir. Kullanıcı Yanıtı: Uygulama üzerinde binanız için beyan ettiğiniz mevcut saha durumudur. Değerlendirme: Beyan ettiğiniz duruma ve yönetmelik kriterlerine göre oluşturulan uygunluk kontrolü, risk derecesi veya tavsiyelerdir.',
+    },
+    {
+      'q': 'Dokümanın geçerlilik süresi var mı?',
       'a':
           'Binanızda yapılan tadilat veya değişiklikler sonucunda analizin güncellenmesi önerilir. Doküman, üretildiği tarihteki beyan edilen bilgilere dayanır.',
     },
     {
+      'q': 'Bu çalışma hangi mevzuata dayanmaktadır?',
+      'a':
+          'Bu çalışmadaki tüm kriterler ve değerlendirmelerde, "Binaların Yangından Korunması Hakkında Yönetmelik" hükümleri ile bu yönetmelikte atıfta bulunulan TS EN (Türk Standartları) esas alınmıştır.',
+    },
+    {
       'q': 'Önemli Uyarı',
       'a':
-          'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksizsiz analiz için binanın, yetkin bir Yangın Mühendisi tarafından proje üzerinde ve yerinde incelenmesi şarttır.',
+          'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksiksiz analiz için binanın, yetkin bir Yangın Güvenlik Uzmanı tarafından proje üzerinde ve yerinde incelenmesi şarttır.',
     },
   ];
 
