@@ -286,6 +286,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: "Yangın Risk Analizi",
               shareAction: PdfService.shareRiskAnalysisPdf,
               saveAction: PdfService.saveRiskAnalysisPdfToDevice,
+              backgroundColor: const Color(0xFFE8F5E9).withOpacity(0.5),
+              borderColor: const Color(0xFFC8E6C9).withOpacity(0.7),
+              iconColor: const Color(0xFF2E7D32),
+              iconBgColor: const Color(0xFFE8F5E9),
             ),
             const SizedBox(height: 8),
             _buildDocumentRow(
@@ -295,6 +299,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: "Aktif Sistem Gereksinimleri",
               shareAction: PdfService.shareActiveSystemsPdf,
               saveAction: PdfService.saveActiveSystemsPdfToDevice,
+              backgroundColor: const Color(0xFFE8F5E9).withOpacity(0.5),
+              borderColor: const Color(0xFFC8E6C9).withOpacity(0.7),
+              iconColor: const Color(0xFF2E7D32),
+              iconBgColor: const Color(0xFFE8F5E9),
             ),
             const SizedBox(height: 8),
             _buildDocumentRow(
@@ -304,6 +312,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: "Birleşik Rapor (Tek PDF)",
               shareAction: PdfService.shareCombinedPdf,
               saveAction: PdfService.saveCombinedPdfToDevice,
+              backgroundColor: const Color(0xFFC8E6C9).withOpacity(0.5),
+              borderColor: const Color(0xFF81C784).withOpacity(0.7),
+              iconColor: const Color(0xFF1B5E20),
+              iconBgColor: const Color(0xFFC8E6C9),
             ),
           ],
         ],
@@ -318,6 +330,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required String title,
     required Future<void> Function(BuildContext) shareAction,
     required Future<String> Function(BuildContext) saveAction,
+    required Color backgroundColor,
+    required Color borderColor,
+    required Color iconColor,
+    required Color iconBgColor,
   }) {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
@@ -331,19 +347,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: AppColors.primaryBlue.withOpacity(0.04),
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.primaryBlue.withOpacity(0.1)),
+          border: Border.all(color: borderColor),
         ),
         child: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(0.08),
+                color: iconBgColor,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(icon, color: AppColors.primaryBlue, size: 18),
+              child: Icon(icon, color: iconColor, size: 18),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -355,11 +371,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   color: AppColors.textDark,
                 ),
               ),
-            ),
-            Icon(
-              Icons.adaptive.share,
-              color: AppColors.primaryBlue.withOpacity(0.45),
-              size: 17,
             ),
           ],
         ),
@@ -379,7 +390,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: Colors.transparent,
       builder: (bottomSheetContext) {
         return Container(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 36),
+          padding: EdgeInsets.fromLTRB(
+            24,
+            12,
+            24,
+            28 + MediaQuery.of(bottomSheetContext).padding.bottom,
+          ),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
