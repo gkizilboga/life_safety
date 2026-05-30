@@ -6,7 +6,5 @@
   },
   "thinkingEnabled": true,
   "reasoningEffort": "max",
-  "workbench.panel.defaultLocation": "right",
-  "editor.lineHighlightBackground": "#FFF9C4",
-  "editor.renderLineHighlight": "all"
+  "workbench.panel.defaultLocation": "right"
 }

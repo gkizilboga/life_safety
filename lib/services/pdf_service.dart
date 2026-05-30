@@ -938,7 +938,7 @@ class PdfService {
                           width: 3.5,
                           height: 3.5,
                           decoration: pw.BoxDecoration(
-                            color: titleColor,
+                            color: PdfColors.black,
                             shape: pw.BoxShape.circle,
                           ),
                         ),
