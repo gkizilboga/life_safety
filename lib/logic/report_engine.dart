@@ -10,6 +10,7 @@ import 'handlers/section_21_handler.dart';
 import 'handlers/section_27_handler.dart';
 import '../utils/input_validator.dart';
 import '../utils/app_progress.dart';
+import '../screens/bolum_33_screen.dart';
 
 enum ReportModule {
   binaBilgileri(
@@ -571,21 +572,21 @@ class ReportEngine {
               'value': '${k.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
-              'isBold': true,
+              'isBold': k < 35,
             });
             details.add({
               'label': 'Kiriş Paspayı',
               'value': '${r.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
-              'isBold': true,
+              'isBold': r < 25,
             });
             details.add({
               'label': 'Döşeme Paspayı',
               'value': '${d.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
-              'isBold': true,
+              'isBold': d < 20,
             });
 
             // 2. Otomatik Analiz
@@ -695,16 +696,29 @@ class ReportEngine {
             advice: b15.kaplama!.adviceText,
             level: b15.kaplama!.level,
           );
-        if (b15.yalitim != null)
+        if (b15.yalitim != null) {
+          String yalitimReport = b15.yalitim!.reportText;
+          String? yalitimAdvice = b15.yalitim!.adviceText;
+          RiskLevel yalitimLevel = b15.yalitim!.level;
+
+          if (b15.yalitim!.label == "15-2-C" &&
+              b15.yalitimSap?.label == "15-2-ALT-A") {
+            yalitimReport =
+                "OLUMLU: Döşeme betonunda yanıcı yalıtım malzemesi (XPS, EPS vb.) kullanılmıştır ancak üzeri en az 2 cm koruyucu şap tabakası ile kaplanarak güvenli hale getirilmiştir.";
+            yalitimAdvice = "";
+            yalitimLevel = RiskLevel.positive;
+          }
+
           _addDetail(
             details,
             label: 'Döşeme üzerinde ısı yalıtım malzemesi var mı?',
             value: b15.yalitim!.uiTitle,
             subtitle: b15.yalitim!.uiSubtitle,
-            report: b15.yalitim!.reportText,
-            advice: b15.yalitim!.adviceText,
-            level: b15.yalitim!.level,
+            report: yalitimReport,
+            advice: yalitimAdvice,
+            level: yalitimLevel,
           );
+        }
         if (b15.yalitimSap != null)
           _addDetail(
             details,
@@ -1010,7 +1024,9 @@ class ReportEngine {
             subtitle: duvar.uiSubtitle,
             report: reportText,
             advice: duvar.adviceText,
-            level: duvar.level,
+            level: duvar.label == Bolum18Content.duvarOptionB.label
+                ? (isYuksek ? RiskLevel.warning : RiskLevel.positive)
+                : duvar.level,
           );
         }
         if (b18.boruTipi != null)
@@ -2179,7 +2195,7 @@ class ReportEngine {
             _addDetail(
               details,
               label:
-                  '(*) 1 adet merdiven genişliği (min.): $minMStr m (En yoğun katın kullanıcı yüküne göre, Madde 33)',
+                  '(*) 1 adet merdiven genişliği (min.): $minMStr m (En yoğun katın kullanıcı yüküne göre, Yönetmelik-Madde 33)',
               value: '',
               report: '',
               isTable: true,
@@ -2198,7 +2214,7 @@ class ReportEngine {
           _addDetail(
             details,
             label:
-                '(*) Gereken çıkış adetleri, BYKHY Madde 39 uyarınca kişi sayısına göre belirlenmiştir (≤500: 2, ≤1000: 3, ≤1500: 4). Çıkışların toplam genişliklerinin Madde 33 kapasite hesaplarını karşılayıp karşılamadığı, projedeki net ölçüler üzerinden ayrıca teyit edilmelidir.',
+                '(*) Gereken çıkış adetleri, BYKHY Madde 39 uyarınca kişi sayısına göre belirlenmiştir (≤500: 2, ≤1000: 3, ≤1500: 4). Çıkışların toplam genişliklerinin Yönetmelik-Madde 33 kapasite hesaplarını karşılayıp karşılamadığı, projedeki net ölçüler üzerinden ayrıca teyit edilmelidir.',
             value: '',
             report: '',
             isTable: true,
@@ -2475,9 +2491,14 @@ class ReportEngine {
             b?.tavanMalzeme?.label == "15-3-ALT-A") {
           tavanLvl = RiskLevel.positive;
         }
+        RiskLevel? yalitimLvl = b?.yalitim?.level;
+        if (b?.yalitim?.label == "15-2-C" &&
+            b?.yalitimSap?.label == "15-2-ALT-A") {
+          yalitimLvl = RiskLevel.positive;
+        }
         return _maxLevel([
           b?.kaplama?.level,
-          b?.yalitim?.level,
+          yalitimLvl,
           b?.yalitimSap?.level,
           tavanLvl,
           b?.tavanMalzeme?.level,
@@ -2889,7 +2910,12 @@ class ReportEngine {
     final b15 = s.bolum15;
     if (b15 != null) {
       add(b15.kaplama);
-      add(b15.yalitim);
+      if (b15.yalitim?.label == "15-2-C" &&
+          b15.yalitimSap?.label == "15-2-ALT-A") {
+        addLevel(RiskLevel.positive);
+      } else {
+        add(b15.yalitim);
+      }
       add(b15.yalitimSap);
       add(b15.tavan);
       add(b15.tavanMalzeme);
@@ -3294,9 +3320,23 @@ class ReportEngine {
       if (b15 != null) {
         List<String> parts = [];
         if (b15.kaplama != null) parts.add(b15.kaplama!.reportText);
-        if (b15.yalitim != null) parts.add(b15.yalitim!.reportText);
+        if (b15.yalitim != null) {
+          if (b15.yalitim!.label == "15-2-C" &&
+              b15.yalitimSap?.label == "15-2-ALT-A") {
+            parts.add("OLUMLU: Döşeme betonunda yanıcı yalıtım malzemesi (XPS, EPS vb.) kullanılmıştır ancak üzeri en az 2 cm koruyucu şap tabakası ile kaplanarak güvenli hale getirilmiştir.");
+          } else {
+            parts.add(b15.yalitim!.reportText);
+          }
+        }
         if (b15.yalitimSap != null) parts.add(b15.yalitimSap!.reportText);
-        if (b15.tavan != null) parts.add(b15.tavan!.reportText);
+        if (b15.tavan != null) {
+          if (b15.tavan!.label == "15-3-B" &&
+              b15.tavanMalzeme?.label == "15-3-ALT-A") {
+            parts.add("OLUMLU: Konut katlarında asma tavan bulunmaktadır ancak kullanılan malzemenin (Alçıpanel, metal vb.) yangın performansı yeterlidir.");
+          } else {
+            parts.add(b15.tavan!.reportText);
+          }
+        }
         if (b15.tavanMalzeme != null) parts.add(b15.tavanMalzeme!.reportText);
         if (b15.tesisat != null) parts.add(b15.tesisat!.reportText);
         if (parts.isNotEmpty) return parts.join("\n\n");

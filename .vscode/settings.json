@@ -1,30 +1,9 @@
 {
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "editor.unicodeHighlight.ambiguousCharacters": false,
-    "editor.unicodeHighlight.nonBasicASCIICharacters": false,
-    "editor.unicodeHighlight.invisibleCharacters": false,
-    "editor.unicodeHighlight.includeComments": false,
-    "editor.unicodeHighlight.includeStrings": false,
-    "editor.unicodeHighlight.allowedLocales": {
-        "tr": true
-    },
-    "editor.unicodeHighlight.allowedCharacters": {
-        "ç": true,
-        "ğ": true,
-        "ı": true,
-        "ö": true,
-        "ş": true,
-        "ü": true,
-        "Ç": true,
-        "Ğ": true,
-        "İ": true,
-        "Ö": true,
-        "Ş": true,
-        "Ü": true
-    },
-    "java.project.sourcePaths": [
-        "assets/images/sections"
-    ],
-    "editor.bracketPairColorization.enabled": true,
-    "editor.guides.bracketPairs": "active"
+  "env": {
+    "MODEL": "deepseek-v4-pro",
+    "BASE_URL": "https://api.deepseek.com",
+    "API_KEY": "sk-09187faf39f14e96b9964eb9d6a28c85"
+  },
+  "thinkingEnabled": true,
+  "reasoningEffort": "max"
 }

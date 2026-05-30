@@ -708,7 +708,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
         ),
         child: ElevatedButton(
           onPressed: () {
-            BinaStore.instance.saveToDisk();
+            BinaStore.instance.saveToDisk(immediate: true);
             if (isPremium) {
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(

@@ -1775,10 +1775,15 @@ class PdfService {
       }
 
       final headerWidget = pw.Container(
-        margin: const pw.EdgeInsets.only(top: 10, bottom: 4),
-        padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        margin: const pw.EdgeInsets.only(top: 14, bottom: 6),
+        padding: const pw.EdgeInsets.only(bottom: 4),
         decoration: const pw.BoxDecoration(
-          color: PdfColor.fromInt(0xFFf1f5f9),
+          border: pw.Border(
+            bottom: pw.BorderSide(
+              color: PdfColor.fromInt(0xFF1a365d), // corporate navy bottom line
+              width: 1.5,
+            ),
+          ),
         ),
         child: pw.Row(
           children: [
@@ -1787,8 +1792,8 @@ class PdfService {
                 "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
                 style: pw.TextStyle(
                   font: ttfBold,
-                  fontSize: 9.5,
-                  color: const PdfColor.fromInt(0xFF1a365d),
+                  fontSize: 10,
+                  color: const PdfColor.fromInt(0xFF1a365d), // corporate dark navy text
                   letterSpacing: 0.3,
                 ),
               ),
@@ -1797,15 +1802,13 @@ class PdfService {
         ),
       );
 
-      final dividerWidget = pw.Divider(thickness: 0.8, color: PdfColors.indigo100);
-
       if (itemsWidgets.isNotEmpty) {
         // Başlık + ilk madde asla ayrılmaz (Inseparable)
         sectionWidgets.add(
           pw.Inseparable(
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [headerWidget, dividerWidget, itemsWidgets.first],
+              children: [headerWidget, itemsWidgets.first],
             ),
           ),
         );
@@ -1816,7 +1819,7 @@ class PdfService {
         sectionWidgets.add(
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [headerWidget, dividerWidget],
+            children: [headerWidget],
           ),
         );
       }

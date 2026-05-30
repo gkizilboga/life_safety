@@ -427,10 +427,19 @@ class Bolum9Content {
 
   static final kismen = ChoiceResult(
     label: "9-1-C",
-    uiTitle: "Bazı yerlerde var.",
-    uiSubtitle: "Sadece bazı katlarda veya bazı mahallerde var.",
+    uiTitle: "Bazı konut katlarında var.",
+    uiSubtitle: "Örneğin; yalnızca zemin katta.",
     reportText:
         "BİLGİ: Sprinkler sistemi binada kısmi olarak bulunuyor. Yönetmelik gereği, kaçış güvenliği hesaplarında sistemin \"YOK\" olduğu varsayılacaktır. Sprinkler sisteminin binada kısmi bulunması, kaçış mesafeleri ve can güvenliği açısından dezavantaj yaratır. Bu Uygulama içerisinde yer alan Aktif Sistem Gereksinimleri çıktısında binanın sprinkler sistemi ihtiyacı belirtilmektedir. Bu çıktıda sprinkler sistemi zorunlu olmadığı belirtilse bile proje üzerinde kat ve mahal bazında hususi çalışma yapılması mutlaka önerilir. ",
+    level: RiskLevel.info,
+  );
+
+  static final yalnizOtopark = ChoiceResult(
+    label: "9-1-D",
+    uiTitle: "Yalnızca otopark alanında var.",
+    uiSubtitle: "",
+    reportText:
+        "BİLGİ: Otomatik sprinkler sistemi yalnızca otopark alanında mevcuttur. Konut ve diğer katlarda sistem bulunmadığından kaçış mesafesi ile ilgili gereksinimler bu bilgiye göre değerlendirilecektir.",
     level: RiskLevel.info,
   );
 
@@ -917,7 +926,7 @@ class Bolum13Content {
     uiSubtitle:
         "Duvarları veya kapısı yangın dayanımsız (sac, demir, plastik, aluminyum, ahşap, cam).",
     reportText:
-        "UYARI: Depolardaki eşyalar büyük yangın yükü oluşturur. Duman sızdırmaz ve yangına dayanıklı kapı kullanılması önerilir. Mevcut durum yangının yayılmasını kolaylaştırabilir.",
+        "UYARI: Konutlara ait depolarda çoğunlukla yüksek yangın yüküne sahip mobilya, elektronik eşya, plastik ürünler vs.bulunabilmektedir. Bu depolarda duman sızdırmaz ve yangına dayanıklı kapı kullanılması önerilir.",
     level: RiskLevel.warning,
   );
 
@@ -926,7 +935,7 @@ class Bolum13Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Kapının özellikleri bilinmiyor. Özellikle yanıcı madde depolanan mahallerin duvarları ve kapıları yangın dayanım özellikli olmalıdır. Depo kapısının yangın dayanım test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilmesi önerilir.",
+        "BİLİNMİYOR: Kapının özellikleri bilinmiyor. Özellikle yanıcı madde depolanan mahallerin duvarları ve kapıları yangın dayanım özellikli olmalıdır. Depo kapısının yangın dayanım test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.",
     level: RiskLevel.unknown,
   );
 
@@ -1816,10 +1825,10 @@ class Bolum18Content {
 
   // Dinamik rapor metinleri — report_engine tarafından seçilir
   static const String duvarOptionBYuksekReport =
-      "UYARI: Bina YÜKSEK BİNA sınıfındadır. Duvar kaplama malzemeleri 'en az zor alevlenici' sınıfta olmalıdır.";
+      "UYARI: Bina YÜKSEK BİNA sınıfındadır. Yönetmelik gereği yüksek binalarda duvar iç kaplamaları ile içte uygulanacak ısı ve ses yalıtımları 'en az zor alevlenici' malzemeden yapılmalıdır. Ahşap, plastik, strafor vb. yanıcı malzemelerin doğrudan kullanımı bu şartı karşılamamaktadır.";
 
   static const String duvarOptionBNormalReport =
-      "UYARI: Duvarlarda kullanılan köpük veya plastik malzemeler 'en az normal alevlenici' sınıfta olmalıdır.";
+      "OLUMLU: Yönetmelik gereği yüksek olmayan binalarda duvar iç kaplamaları ile içte uygulanacak ısı ve ses yalıtımları 'en az normal alevlenici' malzemeden yapılmalıdır. Kullanılan ahşap, plastik, strafor vb. kaplama malzemeleri bu asgari şartı karşılamaktadır.";
 
   static final duvarOptionC = ChoiceResult(
     label: "18-1-C (Duvar)",
@@ -2617,10 +2626,10 @@ class Bolum23Content {
 
   static final konumOptionB = ChoiceResult(
     label: "23-3-B (Konum)",
-    uiTitle: "Doğrudan merdiveninin içine açılıyor.",
+    uiTitle: "Doğrudan merdivenin içine açılıyor.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Yönetmeliğe göre asansör kapıları ASLA merdiveni yuvasına açılamaz. Asansör kuyusundan sızan duman, insanların kaçtığı temiz bölgeyi (merdiveni) dumanla doldurur.",
+        "KRİTİK RİSK: Yönetmeliğe göre asansör kapıları asla merdiven yuvasına açılamaz. Asansör kuyusundan sızan duman, insanların kaçtığı temiz bölgeyi (merdiveni) dumanla doldurabilir.",
     level: RiskLevel.critical,
   );
 

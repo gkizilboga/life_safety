@@ -82,6 +82,13 @@ class _Bolum9ScreenState extends State<Bolum9Screen> {
                   isSelected: _model.secim?.label == Bolum9Content.kismen.label,
                   onTap: () => _handleSelection(Bolum9Content.kismen),
                 ),
+                if (BinaStore.instance.bolum6?.hasIntegratedOtopark == true)
+                  SelectableCard(
+                    choice: Bolum9Content.yalnizOtopark,
+                    isSelected: _model.secim?.label ==
+                        Bolum9Content.yalnizOtopark.label,
+                    onTap: () => _handleSelection(Bolum9Content.yalnizOtopark),
+                  ),
               ],
             ),
           ),

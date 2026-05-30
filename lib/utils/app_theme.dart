@@ -46,8 +46,8 @@ class AppStyles {
 
   // ALT SORU metinleri için stil - Ana sorulardan farklı, daha az baskın
   static const TextStyle subQuestionTitle = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w800,
+    fontSize: 14.5,
+    fontWeight: FontWeight.w700,
     color: AppColors.textHeader, // Standart nötr renk
     height: 1.4,
   );

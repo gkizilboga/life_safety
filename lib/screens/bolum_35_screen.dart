@@ -182,22 +182,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               _buildInfoNote(
                 "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
               ),
-              QuestionCard(
-                child: TextFormField(
-                  controller: _mesafeCtrl,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  inputFormatters: [InputValidator.flexDecimal],
-                  decoration: InputDecoration(
-                    labelText: "Net Mesafeyi Giriniz (m)",
-                    suffixText: "metre",
-                    errorText: _mesafeErr,
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.straighten),
-                  ),
-                ),
-              ),
+              _buildMesafeInput(),
             ],
           ] else ...[
             _buildIntegratedQuestionCard(
@@ -220,22 +205,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               _buildInfoNote(
                 "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
               ),
-              QuestionCard(
-                child: TextFormField(
-                  controller: _mesafeCtrl,
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  inputFormatters: [InputValidator.flexDecimal],
-                  decoration: InputDecoration(
-                    labelText: "Net Mesafeyi Giriniz (m)",
-                    suffixText: "metre",
-                    errorText: _mesafeErr,
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.straighten),
-                  ),
-                ),
-              ),
+              _buildMesafeInput(),
             ],
             const SizedBox(height: 12),
             _buildIntegratedQuestionCard(
@@ -281,26 +251,58 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
                 _buildInfoNote(
                   "Lütfen net mesafeyi metre cinsinden aşağıya yazınız.",
                 ),
-                QuestionCard(
-                  child: TextFormField(
-                    controller: _mesafeCtrl,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    inputFormatters: [InputValidator.flexDecimal],
-                    decoration: InputDecoration(
-                      labelText: "Net Mesafeyi Giriniz (m)",
-                      suffixText: "metre",
-                      errorText: _mesafeErr,
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.straighten),
-                    ),
-                  ),
-                ),
+                _buildMesafeInput(),
               ],
             ],
           ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildMesafeInput() {
+    return QuestionCard(
+      child: TextFormField(
+        controller: _mesafeCtrl,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [InputValidator.flexDecimal],
+        style: const TextStyle(
+          fontSize: 15.0,
+          fontWeight: FontWeight.w600,
+          color: AppColors.primaryBlue,
+        ),
+        decoration: InputDecoration(
+          labelText: "Net Mesafeyi Giriniz (m)",
+          labelStyle: const TextStyle(fontSize: 13.5, color: AppColors.textLabel),
+          hintText: "Örn: 25.5",
+          hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+          errorText: _mesafeErr,
+          suffixText: "metre",
+          suffixStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          prefixIcon: const Icon(Icons.straighten, color: AppColors.primaryBlue, size: 18),
+          filled: true,
+          fillColor: Colors.white,
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 12,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey.shade300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(
+              color: AppColors.primaryBlue,
+              width: 2,
+            ),
+          ),
+        ),
       ),
     );
   }

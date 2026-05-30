@@ -302,7 +302,7 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
         _hasNormal = (store.bolum3?.normalKatSayisi ?? 0) >= 1;
         _hasBodrum = (store.bolum3?.bodrumKatSayisi ?? 0) >= 1;
 
-        bool hasSprinkler = store.bolum9?.secim?.label == "9-A";
+        bool hasSprinkler = store.bolum9?.secim?.label == "9-1-A";
         double alanNormal = _model.alanNormal ?? 0.0;
         int gNormal = _model.gerekliNormal ?? 0;
 

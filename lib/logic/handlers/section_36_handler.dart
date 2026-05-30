@@ -143,15 +143,15 @@ class Section36Handler {
       // Kombine Raporlama (Madde 41 - Dışa Açılan Merdiven)
       if (mainDirectFail && bodrumDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Hem normal katlara hem de bodrum katlara hitap eden kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (Normal: $directMain/$reqDirectMain adet, Bodrum: $directBod/$reqDirectBod adet)",
+          "KRİTİK RİSK: Hem normal katlara hem de bodrum katlara hitap eden kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanmamaktadır. (Normal Katta: $directMain/$reqDirectMain adet, Bodrum Katta: $directBod/$reqDirectBod adet)",
         );
       } else if (mainDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Normal katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (En az $reqDirectMain adet doğrudan dışarıya açılmalıdır, mevcutta $directMain adet doğrudan dışarıya açılmaktadır).",
+          "KRİTİK RİSK: Normal katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanmamaktadır. (En az $reqDirectMain adet merdiven doğrudan dışarıya açılmalıdır, mevcutta $directMain adet doğrudan dışarıya açılmaktadır).",
         );
       } else if (bodrumDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Bodrum katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (En az $reqDirectBod adet doğrudan dışarıya açılmalıdır, mevcutta $directBod adet doğrudan dışarıya açılmaktadır).",
+          "KRİTİK RİSK: Bodrum katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanmamaktadır. (En az $reqDirectBod adet merdiven doğrudan dışarıya açılmalıdır, mevcutta $directBod adet doğrudan dışarıya açılmaktadır).",
         );
       } else if (totalMain > 0 || totalBod > 0) {
         analysisParts.add(
@@ -234,15 +234,15 @@ class Section36Handler {
 
         if (mainKoruFail && bodrumKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle hem normal hem de bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' bulunması zorunludur. Mevcut binada bu durum yetersizdir. (Normal: $currentProtected, Bodrum: $korBod)",
+            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle hem normal hem de bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' bulunması zorunludur. Mevcut binada bu durum yetersizdir. (Normal Katta: $currentProtected, Bodrum Katta: $korBod)",
           );
         } else if (mainKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle normal katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Normal: $currentProtected)",
+            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle normal katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Normal Katta: $currentProtected)",
           );
         } else if (bodrumKoruFail) {
           analysisParts.add(
-            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Bodrum: $korBod)",
+            "KRİTİK RİSK: Yapı yüksekliği (${hPrimary.toStringAsFixed(2)} m) nedeniyle bodrum katlarda en az $requiredProtected adet 'Korunumlu Merdiven' zorunludur. Mevcut binada bu durum yetersizdir. (Bodrum Katta: $korBod)",
           );
         } else {
           analysisParts.add(
@@ -799,66 +799,95 @@ class Section36Handler {
           );
         }
       } else {
-        // Ayrı Giriş
-        evaluateWidth(
-          'Korunumlu Merdiven Genişliği',
-          b36.genislikKorunumlu,
-          reqMerdiven,
-          true,
-        );
-        evaluateWidth(
-          'Korunumlu Koridor Genişliği',
-          b36.koridorGenislikKorunumlu,
-          reqKoridor,
-          false,
-        );
-        if (b36.kapiGenislikKorunumlu != null) {
-          _addDetail(
-            details,
-            label: 'Korunumlu Alan Kapı Genişliği',
-            value: b36.kapiGenislikKorunumlu!.uiTitle,
-            subtitle: b36.kapiGenislikKorunumlu!.uiSubtitle,
-            report: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                ? "KRİTİK RİSK: En Az: 80 cm."
-                : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                      ? "OLUMLU: 80 cm ve üzerindedir."
-                      : "BİLİNMİYOR."),
-            status: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                ? ReportStatus.risk
-                : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                      ? ReportStatus.compliant
-                      : ReportStatus.unknown),
-          );
+        // Ayrı Giriş - Yalnızca binada mevcut olan merdiven türlerinin genişliklerini ekle
+        int korunumluCount = 0;
+        int korunumsuzCount = 0;
+        if (b20 != null) {
+          korunumluCount = b20.binaIciYanginMerdiveniSayisi +
+              b20.binaDisiKapaliYanginMerdiveniSayisi +
+              b20.bodrumBinaIciYanginMerdiveniSayisi +
+              b20.bodrumBinaDisiKapaliYanginMerdiveniSayisi;
+
+          korunumsuzCount = b20.normalMerdivenSayisi +
+              b20.binaDisiAcikYanginMerdiveniSayisi +
+              b20.donerMerdivenSayisi +
+              b20.dengelenmisMerdivenSayisi +
+              b20.sahanliksizMerdivenSayisi +
+              b20.bodrumNormalMerdivenSayisi +
+              b20.bodrumBinaDisiAcikYanginMerdiveniSayisi +
+              b20.bodrumDonerMerdivenSayisi +
+              b20.bodrumDengelenmisMerdivenSayisi +
+              b20.bodrumSahanliksizMerdivenSayisi;
+        } else {
+          // Fallback
+          korunumluCount = 1;
+          korunumsuzCount = 1;
         }
-        evaluateWidth(
-          'Korunumsuz Merdiven Genişliği',
-          b36.genislikKorunumsuz,
-          reqMerdiven,
-          true,
-        );
-        evaluateWidth(
-          'Korunumsuz Koridor Genişliği',
-          b36.koridorGenislikKorunumsuz,
-          reqKoridor,
-          false,
-        );
-        if (b36.kapiGenislikKorunumsuz != null) {
-          _addDetail(
-            details,
-            label: 'Korunumsuz Alan Kapı Genişliği',
-            value: b36.kapiGenislikKorunumsuz!.uiTitle,
-            subtitle: b36.kapiGenislikKorunumsuz!.uiSubtitle,
-            report: b36.kapiGenislikKorunumsuz!.label.contains("-A")
-                ? "KRİTİK RİSK: En Az: 80 cm."
-                : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
-                      ? "OLUMLU: 80 cm ve üzerindedir."
-                      : "BİLİNMİYOR."),
-            status: b36.kapiGenislikKorunumsuz!.label.contains("-A")
-                ? ReportStatus.risk
-                : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
-                      ? ReportStatus.compliant
-                      : ReportStatus.unknown),
+
+        if (korunumluCount > 0) {
+          evaluateWidth(
+            'Korunumlu Merdiven Genişliği',
+            b36.genislikKorunumlu,
+            reqMerdiven,
+            true,
           );
+          evaluateWidth(
+            'Korunumlu Koridor Genişliği',
+            b36.koridorGenislikKorunumlu,
+            reqKoridor,
+            false,
+          );
+          if (b36.kapiGenislikKorunumlu != null) {
+            _addDetail(
+              details,
+              label: 'Korunumlu Alan Kapı Genişliği',
+              value: b36.kapiGenislikKorunumlu!.uiTitle,
+              subtitle: b36.kapiGenislikKorunumlu!.uiSubtitle,
+              report: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                  ? "KRİTİK RİSK: En Az: 80 cm."
+                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                        ? "OLUMLU: 80 cm ve üzerindedir."
+                        : "BİLİNMİYOR."),
+              status: b36.kapiGenislikKorunumlu!.label.contains("-A")
+                  ? ReportStatus.risk
+                  : (b36.kapiGenislikKorunumlu!.label.contains("-B")
+                        ? ReportStatus.compliant
+                        : ReportStatus.unknown),
+            );
+          }
+        }
+
+        if (korunumsuzCount > 0) {
+          evaluateWidth(
+            'Korunumsuz Merdiven Genişliği',
+            b36.genislikKorunumsuz,
+            reqMerdiven,
+            true,
+          );
+          evaluateWidth(
+            'Korunumsuz Koridor Genişliği',
+            b36.koridorGenislikKorunumsuz,
+            reqKoridor,
+            false,
+          );
+          if (b36.kapiGenislikKorunumsuz != null) {
+            _addDetail(
+              details,
+              label: 'Korunumsuz Alan Kapı Genişliği',
+              value: b36.kapiGenislikKorunumsuz!.uiTitle,
+              subtitle: b36.kapiGenislikKorunumsuz!.uiSubtitle,
+              report: b36.kapiGenislikKorunumsuz!.label.contains("-A")
+                  ? "KRİTİK RİSK: En Az: 80 cm."
+                  : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
+                        ? "OLUMLU: 80 cm ve üzerindedir."
+                        : "BİLİNMİYOR."),
+              status: b36.kapiGenislikKorunumsuz!.label.contains("-A")
+                  ? ReportStatus.risk
+                  : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
+                        ? ReportStatus.compliant
+                        : ReportStatus.unknown),
+            );
+          }
         }
       }
 
