@@ -367,7 +367,7 @@ class PdfService {
                   children: [
                     // Raporlanan Bina Etiketi
                     pw.Text(
-                      "RAPORLANAN BİNA / YAPI",
+                      "BİNA ADI",
                       style: pw.TextStyle(
                         color: PdfColor.fromInt(0xFF93C5FD), // Soft Açık Mavi (#93C5FD)
                         fontSize: 8,
@@ -428,7 +428,7 @@ class PdfService {
                           crossAxisAlignment: pw.CrossAxisAlignment.end,
                           children: [
                             pw.Text(
-                              "RAPOR TARİHİ",
+                              "OLUŞTURMA TARİHİ",
                               style: pw.TextStyle(
                                 color: PdfColor.fromInt(0xFF93C5FD),
                                 fontSize: 8,
