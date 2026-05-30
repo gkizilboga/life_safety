@@ -631,7 +631,7 @@ class Section36Handler {
           if (prefix == "Zemin") return "${prefixStr}Zemin kattaki tahliye (lobi) mesafesi uygun mu?";
           if (prefix == "Normal") return "${prefixStr}Normal kattaki tahliye (lobi) mesafesi uygun mu?";
           if (prefix == "Bodrum") return "${prefixStr}Bodrum kattaki tahliye (lobi) mesafesi uygun mu?";
-          return "${prefixStr}Çıkış katındaki tahliye (lobi) mesafesi uygun mu?";
+          return "$prefixStrÇıkış katındaki tahliye (lobi) mesafesi uygun mu?";
         }
 
         String getReportWithKat(String text, String prefix) {

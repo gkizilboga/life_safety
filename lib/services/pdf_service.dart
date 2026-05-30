@@ -239,8 +239,6 @@ class PdfService {
   }) {
     // Renk Paleti
     const navyBlue = PdfColor.fromInt(0xFF1a365d);
-    const darkNavy = PdfColor.fromInt(0xFF0d2137);
-    const softGray = PdfColor.fromInt(0xFF6b7280);
     const slateGray = PdfColor.fromInt(0xFF334155);
 
     return pw.Page(
@@ -370,7 +368,7 @@ class PdfService {
                     // Raporlanan Bina Etiketi
                     pw.Text(
                       "RAPORLANAN BİNA / YAPI",
-                      style: const pw.TextStyle(
+                      style: pw.TextStyle(
                         color: PdfColor.fromInt(0xFF93C5FD), // Soft Açık Mavi (#93C5FD)
                         fontSize: 8,
                         fontWeight: pw.FontWeight.bold,
@@ -407,7 +405,7 @@ class PdfService {
                           children: [
                             pw.Text(
                               "BÖLGE / LOKASYON",
-                              style: const pw.TextStyle(
+                              style: pw.TextStyle(
                                 color: PdfColor.fromInt(0xFF93C5FD),
                                 fontSize: 8,
                                 fontWeight: pw.FontWeight.bold,
@@ -417,7 +415,7 @@ class PdfService {
                             pw.SizedBox(height: 4),
                             pw.Text(
                               "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
-                              style: const pw.TextStyle(
+                              style: pw.TextStyle(
                                 color: PdfColors.white,
                                 fontSize: 11,
                                 fontWeight: pw.FontWeight.bold,
@@ -431,7 +429,7 @@ class PdfService {
                           children: [
                             pw.Text(
                               "RAPOR TARİHİ",
-                              style: const pw.TextStyle(
+                              style: pw.TextStyle(
                                 color: PdfColor.fromInt(0xFF93C5FD),
                                 fontSize: 8,
                                 fontWeight: pw.FontWeight.bold,
@@ -441,7 +439,7 @@ class PdfService {
                             pw.SizedBox(height: 4),
                             pw.Text(
                               "${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year} - ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
-                              style: const pw.TextStyle(
+                              style: pw.TextStyle(
                                 color: PdfColors.white,
                                 fontSize: 11,
                                 fontWeight: pw.FontWeight.bold,
