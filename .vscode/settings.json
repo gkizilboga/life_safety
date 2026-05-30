@@ -5,5 +5,6 @@
     "API_KEY": "sk-09187faf39f14e96b9964eb9d6a28c85"
   },
   "thinkingEnabled": true,
-  "reasoningEffort": "max"
+  "reasoningEffort": "max",
+  "workbench.panel.defaultLocation": "right"
 }

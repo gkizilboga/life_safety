@@ -2133,8 +2133,8 @@ class PdfService {
       _buildCoverPage(
         pageTheme: pageTheme,
         logoImage: logoImage,
-        mainTitle: "BİRLEŞİK RAPOR",
-        subTitle: "YANGIN RİSK ANALİZİ & AKTİF SİSTEM GEREKSİNİMLERİ",
+        mainTitle: "YANGIN RİSK ANALİZİ VE AKTİF SİSTEM GEREKSİNİMLERİ",
+        subTitle: "",
         store: store,
         metrics: metrics,
         showScore: true,
@@ -2160,7 +2160,7 @@ class PdfService {
         ttf: ttf,
         ttfBold: ttfBold,
         docNo: docNo,
-        headerTitle: "BİRLEŞİK RAPOR",
+        headerTitle: "YANGIN RİSK ANALİZİ VE AKTİF SİSTEM GEREKSİNİMLERİ",
         faqs: [
           {
             'q': 'Hangi binalar için uygundur?',
@@ -2265,7 +2265,7 @@ class PdfService {
       MaterialPageRoute(
         builder: (context) => PdfPreviewScreen(
           onLayout: (format) async => pdf.save(),
-          title: "BİRLEŞİK RAPOR",
+          title: "YANGIN RİSK ANALİZİ VE AKTİF SİSTEM GEREKSİNİMLERİ",
           fileName:
               "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf",
         ),
