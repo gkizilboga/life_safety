@@ -1624,7 +1624,7 @@ class PdfService {
                 itemsWidgets.add(
                   _buildInfoTable(
                     tableGroup, ttf, ttfBold,
-                    (id <= 10 || id == 33)
+                    (id <= 10 || id == 12 || id == 33)
                         ? const PdfColor.fromInt(0x00000000)
                         : effectiveSectionRiskColor,
                     subjectLabel: "Konu",
