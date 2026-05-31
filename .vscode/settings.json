@@ -2,9 +2,11 @@
   "env": {
     "MODEL": "deepseek-v4-pro",
     "BASE_URL": "https://api.deepseek.com",
-    "API_KEY": "sk-09187faf39f14e96b9964eb9d6a28c85"
+    "API_KEY": "sk-675fd23381614edb9bb2f4363aa05eff"
   },
   "thinkingEnabled": true,
   "reasoningEffort": "max",
-  "workbench.panel.defaultLocation": "right"
+  "workbench.panel.defaultLocation": "right",
+  "copilot.chat.edits.enabled": true,
+"copilot.advanced": { "allowFileEdits": true }
 }

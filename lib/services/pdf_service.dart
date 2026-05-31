@@ -1536,7 +1536,7 @@ class PdfService {
                             font: ttfBold,
                             fontSize: 9,
                             fontStyle: pw.FontStyle.italic,
-                            color: PdfColors.blue900,
+                            color: const PdfColor.fromInt(0xFF1a365d),
                           ),
                         ),
                         pw.Padding(
@@ -1553,7 +1553,7 @@ class PdfService {
                             font: ttfBold,
                             fontSize: 9,
                             fontStyle: pw.FontStyle.italic,
-                            color: PdfColors.blue900,
+                            color: const PdfColor.fromInt(0xFF1a365d),
                           ),
                         ),
                         pw.SizedBox(height: 3),
@@ -1582,7 +1582,7 @@ class PdfService {
                         style: pw.TextStyle(
                           font: ttfBold,
                           fontSize: 8.5,
-                          color: PdfColors.blue800,
+                          color: PdfColors.grey800,
                         ),
                       ),
                     ),
@@ -1606,7 +1606,7 @@ class PdfService {
                         style: pw.TextStyle(
                           font: ttfBold,
                           fontSize: 8.5,
-                          color: PdfColors.blue800,
+                          color: PdfColors.grey800,
                         ),
                       ),
                     ),
@@ -1659,7 +1659,7 @@ class PdfService {
                         font: ttfBold,
                         fontSize: 9,
                         fontStyle: pw.FontStyle.italic,
-                        color: PdfColors.blue900,
+                        color: const PdfColor.fromInt(0xFF1a365d),
                       ),
                     ),
                     pw.Padding(
@@ -1676,7 +1676,7 @@ class PdfService {
                         font: ttfBold,
                         fontSize: 9,
                         fontStyle: pw.FontStyle.italic,
-                        color: PdfColors.blue900,
+                        color: const PdfColor.fromInt(0xFF1a365d),
                       ),
                     ),
                     pw.SizedBox(height: 3),
@@ -1705,7 +1705,7 @@ class PdfService {
                     style: pw.TextStyle(
                       font: ttfBold,
                       fontSize: 8.5,
-                      color: PdfColors.blue800,
+                      color: PdfColors.grey800,
                     ),
                   ),
                 ),
@@ -1729,7 +1729,7 @@ class PdfService {
                     style: pw.TextStyle(
                       font: ttfBold,
                       fontSize: 8.5,
-                      color: PdfColors.blue800,
+                      color: PdfColors.grey800,
                     ),
                   ),
                 ),
@@ -1773,7 +1773,7 @@ class PdfService {
       }
 
       final headerWidget = pw.Container(
-        margin: const pw.EdgeInsets.only(top: 14, bottom: 6),
+        margin: const pw.EdgeInsets.only(top: 24, bottom: 6),
         padding: const pw.EdgeInsets.only(bottom: 4),
         decoration: const pw.BoxDecoration(
           border: pw.Border(
@@ -2691,7 +2691,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.Padding(
@@ -2718,7 +2718,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.Padding(
@@ -2761,7 +2761,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.Padding(
@@ -2777,7 +2777,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.Padding(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
 import '../utils/text_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:life_safety/screens/settings_screen.dart';
@@ -105,9 +104,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   _buildSectionLabel("Tamamlanan Analizler"),
                   ...completedActions.reversed
                       .take(3)
+                      .toList()
+                      .asMap()
+                      .entries
                       .map(
-                        (b) =>
-                            _buildAnalysisCard(context, b, isCompleted: true),
+                        (entry) => _buildAnalysisCard(
+                          context,
+                          entry.value,
+                          isCompleted: true,
+                          isLatest: entry.key == 0,
+                        ),
                       ),
                   const SizedBox(height: 20),
                 ],
@@ -166,6 +172,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     BuildContext context,
     Map<String, dynamic> building, {
     required bool isCompleted,
+    bool isLatest = true,
   }) {
     final String name = building['name'] ?? "";
     final String dateStr = building['date'].toString().split('T')[0];
@@ -268,55 +275,130 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ] else ...[
             const SizedBox(height: 4),
             Container(height: 1, color: Colors.grey.shade100),
-            const SizedBox(height: 14),
-            Text(
-              "DOKÜMANLAR",
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w800,
-                color: Colors.blueGrey.shade400,
-                letterSpacing: 1.2,
+            if (isLatest) ...[
+              const SizedBox(height: 14),
+              Text(
+                "DOKÜMANLAR",
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.blueGrey.shade400,
+                  letterSpacing: 1.2,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            _buildDocumentRow(
-              context,
-              building: building,
-              icon: Icons.shield_outlined,
-              title: "Yangın Risk Analizi",
-              shareAction: PdfService.shareRiskAnalysisPdf,
-              saveAction: PdfService.saveRiskAnalysisPdfToDevice,
-              backgroundColor: const Color(0xFFE8F5E9).withOpacity(0.5),
-              borderColor: const Color(0xFFC8E6C9).withOpacity(0.7),
-              iconColor: const Color(0xFF2E7D32),
-              iconBgColor: const Color(0xFFE8F5E9),
-            ),
-            const SizedBox(height: 8),
-            _buildDocumentRow(
-              context,
-              building: building,
-              icon: Icons.settings_system_daydream_outlined,
-              title: "Aktif Sistem Gereksinimleri",
-              shareAction: PdfService.shareActiveSystemsPdf,
-              saveAction: PdfService.saveActiveSystemsPdfToDevice,
-              backgroundColor: const Color(0xFFE8F5E9).withOpacity(0.5),
-              borderColor: const Color(0xFFC8E6C9).withOpacity(0.7),
-              iconColor: const Color(0xFF2E7D32),
-              iconBgColor: const Color(0xFFE8F5E9),
-            ),
-            const SizedBox(height: 8),
-            _buildDocumentRow(
-              context,
-              building: building,
-              icon: Icons.picture_as_pdf_outlined,
-              title: "Birleşik Rapor (Tek PDF)",
-              shareAction: PdfService.shareCombinedPdf,
-              saveAction: PdfService.saveCombinedPdfToDevice,
-              backgroundColor: const Color(0xFFC8E6C9).withOpacity(0.5),
-              borderColor: const Color(0xFF81C784).withOpacity(0.7),
-              iconColor: const Color(0xFF1B5E20),
-              iconBgColor: const Color(0xFFC8E6C9),
-            ),
+              const SizedBox(height: 10),
+              _buildDocumentRow(
+                context,
+                building: building,
+                icon: Icons.shield_outlined,
+                title: "Yangın Risk Analizi",
+                shareAction: PdfService.shareRiskAnalysisPdf,
+                saveAction: PdfService.saveRiskAnalysisPdfToDevice,
+                backgroundColor: const Color(0xFFE8EAF6),
+                borderColor: const Color(0xFFC5CAE9),
+                iconColor: const Color(0xFF283593),
+                iconBgColor: const Color(0xFFE8EAF6),
+              ),
+              const SizedBox(height: 8),
+              _buildDocumentRow(
+                context,
+                building: building,
+                icon: Icons.settings_system_daydream_outlined,
+                title: "Aktif Sistem Gereksinimleri",
+                shareAction: PdfService.shareActiveSystemsPdf,
+                saveAction: PdfService.saveActiveSystemsPdfToDevice,
+                backgroundColor: const Color(0xFFE0F2F1),
+                borderColor: const Color(0xFFB2DFDB),
+                iconColor: const Color(0xFF00695C),
+                iconBgColor: const Color(0xFFE0F2F1),
+              ),
+              const SizedBox(height: 8),
+              _buildDocumentRow(
+                context,
+                building: building,
+                icon: Icons.picture_as_pdf_outlined,
+                title: "Birleşik Rapor (Tek PDF)",
+                shareAction: PdfService.shareCombinedPdf,
+                saveAction: PdfService.saveCombinedPdfToDevice,
+                backgroundColor: const Color(0xFFA5D6A7),
+                borderColor: const Color(0xFF66BB6A),
+                iconColor: const Color(0xFF1B5E20),
+                iconBgColor: const Color(0xFFA5D6A7),
+              ),
+            ] else ...[
+              // Accordion: eski analizlerde rapor butonları gizli
+              Theme(
+                data: Theme.of(context).copyWith(
+                  dividerColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                ),
+                child: ExpansionTile(
+                  tilePadding: EdgeInsets.zero,
+                  childrenPadding: EdgeInsets.zero,
+                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.description_outlined,
+                        size: 16,
+                        color: Colors.blueGrey.shade400,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Raporları Görüntüle",
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blueGrey.shade400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  children: [
+                    const SizedBox(height: 10),
+                    _buildDocumentRow(
+                      context,
+                      building: building,
+                      icon: Icons.shield_outlined,
+                      title: "Yangın Risk Analizi",
+                      shareAction: PdfService.shareRiskAnalysisPdf,
+                      saveAction: PdfService.saveRiskAnalysisPdfToDevice,
+                      backgroundColor: const Color(0xFFE8EAF6),
+                      borderColor: const Color(0xFFC5CAE9),
+                      iconColor: const Color(0xFF283593),
+                      iconBgColor: const Color(0xFFE8EAF6),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildDocumentRow(
+                      context,
+                      building: building,
+                      icon: Icons.settings_system_daydream_outlined,
+                      title: "Aktif Sistem Gereksinimleri",
+                      shareAction: PdfService.shareActiveSystemsPdf,
+                      saveAction: PdfService.saveActiveSystemsPdfToDevice,
+                      backgroundColor: const Color(0xFFE0F2F1),
+                      borderColor: const Color(0xFFB2DFDB),
+                      iconColor: const Color(0xFF00695C),
+                      iconBgColor: const Color(0xFFE0F2F1),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildDocumentRow(
+                      context,
+                      building: building,
+                      icon: Icons.picture_as_pdf_outlined,
+                      title: "Birleşik Rapor (Tek PDF)",
+                      shareAction: PdfService.shareCombinedPdf,
+                      saveAction: PdfService.saveCombinedPdfToDevice,
+                      backgroundColor: const Color(0xFFA5D6A7),
+                      borderColor: const Color(0xFF66BB6A),
+                      iconColor: const Color(0xFF1B5E20),
+                      iconBgColor: const Color(0xFFA5D6A7),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ],
       ),
@@ -475,16 +557,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                   backgroundColor: const Color(0xFF2E7D32),
                                   behavior: SnackBarBehavior.floating,
-                                  duration: const Duration(seconds: 5),
+                                  duration: const Duration(seconds: 3),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  action: SnackBarAction(
-                                    label: "AÇ / PAYLAŞ",
-                                    textColor: Colors.white,
-                                    onPressed: () {
-                                      Share.shareXFiles([XFile(path)], text: title);
-                                    },
                                   ),
                                 ),
                               );
@@ -782,7 +857,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: title == "Yeni Analiz" ? Colors.green.shade50 : Colors.white,
+          color: title == "Yeni Analiz" ? const Color(0xFFC8E6C9) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.grey.shade100),
         ),

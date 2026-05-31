@@ -207,7 +207,7 @@ class _Bolum3ScreenState extends State<Bolum3Screen> {
     final bool isLocked = BinaStore.instance.bolum11 != null;
 
     return AnalysisPageLayout(
-      title: "Kat Yükseklik Bilgileri",
+      title: "Kat Bilgileri",
       screenType: widget.runtimeType,
       isNextEnabled: _isReady() || isLocked,
       onNext: () {

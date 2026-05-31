@@ -811,7 +811,7 @@ class Bolum13Content {
     uiSubtitle: "",
     reportText:
         "UYARI: Asansör kat / kabin kapılarının yangına dayanıklı olmadığı beyan edilmiştir. Asansörler, binada şaft görevi görmekte, alev ve dumanın diğer katlara taşınmasına sebep olabilmektedir. Bu sebeple asansör kat kapıları yapı yüksekliğine göre 30 veya 60 dk. yangın dayanıma sahip olması yönetmelikçe zorunludur.\nAyrıca binada asansör makine dairesi varsa bu odanın duvarları ve kapısı yangın dayanımlı olmalıdır.",
-    level: RiskLevel.warning,
+    level: RiskLevel.critical,
   );
 
   static final asansorOptionC = ChoiceResult(
@@ -1551,7 +1551,7 @@ class Bolum16Content {
     uiTitle: "A1, A2 sınıfı malzeme.",
     uiSubtitle: "Taşyünü vb.",
     reportText:
-        "OLUMLU: Giydirme cephe arkasındaki ısı yalıtım malzemesi (A1 veya A2 sınıfı) yanmaz malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır.",
+        "OLUMLU: Giydirme cephe arkasındaki ısı yalıtım malzemesi A1 (hiç yanmaz) veya A2 sınıf malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır.",
     level: RiskLevel.positive,
   );
   static final giydirmeYalitimB = ChoiceResult(
@@ -1559,9 +1559,9 @@ class Bolum16Content {
     uiTitle: "Yanıcı malzeme.",
     uiSubtitle: "EPS, XPS, Poliüretan vb.",
     reportText:
-        "KRİTİK RİSK: Giydirme cephe arkasındaki yalıtım malzemesi yanıcıdır. Bacalanma etkisiyle yangın cephe boşluğunda çok hızlı ilerleyebilir.",
+        "KRİTİK RİSK: Giydirme cephe arkasındaki yalıtım malzemesi yanıcıdır. Baca etkisiyle yangın, cephe boşluğunda çok hızlı ilerleyebilir.",
     adviceText:
-        "Giydirme cephe arkasındaki yalıtımın 'Hiç Yanmaz' (A1 sınıfı) taşyünü gibi malzemelerden oluşması hayati önem taşır. Yanıcı yalıtım malzemelerinin kullanımı, özellikle yüksek binalarda cephe yangınlarının kontrol altına alınmasını imkansız hale getirebilir.",
+        "Giydirme cephe arkasındaki yalıtımın hiç yanmaz (A1 sınıfı) veya A2 sınıfı gibi malzemelerden oluşması gereklidir. Yanıcı yalıtım malzemelerinin kullanımı, özellikle yüksek binalarda cephe yangınlarının kontrol altına alınmasını imkansız hale getirebilir.",
     level: RiskLevel.critical,
   );
   static final giydirmeYalitimC = ChoiceResult(

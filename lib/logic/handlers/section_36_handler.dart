@@ -165,14 +165,23 @@ class Section36Handler {
           ? "(Binada sprinkler mevcut, Yönetmelikte limit 15 m. dir.)"
           : "(Binada sprinkler yok, Yönetmelikte limit 10 m. dir.)";
 
-      bool mainMesafeReq = (directMain < totalMain) && totalMain > 0;
+      // Çıkış katı tipine göre hangi lobi sorularının gösterileceğini belirle
+      final cikisKatiRes = _store.bolum33?.cikisKati;
+      final String cikisLabel = cikisKatiRes?.label ?? '';
+      final bool isZeminExit = cikisLabel.contains('-A');
+      final bool isNormalExit = cikisLabel.contains('-B');
+      final bool isBodrumExit = cikisLabel.contains('-C');
+      // cikisKati ayarlanmamışsa (null) varsayılan olarak zemin/normal çıkış kabul et (geriye uyumluluk)
+      final bool hasZeminOrNormalExit = cikisKatiRes == null || isZeminExit || isNormalExit;
+
+      bool mainMesafeReq = hasZeminOrNormalExit && (directMain < totalMain) && totalMain > 0;
       bool mainMesafeFail =
           mainMesafeReq && b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
       bool mainMesafeUnknown =
           mainMesafeReq && b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-C";
 
       bool bodrumMesafeReq =
-          b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
+          (cikisKatiRes != null && isBodrumExit) && b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
       bool bodrumMesafeFail =
           bodrumMesafeReq &&
           b20.bodrumLobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
@@ -645,8 +654,16 @@ class Section36Handler {
               .replaceAll("Çıkış katındaki tahliye mesafeleri", "$katText tahliye mesafeleri");
         }
 
+        final cikisLabel = cikisKatiRes?.label ?? '';
+        final bool isZeminExit = cikisLabel.contains('-A');
+        final bool isNormalExit = cikisLabel.contains('-B');
+        final bool isBodrumExit = cikisLabel.contains('-C');
+        // cikisKati ayarlanmamışsa varsayılan olarak zemin/normal çıkış kabul et (geriye uyumluluk)
+        final bool hasZeminOrNormalExit = cikisKatiRes == null || isZeminExit || isNormalExit;
+
         final lobi = b20.lobiTahliyeMesafeDurumu;
-        final bool showLobby = (directMain < totalMain) && totalMain > 0;
+        // Çıkış katı Zemin/Normal ise ana lobi mesafesi sorulsun. Bodrum çıkış ise ana lobi sorulmaz.
+        final bool showLobby = hasZeminOrNormalExit && (directMain < totalMain) && totalMain > 0;
         if (showLobby && lobi != null) {
           _addDetail(
             details,
@@ -660,8 +677,9 @@ class Section36Handler {
         }
 
         final bodLobi = b20.bodrumLobiTahliyeMesafeDurumu;
+        // Bodrum lobi mesafesi yalnızca çıkış katı Bodrum ise sorulsun.
         final bool showBodLobby =
-            b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
+            (cikisKatiRes != null && isBodrumExit) && b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
         if (showBodLobby && bodLobi != null) {
           _addDetail(
             details,

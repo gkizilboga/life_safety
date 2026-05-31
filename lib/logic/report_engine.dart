@@ -4032,26 +4032,49 @@ class ReportEngine {
       // 3. Asansör
       if (b7?.hasAsansor == true) {
         if (b13.asansorKapi != null) {
+          final double hYapi = _getHYapi(s);
+          final bool isHighRise = hYapi >= 51.5 - 0.001;
+          final String yukseklikNotu = isHighRise
+              ? "Yapı yüksekliğiniz (${InputValidator.formatArea(hYapi)}m) 51,50m'nin ÜZERİNDE olduğu için asansör kat kapılarının en az 60 dakika yangın dayanımına sahip olması gereklidir."
+              : "Yapı yüksekliğiniz (${InputValidator.formatArea(hYapi)}m) 51,50m'nin ALTINDA olduğu için asansör kat kapılarının en az 30 dakika yangın dayanımına sahip olması gereklidir.";
+
           final bool isMrl = s.bolum29?.asansor?.label == '29-4-C';
-          final String rawReport = b13.asansorKapi!.reportText;
-          final String filteredReport = isMrl
-              ? rawReport
-                    .replaceAll(
-                      RegExp(
-                        r'\s*asansör makine dairesi varsa[^.]*\.',
-                        caseSensitive: false,
-                      ),
-                      '',
-                    )
-                    .trim()
-              : rawReport;
+
+          // Dinamik rapor metni oluştur
+          String dynamicReport;
+          final String choiceLabel = b13.asansorKapi!.label;
+
+          if (choiceLabel.contains("13-3-A")) {
+            // Evet
+            dynamicReport =
+                "OLUMLU: Asansör kat / kabin kapılarının yangına dayanıklı oldukları beyan edilmiştir. $yukseklikNotu Kapıların test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.";
+          } else if (choiceLabel.contains("13-3-B")) {
+            // Hayır
+            dynamicReport =
+                "KRİTİK RİSK: Asansör kat / kabin kapılarının yangına dayanıklı olmadığı beyan edilmiştir. $yukseklikNotu Asansör kovası, binada şaft görevi görmekte, alev ve dumanın diğer katlara taşınmasına sebep olabilmektedir.";
+          } else {
+            // Bilmiyorum
+            dynamicReport =
+                "BİLİNMİYOR: Asansör kat kapılarının özellikleri bilinmiyor. $yukseklikNotu Asansör kat kapılarının yangın dayanım test raporu incelenerek uygunluklarına karar verilir.";
+          }
+
+          // Makine dairesiz asansör (MRL) ise makine dairesi ibaresini kaldır
+          if (isMrl) {
+            dynamicReport = dynamicReport.replaceAll(
+              RegExp(
+                r'\s*asansör makine dairesi varsa[^.]*\.',
+                caseSensitive: false,
+              ),
+              '',
+            ).trim();
+          }
 
           _addDetail(
             details,
             label: 'Asansör kapısı yangın dayanımlı mı?',
             value: b13.asansorKapi!.uiTitle,
             subtitle: b13.asansorKapi!.uiSubtitle,
-            report: filteredReport,
+            report: dynamicReport,
             advice: b13.asansorKapi!.adviceText,
             level: b13.asansorKapi!.level,
           );
