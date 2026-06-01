@@ -286,7 +286,7 @@ class PdfService {
                     textAlign: pw.TextAlign.center,
                     style: pw.TextStyle(
                       color: navyBlue,
-                      fontSize: 26
+                      fontSize: 26,
                       fontWeight: pw.FontWeight.bold,
                       letterSpacing: 1.5,
                     ),

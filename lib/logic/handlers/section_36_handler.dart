@@ -143,15 +143,15 @@ class Section36Handler {
       // Kombine Raporlama (Madde 41 - Dışa Açılan Merdiven)
       if (mainDirectFail && bodrumDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Hem normal katlara hem de bodrum katlara hitap eden kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (Normal: $directMain/$reqDirectMain adet, Bodrum: $directBod/$reqDirectBod adet)",
+          "KRİTİK RİSK: Hem normal katlara hem de bodrum katlara hitap eden kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanmamaktadır. (Normal: $directMain/$reqDirectMain adet, Bodrum: $directBod/$reqDirectBod adet)",
         );
       } else if (mainDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Normal katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (En az $reqDirectMain adet doğrudan dışarıya açılmalıdır, mevcutta $directMain adet doğrudan dışarıya açılmaktadır).",
+          "KRİTİK RİSK: Normal katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanmamaktadır. (En az $reqDirectMain adet merdiven doğrudan dışarıya açılmalıdır, mevcutta $directMain adet doğrudan dışarıya açılmaktadır).",
         );
       } else if (bodrumDirectFail) {
         analysisParts.add(
-          "KRİTİK RİSK: Bodrum katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı SAĞLANMAMAKTADIR. (En az $reqDirectBod adet doğrudan dışarıya açılmalıdır, mevcutta $directBod adet doğrudan dışarıya açılmaktadır).",
+          "KRİTİK RİSK: Bodrum katlarda kaçış merdivenlerinin en az yarısının (%50) doğrudan dışarıya açılması kuralı sağlanmamaktadır. (En az $reqDirectBod adet merdiven doğrudan dışarıya açılmalıdır, mevcutta $directBod adet doğrudan dışarıya açılmaktadır).",
         );
       } else if (totalMain > 0 || totalBod > 0) {
         analysisParts.add(
@@ -693,7 +693,7 @@ class Section36Handler {
             subtitle: choice.uiSubtitle,
             report:
                 "UYARI: BİLİNMİYOR - Genişlik beyan edilmediği için yeterlilik değerlendirmesi yapılamamıştır.",
-            status: ReportStatus.warning,
+            status: ReportStatus.unknown,
           );
           return;
         }

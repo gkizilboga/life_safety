@@ -897,6 +897,40 @@ class ReportEngine {
             advice: b16.sagirYuzey!.adviceText,
             level: b16.sagirYuzey!.level,
           );
+
+          if (b16.sagirYuzey?.label ==
+                  Bolum16Content.sagirYuzeyOptionB.label ||
+              b16.sagirYuzey?.label ==
+                  Bolum16Content.sagirYuzeyOptionC.label) {
+            if (b16.sagirYuzeySprinkler == 1) {
+              _addDetail(
+                details,
+                label: 'Cepheye doğru bakan sprinkler başlıkları var mı?',
+                value: 'Evet, var',
+                report:
+                    'Kullanıcı cephede sprinkler olduğunu beyan etmiştir.',
+                level: RiskLevel.positive,
+              );
+            } else if (b16.sagirYuzeySprinkler == 0) {
+              _addDetail(
+                details,
+                label: 'Cepheye doğru bakan sprinkler başlıkları var mı?',
+                value: 'Hayır, yok',
+                report:
+                    'Katlar arasında 100 cm yüksekliğinde hiç yanmaz yüzey bulunmadığından cepheye doğru bakan sprinkler sistemi bulunması zorunludur.',
+                level: RiskLevel.warning,
+              );
+            } else if (b16.sagirYuzeySprinkler == 2) {
+              _addDetail(
+                details,
+                label: 'Cepheye doğru bakan sprinkler başlıkları var mı?',
+                value: 'Bilmiyorum',
+                report:
+                    'Katlar arasında 100 cm yüksekliğinde hiç yanmaz yüzeyin olup olmadığı bilinmediğinden konu hakkında proje üzerinde veya sahada inceleme yapılarak nihai karar verilmelidir. Olmaması halinde cephede sprinkler sistemi imal edilmesi zorunludur.',
+                level: RiskLevel.warning,
+              );
+            }
+          }
         }
 
         if (b16.bitisikNizam != null) {
@@ -1615,7 +1649,7 @@ class ReportEngine {
               evalLevel = RiskLevel.critical;
             } else {
               evalReport =
-                  'UYARI: Bina yüksekliği 30.50m - 51.50m arasındadır. Merdivenlerde basınçlandırma sistemi YOK ise, merdiven önlerinde Yangın Güvenlik Holü (YGH) bulunması zorunludur. Eğer Yangın Güvenlik Holü (YGH) varsa basınçlandırma yapılması zorunluluğu ortadan kalkar.\n\nGerekçe:\n${basincReasons.join("\n")}';
+                  'UYARI: Bina yüksekliği 30.50m - 51.50m arasındadır. Kapalı merdivenlerde basınçlandırma sistemi YOK ise, merdiven önlerinde Yangın Güvenlik Holü (YGH) bulunması zorunludur. Eğer Yangın Güvenlik Holü (YGH) varsa basınçlandırma yapılması zorunluluğu ortadan kalkar.\n\nGerekçe:\n${basincReasons.join("\n")}';
               evalLevel = RiskLevel.warning;
             }
           }
@@ -2554,7 +2588,7 @@ class ReportEngine {
           }
         }
 
-        if (b?.sagirYuzeySprinkler == false) bariyerLevels.add(RiskLevel.warning);
+        if (b?.sagirYuzeySprinkler == 0 || b?.sagirYuzeySprinkler == 2) bariyerLevels.add(RiskLevel.warning);
         bariyerLevels.add(b?.cepheUzunlugu?.level);
 
         return _maxLevel(bariyerLevels);
@@ -2938,7 +2972,7 @@ class ReportEngine {
         addLevel(RiskLevel.critical);
       if (b16.bariyerZemin != null && b16.bariyerZemin != 1)
         addLevel(RiskLevel.critical);
-      if (b16.sagirYuzeySprinkler == false) addLevel(RiskLevel.warning);
+      if (b16.sagirYuzeySprinkler == 0 || b16.sagirYuzeySprinkler == 2) addLevel(RiskLevel.warning);
     }
 
     // --- BÖLÜM 17 (Çatı) ---

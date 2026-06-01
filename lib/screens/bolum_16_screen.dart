@@ -86,9 +86,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             _model.giydirmeYalitimMalzemesi == null))
       return false;
     if (_model.sagirYuzey == null) return false;
-    if (_model.sagirYuzey?.label == Bolum16Content.sagirYuzeyOptionB.label &&
-        _model.sagirYuzeySprinkler == null)
-      return false;
+    if ((_model.sagirYuzey?.label == Bolum16Content.sagirYuzeyOptionB.label ||
+            _model.sagirYuzey?.label ==
+                Bolum16Content.sagirYuzeyOptionC.label) &&
+        _model.sagirYuzeySprinkler == null) return false;
     if (_askBitisik && _model.bitisikNizam == null) return false;
     if (_model.cepheUzunlugu == null) return false;
     return true;
@@ -198,19 +199,19 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               ),
               _buildSubQuestion(
                 null,
-                "Pencerelerin yanlarında en az 15 cm eninde yanmaz malzeme ile yalıtım var mı?",
+                "Pencerelerin yanlarında en az 15 cm eninde hiç yanmaz malzeme ile yalıtım var mı?",
                 _model.bariyerYan,
                 (v) => setState(() => _model = _model.copyWith(bariyerYan: v)),
               ),
               _buildSubQuestion(
                 null,
-                "Pencerelerin üstünde 30 cm eninde yanmaz malzeme ile yalıtım var mı?",
+                "Pencerelerin üstünde 30 cm eninde hiç yanmaz malzeme ile yalıtım var mı?",
                 _model.bariyerUst,
                 (v) => setState(() => _model = _model.copyWith(bariyerUst: v)),
               ),
               _buildSubQuestion(
                 null,
-                "Zemin seviyesinden 150 cm yüksekliğinde yanmaz malzeme ile yalıtım var mı?",
+                "Zemin seviyesinden 150 cm yüksekliğinde hiç yanmaz malzeme ile yalıtım var mı?",
                 _model.bariyerZemin,
                 (v) =>
                     setState(() => _model = _model.copyWith(bariyerZemin: v)),
@@ -277,13 +278,16 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ),
 
             if (_model.sagirYuzey?.label ==
-                Bolum16Content.sagirYuzeyOptionB.label) ...[
+                    Bolum16Content.sagirYuzeyOptionB.label ||
+                _model.sagirYuzey?.label ==
+                    Bolum16Content.sagirYuzeyOptionC.label) ...[
               CustomInfoNote(
                 type: InfoNoteType.info,
                 text: "Lütfen alttaki soruyu yanıtlayınız.",
                 icon: Icons.arrow_downward,
               ),
-              _buildSubQuestionRadio(
+              _buildSubQuestion(
+                null,
                 "Cepheye doğru bakan özel sprinkler başlıkları var mı?",
                 _model.sagirYuzeySprinkler,
                 (v) => setState(
@@ -388,7 +392,9 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 setState(() {
                   if (k == 'sagir') {
                     _model = _model.copyWith(sagirYuzey: opt);
-                    if (opt.label != Bolum16Content.sagirYuzeyOptionB.label) {
+                    if (opt.label != Bolum16Content.sagirYuzeyOptionB.label &&
+                        opt.label !=
+                            Bolum16Content.sagirYuzeyOptionC.label) {
                       _model = _model.copyWith(sagirYuzeySprinkler: null);
                     }
                   }
@@ -452,47 +458,6 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                 onChanged: onChanged,
               ),
               const Text("Bilmiyorum", style: TextStyle(fontSize: 14)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSubQuestionRadio(
-    String title,
-    bool? groupValue,
-    Function(bool?) onChanged,
-  ) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F7FA),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE0E0E0)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SubQuestionTitle(title),
-          Row(
-            children: [
-              Radio<bool>(
-                value: true,
-                groupValue: groupValue,
-                activeColor: const Color(0xFF1A237E),
-                onChanged: onChanged,
-              ),
-              const Text("Evet", style: TextStyle(fontSize: 15)),
-              const SizedBox(width: 15),
-              Radio<bool>(
-                value: false,
-                groupValue: groupValue,
-                activeColor: const Color(0xFF1A237E),
-                onChanged: onChanged,
-              ),
-              const Text("Hayır", style: TextStyle(fontSize: 15)),
             ],
           ),
         ],

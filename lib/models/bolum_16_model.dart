@@ -6,7 +6,7 @@ class Bolum16Model {
   final ChoiceResult? giydirmeCepheMalzemesi;
   final ChoiceResult? giydirmeYalitimMalzemesi;
   final ChoiceResult? sagirYuzey;
-  final bool? sagirYuzeySprinkler;
+  final int? sagirYuzeySprinkler;
   final ChoiceResult? bitisikNizam;
 
   final int? bariyerYan;
@@ -34,7 +34,7 @@ class Bolum16Model {
     ChoiceResult? giydirmeCepheMalzemesi,
     ChoiceResult? giydirmeYalitimMalzemesi,
     ChoiceResult? sagirYuzey,
-    bool? sagirYuzeySprinkler,
+    int? sagirYuzeySprinkler,
     ChoiceResult? bitisikNizam,
     int? bariyerYan,
     int? bariyerUst,
@@ -105,7 +105,9 @@ class Bolum16Model {
         Bolum16Content.sagirYuzeyOptionB,
         Bolum16Content.sagirYuzeyOptionC,
       ]),
-      sagirYuzeySprinkler: map['sagirYuzeySprinkler'],
+      sagirYuzeySprinkler: map['sagirYuzeySprinkler'] is bool
+          ? ((map['sagirYuzeySprinkler'] as bool) ? 1 : 0)
+          : map['sagirYuzeySprinkler'],
       bitisikNizam: find(map['bitisikNizam_label'], [
         Bolum16Content.bitisikOptionA,
         Bolum16Content.bitisikOptionB,
