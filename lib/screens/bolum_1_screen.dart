@@ -95,18 +95,13 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
                       children: [
                         TextSpan(text: "Analiz yalnızca "),
                         TextSpan(
-                          text: "19.12.2007 sonrası ruhsatlı ",
+                          text: "19.12.2007 sonrası yapı ruhsatı onaylanmış ",
                         ),
                         TextSpan(
                           text: "KONUT",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        TextSpan(text: " veya "),
-                        TextSpan(
-                          text: "KONUT+TİCARİ",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        TextSpan(text: " ruhsatlı yapılar için geçerlidir."),
+                        TextSpan(text: " amaçlı yapılar için geçerlidir."),
                       ],
                     ),
                   ),
@@ -149,7 +144,7 @@ class _Bolum1ScreenState extends State<Bolum1Screen> {
       context: context,
       title: 'UYARI',
       content:
-          ' DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Uzman görüşüne başvurmanız tavsiye edilir.',
+          ' DİKKAT: Binanız 19.12.2007 tarihinden önce ruhsatlandırılmış olmasına rağmen yönetmelikteki "Yeni Bina" hükümlerine göre analiz edilmesini talep ediyorsunuz. Durumunuza uygun yangın risk analizi için Yangın Güvenlik Uzmanı görüşüne başvurmanız tavsiye edilir.',
       confirmText: 'Devam Et',
       cancelText: 'Vazgeç',
       icon: Icons.warning_amber_rounded,

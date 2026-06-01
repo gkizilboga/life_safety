@@ -154,16 +154,12 @@ class _Bolum7ScreenState extends State<Bolum7Screen> {
             Bolum7Content.elektrik,
             _model.hasElektrik,
             () => _toggleOption('elektrik'),
-            imagePath: AppAssets.section7ElektrikOdasi,
-            imageTitle: "Elektrik odası",
           ),
 
           _buildOption(
             Bolum7Content.trafo,
             _model.hasTrafo,
             () => _toggleOption('trafo'),
-            imagePath: AppAssets.section7Trafo,
-            imageTitle: "Trafo odası",
           ),
 
           _buildOption(

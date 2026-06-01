@@ -3,20 +3,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../data/bina_store.dart';
 
 class AuthService {
-  static final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile'],
-  );
+  static final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
 
   /// Triggers Google Sign-In and updates BinaStore
-  static Future<GoogleSignInAccount?> signInWithGoogle() async {
+  static Future<GoogleSignInAccount> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? account = await _googleSignIn.signIn();
-      if (account != null) {
-        // Sync user data to local storage
-        BinaStore.instance.userName = account.displayName ?? "Misafir";
-        BinaStore.instance.isRegistered = true;
-        // We could store email too if BinaStore supported it
-      }
+      final account = await _googleSignIn.authenticate();
+      // Sync user data to local storage
+      BinaStore.instance.userName = account.displayName ?? "Misafir";
+      BinaStore.instance.isRegistered = true;
       return account;
     } catch (e) {
       debugPrint('Google Sign-In Error: $e');

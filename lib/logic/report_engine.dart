@@ -10,6 +10,7 @@ import 'handlers/section_21_handler.dart';
 import 'handlers/section_27_handler.dart';
 import '../utils/input_validator.dart';
 import '../utils/app_progress.dart';
+import '../screens/bolum_33_screen.dart';
 
 enum ReportModule {
   binaBilgileri(
@@ -127,6 +128,12 @@ class ReportEngine {
           } else if (status == ReportStatus.unknown) {
             unknowns++;
           }
+        }
+
+        // Sahanlıksız merdiven kritik riski Bölüm 20 detay raporundan kaldırıldığı için burada skorlama amacıyla manuel eklenmektedir.
+        if (i == 20 && s.bolum20 != null && s.bolum20!.sahanliksizMerdivenSayisi > 0) {
+          criticalRisks++;
+          hasCritical = true;
         }
 
         if (hasCritical && i > 10 && !criticalTitles.contains("Bölüm $i")) {
@@ -565,21 +572,21 @@ class ReportEngine {
               'value': '${k.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
-              'isBold': true,
+              'isBold': k < 35,
             });
             details.add({
               'label': 'Kiriş Paspayı',
               'value': '${r.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
-              'isBold': true,
+              'isBold': r < 25,
             });
             details.add({
               'label': 'Döşeme Paspayı',
               'value': '${d.toStringAsFixed(1)} mm',
               'report': '',
               'isTable': true,
-              'isBold': true,
+              'isBold': d < 20,
             });
 
             // 2. Otomatik Analiz
@@ -689,16 +696,29 @@ class ReportEngine {
             advice: b15.kaplama!.adviceText,
             level: b15.kaplama!.level,
           );
-        if (b15.yalitim != null)
+        if (b15.yalitim != null) {
+          String yalitimReport = b15.yalitim!.reportText;
+          String? yalitimAdvice = b15.yalitim!.adviceText;
+          RiskLevel yalitimLevel = b15.yalitim!.level;
+
+          if (b15.yalitim!.label == "15-2-C" &&
+              b15.yalitimSap?.label == "15-2-ALT-A") {
+            yalitimReport =
+                "OLUMLU: Döşeme betonunda yanıcı yalıtım malzemesi (XPS, EPS vb.) kullanılmıştır ancak üzeri en az 2 cm koruyucu şap tabakası ile kaplanarak güvenli hale getirilmiştir.";
+            yalitimAdvice = "";
+            yalitimLevel = RiskLevel.positive;
+          }
+
           _addDetail(
             details,
             label: 'Döşeme üzerinde ısı yalıtım malzemesi var mı?',
             value: b15.yalitim!.uiTitle,
             subtitle: b15.yalitim!.uiSubtitle,
-            report: b15.yalitim!.reportText,
-            advice: b15.yalitim!.adviceText,
-            level: b15.yalitim!.level,
+            report: yalitimReport,
+            advice: yalitimAdvice,
+            level: yalitimLevel,
           );
+        }
         if (b15.yalitimSap != null)
           _addDetail(
             details,
@@ -717,13 +737,13 @@ class ReportEngine {
           if (b15.tavan!.label == "15-3-B" &&
               b15.tavanMalzeme?.label == "15-3-ALT-A") {
             tavanReport =
-                "OLUMLU: Binada asma tavan bulunmaktadır ancak kullanılan malzemenin (Alçıpanel, metal vb.) yangın performansı yeterlidir.";
+                "OLUMLU: Konut katlarında asma tavan bulunmaktadır ancak kullanılan malzemenin (Alçıpanel, metal vb.) yangın performansı yeterlidir.";
             tavanLevel = RiskLevel.positive;
           }
 
           _addDetail(
             details,
-            label: 'Asma Tavan var mı?',
+            label: 'Konut katlarında asma tavan var mı?',
             value: b15.tavan!.uiTitle,
             report: tavanReport,
             advice: b15.tavan!.adviceText,
@@ -1004,7 +1024,9 @@ class ReportEngine {
             subtitle: duvar.uiSubtitle,
             report: reportText,
             advice: duvar.adviceText,
-            level: duvar.level,
+            level: duvar.label == Bolum18Content.duvarOptionB.label
+                ? (isYuksek ? RiskLevel.warning : RiskLevel.positive)
+                : duvar.level,
           );
         }
         if (b18.boruTipi != null)
@@ -1520,7 +1542,7 @@ class ReportEngine {
             label: 'Yönetmelik Madde 48/7 Notu',
             value: 'GEÇERLİ',
             report:
-                'Not: Giriş, çıkış ve şaftları üst katlardan 120 dakika yangına dayanıklı döşeme veya bölme ile ayrılan bodrum katlar, yapı yüksekliğine dâhil edilmez ve yangın güvenlik tedbirleri bakımından ayrı değerlendirilir. Binanızda hem bodrum kat merdivenlerinin ayrıldığı hem de asansörlerin bodruma inmediği beyan edilmiştir. Bu ayrımın 120 dakika yangına dayanımlı olup olmadığı ve bodrumun gerçekten yapı yüksekliğinden muaf tutulup tutulamayacağı hususunda yetkin bir Yangın Mühendisi tarafından sahada detaylı inceleme yapılması gereklidir.',
+                'Not: Giriş, çıkış ve şaftları üst katlardan 120 dakika yangına dayanıklı döşeme veya bölme ile ayrılan bodrum katlar, yapı yüksekliğine dâhil edilmez ve yangın güvenlik tedbirleri bakımından ayrı değerlendirilir. Binanızda hem bodrum kat merdivenlerinin ayrıldığı hem de asansörlerin bodruma inmediği beyan edilmiştir. Bu ayrımın 120 dakika yangına dayanımlı olup olmadığı ve bodrumun gerçekten yapı yüksekliğinden muaf tutulup tutulamayacağı hususunda yetkin bir Yangın Güvenlik Uzmanı tarafından sahada detaylı inceleme yapılması gereklidir.',
             level: RiskLevel.info,
           );
         }
@@ -1593,7 +1615,7 @@ class ReportEngine {
               evalLevel = RiskLevel.critical;
             } else {
               evalReport =
-                  'UYARI: Bina yüksekliği 30.50m - 51.50m arasındadır. Merdivenlerde basınçlandırma sistemi YOK ise, merdiven önlerinde Yangın Güvenlik Holü (YGH) bulunması zorunludur. Eğer YGH varsa basınçlandırma yapılması zorunluluğu ortadan kalkar.\n\nGerekçe:\n${basincReasons.join("\n")}';
+                  'UYARI: Bina yüksekliği 30.50m - 51.50m arasındadır. Merdivenlerde basınçlandırma sistemi YOK ise, merdiven önlerinde Yangın Güvenlik Holü (YGH) bulunması zorunludur. Eğer Yangın Güvenlik Holü (YGH) varsa basınçlandırma yapılması zorunluluğu ortadan kalkar.\n\nGerekçe:\n${basincReasons.join("\n")}';
               evalLevel = RiskLevel.warning;
             }
           }
@@ -1635,18 +1657,6 @@ class ReportEngine {
         }
 
         // Madde 41 Tahliye Mesafesi (Lobi) - Bölüm 36 analiz notunda merkezileştirildiği için buradan kaldırıldı.
-        if (b20.sahanliksizMerdivenSayisi > 0) {
-          _addDetail(
-            details,
-            label: 'Sahanlıksız (Düz) Merdiven Var Mı?',
-            value: '${b20.sahanliksizMerdivenSayisi} Adet',
-            report:
-                'KRİTİK RİSK: Bina merdivenlerinde sahanlıksız (düz) merdiven bulunduğu beyan edilmiştir. Yangın kaçış merdivenlerinde kesintisiz (sahanlıksız) yükseklik sınırları aşılmamalıdır; aksi takdirde düşme ve tahliye sırasında yaralanma riski son derece yüksektir.',
-            advice:
-                'Sahanlıksız merdivenler acilen standartlara uygun hale getirilmeli veya alternatif güvenli kaçış yolları planlanmalıdır.',
-            level: RiskLevel.critical,
-          );
-        }
 
         handled = true;
       }
@@ -2185,7 +2195,7 @@ class ReportEngine {
             _addDetail(
               details,
               label:
-                  '(*) 1 adet merdiven genişliği (min.): $minMStr m (En yoğun katın kullanıcı yüküne göre, Madde 33)',
+                  '(*) 1 adet merdiven genişliği (min.): $minMStr m (En yoğun katın kullanıcı yüküne göre, Yönetmelik-Madde 33)',
               value: '',
               report: '',
               isTable: true,
@@ -2204,7 +2214,7 @@ class ReportEngine {
           _addDetail(
             details,
             label:
-                '(*) Gereken çıkış adetleri, BYKHY Madde 39 uyarınca kişi sayısına göre belirlenmiştir (≤500: 2, ≤1000: 3, ≤1500: 4). Çıkışların toplam genişliklerinin Madde 33 kapasite hesaplarını karşılayıp karşılamadığı, projedeki net ölçüler üzerinden ayrıca teyit edilmelidir.',
+                '(*) Gereken çıkış adetleri, BYKHY Madde 39 uyarınca kişi sayısına göre belirlenmiştir (≤500: 2, ≤1000: 3, ≤1500: 4). Çıkışların toplam genişliklerinin Yönetmelik-Madde 33 kapasite hesaplarını karşılayıp karşılamadığı, projedeki net ölçüler üzerinden ayrıca teyit edilmelidir.',
             value: '',
             report: '',
             isTable: true,
@@ -2302,17 +2312,53 @@ class ReportEngine {
             level: b35.cikmazMesafe!.level,
           );
         if (b35.manuelMesafe != null && b35.manuelMesafe! > 0) {
-          final int limit = (b35.tekYon != null || b35.cikmaz != null)
-              ? limitTekYon
-              : limitCiftYon;
+          final int limit = (b35.ciftYon?.label == "35-2-C")
+              ? limitCiftYon
+              : limitTekYon;
           final bool isOk = b35.manuelMesafe! <= limit;
+
+          String labelText = 'Elle Girilen Kaçış Mesafesi';
+          String reportText = '';
+          String adviceText = '';
+
+          final formattedValue = InputValidator.formatArea(b35.manuelMesafe!);
+
+          if (b35.tekYon?.label == "35-1-C") {
+            labelText = 'Elle Girilen Tek Yönlü Kaçış Mesafesi (Daire kapısından en yakın merdivene)';
+            reportText = isOk
+                ? 'OLUMLU: Daire kapısından en yakın merdivene kadar elle girilen tek yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
+                : 'KRİTİK RİSK: Daire kapısından en yakın merdivene kadar elle girilen tek yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. En yakın merdivene ulaşım mesafesi güvenli tahliye sınırlarının üzerindedir.';
+            adviceText = isOk
+                ? ''
+                : 'Tek yönlü kaçış mesafesini azaltmak amacıyla kat holünde alternatif bir acil çıkış kapısı açılmalı veya binadaki diğer güvenlik önlemleri (örneğin sprinkler sistemi vb.) artırılarak Yönetmelik sınırı genişletilmelidir.';
+          } else if (b35.ciftYon?.label == "35-2-C") {
+            labelText = 'Elle Girilen Çift Yönlü Kaçış Mesafesi (Daire kapısından en yakın merdivene)';
+            reportText = isOk
+                ? 'OLUMLU: Daire kapısından en yakın merdivene kadar elle girilen çift yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
+                : 'KRİTİK RİSK: Daire kapısından en yakın merdivene kadar elle girilen çift yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. En yakın merdivene ulaşım mesafesi güvenli tahliye sınırlarının üzerindedir.';
+            adviceText = isOk
+                ? ''
+                : 'Çift yönlü kaçış mesafesini azaltmak amacıyla daha yakın konumda alternatif bir kaçış merdiveni planlanmalı veya sprinkler sistemi gibi aktif söndürme sistemleri kurularak izin verilen Yönetmelik limitinin artırılması değerlendirilmelidir.';
+          } else if (b35.cikmazMesafe?.label == "35-3-E") {
+            labelText = 'Elle Girilen Çıkmaz Koridor Mesafesi';
+            reportText = isOk
+                ? 'OLUMLU: Elle girilen çıkmaz koridor uzunluğu ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
+                : 'KRİTİK RİSK: Elle girilen çıkmaz koridor uzunluğu ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. Koridordaki çıkmaz mesafe uzunluğu, olası bir yangın veya acil durumda sıkışma riskini artıracak düzeyde güvenli tahliye sınırlarının üzerindedir.';
+            adviceText = isOk
+                ? ''
+                : 'Çıkmaz koridor uzunluğunu Yönetmelik sınırlarına çekmek adına çıkmaz koridorun sonundaki daireler için alternatif bir çıkış güzergahı oluşturulmalı veya koridor mimarisi yeniden düzenlenmelidir.';
+          } else {
+            reportText = isOk
+                ? 'OLUMLU: Elle girilen kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
+                : 'KRİTİK RİSK: Elle girilen kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır.';
+          }
+
           _addDetail(
             details,
-            label: 'Elle Girilen Kaçış Mesafesi',
-            value: '${InputValidator.formatArea(b35.manuelMesafe!)} m',
-            report: isOk
-                ? 'OLUMLU: Girilen mesafe Yönetmelik sınırı olan $limit m. nin içerisindedir.'
-                : 'KRİTİK RİSK: Girilen mesafe Yönetmelik sınırı olan $limit m. nin üzerindedir.',
+            label: labelText,
+            value: '$formattedValue m',
+            report: reportText,
+            advice: adviceText,
             status: isOk ? ReportStatus.compliant : ReportStatus.risk,
           );
         }
@@ -2445,9 +2491,14 @@ class ReportEngine {
             b?.tavanMalzeme?.label == "15-3-ALT-A") {
           tavanLvl = RiskLevel.positive;
         }
+        RiskLevel? yalitimLvl = b?.yalitim?.level;
+        if (b?.yalitim?.label == "15-2-C" &&
+            b?.yalitimSap?.label == "15-2-ALT-A") {
+          yalitimLvl = RiskLevel.positive;
+        }
         return _maxLevel([
           b?.kaplama?.level,
-          b?.yalitim?.level,
+          yalitimLvl,
           b?.yalitimSap?.level,
           tavanLvl,
           b?.tavanMalzeme?.level,
@@ -2859,7 +2910,12 @@ class ReportEngine {
     final b15 = s.bolum15;
     if (b15 != null) {
       add(b15.kaplama);
-      add(b15.yalitim);
+      if (b15.yalitim?.label == "15-2-C" &&
+          b15.yalitimSap?.label == "15-2-ALT-A") {
+        addLevel(RiskLevel.positive);
+      } else {
+        add(b15.yalitim);
+      }
       add(b15.yalitimSap);
       add(b15.tavan);
       add(b15.tavanMalzeme);
@@ -3264,9 +3320,23 @@ class ReportEngine {
       if (b15 != null) {
         List<String> parts = [];
         if (b15.kaplama != null) parts.add(b15.kaplama!.reportText);
-        if (b15.yalitim != null) parts.add(b15.yalitim!.reportText);
+        if (b15.yalitim != null) {
+          if (b15.yalitim!.label == "15-2-C" &&
+              b15.yalitimSap?.label == "15-2-ALT-A") {
+            parts.add("OLUMLU: Döşeme betonunda yanıcı yalıtım malzemesi (XPS, EPS vb.) kullanılmıştır ancak üzeri en az 2 cm koruyucu şap tabakası ile kaplanarak güvenli hale getirilmiştir.");
+          } else {
+            parts.add(b15.yalitim!.reportText);
+          }
+        }
         if (b15.yalitimSap != null) parts.add(b15.yalitimSap!.reportText);
-        if (b15.tavan != null) parts.add(b15.tavan!.reportText);
+        if (b15.tavan != null) {
+          if (b15.tavan!.label == "15-3-B" &&
+              b15.tavanMalzeme?.label == "15-3-ALT-A") {
+            parts.add("OLUMLU: Konut katlarında asma tavan bulunmaktadır ancak kullanılan malzemenin (Alçıpanel, metal vb.) yangın performansı yeterlidir.");
+          } else {
+            parts.add(b15.tavan!.reportText);
+          }
+        }
         if (b15.tavanMalzeme != null) parts.add(b15.tavanMalzeme!.reportText);
         if (b15.tesisat != null) parts.add(b15.tesisat!.reportText);
         if (parts.isNotEmpty) return parts.join("\n\n");
@@ -3962,26 +4032,49 @@ class ReportEngine {
       // 3. Asansör
       if (b7?.hasAsansor == true) {
         if (b13.asansorKapi != null) {
+          final double hYapi = _getHYapi(s);
+          final bool isHighRise = hYapi >= 51.5 - 0.001;
+          final String yukseklikNotu = isHighRise
+              ? "Yapı yüksekliğiniz (${InputValidator.formatArea(hYapi)}m) 51,50m'nin ÜZERİNDE olduğu için asansör kat kapılarının en az 60 dakika yangın dayanımına sahip olması gereklidir."
+              : "Yapı yüksekliğiniz (${InputValidator.formatArea(hYapi)}m) 51,50m'nin ALTINDA olduğu için asansör kat kapılarının en az 30 dakika yangın dayanımına sahip olması gereklidir.";
+
           final bool isMrl = s.bolum29?.asansor?.label == '29-4-C';
-          final String rawReport = b13.asansorKapi!.reportText;
-          final String filteredReport = isMrl
-              ? rawReport
-                    .replaceAll(
-                      RegExp(
-                        r'\s*asansör makine dairesi varsa[^.]*\.',
-                        caseSensitive: false,
-                      ),
-                      '',
-                    )
-                    .trim()
-              : rawReport;
+
+          // Dinamik rapor metni oluştur
+          String dynamicReport;
+          final String choiceLabel = b13.asansorKapi!.label;
+
+          if (choiceLabel.contains("13-3-A")) {
+            // Evet
+            dynamicReport =
+                "OLUMLU: Asansör kat / kabin kapılarının yangına dayanıklı oldukları beyan edilmiştir. $yukseklikNotu Kapıların test raporu Yangın Güvenlik Uzmanı tarafından incelenerek uygunluğuna karar verilir.";
+          } else if (choiceLabel.contains("13-3-B")) {
+            // Hayır
+            dynamicReport =
+                "KRİTİK RİSK: Asansör kat / kabin kapılarının yangına dayanıklı olmadığı beyan edilmiştir. $yukseklikNotu Asansör kovası, binada şaft görevi görmekte, alev ve dumanın diğer katlara taşınmasına sebep olabilmektedir.";
+          } else {
+            // Bilmiyorum
+            dynamicReport =
+                "BİLİNMİYOR: Asansör kat kapılarının özellikleri bilinmiyor. $yukseklikNotu Asansör kat kapılarının yangın dayanım test raporu incelenerek uygunluklarına karar verilir.";
+          }
+
+          // Makine dairesiz asansör (MRL) ise makine dairesi ibaresini kaldır
+          if (isMrl) {
+            dynamicReport = dynamicReport.replaceAll(
+              RegExp(
+                r'\s*asansör makine dairesi varsa[^.]*\.',
+                caseSensitive: false,
+              ),
+              '',
+            ).trim();
+          }
 
           _addDetail(
             details,
             label: 'Asansör kapısı yangın dayanımlı mı?',
             value: b13.asansorKapi!.uiTitle,
             subtitle: b13.asansorKapi!.uiSubtitle,
-            report: filteredReport,
+            report: dynamicReport,
             advice: b13.asansorKapi!.adviceText,
             level: b13.asansorKapi!.level,
           );
@@ -4404,7 +4497,7 @@ class ReportEngine {
     // 1. Yapı Yüksekliği >= 51.50m (Konutlarda Üst Eşik)
     if (hYapi >= (51.50 - 0.001)) {
       reasons.add(
-        "Yapı Yüksekliği 51.50 metrenin üzerinde olması sebebiyle hem itfaiye asansörü hem de genel kaçış güvenliği açısından YGH zorunludur.",
+        "Yapı Yüksekliği 51.50 metrenin üzerinde olması sebebiyle hem itfaiye asansörü hem de genel kaçış güvenliği açısından Yangın Güvenlik Holü (YGH) zorunludur.",
       );
     }
     // 2. Yapı Yüksekliği > 30.50m (Konutlarda Yüksek Bina Eşiği)
@@ -4412,7 +4505,7 @@ class ReportEngine {
       if (b20?.basinclandirma?.label.contains("-B") == true) {
         // 20-BAS-B: Hayır
         reasons.add(
-          "Yapı Yüksekliği 30.50m üzeri (Yüksek Bina) olduğu için kaçış merdivenleri önünde YGH zorunludur.",
+          "Yapı Yüksekliği 30.50m üzeri (Yüksek Bina) olduğu için kaçış merdivenleri önünde Yangın Güvenlik Holü (YGH) zorunludur.",
         );
       } else if (b20?.basinclandirma?.label.contains("-A") == true) {
         // MUAFİYET DURUMU (Madde 38/c)
@@ -4436,7 +4529,7 @@ class ReportEngine {
       );
       if (hasNonResInBasement) {
         reasons.add(
-          "Bodrum katlarda otopark harici (ticari/teknik) kullanım alanları olduğundan bu merdivenlerin önünde YGH zorunludur.",
+          "Bodrum katlarda otopark harici (ticari/teknik) kullanım alanları olduğundan bu merdivenlerin önünde Yangın Güvenlik Holü (YGH) zorunludur.",
         );
       }
     }
@@ -4451,14 +4544,14 @@ class ReportEngine {
     final b23 = s.bolum23;
     if (b23 != null && b23.bodrum?.label.contains("23-1-C") == true) {
       reasons.add(
-        "Bodrum katlarda asansör kapılarının binanın diğer bölümlerine açılması durumunda yangın güvenlik holü gereklidir.",
+        "Bodrum katlarda asansör kapılarının binanın diğer bölümlerine açılması durumunda Yangın Güvenlik Holü (YGH) gereklidir.",
       );
     }
 
     // 6. Bodrum kat sayısı > 4
     if (bodrumKatSayisi > 4) {
       reasons.add(
-        "Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren tüm merdivenlerin önünde YGH zorunludur.",
+        "Bodrum kat sayısı 4'ten fazla olduğu için bodrumlara hizmet veren tüm merdivenlerin önünde Yangın Güvenlik Holü (YGH) zorunludur.",
       );
     }
 

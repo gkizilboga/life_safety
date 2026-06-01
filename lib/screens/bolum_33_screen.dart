@@ -302,14 +302,14 @@ class _Bolum33ScreenState extends State<Bolum33Screen> {
         _hasNormal = (store.bolum3?.normalKatSayisi ?? 0) >= 1;
         _hasBodrum = (store.bolum3?.bodrumKatSayisi ?? 0) >= 1;
 
-        bool hasSprinkler = store.bolum9?.secim?.label == "9-A";
+        bool hasSprinkler = store.bolum9?.secim?.label == "9-1-A";
         double alanNormal = _model.alanNormal ?? 0.0;
         int gNormal = _model.gerekliNormal ?? 0;
 
         if (gNormal == 1) {
           if (hasSprinkler && alanNormal > 450) {
             _specialWarning =
-                "Normal kat alanı belli büyüklüğün üzerindedir. Bu sebeple, binada sprinkler olsa bile tek yön kaçış mesafesinin (30m) aşılma ihtimali var. İkinci çıkış gereksinimi doğabilir. Uzman kontrolü tavsiye edilir.";
+                "Normal kat alanı belli büyüklüğün üzerindedir. Bu sebeple, binada sprinkler olsa bile tek yön kaçış mesafesinin (30m) aşılma ihtimali var. İkinci çıkış gereksinimi doğabilir. Yangın Güvenlik Uzmanı kontrolü tavsiye edilir.";
           } else if (!hasSprinkler && alanNormal > 600) {
             _specialWarning =
                 "Normal kat alanı belli büyüklüğün üzerindedir. Tek yön kaçış mesafesi aşılabilir. İkinci çıkış gerekebilir.";

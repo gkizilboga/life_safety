@@ -104,9 +104,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   _buildSectionLabel("Tamamlanan Analizler"),
                   ...completedActions.reversed
                       .take(3)
+                      .toList()
+                      .asMap()
+                      .entries
                       .map(
-                        (b) =>
-                            _buildAnalysisCard(context, b, isCompleted: true),
+                        (entry) => _buildAnalysisCard(
+                          context,
+                          entry.value,
+                          isCompleted: true,
+                          isLatest: entry.key == 0,
+                        ),
                       ),
                   const SizedBox(height: 20),
                 ],
@@ -165,6 +172,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     BuildContext context,
     Map<String, dynamic> building, {
     required bool isCompleted,
+    bool isLatest = true,
   }) {
     final String name = building['name'] ?? "";
     final String dateStr = building['date'].toString().split('T')[0];
@@ -220,61 +228,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (!isCompleted) ...[
             _buildProgressBar(completion.toInt()),
             const SizedBox(height: 15),
-          ],
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isCompleted
-                        ? AppColors.primaryBlue
-                        : Colors.white,
-                    foregroundColor: isCompleted
-                        ? Colors.white
-                        : AppColors.primaryBlue,
-                    elevation: 0,
-                    side: isCompleted
-                        ? null
-                        : const BorderSide(color: AppColors.primaryBlue),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: AppColors.primaryBlue,
+                      elevation: 0,
+                      side: const BorderSide(color: AppColors.primaryBlue),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                  ),
-                  onPressed: () async {
-                    BinaStore.instance.loadBuildingFromArchive(building['id']);
-                    if (isCompleted) {
-                      // Bir frame bekle: store'un tamamen settle olmasını garantile
-                      await Future.delayed(Duration.zero);
-                      if (!context.mounted) return;
-                      try {
-                        await PdfService.generateRiskAnalysisPdf(context);
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("PDF hatası: $e")),
-                          );
-                        }
-                      }
-                    } else {
+                    onPressed: () {
+                      BinaStore.instance.loadBuildingFromArchive(building['id']);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => _getResumeScreen(),
                         ),
                       );
-                    }
-                  },
-                  child: Text(
-                    isCompleted ? "Yangın Risk Analizi" : "Devam Et",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                    },
+                    child: const Text(
+                      "Devam Et",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (!isCompleted) ...[
                 const SizedBox(width: 8),
                 IconButton(
                   onPressed: () =>
@@ -286,49 +271,453 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
               ],
-            ],
-          ),
-          if (isCompleted) ...[
-            const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  try {
-                    await PdfService.generateActiveSystemsPdf(context);
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text("PDF Hatası: $e")));
-                    }
-                  }
-                },
-                icon: const Icon(
-                  Icons.settings_system_daydream_outlined,
-                  size: 18,
-                ),
-                label: const Text("Aktif Sistem Gereksinimleri"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: AppColors.primaryBlue,
-                  elevation: 0,
-                  side: const BorderSide(color: AppColors.primaryBlue),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  textStyle: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
+            ),
+          ] else ...[
+            const SizedBox(height: 4),
+            Container(height: 1, color: Colors.grey.shade100),
+            if (isLatest) ...[
+              const SizedBox(height: 14),
+              Text(
+                "DOKÜMANLAR",
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.blueGrey.shade400,
+                  letterSpacing: 1.2,
                 ),
               ),
-            ),
+              const SizedBox(height: 10),
+              _buildDocumentRow(
+                context,
+                building: building,
+                icon: Icons.shield_outlined,
+                title: "Yangın Risk Analizi",
+                shareAction: PdfService.shareRiskAnalysisPdf,
+                saveAction: PdfService.saveRiskAnalysisPdfToDevice,
+                backgroundColor: const Color(0xFFE8EAF6),
+                borderColor: const Color(0xFFC5CAE9),
+                iconColor: const Color(0xFF283593),
+                iconBgColor: const Color(0xFFE8EAF6),
+              ),
+              const SizedBox(height: 8),
+              _buildDocumentRow(
+                context,
+                building: building,
+                icon: Icons.settings_system_daydream_outlined,
+                title: "Aktif Sistem Gereksinimleri",
+                shareAction: PdfService.shareActiveSystemsPdf,
+                saveAction: PdfService.saveActiveSystemsPdfToDevice,
+                backgroundColor: const Color(0xFFE0F2F1),
+                borderColor: const Color(0xFFB2DFDB),
+                iconColor: const Color(0xFF00695C),
+                iconBgColor: const Color(0xFFE0F2F1),
+              ),
+              const SizedBox(height: 8),
+              _buildDocumentRow(
+                context,
+                building: building,
+                icon: Icons.picture_as_pdf_outlined,
+                title: "Birleşik Rapor (Tek PDF)",
+                shareAction: PdfService.shareCombinedPdf,
+                saveAction: PdfService.saveCombinedPdfToDevice,
+                backgroundColor: const Color(0xFFA5D6A7),
+                borderColor: const Color(0xFF66BB6A),
+                iconColor: const Color(0xFF1B5E20),
+                iconBgColor: const Color(0xFFA5D6A7),
+              ),
+            ] else ...[
+              // Accordion: eski analizlerde rapor butonları gizli
+              Theme(
+                data: Theme.of(context).copyWith(
+                  dividerColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                ),
+                child: ExpansionTile(
+                  tilePadding: EdgeInsets.zero,
+                  childrenPadding: EdgeInsets.zero,
+                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.description_outlined,
+                        size: 16,
+                        color: Colors.blueGrey.shade400,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Raporları Görüntüle",
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blueGrey.shade400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  children: [
+                    const SizedBox(height: 10),
+                    _buildDocumentRow(
+                      context,
+                      building: building,
+                      icon: Icons.shield_outlined,
+                      title: "Yangın Risk Analizi",
+                      shareAction: PdfService.shareRiskAnalysisPdf,
+                      saveAction: PdfService.saveRiskAnalysisPdfToDevice,
+                      backgroundColor: const Color(0xFFE8EAF6),
+                      borderColor: const Color(0xFFC5CAE9),
+                      iconColor: const Color(0xFF283593),
+                      iconBgColor: const Color(0xFFE8EAF6),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildDocumentRow(
+                      context,
+                      building: building,
+                      icon: Icons.settings_system_daydream_outlined,
+                      title: "Aktif Sistem Gereksinimleri",
+                      shareAction: PdfService.shareActiveSystemsPdf,
+                      saveAction: PdfService.saveActiveSystemsPdfToDevice,
+                      backgroundColor: const Color(0xFFE0F2F1),
+                      borderColor: const Color(0xFFB2DFDB),
+                      iconColor: const Color(0xFF00695C),
+                      iconBgColor: const Color(0xFFE0F2F1),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildDocumentRow(
+                      context,
+                      building: building,
+                      icon: Icons.picture_as_pdf_outlined,
+                      title: "Birleşik Rapor (Tek PDF)",
+                      shareAction: PdfService.shareCombinedPdf,
+                      saveAction: PdfService.saveCombinedPdfToDevice,
+                      backgroundColor: const Color(0xFFA5D6A7),
+                      borderColor: const Color(0xFF66BB6A),
+                      iconColor: const Color(0xFF1B5E20),
+                      iconBgColor: const Color(0xFFA5D6A7),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ],
       ),
     );
+  }
+
+  Widget _buildDocumentRow(
+    BuildContext context, {
+    required Map<String, dynamic> building,
+    required IconData icon,
+    required String title,
+    required Future<void> Function(BuildContext) shareAction,
+    required Future<String> Function(BuildContext) saveAction,
+    required Color backgroundColor,
+    required Color borderColor,
+    required Color iconColor,
+    required Color iconBgColor,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => _showDocumentActions(
+        context,
+        building: building,
+        title: title,
+        shareAction: shareAction,
+        saveAction: saveAction,
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: borderColor),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: iconBgColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: iconColor, size: 18),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13.5,
+                  color: AppColors.textDark,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDocumentActions(
+    BuildContext context, {
+    required Map<String, dynamic> building,
+    required String title,
+    required Future<void> Function(BuildContext) shareAction,
+    required Future<String> Function(BuildContext) saveAction,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) {
+        return Container(
+          padding: EdgeInsets.fromLTRB(
+            24,
+            12,
+            24,
+            28 + MediaQuery.of(bottomSheetContext).padding.bottom,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 18),
+              // Title
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.textDark,
+                ),
+              ),
+              const SizedBox(height: 22),
+              // Action buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildBottomSheetAction(
+                      icon: Icons.ios_share_rounded,
+                      label: "Paylaş",
+                      color: AppColors.primaryBlue,
+                      onTap: () {
+                        Navigator.pop(bottomSheetContext);
+                        _handleDocumentAction(
+                          context,
+                          building['id'],
+                          title,
+                          "Doküman hazırlanıyor ve paylaşılıyor...",
+                          () => shareAction(context),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildBottomSheetAction(
+                      icon: Icons.download_rounded,
+                      label: "Telefonuma İndir",
+                      color: const Color(0xFF2E7D32),
+                      onTap: () {
+                        Navigator.pop(bottomSheetContext);
+                        _handleDocumentAction(
+                          context,
+                          building['id'],
+                          title,
+                          "Doküman hazırlanıyor ve kaydediliyor...",
+                          () async {
+                            final path = await saveAction(context);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                    "Doküman başarıyla indirildi.",
+                                    style: TextStyle(fontSize: 12.5),
+                                  ),
+                                  backgroundColor: const Color(0xFF2E7D32),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: const Duration(seconds: 3),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              );
+                            }
+                            return path;
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomSheetAction({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.06),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: color.withOpacity(0.15)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 22),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleDocumentAction(
+    BuildContext context,
+    String id,
+    String docTitle,
+    String loadingMessage,
+    Future<dynamic> Function() action,
+  ) async {
+    BinaStore.instance.loadBuildingFromArchive(id);
+    await Future.delayed(Duration.zero);
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(
+                  width: 32,
+                  height: 32,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
+                    strokeWidth: 3.0,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  docTitle,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: AppColors.textDark,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  loadingMessage,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 12.5,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    try {
+      await action();
+    } catch (e) {
+      debugPrint("Document action error: $e");
+      if (context.mounted) {
+        String errorMsg = "İşlem sırasında bir hata oluştu.";
+        final errorStr = e.toString().toLowerCase();
+        
+        if (errorStr.contains("permission") || errorStr.contains("denied")) {
+          errorMsg = "Dosya erişim izni reddedildi. Lütfen cihaz ayarlarından izinleri kontrol edin.";
+        } else if (errorStr.contains("disk full") || errorStr.contains("space")) {
+          errorMsg = "Cihazınızda yeterli boş alan bulunmamaktadır.";
+        } else if (errorStr.contains("os error") || errorStr.contains("filesystemexception")) {
+          errorMsg = "Dosya kaydedilirken sistem hatası oluştu. Lütfen tekrar deneyin.";
+        } else {
+          errorMsg = "İşlem başarısız oldu: $e";
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error_outline_rounded, color: Colors.white, size: 20),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    errorMsg,
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.redAccent.shade700,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
   }
 
   Widget _buildStatusChip(bool isCompleted) {
@@ -372,8 +761,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       setState(() {});
     }
   }
-
-  // Unused methods removed
 
   Widget _buildProgressBar(int percent) {
     return Column(
@@ -462,7 +849,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: title == "Yeni Analiz" ? Colors.green.shade50 : Colors.white,
+          color: title == "Yeni Analiz" ? const Color(0xFFC8E6C9) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.grey.shade100),
         ),

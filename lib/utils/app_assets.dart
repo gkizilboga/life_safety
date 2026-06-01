@@ -10,7 +10,6 @@ class AppAssets {
       'assets/images/sections/normal_asansor.webp';
   static const String section7Jenerator =
       'assets/images/sections/jenerator_odasi.webp';
-  static const String section7Trafo = 'assets/images/sections/trafo_odasi.webp';
   static const String section7OrtakDuvar =
       'assets/images/sections/ortak_duvar.webp';
   static const String section8Ayrik = 'assets/images/sections/ayrik_nizam.webp';
@@ -89,8 +88,6 @@ class AppAssets {
   static const String section35KacisGosterim =
       'assets/images/sections/kacis_mesafe_gosterim.webp';
 
-  static const String section7ElektrikOdasi =
-      'assets/images/sections/elektrik_odasi.webp';
   static const String section3KatYuksekligi =
       'assets/images/sections/kat_yuksekligi_1.webp';
   static const String section9Davlumbaz =

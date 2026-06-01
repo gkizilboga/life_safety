@@ -160,19 +160,27 @@ class Section36Handler {
       }
 
       // 3. Madde 41/2: Çıkış Katı Tahliye Mesafesi (BİRLEŞTİRİLMİŞ MANTIK)
-      int limit = hasSprinkler ? 15 : 10;
-      String sprinklerNote = hasSprinkler
-          ? "(Binada sprinkler mevcut, Yönetmelikte limit 15 m. dir.)"
-          : "(Binada sprinkler yok, Yönetmelikte limit 10 m. dir.)";
+      final _cikisKatiRes = _store.bolum33?.cikisKati;
+      final String _cikisLabel = _cikisKatiRes?.label ?? '';
+      final bool _isZeminExit = _cikisLabel.contains('-A');
+      final bool _isBodrumExit = _cikisLabel.contains('-C');
 
-      bool mainMesafeReq = (directMain < totalMain) && totalMain > 0;
+      int limit = hasSprinkler ? 15 : 10;
+
+      String cikisKatPrefix() {
+        if (_isZeminExit) return "Zemin katta ";
+        if (_isBodrumExit) return "Bodrum katta ";
+        return "Normal katta ";
+      }
+
+      bool mainMesafeReq = !_isBodrumExit && (directMain < totalMain) && totalMain > 0;
       bool mainMesafeFail =
           mainMesafeReq && b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
       bool mainMesafeUnknown =
           mainMesafeReq && b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-C";
 
       bool bodrumMesafeReq =
-          b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
+          _isBodrumExit && b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
       bool bodrumMesafeFail =
           bodrumMesafeReq &&
           b20.bodrumLobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
@@ -183,14 +191,13 @@ class Section36Handler {
       if (mainMesafeFail || bodrumMesafeFail) {
         String msg = "KRİTİK RİSK: ";
         if (mainMesafeFail && bodrumMesafeFail)
-          msg += "Hem normal hem de bodrum katlarda ";
+          msg += "Hem ${cikisKatPrefix().trim().toLowerCase()} hem de bodrum katta ";
         else if (mainMesafeFail)
-          msg += "Normal katlarda ";
+          msg += cikisKatPrefix();
         else
-          msg += "Bodrum katlarda ";
-        msg += "tahliye mesafesi %limit metre sınırını aşmaktadır %sprinkler."
-            .replaceAll("%limit", limit.toString())
-            .replaceAll("%sprinkler", sprinklerNote);
+          msg += "Bodrum katta ";
+        msg += "doğrudan dışarıya açılmayan merdiven(ler)in tahliye mesafesi %limit metre sınırını aşmaktadır."
+            .replaceAll("%limit", limit.toString());
         analysisParts.add(msg);
       } else if (mainMesafeUnknown || bodrumMesafeUnknown) {
         analysisParts.add(
@@ -612,62 +619,6 @@ class Section36Handler {
                     ? ReportStatus.compliant
                     : ReportStatus.warning),
         );
-
-      // Madde 41 Tahliye Mesafesi (Lobi) - Merkezi raporlama (Bölüm 20 yerine burada)
-      final hasSprinkler = _store.bolum9?.secim?.label == "9-1-A";
-      int lobbyLimit = hasSprinkler ? 15 : 10;
-      String replaceLobbyLimit(String? text) {
-        if (text == null) return "";
-        return text.replaceAll("[LIMIT]", lobbyLimit.toString());
-      }
-
-      if (b20 != null) {
-        final cikisKatiRes = BinaStore.instance.bolum33?.cikisKati;
-        String katPrefix = "Çıkış";
-        if (cikisKatiRes != null) {
-          if (cikisKatiRes.label.contains("-A")) katPrefix = "Zemin";
-          if (cikisKatiRes.label.contains("-B")) katPrefix = "Normal";
-          if (cikisKatiRes.label.contains("-C")) katPrefix = "Bodrum";
-        }
-
-        final lobi = b20.lobiTahliyeMesafeDurumu;
-        final bool showLobby = (directMain < totalMain) && totalMain > 0;
-        if (showLobby && lobi != null) {
-          _addDetail(
-            details,
-            label: '$katPrefix katındaki tahliye (lobi) mesafesi uygun mu?',
-            value: replaceLobbyLimit(lobi.uiTitle),
-            subtitle: replaceLobbyLimit(lobi.uiSubtitle),
-            report: replaceLobbyLimit(lobi.reportText),
-            advice: replaceLobbyLimit(lobi.adviceText),
-            status: lobi.level == RiskLevel.critical
-                ? ReportStatus.risk
-                : (lobi.level == RiskLevel.positive
-                      ? ReportStatus.compliant
-                      : ReportStatus.warning),
-          );
-        }
-
-        final bodLobi = b20.bodrumLobiTahliyeMesafeDurumu;
-        final bool showBodLobby =
-            b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
-        if (showBodLobby && bodLobi != null) {
-          _addDetail(
-            details,
-            label:
-                'Bodrum Kat: $katPrefix katındaki tahliye (lobi) mesafesi uygun mu?',
-            value: replaceLobbyLimit(bodLobi.uiTitle),
-            subtitle: replaceLobbyLimit(bodLobi.uiSubtitle),
-            report: replaceLobbyLimit(bodLobi.reportText),
-            advice: replaceLobbyLimit(bodLobi.adviceText),
-            status: bodLobi.level == RiskLevel.critical
-                ? ReportStatus.risk
-                : (bodLobi.level == RiskLevel.positive
-                      ? ReportStatus.compliant
-                      : ReportStatus.warning),
-          );
-        }
-      }
 
       final konum = b36.konum;
       if (konum != null)

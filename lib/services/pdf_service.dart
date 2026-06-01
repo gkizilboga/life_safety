@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
 import '../data/bina_store.dart';
 import '../logic/report_engine.dart';
 import '../models/report_status.dart';
@@ -33,37 +35,44 @@ class PdfService {
 
 
   static pw.Widget _buildLegendItem(PdfColor color, String label, String desc) {
-    return pw.Row(
+    final titleRow = pw.Row(
+      crossAxisAlignment: pw.CrossAxisAlignment.center,
       mainAxisSize: pw.MainAxisSize.min,
+      children: [
+        pw.Container(
+          width: 7,
+          height: 7,
+          color: color,
+        ),
+        pw.SizedBox(width: 5),
+        pw.Text(
+          label,
+          style: pw.TextStyle(
+            fontSize: 9,
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColors.black,
+          ),
+        ),
+      ],
+    );
+
+    if (desc.isEmpty) {
+      return titleRow;
+    }
+
+    return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
+        titleRow,
         pw.Padding(
-          padding: const pw.EdgeInsets.only(
-            top: 2,
-          ), // Align dash with first line
-          child: pw.Container(width: 8, height: 8, color: color),
-        ),
-        pw.SizedBox(width: 4),
-        pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text(
-              label,
-              style: pw.TextStyle(
-                fontSize: 9,
-                fontWeight: pw.FontWeight.bold,
-                color: PdfColors.black,
-              ),
+          padding: const pw.EdgeInsets.only(left: 12),
+          child: pw.Text(
+            desc,
+            style: const pw.TextStyle(
+              fontSize: 7,
+              color: PdfColors.grey700,
             ),
-            if (desc.isNotEmpty)
-              pw.Text(
-                desc,
-                style: const pw.TextStyle(
-                  fontSize: 7,
-                  color: PdfColors.grey700,
-                ),
-              ),
-          ],
+          ),
         ),
       ],
     );
@@ -188,24 +197,35 @@ class PdfService {
   static pw.Widget _buildGaugeChart(int score) {
     double angle = -180.0 + (score / 100.0) * 180.0;
 
+    // SVG parser of pdf package has limited support for stroke-dasharray/stroke-dashoffset.
+    // Instead, we use three mathematically calculated arc segments (Red, Orange, Green)
+    // and draw explicit white divider lines. This renders 100% correctly and beautifully on all PDF viewers.
     String svgContent =
         '''
-    <svg width="240" height="130" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#10b981" stroke-width="20" />
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f59e0b" stroke-width="20" stroke-dasharray="201.06 251.33" />
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ef4444" stroke-width="20" stroke-dasharray="125.66 251.33" />
+    <svg width="190" height="102" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Kirmizi Segment (Sol: 180 derece -> 120 derece) -->
+      <path d="M 20 100 A 80 80 0 0 1 60 30.72" fill="none" stroke="#ef4444" stroke-width="20" />
       
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ffffff" stroke-width="22" stroke-dasharray="3 251.33" stroke-dashoffset="-124.66" />
-      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#ffffff" stroke-width="22" stroke-dasharray="3 251.33" stroke-dashoffset="-200.06" />
-
+      <!-- Turuncu Segment (Orta: 120 derece -> 60 derece) -->
+      <path d="M 60 30.72 A 80 80 0 0 1 140 30.72" fill="none" stroke="#f59e0b" stroke-width="20" />
+      
+      <!-- Yesil Segment (Sag: 60 derece -> 0 derece) -->
+      <path d="M 140 30.72 A 80 80 0 0 1 180 100" fill="none" stroke="#10b981" stroke-width="20" />
+      
+      <!-- Beyaz Bolucu Cizgiler (Segmentler arasi sik bosluk hissi) -->
+      <line x1="65" y1="39.38" x2="55" y2="22.06" stroke="#ffffff" stroke-width="3" />
+      <line x1="135" y1="39.38" x2="145" y2="22.06" stroke="#ffffff" stroke-width="3" />
+      
+      <!-- Gosterge Ignesi -->
       <polygon points="100,96 100,104 175,100" fill="#1e293b" transform="rotate($angle 100 100)" />
       
+      <!-- Igne Gobegi -->
       <circle cx="100" cy="100" r="10" fill="#1e293b" />
       <circle cx="100" cy="100" r="4" fill="#ffffff" />
     </svg>
     ''';
 
-    return pw.Container(height: 120, child: pw.SvgImage(svg: svgContent));
+    return pw.Container(height: 95, child: pw.SvgImage(svg: svgContent));
   }
 
   static pw.Page _buildCoverPage({
@@ -219,8 +239,7 @@ class PdfService {
   }) {
     // Renk Paleti
     const navyBlue = PdfColor.fromInt(0xFF1a365d);
-    const darkNavy = PdfColor.fromInt(0xFF0d2137);
-    const softGray = PdfColor.fromInt(0xFF6b7280);
+    const slateGray = PdfColor.fromInt(0xFF334155);
 
     return pw.Page(
       pageTheme: pageTheme,
@@ -230,18 +249,18 @@ class PdfService {
           child: pw.Column(
             children: [
               // Üst Boşluk
-              pw.SizedBox(height: 50),
+              pw.SizedBox(height: 30),
 
               // Logo - Ortada
               pw.Center(
                 child: pw.Container(
-                  height: 100, // Daha büyük logo
+                  height: 100,
                   width: 250,
                   child: pw.Image(logoImage, fit: pw.BoxFit.contain),
                 ),
               ),
 
-              pw.SizedBox(height: 30),
+              pw.SizedBox(height: 18),
 
               // Yönetmelik Başlığı
               pw.Center(
@@ -249,14 +268,14 @@ class PdfService {
                   "BİNALARIN YANGINDAN KORUNMASI HAKKINDA YÖNETMELİĞİ'NE GÖRE",
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
-                    color: softGray,
+                    color: slateGray,
                     fontSize: 10,
                     letterSpacing: 1.2,
                   ),
                 ),
               ),
 
-              pw.SizedBox(height: 15),
+              pw.SizedBox(height: 8),
 
               // Ana Başlık
               pw.Center(
@@ -267,7 +286,7 @@ class PdfService {
                     textAlign: pw.TextAlign.center,
                     style: pw.TextStyle(
                       color: navyBlue,
-                      fontSize: 32, // Daha büyük ve ihtişamlı ana başlık
+                      fontSize: 26
                       fontWeight: pw.FontWeight.bold,
                       letterSpacing: 1.5,
                     ),
@@ -275,7 +294,7 @@ class PdfService {
                 ),
               ),
 
-              pw.SizedBox(height: 40),
+              pw.SizedBox(height: 25),
 
               // Skor Yüzdesi ve Gauge Chart (sadece showScore true ise)
               if (showScore) ...[
@@ -284,18 +303,18 @@ class PdfService {
                   child: pw.Text(
                     "${metrics['score']} / 100",
                     style: pw.TextStyle(
-                      fontSize: 32,
+                      fontSize: 26,
                       fontWeight: pw.FontWeight.bold,
                       color: _getScoreColorForPdf(metrics['score'] as int),
                     ),
                   ),
                 ),
-                pw.SizedBox(height: 5),
+                pw.SizedBox(height: 4),
                 pw.Center(
                   child: pw.Container(
                     padding: const pw.EdgeInsets.symmetric(
                       horizontal: 20,
-                      vertical: 8,
+                      vertical: 6,
                     ),
                     decoration: pw.BoxDecoration(
                       color: _getScoreColorForPdf(
@@ -311,7 +330,7 @@ class PdfService {
                           : "YÜKSEK RİSK",
                       style: pw.TextStyle(
                         color: _getScoreColorForPdf(metrics['score'] as int),
-                        fontSize: 16,
+                        fontSize: 13,
                         fontWeight: pw.FontWeight.bold,
                         letterSpacing: 1.0,
                       ),
@@ -325,7 +344,7 @@ class PdfService {
                     child: pw.Text(
                       subTitle,
                       style: pw.TextStyle(
-                        color: softGray,
+                        color: slateGray,
                         fontSize: 14,
                         letterSpacing: 1.0,
                       ),
@@ -335,46 +354,98 @@ class PdfService {
 
               pw.Spacer(),
 
-              // Alt Bilgi Şeridi - Koyu Lacivert
+              // Alt Bilgi Şeridi - Yönetici Özeti ile Aynı Lacivert Tonu
               pw.Container(
                 width: double.infinity,
                 padding: const pw.EdgeInsets.symmetric(
-                  vertical: 25,
+                  vertical: 20,
                   horizontal: 30,
                 ),
-                color: darkNavy,
+                color: navyBlue,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    // Bina Adı
+                    // Raporlanan Bina Etiketi
+                    pw.Text(
+                      "BİNA ADI",
+                      style: pw.TextStyle(
+                        color: PdfColor.fromInt(0xFF93C5FD), // Soft Açık Mavi (#93C5FD)
+                        fontSize: 8,
+                        fontWeight: pw.FontWeight.bold,
+                        letterSpacing: 1.0,
+                      ),
+                    ),
+                    pw.SizedBox(height: 4),
+                    // Bina Adı (14pt Bold)
                     pw.Text(
                       _cleanEmojis(store.currentBinaName).isEmpty
                           ? "Bina Adı Belirtilmemiş"
                           : _cleanEmojis(store.currentBinaName),
                       style: pw.TextStyle(
                         color: PdfColors.white,
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: pw.FontWeight.bold,
                       ),
                     ),
-                    pw.SizedBox(height: 8),
-                    // Konum ve Tarih
+                    pw.SizedBox(height: 10),
+                    // İnce Bölücü Çizgi (%20 Şeffaflıkta)
+                    pw.Container(
+                      height: 1,
+                      color: const PdfColor.fromInt(0x33FFFFFF),
+                    ),
+                    pw.SizedBox(height: 10),
+                    // Lokasyon ve Rapor Tarihi Kolonları
                     pw.Row(
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
-                        pw.Text(
-                          "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
-                          style: const pw.TextStyle(
-                            color: PdfColors.white,
-                            fontSize: 12,
-                          ),
+                        // Sol Kolon: Lokasyon
+                        pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text(
+                              "BÖLGE / LOKASYON",
+                              style: pw.TextStyle(
+                                color: PdfColor.fromInt(0xFF93C5FD),
+                                fontSize: 8,
+                                fontWeight: pw.FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                            pw.SizedBox(height: 4),
+                            pw.Text(
+                              "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
+                              style: pw.TextStyle(
+                                color: PdfColors.white,
+                                fontSize: 11,
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        pw.Text(
-                          "Oluşturma Tarihi: ${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year} ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
-                          style: const pw.TextStyle(
-                            color: PdfColors.white,
-                            fontSize: 12,
-                          ),
+                        // Sağ Kolon: Rapor Tarihi
+                        pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.end,
+                          children: [
+                            pw.Text(
+                              "OLUŞTURMA TARİHİ",
+                              style: pw.TextStyle(
+                                color: PdfColor.fromInt(0xFF93C5FD),
+                                fontSize: 8,
+                                fontWeight: pw.FontWeight.bold,
+                                letterSpacing: 1.0,
+                              ),
+                            ),
+                            pw.SizedBox(height: 4),
+                            pw.Text(
+                              "${DateTime.now().day.toString().padLeft(2, '0')}.${DateTime.now().month.toString().padLeft(2, '0')}.${DateTime.now().year} - ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
+                              style: pw.TextStyle(
+                                color: PdfColors.white,
+                                fontSize: 11,
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -867,7 +938,7 @@ class PdfService {
                           width: 3.5,
                           height: 3.5,
                           decoration: pw.BoxDecoration(
-                            color: titleColor,
+                            color: PdfColors.black,
                             shape: pw.BoxShape.circle,
                           ),
                         ),
@@ -921,6 +992,7 @@ class PdfService {
         child: pw.Text(
           "EK 1: YASAL DAYANAKLAR VE SORUMLULUK REDDİ BEYANI",
           style: pw.TextStyle(
+            font: fontBold,
             fontSize: 11,
             fontWeight: pw.FontWeight.bold,
             color: PdfColors.white,
@@ -968,6 +1040,9 @@ class PdfService {
     pw.Font fontBold,
     String title,
   ) {
+    const slateMavi = PdfColor.fromInt(0xFF64748B); // Premium Slate 500
+    const dividerColor = PdfColor.fromInt(0xFFCBD5E1); // Soft Slate 300
+
     return pw.Container(
       margin: const pw.EdgeInsets.only(bottom: 15),
       child: pw.Column(
@@ -980,7 +1055,7 @@ class PdfService {
                 style: pw.TextStyle(
                   font: fontBold,
                   fontSize: 8,
-                  color: const PdfColor.fromInt(0xFF1a365d), // Navy blue
+                  color: slateMavi,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -989,13 +1064,13 @@ class PdfService {
                 style: pw.TextStyle(
                   font: fontBold,
                   fontSize: 8,
-                  color: PdfColors.grey700,
+                  color: slateMavi,
                 ),
               ),
             ],
           ),
           pw.SizedBox(height: 4),
-          pw.Divider(color: const PdfColor.fromInt(0xFF1a365d), thickness: 1),
+          pw.Divider(color: dividerColor, thickness: 1),
         ],
       ),
     );
@@ -1006,11 +1081,14 @@ class PdfService {
     pw.Font font,
     pw.Font fontBold,
   ) {
+    const slateMavi = PdfColor.fromInt(0xFF64748B); // Premium Slate 500
+    const dividerColor = PdfColor.fromInt(0xFFCBD5E1); // Soft Slate 300
+
     return pw.Container(
       margin: const pw.EdgeInsets.only(top: 15),
       child: pw.Column(
         children: [
-          pw.Divider(color: const PdfColor.fromInt(0xFF1a365d), thickness: 0.5),
+          pw.Divider(color: dividerColor, thickness: 0.5),
           pw.SizedBox(height: 4),
           pw.Row(
             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -1034,7 +1112,7 @@ class PdfService {
                 style: pw.TextStyle(
                   font: font,
                   fontSize: 8,
-                  color: const PdfColor.fromInt(0xFF1a365d),
+                  color: slateMavi,
                 ),
               ),
             ],
@@ -1186,6 +1264,9 @@ class PdfService {
 
     if (!context.mounted) return;
 
+    final now = DateTime.now();
+    final timestamp = "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
+
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -1193,7 +1274,7 @@ class PdfService {
           onLayout: (format) async => pdf.save(),
           title: "YANGIN RİSK ANALİZİ",
           fileName:
-              "yangin_risk_analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}.pdf",
+              "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf",
         ),
       ),
     );
@@ -1262,24 +1343,34 @@ class PdfService {
                 'Bu çalışma, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
           },
           {
-            'q': 'Sistem gereksinimleri hakkında ne bilinmeli?',
+            'q': 'Kapsam nedir?',
             'a':
-                'Bu analiz yalnızca binanın fiziksel (mimari) yapısını inceler. Alarm, söndürme ve duman tahliye sistemleri için bu uygulamadaki "Aktif Sistem Gereksinimleri" çalışmasını da incelemenizi öneririz.',
+                'Bu analiz yalnızca binanın mimari yapısını inceler. Algılama, söndürme, duman tahliye vb. sistemler için bu uygulamadaki "Aktif Sistem Gereksinimleri" dokümanını da incelemenizi öneririz.',
           },
           {
-            'q': 'Puanlama ve Risk Seviyeleri ne anlama gelir?',
+            'q': 'Puanlama ve risk seviyeleri ne anlama gelir?',
             'a':
-                'Raporlardaki kırmızı (kritik risk / zorunlu), sarı (uyarı) ve yeşil (olumlu) renkler, o konudaki risk veya gereklilik seviyesini gösterir. Puanlar ve değerlendirmeler yalnızca bu uygulama içindeki göreli bir ön değerlendirmedir; resmi evrak niteliği taşımaz.',
+                'Raporlardaki kırmızı, sarı, mavi, yeşil ve gri renkler, o konudaki risk veya gereklilik seviyesini gösterir.',
           },
           {
-            'q': 'Bu belgenin geçerlilik süresi var mı?',
+            'q': '"Konu", "Kullanıcı Yanıtı" ve "Değerlendirme" neyi ifade eder?',
             'a':
-                'Binanızda yapılan tadilat veya değişiklikler sonucunda analizin güncellenmesi önerilir. Belge, üretildiği tarihteki beyan edilen bilgilere dayanır.',
+                'Konu: İncelenen yangın güvenliği başlığını belirtir. Kullanıcı Yanıtı: Uygulama üzerinde binanız için beyan ettiğiniz mevcut saha durumudur. Değerlendirme: Beyan ettiğiniz duruma ve yönetmelik kriterlerine göre oluşturulan uygunluk kontrolü, risk derecesi veya tavsiyelerdir.',
+          },
+          {
+            'q': 'Dokümanın geçerlilik süresi var mı?',
+            'a':
+                'Binanızda yapılan tadilat veya değişiklikler sonucunda analizin güncellenmesi önerilir. Doküman, üretildiği tarihteki beyan edilen bilgilere dayanır.',
+          },
+          {
+            'q': 'Bu çalışma hangi mevzuata dayanmaktadır?',
+            'a':
+                'Bu çalışmadaki tüm kriterler ve değerlendirmelerde, "Binaların Yangından Korunması Hakkında Yönetmelik" hükümleri ile bu yönetmelikte atıfta bulunulan TS EN (Türk Standartları) esas alınmıştır.',
           },
           {
             'q': 'Önemli Uyarı',
             'a':
-                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksizsiz analiz için binanın, yetkin bir Yangın Mühendisi tarafından proje üzerinde ve yerinde incelenmesi şarttır.',
+                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksiksiz analiz için binanın, yetkin bir Yangın Güvenlik Uzmanı tarafından proje üzerinde ve yerinde incelenmesi şarttır.',
           },
         ],
       ),
@@ -1294,443 +1385,7 @@ class PdfService {
             _buildHeader(context, docNo, ttfBold, "YANGIN RİSK ANALİZİ"),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
-          pw.SizedBox(height: 12),
-          pw.Text(
-            "DEĞERLENDİRME NOTLARI",
-            style: pw.TextStyle(
-              font: ttfBold,
-              fontSize: 13,
-              color: PdfColor.fromInt(0xFF1a365d),
-            ),
-          ),
-          pw.SizedBox(height: 8),
-          pw.Text(
-            "Bu doküman içerisinde (paragrafların hemen solunda yer alan) renk kodları ve anlamları aşağıda açıklanmıştır:",
-            style: const pw.TextStyle(
-              fontSize: 9,
-              color: PdfColors.grey700,
-              lineSpacing: 2.2,
-            ),
-          ),
-          pw.SizedBox(height: 10),
-          pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.start,
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", ""),
-              pw.SizedBox(width: 20),
-              _buildLegendItem(PdfColors.yellow700, "UYARI", ""),
-              pw.SizedBox(width: 20),
-              _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
-              pw.SizedBox(width: 20),
-              _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
-              pw.SizedBox(width: 20),
-              _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", ""),
-            ],
-          ),
-
-          pw.SizedBox(height: 15),
-          // 2. Build Section Widgets and spread them directly into the MultiPage list
-          // This allows each section and its items to break across pages freely.
-          ...(() {
-            final List<pw.Widget> sectionWidgets = [];
-            for (int index = 0; index < 36; index++) {
-              int id = index + 1;
-              final res = store.getResultForSection(id);
-              if (res == null) continue;
-
-              final details = ReportEngine.getSectionDetailedReport(
-                id,
-                store: store,
-              );
-              ReportStatus sectionStatus = ReportStatus.info;
-              bool hasValidStatus = false;
-              for (final item in details) {
-                if (item['status'] != null && item['status'] is ReportStatus) {
-                  final status = item['status'] as ReportStatus;
-                  if (!hasValidStatus ||
-                      status.priority > sectionStatus.priority) {
-                    sectionStatus = status;
-                    hasValidStatus = true;
-                  }
-                }
-              }
-
-              PdfColor riskColor;
-              if (hasValidStatus) {
-                riskColor = _getColorFromStatus(sectionStatus);
-              } else {
-                final fullReportForColor = ReportEngine.getSectionFullReport(
-                  id,
-                  store: store,
-                );
-                riskColor = _getRiskColor(fullReportForColor);
-              }
-
-              final effectiveSectionRiskColor = (id <= 10)
-                  ? PdfColors.blue700
-                  : riskColor;
-              final bool useTable = [
-                3,
-                5,
-                6,
-                7,
-                10,
-                12,
-                21,
-                33,
-                36,
-              ].contains(id);
-              final List<pw.Widget> itemsWidgets = [];
-
-              if (!useTable) {
-                for (final item in details) {
-                  itemsWidgets.add(
-                    _buildStandardVerticalItem(
-                      item,
-                      ttf,
-                      ttfBold,
-                      riskColor: (id <= 10 || id == 14)
-                          ? PdfColors.blue700
-                          : (id == 12
-                                ? effectiveSectionRiskColor
-                                : _getColorForItem(item)),
-                      isLast: item == details.last,
-                      sectionId: id,
-                    ),
-                  );
-                }
-              } else {
-                List<Map<String, dynamic>> tableGroup = [];
-                bool isFirstTableFor36 = true;
-                for (int i = 0; i < details.length; i++) {
-                  final item = details[i];
-                  final isLast = i == details.length - 1;
-                  final String report = _cleanEmojis(item['report'] ?? '');
-                  final String advice = _cleanEmojis(item['advice'] ?? '');
-                  final bool isTableRow =
-                      (item['isTable'] == true) ||
-                      (report.isEmpty &&
-                          advice.isEmpty &&
-                          item['isTable'] != false);
-
-                  if (isTableRow) {
-                    tableGroup.add(item);
-                  } else {
-                    if (tableGroup.isNotEmpty) {
-                      if (id == 36) {
-                        if (isFirstTableFor36) {
-                          itemsWidgets.add(
-                            pw.Column(
-                              crossAxisAlignment: pw.CrossAxisAlignment.start,
-                              children: [
-                                pw.Text(
-                                  "Konu:",
-                                  style: pw.TextStyle(
-                                    font: ttfBold,
-                                    fontSize: 9,
-                                    fontStyle: pw.FontStyle.italic,
-                                    color: PdfColors.blue900,
-                                  ),
-                                ),
-                                pw.Padding(
-                                  padding: const pw.EdgeInsets.only(left: 6),
-                                  child: pw.Text(
-                                    "Merdiven Uygunluk Değerlendirmesi",
-                                    style: pw.TextStyle(font: ttf, fontSize: 9),
-                                  ),
-                                ),
-                                pw.SizedBox(height: 5),
-                                pw.Text(
-                                  "Kullanıcı Yanıtı:",
-                                  style: pw.TextStyle(
-                                    font: ttfBold,
-                                    fontSize: 9,
-                                    fontStyle: pw.FontStyle.italic,
-                                    color: PdfColors.blue900,
-                                  ),
-                                ),
-                                pw.SizedBox(height: 3),
-                              ],
-                            ),
-                          );
-                          isFirstTableFor36 = false;
-                        }
-
-                        final zeminUpperGroup = tableGroup.where((item) {
-                          final lbl = (item['label'] ?? '').toString();
-                          return !lbl.startsWith("Bodrum") && !lbl.startsWith("BODRUM");
-                        }).toList();
-
-                        final bodrumGroup = tableGroup.where((item) {
-                          final lbl = (item['label'] ?? '').toString();
-                          return lbl.startsWith("Bodrum") || lbl.startsWith("BODRUM");
-                        }).toList();
-
-                        if (zeminUpperGroup.isNotEmpty) {
-                          itemsWidgets.add(
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.only(bottom: 4, top: 2),
-                              child: pw.Text(
-                                "Zemin ve Üst Katlar:",
-                                style: pw.TextStyle(
-                                  font: ttfBold,
-                                  fontSize: 8.5,
-                                  color: PdfColors.blue800,
-                                ),
-                              ),
-                            ),
-                          );
-                          itemsWidgets.add(
-                            _buildInfoTable(
-                              zeminUpperGroup,
-                              ttf,
-                              ttfBold,
-                              const PdfColor.fromInt(0x00000000),
-                              subjectLabel: "Merdiven Tipleri",
-                            ),
-                          );
-                          itemsWidgets.add(pw.SizedBox(height: 8));
-                        }
-
-                        if (bodrumGroup.isNotEmpty) {
-                          itemsWidgets.add(
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
-                              child: pw.Text(
-                                "Bodrum Katlar:",
-                                style: pw.TextStyle(
-                                  font: ttfBold,
-                                  fontSize: 8.5,
-                                  color: PdfColors.blue800,
-                                ),
-                              ),
-                            ),
-                          );
-                          itemsWidgets.add(
-                            _buildInfoTable(
-                              bodrumGroup,
-                              ttf,
-                              ttfBold,
-                              const PdfColor.fromInt(0x00000000),
-                              subjectLabel: "Merdiven Tipleri",
-                            ),
-                          );
-                          itemsWidgets.add(pw.SizedBox(height: 8));
-                        }
-                      } else {
-                        itemsWidgets.add(
-                          _buildInfoTable(
-                            tableGroup,
-                            ttf,
-                            ttfBold,
-                            (id <= 10 || id == 33)
-                                ? const PdfColor.fromInt(0x00000000)
-                                : effectiveSectionRiskColor,
-                            subjectLabel: "Konu",
-                          ),
-                        );
-                        itemsWidgets.add(pw.SizedBox(height: 10));
-                      }
-                      tableGroup = [];
-                    }
-                    itemsWidgets.add(
-                      _buildStandardVerticalItem(
-                        item,
-                        ttf,
-                        ttfBold,
-                        riskColor: (id <= 10 || id == 14)
-                            ? PdfColors.blue700
-                            : (id == 12
-                                  ? effectiveSectionRiskColor
-                                  : _getColorForItem(item)),
-                        isLast: isLast,
-                        sectionId: id,
-                      ),
-                    );
-                  }
-                }
-                if (tableGroup.isNotEmpty) {
-                  if (id == 36) {
-                    if (isFirstTableFor36) {
-                      itemsWidgets.add(
-                        pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: [
-                            pw.Text(
-                              "Konu:",
-                              style: pw.TextStyle(
-                                font: ttfBold,
-                                fontSize: 9,
-                                fontStyle: pw.FontStyle.italic,
-                                color: PdfColors.blue900,
-                              ),
-                            ),
-                            pw.Padding(
-                              padding: const pw.EdgeInsets.only(left: 6),
-                              child: pw.Text(
-                                "Merdiven Uygunluk Değerlendirmesi",
-                                style: pw.TextStyle(font: ttf, fontSize: 9),
-                              ),
-                            ),
-                            pw.SizedBox(height: 5),
-                            pw.Text(
-                              "Kullanıcı Yanıtı:",
-                              style: pw.TextStyle(
-                                font: ttfBold,
-                                fontSize: 9,
-                                fontStyle: pw.FontStyle.italic,
-                                color: PdfColors.blue900,
-                              ),
-                            ),
-                            pw.SizedBox(height: 3),
-                          ],
-                        ),
-                      );
-                      isFirstTableFor36 = false;
-                    }
-
-                    final zeminUpperGroup = tableGroup.where((item) {
-                      final lbl = (item['label'] ?? '').toString();
-                      return !lbl.startsWith("Bodrum") && !lbl.startsWith("BODRUM");
-                    }).toList();
-
-                    final bodrumGroup = tableGroup.where((item) {
-                      final lbl = (item['label'] ?? '').toString();
-                      return lbl.startsWith("Bodrum") || lbl.startsWith("BODRUM");
-                    }).toList();
-
-                    if (zeminUpperGroup.isNotEmpty) {
-                      itemsWidgets.add(
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.only(bottom: 4, top: 2),
-                          child: pw.Text(
-                            "Zemin ve Üst Katlar:",
-                            style: pw.TextStyle(
-                              font: ttfBold,
-                              fontSize: 8.5,
-                              color: PdfColors.blue800,
-                            ),
-                          ),
-                        ),
-                      );
-                      itemsWidgets.add(
-                        _buildInfoTable(
-                          zeminUpperGroup,
-                          ttf,
-                          ttfBold,
-                          const PdfColor.fromInt(0x00000000),
-                          subjectLabel: "Merdiven Tipleri",
-                        ),
-                      );
-                      itemsWidgets.add(pw.SizedBox(height: 8));
-                    }
-
-                    if (bodrumGroup.isNotEmpty) {
-                      itemsWidgets.add(
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
-                          child: pw.Text(
-                            "Bodrum Katlar:",
-                            style: pw.TextStyle(
-                              font: ttfBold,
-                              fontSize: 8.5,
-                              color: PdfColors.blue800,
-                            ),
-                          ),
-                        ),
-                      );
-                      itemsWidgets.add(
-                        _buildInfoTable(
-                          bodrumGroup,
-                          ttf,
-                          ttfBold,
-                          const PdfColor.fromInt(0x00000000),
-                          subjectLabel: "Merdiven Tipleri",
-                        ),
-                      );
-                      itemsWidgets.add(pw.SizedBox(height: 8));
-                    }
-                  } else {
-                    itemsWidgets.add(
-                      _buildInfoTable(
-                        tableGroup,
-                        ttf,
-                        ttfBold,
-                        (id <= 10 || id == 33)
-                            ? const PdfColor.fromInt(0x00000000)
-                            : effectiveSectionRiskColor,
-                        subjectLabel: "Konu",
-                      ),
-                    );
-                  }
-                }
-              }
-
-              final headerWidget = pw.Container(
-                margin: const pw.EdgeInsets.only(top: 10, bottom: 4),
-                padding: const pw.EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 6,
-                ),
-                decoration: const pw.BoxDecoration(
-                  color: PdfColor.fromInt(0xFF1a365d),
-                ),
-                child: pw.Row(
-                  children: [
-                    pw.Expanded(
-                      child: pw.Text(
-                        "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
-                        style: pw.TextStyle(
-                          fontSize: 10,
-                          fontWeight: pw.FontWeight.bold,
-                          color: PdfColors.white,
-                          letterSpacing: 0.4,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-
-              final dividerWidget = pw.Divider(
-                thickness: 0.8,
-                color: PdfColors.indigo100,
-              );
-
-              if (itemsWidgets.isNotEmpty) {
-                // Tüm bölümler: Başlık + ilk madde asla ayrılmaz (Inseparable),
-                // geri kalan maddeler sayfa sınırında serbestçe bölünebilir.
-                sectionWidgets.add(
-                  pw.Inseparable(
-                    child: pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        headerWidget,
-                        dividerWidget,
-                        itemsWidgets.first,
-                      ],
-                    ),
-                  ),
-                );
-                if (itemsWidgets.length > 1) {
-                  sectionWidgets.addAll(itemsWidgets.sublist(1));
-                }
-              } else {
-                // Veri yoksa sadece başlık ve çizgi
-                sectionWidgets.add(
-                  pw.Column(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [headerWidget, dividerWidget],
-                  ),
-                );
-              }
-              sectionWidgets.add(pw.SizedBox(height: 8));
-            }
-            return sectionWidgets;
-          })(),
-
-          // --- PROFESYONEL PROMOSYON VE QR KUTUSU ---
+          ..._buildRiskAnalysisSectionContent(store: store, ttf: ttf, ttfBold: ttfBold, sectionTitle: "DEĞERLENDİRME NOTLARI"),
           pw.SizedBox(height: 30),
           _buildPromoQRBox(ttf, ttfBold),
         ],
@@ -1746,10 +1401,598 @@ class PdfService {
     return pdf;
   }
 
-  // --- 2. AKTİF SİSTEM GEREKSİNİMLERİ RAPORU ---
-  static Future<void> generateActiveSystemsPdf(BuildContext context) async {
-    final pdf = pw.Document();
+  // ---------------------------------------------------------------------------
+  // SHARED HELPER: Risk Analizi bölüm içeriklerini döndürür.
+  // Hem _buildRiskAnalysisDocument hem _buildCombinedDocument tarafından
+  // kullanılır — böylece herhangi bir stil değişikliği tek noktada yapılır.
+  // ---------------------------------------------------------------------------
+  static List<pw.Widget> _buildRiskAnalysisSectionContent({
+    required BinaStore store,
+    required pw.Font ttf,
+    required pw.Font ttfBold,
+    String sectionTitle = "DEĞERLENDİRME NOTLARI",
+  }) {
+    final List<pw.Widget> result = [];
+
+    result.add(
+      pw.Container(
+        width: double.infinity,
+        padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
+        child: pw.Text(
+          sectionTitle,
+          style: pw.TextStyle(
+            font: ttfBold,
+            fontSize: 11,
+            color: PdfColors.white,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+    );
+    result.add(pw.SizedBox(height: 8));
+    result.add(
+      pw.Text(
+        "Bu doküman içerisinde (paragrafların hemen solunda yer alan) renk kodları ve anlamları aşağıda açıklanmıştır:",
+        style: const pw.TextStyle(
+          fontSize: 9,
+          color: PdfColors.grey700,
+          lineSpacing: 2.2,
+        ),
+      ),
+    );
+    result.add(pw.SizedBox(height: 10));
+    result.add(
+      pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.start,
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", ""),
+          pw.SizedBox(width: 20),
+          _buildLegendItem(PdfColors.yellow700, "UYARI", ""),
+          pw.SizedBox(width: 20),
+          _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
+          pw.SizedBox(width: 20),
+          _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
+          pw.SizedBox(width: 20),
+          _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", ""),
+        ],
+      ),
+    );
+    result.add(pw.SizedBox(height: 15));
+
+    // Bölüm widget'larını oluştur
+    final List<pw.Widget> sectionWidgets = [];
+    for (int index = 0; index < 36; index++) {
+      int id = index + 1;
+      final res = store.getResultForSection(id);
+      if (res == null) continue;
+
+      final details = ReportEngine.getSectionDetailedReport(id, store: store);
+      ReportStatus sectionStatus = ReportStatus.info;
+      bool hasValidStatus = false;
+      for (final item in details) {
+        if (item['status'] != null && item['status'] is ReportStatus) {
+          final status = item['status'] as ReportStatus;
+          if (!hasValidStatus || status.priority > sectionStatus.priority) {
+            sectionStatus = status;
+            hasValidStatus = true;
+          }
+        }
+      }
+
+      PdfColor riskColor;
+      if (hasValidStatus) {
+        riskColor = _getColorFromStatus(sectionStatus);
+      } else {
+        final fullReportForColor = ReportEngine.getSectionFullReport(id, store: store);
+        riskColor = _getRiskColor(fullReportForColor);
+      }
+
+      final effectiveSectionRiskColor = (id <= 10) ? PdfColors.blue700 : riskColor;
+      final bool useTable = [3, 5, 6, 7, 10, 12, 21, 33, 36].contains(id);
+      final List<pw.Widget> itemsWidgets = [];
+
+      if (!useTable) {
+        for (final item in details) {
+          itemsWidgets.add(
+            _buildStandardVerticalItem(
+              item,
+              ttf,
+              ttfBold,
+              riskColor: (id <= 10 || id == 14)
+                  ? PdfColors.blue700
+                  : (id == 12 ? effectiveSectionRiskColor : _getColorForItem(item)),
+              isLast: item == details.last,
+              sectionId: id,
+            ),
+          );
+        }
+      } else {
+        List<Map<String, dynamic>> tableGroup = [];
+        bool isFirstTableFor36 = true;
+        for (int i = 0; i < details.length; i++) {
+          final item = details[i];
+          final isLast = i == details.length - 1;
+          final String report = _cleanEmojis(item['report'] ?? '');
+          final String advice = _cleanEmojis(item['advice'] ?? '');
+          final bool isTableRow =
+              (item['isTable'] == true) ||
+              (report.isEmpty && advice.isEmpty && item['isTable'] != false);
+
+          if (isTableRow) {
+            tableGroup.add(item);
+          } else {
+            if (tableGroup.isNotEmpty) {
+              if (id == 36) {
+                if (isFirstTableFor36) {
+                  itemsWidgets.add(
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          "Konu:",
+                          style: pw.TextStyle(
+                            font: ttfBold,
+                            fontSize: 9,
+                            fontStyle: pw.FontStyle.italic,
+                            color: const PdfColor.fromInt(0xFF1a365d),
+                          ),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.only(left: 6),
+                          child: pw.Text(
+                            "Merdiven Uygunluk Değerlendirmesi",
+                            style: pw.TextStyle(font: ttf, fontSize: 9),
+                          ),
+                        ),
+                        pw.SizedBox(height: 5),
+                        pw.Text(
+                          "Kullanıcı Yanıtı:",
+                          style: pw.TextStyle(
+                            font: ttfBold,
+                            fontSize: 9,
+                            fontStyle: pw.FontStyle.italic,
+                            color: const PdfColor.fromInt(0xFF1a365d),
+                          ),
+                        ),
+                        pw.SizedBox(height: 3),
+                      ],
+                    ),
+                  );
+                  isFirstTableFor36 = false;
+                }
+
+                final zeminUpperGroup = tableGroup.where((item) {
+                  final lbl = (item['label'] ?? '').toString();
+                  return !lbl.startsWith("Bodrum") && !lbl.startsWith("BODRUM");
+                }).toList();
+
+                final bodrumGroup = tableGroup.where((item) {
+                  final lbl = (item['label'] ?? '').toString();
+                  return lbl.startsWith("Bodrum") || lbl.startsWith("BODRUM");
+                }).toList();
+
+                if (zeminUpperGroup.isNotEmpty) {
+                  itemsWidgets.add(
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(bottom: 4, top: 2),
+                      child: pw.Text(
+                        "Zemin ve Üst Katlar:",
+                        style: pw.TextStyle(
+                          font: ttfBold,
+                          fontSize: 8.5,
+                          color: PdfColors.grey800,
+                        ),
+                      ),
+                    ),
+                  );
+                  itemsWidgets.add(
+                    _buildInfoTable(
+                      zeminUpperGroup, ttf, ttfBold,
+                      const PdfColor.fromInt(0x00000000),
+                      subjectLabel: "Merdiven Tipleri (Zemin ve Üst Katlar)",
+                    ),
+                  );
+                  itemsWidgets.add(pw.SizedBox(height: 8));
+                }
+
+                if (bodrumGroup.isNotEmpty) {
+                  itemsWidgets.add(
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
+                      child: pw.Text(
+                        "Bodrum Katlar:",
+                        style: pw.TextStyle(
+                          font: ttfBold,
+                          fontSize: 8.5,
+                          color: PdfColors.grey800,
+                        ),
+                      ),
+                    ),
+                  );
+                  itemsWidgets.add(
+                    _buildInfoTable(
+                      bodrumGroup, ttf, ttfBold,
+                      const PdfColor.fromInt(0x00000000),
+                      subjectLabel: "Merdiven Tipleri (Bodrum Katlar)",
+                    ),
+                  );
+                  itemsWidgets.add(pw.SizedBox(height: 8));
+                }
+              } else {
+                itemsWidgets.add(
+                  _buildInfoTable(
+                    tableGroup, ttf, ttfBold,
+                    (id <= 10 || id == 12 || id == 33)
+                        ? const PdfColor.fromInt(0x00000000)
+                        : effectiveSectionRiskColor,
+                    subjectLabel: "Konu",
+                  ),
+                );
+                itemsWidgets.add(pw.SizedBox(height: 10));
+              }
+              tableGroup = [];
+            }
+            itemsWidgets.add(
+              _buildStandardVerticalItem(
+                item, ttf, ttfBold,
+                riskColor: (id <= 10 || id == 14)
+                    ? PdfColors.blue700
+                    : (id == 12 ? effectiveSectionRiskColor : _getColorForItem(item)),
+                isLast: isLast,
+                sectionId: id,
+              ),
+            );
+          }
+        }
+        if (tableGroup.isNotEmpty) {
+          if (id == 36) {
+            if (isFirstTableFor36) {
+              itemsWidgets.add(
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      "Konu:",
+                      style: pw.TextStyle(
+                        font: ttfBold,
+                        fontSize: 9,
+                        fontStyle: pw.FontStyle.italic,
+                        color: const PdfColor.fromInt(0xFF1a365d),
+                      ),
+                    ),
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 6),
+                      child: pw.Text(
+                        "Merdiven Uygunluk Değerlendirmesi",
+                        style: pw.TextStyle(font: ttf, fontSize: 9),
+                      ),
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Text(
+                      "Kullanıcı Yanıtı:",
+                      style: pw.TextStyle(
+                        font: ttfBold,
+                        fontSize: 9,
+                        fontStyle: pw.FontStyle.italic,
+                        color: const PdfColor.fromInt(0xFF1a365d),
+                      ),
+                    ),
+                    pw.SizedBox(height: 3),
+                  ],
+                ),
+              );
+              isFirstTableFor36 = false;
+            }
+
+            final zeminUpperGroup = tableGroup.where((item) {
+              final lbl = (item['label'] ?? '').toString();
+              return !lbl.startsWith("Bodrum") && !lbl.startsWith("BODRUM");
+            }).toList();
+
+            final bodrumGroup = tableGroup.where((item) {
+              final lbl = (item['label'] ?? '').toString();
+              return lbl.startsWith("Bodrum") || lbl.startsWith("BODRUM");
+            }).toList();
+
+            if (zeminUpperGroup.isNotEmpty) {
+              itemsWidgets.add(
+                pw.Padding(
+                  padding: const pw.EdgeInsets.only(bottom: 4, top: 2),
+                  child: pw.Text(
+                    "Zemin ve Üst Katlar:",
+                    style: pw.TextStyle(
+                      font: ttfBold,
+                      fontSize: 8.5,
+                      color: PdfColors.grey800,
+                    ),
+                  ),
+                ),
+              );
+              itemsWidgets.add(
+                _buildInfoTable(
+                  zeminUpperGroup, ttf, ttfBold,
+                  const PdfColor.fromInt(0x00000000),
+                  subjectLabel: "Merdiven Tipleri",
+                ),
+              );
+              itemsWidgets.add(pw.SizedBox(height: 8));
+            }
+
+            if (bodrumGroup.isNotEmpty) {
+              itemsWidgets.add(
+                pw.Padding(
+                  padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
+                  child: pw.Text(
+                    "Bodrum Katlar:",
+                    style: pw.TextStyle(
+                      font: ttfBold,
+                      fontSize: 8.5,
+                      color: PdfColors.grey800,
+                    ),
+                  ),
+                ),
+              );
+              itemsWidgets.add(
+                _buildInfoTable(
+                  bodrumGroup, ttf, ttfBold,
+                  const PdfColor.fromInt(0x00000000),
+                  subjectLabel: "Merdiven Tipleri",
+                ),
+              );
+              itemsWidgets.add(pw.SizedBox(height: 8));
+            }
+            itemsWidgets.add(
+              pw.Padding(
+                padding: const pw.EdgeInsets.only(left: 2, top: 4, bottom: 4),
+                child: pw.Text(
+                  "(*) Not: Raporlanan merdiven uygunluğu kullanıcının beyan ettiği verilere dayanmaktadır. Yönetmelik Madde 41 kapsamındaki basamak, baş yüksekliği vb. ölçüleri, sahanlık detayları yerinde ölçüm gerektirdiğinden bu dokümandaki notlar ön değerlendirme niteliğindedir.",
+                  style: pw.TextStyle(
+                    font: ttf,
+                    fontSize: 7,
+                    fontStyle: pw.FontStyle.italic,
+                    color: PdfColors.grey600,
+                    lineSpacing: 1.3,
+                  ),
+                ),
+              ),
+            );
+          } else {
+            itemsWidgets.add(
+              _buildInfoTable(
+                tableGroup, ttf, ttfBold,
+                (id <= 10 || id == 33)
+                    ? const PdfColor.fromInt(0x00000000)
+                    : effectiveSectionRiskColor,
+                subjectLabel: "Konu",
+              ),
+            );
+          }
+        }
+      }
+
+      final headerWidget = pw.Container(
+        margin: const pw.EdgeInsets.only(top: 24, bottom: 6),
+        padding: const pw.EdgeInsets.only(bottom: 4),
+        decoration: const pw.BoxDecoration(
+          border: pw.Border(
+            bottom: pw.BorderSide(
+              color: PdfColor.fromInt(0xFF1a365d), // corporate navy bottom line
+              width: 1.5,
+            ),
+          ),
+        ),
+        child: pw.Row(
+          children: [
+            pw.Expanded(
+              child: pw.Text(
+                "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
+                style: pw.TextStyle(
+                  font: ttfBold,
+                  fontSize: 10,
+                  color: const PdfColor.fromInt(0xFF1a365d), // corporate dark navy text
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+      if (itemsWidgets.isNotEmpty) {
+        // Başlık + ilk madde asla ayrılmaz (Inseparable)
+        sectionWidgets.add(
+          pw.Inseparable(
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [headerWidget, itemsWidgets.first],
+            ),
+          ),
+        );
+        if (itemsWidgets.length > 1) {
+          sectionWidgets.addAll(itemsWidgets.sublist(1));
+        }
+      } else {
+        sectionWidgets.add(
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [headerWidget],
+          ),
+        );
+      }
+      sectionWidgets.add(pw.SizedBox(height: 8));
+    }
+
+    result.addAll(sectionWidgets);
+    return result;
+  }
+
+  // ---------------------------------------------------------------------------
+  // SHARED HELPER: Aktif sistem kart widget listesini döndürür.
+  // Hem _buildActiveSystemsDocument hem _buildCombinedDocument tarafından
+  // kullanılır — böylece herhangi bir stil değişikliği tek noktada yapılır.
+  // ---------------------------------------------------------------------------
+  static List<pw.Widget> _buildActiveSystemsCardContent({
+    required List<dynamic> activeSystems,
+    required pw.Font ttf,
+    required pw.Font ttfBold,
+    String sectionTitle = "DEĞERLENDİRME NOTLARI",
+  }) {
+    final List<pw.Widget> result = [];
+
+    result.add(
+      pw.Container(
+        width: double.infinity,
+        padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
+        child: pw.Text(
+          sectionTitle,
+          style: pw.TextStyle(
+            font: ttfBold,
+            fontSize: 11,
+            color: PdfColors.white,
+            letterSpacing: 0.5,
+          ),
+        ),
+      ),
+    );
+    result.add(pw.SizedBox(height: 8));
+    result.add(
+      pw.Text(
+        "Bu doküman içerisinde (paragrafların hemen solunda yer alan) renk kodları ve anlamları aşağıda açıklanmıştır:",
+        style: const pw.TextStyle(
+          fontSize: 9,
+          color: PdfColors.grey700,
+          lineSpacing: 2.2,
+        ),
+      ),
+    );
+    result.add(pw.SizedBox(height: 10));
+    result.add(
+      pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.start,
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", ""),
+          pw.SizedBox(width: 20),
+          _buildLegendItem(PdfColors.yellow700, "UYARI", ""),
+          pw.SizedBox(width: 20),
+          _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
+          pw.SizedBox(width: 20),
+          _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
+          pw.SizedBox(width: 20),
+          _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", ""),
+        ],
+      ),
+    );
+    result.add(pw.SizedBox(height: 15));
+    result.add(
+      pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
+            style: pw.TextStyle(
+              fontSize: 8.5,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.blueGrey700,
+              lineSpacing: 2.2,
+            ),
+          ),
+        ],
+      ),
+    );
+    result.add(pw.SizedBox(height: 15));
+
+    for (final req in activeSystems) {
+      final String cleanReason = _cleanEmojis(req.reason).trim();
+      final bool isMandatory = req.isMandatory;
+      final bool isWarning = req.isWarning;
+
+      pw.BoxDecoration boxDecoration;
+      if (isMandatory) {
+        boxDecoration = pw.BoxDecoration(
+          color: const PdfColor.fromInt(0xFFFFEBEE),
+          border: pw.Border.all(color: PdfColors.red700, width: 0.5),
+          borderRadius: pw.BorderRadius.circular(2),
+        );
+      } else if (isWarning) {
+        boxDecoration = pw.BoxDecoration(
+          color: const PdfColor.fromInt(0xFFFFF8E1),
+          border: pw.Border.all(color: PdfColors.amber700, width: 0.5),
+          borderRadius: pw.BorderRadius.circular(2),
+        );
+      } else {
+        boxDecoration = const pw.BoxDecoration(
+          color: PdfColors.white,
+          border: pw.Border(
+            left: pw.BorderSide(color: PdfColors.grey400, width: 2),
+          ),
+        );
+      }
+
+      result.add(
+        pw.Inseparable(
+          child: pw.Container(
+            margin: const pw.EdgeInsets.only(bottom: 10),
+            padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: boxDecoration,
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Expanded(
+                      child: pw.Text(
+                        _cleanEmojis(req.name),
+                        style: pw.TextStyle(
+                          fontSize: 9.5,
+                          fontWeight: pw.FontWeight.bold,
+                          color: PdfColors.black,
+                          lineSpacing: 2.2,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                pw.SizedBox(height: 2),
+                pw.Text(
+                  cleanReason,
+                  style: const pw.TextStyle(
+                    fontSize: 8.5,
+                    color: PdfColors.black,
+                    lineSpacing: 2.2,
+                  ),
+                ),
+                if (req.note.isNotEmpty) ...[
+                  pw.SizedBox(height: 2),
+                  pw.Text(
+                    _cleanEmojis(req.note),
+                    style: const pw.TextStyle(
+                      fontSize: 8.5,
+                      color: PdfColors.black,
+                      lineSpacing: 2.2,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return result;
+  }
+
+  // --- 2. AKTİF SİSTEM GEREKSİNİMLERİ DOKÜMANI ---
+  static Future<pw.Document> _buildActiveSystemsDocument({
+    BinaStore? providedStore,
+  }) async {
     await _ensureAssetsLoaded();
+    final pdf = pw.Document();
 
     final ttf = pw.Font.ttf(_fontData!);
     final ttfBold = pw.Font.ttf(_fontDataBold!);
@@ -1758,7 +2001,7 @@ class PdfService {
 
     final logoImage = pw.MemoryImage(_logoData!.buffer.asUint8List());
 
-    final store = BinaStore.instance;
+    final store = providedStore ?? BinaStore.instance;
     final activeSystems = ActiveSystemsEngine.calculateRequirements(store);
     final pageTheme = _buildPageTheme(ttf, ttfBold, ttfItalic, ttfBoldItalic);
 
@@ -1770,7 +2013,7 @@ class PdfService {
         mainTitle: "AKTİF SİSTEM GEREKSİNİMLERİ",
         subTitle: "",
         store: store,
-        metrics: {'score': 0}, // Skor gösterilmeyecek
+        metrics: const {'score': 0}, // Skor gösterilmeyecek
         showScore: false,
       ),
     );
@@ -1790,24 +2033,24 @@ class PdfService {
         headerTitle: "AKTİF SİSTEM GEREKSİNİMLERİ",
         faqs: [
           {
+            'q': 'Kapsam nedir?',
+            'a':
+                'Bu çalışma yalnızca binanın ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını (alarm, söndürme, duman tahliyesi vb.) ele alır. Mimari (yapısal) risk analizi için uygulamadaki "Yangın Risk Analizi" çalışmasının da incelenmesi önerilir.',
+          },
+          {
             'q': 'Hangi binalar için uygundur?',
             'a':
                 'Bu çalışma, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu çalışmanın kapsamı dışındadır.',
           },
           {
-            'q': 'Bu belge mimari analizi de kapsar mı?',
+            'q': 'Bu çalışma hangi mevzuata dayanmaktadır?',
             'a':
-                'Bu çalışma yalnızca binanın ELEKTROMEKANİK yangın güvenliği ihtiyaçlarını (alarm, söndürme, duman tahliyesi vb.) ele alır. Mimari (yapısal) risk analizi için uygulamadaki "Yangın Risk Analizi" çalışmasını da incelemenizi öneririz.',
+                'Bu çalışmadaki tüm kriterler ve değerlendirmelerde, "Binaların Yangından Korunması Hakkında Yönetmelik" hükümleri ile bu yönetmelikte atıfta bulunulan TS EN (Türk Standartları) esas alınmıştır.',
           },
           {
             'q': 'Binanızda periyodik testler zorunlu mu?',
             'a':
-                'Evet. Kurulumu yapılan yangın alarm, sprinkler, duman tahliye, acil aydınlatma ve söndürme sistemlerinin Binaların Yangından Korunması Hakkında Yönetmeliği ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşlarınca YILDA EN AZ BİR KEZ periyodik test ve bakımlarının yapılması yasal zorunluluktur. Yangın tüpleri ve yangın dolapları için ise 6 ayda bir kontrol önerilir. Bu sorumluluk bina yönetimine aittir.',
-          },
-          {
-            'q': 'Önemli Uyarı',
-            'a':
-                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksizsiz analiz için binanın, yetkin bir Yangın Mühendisi tarafından proje üzerinde veya yerinde incelenmesi şarttır.',
+                'Evet. Kurulumu yapılan yangın algılama, söndürme, duman tahliye, acil aydınlatma vb. sistemlerin, "Binaların Yangından Korunması Hakkında Yönetmelik" ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşları veya yetkin kişiler tarafından YILDA EN AZ BİR KEZ periyodik test ve bakımlarının yapılması yasal zorunluluktur. Yangın tüpleri ve yangın dolapları için 6 ayda bir kontrol önerilebilir. Bu sorumluluk bina yönetimine aittir.',
           },
         ],
       ),
@@ -1818,120 +2061,15 @@ class PdfService {
       pw.MultiPage(
         maxPages: 2000,
         pageTheme: pageTheme,
-        header: (context) => _buildHeader(
-          context,
-          docNo,
-          ttfBold,
-          "AKTİF SİSTEM GEREKSİNİMLERİ",
-        ),
+        header: (context) => _buildHeader(context, docNo, ttfBold, "AKTİF SİSTEM GEREKSİNİMLERİ"),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
-          // Giriş metni ve ilk maddeyi bir arada tut (Header ayrılmasın)
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-
-              pw.Text(
-                "Yangın güvenliği için kritik öneme sahip, Binaların Yangından Korunması Hakkında Yönetmeliği'ne göre binada olması gereken algılama, söndürme, duman tahliye vb. sistem gereksinimleri aşağıda listelenmiştir.",
-                style: pw.TextStyle(
-                  fontSize: 8.5,
-                  fontWeight: pw.FontWeight.bold,
-                  color: PdfColors.blueGrey700,
-                  lineSpacing: 2.2,
-                ),
-              ),
-            ],
+          ..._buildActiveSystemsCardContent(
+            activeSystems: activeSystems,
+            ttf: ttf,
+            ttfBold: ttfBold,
+            sectionTitle: "DEĞERLENDİRME NOTLARI",
           ),
-          pw.SizedBox(height: 20),
-
-          // Gereksinim maddelerini serbest bırak (MultiPage bölünmeye izin verir)
-          // Her bir madde (Container) zaten kendi içinde bölünmezdir.
-          ...activeSystems.map((req) {
-            // Redundant prefix cleaning is no longer needed
-            String cleanReason = _cleanEmojis(req.reason).trim();
-
-            final isMandatory = req.isMandatory;
-            final isWarning = req.isWarning;
-
-            // Determine box decoration based on status
-            pw.BoxDecoration boxDecoration;
-            if (isMandatory) {
-              // Critical Risk: Red background
-              boxDecoration = pw.BoxDecoration(
-                color: PdfColor.fromInt(0xFFFFEBEE), // Soft Red
-                border: pw.Border.all(color: PdfColors.red700, width: 0.5),
-                borderRadius: pw.BorderRadius.circular(2),
-              );
-            } else if (isWarning) {
-              // Warning: Amber/Yellow background
-              boxDecoration = pw.BoxDecoration(
-                color: PdfColor.fromInt(0xFFFFF8E1), // Soft Amber
-                border: pw.Border.all(color: PdfColors.amber700, width: 0.5),
-                borderRadius: pw.BorderRadius.circular(2),
-              );
-            } else {
-              // Neutral (OLUMLU, BİLGİ, etc.)
-              boxDecoration = const pw.BoxDecoration(
-                color: PdfColors.white,
-                border: pw.Border(
-                  left: pw.BorderSide(color: PdfColors.grey400, width: 2),
-                ),
-              );
-            }
-
-            return pw.KeepTogether(
-              child: pw.Container(
-                margin: const pw.EdgeInsets.only(bottom: 10),
-                padding: const pw.EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                decoration: boxDecoration,
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                      children: [
-                        pw.Expanded(
-                          child: pw.Text(
-                            _cleanEmojis(req.name),
-                            style: pw.TextStyle(
-                              fontSize: 9.5,
-                              fontWeight: pw.FontWeight.bold,
-                              color: PdfColors.black,
-                              lineSpacing: 2.2,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    pw.SizedBox(height: 2),
-                    pw.Text(
-                      cleanReason,
-                      style: const pw.TextStyle(
-                        fontSize: 8.5,
-                        color: PdfColors.black,
-                        lineSpacing: 2.2,
-                      ),
-                    ),
-                    if (req.note.isNotEmpty) ...[
-                      pw.SizedBox(height: 2),
-                      pw.Text(
-                        _cleanEmojis(req.note),
-                        style: const pw.TextStyle(
-                          fontSize: 8.5,
-                          color: PdfColors.black,
-                          lineSpacing: 2.2,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            );
-          }),
-          // --- PROFESYONEL PROMOSYON VE QR KUTUSU ---
           pw.SizedBox(height: 30),
           _buildPromoQRBox(ttf, ttfBold),
         ],
@@ -1941,7 +2079,17 @@ class PdfService {
     // Yasal (En Sona Taşındı)
     pdf.addPage(_buildLegalPage(pageTheme, ttf, ttfBold));
 
+    return pdf;
+  }
+
+  static Future<void> generateActiveSystemsPdf(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildActiveSystemsDocument(providedStore: store);
+
     if (!context.mounted) return;
+
+    final now = DateTime.now();
+    final timestamp = "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
 
     Navigator.push(
       context,
@@ -1950,7 +2098,176 @@ class PdfService {
           onLayout: (format) async => pdf.save(),
           title: "AKTİF SİSTEM GEREKSİNİMLERİ",
           fileName:
-              "aktif_sistem_gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}.pdf",
+              "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf",
+        ),
+      ),
+    );
+  }
+
+  // --- 3. BİRLEŞİK RAPOR (TEK PDF) ---
+  static Future<pw.Document> _buildCombinedDocument({
+    BinaStore? providedStore,
+  }) async {
+    await _ensureAssetsLoaded();
+    final pdf = pw.Document();
+
+    final ttf = pw.Font.ttf(_fontData!);
+    final ttfBold = pw.Font.ttf(_fontDataBold!);
+    final ttfItalic = pw.Font.ttf(_fontDataItalic!);
+    final ttfBoldItalic = pw.Font.ttf(_fontDataBoldItalic!);
+
+    final logoImage = pw.MemoryImage(_logoData!.buffer.asUint8List());
+
+    final store = providedStore ?? BinaStore.instance;
+    final metrics = ReportEngine.calculateRiskMetrics(store: store);
+    final activeSystems = ActiveSystemsEngine.calculateRequirements(store);
+    final pageTheme = _buildPageTheme(ttf, ttfBold, ttfItalic, ttfBoldItalic);
+
+    // Doküman No Oluştur (Birleşik Doküman)
+    final now = DateTime.now();
+    final docNo =
+        "LS-BYD-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
+
+    // 1. Ortak Kapak
+    pdf.addPage(
+      _buildCoverPage(
+        pageTheme: pageTheme,
+        logoImage: logoImage,
+        mainTitle: "YANGIN RİSK ANALİZİ VE AKTİF SİSTEM GEREKSİNİMLERİ",
+        subTitle: "",
+        store: store,
+        metrics: metrics,
+        showScore: true,
+      ),
+    );
+
+    // 2. Yönetici Özeti
+    for (var page in _buildExecutiveSummaryPage(
+      pageTheme: pageTheme,
+      store: store,
+      metrics: metrics,
+      ttf: ttf,
+      ttfBold: ttfBold,
+      docNo: docNo,
+    )) {
+      pdf.addPage(page);
+    }
+
+    // 3. Ortak Kapsam ve Sık Sorulan Sorular (Unified FAQ)
+    pdf.addPage(
+      _buildFaqPage(
+        pageTheme: pageTheme,
+        ttf: ttf,
+        ttfBold: ttfBold,
+        docNo: docNo,
+        headerTitle: "YANGIN RİSK ANALİZİ VE AKTİF SİSTEM GEREKSİNİMLERİ",
+        faqs: [
+          {
+            'q': 'Hangi binalar için uygundur?',
+            'a':
+                'Bu çalışma, 19.12.2007 tarihinden sonra yapı ruhsatı onaylanmış KONUT amaçlı yapılar için geçerlidir. Binada zemin veya bodrum katta ticari alan (dükkan, ofis vb.) bulunsa dahi, bu uygulama yalnızca binanın konut bölümlerini ve ortak kullanım alanlarını (merdiven, kaçış yolu, otopark, teknik hacimler vb.) kapsar. Ticari alanlar bu dokümanın kapsamı dışındadır.',
+          },
+          {
+            'q': 'Dokümanın kapsamı nedir?',
+            'a':
+                'Bu çalışma, binanın hem mimari yapısal risk analizi değerlendirmelerini hem de yangın algılama, söndürme, duman tahliye, acil aydınlatma gibi elektromekanik yangın güvenliği sistem gereksinimlerini kapsamaktadır.',
+          },
+          {
+            'q': 'Puanlama ve renk kodları ne anlama gelir?',
+            'a':
+                'Doküman içerisindeki kırmızı, sarı, mavi, yeşil ve gri renkler, o konudaki risk veya gereklilik/uygunluk seviyesini göstermektedir.',
+          },
+          {
+            'q': 'Bu çalışma hangi mevzuata dayanmaktadır?',
+            'a':
+                'Bu çalışmadaki tüm kriterler ve değerlendirmelerde, "Binaların Yangından Korunması Hakkında Yönetmelik" hükümleri ile bu yönetmelikte atıfta bulunulan TS EN (Türk Standartları) esas alınmıştır.',
+          },
+          {
+            'q': 'Binanızda periyodik testler zorunlu mu?',
+            'a':
+                'Evet. Kurulumu yapılan yangın algılama, söndürme, duman tahliye, acil aydınlatma vb. sistemlerin, yönetmelik ve ilgili TS EN standartları çerçevesinde yetkili servis kuruluşlarınca yılda en az bir kez periyodik test ve bakımlarının yapılması yasal zorunluluktur. Bu sorumluluk bina yönetimine aittir.',
+          },
+          {
+            'q': 'Önemli Uyarı',
+            'a':
+                'Bu uygulama bir "ön değerlendirme" aracıdır ve binanızdaki tüm riskleri eksiksiz tespit edemez. Kesin ve eksiksiz analiz için binanın, yetkin bir Yangın Güvenlik Uzmanı tarafından proje üzerinde ve yerinde incelenmesi şarttır.',
+          },
+        ],
+      ),
+    );
+
+    // 4. Kısım I: Yangın Risk Analizi
+    pdf.addPage(
+      pw.MultiPage(
+        maxPages: 2000,
+        pageTheme: pageTheme,
+        header: (context) => _buildHeader(
+          context, docNo, ttfBold,
+          "KISIM I: YANGIN RİSK ANALİZİ",
+        ),
+        footer: (context) => _buildFooter(context, ttf, ttfBold),
+        build: (context) => [
+          ..._buildRiskAnalysisSectionContent(
+            store: store,
+            ttf: ttf,
+            ttfBold: ttfBold,
+            sectionTitle: "KISIM I: YANGIN RİSK ANALİZ DEĞERLENDİRMESİ",
+          ),
+          pw.SizedBox(height: 30),
+          _buildPromoQRBox(ttf, ttfBold),
+        ],
+      ),
+    );
+
+    // 5. Kısım II: Aktif Sistem Gereksinimleri
+    pdf.addPage(
+      pw.MultiPage(
+        maxPages: 2000,
+        pageTheme: pageTheme,
+        header: (context) => _buildHeader(
+          context, docNo, ttfBold,
+          "KISIM II: AKTİF SİSTEM GEREKSİNİMLERİ",
+        ),
+        footer: (context) => _buildFooter(context, ttf, ttfBold),
+        build: (context) => [
+          ..._buildActiveSystemsCardContent(
+            activeSystems: activeSystems,
+            ttf: ttf,
+            ttfBold: ttfBold,
+            sectionTitle: "KISIM II: AKTİF SİSTEM GEREKSİNİMLERİ",
+          ),
+          pw.SizedBox(height: 30),
+          _buildPromoQRBox(ttf, ttfBold),
+        ],
+      ),
+    );
+
+    // 6. Hayat Kurtarıcı Bilgiler
+    pdf.addPage(_buildLifeSavingInfoPage(pageTheme, ttf, ttfBold));
+
+    // 7. Yasal (En Sona Taşındı - Tek Sefer)
+    pdf.addPage(_buildLegalPage(pageTheme, ttf, ttfBold));
+
+    return pdf;
+  }
+
+  static Future<void> generateCombinedPdf(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildCombinedDocument(providedStore: store);
+
+    if (!context.mounted) return;
+
+    final now = DateTime.now();
+    final timestamp = "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PdfPreviewScreen(
+          onLayout: (format) async => pdf.save(),
+          title: "YANGIN RİSK ANALİZİ VE AKTİF SİSTEM GEREKSİNİMLERİ",
+          fileName:
+              "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf",
         ),
       ),
     );
@@ -2320,7 +2637,7 @@ class PdfService {
 
     // Wrap in Container for the side border if sectionColor is provided
     if (sectionColor.alpha == 0) {
-      return pw.KeepTogether(
+      return pw.Inseparable(
         child: pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: rows,
@@ -2342,7 +2659,7 @@ class PdfService {
         )
         .toList();
 
-    return pw.KeepTogether(
+    return pw.Inseparable(
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: decoratedRows,
@@ -2374,7 +2691,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.Padding(
@@ -2401,7 +2718,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.Padding(
@@ -2444,7 +2761,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.Padding(
@@ -2460,7 +2777,7 @@ class PdfService {
               fontSize: 9,
               fontWeight: pw.FontWeight.bold,
               fontStyle: pw.FontStyle.italic,
-              color: PdfColors.blue900,
+              color: const PdfColor.fromInt(0xFF1a365d),
             ),
           ),
           pw.Padding(
@@ -2497,7 +2814,7 @@ class PdfService {
             child: content,
           );
 
-    return pw.KeepTogether(child: result);
+    return pw.Inseparable(child: result);
   }
 
   static pw.Widget _buildPromoQRBox(pw.Font font, pw.Font fontBold) {
@@ -2535,7 +2852,7 @@ class PdfService {
               mainAxisAlignment: pw.MainAxisAlignment.center,
               children: [
                 pw.Text(
-                  "Bu Uygulama, uluslararası yetkinlik sertifikalarına sahip ve alanında tecrübeli Yangın Mühendisleri tarafından hazırlanmıştır.",
+                  "Bu Uygulama, uluslararası yetkinlik sertifikalarına sahip ve alanında tecrübeli Yangın Güvenlik Uzmanları tarafından hazırlanmıştır.",
                   style: pw.TextStyle(
                     font: fontBold,
                     fontSize: 10,
@@ -2569,5 +2886,71 @@ class PdfService {
         ],
       ),
     );
+  }
+
+  static Future<void> shareRiskAnalysisPdf(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildRiskAnalysisDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    await Printing.sharePdf(bytes: bytes, filename: fileName);
+  }
+
+  static Future<void> shareActiveSystemsPdf(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildActiveSystemsDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    await Printing.sharePdf(bytes: bytes, filename: fileName);
+  }
+
+  static Future<void> shareCombinedPdf(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildCombinedDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    await Printing.sharePdf(bytes: bytes, filename: fileName);
+  }
+
+  static String _generateTimestamp() {
+    final now = DateTime.now();
+    return "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
+  }
+
+  static Future<String> saveRiskAnalysisPdfToDevice(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildRiskAnalysisDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    return _saveBytesToDevice(bytes, fileName);
+  }
+
+  static Future<String> saveActiveSystemsPdfToDevice(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildActiveSystemsDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    return _saveBytesToDevice(bytes, fileName);
+  }
+
+  static Future<String> saveCombinedPdfToDevice(BuildContext context) async {
+    final store = BinaStore.instance;
+    final pdf = await _buildCombinedDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    return _saveBytesToDevice(bytes, fileName);
+  }
+
+  static Future<String> _saveBytesToDevice(List<int> bytes, String fileName) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/$fileName');
+    await file.writeAsBytes(bytes);
+    return file.path;
   }
 }

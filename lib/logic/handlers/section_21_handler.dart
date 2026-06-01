@@ -43,17 +43,17 @@ class Section21Handler {
       if (isMandatory) {
         if (hasYgh) {
           evaluationMessage =
-              "Binadaki aşağıdaki teknik veriler nedeniyle YGH zorunluluğu bulunmakta olup, kullanıcı tarafından binada MEVCUT olduğu beyan edilmiştir:\n- ${result.reasons.join('\n- ')}";
+              "Binadaki aşağıdaki teknik veriler nedeniyle Yangın Güvenlik Holü (YGH) zorunluluğu bulunmakta olup, kullanıcı tarafından binada MEVCUT olduğu beyan edilmiştir:\n- ${result.reasons.join('\n- ')}";
         } else {
           evaluationMessage =
-              "Bina teknik verilerine göre Yangın Güvenlik Holü (YGH) ZORUNLU olmasına rağmen binada MEVCUT OLMADIĞI beyan edilmiştir. Bu durum tahliye güvenliği adına yüksek risk oluşturmaktadır.\n\nBinadaki YGH zorunluluğu gerekçeleri:\n- ${result.reasons.join('\n- ')}";
+              "Bina teknik verilerine göre Yangın Güvenlik Holü (YGH) ZORUNLU olmasına rağmen binada MEVCUT OLMADIĞI beyan edilmiştir. Bu durum tahliye güvenliği adına yüksek risk oluşturmaktadır.\n\nBinadaki Yangın Güvenlik Holü (YGH) zorunluluğu gerekçeleri:\n- ${result.reasons.join('\n- ')}";
         }
       } else {
         if (result.waiverNote != null) {
           evaluationMessage = result.waiverNote!;
         } else if (result.isUnknown) {
           evaluationMessage =
-              "Merdivenlerde basınçlandırma durumu beyan edilmediği için BYKHY Madde 38/c uyarınca YGH zorunluluğu netleştirilememiştir. Yerinde kontrol edilmelidir.";
+              "Merdivenlerde basınçlandırma durumu beyan edilmediği için BYKHY Madde 38/c uyarınca Yangın Güvenlik Holü (YGH) zorunluluğu netleştirilememiştir. Yerinde kontrol edilmelidir.";
         } else {
           evaluationMessage =
               "Mevcut bina verilerine göre (yükseklik, kullanım amacı vb.) bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.";
@@ -74,7 +74,7 @@ class Section21Handler {
 
       _addDetail(
         details,
-        label: 'Merdiven önünde Yangın Güvenlik Holü var mı?',
+        label: 'Merdiven önünde Yangın Güvenlik Holü (YGH) var mı?',
         value: b21.varlik?.uiTitle ?? '-',
         subtitle: b21.varlik?.uiSubtitle,
         report: '',
@@ -116,7 +116,7 @@ class Section21Handler {
       // YGH Gereksinimi
       _addDetail(
         details,
-        label: 'YGH Gereksinimi',
+        label: 'Yangın Güvenlik Holü (YGH) Gereksinimi',
         value: '',
         report: isMandatory
             ? (hasYgh 
@@ -149,16 +149,16 @@ class Section21Handler {
     // 1. Değerlendirme Özeti
     if (isMandatory) {
       parts.add(
-        "BİLGİ: YGH ZORUNLUDUR\nBinada aşağıdaki teknik gerekçelerden dolayı Yangın Güvenlik Holü (YGH) bulunması zorunludur:\n${result.reasons.join('\n')}",
+        "BİLGİ: YANGIN GÜVENLİK HOLÜ (YGH) ZORUNLUDUR\nBinada aşağıdaki teknik gerekçelerden dolayı Yangın Güvenlik Holü (YGH) bulunması zorunludur:\n${result.reasons.join('\n')}",
       );
     } else if (result.waiverNote != null) {
       parts.add(result.waiverNote!);
     } else if (result.isUnknown) {
       parts.add(
-          "BİLGİ: Basınçlandırma durumu belirsiz olduğundan Madde 38/c uyarınca YGH muafiyeti netleştirilememiştir.");
+          "BİLGİ: Basınçlandırma durumu belirsiz olduğundan Madde 38/c uyarınca Yangın Güvenlik Holü (YGH) muafiyeti netleştirilememiştir.");
     } else {
       parts.add(
-        "BİLGİ: YGH ZORUNLU DEĞİLDİR\nMevcut bina verilerine göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
+        "BİLGİ: YANGIN GÜVENLİK HOLÜ (YGH) ZORUNLU DEĞİLDİR\nMevcut bina verilerine göre bu binada Yangın Güvenlik Holü (YGH) zorunluluğu tespit edilmemiştir.",
       );
     }
 
@@ -171,7 +171,7 @@ class Section21Handler {
     } else if (noYgh) {
       if (isMandatory) {
         parts.add(
-          "KRİTİK RİSK: Binada YGH zorunlu olmasına rağmen, binada mevcut olmadığı beyan edilmiştir.",
+          "KRİTİK RİSK: Binada Yangın Güvenlik Holü (YGH) zorunlu olmasına rağmen, binada mevcut olmadığı beyan edilmiştir.",
         );
       } else {
         parts.add("DURUM: Binada Yangın Güvenlik Holü (YGH) bulunmamaktadır.");

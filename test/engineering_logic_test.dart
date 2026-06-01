@@ -105,7 +105,7 @@ void main() {
         expect(metrics['criticalCount'] >= 1, true);
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
+        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
       },
     );
 
@@ -176,9 +176,9 @@ void main() {
       store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
 
       final report = ReportEngine.getSectionFullReport(36, store: store);
-      expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
+      expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
       expect(
-        report.contains("En az 1 adet doğrudan dışarıya açılmalıdır"),
+        report.contains("En az 1 adet merdiven doğrudan dışarıya açılmalıdır"),
         true,
       );
     });
@@ -193,9 +193,9 @@ void main() {
         store.bolum36 = Bolum36Model(merdivenDegerlendirme: "");
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
+        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
         expect(
-          report.contains("En az 2 adet doğrudan dışarıya açılmalıdır"),
+          report.contains("En az 2 adet merdiven doğrudan dışarıya açılmalıdır"),
           true,
         ); // Check for number 2
       },
@@ -221,9 +221,9 @@ void main() {
         );
 
         final report = ReportEngine.getSectionFullReport(36, store: store);
-        expect(report.contains("açılması kuralı SAĞLANMAMAKTADIR"), true);
+        expect(report.contains("açılması kuralı sağlanmamaktadır"), true);
         expect(
-          report.contains("En az 3 adet doğrudan dışarıya açılmalıdır"),
+          report.contains("En az 3 adet merdiven doğrudan dışarıya açılmalıdır"),
           true,
         );
       },
@@ -270,8 +270,8 @@ void main() {
         store.bolum9 = Bolum9Model(secim: Bolum9Content.yok);
         store.bolum33 = Bolum33Model(
           cikisKati: ChoiceResult(
-            label: "test",
-            uiTitle: "test",
+            label: "33-C",
+            uiTitle: "Bodrum",
             uiSubtitle: "",
             reportText: "",
           ),
@@ -358,7 +358,7 @@ void main() {
     );
 
     test(
-      'Bölüm 36: Genişlik Aralık Analizi - Bilinmiyor Seçeneği (WARNING)',
+      'Bölüm 36: Genişlik Aralık Analizi - Bilinmiyor Seçeneği (UNKNOWN)',
       () {
         store.bolum4 = Bolum4Model();
         store.bolum33 = Bolum33Model();
@@ -373,7 +373,7 @@ void main() {
           (d) => d['label'] == 'Korunumlu Merdiven Genişliği',
         );
 
-        expect(merdDetail['status'], ReportStatus.warning);
+        expect(merdDetail['status'], ReportStatus.unknown);
         expect(merdDetail['report'].contains("BİLİNMİYOR"), true);
       },
     );

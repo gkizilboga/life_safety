@@ -243,15 +243,40 @@ class _Bolum12ScreenState extends State<Bolum12Screen> {
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [InputValidator.flexDecimal],
       onChanged: (_) => setState(() {}), // Force rebuild for Next button state
+      style: const TextStyle(
+        fontSize: 15.0,
+        fontWeight: FontWeight.w600,
+        color: AppColors.primaryBlue,
+      ),
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: const TextStyle(fontSize: 13.5, color: AppColors.textLabel),
         hintText: "5 - 100",
+        hintStyle: TextStyle(fontSize: 12, color: Colors.grey.shade400),
         errorText: error,
         suffixText: "mm",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        suffixStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+        filled: true,
+        fillColor: Colors.white,
+        isDense: true,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
-          vertical: 14,
+          vertical: 12,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: AppColors.primaryBlue,
+            width: 2,
+          ),
         ),
       ),
     );

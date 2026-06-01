@@ -26,6 +26,8 @@ class Bolum9Model {
     if (label == Bolum9Content.yok.label) sprinklerSecim = Bolum9Content.yok;
     if (label == Bolum9Content.kismen.label)
       sprinklerSecim = Bolum9Content.kismen;
+    if (label == Bolum9Content.yalnizOtopark.label)
+      sprinklerSecim = Bolum9Content.yalnizOtopark;
 
     ChoiceResult? davlumbazSecim;
     final dLabel = map['davlumbaz_label'];

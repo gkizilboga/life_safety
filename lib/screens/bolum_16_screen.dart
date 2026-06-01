@@ -198,19 +198,19 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               ),
               _buildSubQuestion(
                 null,
-                "Pencerelerin yanlarında en az 15 cm eninde yalıtım var mı?",
+                "Pencerelerin yanlarında en az 15 cm eninde yanmaz malzeme ile yalıtım var mı?",
                 _model.bariyerYan,
                 (v) => setState(() => _model = _model.copyWith(bariyerYan: v)),
               ),
               _buildSubQuestion(
                 null,
-                "Pencerelerin üstünde 30 cm eninde yalıtım var mı?",
+                "Pencerelerin üstünde 30 cm eninde yanmaz malzeme ile yalıtım var mı?",
                 _model.bariyerUst,
                 (v) => setState(() => _model = _model.copyWith(bariyerUst: v)),
               ),
               _buildSubQuestion(
                 null,
-                "Zemin seviyesinden 150 cm yüksekliğinde yalıtım var mı?",
+                "Zemin seviyesinden 150 cm yüksekliğinde yanmaz malzeme ile yalıtım var mı?",
                 _model.bariyerZemin,
                 (v) =>
                     setState(() => _model = _model.copyWith(bariyerZemin: v)),
