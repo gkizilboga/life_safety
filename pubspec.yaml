@@ -18,8 +18,8 @@ dependencies:
   path_provider: ^2.1.5
   url_launcher: ^6.3.1
   fl_chart: ^1.2.0
-  share_plus: ^10.1.4
-  file_picker: ^8.3.7
+  share_plus: ^13.1.0
+  file_picker: ^12.0.0-beta.4
   google_sign_in: ^7.2.0
   provider: ^6.1.5+1
 

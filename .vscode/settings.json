@@ -7,16 +7,6 @@
   "thinkingEnabled": true,
   "reasoningEffort": "max",
   "workbench.panel.defaultLocation": "right",
-  "copilot.chat.commandLineToolsRequired": false,
-  "copilot.chat.terminalExecutionEnabled": true,
-  "terminal.integrated.defaultProfile.windows": "PowerShell",
-  "terminal.integrated.profiles.windows": {
-    "PowerShell": {
-      "path": "pwsh.exe",
-      "args": ["-NoProfile"]
-    }
-  },
-  "chat.commandLineToolsRequired": false,
-  "copilot.advanced.tools.run_in_terminal": true,
-  "copilot.advanced.tools.edit_files": true
+  "copilot.chat.edits.enabled": true,
+"copilot.advanced": { "allowFileEdits": true }
 }
