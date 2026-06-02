@@ -157,9 +157,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             "HOŞ GELDİNİZ",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 21,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 0.8,
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.5,
             ),
           ),
           const SizedBox(height: 16.5),
@@ -194,6 +194,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: isCompleted
+            ? null
+            : Border(left: BorderSide(color: AppColors.primaryBlue, width: 3)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.04),
@@ -219,7 +222,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Text(
             name,
             style: const TextStyle(
-              fontSize: 15.5, // Zarif hierarchy
+              fontSize: 14,
               fontWeight: FontWeight.w700,
               color: Color(0xFF2C3E50),
             ),
@@ -282,7 +285,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
-                  color: Colors.blueGrey.shade400,
+                  color: Colors.blueGrey.shade500,
                   letterSpacing: 1.2,
                 ),
               ),
@@ -342,15 +345,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Icon(
                         Icons.description_outlined,
                         size: 16,
-                        color: Colors.blueGrey.shade400,
+                        color: Colors.blueGrey.shade500,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         "Raporları Görüntüle",
                         style: TextStyle(
-                          fontSize: 12.5,
+                          fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: Colors.blueGrey.shade400,
+                          color: Colors.blueGrey.shade500,
                         ),
                       ),
                     ],
@@ -449,7 +452,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 title,
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 13.5,
+                  fontSize: 13,
                   color: AppColors.textDark,
                 ),
               ),
@@ -500,7 +503,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 title,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 14,
                   color: AppColors.textDark,
                 ),
               ),
@@ -545,7 +548,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 SnackBar(
                                   content: const Text(
                                     "Doküman başarıyla indirildi.",
-                                    style: TextStyle(fontSize: 12.5),
+                                    style: TextStyle(fontSize: 12),
                                   ),
                                   backgroundColor: const Color(0xFF2E7D32),
                                   behavior: SnackBarBehavior.floating,
@@ -602,7 +605,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               label,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 13,
+                fontSize: 12,
                 color: color,
               ),
             ),
@@ -653,7 +656,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    fontSize: 14,
                     color: AppColors.textDark,
                   ),
                 ),
@@ -662,7 +665,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   loadingMessage,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontSize: 12.5,
+                    fontSize: 12,
                     color: Colors.grey,
                   ),
                 ),
@@ -869,7 +872,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 14.5,
+                fontSize: 14,
                 color: AppColors.textDark,
               ),
             ),
@@ -971,7 +974,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           title,
           style: const TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 14.5,
+            fontSize: 14,
             color: AppColors.textDark,
           ),
         ),
@@ -993,7 +996,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w800,
-          color: Colors.blueGrey.shade600,
+          color: Colors.blueGrey.shade700,
           letterSpacing: 1.3,
         ),
       ),
@@ -1043,7 +1046,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       style: TextStyle(
                         color: Colors.green.shade900,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 14,
                       ),
                     ),
                   ],
@@ -1158,9 +1161,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFF8F9FF),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: const Color(0xFFE3E8F0)),
       ),
       child: Column(
         children: [
@@ -1199,9 +1202,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFFFF8F0),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: const Color(0xFFF0E6D6)),
       ),
       child: Column(
         children: [
@@ -1254,7 +1257,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 15,
+                fontSize: 14,
                 color: AppColors.textDark,
               ),
             ),

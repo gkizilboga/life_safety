@@ -294,11 +294,13 @@ class PdfService {
                 ),
               ),
 
-              pw.SizedBox(height: 25),
+              // Boşluk - Gauge'ı ortalamak için
+              pw.Spacer(),
 
               // Skor Yüzdesi ve Gauge Chart (sadece showScore true ise)
               if (showScore) ...[
                 pw.Center(child: _buildGaugeChart(metrics['score'] as int)),
+                pw.SizedBox(height: 8),
                 pw.Center(
                   child: pw.Text(
                     "${metrics['score']} / 100",
@@ -338,7 +340,6 @@ class PdfService {
                   ),
                 ),
               ] else ...[
-                pw.SizedBox(height: 30),
                 if (subTitle.isNotEmpty)
                   pw.Center(
                     child: pw.Text(
@@ -352,7 +353,8 @@ class PdfService {
                   ),
               ],
 
-              pw.Spacer(),
+              // Gauge ile lacivert blok arası boşluk
+              pw.SizedBox(height: 20),
 
               // Alt Bilgi Şeridi - Yönetici Özeti ile Aynı Lacivert Tonu
               pw.Container(
@@ -1301,7 +1303,7 @@ class PdfService {
     // Doküman No Oluştur (Risk Analizi)
     final now = DateTime.now();
     final docNo =
-        "LS-YRA-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
+        "LY-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
 
     // 1. Kapak
     pdf.addPage(
@@ -2021,7 +2023,7 @@ class PdfService {
     // Doküman No Oluştur (Aktif Sistemler)
     final now = DateTime.now();
     final docNo =
-        "LS-ASG-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
+        "LA-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
 
     // 2. Kapsam ve Sık Sorulan Sorular
     pdf.addPage(
@@ -2126,7 +2128,7 @@ class PdfService {
     // Doküman No Oluştur (Birleşik Doküman)
     final now = DateTime.now();
     final docNo =
-        "LS-BYD-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
+        "LB-${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
 
     // 1. Ortak Kapak
     pdf.addPage(
@@ -2917,7 +2919,7 @@ class PdfService {
 
   static String _generateTimestamp() {
     final now = DateTime.now();
-    return "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
+    return "${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
   }
 
   static Future<String> saveRiskAnalysisPdfToDevice(BuildContext context) async {
@@ -2948,8 +2950,14 @@ class PdfService {
   }
 
   static Future<String> _saveBytesToDevice(List<int> bytes, String fileName) async {
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/$fileName');
+    String dirPath;
+    if (Platform.isAndroid) {
+      dirPath = '/storage/emulated/0/Download';
+    } else {
+      final dir = await getApplicationDocumentsDirectory();
+      dirPath = dir.path;
+    }
+    final file = File('$dirPath/$fileName');
     await file.writeAsBytes(bytes);
     return file.path;
   }
