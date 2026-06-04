@@ -918,7 +918,7 @@ class ReportEngine {
                 value: 'Hayır, yok',
                 report:
                     'Katlar arasında 100 cm yüksekliğinde hiç yanmaz yüzey bulunmadığından cepheye doğru bakan sprinkler sistemi bulunması zorunludur.',
-                level: RiskLevel.warning,
+                level: RiskLevel.critical,
               );
             } else if (b16.sagirYuzeySprinkler == 2) {
               _addDetail(
@@ -2292,111 +2292,82 @@ class ReportEngine {
     if (id == 35) {
       final b35 = s.bolum35;
       if (b35 != null) {
-        // Calculate dynamic limits
         final b9 = s.bolum9;
         bool hasSprinkler = b9?.secim?.label == "9-1-A";
         int limitTekYon = hasSprinkler ? 30 : 15;
         int limitCiftYon = hasSprinkler ? 75 : 30;
 
-        String replaceLimit(String? text, int limit) {
-          if (text == null) return "";
-          return text.replaceAll("[LIMIT]", limit.toString());
+        // Determine if single or double exit
+        final b20 = s.bolum20;
+        int toplamCikis =
+            (b20?.normalMerdivenSayisi ?? 0) +
+            (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
+            (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+            (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0);
+        bool tekCikis = (toplamCikis <= 1);
+
+        // SORU 1: Kaçış Mesafesi
+        final double? mesafe = tekCikis ? b35.tekYonMesafe : b35.ciftYonMesafe;
+        final int limit = tekCikis ? limitTekYon : limitCiftYon;
+        final String questionLabel = tekCikis
+            ? 'Daire kapınızdan çıktığınızda kattaki merdiven kapısına kadar olan mesafe kaç metredir?'
+            : 'Daire kapınızdan çıktığınızda, size EN YAKIN merdivene olan mesafe kaç metredir?';
+
+        if (mesafe != null && mesafe > 0) {
+          String degerlendirme;
+          RiskLevel level;
+          if (mesafe <= limit) {
+            degerlendirme =
+                "OLUMLU: Girilen kaçış mesafesi ${_formatSayi(mesafe)} m, yönetmelik sınırı olan $limit m'nin altında olduğu için uygundur.";
+            level = RiskLevel.positive;
+          } else {
+            degerlendirme =
+                "KRİTİK RİSK: Girilen kaçış mesafesi ${_formatSayi(mesafe)} m, yönetmelik sınırı olan $limit m'nin üzerinde olduğu için UYGUN DEĞİLDİR. Kaçış mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir.";
+            level = RiskLevel.critical;
+          }
+          _addDetail(
+            details,
+            label: questionLabel,
+            value: "${_formatSayi(mesafe)} m",
+            report: degerlendirme,
+            level: level,
+          );
         }
 
-        if (b35.tekYon != null)
-          _addDetail(
-            details,
-            label:
-                'Daire kapınızdan çıktığınızda bina merdiven kapısına kadar olan mesafe kaç metredir?',
-            value: replaceLimit(b35.tekYon!.uiTitle, limitTekYon),
-            subtitle: b35.tekYon!.uiSubtitle,
-            report: replaceLimit(b35.tekYon!.reportText, limitTekYon),
-            advice: replaceLimit(b35.tekYon!.adviceText, limitTekYon),
-            level: b35.tekYon!.level,
-          );
-        if (b35.ciftYon != null)
-          _addDetail(
-            details,
-            label:
-                'Daire kapınızdan çıktığınızda, size EN YAKIN yangın merdivenine olan mesafe kaç metredir?',
-            value: replaceLimit(b35.ciftYon!.uiTitle, limitCiftYon),
-            subtitle: b35.ciftYon!.uiSubtitle,
-            report: replaceLimit(b35.ciftYon!.reportText, limitCiftYon),
-            advice: replaceLimit(b35.ciftYon!.adviceText, limitCiftYon),
-            level: b35.ciftYon!.level,
-          );
-        if (b35.cikmaz != null)
+        // SORU 2: Çıkmaz Koridor (sadece çift yön için)
+        if (!tekCikis && b35.cikmaz != null) {
           _addDetail(
             details,
             label: "Daireniz koridorun sonunda, 'Çıkmaz' bir noktada mı?",
             value: b35.cikmaz!.uiTitle,
-            subtitle: b35.cikmaz!.uiSubtitle,
             report: b35.cikmaz!.reportText,
+            subtitle: b35.cikmaz!.uiSubtitle,
             advice: b35.cikmaz!.adviceText,
             level: b35.cikmaz!.level,
           );
-        if (b35.cikmazMesafe != null)
-          _addDetail(
-            details,
-            label: 'Çıkmaz koridor mesafesi ne kadar?',
-            value: replaceLimit(b35.cikmazMesafe!.uiTitle, limitTekYon),
-            subtitle: b35.cikmazMesafe!.uiSubtitle,
-            report: replaceLimit(b35.cikmazMesafe!.reportText, limitTekYon),
-            advice: replaceLimit(b35.cikmazMesafe!.adviceText, limitTekYon),
-            level: b35.cikmazMesafe!.level,
-          );
-        if (b35.manuelMesafe != null && b35.manuelMesafe! > 0) {
-          final int limit = (b35.ciftYon?.label == "35-2-C")
-              ? limitCiftYon
-              : limitTekYon;
-          final bool isOk = b35.manuelMesafe! <= limit;
+        }
 
-          String labelText = 'Elle Girilen Kaçış Mesafesi';
-          String reportText = '';
-          String adviceText = '';
-
-          final formattedValue = InputValidator.formatArea(b35.manuelMesafe!);
-
-          if (b35.tekYon?.label == "35-1-C") {
-            labelText = 'Elle Girilen Tek Yönlü Kaçış Mesafesi (Daire kapısından en yakın merdivene)';
-            reportText = isOk
-                ? 'OLUMLU: Daire kapısından en yakın merdivene kadar elle girilen tek yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
-                : 'KRİTİK RİSK: Daire kapısından en yakın merdivene kadar elle girilen tek yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. En yakın merdivene ulaşım mesafesi güvenli tahliye sınırlarının üzerindedir.';
-            adviceText = isOk
-                ? ''
-                : 'Tek yönlü kaçış mesafesini azaltmak amacıyla kat holünde alternatif bir acil çıkış kapısı açılmalı veya binadaki diğer güvenlik önlemleri (örneğin sprinkler sistemi vb.) artırılarak Yönetmelik sınırı genişletilmelidir.';
-          } else if (b35.ciftYon?.label == "35-2-C") {
-            labelText = 'Elle Girilen Çift Yönlü Kaçış Mesafesi (Daire kapısından en yakın merdivene)';
-            reportText = isOk
-                ? 'OLUMLU: Daire kapısından en yakın merdivene kadar elle girilen çift yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
-                : 'KRİTİK RİSK: Daire kapısından en yakın merdivene kadar elle girilen çift yönlü kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. En yakın merdivene ulaşım mesafesi güvenli tahliye sınırlarının üzerindedir.';
-            adviceText = isOk
-                ? ''
-                : 'Çift yönlü kaçış mesafesini azaltmak amacıyla daha yakın konumda alternatif bir kaçış merdiveni planlanmalı veya sprinkler sistemi gibi aktif söndürme sistemleri kurularak izin verilen Yönetmelik limitinin artırılması değerlendirilmelidir.';
-          } else if (b35.cikmazMesafe?.label == "35-3-E") {
-            labelText = 'Elle Girilen Çıkmaz Koridor Mesafesi';
-            reportText = isOk
-                ? 'OLUMLU: Elle girilen çıkmaz koridor uzunluğu ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
-                : 'KRİTİK RİSK: Elle girilen çıkmaz koridor uzunluğu ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır. Koridordaki çıkmaz mesafe uzunluğu, olası bir yangın veya acil durumda sıkışma riskini artıracak düzeyde güvenli tahliye sınırlarının üzerindedir.';
-            adviceText = isOk
-                ? ''
-                : 'Çıkmaz koridor uzunluğunu Yönetmelik sınırlarına çekmek adına çıkmaz koridorun sonundaki daireler için alternatif bir çıkış güzergahı oluşturulmalı veya koridor mimarisi yeniden düzenlenmelidir.';
+        // SORU 3: Çıkmaz Koridor Uzunluğu
+        if (!tekCikis && b35.cikmaz?.label == Bolum35Content.cikmazOptionA.label && b35.cikmazUzunluk != null && b35.cikmazUzunluk! > 0) {
+          String degerlendirme;
+          RiskLevel level;
+          if (b35.cikmazUzunluk! <= limitTekYon) {
+            degerlendirme =
+                "OLUMLU: Çıkmaz koridor uzunluğu ${_formatSayi(b35.cikmazUzunluk!)} m, yönetmelik sınırı olan $limitTekYon m'nin altında olduğu için uygundur.";
+            level = RiskLevel.positive;
           } else {
-            reportText = isOk
-                ? 'OLUMLU: Elle girilen kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitinin içerisindedir.'
-                : 'KRİTİK RİSK: Elle girilen kaçış mesafesi ($formattedValue m), Yönetmelik sınırı olan $limit m limitini aşmaktadır.';
+            degerlendirme =
+                "KRİTİK RİSK: Çıkmaz koridor uzunluğu ${_formatSayi(b35.cikmazUzunluk!)} m, yönetmelik sınırı olan $limitTekYon m'nin üzerinde olduğu için UYGUN DEĞİLDİR. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir.";
+            level = RiskLevel.critical;
           }
-
           _addDetail(
             details,
-            label: labelText,
-            value: '$formattedValue m',
-            report: reportText,
-            advice: adviceText,
-            status: isOk ? ReportStatus.compliant : ReportStatus.risk,
+            label: "Çıkmaz koridor kaç metre uzunluğundadır?",
+            value: "${_formatSayi(b35.cikmazUzunluk!)} m",
+            report: degerlendirme,
+            level: level,
           );
         }
-        handled = true;
       }
     }
 
@@ -2812,21 +2783,35 @@ class ReportEngine {
         int limitTekYon = hasSprinkler ? 30 : 15;
         int limitCiftYon = hasSprinkler ? 75 : 30;
 
-        RiskLevel manualLevel = RiskLevel.positive;
-        if (b.manuelMesafe != null && b.manuelMesafe! > 0) {
-          final int limit = (b.tekYon != null || b.cikmaz != null)
-              ? limitTekYon
-              : limitCiftYon;
-          if (b.manuelMesafe! > limit) manualLevel = RiskLevel.critical;
+        final b20 = s.bolum20;
+        int toplamCikis =
+            (b20?.normalMerdivenSayisi ?? 0) +
+            (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
+            (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+            (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0);
+        bool tekCikis = (toplamCikis <= 1);
+
+        final double? mesafe = tekCikis ? b.tekYonMesafe : b.ciftYonMesafe;
+        final int limit = tekCikis ? limitTekYon : limitCiftYon;
+
+        List<RiskLevel> levels = [];
+
+        if (mesafe != null && mesafe > 0) {
+          levels.add(mesafe <= limit ? RiskLevel.positive : RiskLevel.critical);
         }
 
-        return _maxLevel([
-          b.tekYon?.level,
-          b.ciftYon?.level,
-          b.cikmaz?.level,
-          b.cikmazMesafe?.level,
-          manualLevel,
-        ]);
+        if (b.cikmaz != null) {
+          levels.add(b.cikmaz!.level);
+        }
+
+        if (b.cikmaz?.label == Bolum35Content.cikmazOptionA.label &&
+            b.cikmazUzunluk != null && b.cikmazUzunluk! > 0) {
+          levels.add(b.cikmazUzunluk! <= limitTekYon
+              ? RiskLevel.positive
+              : RiskLevel.critical);
+        }
+
+        return _maxLevel(levels);
       case 36:
         final b = s.bolum36;
         final b20 = s.bolum20;
@@ -3237,10 +3222,33 @@ class ReportEngine {
     // --- BÖLÜM 35 (Mesafeler) ---
     final b35 = s.bolum35;
     if (b35 != null) {
-      add(b35.tekYon);
-      add(b35.ciftYon);
+      final hasSprinkler = s.bolum9?.secim?.label == "9-1-A";
+      final limitTekYon = hasSprinkler ? 30 : 15;
+      final limitCiftYon = hasSprinkler ? 75 : 30;
+
+      final b20 = s.bolum20;
+      int toplamCikis =
+          (b20?.normalMerdivenSayisi ?? 0) +
+          (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
+          (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+          (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0);
+      bool tekCikis = (toplamCikis <= 1);
+
+      final double? mesafe = tekCikis ? b35.tekYonMesafe : b35.ciftYonMesafe;
+      final int limit = tekCikis ? limitTekYon : limitCiftYon;
+
+      if (mesafe != null && mesafe > 0) {
+        addLevel(mesafe <= limit ? RiskLevel.positive : RiskLevel.critical);
+      }
+
       add(b35.cikmaz);
-      add(b35.cikmazMesafe);
+
+      if (b35.cikmaz?.label == Bolum35Content.cikmazOptionA.label &&
+          b35.cikmazUzunluk != null && b35.cikmazUzunluk! > 0) {
+        addLevel(b35.cikmazUzunluk! <= limitTekYon
+            ? RiskLevel.positive
+            : RiskLevel.critical);
+      }
     }
 
     // --- BÖLÜM 36 (Genişlikler) ---
@@ -3841,42 +3849,51 @@ class ReportEngine {
         final limitTekYon = hasSprinkler ? 30 : 15;
         final limitCiftYon = hasSprinkler ? 75 : 30;
 
+        final b20 = s.bolum20;
+        int toplamCikis =
+            (b20?.normalMerdivenSayisi ?? 0) +
+            (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
+            (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+            (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0);
+        bool tekCikis = (toplamCikis <= 1);
+
         List<String> parts = [];
-        if (b35.tekYon != null) {
-          parts.add(
-            _filterSprinklerText(
-              b35.tekYon!.reportText,
-              hasSprinkler,
-              limit: limitTekYon.toString(),
-            ),
-          );
+
+        // SORU 1: Kaçış Mesafesi
+        final double? mesafe = tekCikis ? b35.tekYonMesafe : b35.ciftYonMesafe;
+        final int limit = tekCikis ? limitTekYon : limitCiftYon;
+
+        if (mesafe != null && mesafe > 0) {
+          if (mesafe <= limit) {
+            parts.add(
+              "OLUMLU: Girilen kaçış mesafesi ${_formatSayi(mesafe)} m, yönetmelik sınırı olan $limit m'nin altında olduğu için uygundur.",
+            );
+          } else {
+            parts.add(
+              "KRİTİK RİSK: Girilen kaçış mesafesi ${_formatSayi(mesafe)} m, yönetmelik sınırı olan $limit m'nin üzerinde olduğu için UYGUN DEĞİLDİR.",
+            );
+          }
         }
-        if (b35.ciftYon != null) {
-          parts.add(
-            _filterSprinklerText(
-              b35.ciftYon!.reportText,
-              hasSprinkler,
-              limit: limitCiftYon.toString(),
-            ),
-          );
-        }
+
+        // SORU 2: Çıkmaz Koridor
         if (b35.cikmaz != null) {
-          parts.add(_filterSprinklerText(b35.cikmaz!.reportText, hasSprinkler));
+          parts.add(b35.cikmaz!.reportText);
         }
-        if (b35.cikmazMesafe != null) {
-          parts.add(
-            _filterSprinklerText(
-              b35.cikmazMesafe!.reportText,
-              hasSprinkler,
-              limit: limitTekYon.toString(),
-            ),
-          );
+
+        // SORU 3: Çıkmaz Koridor Uzunluğu
+        if (b35.cikmaz?.label == Bolum35Content.cikmazOptionA.label &&
+            b35.cikmazUzunluk != null && b35.cikmazUzunluk! > 0) {
+          if (b35.cikmazUzunluk! <= limitTekYon) {
+            parts.add(
+              "OLUMLU: Çıkmaz koridor uzunluğu ${_formatSayi(b35.cikmazUzunluk!)} m, yönetmelik sınırı olan $limitTekYon m'nin altında olduğu için uygundur.",
+            );
+          } else {
+            parts.add(
+              "KRİTİK RİSK: Çıkmaz koridor uzunluğu ${_formatSayi(b35.cikmazUzunluk!)} m, yönetmelik sınırı olan $limitTekYon m'nin üzerinde olduğu için UYGUN DEĞİLDİR.",
+            );
+          }
         }
-        if (b35.manuelMesafe != null) {
-          parts.add(
-            "BİLGİ: Elle girilen kaçış mesafesi: ${b35.manuelMesafe} m",
-          );
-        }
+
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
       return res.reportText;
@@ -4629,20 +4646,18 @@ class ReportEngine {
     if (id == 35) {
       final b35 = s.bolum35;
       if (b35 != null) {
-        final b9 = s.bolum9;
-        bool hasSprinkler = b9?.secim?.label == "9-1-A";
-        int limitTekYon = hasSprinkler ? 30 : 15;
-        int limitCiftYon = hasSprinkler ? 75 : 30;
+        final b20 = s.bolum20;
+        int toplamCikis =
+            (b20?.normalMerdivenSayisi ?? 0) +
+            (b20?.binaIciYanginMerdiveniSayisi ?? 0) +
+            (b20?.binaDisiKapaliYanginMerdiveniSayisi ?? 0) +
+            (b20?.binaDisiAcikYanginMerdiveniSayisi ?? 0);
+        bool tekCikis = (toplamCikis <= 1);
 
-        String replaceLimit(String? text, int limit) {
-          if (text == null) return "";
-          return text.replaceAll("[LİMİT]", limit.toString());
+        final double? mesafe = tekCikis ? b35.tekYonMesafe : b35.ciftYonMesafe;
+        if (mesafe != null && mesafe > 0) {
+          return "${_formatSayi(mesafe)} m";
         }
-
-        if (b35.tekYon != null)
-          return replaceLimit(b35.tekYon!.uiTitle, limitTekYon);
-        if (b35.ciftYon != null)
-          return replaceLimit(b35.ciftYon!.uiTitle, limitCiftYon);
       }
     }
 
@@ -4675,6 +4690,12 @@ class ReportEngine {
     }
 
     return summary;
+  }
+
+  static String _formatSayi(double val) {
+    return val == val.roundToDouble()
+        ? val.toInt().toString()
+        : val.toStringAsFixed(1);
   }
 
   static String _filterSprinklerText(

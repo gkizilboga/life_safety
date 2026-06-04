@@ -1221,10 +1221,7 @@ class BinaStore {
           uiSubtitle: "",
           reportText: "Kat bazlı genişlik analizleri.",
           adviceText: _joinAdvice([
-            _bolum35!.tekYon,
-            _bolum35!.ciftYon,
             _bolum35!.cikmaz,
-            _bolum35!.cikmazMesafe,
           ]),
         );
       case 36:

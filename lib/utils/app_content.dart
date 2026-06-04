@@ -4239,78 +4239,12 @@ class Bolum34Content {
 }
 
 class Bolum35Content {
-  // --- SENARYO 1: TEK YÖN ---
-  static final tekYonOptionA = ChoiceResult(
-    label: "35-1-A",
-    uiTitle: "[LIMIT] metreden KISA.",
-    uiSubtitle: "",
-    reportText:
-        "OLUMLU: Tek yön kaçış mesafesi, Yönetmelik sınırları içerisindedir.",
-    level: RiskLevel.positive,
-  );
-  static final tekYonOptionB = ChoiceResult(
-    label: "35-1-B",
-    uiTitle: "[LIMIT] metreden UZUN.",
-    uiSubtitle: "",
-    reportText:
-        "KRİTİK RİSK: Tek yön kaçış mesafesi, Yönetmelik sınırının üzerindedir. ",
-    level: RiskLevel.critical,
-  );
-  static final tekYonOptionC = ChoiceResult(
-    label: "35-1-C",
-    uiTitle: "Tam olarak ölçüyü biliyorum.",
-    uiSubtitle: "",
-    reportText: "BİLGİ: Girilen değere göre otomatik hesaplandı.",
-    level: RiskLevel.info,
-  );
-  static final tekYonOptionD = ChoiceResult(
-    label: "35-1-D",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Kaçış mesafesi bilinmiyor. Bu mesafe, insanların tahliye süresini belirleyen en önemli faktördür. Ölçüm yapılmalıdır.",
-    level: RiskLevel.unknown,
-  );
-
-  // --- SENARYO 2: ÇİFT YÖN (EN YAKIN) ---
-  static final ciftYonOptionA = ChoiceResult(
-    label: "35-2-A",
-    uiTitle: "[LIMIT] metreden KISADIR.",
-    uiSubtitle: "Mesafe yakın.",
-    reportText:
-        "OLUMLU: En yakın çıkışa kaçış mesafesi yönetmelik sınırları içerisindedir.",
-    level: RiskLevel.positive,
-  );
-  static final ciftYonOptionB = ChoiceResult(
-    label: "35-2-B",
-    uiTitle: "[LIMIT] metreden UZUNDUR.",
-    uiSubtitle: "Mesafe uzak.",
-    reportText:
-        "KRİTİK RİSK: En yakın çıkışa mesafe sınırın üzerindedir. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir.",
-    level: RiskLevel.critical,
-  );
-  static final ciftYonOptionC = ChoiceResult(
-    label: "35-2-C",
-    uiTitle: "Tam ölçüyü biliyorum.",
-    uiSubtitle: "En yakın çıkışa olan mesafeyi kendim gireceğim.",
-    reportText: "(Girilen değere göre otomatik hesaplanır)",
-    level: RiskLevel.positive,
-  );
-  static final ciftYonOptionD = ChoiceResult(
-    label: "35-2-D",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Kaçış mesafesi bilinmiyor. Proje üzerinde veya yerinde ölçüm yapılmalıdır.",
-    level: RiskLevel.unknown,
-  );
-
   static final cikmazOptionA = ChoiceResult(
     label: "35-3-A",
     uiTitle: "Evet.",
     uiSubtitle: "Sadece tek yöne gidebiliyorum.",
     reportText:
-        "BİLGİ: Çıkmaz koridor mesafesi alt soruya göre değerlendirilecektir.",
+        "BİLGİ: Daire çıkmaz koridor üzerindedir. Çıkmaz koridor mesafesi ayrıca değerlendirilmiştir.",
     level: RiskLevel.info,
   );
   static final cikmazOptionB = ChoiceResult(
@@ -4328,38 +4262,6 @@ class Bolum35Content {
     uiSubtitle: "",
     reportText:
         "BİLİNMİYOR: Dairenin çıkmaz koridor üzerinde olup olmadığı bilinmiyor. Çıkmaz koridorlar tahliye güvenliğini doğrudan etkiler.",
-    level: RiskLevel.unknown,
-  );
-
-  static final cikmazMesafeOptionA = ChoiceResult(
-    label: "35-3-C",
-    uiTitle: "[LIMIT] metreden KISA.",
-    uiSubtitle: "",
-    reportText:
-        "OLUMLU: Çıkmaz koridor mesafesi yönetmelik sınırları içerisindedir.",
-    level: RiskLevel.positive,
-  );
-  static final cikmazMesafeOptionB = ChoiceResult(
-    label: "35-3-D",
-    uiTitle: "[LIMIT] metreden UZUN.",
-    uiSubtitle: "",
-    reportText:
-        "KRİTİK RİSK: Çıkmaz koridor mesafesi sınırın üzerindedir. Koridor mesafesini kısaltmak için yatay tahliye koridoru vb. oluşturulabilir veya farklı önlemler almak gerekebilir. bunun için yerinde Yangın Güvenlik Uzmanı kontrolü gereklidir.",
-    level: RiskLevel.critical,
-  );
-  static final cikmazMesafeOptionC = ChoiceResult(
-    label: "35-3-E",
-    uiTitle: "Tam ölçüyü biliyorum.",
-    uiSubtitle: "",
-    reportText: "Girilen değere göre otomatik hesaplanmıştır.",
-    level: RiskLevel.positive,
-  );
-  static final cikmazMesafeOptionD = ChoiceResult(
-    label: "35-3-F",
-    uiTitle: "Bilmiyorum.",
-    uiSubtitle: "",
-    reportText:
-        "BİLİNMİYOR: Çıkmaz koridor mesafesi bilinmiyor. Mimari proje üzerinde veya yerinde ölçüm yapılmalıdır.",
     level: RiskLevel.unknown,
   );
 }

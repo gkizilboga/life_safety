@@ -96,14 +96,9 @@ void main() {
         isSadeceKonut: true,
       );
 
-      // Mock ChoiceResult with label containing 35-1-C
+      // Mock distance entered in Section 35
       store.bolum35 = Bolum35Model(
-        tekYon: ChoiceResult(
-          label: "35-1-C",
-          uiTitle: "",
-          uiSubtitle: "",
-          reportText: "",
-        ),
+        tekYonMesafe: 10.0,
       );
 
       final reqs = ActiveSystemsEngine.calculateRequirements(store);
@@ -201,14 +196,9 @@ void main() {
         store.bolum3 = Bolum3Model(hYapi: 10.0);
         store.bolum6 = Bolum6Model(hasOtopark: false);
 
-        // Setup "Bilmiyorum" in Section 35
+        // Setup no distance in Section 35 (unknown)
         store.bolum35 = Bolum35Model(
-          tekYon: ChoiceResult(
-            label: "35-1-D (Bilmiyorum)",
-            uiTitle: "Bilmiyorum",
-            uiSubtitle: "",
-            reportText: "Bilmiyorum",
-          ),
+          tekYonMesafe: null,
         );
 
         final reqs = ActiveSystemsEngine.calculateRequirements(store);

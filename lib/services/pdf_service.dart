@@ -286,16 +286,16 @@ class PdfService {
                     textAlign: pw.TextAlign.center,
                     style: pw.TextStyle(
                       color: navyBlue,
-                      fontSize: 26,
+                      fontSize: 22,
                       fontWeight: pw.FontWeight.bold,
-                      letterSpacing: 1.5,
+                      letterSpacing: 1.0,
                     ),
                   ),
                 ),
               ),
 
               // Boşluk - Gauge'ı ortalamak için
-              pw.Spacer(),
+              pw.Spacer(flex: 2),
 
               // Skor Yüzdesi ve Gauge Chart (sadece showScore true ise)
               if (showScore) ...[
@@ -353,8 +353,8 @@ class PdfService {
                   ),
               ],
 
-              // Gauge ile lacivert blok arası boşluk
-              pw.SizedBox(height: 20),
+              // Alttaki gauge'ı lacivert bloktan ayırmak için boşluk
+              pw.Spacer(flex: 1),
 
               // Alt Bilgi Şeridi - Yönetici Özeti ile Aynı Lacivert Tonu
               pw.Container(
@@ -1577,19 +1577,6 @@ class PdfService {
 
                 if (zeminUpperGroup.isNotEmpty) {
                   itemsWidgets.add(
-                    pw.Padding(
-                      padding: const pw.EdgeInsets.only(bottom: 4, top: 2),
-                      child: pw.Text(
-                        "Zemin ve Üst Katlar:",
-                        style: pw.TextStyle(
-                          font: ttfBold,
-                          fontSize: 8.5,
-                          color: PdfColors.grey800,
-                        ),
-                      ),
-                    ),
-                  );
-                  itemsWidgets.add(
                     _buildInfoTable(
                       zeminUpperGroup, ttf, ttfBold,
                       const PdfColor.fromInt(0x00000000),
@@ -1699,19 +1686,6 @@ class PdfService {
             }).toList();
 
             if (zeminUpperGroup.isNotEmpty) {
-              itemsWidgets.add(
-                pw.Padding(
-                  padding: const pw.EdgeInsets.only(bottom: 4, top: 2),
-                  child: pw.Text(
-                    "Zemin ve Üst Katlar:",
-                    style: pw.TextStyle(
-                      font: ttfBold,
-                      fontSize: 8.5,
-                      color: PdfColors.grey800,
-                    ),
-                  ),
-                ),
-              );
               itemsWidgets.add(
                 _buildInfoTable(
                   zeminUpperGroup, ttf, ttfBold,
@@ -2006,6 +1980,7 @@ class PdfService {
     final store = providedStore ?? BinaStore.instance;
     final activeSystems = ActiveSystemsEngine.calculateRequirements(store);
     final pageTheme = _buildPageTheme(ttf, ttfBold, ttfItalic, ttfBoldItalic);
+    final metrics = ReportEngine.calculateRiskMetrics(store: store);
 
     // 1. Kapak
     pdf.addPage(
@@ -2015,8 +1990,8 @@ class PdfService {
         mainTitle: "AKTİF SİSTEM GEREKSİNİMLERİ",
         subTitle: "",
         store: store,
-        metrics: const {'score': 0}, // Skor gösterilmeyecek
-        showScore: false,
+        metrics: metrics,
+        showScore: true,
       ),
     );
 
@@ -2135,7 +2110,7 @@ class PdfService {
       _buildCoverPage(
         pageTheme: pageTheme,
         logoImage: logoImage,
-        mainTitle: "YANGIN RİSK ANALİZİ VE AKTİF SİSTEM GEREKSİNİMLERİ",
+        mainTitle: "YANGIN RİSK ANALİZİ\nVE\nAKTİF SİSTEM GEREKSİNİMLERİ",
         subTitle: "",
         store: store,
         metrics: metrics,
@@ -2213,7 +2188,7 @@ class PdfService {
             store: store,
             ttf: ttf,
             ttfBold: ttfBold,
-            sectionTitle: "KISIM I: YANGIN RİSK ANALİZ DEĞERLENDİRMESİ",
+            sectionTitle: "KISIM I: YANGIN RİSK ANALİZİ",
           ),
           pw.SizedBox(height: 30),
           _buildPromoQRBox(ttf, ttfBold),
@@ -2555,7 +2530,6 @@ class PdfService {
                           pw.Text(
                             item['subtitle'].toString(),
                             style: pw.TextStyle(
-                              font: font,
                               fontSize: 7,
                               fontStyle: pw.FontStyle.italic,
                               color: PdfColors.grey700,
@@ -2744,7 +2718,6 @@ class PdfService {
                     item['subtitle'],
                     style: pw.TextStyle(
                       fontSize: 8,
-                      font: font,
                       fontStyle: pw.FontStyle.italic,
                       color: PdfColors.grey700,
                       lineSpacing: 1.5,

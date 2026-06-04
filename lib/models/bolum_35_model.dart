@@ -2,37 +2,37 @@ import 'choice_result.dart';
 import '../utils/app_content.dart';
 
 class Bolum35Model {
-  final ChoiceResult? tekYon;
-  final ChoiceResult? ciftYon;
+  final double? tekYonMesafe;
+  final double? ciftYonMesafe;
   final ChoiceResult? cikmaz;
-  final ChoiceResult? cikmazMesafe;
-  final double? manuelMesafe;
+  final double? cikmazUzunluk;
 
   Bolum35Model({
-    this.tekYon,
-    this.ciftYon,
+    this.tekYonMesafe,
+    this.ciftYonMesafe,
     this.cikmaz,
-    this.cikmazMesafe,
-    this.manuelMesafe,
+    this.cikmazUzunluk,
   });
 
   Bolum35Model copyWith({
-    ChoiceResult? tekYon,
-    ChoiceResult? ciftYon,
-    ChoiceResult? cikmaz,
-    Object? cikmazMesafe = _sentinel,
-    Object? manuelMesafe = _sentinel,
+    Object? tekYonMesafe = _sentinel,
+    Object? ciftYonMesafe = _sentinel,
+    Object? cikmaz = _sentinel,
+    Object? cikmazUzunluk = _sentinel,
   }) {
     return Bolum35Model(
-      tekYon: tekYon ?? this.tekYon,
-      ciftYon: ciftYon ?? this.ciftYon,
-      cikmaz: cikmaz ?? this.cikmaz,
-      cikmazMesafe: cikmazMesafe == _sentinel
-          ? this.cikmazMesafe
-          : (cikmazMesafe as ChoiceResult?),
-      manuelMesafe: manuelMesafe == _sentinel
-          ? this.manuelMesafe
-          : (manuelMesafe as double?),
+      tekYonMesafe: tekYonMesafe == _sentinel
+          ? this.tekYonMesafe
+          : (tekYonMesafe as double?),
+      ciftYonMesafe: ciftYonMesafe == _sentinel
+          ? this.ciftYonMesafe
+          : (ciftYonMesafe as double?),
+      cikmaz: cikmaz == _sentinel
+          ? this.cikmaz
+          : (cikmaz as ChoiceResult?),
+      cikmazUzunluk: cikmazUzunluk == _sentinel
+          ? this.cikmazUzunluk
+          : (cikmazUzunluk as double?),
     );
   }
 
@@ -40,47 +40,31 @@ class Bolum35Model {
 
   Map<String, dynamic> toMap() {
     return {
-      'tekYon_label': tekYon?.label,
-      'ciftYon_label': ciftYon?.label,
+      'tekYonMesafe': tekYonMesafe,
+      'ciftYonMesafe': ciftYonMesafe,
       'cikmaz_label': cikmaz?.label,
-      'cikmazMesafe_label': cikmazMesafe?.label,
-      'manuelMesafe': manuelMesafe,
+      'cikmazUzunluk': cikmazUzunluk,
     };
   }
 
   factory Bolum35Model.fromMap(Map<String, dynamic> map) {
-    ChoiceResult? find(String? label, List<ChoiceResult> options) {
-      try {
-        return options.firstWhere((e) => e.label == label);
-      } catch (_) {
-        return null;
-      }
-    }
-
     return Bolum35Model(
-      tekYon: find(map['tekYon_label'], [
-        Bolum35Content.tekYonOptionA,
-        Bolum35Content.tekYonOptionB,
-        Bolum35Content.tekYonOptionC,
-        Bolum35Content.tekYonOptionD,
-      ]),
-      ciftYon: find(map['ciftYon_label'], [
-        Bolum35Content.ciftYonOptionA,
-        Bolum35Content.ciftYonOptionB,
-        Bolum35Content.ciftYonOptionC,
-        Bolum35Content.ciftYonOptionD,
-      ]),
-      cikmaz: find(map['cikmaz_label'], [
-        Bolum35Content.cikmazOptionA,
-        Bolum35Content.cikmazOptionB,
-      ]),
-      cikmazMesafe: find(map['cikmazMesafe_label'], [
-        Bolum35Content.cikmazMesafeOptionA,
-        Bolum35Content.cikmazMesafeOptionB,
-        Bolum35Content.cikmazMesafeOptionC,
-        Bolum35Content.cikmazMesafeOptionD,
-      ]),
-      manuelMesafe: (map['manuelMesafe'] as num?)?.toDouble(),
+      tekYonMesafe: (map['tekYonMesafe'] as num?)?.toDouble(),
+      ciftYonMesafe: (map['ciftYonMesafe'] as num?)?.toDouble(),
+      cikmaz: () {
+        final label = map['cikmaz_label'];
+        if (label == null) return null;
+        try {
+          return [
+            Bolum35Content.cikmazOptionA,
+            Bolum35Content.cikmazOptionB,
+            Bolum35Content.cikmazOptionC,
+          ].firstWhere((e) => e.label == label);
+        } catch (_) {
+          return null;
+        }
+      }(),
+      cikmazUzunluk: (map['cikmazUzunluk'] as num?)?.toDouble(),
     );
   }
 }

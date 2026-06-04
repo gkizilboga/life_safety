@@ -135,7 +135,7 @@ void main() {
       cikisKati: mockRes("36-1-A", "Zemin"),
     );
     store.bolum34 = Bolum34Model(mutfakBacasi: mockRes("34-4-A", "Bağımsız"));
-    store.bolum35 = Bolum35Model(tekYon: mockRes("35-A", "15m"));
+    store.bolum35 = Bolum35Model(tekYonMesafe: 15.0);
     store.bolum36 = Bolum36Model(
       merdivenDegerlendirme: "Detaylı Analiz Metni",
     );
