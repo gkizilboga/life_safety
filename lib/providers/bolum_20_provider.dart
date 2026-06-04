@@ -302,17 +302,14 @@ class Bolum20Provider extends ChangeNotifier {
     // 2. Yapı yüksekliği 30.5m üzerindeyse (zorunluluk sınırı başladığı için) gösterilmelidir.
     bool newShowBasinclandirma = (ic >= 1 || dis >= 1 || bIc >= 1 || bDis >= 1) || hYapi >= 30.5;
 
-    bool stateChanged = false;
     if (_showBasinclandirma != newShowBasinclandirma) {
       _showBasinclandirma = newShowBasinclandirma;
       if (!_showBasinclandirma) {
         _model = _model.copyWith(basinclandirma: null);
       }
-      stateChanged = true;
     }
 
     if (shouldNotify) {
-      // Defensive check: Only notify if errors or dependencies changed
       final newTDE = _validateDirectCount(
         int.tryParse(toplamDirectCtrl.text) ?? 0,
         totalMainStairs,
@@ -327,29 +324,23 @@ class Bolum20Provider extends ChangeNotifier {
       final bool lobbyReq = shouldShowLobbyDistanceQuestion;
       final bool bLobbyReq = shouldShowBasementLobbyDistanceQuestion;
 
-      bool changed = false;
       if (toplamDirectErr != newTDE) {
         toplamDirectErr = newTDE;
-        changed = true;
       }
       if (bodToplamDirectErr != newBTDE) {
         bodToplamDirectErr = newBTDE;
-        changed = true;
       }
 
-      // Reset relevance-based fields if they are no longer shown
       if (!lobbyReq && (_lobiMesafeDurumu != null || _model.lobiTahliyeMesafeDurumu != null)) {
         _lobiMesafeDurumu = null;
         _model = _model.copyWith(lobiTahliyeMesafeDurumu: null);
-        changed = true;
       }
       if (!bLobbyReq && (_bodLobiMesafeDurumu != null || _model.bodrumLobiTahliyeMesafeDurumu != null)) {
         _bodLobiMesafeDurumu = null;
         _model = _model.copyWith(bodrumLobiTahliyeMesafeDurumu: null);
-        changed = true;
       }
 
-      if (changed || stateChanged) notifyListeners();
+      notifyListeners();
     }
   }
 

@@ -58,12 +58,22 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     }
   }
 
+  bool _getIsValid() {
+    if (_model.varlik == null) return false;
+    if (_model.varlik?.label == Bolum21Content.varlikOptionA.label) {
+      return _model.malzeme != null &&
+          _model.kapi != null &&
+          _model.esya != null;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnalysisPageLayout(
       title: "Yangın Güvenlik Holü",
       screenType: widget.runtimeType,
-      isNextEnabled: _model.varlik != null,
+      isNextEnabled: _getIsValid(),
       onNext: () {
         BinaStore.instance.bolum21 = _model;
         BinaStore.instance.saveToDisk();

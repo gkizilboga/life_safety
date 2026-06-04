@@ -230,7 +230,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 8),
                   child: Text(
-                    "Binanızdaki risklerin çözüm yollarını ve ön raporun tamamını görmek için devam edin.",
+                    "Binanızdaki risklerin çözüm yollarını ve dokümanların tamamını görmek için devam edin.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
@@ -658,7 +658,7 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "RAPORLAR HAKKINDA",
+                  "DOKÜMANLAR HAKKINDA",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -671,10 +671,11 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildBulletItem(
-                      "Binanıza ait 2 adet PDF dokümanı hazırlanmıştır:",
+                      "Binanıza ait 3 adet PDF dokümanı hazırlanmıştır:",
                     ),
                     _buildSubBulletItem("Yangın Risk Analizi"),
                     _buildSubBulletItem("Aktif Sistem Gereksinimleri"),
+                    _buildSubBulletItem("Birleşik Rapor (Tek PDF)"),
                     _buildBulletItem(
                       "PDF oluşturma işlemi 10–20 saniye sürebilir.",
                     ),

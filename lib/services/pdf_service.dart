@@ -2959,6 +2959,16 @@ class PdfService {
     }
     final file = File('$dirPath/$fileName');
     await file.writeAsBytes(bytes);
+    if (Platform.isAndroid) {
+      _notifyMediaStore(file.path);
+    }
     return file.path;
+  }
+
+  static void _notifyMediaStore(String filePath) {
+    try {
+      const channel = MethodChannel('com.example.life_safety/media');
+      channel.invokeMethod('scanFile', {'path': filePath});
+    } catch (_) {}
   }
 }

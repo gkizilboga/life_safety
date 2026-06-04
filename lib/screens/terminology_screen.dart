@@ -115,21 +115,6 @@ class _TerminologyScreenState extends State<TerminologyScreen> {
                         child: Theme(
                           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                           child: ExpansionTile(
-                            leading: Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF1a365d).withValues(alpha: 0.05),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Text(
-                                term.title[0].toUpperCase(),
-                                style: const TextStyle(
-                                  color: Color(0xFF1a365d),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
                             title: Text(
                               term.title,
                               style: const TextStyle(
