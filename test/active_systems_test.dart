@@ -98,7 +98,8 @@ void main() {
 
       // Mock distance entered in Section 35
       store.bolum35 = Bolum35Model(
-        tekYonMesafe: 10.0,
+        tekYon: Bolum35Content.tekYonOptionC,
+        manuelMesafe: 10.0,
       );
 
       final reqs = ActiveSystemsEngine.calculateRequirements(store);
@@ -197,9 +198,7 @@ void main() {
         store.bolum6 = Bolum6Model(hasOtopark: false);
 
         // Setup no distance in Section 35 (unknown)
-        store.bolum35 = Bolum35Model(
-          tekYonMesafe: null,
-        );
+        store.bolum35 = Bolum35Model();
 
         final reqs = ActiveSystemsEngine.calculateRequirements(store);
         final item = reqs.firstWhere((e) => e.name.contains("Sprinkler"));

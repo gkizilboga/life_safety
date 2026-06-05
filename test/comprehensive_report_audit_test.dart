@@ -24,6 +24,7 @@ import 'package:life_safety/models/bolum_19_model.dart';
 import 'package:life_safety/models/bolum_20_model.dart';
 import 'package:life_safety/models/bolum_21_model.dart';
 import 'package:life_safety/models/choice_result.dart';
+import 'package:life_safety/utils/app_content.dart';
 import 'package:life_safety/models/bolum_22_model.dart';
 import 'package:life_safety/models/bolum_23_model.dart';
 import 'package:life_safety/models/bolum_24_model.dart';
@@ -135,7 +136,7 @@ void main() {
       cikisKati: mockRes("36-1-A", "Zemin"),
     );
     store.bolum34 = Bolum34Model(mutfakBacasi: mockRes("34-4-A", "Bağımsız"));
-    store.bolum35 = Bolum35Model(tekYonMesafe: 15.0);
+    store.bolum35 = Bolum35Model(tekYon: Bolum35Content.tekYonOptionC, manuelMesafe: 15.0);
     store.bolum36 = Bolum36Model(
       merdivenDegerlendirme: "Detaylı Analiz Metni",
     );

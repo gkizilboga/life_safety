@@ -160,27 +160,27 @@ class Section36Handler {
       }
 
       // 3. Madde 41/2: Çıkış Katı Tahliye Mesafesi (BİRLEŞTİRİLMİŞ MANTIK)
-      final _cikisKatiRes = _store.bolum33?.cikisKati;
-      final String _cikisLabel = _cikisKatiRes?.label ?? '';
-      final bool _isZeminExit = _cikisLabel.contains('-A');
-      final bool _isBodrumExit = _cikisLabel.contains('-C');
+      final cikisKatiRes = _store.bolum33?.cikisKati;
+      final String cikisLabel = cikisKatiRes?.label ?? '';
+      final bool isZeminExit = cikisLabel.contains('-A');
+      final bool isBodrumExit = cikisLabel.contains('-C');
 
       int limit = hasSprinkler ? 15 : 10;
 
       String cikisKatPrefix() {
-        if (_isZeminExit) return "Zemin katta ";
-        if (_isBodrumExit) return "Bodrum katta ";
+        if (isZeminExit) return "Zemin katta ";
+        if (isBodrumExit) return "Bodrum katta ";
         return "Normal katta ";
       }
 
-      bool mainMesafeReq = !_isBodrumExit && (directMain < totalMain) && totalMain > 0;
+      bool mainMesafeReq = !isBodrumExit && (directMain < totalMain) && totalMain > 0;
       bool mainMesafeFail =
           mainMesafeReq && b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
       bool mainMesafeUnknown =
           mainMesafeReq && b20.lobiTahliyeMesafeDurumu?.label == "41-MESAFE-C";
 
       bool bodrumMesafeReq =
-          _isBodrumExit && b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
+          isBodrumExit && b20.isBodrumIndependent && (directBod < totalBod) && totalBod > 0;
       bool bodrumMesafeFail =
           bodrumMesafeReq &&
           b20.bodrumLobiTahliyeMesafeDurumu?.label == "41-MESAFE-B";
@@ -554,34 +554,8 @@ class Section36Handler {
     if (b36 != null) {
       // 1. Merdiven Tipleri (Tablo için)
       final b20 = _store.bolum20;
-      int totalMain = 0;
-      int directMain = 0;
-      int totalBod = 0;
-      int directBod = 0;
 
       if (b20 != null) {
-        totalMain =
-            b20.normalMerdivenSayisi +
-            b20.binaIciYanginMerdiveniSayisi +
-            b20.binaDisiKapaliYanginMerdiveniSayisi +
-            b20.binaDisiAcikYanginMerdiveniSayisi +
-            b20.donerMerdivenSayisi +
-            b20.sahanliksizMerdivenSayisi +
-            b20.dengelenmisMerdivenSayisi;
-        directMain = b20.toplamDisariAcilanMerdivenSayisi;
-
-        if (b20.isBodrumIndependent) {
-          totalBod =
-              b20.bodrumNormalMerdivenSayisi +
-              b20.bodrumBinaIciYanginMerdiveniSayisi +
-              b20.bodrumBinaDisiKapaliYanginMerdiveniSayisi +
-              b20.bodrumBinaDisiAcikYanginMerdiveniSayisi +
-              b20.bodrumDonerMerdivenSayisi +
-              b20.bodrumSahanliksizMerdivenSayisi +
-              b20.bodrumDengelenmisMerdivenSayisi;
-          directBod = b20.bodrumToplamDisariAcilanMerdivenSayisi;
-        }
-
         _addStaircaseRows(details, b20);
         if (b20.isBodrumIndependent) {
           _addStaircaseRows(details, b20, isBasement: true);
