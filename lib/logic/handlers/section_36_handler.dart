@@ -714,9 +714,9 @@ class Section36Handler {
             value: b36.kapiGenislikKorunumlu!.uiTitle,
             subtitle: b36.kapiGenislikKorunumlu!.uiSubtitle,
             report: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                ? "KRİTİK RİSK: En Az: 80 cm."
+                ? "KRİTİK RİSK: En alt limit olan 80 cm sağlanmamaktadır."
                 : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                      ? "OLUMLU: 80 cm ve üzerindedir."
+                      ? "OLUMLU: En alt limit olan 80 cm sağlanmaktadır."
                       : "BİLİNMİYOR."),
             status: b36.kapiGenislikKorunumlu!.label.contains("-A")
                 ? ReportStatus.risk
@@ -746,9 +746,9 @@ class Section36Handler {
             value: b36.kapiGenislikKorunumlu!.uiTitle,
             subtitle: b36.kapiGenislikKorunumlu!.uiSubtitle,
             report: b36.kapiGenislikKorunumlu!.label.contains("-A")
-                ? "KRİTİK RİSK: En Az: 80 cm."
+                ? "KRİTİK RİSK: En alt limit olan 80 cm sağlanmamaktadır."
                 : (b36.kapiGenislikKorunumlu!.label.contains("-B")
-                      ? "OLUMLU: 80 cm ve üzerindedir."
+                      ? "OLUMLU: En alt limit olan 80 cm sağlanmaktadır."
                       : "BİLİNMİYOR."),
             status: b36.kapiGenislikKorunumlu!.label.contains("-A")
                 ? ReportStatus.risk
@@ -776,9 +776,9 @@ class Section36Handler {
             value: b36.kapiGenislikKorunumsuz!.uiTitle,
             subtitle: b36.kapiGenislikKorunumsuz!.uiSubtitle,
             report: b36.kapiGenislikKorunumsuz!.label.contains("-A")
-                ? "KRİTİK RİSK: En Az: 80 cm."
+                ? "KRİTİK RİSK: En alt limit olan 80 cm sağlanmamaktadır."
                 : (b36.kapiGenislikKorunumsuz!.label.contains("-B")
-                      ? "OLUMLU: 80 cm ve üzerindedir."
+                      ? "OLUMLU: En alt limit olan 80 cm sağlanmaktadır."
                       : "BİLİNMİYOR."),
             status: b36.kapiGenislikKorunumsuz!.label.contains("-A")
                 ? ReportStatus.risk

@@ -295,7 +295,7 @@ class PdfService {
               ),
 
               // Boşluk - Gauge'ı ortalamak için
-              pw.Spacer(flex: 2),
+              pw.Spacer(flex: 1),
 
               // Skor Yüzdesi ve Gauge Chart (sadece showScore true ise)
               if (showScore) ...[
@@ -598,21 +598,34 @@ class PdfService {
             ),
           ),
           pw.SizedBox(height: 15),
-          // Çok uzun metinlerin (overflow) PDF'i çökertmemesi için pw.Bullet yapısına geçildi
-          ...actionItems.map((item) {
+          ...actionItems.asMap().entries.map((entry) {
+            final idx = entry.key + 1;
+            final item = entry.value;
             return pw.Padding(
               padding: const pw.EdgeInsets.only(bottom: 12),
-              child: pw.Bullet(
-                text: item,
-                style: pw.TextStyle(
-                  font: ttf,
-                  fontSize: 8.5,
-                  color: PdfColors.black,
-                  lineSpacing: 2.2,
-                ),
-                bulletColor: PdfColors.red700,
-                bulletMargin: const pw.EdgeInsets.only(top: 4, right: 10),
-                bulletSize: 3,
+              child: pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text(
+                    '$idx) ',
+                    style: pw.TextStyle(
+                      font: ttfBold,
+                      fontSize: 8.5,
+                      color: PdfColors.red700,
+                    ),
+                  ),
+                  pw.Expanded(
+                    child: pw.Text(
+                      item,
+                      style: pw.TextStyle(
+                        font: ttf,
+                        fontSize: 8.5,
+                        color: PdfColors.black,
+                        lineSpacing: 2.2,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           }),
@@ -1580,26 +1593,13 @@ class PdfService {
                     _buildInfoTable(
                       zeminUpperGroup, ttf, ttfBold,
                       const PdfColor.fromInt(0x00000000),
-                      subjectLabel: "Merdiven Tipleri (Zemin ve Üst Katlar)",
+                      subjectLabel: "Merdiven Tipleri",
                     ),
                   );
                   itemsWidgets.add(pw.SizedBox(height: 8));
                 }
 
                 if (bodrumGroup.isNotEmpty) {
-                  itemsWidgets.add(
-                    pw.Padding(
-                      padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
-                      child: pw.Text(
-                        "Bodrum Katlar:",
-                        style: pw.TextStyle(
-                          font: ttfBold,
-                          fontSize: 8.5,
-                          color: PdfColors.grey800,
-                        ),
-                      ),
-                    ),
-                  );
                   itemsWidgets.add(
                     _buildInfoTable(
                       bodrumGroup, ttf, ttfBold,
@@ -1698,23 +1698,10 @@ class PdfService {
 
             if (bodrumGroup.isNotEmpty) {
               itemsWidgets.add(
-                pw.Padding(
-                  padding: const pw.EdgeInsets.only(bottom: 4, top: 4),
-                  child: pw.Text(
-                    "Bodrum Katlar:",
-                    style: pw.TextStyle(
-                      font: ttfBold,
-                      fontSize: 8.5,
-                      color: PdfColors.grey800,
-                    ),
-                  ),
-                ),
-              );
-              itemsWidgets.add(
                 _buildInfoTable(
                   bodrumGroup, ttf, ttfBold,
                   const PdfColor.fromInt(0x00000000),
-                  subjectLabel: "Merdiven Tipleri",
+                  subjectLabel: "Merdiven Tipleri (Bodrum Katlar)",
                 ),
               );
               itemsWidgets.add(pw.SizedBox(height: 8));
@@ -2943,5 +2930,39 @@ class PdfService {
       const channel = MethodChannel('com.example.life_safety/media');
       channel.invokeMethod('scanFile', {'path': filePath});
     } catch (_) {}
+  }
+
+  static Future<String> saveRiskAnalysisPdfToTemp() async {
+    final store = BinaStore.instance;
+    final pdf = await _buildRiskAnalysisDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    return _saveBytesToTemp(bytes, fileName);
+  }
+
+  static Future<String> saveActiveSystemsPdfToTemp() async {
+    final store = BinaStore.instance;
+    final pdf = await _buildActiveSystemsDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    return _saveBytesToTemp(bytes, fileName);
+  }
+
+  static Future<String> saveCombinedPdfToTemp() async {
+    final store = BinaStore.instance;
+    final pdf = await _buildCombinedDocument(providedStore: store);
+    final timestamp = _generateTimestamp();
+    final fileName = "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final bytes = await pdf.save();
+    return _saveBytesToTemp(bytes, fileName);
+  }
+
+  static Future<String> _saveBytesToTemp(List<int> bytes, String fileName) async {
+    final dir = await getTemporaryDirectory();
+    final file = File('${dir.path}/$fileName');
+    await file.writeAsBytes(bytes);
+    return file.path;
   }
 }

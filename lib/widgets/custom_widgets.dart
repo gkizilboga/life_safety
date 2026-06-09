@@ -214,6 +214,31 @@ class QuestionCard extends StatelessWidget {
   }
 }
 
+class SubQuestionCard extends StatelessWidget {
+  final Widget child;
+  const SubQuestionCard({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F7F6),
+        borderRadius: BorderRadius.circular(12),
+        border: Border(
+          left: const BorderSide(color: Color(0xFF00695C), width: 4),
+          top: const BorderSide(color: Color(0xFFB2DFDB), width: 1),
+          right: const BorderSide(color: Color(0xFFB2DFDB), width: 1),
+          bottom: const BorderSide(color: Color(0xFFB2DFDB), width: 1),
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
 class QuestionTitle extends StatelessWidget {
   final String title;
   const QuestionTitle(this.title, {super.key});

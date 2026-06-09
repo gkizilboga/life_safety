@@ -377,7 +377,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
   Widget _buildCikmazUzunlukQuestion() {
     return Padding(
       padding: const EdgeInsets.only(top: 12),
-      child: QuestionCard(
+      child: SubQuestionCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -385,23 +385,19 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Expanded(
-                  child: Text(
-                    "Çıkmaz koridor kaç metre uzunluğundadır?",
-                    style: AppStyles.questionTitle,
-                  ),
+                  child: SubQuestionTitle("Çıkmaz koridor kaç metre uzunluğundadır?"),
                 ),
-                const SizedBox(width: 8),
                 DefinitionButton(
                   term: "Çıkmaz Koridor",
                   definition: AppDefinitions.cikmazKoridor,
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             _buildInfoNote(
               "Çıkmaz koridor tespiti yapıldı. Lütfen koridor uzunluğunu değerlendiriniz.",
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             SelectableCard(
               choice: _replaceChoiceLabel(Bolum35Content.cikmazMesafeOptionA, "[LIMIT] metreden KISA.", _limitTekYon.toString()),
               isSelected: _model.cikmazMesafe?.label == Bolum35Content.cikmazMesafeOptionA.label,
@@ -426,7 +422,7 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               onTap: () => _onCikmazMesafeSelected(Bolum35Content.cikmazMesafeOptionD),
             ),
             if (_isCikmazManuelChosen()) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               _buildInputField(
                 controller: _cikmazCtrl,
                 errorText: _cikmazErr,

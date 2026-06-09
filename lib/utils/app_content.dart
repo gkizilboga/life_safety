@@ -2416,7 +2416,7 @@ class Bolum22Content {
     uiTitle: "Bir Yangın Güvenlik Holü'ne açılıyor.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: İtfaiye asansörü Yangın Güvenlik Holü'ne (YGH) açılmaktadır.",
+        "OLUMLU: İtfaiye asansörü Yangın Güvenlik Holü'ne (YGH) açılmaktadır. Yönetmelik gereksinimi karşılanmaktadır.",
     level: RiskLevel.positive,
   );
 
@@ -2500,7 +2500,7 @@ class Bolum22Content {
         "Evet, jeneratöre bağlı ve binada elektrik olmasa bile 60 dakika boyunca çalışabilir durumda.",
     uiSubtitle: "Elektrik kesilse bile asansörler çalışabiliyor.",
     reportText:
-        "OLUMLU: İtfaiye asansörü acil durum enerji sistemine (jeneratör) bağlıdır.",
+        "OLUMLU: İtfaiye asansörü acil durum enerji sistemine (jeneratör) bağlıdır. Yönetmelik gereksinimi karşılanmaktadır.",
     level: RiskLevel.positive,
   );
 
@@ -2527,7 +2527,7 @@ class Bolum22Content {
     uiTitle: "Evet, basınçlandırma sistemi var.",
     uiSubtitle: "Asansör kuyusuna hava üfleyen sistem.",
     reportText:
-        "OLUMLU: İtfaiye asansör kuyusu basınçlandırma sistemi ile korunmaktadır.",
+        "OLUMLU: İtfaiye asansör kuyusu basınçlandırma sistemi ile korunmaktadır. Yönetmelik gereksinimi karşılanmaktadır.",
     level: RiskLevel.positive,
   );
 
@@ -2555,7 +2555,7 @@ class Bolum23Content {
     label: "23-1-A (Bodrum)",
     uiTitle: "İnmiyor.",
     uiSubtitle: "Sadece üst katlara hizmet veriyor.",
-    reportText: "BİLGİ: Asansör bodrum katlara inmemektedir.",
+    reportText: "BİLGİ: Asansör bodrum katlara inmemektedir. Bu hususta ekstra önleme gerek yoktur.",
     level: RiskLevel.info,
   );
 

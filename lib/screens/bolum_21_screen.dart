@@ -182,11 +182,12 @@ class _Bolum21ScreenState extends State<Bolum21Screen> {
     List<ChoiceResult> options,
     ChoiceResult? selected,
   ) {
-    return QuestionCard(
+    return SubQuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SubQuestionTitle(title, style: AppStyles.questionTitle),
+          SubQuestionTitle(title),
+          const SizedBox(height: 6),
           ...options.map(
             (opt) => SelectableCard(
               choice: opt,

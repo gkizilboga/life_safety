@@ -220,7 +220,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
 
             if (_model.mantolama?.label ==
                 Bolum16Content.giydirmeOptionC.label) ...[
-              QuestionCard(
+              SubQuestionCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -229,10 +229,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                       text: "Lütfen cephe ve yalıtım malzemelerini seçiniz.",
                       icon: Icons.arrow_downward,
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     const SubQuestionTitle(
                         "Giydirme cephe malzemesi nedir?"),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     ...[
                       Bolum16Content.giydirmeCepheA,
                       Bolum16Content.giydirmeCepheB,
@@ -244,10 +244,10 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
                           onTap: () => setState(() => _model =
                               _model.copyWith(giydirmeCepheMalzemesi: opt)),
                         )),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 6),
                     const SubQuestionTitle(
                         "Giydirme cephe ARKASINDAKİ (yalıtım) malzemesi nedir?"),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     ...[
                       Bolum16Content.giydirmeYalitimA,
                       Bolum16Content.giydirmeYalitimB,
@@ -422,39 +422,32 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
     int? groupValue,
     Function(int?) onChanged,
   ) {
-    return Container(
-      key: key,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F7FA),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE0E0E0)),
-      ),
+    return SubQuestionCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SubQuestionTitle(title),
+          const SizedBox(height: 6),
           Row(
             children: [
               Radio<int>(
                 value: 1,
                 groupValue: groupValue,
-                activeColor: const Color(0xFF1A237E),
+                activeColor: const Color(0xFF00695C),
                 onChanged: onChanged,
               ),
               const Text("Evet", style: TextStyle(fontSize: 14)),
               Radio<int>(
                 value: 0,
                 groupValue: groupValue,
-                activeColor: const Color(0xFF1A237E),
+                activeColor: const Color(0xFF00695C),
                 onChanged: onChanged,
               ),
               const Text("Hayır", style: TextStyle(fontSize: 14)),
               Radio<int>(
                 value: 2,
                 groupValue: groupValue,
-                activeColor: const Color(0xFF1A237E),
+                activeColor: const Color(0xFF00695C),
                 onChanged: onChanged,
               ),
               const Text("Bilmiyorum", style: TextStyle(fontSize: 14)),

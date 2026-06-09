@@ -1,7 +1,6 @@
 import 'dart:ui';
 import '../utils/text_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import '../widgets/custom_widgets.dart';
 import '../logic/report_engine.dart';
 import '../data/bina_store.dart';
@@ -20,7 +19,6 @@ class ReportSummaryScreen extends StatefulWidget {
 
 class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
   late Map<String, dynamic> _metrics;
-  late Map<ReportModule, double> _moduleScores;
   bool _isPremium = false;
   bool _isLoading = true;
   int _loadingProgress = 0;
@@ -69,14 +67,6 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
       };
     }
 
-    try {
-      _moduleScores = ReportEngine.calculateModuleScores();
-      await Future.delayed(Duration.zero);
-    } catch (e, stack) {
-      debugPrint('Error calculating module scores: $e\n$stack');
-      _moduleScores = {};
-    }
-    
     _isPremium = BinaStore.instance.isPremium;
 
     // Cache section reports, yielding to prevent frame drops
@@ -149,8 +139,6 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
                         ]
                       : [
                           _buildRiskPanel(_metrics),
-                          const SizedBox(height: 20),
-                          _buildVisualAnalysis(_moduleScores),
                           const SizedBox(height: 25),
                           const Padding(
                             padding: EdgeInsets.only(left: 8, bottom: 12),
@@ -243,87 +231,6 @@ class _ReportSummaryScreenState extends State<ReportSummaryScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildVisualAnalysis(Map<ReportModule, double> scores) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 15,
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          const Text(
-            "YANGIN RİSK ANALİZİ",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-              color: Color(0xFF1A237E),
-              letterSpacing: 1,
-            ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 220,
-            child: RadarChart(
-              RadarChartData(
-                radarShape: RadarShape.polygon,
-                dataSets: [
-                  RadarDataSet(
-                    fillColor: const Color(0xFF1A237E).withValues(alpha: 0.2),
-                    borderColor: const Color(0xFF1A237E),
-                    entryRadius: 3,
-                    dataEntries: scores.values
-                        .map((e) => RadarEntry(value: e))
-                        .toList(),
-                  ),
-                ],
-                radarBackgroundColor: Colors.transparent,
-                borderData: FlBorderData(show: false),
-                radarBorderData: const BorderSide(
-                  color: Colors.grey,
-                  width: 0.5,
-                ),
-                titlePositionPercentageOffset: 0.15,
-                titleTextStyle: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 9,
-                  fontWeight: FontWeight.bold,
-                ),
-                getTitle: (index, angle) {
-                  return RadarChartTitle(
-                    text: scores.keys.elementAt(index).title,
-                    angle: angle,
-                  );
-                },
-                tickCount: 4,
-                ticksTextStyle: const TextStyle(color: Colors.transparent),
-                gridBorderData: const BorderSide(
-                  color: Colors.grey,
-                  width: 0.5,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            "Merkeze yakın noktalar riskli durumları temsil eder.",
-            style: TextStyle(
-              fontSize: 10,
-              color: Colors.grey,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
       ),
     );
   }
