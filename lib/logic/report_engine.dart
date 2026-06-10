@@ -888,21 +888,36 @@ class ReportEngine {
 
 
         if (b16.sagirYuzey != null) {
+          final bool hasSprinkler = b16.sagirYuzeySprinkler == 1;
+          final bool isSprinklerRelevant =
+              b16.sagirYuzey?.label ==
+                      Bolum16Content.sagirYuzeyOptionB.label ||
+                  b16.sagirYuzey?.label ==
+                      Bolum16Content.sagirYuzeyOptionC.label;
+
+          String reportText = b16.sagirYuzey!.reportText;
+          String? adviceText = b16.sagirYuzey!.adviceText;
+          RiskLevel level = b16.sagirYuzey!.level;
+
+          if (isSprinklerRelevant && hasSprinkler) {
+            reportText =
+                "BİLGİ: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den az olmakla birlikte, cepheye doğru bakan sprinkler başlıkları bulunduğundan yönetmelik açısından yeterli kabul edilmektedir.";
+            adviceText = null;
+            level = RiskLevel.info;
+          }
+
           _addDetail(
             details,
             label: 'Katlar arasında sağır (yanmaz) yüzey var mı?',
             value: b16.sagirYuzey!.uiTitle,
             subtitle: b16.sagirYuzey!.uiSubtitle,
-            report: b16.sagirYuzey!.reportText,
-            advice: b16.sagirYuzey!.adviceText,
-            level: b16.sagirYuzey!.level,
+            report: reportText,
+            advice: adviceText,
+            level: level,
           );
 
-          if (b16.sagirYuzey?.label ==
-                  Bolum16Content.sagirYuzeyOptionB.label ||
-              b16.sagirYuzey?.label ==
-                  Bolum16Content.sagirYuzeyOptionC.label) {
-            if (b16.sagirYuzeySprinkler == 1) {
+          if (isSprinklerRelevant) {
+            if (hasSprinkler) {
               _addDetail(
                 details,
                 label: 'Cepheye doğru bakan sprinkler başlıkları var mı?',
@@ -2563,7 +2578,13 @@ class ReportEngine {
           mantolamaLevel,
           b?.giydirmeCepheMalzemesi?.level,
           b?.giydirmeYalitimMalzemesi?.level,
-          b?.sagirYuzey?.level,
+          (b?.sagirYuzeySprinkler == 1 &&
+                  (b?.sagirYuzey?.label ==
+                          Bolum16Content.sagirYuzeyOptionB.label ||
+                      b?.sagirYuzey?.label ==
+                          Bolum16Content.sagirYuzeyOptionC.label))
+              ? RiskLevel.info
+              : b?.sagirYuzey?.level,
           b?.bitisikNizam?.level,
         ];
 
@@ -2994,7 +3015,15 @@ class ReportEngine {
       add(b16.mantolama);
       add(b16.giydirmeCepheMalzemesi);
       add(b16.giydirmeYalitimMalzemesi);
-      add(b16.sagirYuzey);
+      if (b16.sagirYuzeySprinkler == 1 &&
+          (b16.sagirYuzey?.label ==
+                  Bolum16Content.sagirYuzeyOptionB.label ||
+              b16.sagirYuzey?.label ==
+                  Bolum16Content.sagirYuzeyOptionC.label)) {
+        addLevel(RiskLevel.info);
+      } else {
+        add(b16.sagirYuzey);
+      }
       add(b16.bitisikNizam);
       add(b16.cepheUzunlugu); // corrected from cepheUzlugu
       // Hidden Risks (bools)
@@ -3481,7 +3510,19 @@ class ReportEngine {
           }
         }
 
-        if (b16.sagirYuzey != null) parts.add(b16.sagirYuzey!.reportText);
+        if (b16.sagirYuzey != null) {
+          if (b16.sagirYuzeySprinkler == 1 &&
+              (b16.sagirYuzey?.label ==
+                      Bolum16Content.sagirYuzeyOptionB.label ||
+                  b16.sagirYuzey?.label ==
+                      Bolum16Content.sagirYuzeyOptionC.label)) {
+            parts.add(
+              "BİLGİ: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den az olmakla birlikte, cepheye doğru bakan sprinkler başlıkları bulunduğundan yönetmelik açısından yeterli kabul edilmektedir.",
+            );
+          } else {
+            parts.add(b16.sagirYuzey!.reportText);
+          }
+        }
         if (b16.bitisikNizam != null) parts.add(b16.bitisikNizam!.reportText);
         if (parts.isNotEmpty) return parts.join("\n\n");
       }
