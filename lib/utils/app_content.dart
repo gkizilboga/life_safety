@@ -1467,8 +1467,6 @@ class Bolum16Content {
         "Pencereler dikeyde birbirine çok yakın, aradaki duvar mesafesi 100 cm'den az.",
     reportText:
         "KRİTİK RİSK: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den azdır. Yangın bir kattan diğerine kolayca sıçrayabilir.",
-    adviceText:
-        "Dumanın ve alevlerin üst katlara sıçramasını önlemek için cephe ile döşeme arasındaki boşluklar yangın durdurucu harç ile kapatılmalı ve kat aralarında en az 100 cm yüksekliğinde yanmaz yüzey oluşturulmalıdır.",
     level: RiskLevel.critical,
   );
 
