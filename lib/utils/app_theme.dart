@@ -48,7 +48,7 @@ class AppStyles {
   static const TextStyle subQuestionTitle = TextStyle(
     fontSize: 15,
     fontWeight: FontWeight.w600,
-    color: Color(0xFF00695C), // Teal 800 - Ana soru (mor) ve şıklardan net ayrışır
+    color: AppColors.textBody, // Blue Grey 700 - Kurumsal, nötr, profesyonel
     height: 1.4,
   );
 
