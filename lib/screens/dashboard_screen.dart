@@ -296,7 +296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icons.shield_outlined,
                 title: "Yangın Risk Analizi",
                 shareAction: PdfService.shareRiskAnalysisPdf,
-                openAction: PdfService.saveRiskAnalysisPdfToTemp,
+                saveAction: PdfService.saveRiskAnalysisPdfToDevice,
                 backgroundColor: const Color(0xFFE8EAF6),
                 borderColor: const Color(0xFFC5CAE9),
                 iconColor: const Color(0xFF283593),
@@ -309,7 +309,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icons.settings_system_daydream_outlined,
                 title: "Aktif Sistem Gereksinimleri",
                 shareAction: PdfService.shareActiveSystemsPdf,
-                openAction: PdfService.saveActiveSystemsPdfToTemp,
+                saveAction: PdfService.saveActiveSystemsPdfToDevice,
                 backgroundColor: const Color(0xFFE8EAF6),
                 borderColor: const Color(0xFFC5CAE9),
                 iconColor: const Color(0xFF283593),
@@ -322,7 +322,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icons.picture_as_pdf_outlined,
                 title: "Birleşik Rapor (Tek PDF)",
                 shareAction: PdfService.shareCombinedPdf,
-                openAction: PdfService.saveCombinedPdfToTemp,
+                saveAction: PdfService.saveCombinedPdfToDevice,
                 backgroundColor: const Color(0xFFFFF3E0),
                 borderColor: const Color(0xFFFFE0B2),
                 iconColor: const Color(0xFFE65100),
@@ -366,7 +366,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       icon: Icons.shield_outlined,
                       title: "Yangın Risk Analizi",
                       shareAction: PdfService.shareRiskAnalysisPdf,
-                      openAction: PdfService.saveRiskAnalysisPdfToTemp,
+                      saveAction: PdfService.saveRiskAnalysisPdfToDevice,
                       backgroundColor: const Color(0xFFE8EAF6),
                       borderColor: const Color(0xFFC5CAE9),
                       iconColor: const Color(0xFF283593),
@@ -379,7 +379,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       icon: Icons.settings_system_daydream_outlined,
                       title: "Aktif Sistem Gereksinimleri",
                       shareAction: PdfService.shareActiveSystemsPdf,
-                      openAction: PdfService.saveActiveSystemsPdfToTemp,
+                      saveAction: PdfService.saveActiveSystemsPdfToDevice,
                       backgroundColor: const Color(0xFFE8EAF6),
                       borderColor: const Color(0xFFC5CAE9),
                       iconColor: const Color(0xFF283593),
@@ -392,7 +392,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       icon: Icons.picture_as_pdf_outlined,
                       title: "Birleşik Rapor (Tek PDF)",
                       shareAction: PdfService.shareCombinedPdf,
-                      openAction: PdfService.saveCombinedPdfToTemp,
+                      saveAction: PdfService.saveCombinedPdfToDevice,
                       backgroundColor: const Color(0xFFFFF3E0),
                       borderColor: const Color(0xFFFFE0B2),
                       iconColor: const Color(0xFFE65100),
@@ -414,7 +414,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required IconData icon,
     required String title,
     required Future<void> Function(BuildContext) shareAction,
-    required Future<String> Function() openAction,
+    required Future<String> Function(BuildContext) saveAction,
     required Color backgroundColor,
     required Color borderColor,
     required Color iconColor,
@@ -427,7 +427,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         building: building,
         title: title,
         shareAction: shareAction,
-        openAction: openAction,
+        saveAction: saveAction,
       ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -468,7 +468,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     required Map<String, dynamic> building,
     required String title,
     required Future<void> Function(BuildContext) shareAction,
-    required Future<String> Function() openAction,
+    required Future<String> Function(BuildContext) saveAction,
   }) {
     showModalBottomSheet(
       context: context,
@@ -531,8 +531,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _buildBottomSheetAction(
-                      icon: Icons.open_in_new_rounded,
-                      label: "Telefonumda Aç",
+                      icon: Icons.download_rounded,
+                      label: "Telefonuma İndir",
                       color: const Color(0xFF2E7D32),
                       onTap: () {
                         Navigator.pop(bottomSheetContext);
@@ -540,14 +540,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           context,
                           building['id'],
                           title,
-                          "Doküman hazırlanıyor ve açılıyor...",
+                          "Doküman hazırlanıyor ve kaydediliyor...",
                           () async {
-                            final path = await openAction();
+                            await saveAction(context);
                             if (context.mounted) {
-                              final uri = Uri.file(path);
-                              if (await canLaunchUrl(uri)) {
-                                await launchUrl(uri, mode: LaunchMode.externalApplication);
-                              }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                    "Doküman başarıyla indirildi.",
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  backgroundColor: const Color(0xFF2E7D32),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: const Duration(seconds: 3),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              );
                             }
                           },
                         );
