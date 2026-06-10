@@ -1417,10 +1417,10 @@ class Bolum16Content {
 
   static final mantolamaOptionB = ChoiceResult(
     label: "16-1-B (Mantolama)",
-    uiTitle: "A1, A2 sınıfı mantolama",
+    uiTitle: "A1 veya A2, s1, d0 sınıfı mantolama",
     uiSubtitle: "Taşyünü vb. yanmaz malzeme ile.",
     reportText:
-        "OLUMLU: Dış cephe yalıtımında yanmaz (A1 veya A2 sınıfı) taşyünü malzeme kullanılmıştır. Bu tercih, cephe yangınlarının yayılmasını engelleyebilir. Cephe sisteminin veya malzemelerinin yangına tepki test raporları incelendikten sonra yönetmeliğe göre uygunluk kontrolü yapılmış olur.",
+        "OLUMLU: Dış cephe yalıtımında yanmaz (A1 veya A2, s1, d0 sınıfı) taşyünü malzeme kullanılmıştır. Bu tercih, cephe yangınlarının yayılmasını engelleyebilir. Cephe sisteminin veya malzemelerinin yangına tepki test raporları incelendikten sonra yönetmeliğe göre uygunluk kontrolü yapılmış olur.",
     level: RiskLevel.positive,
   );
 
@@ -1521,10 +1521,10 @@ class Bolum16Content {
   // CEPHE MALZEMESİ
   static final giydirmeCepheA = ChoiceResult(
     label: "16-1-ALT-A1",
-    uiTitle: "A1, A2 sınıfı malzeme.",
+    uiTitle: "A1 veya A2, s1, d0 sınıfı malzeme.",
     uiSubtitle: "Taşyünü, cam yünü vb.",
     reportText:
-        "OLUMLU: Giydirme cephe malzemesi (A1 veya A2 sınıfı) yanmaz / zor yanıcı malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır. ",
+        "OLUMLU: Giydirme cephe malzemesi (A1 veya A2, s1, d0 sınıfı) yanmaz / zor yanıcı malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır. ",
     level: RiskLevel.positive,
   );
   static final giydirmeCepheB = ChoiceResult(
@@ -1532,7 +1532,7 @@ class Bolum16Content {
     uiTitle: "Yanıcı malzeme.",
     uiSubtitle: "Aluminyum kompozit vb.",
     reportText:
-        "KRİTİK RİSK: Giydirme cephe malzemesi olarak A1 veya A2 sınıfı haricinde yanıcı malzeme kullanılmıştır. Bu durum yangının cephe boyunca hızla yayılmasına neden olabilir.",
+        "KRİTİK RİSK: Giydirme cephe malzemesi olarak A1 veya A2, s1, d0 sınıfı haricinde yanıcı malzeme kullanılmıştır. Bu durum yangının cephe boyunca hızla yayılmasına neden olabilir.",
     adviceText: "",
     level: RiskLevel.critical,
   );
@@ -1548,10 +1548,10 @@ class Bolum16Content {
   // YALITIM MALZEMESİ
   static final giydirmeYalitimA = ChoiceResult(
     label: "16-1-ALT-B1",
-    uiTitle: "A1, A2 sınıfı malzeme.",
+    uiTitle: "A1 veya A2, s1, d0 sınıfı malzeme.",
     uiSubtitle: "Taşyünü vb.",
     reportText:
-        "OLUMLU: Giydirme cephe arkasındaki ısı yalıtım malzemesi A1 (hiç yanmaz) veya A2 sınıf malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır.",
+        "OLUMLU: Giydirme cephe arkasındaki ısı yalıtım malzemesi (A1 veya A2, s1, d0 sınıfı) yanmaz / zor yanıcı olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır.",
     level: RiskLevel.positive,
   );
   static final giydirmeYalitimB = ChoiceResult(
@@ -1561,7 +1561,7 @@ class Bolum16Content {
     reportText:
         "KRİTİK RİSK: Giydirme cephe arkasındaki yalıtım malzemesi yanıcıdır. Baca etkisiyle yangın, cephe boşluğunda çok hızlı ilerleyebilir.",
     adviceText:
-        "Giydirme cephe arkasındaki yalıtımın hiç yanmaz (A1 sınıfı) veya A2 sınıfı gibi malzemelerden oluşması gereklidir. Yanıcı yalıtım malzemelerinin kullanımı, özellikle yüksek binalarda cephe yangınlarının kontrol altına alınmasını imkansız hale getirebilir.",
+        "Giydirme cephe arkasındaki yalıtımın A1 veya A2, s1, d0 sınıfı malzemelerden oluşması gereklidir. Yanıcı yalıtım malzemelerinin kullanımı, özellikle yüksek binalarda cephe yangınlarının kontrol altına alınmasını imkansız hale getirebilir.",
     level: RiskLevel.critical,
   );
   static final giydirmeYalitimC = ChoiceResult(
