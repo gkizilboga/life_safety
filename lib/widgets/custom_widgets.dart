@@ -226,26 +226,22 @@ class SubQuestionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF0F7F6),
         borderRadius: BorderRadius.circular(12),
-        border: const Border(
-          top: BorderSide(color: Color(0xFFB2DFDB), width: 1),
-          right: BorderSide(color: Color(0xFFB2DFDB), width: 1),
-          bottom: BorderSide(color: Color(0xFFB2DFDB), width: 1),
-        ),
+        border: Border.all(color: const Color(0xFFB2DFDB), width: 1),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         clipBehavior: Clip.antiAlias,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Stack(
           children: [
-            Container(
-              width: 4,
-              color: const Color(0xFF00695C),
+            Padding(
+              padding: const EdgeInsets.only(left: 18, top: 14, right: 14, bottom: 14),
+              child: child,
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(14),
-                child: child,
+            Positioned(
+              left: 0, top: 0, bottom: 0,
+              child: Container(
+                width: 4,
+                color: const Color(0xFF00695C),
               ),
             ),
           ],
