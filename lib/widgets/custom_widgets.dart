@@ -223,18 +223,34 @@ class SubQuestionCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.only(top: 14, right: 14, bottom: 14, left: 18),
       decoration: BoxDecoration(
         color: const Color(0xFFF0F7F6),
         borderRadius: BorderRadius.circular(12),
         border: const Border(
-          left: BorderSide(color: Color(0xFF00695C), width: 4),
           top: BorderSide(color: Color(0xFFB2DFDB), width: 1),
           right: BorderSide(color: Color(0xFFB2DFDB), width: 1),
           bottom: BorderSide(color: Color(0xFFB2DFDB), width: 1),
         ),
       ),
-      child: child,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 4,
+              color: const Color(0xFF00695C),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: child,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
