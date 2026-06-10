@@ -2268,6 +2268,14 @@ class ReportEngine {
             report: '',
             isTable: true,
           );
+          _addDetail(
+            details,
+            label:
+                '(*) Tahmini gerekli çıkış hesabında baz alınan kapı genişliği: 0.90 m (90 cm) olarak kabul edilmiştir.',
+            value: '',
+            report: '',
+            isTable: true,
+          );
         }
 
         // Tablo altı uyarı notu: Hesaplamanın tahmini niteliği

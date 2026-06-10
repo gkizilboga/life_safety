@@ -448,7 +448,7 @@ class Section36Handler {
       if (count >= 0) {
         _addDetail(
           details,
-          label: '$prefix$label (Adet)',
+          label: '$prefix$label',
           value: '$count adet',
           report: '',
           status: ReportStatus.info, // Counting is info
@@ -486,7 +486,7 @@ class Section36Handler {
 
       _addDetail(
         details,
-        label: 'TOPLAM MERDİVEN (Adet)',
+        label: 'TOPLAM MERDİVEN ',
         value: '$total adet',
         report: '',
         status: ReportStatus.warning,
@@ -495,7 +495,7 @@ class Section36Handler {
 
       _addDetail(
         details,
-        label: "Doğrudan Dışarı Açılan Merdiven (Adet)",
+        label: "Doğrudan Dışarı Açılan Merdiven ",
         value: '${b.toplamDisariAcilanMerdivenSayisi} adet',
         report: '',
         status: ReportStatus.warning,
@@ -530,7 +530,7 @@ class Section36Handler {
 
       _addDetail(
         details,
-        label: 'BODRUM KATLAR TOPLAM MERDİVEN (Adet)',
+        label: 'BODRUM KATLAR TOPLAM MERDİVEN ',
         value: '$totalBod adet',
         report: '',
         status: ReportStatus.warning,
@@ -539,7 +539,7 @@ class Section36Handler {
 
       _addDetail(
         details,
-        label: "Bodrum Doğrudan Dışarı Açılan Merdiven (Adet)",
+        label: "Bodrum Doğrudan Dışarı Açılan Merdiven ",
         value: '${b.bodrumToplamDisariAcilanMerdivenSayisi} adet',
         report: '',
         status: ReportStatus.warning,

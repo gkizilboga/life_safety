@@ -1540,41 +1540,38 @@ class PdfService {
           } else {
             if (tableGroup.isNotEmpty) {
               if (id == 36) {
+                final s36Children = <pw.Widget>[];
+
                 if (isFirstTableFor36) {
-                  itemsWidgets.add(
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          "Konu:",
-                          style: pw.TextStyle(
-                            font: ttfBold,
-                            fontSize: 9,
-                            fontStyle: pw.FontStyle.italic,
-                            color: const PdfColor.fromInt(0xFF1a365d),
-                          ),
-                        ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.only(left: 6),
-                          child: pw.Text(
-                            "Merdiven Uygunluk Değerlendirmesi",
-                            style: pw.TextStyle(font: ttf, fontSize: 9),
-                          ),
-                        ),
-                        pw.SizedBox(height: 5),
-                        pw.Text(
-                          "Kullanıcı Yanıtı:",
-                          style: pw.TextStyle(
-                            font: ttfBold,
-                            fontSize: 9,
-                            fontStyle: pw.FontStyle.italic,
-                            color: const PdfColor.fromInt(0xFF1a365d),
-                          ),
-                        ),
-                        pw.SizedBox(height: 3),
-                      ],
+                  s36Children.addAll([
+                    pw.Text(
+                      "Konu:",
+                      style: pw.TextStyle(
+                        font: ttfBold,
+                        fontSize: 9,
+                        fontStyle: pw.FontStyle.italic,
+                        color: const PdfColor.fromInt(0xFF1a365d),
+                      ),
                     ),
-                  );
+                    pw.Padding(
+                      padding: const pw.EdgeInsets.only(left: 6),
+                      child: pw.Text(
+                        "Merdiven Uygunluk Değerlendirmesi",
+                        style: pw.TextStyle(font: ttf, fontSize: 9),
+                      ),
+                    ),
+                    pw.SizedBox(height: 5),
+                    pw.Text(
+                      "Kullanıcı Yanıtı:",
+                      style: pw.TextStyle(
+                        font: ttfBold,
+                        fontSize: 9,
+                        fontStyle: pw.FontStyle.italic,
+                        color: const PdfColor.fromInt(0xFF1a365d),
+                      ),
+                    ),
+                    pw.SizedBox(height: 3),
+                  ]);
                   isFirstTableFor36 = false;
                 }
 
@@ -1589,25 +1586,29 @@ class PdfService {
                 }).toList();
 
                 if (zeminUpperGroup.isNotEmpty) {
-                  itemsWidgets.add(
+                  s36Children.add(
                     _buildInfoTable(
                       zeminUpperGroup, ttf, ttfBold,
                       const PdfColor.fromInt(0x00000000),
                       subjectLabel: "Merdiven Tipleri",
                     ),
                   );
-                  itemsWidgets.add(pw.SizedBox(height: 8));
+                  s36Children.add(pw.SizedBox(height: 8));
                 }
 
                 if (bodrumGroup.isNotEmpty) {
-                  itemsWidgets.add(
+                  s36Children.add(
                     _buildInfoTable(
                       bodrumGroup, ttf, ttfBold,
                       const PdfColor.fromInt(0x00000000),
                       subjectLabel: "Merdiven Tipleri (Bodrum Katlar)",
                     ),
                   );
-                  itemsWidgets.add(pw.SizedBox(height: 8));
+                  s36Children.add(pw.SizedBox(height: 8));
+                }
+
+                if (s36Children.isNotEmpty) {
+                  itemsWidgets.add(pw.Column(children: s36Children));
                 }
               } else {
                 itemsWidgets.add(
@@ -1637,41 +1638,38 @@ class PdfService {
         }
         if (tableGroup.isNotEmpty) {
           if (id == 36) {
+            final s36Children = <pw.Widget>[];
+
             if (isFirstTableFor36) {
-              itemsWidgets.add(
-                pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      "Konu:",
-                      style: pw.TextStyle(
-                        font: ttfBold,
-                        fontSize: 9,
-                        fontStyle: pw.FontStyle.italic,
-                        color: const PdfColor.fromInt(0xFF1a365d),
-                      ),
-                    ),
-                    pw.Padding(
-                      padding: const pw.EdgeInsets.only(left: 6),
-                      child: pw.Text(
-                        "Merdiven Uygunluk Değerlendirmesi",
-                        style: pw.TextStyle(font: ttf, fontSize: 9),
-                      ),
-                    ),
-                    pw.SizedBox(height: 5),
-                    pw.Text(
-                      "Kullanıcı Yanıtı:",
-                      style: pw.TextStyle(
-                        font: ttfBold,
-                        fontSize: 9,
-                        fontStyle: pw.FontStyle.italic,
-                        color: const PdfColor.fromInt(0xFF1a365d),
-                      ),
-                    ),
-                    pw.SizedBox(height: 3),
-                  ],
+              s36Children.addAll([
+                pw.Text(
+                  "Konu:",
+                  style: pw.TextStyle(
+                    font: ttfBold,
+                    fontSize: 9,
+                    fontStyle: pw.FontStyle.italic,
+                    color: const PdfColor.fromInt(0xFF1a365d),
+                  ),
                 ),
-              );
+                pw.Padding(
+                  padding: const pw.EdgeInsets.only(left: 6),
+                  child: pw.Text(
+                    "Merdiven Uygunluk Değerlendirmesi",
+                    style: pw.TextStyle(font: ttf, fontSize: 9),
+                  ),
+                ),
+                pw.SizedBox(height: 5),
+                pw.Text(
+                  "Kullanıcı Yanıtı:",
+                  style: pw.TextStyle(
+                    font: ttfBold,
+                    fontSize: 9,
+                    fontStyle: pw.FontStyle.italic,
+                    color: const PdfColor.fromInt(0xFF1a365d),
+                  ),
+                ),
+                pw.SizedBox(height: 3),
+              ]);
               isFirstTableFor36 = false;
             }
 
@@ -1686,27 +1684,27 @@ class PdfService {
             }).toList();
 
             if (zeminUpperGroup.isNotEmpty) {
-              itemsWidgets.add(
+              s36Children.add(
                 _buildInfoTable(
                   zeminUpperGroup, ttf, ttfBold,
                   const PdfColor.fromInt(0x00000000),
                   subjectLabel: "Merdiven Tipleri",
                 ),
               );
-              itemsWidgets.add(pw.SizedBox(height: 8));
+              s36Children.add(pw.SizedBox(height: 8));
             }
 
             if (bodrumGroup.isNotEmpty) {
-              itemsWidgets.add(
+              s36Children.add(
                 _buildInfoTable(
                   bodrumGroup, ttf, ttfBold,
                   const PdfColor.fromInt(0x00000000),
                   subjectLabel: "Merdiven Tipleri (Bodrum Katlar)",
                 ),
               );
-              itemsWidgets.add(pw.SizedBox(height: 8));
+              s36Children.add(pw.SizedBox(height: 8));
             }
-            itemsWidgets.add(
+            s36Children.add(
               pw.Padding(
                 padding: const pw.EdgeInsets.only(left: 2, top: 4, bottom: 4),
                 child: pw.Text(
@@ -1721,6 +1719,10 @@ class PdfService {
                 ),
               ),
             );
+
+            if (s36Children.isNotEmpty) {
+              itemsWidgets.add(pw.Column(children: s36Children));
+            }
           } else {
             itemsWidgets.add(
               _buildInfoTable(
@@ -1821,35 +1823,6 @@ class PdfService {
       ),
     );
     result.add(pw.SizedBox(height: 8));
-    result.add(
-      pw.Text(
-        "Bu doküman içerisinde (paragrafların hemen solunda yer alan) renk kodları ve anlamları aşağıda açıklanmıştır:",
-        style: const pw.TextStyle(
-          fontSize: 9,
-          color: PdfColors.grey700,
-          lineSpacing: 2.2,
-        ),
-      ),
-    );
-    result.add(pw.SizedBox(height: 10));
-    result.add(
-      pw.Row(
-        mainAxisAlignment: pw.MainAxisAlignment.start,
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          _buildLegendItem(PdfColors.red700, "KRİTİK RİSK", ""),
-          pw.SizedBox(width: 20),
-          _buildLegendItem(PdfColors.yellow700, "UYARI", ""),
-          pw.SizedBox(width: 20),
-          _buildLegendItem(PdfColors.blue700, "BİLGİ", ""),
-          pw.SizedBox(width: 20),
-          _buildLegendItem(PdfColors.green700, "OLUMLU", ""),
-          pw.SizedBox(width: 20),
-          _buildLegendItem(PdfColors.grey500, "BİLİNMİYOR", ""),
-        ],
-      ),
-    );
-    result.add(pw.SizedBox(height: 15));
     result.add(
       pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
