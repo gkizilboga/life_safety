@@ -15,11 +15,7 @@ class ScopeScreen extends StatelessWidget {
       'a':
           'Bu analiz yalnızca binanın fiziksel (mimari) yapısını inceler. Alarm, söndürme ve duman tahliye sistemleri için bu uygulamadaki "Aktif Sistem Gereksinimleri" dokümanının da incelenmesi önerilir.',
     },
-    {
-      'q': 'Puanlama ve Risk Seviyeleri ne anlama gelir?',
-      'a':
-          'Raporlardaki kırmızı (kritik risk / zorunlu), sarı (uyarı), mavi (bilgi), yeşil (olumlu) ve gri (bilinmiyor) renkler, o konudaki risk veya gereklilik seviyesini gösterir.',
-    },
+
     {
       'q': '"Konu", "Kullanıcı Yanıtı" ve "Değerlendirme" neyi ifade eder?',
       'a':
@@ -82,7 +78,7 @@ class ScopeScreen extends StatelessWidget {
                   child: Theme(
                     data: theme.copyWith(dividerColor: Colors.transparent),
                     child: ExpansionTile(
-                      initiallyExpanded: index == 0 || isWarning,
+                      initiallyExpanded: false,
                       leading: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(

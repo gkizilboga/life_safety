@@ -86,27 +86,6 @@ class _Bolum20ScreenContentState extends State<_Bolum20ScreenContent> {
           if (provider.validateAndSave(context)) {
             final navigator = Navigator.of(context);
 
-            if (provider.isBodrumIndependent) {
-              bool confirmed =
-                  await showCustomDialog<bool>(
-                    context: context,
-                    title: "Dikkat:",
-                    content:
-                        "Bodrum kat merdivenlerinin, üst kat merdivenlerinden FARKLI bir konumda olduğunu belirttiniz.\n\nBu durum, kaçış yollarının sürekliliği açısından kritik bir bilgidir.\n\nOnaylıyor musunuz?",
-                    confirmText: "Evet",
-                    cancelText: "Hayır",
-                    icon: Icons.warning_amber_rounded,
-                    iconColor: Colors.orange,
-                    barrierDismissible: false,
-                  ) ??
-                  false;
-
-              if (!confirmed) {
-                if (mounted) setState(() => _isProcessing = false);
-                return;
-              }
-            }
-
             if (!mounted) return;
             navigator.push(
               MaterialPageRoute(

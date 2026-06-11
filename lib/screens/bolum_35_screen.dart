@@ -274,19 +274,16 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               isSelected: _model.tekYon?.label == Bolum35Content.tekYonOptionA.label,
               onTap: () => _onTekYonSelected(Bolum35Content.tekYonOptionA),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: _replaceChoiceLabel(Bolum35Content.tekYonOptionB, "[LIMIT] metreden UZUN.", _limitStr),
               isSelected: _model.tekYon?.label == Bolum35Content.tekYonOptionB.label,
               onTap: () => _onTekYonSelected(Bolum35Content.tekYonOptionB),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: Bolum35Content.tekYonOptionC,
               isSelected: _model.tekYon?.label == Bolum35Content.tekYonOptionC.label,
               onTap: () => _onTekYonSelected(Bolum35Content.tekYonOptionC),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: Bolum35Content.tekYonOptionD,
               isSelected: _model.tekYon?.label == Bolum35Content.tekYonOptionD.label,
@@ -298,19 +295,16 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               isSelected: _model.ciftYon?.label == Bolum35Content.ciftYonOptionA.label,
               onTap: () => _onCiftYonSelected(Bolum35Content.ciftYonOptionA),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: _replaceChoiceLabel(Bolum35Content.ciftYonOptionB, "[LIMIT] metreden UZUNDUR.", _limitStr),
               isSelected: _model.ciftYon?.label == Bolum35Content.ciftYonOptionB.label,
               onTap: () => _onCiftYonSelected(Bolum35Content.ciftYonOptionB),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: Bolum35Content.ciftYonOptionC,
               isSelected: _model.ciftYon?.label == Bolum35Content.ciftYonOptionC.label,
               onTap: () => _onCiftYonSelected(Bolum35Content.ciftYonOptionC),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: Bolum35Content.ciftYonOptionD,
               isSelected: _model.ciftYon?.label == Bolum35Content.ciftYonOptionD.label,
@@ -357,13 +351,11 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
             isSelected: _model.cikmaz?.label == Bolum35Content.cikmazOptionA.label,
             onTap: () => _onCikmazSelected(Bolum35Content.cikmazOptionA),
           ),
-          const SizedBox(height: 6),
           SelectableCard(
             choice: Bolum35Content.cikmazOptionB,
             isSelected: _model.cikmaz?.label == Bolum35Content.cikmazOptionB.label,
             onTap: () => _onCikmazSelected(Bolum35Content.cikmazOptionB),
           ),
-          const SizedBox(height: 6),
           SelectableCard(
             choice: Bolum35Content.cikmazOptionC,
             isSelected: _model.cikmaz?.label == Bolum35Content.cikmazOptionC.label,
@@ -403,19 +395,16 @@ class _Bolum35ScreenState extends State<Bolum35Screen> {
               isSelected: _model.cikmazMesafe?.label == Bolum35Content.cikmazMesafeOptionA.label,
               onTap: () => _onCikmazMesafeSelected(Bolum35Content.cikmazMesafeOptionA),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: _replaceChoiceLabel(Bolum35Content.cikmazMesafeOptionB, "[LIMIT] metreden UZUN.", _limitTekYon.toString()),
               isSelected: _model.cikmazMesafe?.label == Bolum35Content.cikmazMesafeOptionB.label,
               onTap: () => _onCikmazMesafeSelected(Bolum35Content.cikmazMesafeOptionB),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: Bolum35Content.cikmazMesafeOptionC,
               isSelected: _model.cikmazMesafe?.label == Bolum35Content.cikmazMesafeOptionC.label,
               onTap: () => _onCikmazMesafeSelected(Bolum35Content.cikmazMesafeOptionC),
             ),
-            const SizedBox(height: 6),
             SelectableCard(
               choice: Bolum35Content.cikmazMesafeOptionD,
               isSelected: _model.cikmazMesafe?.label == Bolum35Content.cikmazMesafeOptionD.label,

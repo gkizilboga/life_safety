@@ -24,7 +24,9 @@ class PdfService {
     _fontData ??= await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
     _fontDataBold ??= await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
     _fontDataItalic ??= await rootBundle.load("assets/fonts/Roboto-Italic.ttf");
-    _fontDataBoldItalic ??= await rootBundle.load("assets/fonts/Roboto-BoldItalic.ttf");
+    _fontDataBoldItalic ??= await rootBundle.load(
+      "assets/fonts/Roboto-BoldItalic.ttf",
+    );
     _logoData ??= await rootBundle.load("assets/images/ui/logo3.webp");
   }
 
@@ -32,18 +34,12 @@ class PdfService {
   // Defined once here and used by both _buildHighlightedText and _buildRichText.
   static const _highlightKeywords = ["YÜKSEK BİNA", "YÜKSEK OLMAYAN BİNA"];
 
-
-
   static pw.Widget _buildLegendItem(PdfColor color, String label, String desc) {
     final titleRow = pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.center,
       mainAxisSize: pw.MainAxisSize.min,
       children: [
-        pw.Container(
-          width: 7,
-          height: 7,
-          color: color,
-        ),
+        pw.Container(width: 7, height: 7, color: color),
         pw.SizedBox(width: 5),
         pw.Text(
           label,
@@ -68,10 +64,7 @@ class PdfService {
           padding: const pw.EdgeInsets.only(left: 12),
           child: pw.Text(
             desc,
-            style: const pw.TextStyle(
-              fontSize: 7,
-              color: PdfColors.grey700,
-            ),
+            style: const pw.TextStyle(fontSize: 7, color: PdfColors.grey700),
           ),
         ),
       ],
@@ -371,7 +364,9 @@ class PdfService {
                     pw.Text(
                       "BİNA ADI",
                       style: pw.TextStyle(
-                        color: PdfColor.fromInt(0xFF93C5FD), // Soft Açık Mavi (#93C5FD)
+                        color: PdfColor.fromInt(
+                          0xFF93C5FD,
+                        ), // Soft Açık Mavi (#93C5FD)
                         fontSize: 8,
                         fontWeight: pw.FontWeight.bold,
                         letterSpacing: 1.0,
@@ -506,6 +501,7 @@ class PdfService {
       if (sectionId <= 10 || sectionId == 14)
         return false; // Bu bölümler PDF'de hep mavidir
       if (status == ReportStatus.risk) return true;
+      if (text.contains('KRİTİK RİSK')) return true;
       return _getRiskColor(text) == PdfColors.red700;
     }
 
@@ -562,11 +558,10 @@ class PdfService {
         build: (context) => [
           pw.Container(
             width: double.infinity,
-            padding: const pw.EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 6,
+            padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: const pw.BoxDecoration(
+              color: PdfColor.fromInt(0xFF1a365d),
             ),
-            decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
             child: pw.Text(
               "YÖNETİCİ ÖZETİ VE ACİL EYLEM PLANI",
               style: pw.TextStyle(
@@ -731,7 +726,7 @@ class PdfService {
     pw.Font fontBold,
   ) {
     const navyBlue = PdfColor.fromInt(0xFF1a365d);
-    
+
     final List<Map<String, dynamic>> sections = [
       {
         'title': '1. Önlemler & Hazırlık',
@@ -812,7 +807,7 @@ class PdfService {
               ),
             ),
             pw.SizedBox(height: 12),
-            
+
             // 2 Sütunlu Grid Layout (Sayfaya mükemmel sığması için)
             pw.Row(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -871,13 +866,14 @@ class PdfService {
         spans.add(pw.TextSpan(text: text.substring(lastMatchEnd, match.start)));
       }
       final String groupVal = match.group(1) ?? '';
-      final bool isWarningText = groupVal.contains('SU DÖKMEYİN') || 
-                                 groupVal.contains('SÖNDÜRMEYİN') || 
-                                 groupVal.contains('şarj etmeyin') ||
-                                 groupVal.contains('şarj ETMEYİN') ||
-                                 groupVal.contains('KULLANMAYIN') ||
-                                 groupVal.contains('müdahale etmeyin');
-      
+      final bool isWarningText =
+          groupVal.contains('SU DÖKMEYİN') ||
+          groupVal.contains('SÖNDÜRMEYİN') ||
+          groupVal.contains('şarj etmeyin') ||
+          groupVal.contains('şarj ETMEYİN') ||
+          groupVal.contains('KULLANMAYIN') ||
+          groupVal.contains('müdahale etmeyin');
+
       spans.add(
         pw.TextSpan(
           text: groupVal,
@@ -920,7 +916,9 @@ class PdfService {
             padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 5),
             decoration: pw.BoxDecoration(
               color: PdfColors.grey50,
-              border: pw.Border(bottom: pw.BorderSide(color: PdfColors.grey200, width: 0.5)),
+              border: pw.Border(
+                bottom: pw.BorderSide(color: PdfColors.grey200, width: 0.5),
+              ),
             ),
             child: pw.Text(
               section['title'],
@@ -940,7 +938,9 @@ class PdfService {
                 final parts = item.split(': ');
                 final hasPrefix = parts.length > 1;
                 final String boldPart = hasPrefix ? parts[0] : '';
-                final String normalPart = hasPrefix ? parts.sublist(1).join(': ') : item;
+                final String normalPart = hasPrefix
+                    ? parts.sublist(1).join(': ')
+                    : item;
 
                 return pw.Padding(
                   padding: const pw.EdgeInsets.only(bottom: 6),
@@ -973,7 +973,12 @@ class PdfService {
                                   text: "$boldPart: ",
                                   style: pw.TextStyle(font: fontBold),
                                 ),
-                              ..._buildPdfLifeSavingRichSpans(normalPart, font, fontBold, titleColor),
+                              ..._buildPdfLifeSavingRichSpans(
+                                normalPart,
+                                font,
+                                fontBold,
+                                titleColor,
+                              ),
                             ],
                           ),
                         ),
@@ -999,10 +1004,7 @@ class PdfService {
       header: (context) => pw.Container(
         width: double.infinity,
         margin: const pw.EdgeInsets.only(bottom: 16),
-        padding: const pw.EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 6,
-        ),
+        padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
         child: pw.Text(
           "EK 1: YASAL DAYANAKLAR VE SORUMLULUK REDDİ BEYANI",
@@ -1124,11 +1126,7 @@ class PdfService {
               ),
               pw.Text(
                 "Sayfa ${context.pageNumber} / ${context.pagesCount}",
-                style: pw.TextStyle(
-                  font: font,
-                  fontSize: 8,
-                  color: slateMavi,
-                ),
+                style: pw.TextStyle(font: font, fontSize: 8, color: slateMavi),
               ),
             ],
           ),
@@ -1280,7 +1278,8 @@ class PdfService {
     if (!context.mounted) return;
 
     final now = DateTime.now();
-    final timestamp = "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
+    final timestamp =
+        "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
 
     Navigator.push(
       context,
@@ -1368,7 +1367,8 @@ class PdfService {
                 'Raporlardaki kırmızı, sarı, mavi, yeşil ve gri renkler, o konudaki risk veya gereklilik seviyesini gösterir.',
           },
           {
-            'q': '"Konu", "Kullanıcı Yanıtı" ve "Değerlendirme" neyi ifade eder?',
+            'q':
+                '"Konu", "Kullanıcı Yanıtı" ve "Değerlendirme" neyi ifade eder?',
             'a':
                 'Konu: İncelenen yangın güvenliği başlığını belirtir. Kullanıcı Yanıtı: Uygulama üzerinde binanız için beyan ettiğiniz mevcut saha durumudur. Değerlendirme: Beyan ettiğiniz duruma ve yönetmelik kriterlerine göre oluşturulan uygunluk kontrolü, risk derecesi veya tavsiyelerdir.',
           },
@@ -1400,7 +1400,12 @@ class PdfService {
             _buildHeader(context, docNo, ttfBold, "YANGIN RİSK ANALİZİ"),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
-          ..._buildRiskAnalysisSectionContent(store: store, ttf: ttf, ttfBold: ttfBold, sectionTitle: "DEĞERLENDİRME NOTLARI"),
+          ..._buildRiskAnalysisSectionContent(
+            store: store,
+            ttf: ttf,
+            ttfBold: ttfBold,
+            sectionTitle: "DEĞERLENDİRME NOTLARI",
+          ),
           pw.SizedBox(height: 30),
           _buildPromoQRBox(ttf, ttfBold),
         ],
@@ -1500,11 +1505,16 @@ class PdfService {
       if (hasValidStatus) {
         riskColor = _getColorFromStatus(sectionStatus);
       } else {
-        final fullReportForColor = ReportEngine.getSectionFullReport(id, store: store);
+        final fullReportForColor = ReportEngine.getSectionFullReport(
+          id,
+          store: store,
+        );
         riskColor = _getRiskColor(fullReportForColor);
       }
 
-      final effectiveSectionRiskColor = (id <= 10) ? PdfColors.blue700 : riskColor;
+      final effectiveSectionRiskColor = (id <= 10)
+          ? PdfColors.blue700
+          : riskColor;
       final bool useTable = [3, 5, 6, 7, 10, 12, 21, 33, 36].contains(id);
       final List<pw.Widget> itemsWidgets = [];
 
@@ -1517,7 +1527,9 @@ class PdfService {
               ttfBold,
               riskColor: (id <= 10 || id == 14)
                   ? PdfColors.blue700
-                  : (id == 12 ? effectiveSectionRiskColor : _getColorForItem(item)),
+                  : (id == 12
+                        ? effectiveSectionRiskColor
+                        : _getColorForItem(item)),
               isLast: item == details.last,
               sectionId: id,
             ),
@@ -1585,12 +1597,18 @@ class PdfService {
                   return lbl.startsWith("Bodrum") || lbl.startsWith("BODRUM");
                 }).toList();
 
+                final bool hasIndependentBasement = bodrumGroup.isNotEmpty;
+
                 if (zeminUpperGroup.isNotEmpty) {
                   s36Children.add(
                     _buildInfoTable(
-                      zeminUpperGroup, ttf, ttfBold,
+                      zeminUpperGroup,
+                      ttf,
+                      ttfBold,
                       const PdfColor.fromInt(0x00000000),
-                      subjectLabel: "Merdiven Tipleri",
+                      subjectLabel: hasIndependentBasement
+                          ? "Merdiven Tipleri (Zemin ve Üst Katlar)"
+                          : "Merdiven Tipleri",
                     ),
                   );
                   s36Children.add(pw.SizedBox(height: 8));
@@ -1599,7 +1617,9 @@ class PdfService {
                 if (bodrumGroup.isNotEmpty) {
                   s36Children.add(
                     _buildInfoTable(
-                      bodrumGroup, ttf, ttfBold,
+                      bodrumGroup,
+                      ttf,
+                      ttfBold,
                       const PdfColor.fromInt(0x00000000),
                       subjectLabel: "Merdiven Tipleri (Bodrum Katlar)",
                     ),
@@ -1618,7 +1638,9 @@ class PdfService {
               } else {
                 itemsWidgets.add(
                   _buildInfoTable(
-                    tableGroup, ttf, ttfBold,
+                    tableGroup,
+                    ttf,
+                    ttfBold,
                     (id <= 10 || id == 12 || id == 33)
                         ? const PdfColor.fromInt(0x00000000)
                         : effectiveSectionRiskColor,
@@ -1631,10 +1653,14 @@ class PdfService {
             }
             itemsWidgets.add(
               _buildStandardVerticalItem(
-                item, ttf, ttfBold,
+                item,
+                ttf,
+                ttfBold,
                 riskColor: (id <= 10 || id == 14)
                     ? PdfColors.blue700
-                    : (id == 12 ? effectiveSectionRiskColor : _getColorForItem(item)),
+                    : (id == 12
+                          ? effectiveSectionRiskColor
+                          : _getColorForItem(item)),
                 isLast: isLast,
                 sectionId: id,
               ),
@@ -1691,7 +1717,9 @@ class PdfService {
             if (zeminUpperGroup.isNotEmpty) {
               s36Children.add(
                 _buildInfoTable(
-                  zeminUpperGroup, ttf, ttfBold,
+                  zeminUpperGroup,
+                  ttf,
+                  ttfBold,
                   const PdfColor.fromInt(0x00000000),
                   subjectLabel: "Merdiven Tipleri",
                 ),
@@ -1702,7 +1730,9 @@ class PdfService {
             if (bodrumGroup.isNotEmpty) {
               s36Children.add(
                 _buildInfoTable(
-                  bodrumGroup, ttf, ttfBold,
+                  bodrumGroup,
+                  ttf,
+                  ttfBold,
                   const PdfColor.fromInt(0x00000000),
                   subjectLabel: "Merdiven Tipleri (Bodrum Katlar)",
                 ),
@@ -1736,7 +1766,9 @@ class PdfService {
           } else {
             itemsWidgets.add(
               _buildInfoTable(
-                tableGroup, ttf, ttfBold,
+                tableGroup,
+                ttf,
+                ttfBold,
                 (id <= 10 || id == 33)
                     ? const PdfColor.fromInt(0x00000000)
                     : effectiveSectionRiskColor,
@@ -1766,7 +1798,9 @@ class PdfService {
                 style: pw.TextStyle(
                   font: ttfBold,
                   fontSize: 10,
-                  color: const PdfColor.fromInt(0xFF1a365d), // corporate dark navy text
+                  color: const PdfColor.fromInt(
+                    0xFF1a365d,
+                  ), // corporate dark navy text
                   letterSpacing: 0.3,
                 ),
               ),
@@ -1808,10 +1842,58 @@ class PdfService {
   // Hem _buildActiveSystemsDocument hem _buildCombinedDocument tarafından
   // kullanılır — böylece herhangi bir stil değişikliği tek noktada yapılır.
   // ---------------------------------------------------------------------------
+  static pw.Widget _buildCheckboxSquare() {
+    return pw.Center(
+      child: pw.Container(
+        width: 10,
+        height: 10,
+        decoration: pw.BoxDecoration(
+          color: PdfColors.white,
+          border: pw.Border.all(color: PdfColors.grey700, width: 0.8),
+          borderRadius: const pw.BorderRadius.all(pw.Radius.circular(1.5)),
+        ),
+      ),
+    );
+  }
+
+  static pw.Widget _buildExplanationLines() {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      child: pw.Column(
+        mainAxisAlignment: pw.MainAxisAlignment.center,
+        children: [
+          pw.Container(
+            height: 10,
+            decoration: const pw.BoxDecoration(
+              border: pw.Border(
+                bottom: pw.BorderSide(color: PdfColors.grey300, width: 0.5),
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 4),
+          pw.Container(
+            height: 10,
+            decoration: const pw.BoxDecoration(
+              border: pw.Border(
+                bottom: pw.BorderSide(color: PdfColors.grey300, width: 0.5),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // SHARED HELPER: Aktif sistem kart widget listesini döndürür.
+  // Hem _buildActiveSystemsDocument hem _buildCombinedDocument tarafından
+  // kullanılır — böylece herhangi bir stil değişikliği tek noktada yapılır.
+  // ---------------------------------------------------------------------------
   static List<pw.Widget> _buildActiveSystemsCardContent({
     required List<dynamic> activeSystems,
     required pw.Font ttf,
     required pw.Font ttfBold,
+    required pw.Font ttfItalic,
     String sectionTitle = "DEĞERLENDİRME NOTLARI",
   }) {
     final List<pw.Widget> result = [];
@@ -1851,80 +1933,166 @@ class PdfService {
     );
     result.add(pw.SizedBox(height: 15));
 
+    final Map<int, pw.TableColumnWidth> columnWidths = {
+      0: const pw.FixedColumnWidth(200),
+      1: const pw.FixedColumnWidth(65),
+      2: const pw.FixedColumnWidth(65),
+      3: const pw.FixedColumnWidth(75),
+      4: const pw.FixedColumnWidth(75),
+    };
+
+    final headerTable = pw.Table(
+      border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+      columnWidths: columnWidths,
+      children: [
+        pw.TableRow(
+          decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFFe8eef7)),
+          children: [
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 6),
+              child: pw.Text(
+                "Gereksinimler",
+                style: pw.TextStyle(font: ttfBold, fontSize: 8, color: const PdfColor.fromInt(0xFF1a365d)),
+              ),
+            ),
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+              child: pw.Text(
+                "Binada\nmevcut mu?",
+                textAlign: pw.TextAlign.center,
+                style: pw.TextStyle(font: ttfBold, fontSize: 7, color: const PdfColor.fromInt(0xFF1a365d)),
+              ),
+            ),
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+              child: pw.Text(
+                "Yangın anında\nçalışır mı?",
+                textAlign: pw.TextAlign.center,
+                style: pw.TextStyle(font: ttfBold, fontSize: 7, color: const PdfColor.fromInt(0xFF1a365d)),
+              ),
+            ),
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 3, vertical: 6),
+              child: pw.Text(
+                "Periyodik bakım &\ntestleri yapılıyor mu?",
+                textAlign: pw.TextAlign.center,
+                style: pw.TextStyle(font: ttfBold, fontSize: 7, color: const PdfColor.fromInt(0xFF1a365d)),
+              ),
+            ),
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 6),
+              child: pw.Text(
+                "Açıklama",
+                style: pw.TextStyle(font: ttfBold, fontSize: 8, color: const PdfColor.fromInt(0xFF1a365d)),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    if (activeSystems.isNotEmpty) {
+      result.add(headerTable);
+      result.add(pw.SizedBox(height: 6));
+    }
+
     for (final req in activeSystems) {
       final String cleanReason = _cleanEmojis(req.reason).trim();
       final bool isMandatory = req.isMandatory;
       final bool isWarning = req.isWarning;
 
       pw.BoxDecoration boxDecoration;
+      PdfColor borderColor;
       if (isMandatory) {
-        boxDecoration = pw.BoxDecoration(
-          color: const PdfColor.fromInt(0xFFFFEBEE),
-          border: pw.Border.all(color: PdfColors.red700, width: 0.5),
-          borderRadius: pw.BorderRadius.circular(2),
+        boxDecoration = const pw.BoxDecoration(
+          color: PdfColor.fromInt(0xFFFFEBEE),
         );
+        borderColor = PdfColors.red700;
       } else if (isWarning) {
-        boxDecoration = pw.BoxDecoration(
-          color: const PdfColor.fromInt(0xFFFFF8E1),
-          border: pw.Border.all(color: PdfColors.amber700, width: 0.5),
-          borderRadius: pw.BorderRadius.circular(2),
+        boxDecoration = const pw.BoxDecoration(
+          color: PdfColor.fromInt(0xFFFFF8E1),
         );
+        borderColor = PdfColors.amber700;
       } else {
         boxDecoration = const pw.BoxDecoration(
           color: PdfColors.white,
-          border: pw.Border(
-            left: pw.BorderSide(color: PdfColors.grey400, width: 2),
-          ),
         );
+        borderColor = PdfColors.grey400;
       }
+
+      final rowTable = pw.Table(
+        border: pw.TableBorder.all(color: borderColor, width: 0.5),
+        columnWidths: columnWidths,
+        children: [
+          pw.TableRow(
+            decoration: boxDecoration,
+            children: [
+              pw.Padding(
+                padding: const pw.EdgeInsets.all(6),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      _cleanEmojis(req.name),
+                      style: pw.TextStyle(
+                        fontSize: 9,
+                        font: ttfBold,
+                        color: PdfColors.black,
+                        lineSpacing: 1.8,
+                      ),
+                    ),
+                    if (cleanReason.isNotEmpty) ...[
+                      pw.SizedBox(height: 3),
+                      pw.Text(
+                        cleanReason,
+                        style: pw.TextStyle(
+                          fontSize: 7.5,
+                          font: ttf,
+                          color: PdfColors.grey900,
+                          lineSpacing: 1.8,
+                        ),
+                      ),
+                    ],
+                    if (req.note.isNotEmpty) ...[
+                      pw.SizedBox(height: 3),
+                      pw.Text(
+                        _cleanEmojis(req.note),
+                        style: pw.TextStyle(
+                          fontSize: 7.5,
+                          font: ttfItalic,
+                          color: PdfColors.grey700,
+                          lineSpacing: 1.8,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(vertical: 6),
+                child: _buildCheckboxSquare(),
+              ),
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(vertical: 6),
+                child: _buildCheckboxSquare(),
+              ),
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(vertical: 6),
+                child: _buildCheckboxSquare(),
+              ),
+              _buildExplanationLines(),
+            ],
+          ),
+        ],
+      );
 
       result.add(
         pw.Inseparable(
-          child: pw.Container(
-            margin: const pw.EdgeInsets.only(bottom: 10),
-            padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: boxDecoration,
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Expanded(
-                      child: pw.Text(
-                        _cleanEmojis(req.name),
-                        style: pw.TextStyle(
-                          fontSize: 9.5,
-                          fontWeight: pw.FontWeight.bold,
-                          color: PdfColors.black,
-                          lineSpacing: 2.2,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                pw.SizedBox(height: 2),
-                pw.Text(
-                  cleanReason,
-                  style: const pw.TextStyle(
-                    fontSize: 8.5,
-                    color: PdfColors.black,
-                    lineSpacing: 2.2,
-                  ),
-                ),
-                if (req.note.isNotEmpty) ...[
-                  pw.SizedBox(height: 2),
-                  pw.Text(
-                    _cleanEmojis(req.note),
-                    style: const pw.TextStyle(
-                      fontSize: 8.5,
-                      color: PdfColors.black,
-                      lineSpacing: 2.2,
-                    ),
-                  ),
-                ],
-              ],
-            ),
+          child: pw.Column(
+            children: [
+              rowTable,
+              pw.SizedBox(height: 6),
+            ],
           ),
         ),
       );
@@ -2008,13 +2176,19 @@ class PdfService {
       pw.MultiPage(
         maxPages: 2000,
         pageTheme: pageTheme,
-        header: (context) => _buildHeader(context, docNo, ttfBold, "AKTİF SİSTEM GEREKSİNİMLERİ"),
+        header: (context) => _buildHeader(
+          context,
+          docNo,
+          ttfBold,
+          "AKTİF SİSTEM GEREKSİNİMLERİ",
+        ),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
         build: (context) => [
           ..._buildActiveSystemsCardContent(
             activeSystems: activeSystems,
             ttf: ttf,
             ttfBold: ttfBold,
+            ttfItalic: ttfItalic,
             sectionTitle: "DEĞERLENDİRME NOTLARI",
           ),
           pw.SizedBox(height: 30),
@@ -2036,7 +2210,8 @@ class PdfService {
     if (!context.mounted) return;
 
     final now = DateTime.now();
-    final timestamp = "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
+    final timestamp =
+        "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
 
     Navigator.push(
       context,
@@ -2149,7 +2324,9 @@ class PdfService {
         maxPages: 2000,
         pageTheme: pageTheme,
         header: (context) => _buildHeader(
-          context, docNo, ttfBold,
+          context,
+          docNo,
+          ttfBold,
           "KISIM I: YANGIN RİSK ANALİZİ",
         ),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
@@ -2172,7 +2349,9 @@ class PdfService {
         maxPages: 2000,
         pageTheme: pageTheme,
         header: (context) => _buildHeader(
-          context, docNo, ttfBold,
+          context,
+          docNo,
+          ttfBold,
           "KISIM II: AKTİF SİSTEM GEREKSİNİMLERİ",
         ),
         footer: (context) => _buildFooter(context, ttf, ttfBold),
@@ -2181,6 +2360,7 @@ class PdfService {
             activeSystems: activeSystems,
             ttf: ttf,
             ttfBold: ttfBold,
+            ttfItalic: ttfItalic,
             sectionTitle: "KISIM II: AKTİF SİSTEM GEREKSİNİMLERİ",
           ),
           pw.SizedBox(height: 30),
@@ -2205,7 +2385,8 @@ class PdfService {
     if (!context.mounted) return;
 
     final now = DateTime.now();
-    final timestamp = "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
+    final timestamp =
+        "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}-${now.year}_${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}";
 
     Navigator.push(
       context,
@@ -2747,13 +2928,12 @@ class PdfService {
     );
 
     final result = riskColor.alpha == 0
-        ? pw.Padding(
-            padding: const pw.EdgeInsets.only(left: 0),
-            child: content,
-          )
+        ? pw.Padding(padding: const pw.EdgeInsets.only(left: 0), child: content)
         : pw.Container(
             decoration: pw.BoxDecoration(
-              border: pw.Border(left: pw.BorderSide(color: riskColor, width: 4)),
+              border: pw.Border(
+                left: pw.BorderSide(color: riskColor, width: 4),
+              ),
             ),
             padding: const pw.EdgeInsets.only(left: 8),
             child: content,
@@ -2837,7 +3017,8 @@ class PdfService {
     final store = BinaStore.instance;
     final pdf = await _buildRiskAnalysisDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     await Printing.sharePdf(bytes: bytes, filename: fileName);
   }
@@ -2846,7 +3027,8 @@ class PdfService {
     final store = BinaStore.instance;
     final pdf = await _buildActiveSystemsDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     await Printing.sharePdf(bytes: bytes, filename: fileName);
   }
@@ -2855,7 +3037,8 @@ class PdfService {
     final store = BinaStore.instance;
     final pdf = await _buildCombinedDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     await Printing.sharePdf(bytes: bytes, filename: fileName);
   }
@@ -2865,20 +3048,26 @@ class PdfService {
     return "${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
   }
 
-  static Future<String> saveRiskAnalysisPdfToDevice(BuildContext context) async {
+  static Future<String> saveRiskAnalysisPdfToDevice(
+    BuildContext context,
+  ) async {
     final store = BinaStore.instance;
     final pdf = await _buildRiskAnalysisDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     return _saveBytesToDevice(bytes, fileName);
   }
 
-  static Future<String> saveActiveSystemsPdfToDevice(BuildContext context) async {
+  static Future<String> saveActiveSystemsPdfToDevice(
+    BuildContext context,
+  ) async {
     final store = BinaStore.instance;
     final pdf = await _buildActiveSystemsDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     return _saveBytesToDevice(bytes, fileName);
   }
@@ -2887,12 +3076,16 @@ class PdfService {
     final store = BinaStore.instance;
     final pdf = await _buildCombinedDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     return _saveBytesToDevice(bytes, fileName);
   }
 
-  static Future<String> _saveBytesToDevice(List<int> bytes, String fileName) async {
+  static Future<String> _saveBytesToDevice(
+    List<int> bytes,
+    String fileName,
+  ) async {
     String dirPath;
     if (Platform.isAndroid) {
       dirPath = '/storage/emulated/0/Download';
@@ -2919,7 +3112,8 @@ class PdfService {
     final store = BinaStore.instance;
     final pdf = await _buildRiskAnalysisDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     return _saveBytesToTemp(bytes, fileName);
   }
@@ -2928,7 +3122,8 @@ class PdfService {
     final store = BinaStore.instance;
     final pdf = await _buildActiveSystemsDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     return _saveBytesToTemp(bytes, fileName);
   }
@@ -2937,12 +3132,16 @@ class PdfService {
     final store = BinaStore.instance;
     final pdf = await _buildCombinedDocument(providedStore: store);
     final timestamp = _generateTimestamp();
-    final fileName = "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
+    final fileName =
+        "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     return _saveBytesToTemp(bytes, fileName);
   }
 
-  static Future<String> _saveBytesToTemp(List<int> bytes, String fileName) async {
+  static Future<String> _saveBytesToTemp(
+    List<int> bytes,
+    String fileName,
+  ) async {
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/$fileName');
     await file.writeAsBytes(bytes);

@@ -157,9 +157,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             "HOŞ GELDİNİZ",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 0.5,
+              fontSize: 19,
+              fontWeight: FontWeight.bold,
+              height: 1.1,
             ),
           ),
           const SizedBox(height: 16.5),

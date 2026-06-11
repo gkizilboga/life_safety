@@ -13,12 +13,12 @@ class UserGuideScreen extends StatelessWidget {
     {
       'q': 'Soruların yanıtlarını bilmiyorsam ne yapmalıyım?',
       'a':
-          'Bazı teknik detayları (örneğin yangın merdiveninin basınçlandırılması, yangın algılama sisteminin özellikleri) bilmiyor olabilirsiniz. Bu durumda, soruların altındaki <b>"Emin Değilim"</b> veya <b>"Bilmiyorum"</b> seçeneklerini kullanabilirsiniz. Ancak en doğru sonuç için binanızın <b>apartman veya site yöneticisine</b>, <b>güvenlik görevlilerine</b> veya <b>teknik personeline</b> danışarak doğru bilgileri öğrenmeniz tavsiye edilir.',
+          'Bazı teknik detayları (örneğin yangın merdiveninin basınçlandırılması, yangın algılama sisteminin özellikleri) bilmiyor olabilirsiniz. Bu durumda, soruların altındaki <b>"Bilmiyorum"</b> seçeneğini kullanabilirsiniz. Ancak en doğru sonuç için <b>apartman veya site yöneticisine</b>, <b>teknik personeline</b> danışarak doğru bilgileri öğrenmeniz tavsiye edilir.',
     },
     {
       'q': 'Hiçbir bilgim yoksa testi başkasına çözdürebilir miyim?',
       'a':
-          'Evet! Eğer binanızın mimari veya teknik detaylarına hakim değilseniz, uygulamayı binanızın <b>yönetim kuruluna</b>, <b>site müdürüne</b> veya binanızdaki <b>teknik personele</b> önerebilirsiniz. Kendi dairenize ait analizleri yapmak yerine, yetkili kişilerin bu uygulamayı kullanarak tüm bina için ortak bir analiz yapmasını sağlayabilirsiniz. Dilerseniz, ana ekrandaki <b>"Paylaşım ve Transfer"</b> bölümünden yarım kalmış analizi dosya olarak <b>dışa aktarıp (export)</b> yöneticinize gönderebilirsiniz. Onlar kendi telefonlarına bu dosyayı <b>içe aktararak (import)</b> analizi kaldığı yerden tamamlayabilirler!',
+          'Evet! Eğer binanızın mimari veya teknik detaylarına hakim değilseniz, uygulamayı binanızın <b>yönetim kuruluna</b>, <b>yönetici</b> veya <b>teknik personele</b> önerebilirsiniz. Kendi dairenize ait analizleri yapmak yerine, yetkili kişilerin bu uygulamayı kullanarak tüm bina için ortak bir analiz yapmasını sağlayabilirsiniz. Dilerseniz, ana ekrandaki <b>"Paylaşım ve Transfer"</b> bölümünden yarım kalmış analizi dosya olarak <b>dışa aktarıp (export)</b> yöneticinize gönderebilirsiniz. Onlar kendi telefonlarına bu dosyayı <b>içe aktararak (import)</b> analizi kaldığı yerden tamamlayabilirler!',
     },
     {
       'q': 'Promo Kod "Al" ve "Gönder" ne anlama gelir?',
@@ -28,7 +28,7 @@ class UserGuideScreen extends StatelessWidget {
     {
       'q': 'Uygulamadaki puanlar ve renk kodları ne anlama geliyor?',
       'a':
-          'Dokümanınızdaki veya soru ekranlarındaki renkler risk düzeyini belirtir:\n\n• <b>Kritik Risk (Kırmızı):</b> Yönetmeliğe aykırı olan ve acilen düzeltilmesi gereken can güvenliği açıklarını temsil eder.\n\n• <b>Uyarı (Sarı):</b> İyileştirilmesi gereken hususları gösterir.\n\n• <b>Olumlu (Yeşil):</b> Yönetmeliğe tam uyumlu, güvenli alanları ifade eder.',
+          'Dokümanınızdaki veya soru ekranlarındaki renkler risk düzeyini belirtir:\n\n• <b>Kritik Risk (Kırmızı):</b> Yönetmeliğe aykırı olan ve acilen düzeltilmesi gereken can güvenliği açıklarını temsil eder.\n\n• <b>Uyarı (Sarı):</b> İyileştirilmesi gereken hususları gösterir.\n\n• <b>Bilgi (Mavi):</b> Yönetmelikte doğrudan bir kural olmamakla birlikte, binanızın durumuna göre bilmeniz gereken ek bilgileri belirtir.\n\n• <b>Olumlu (Yeşil):</b> Yönetmeliğe tam uyumlu, güvenli alanları ifade eder.\n\n• <b>Bilinmiyor (Gri):</b> Hakkında yeterli bilgi girilmemiş veya henüz incelenmemiş konuları gösterir.',
     },
     {
       'q': 'Sonuç dokümanını (PDF) ne yapmalıyım?',
@@ -62,6 +62,10 @@ class UserGuideScreen extends StatelessWidget {
         textColor = const Color(0xFFF57C00); // Amber/Orange
       } else if (groupVal.contains('Olumlu') || groupVal.contains('Yeşil')) {
         textColor = const Color(0xFF2E7D32); // Green
+      } else if (groupVal.contains('Bilgi') || groupVal.contains('Mavi')) {
+        textColor = const Color(0xFF1565C0); // Blue
+      } else if (groupVal.contains('Bilinmiyor') || groupVal.contains('Gri')) {
+        textColor = const Color(0xFF616161); // Grey
       }
 
       spans.add(

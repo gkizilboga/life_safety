@@ -1417,10 +1417,10 @@ class Bolum16Content {
 
   static final mantolamaOptionB = ChoiceResult(
     label: "16-1-B (Mantolama)",
-    uiTitle: "A1 veya A2, s1, d0 sınıfı mantolama",
+    uiTitle: "A1 veya A2 sınıfı mantolama",
     uiSubtitle: "Taşyünü vb. yanmaz malzeme ile.",
     reportText:
-        "OLUMLU: Dış cephe yalıtımında yanmaz (A1 veya A2, s1, d0 sınıfı) taşyünü malzeme kullanılmıştır. Bu tercih, cephe yangınlarının yayılmasını engelleyebilir. Cephe sisteminin veya malzemelerinin yangına tepki test raporları incelendikten sonra yönetmeliğe göre uygunluk kontrolü yapılmış olur.",
+        "OLUMLU: Dış cephe yalıtımında yanmaz (A1 veya A2, s1-d0 sınıfı) taşyünü malzeme kullanılmıştır. Bu tercih, cephe yangınlarının yayılmasını engelleyebilir. Cephe sisteminin veya malzemelerinin yangına tepki test raporları incelendikten sonra yönetmeliğe göre uygunluk kontrolü yapılmış olur.",
     level: RiskLevel.positive,
   );
 
@@ -1456,7 +1456,7 @@ class Bolum16Content {
     uiTitle: "Evet, var.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Katlar arasındaki yangın dayanıklı yüzey (veya sistem) yüksekliği 100 cm şartını sağlamaktadır. Bu mesafe, alevin bir kattan diğerine sıçramasını zorlaştırır. Yönetmelik şartlarını sağlayıp sağlamadığına yanmaz yüzeyin yerinde kontrol edilmesi ile karar verilmesi önerilir.",
+        "OLUMLU: Katlar arasındaki yangına dayanıklı cephe elemanıyla dolu yüzey (veya sistem) yüksekliği 100 cm şartını sağlamaktadır. Bu mesafe, alevin bir kattan diğerine sıçramasını zorlaştırır. Yönetmelik şartlarını sağlayıp sağlamadığına yangına dayanıklı cephe elemanıyla dolu yüzeyin yerinde kontrol edilmesi ile karar verilmesi önerilir.",
     level: RiskLevel.positive,
   );
 
@@ -1466,7 +1466,7 @@ class Bolum16Content {
     uiSubtitle:
         "Pencereler dikeyde birbirine çok yakın, aradaki duvar mesafesi 100 cm'den az.",
     reportText:
-        "KRİTİK RİSK: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den azdır. Yangın bir kattan diğerine kolayca sıçrayabilir.",
+        "KRİTİK RİSK: Katlar arasındaki yangına dayanıklı cephe elemanıyla dolu yüzey yüksekliği 100 cm'den azdır. Yangın bir kattan diğerine kolayca sıçrayabilir.",
     level: RiskLevel.critical,
   );
 
@@ -1475,9 +1475,10 @@ class Bolum16Content {
     uiTitle: "Bilmiyorum.",
     uiSubtitle: "",
     reportText:
-        "BİLİNMİYOR: Katlar arasındaki yangına dayanıklı yüzey yüksekliği bilinmiyor. 100 cm'den az ise yangın dikeyde hızla yayılabilir.",
+        "BİLİNMİYOR: Katlar arasındaki yangına dayanıklı cephe elemanıyla dolu yüzey yüksekliği bilinmiyor. 100 cm'den az ise yangın dikeyde hızla yayılabilir.",
     level: RiskLevel.unknown,
   );
+
 
   static final bitisikOptionA = ChoiceResult(
     label: "16-3-A (Bitişik)",
@@ -1519,10 +1520,10 @@ class Bolum16Content {
   // CEPHE MALZEMESİ
   static final giydirmeCepheA = ChoiceResult(
     label: "16-1-ALT-A1",
-    uiTitle: "A1 veya A2, s1, d0 sınıfı malzeme.",
+    uiTitle: "A1 veya A2 sınıfı malzeme.",
     uiSubtitle: "Taşyünü, cam yünü vb.",
     reportText:
-        "OLUMLU: Giydirme cephe malzemesi (A1 veya A2, s1, d0 sınıfı) yanmaz / zor yanıcı malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır. ",
+        "OLUMLU: Giydirme cephe malzemesi (A1 veya A2, s1-d0 sınıfı) yanmaz veya zor yanıcı malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır. ",
     level: RiskLevel.positive,
   );
   static final giydirmeCepheB = ChoiceResult(
@@ -1530,7 +1531,7 @@ class Bolum16Content {
     uiTitle: "Yanıcı malzeme.",
     uiSubtitle: "Aluminyum kompozit vb.",
     reportText:
-        "KRİTİK RİSK: Giydirme cephe malzemesi olarak A1 veya A2, s1, d0 sınıfı haricinde yanıcı malzeme kullanılmıştır. Bu durum yangının cephe boyunca hızla yayılmasına neden olabilir.",
+        "KRİTİK RİSK: Giydirme cephe malzemesi olarak A1 veya A2, s1-d0 sınıfı haricinde yanıcı malzeme kullanılmıştır. Bu durum yangının cephe boyunca hızla yayılmasına neden olabilir.",
     adviceText: "",
     level: RiskLevel.critical,
   );
@@ -1546,10 +1547,10 @@ class Bolum16Content {
   // YALITIM MALZEMESİ
   static final giydirmeYalitimA = ChoiceResult(
     label: "16-1-ALT-B1",
-    uiTitle: "A1 veya A2, s1, d0 sınıfı malzeme.",
+    uiTitle: "A1 veya A2 sınıfı malzeme.",
     uiSubtitle: "Taşyünü vb.",
     reportText:
-        "OLUMLU: Giydirme cephe arkasındaki ısı yalıtım malzemesi (A1 veya A2, s1, d0 sınıfı) yanmaz / zor yanıcı olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır.",
+        "OLUMLU: Giydirme cephe arkasındaki ısı yalıtım malzemesi (A1 veya A2, s1-d0 sınıfı) yanmaz veya zor yanıcı malzeme olarak beyan edilmiştir. Bu hususta Yönetmelik gereksinimi karşılanmıştır.",
     level: RiskLevel.positive,
   );
   static final giydirmeYalitimB = ChoiceResult(
@@ -1559,7 +1560,7 @@ class Bolum16Content {
     reportText:
         "KRİTİK RİSK: Giydirme cephe arkasındaki yalıtım malzemesi yanıcıdır. Baca etkisiyle yangın, cephe boşluğunda çok hızlı ilerleyebilir.",
     adviceText:
-        "Giydirme cephe arkasındaki yalıtımın A1 veya A2, s1, d0 sınıfı malzemelerden oluşması gereklidir. Yanıcı yalıtım malzemelerinin kullanımı, özellikle yüksek binalarda cephe yangınlarının kontrol altına alınmasını imkansız hale getirebilir.",
+        "Giydirme cephe arkasındaki yalıtımın A1 veya A2, s1-d0 sınıfı malzemelerden oluşması gereklidir. Yanıcı yalıtım malzemelerinin kullanımı, özellikle yüksek binalarda cephe yangınlarının kontrol altına alınmasını imkansız hale getirebilir.",
     level: RiskLevel.critical,
   );
   static final giydirmeYalitimC = ChoiceResult(
@@ -2286,7 +2287,8 @@ class Bolum21Content {
     label: "21-2-A",
     uiTitle: "Sıva, boya, alçıpanel, beton, mermer vb.",
     uiSubtitle: "Hol içinde yanmaz malzemeler kullanılmış.",
-    reportText: "OLUMLU: Yangın Güvenlik Holü (YGH) içindeki kaplama malzemeleri yanmaz özelliktedir.",
+    reportText:
+        "OLUMLU: Yangın Güvenlik Holü (YGH) içindeki kaplama malzemeleri yanmaz özelliktedir.",
     level: RiskLevel.positive,
   );
 
@@ -2314,7 +2316,8 @@ class Bolum21Content {
     label: "21-3-A",
     uiTitle: "Evet.",
     uiSubtitle: "",
-    reportText: "OLUMLU: Yangın Güvenlik Holü (YGH) kapıları uygun gözükmektedir.",
+    reportText:
+        "OLUMLU: Yangın Güvenlik Holü (YGH) kapıları uygun gözükmektedir.",
     level: RiskLevel.positive,
   );
 
@@ -2342,7 +2345,8 @@ class Bolum21Content {
     label: "21-4-A",
     uiTitle: "Hayır, tamamen boş, gereksiz eşya yok.",
     uiSubtitle: "",
-    reportText: "OLUMLU: Yangın Güvenlik Holü (YGH) içi temiz ve boş tutulduğundan güvenli sayılır.",
+    reportText:
+        "OLUMLU: Yangın Güvenlik Holü (YGH) içi temiz ve boş tutulduğundan güvenli sayılır.",
     level: RiskLevel.positive,
   );
   static final esyaOptionB = ChoiceResult(
@@ -2553,7 +2557,8 @@ class Bolum23Content {
     label: "23-1-A (Bodrum)",
     uiTitle: "İnmiyor.",
     uiSubtitle: "Sadece üst katlara hizmet veriyor.",
-    reportText: "BİLGİ: Asansör bodrum katlara inmemektedir. Bu hususta ekstra önleme gerek yoktur.",
+    reportText:
+        "BİLGİ: Asansör bodrum katlara inmemektedir. Bu hususta ekstra önleme gerek yoktur.",
     level: RiskLevel.info,
   );
 

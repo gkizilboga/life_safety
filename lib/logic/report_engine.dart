@@ -885,8 +885,6 @@ class ReportEngine {
           }
         }
 
-
-
         if (b16.sagirYuzey != null) {
           final bool hasSprinkler = b16.sagirYuzeySprinkler == 1;
           final bool isSprinklerRelevant =
@@ -901,14 +899,14 @@ class ReportEngine {
 
           if (isSprinklerRelevant && hasSprinkler) {
             reportText =
-                "BİLGİ: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den az olmakla birlikte, cepheye doğru bakan sprinkler başlıkları bulunduğundan yönetmelik açısından yeterli kabul edilmektedir.";
+                "BİLGİ: Katlar arasındaki yangına dayanıklı cephe elemanıyla dolu yüzey yüksekliği 100 cm'den az olmakla birlikte, cepheye doğru bakan sprinkler başlıkları bulunduğundan yönetmelik açısından yeterli kabul edilmektedir.";
             adviceText = null;
             level = RiskLevel.info;
           }
 
           _addDetail(
             details,
-            label: 'Katlar arasında sağır (yanmaz) yüzey var mı?',
+            label: 'Katlar arasında 100 cm yüksekliğinde yangına dayanıklı cephe elemanıyla dolu yüzey var mı?',
             value: b16.sagirYuzey!.uiTitle,
             subtitle: b16.sagirYuzey!.uiSubtitle,
             report: reportText,
@@ -932,7 +930,7 @@ class ReportEngine {
                 label: 'Cepheye doğru bakan sprinkler başlıkları var mı?',
                 value: 'Hayır, yok',
                 report:
-                    'Katlar arasında 100 cm yüksekliğinde hiç yanmaz yüzey bulunmadığından cepheye doğru bakan sprinkler sistemi bulunması zorunludur.',
+                    'Katlar arasında 100 cm yüksekliğinde hiç yangına dayanıklı cephe elemanıyla dolu yüzey bulunmadığından cepheye doğru bakan sprinkler sistemi bulunması zorunludur.',
                 level: RiskLevel.critical,
               );
             } else if (b16.sagirYuzeySprinkler == 2) {
@@ -941,7 +939,7 @@ class ReportEngine {
                 label: 'Cepheye doğru bakan sprinkler başlıkları var mı?',
                 value: 'Bilmiyorum',
                 report:
-                    'Katlar arasında 100 cm yüksekliğinde hiç yanmaz yüzeyin olup olmadığı bilinmediğinden konu hakkında proje üzerinde veya sahada inceleme yapılarak nihai karar verilmelidir. Olmaması halinde cephede sprinkler sistemi imal edilmesi zorunludur.',
+                    'Katlar arasında 100 cm yüksekliğinde hiç yangına dayanıklı cephe elemanıyla dolu yüzeyin olup olmadığı bilinmediğinden konu hakkında proje üzerinde veya sahada inceleme yapılarak nihai karar verilmelidir. Olmaması halinde cephede sprinkler sistemi imal edilmesi zorunludur.',
                 level: RiskLevel.warning,
               );
             }
@@ -3525,7 +3523,7 @@ class ReportEngine {
                   b16.sagirYuzey?.label ==
                       Bolum16Content.sagirYuzeyOptionC.label)) {
             parts.add(
-              "BİLGİ: Katlar arasındaki yangına dayanıklı yüzey yüksekliği 100 cm'den az olmakla birlikte, cepheye doğru bakan sprinkler başlıkları bulunduğundan yönetmelik açısından yeterli kabul edilmektedir.",
+              "BİLGİ: Katlar arasındaki yangına dayanıklı cephe elemanıyla dolu yüzey yüksekliği 100 cm'den az olmakla birlikte, cepheye doğru bakan sprinkler başlıkları bulunduğundan yönetmelik açısından yeterli kabul edilmektedir.",
             );
           } else {
             parts.add(b16.sagirYuzey!.reportText);

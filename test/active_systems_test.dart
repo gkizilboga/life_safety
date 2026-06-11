@@ -328,5 +328,51 @@ void main() {
       expect(item.isMandatory, true);
       expect(item.note.contains("Merdivenlerin en az birinde"), true);
     });
+
+    test('Cephe Sprinkler: 100cm yangına dayanıklı cephe elemanıyla dolu yüzey yok (Option B) -> Kırmızı arka fonlu (isMandatory = true)', () {
+      store.bolum16 = Bolum16Model(
+        sagirYuzey: Bolum16Content.sagirYuzeyOptionB,
+      );
+      final reqs = ActiveSystemsEngine.calculateRequirements(store);
+      final item = reqs.firstWhere((e) => e.name == "Cephe Sprinkler Sistemi");
+
+      expect(item.isMandatory, true);
+      expect(item.isWarning, false);
+      expect(item.reason.contains("yangına dayanıklı cephe elemanıyla dolu yüzey bulunmadığı"), true);
+    });
+
+    test('Cephe Sprinkler: 100cm yangına dayanıklı cephe elemanıyla dolu yüzey var (Option A) -> gerek yok (isMandatory = false, isWarning = false)', () {
+      store.bolum16 = Bolum16Model(
+        sagirYuzey: Bolum16Content.sagirYuzeyOptionA,
+      );
+      final reqs = ActiveSystemsEngine.calculateRequirements(store);
+      final item = reqs.firstWhere((e) => e.name == "Cephe Sprinkler Sistemi");
+
+      expect(item.isMandatory, false);
+      expect(item.isWarning, false);
+      expect(item.reason.contains("gerek yoktur"), true);
+    });
+
+    test('Cephe Sprinkler: Bilmiyorum (Option C) veya null -> Sarı arka fonlu (isWarning = true)', () {
+      store.bolum16 = Bolum16Model(
+        sagirYuzey: Bolum16Content.sagirYuzeyOptionC,
+      );
+      final reqs1 = ActiveSystemsEngine.calculateRequirements(store);
+      final item1 = reqs1.firstWhere((e) => e.name == "Cephe Sprinkler Sistemi");
+
+      expect(item1.isMandatory, false);
+      expect(item1.isWarning, true);
+      expect(item1.reason.contains("uzmanı tarafından inceleme yapıldıktan sonra"), true);
+
+      // null case
+      store.bolum16 = Bolum16Model(sagirYuzey: null);
+      final reqs2 = ActiveSystemsEngine.calculateRequirements(store);
+      final item2 = reqs2.firstWhere((e) => e.name == "Cephe Sprinkler Sistemi");
+
+      expect(item2.isMandatory, false);
+      expect(item2.isWarning, true);
+      expect(item2.reason.contains("uzmanı tarafından inceleme yapıldıktan sonra"), true);
+    });
   });
 }
+

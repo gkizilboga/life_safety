@@ -504,19 +504,19 @@ class Section36Handler {
     } else {
       add("Normal Merdiven", b.bodrumNormalMerdivenSayisi);
       add(
-        "Bina İçi Yangın Merdiveni",
+        "Bina İçi Korunumlu (Yangın) Merdiven",
         b.bodrumBinaIciYanginMerdiveniSayisi,
       );
       add(
-        "Bina Dışı Kapalı Yangın Merdiveni",
+        "Bina Dışı Kapalı (Yangın) Merdiven",
         b.bodrumBinaDisiKapaliYanginMerdiveniSayisi,
       );
       add(
-        "Bina Dışı Açık Yangın Merdiveni",
+        "Bina Dışı Açık (Yangın) Merdiven",
         b.bodrumBinaDisiAcikYanginMerdiveniSayisi,
       );
       add("Dairesel Merdiven", b.bodrumDonerMerdivenSayisi);
-      add("Sahanlıksız Merdiven", b.bodrumSahanliksizMerdivenSayisi);
+      add("Sahanlıksız (Düz) Merdiven", b.bodrumSahanliksizMerdivenSayisi);
       add("Dengelenmiş Merdiven", b.bodrumDengelenmisMerdivenSayisi);
 
       final int totalBod =

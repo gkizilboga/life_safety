@@ -1,3 +1,5 @@
+rootProject.name = "life_safety_android"
+
 pluginManagement {
     val localPropertiesFile = File(rootProject.projectDir, "local.properties")
     val properties = java.util.Properties()

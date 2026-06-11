@@ -265,7 +265,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
             ],
 
             _buildSoru(
-              "Katlar arasında 100 cm yüksekliğinde yanmaz (sağır) yüzey var mı?",
+              "Katlar arasında 100 cm yüksekliğinde yangına dayanıklı cephe elemanıyla dolu yüzey var mı?",
               'sagir',
               [
                 Bolum16Content.sagirYuzeyOptionA,
@@ -274,7 +274,7 @@ class _Bolum16ScreenState extends State<Bolum16Screen> {
               ],
               _model.sagirYuzey,
               imagePath: AppAssets.section16Spandrel,
-              imageTitle: "Spandrel (yanmaz yüzey)",
+              imageTitle: "Spandrel (yangına dayanıklı cephe elemanıyla dolu yüzey)",
             ),
 
             if (_model.sagirYuzey?.label ==

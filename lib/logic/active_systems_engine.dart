@@ -400,31 +400,38 @@ class ActiveSystemsEngine {
     }
 
     // 10-B. Cephe Sprinkler Sistemi
-    if (b16?.sagirYuzey?.label ==
-            Bolum16Content.sagirYuzeyOptionB.label ||
-        b16?.sagirYuzey?.label ==
-            Bolum16Content.sagirYuzeyOptionC.label) {
-      if (b16?.sagirYuzeySprinkler == 0 ||
-          b16?.sagirYuzeySprinkler == 2) {
-        requirements.add(
-          ActiveSystemRequirement(
-            name: "Cephe Sprinkler Sistemi",
-            isMandatory: true,
-            reason:
-                "Katlar arasında 100 cm yüksekliğinde yanmaz yüzey bulunmadığı ve cephede sprinkler beyan edilmediği için cephe sprinkler sistemi zorunludur.",
-          ),
-        );
-      } else if (b16?.sagirYuzeySprinkler == 1) {
-        requirements.add(
-          ActiveSystemRequirement(
-            name: "Cephe Sprinkler Sistemi",
-            isMandatory: false,
-            reason:
-                "Kullanıcı cephede sprinkler olduğunu beyan etmiştir. Cephe sprinkler sistemi mevcuttur.",
-          ),
-        );
-      }
+    final sagirLabel = b16?.sagirYuzey?.label;
+    if (sagirLabel == Bolum16Content.sagirYuzeyOptionB.label) {
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "Cephe Sprinkler Sistemi",
+          isMandatory: true,
+          reason:
+              "Katlar arasında 100 cm yüksekliğinde yangına dayanıklı cephe elemanıyla dolu yüzey bulunmadığı için cephe sprinkler sistemi zorunludur.",
+        ),
+      );
+    } else if (sagirLabel == Bolum16Content.sagirYuzeyOptionA.label) {
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "Cephe Sprinkler Sistemi",
+          isMandatory: false,
+          reason:
+              "Katlar arasında 100 cm yüksekliğinde yangına dayanıklı cephe elemanıyla dolu yüzey bulunduğu için cephe sprinkler sistemine gerek yoktur.",
+        ),
+      );
+    } else {
+      // Bilmiyorum veya null (yanıtlanmamış)
+      requirements.add(
+        ActiveSystemRequirement(
+          name: "Cephe Sprinkler Sistemi",
+          isMandatory: false,
+          isWarning: true,
+          reason:
+              "Katlar arasında 100 cm yüksekliğinde yangına dayanıklı cephe elemanıyla dolu yüzey olup olmadığı bilinmemektedir. Sahada yangın güvenlik uzmanı tarafından inceleme yapıldıktan sonra zorunluluğa karar verilecektir.",
+        ),
+      );
     }
+
 
     // 11. Hidrant Sistemi
     // Kural: tabanAlani > 5000m² ise ZORUNLU.
