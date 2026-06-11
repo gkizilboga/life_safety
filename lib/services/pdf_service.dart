@@ -1608,7 +1608,12 @@ class PdfService {
                 }
 
                 if (s36Children.isNotEmpty) {
-                  itemsWidgets.add(pw.Column(children: s36Children));
+                  itemsWidgets.add(
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: s36Children,
+                    ),
+                  );
                 }
               } else {
                 itemsWidgets.add(
@@ -1721,7 +1726,12 @@ class PdfService {
             );
 
             if (s36Children.isNotEmpty) {
-              itemsWidgets.add(pw.Column(children: s36Children));
+              itemsWidgets.add(
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: s36Children,
+                ),
+              );
             }
           } else {
             itemsWidgets.add(
