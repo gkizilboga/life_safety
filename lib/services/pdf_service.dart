@@ -606,7 +606,7 @@ class PdfService {
                     style: pw.TextStyle(
                       font: ttfBold,
                       fontSize: 8.5,
-                      color: PdfColors.red700,
+                      color: const PdfColor.fromInt(0xFF1a365d),
                     ),
                   ),
                   pw.Expanded(
@@ -1780,30 +1780,43 @@ class PdfService {
       }
 
       final headerWidget = pw.Container(
-        margin: const pw.EdgeInsets.only(top: 24, bottom: 6),
-        padding: const pw.EdgeInsets.only(bottom: 4),
+        margin: const pw.EdgeInsets.only(top: 24, bottom: 8),
+        padding: const pw.EdgeInsets.only(bottom: 6),
         decoration: const pw.BoxDecoration(
           border: pw.Border(
             bottom: pw.BorderSide(
               color: PdfColor.fromInt(0xFF1a365d), // corporate navy bottom line
-              width: 1.5,
+              width: 1.0,
             ),
           ),
         ),
-        child: pw.Row(
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Expanded(
-              child: pw.Text(
-                "Bölüm $id: ${AppDefinitions.getSectionTitle(id)}",
-                style: pw.TextStyle(
-                  font: ttfBold,
-                  fontSize: 10,
-                  color: const PdfColor.fromInt(
-                    0xFF1a365d,
-                  ), // corporate dark navy text
-                  letterSpacing: 0.3,
-                ),
+            pw.Text(
+              "Bölüm $id",
+              style: pw.TextStyle(
+                font: ttfBold,
+                fontSize: 7.5,
+                color: const PdfColor.fromInt(0xFF64748B), // Slate 500
+                letterSpacing: 1.0,
               ),
+            ),
+            pw.SizedBox(height: 3),
+            pw.Row(
+              children: [
+                pw.Expanded(
+                  child: pw.Text(
+                    AppDefinitions.getSectionTitle(id),
+                    style: pw.TextStyle(
+                      font: ttfBold,
+                      fontSize: 11.5,
+                      color: const PdfColor.fromInt(0xFF1a365d), // corporate dark navy text
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
