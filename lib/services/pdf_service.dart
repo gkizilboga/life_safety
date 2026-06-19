@@ -12,23 +12,11 @@ import '../utils/app_content.dart';
 import '../logic/active_systems_engine.dart';
 import 'package:flutter/material.dart';
 import '../screens/pdf_preview_screen.dart';
+import 'pdf/pdf_assets.dart';
+import 'pdf/pdf_utils.dart';
 
 class PdfService {
-  static ByteData? _fontData;
-  static ByteData? _fontDataBold;
-  static ByteData? _fontDataItalic;
-  static ByteData? _fontDataBoldItalic;
-  static ByteData? _logoData;
 
-  static Future<void> _ensureAssetsLoaded() async {
-    _fontData ??= await rootBundle.load("assets/fonts/Roboto-Regular.ttf");
-    _fontDataBold ??= await rootBundle.load("assets/fonts/Roboto-Bold.ttf");
-    _fontDataItalic ??= await rootBundle.load("assets/fonts/Roboto-Italic.ttf");
-    _fontDataBoldItalic ??= await rootBundle.load(
-      "assets/fonts/Roboto-BoldItalic.ttf",
-    );
-    _logoData ??= await rootBundle.load("assets/images/ui/logo3.webp");
-  }
 
   // Keywords that get bold+red highlighting in PDF output.
   // Defined once here and used by both _buildHighlightedText and _buildRichText.
@@ -71,104 +59,7 @@ class PdfService {
     );
   }
 
-  static String _cleanEmojis(String? t) {
-    if (t == null) return "";
 
-    // 1. Emoji Clean
-    String cleaned = t
-        .replaceAll(
-          RegExp(
-            r'[\u{1f300}-\u{1f5ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{1f900}-\u{1f9ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}\u{fe00}-\u{fe0f}]',
-            unicode: true,
-          ),
-          '',
-        )
-        .trim();
-
-    // 2. Technical Prefix Clean (PDF Output Only)
-    final List<String> prefixesToRemove = [
-      "KRİTİK RİSK",
-      "UYARI",
-      "BİLİNMİYOR",
-      "BİLGİ",
-      "OLUMLU",
-      "UYGUN",
-      "ÖNERİ",
-    ];
-
-    for (var prefix in prefixesToRemove) {
-      cleaned = cleaned.replaceAll(
-        RegExp(
-          '^(DURUM:\\s*)?$prefix:?\\s*',
-          multiLine: true,
-          caseSensitive: false,
-        ),
-        '',
-      );
-    }
-
-    // Preserve DURUM: ZORUNLU but clean DURUM: OLUMLU etc.
-    if (cleaned.startsWith(
-      RegExp(r'^DURUM:\s*(?!ZORUNLU|ŞART DEĞİL)', caseSensitive: false),
-    )) {
-      cleaned = cleaned.replaceFirst(
-        RegExp(r'^DURUM:\s*', caseSensitive: false),
-        '',
-      );
-    }
-
-    return cleaned.trim();
-  }
-
-  static PdfColor _getRiskColor(String text) {
-    final t = text.trim();
-    if (t.startsWith('KRİTİK RİSK')) return PdfColors.red700;
-    if (t.startsWith('UYARI')) return PdfColors.amber700;
-    if (t.startsWith('OLUMLU') || t.startsWith('Olumlu')) {
-      return PdfColors.green700;
-    }
-    if (t.startsWith('BİLGİ')) return PdfColors.blue700;
-    if (t.startsWith('BİLİNMİYOR') || t.startsWith('Bilinmiyor')) {
-      return PdfColors.grey500;
-    }
-    if (t.startsWith('DURUM:') || t.startsWith('ZORUNLU')) {
-      return PdfColors.red700;
-    }
-    return PdfColors.grey500;
-  }
-
-  static PdfColor _getColorForItem(Map<String, dynamic> item) {
-    // 1. ÖNCELİK: Kod Mantığı (Status Nesnesi)
-    // Eğer logic handler açıkça bir statü atamışsa, metin içeriğinden bağımsız olarak onu baz al.
-    // Bu yöntem en stabil ve hatasız yaklaşımdır.
-    if (item['status'] != null && item['status'] is ReportStatus) {
-      return _getColorFromStatus(item['status'] as ReportStatus);
-    }
-
-    // 2. ÖNCELİK: Metin Öneki (Fallback)
-    // Eğer statü nesnesi yoksa, rapor metninin en başındaki anahtar kelimeye bak.
-    final String reportText = item['report']?.toString() ?? '';
-    if (reportText.trim().isNotEmpty) {
-      return _getRiskColor(reportText);
-    }
-
-    return PdfColors.grey500;
-  }
-
-  static PdfColor _getColorFromStatus(ReportStatus status) {
-    if (status == ReportStatus.risk) return PdfColors.red700;
-    if (status == ReportStatus.warning) return PdfColors.amber700;
-    if (status == ReportStatus.compliant) return PdfColors.green700;
-    if (status == ReportStatus.info) return PdfColors.blue700;
-    if (status == ReportStatus.unknown) return PdfColors.grey500;
-    return PdfColors.grey500;
-  }
-
-  static PdfColor _getScoreColorForPdf(int score) {
-    if (score >= 80) return PdfColors.green300;
-    if (score >= 50) return PdfColors.orange300;
-    return PdfColors.red300;
-  }
 
   static pw.PageTheme _buildPageTheme(
     pw.Font base,
@@ -300,7 +191,7 @@ class PdfService {
                     style: pw.TextStyle(
                       fontSize: 26,
                       fontWeight: pw.FontWeight.bold,
-                      color: _getScoreColorForPdf(metrics['score'] as int),
+                      color: PdfUtils.getScoreColorForPdf(metrics['score'] as int),
                     ),
                   ),
                 ),
@@ -312,7 +203,7 @@ class PdfService {
                       vertical: 6,
                     ),
                     decoration: pw.BoxDecoration(
-                      color: _getScoreColorForPdf(
+                      color: PdfUtils.getScoreColorForPdf(
                         metrics['score'] as int,
                       ).shade(0.1),
                       borderRadius: pw.BorderRadius.circular(20),
@@ -324,7 +215,7 @@ class PdfService {
                           ? "ORTA RİSK"
                           : "YÜKSEK RİSK",
                       style: pw.TextStyle(
-                        color: _getScoreColorForPdf(metrics['score'] as int),
+                        color: PdfUtils.getScoreColorForPdf(metrics['score'] as int),
                         fontSize: 13,
                         fontWeight: pw.FontWeight.bold,
                         letterSpacing: 1.0,
@@ -375,9 +266,9 @@ class PdfService {
                     pw.SizedBox(height: 4),
                     // Bina Adı (14pt Bold)
                     pw.Text(
-                      _cleanEmojis(store.currentBinaName).isEmpty
+                      PdfUtils.cleanEmojis(store.currentBinaName).isEmpty
                           ? "Bina Adı Belirtilmemiş"
-                          : _cleanEmojis(store.currentBinaName),
+                          : PdfUtils.cleanEmojis(store.currentBinaName),
                       style: pw.TextStyle(
                         color: PdfColors.white,
                         fontSize: 14,
@@ -411,7 +302,7 @@ class PdfService {
                             ),
                             pw.SizedBox(height: 4),
                             pw.Text(
-                              "${_cleanEmojis(store.currentBinaDistrict)} / ${_cleanEmojis(store.currentBinaCity)}",
+                              "${PdfUtils.cleanEmojis(store.currentBinaDistrict)} / ${PdfUtils.cleanEmojis(store.currentBinaCity)}",
                               style: pw.TextStyle(
                                 color: PdfColors.white,
                                 fontSize: 11,
@@ -502,7 +393,7 @@ class PdfService {
         return false; // Bu bölümler PDF'de hep mavidir
       if (status == ReportStatus.risk) return true;
       if (text.contains('KRİTİK RİSK')) return true;
-      return _getRiskColor(text) == PdfColors.red700;
+      return PdfUtils.getRiskColor(text) == PdfColors.red700;
     }
 
     for (int id = 1; id <= 36; id++) {
@@ -547,7 +438,7 @@ class PdfService {
         : score > 50
         ? "ORTA RİSK"
         : "YÜKSEK RİSK";
-    final riskColor = _getScoreColorForPdf(score);
+    final riskColor = PdfUtils.getScoreColorForPdf(score);
 
     return [
       pw.MultiPage(
@@ -1297,15 +1188,15 @@ class PdfService {
   static Future<pw.Document> _buildRiskAnalysisDocument({
     BinaStore? providedStore,
   }) async {
-    await _ensureAssetsLoaded();
+    await PdfAssets.ensureAssetsLoaded();
     final pdf = pw.Document();
 
-    final ttf = pw.Font.ttf(_fontData!);
-    final ttfBold = pw.Font.ttf(_fontDataBold!);
-    final ttfItalic = pw.Font.ttf(_fontDataItalic!);
-    final ttfBoldItalic = pw.Font.ttf(_fontDataBoldItalic!);
+    final ttf = pw.Font.ttf(PdfAssets.fontData);
+    final ttfBold = pw.Font.ttf(PdfAssets.fontDataBold);
+    final ttfItalic = pw.Font.ttf(PdfAssets.fontDataItalic);
+    final ttfBoldItalic = pw.Font.ttf(PdfAssets.fontDataBoldItalic);
 
-    final logoImage = pw.MemoryImage(_logoData!.buffer.asUint8List());
+    final logoImage = pw.MemoryImage(PdfAssets.logoData.buffer.asUint8List());
 
     final store = providedStore ?? BinaStore.instance;
     final metrics = ReportEngine.calculateRiskMetrics(store: store);
@@ -1503,13 +1394,13 @@ class PdfService {
 
       PdfColor riskColor;
       if (hasValidStatus) {
-        riskColor = _getColorFromStatus(sectionStatus);
+        riskColor = PdfUtils.getColorFromStatus(sectionStatus);
       } else {
         final fullReportForColor = ReportEngine.getSectionFullReport(
           id,
           store: store,
         );
-        riskColor = _getRiskColor(fullReportForColor);
+        riskColor = PdfUtils.getRiskColor(fullReportForColor);
       }
 
       final effectiveSectionRiskColor = (id <= 10)
@@ -1529,7 +1420,7 @@ class PdfService {
                   ? PdfColors.blue700
                   : (id == 12
                         ? effectiveSectionRiskColor
-                        : _getColorForItem(item)),
+                        : PdfUtils.getColorForItem(item)),
               isLast: item == details.last,
               sectionId: id,
             ),
@@ -1541,8 +1432,8 @@ class PdfService {
         for (int i = 0; i < details.length; i++) {
           final item = details[i];
           final isLast = i == details.length - 1;
-          final String report = _cleanEmojis(item['report'] ?? '');
-          final String advice = _cleanEmojis(item['advice'] ?? '');
+          final String report = PdfUtils.cleanEmojis(item['report'] ?? '');
+          final String advice = PdfUtils.cleanEmojis(item['advice'] ?? '');
           final bool isTableRow =
               (item['isTable'] == true) ||
               (report.isEmpty && advice.isEmpty && item['isTable'] != false);
@@ -1660,7 +1551,7 @@ class PdfService {
                     ? PdfColors.blue700
                     : (id == 12
                           ? effectiveSectionRiskColor
-                          : _getColorForItem(item)),
+                          : PdfUtils.getColorForItem(item)),
                 isLast: isLast,
                 sectionId: id,
               ),
@@ -2010,7 +1901,7 @@ class PdfService {
     }
 
     for (final req in activeSystems) {
-      final String cleanReason = _cleanEmojis(req.reason).trim();
+      final String cleanReason = PdfUtils.cleanEmojis(req.reason).trim();
       final bool isMandatory = req.isMandatory;
       final bool isWarning = req.isWarning;
 
@@ -2046,7 +1937,7 @@ class PdfService {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      _cleanEmojis(req.name),
+                      PdfUtils.cleanEmojis(req.name),
                       style: pw.TextStyle(
                         fontSize: 9,
                         font: ttfBold,
@@ -2069,7 +1960,7 @@ class PdfService {
                     if (req.note.isNotEmpty) ...[
                       pw.SizedBox(height: 3),
                       pw.Text(
-                        _cleanEmojis(req.note),
+                        PdfUtils.cleanEmojis(req.note),
                         style: pw.TextStyle(
                           fontSize: 7.5,
                           font: ttfItalic,
@@ -2118,15 +2009,15 @@ class PdfService {
   static Future<pw.Document> _buildActiveSystemsDocument({
     BinaStore? providedStore,
   }) async {
-    await _ensureAssetsLoaded();
+    await PdfAssets.ensureAssetsLoaded();
     final pdf = pw.Document();
 
-    final ttf = pw.Font.ttf(_fontData!);
-    final ttfBold = pw.Font.ttf(_fontDataBold!);
-    final ttfItalic = pw.Font.ttf(_fontDataItalic!);
-    final ttfBoldItalic = pw.Font.ttf(_fontDataBoldItalic!);
+    final ttf = pw.Font.ttf(PdfAssets.fontData);
+    final ttfBold = pw.Font.ttf(PdfAssets.fontDataBold);
+    final ttfItalic = pw.Font.ttf(PdfAssets.fontDataItalic);
+    final ttfBoldItalic = pw.Font.ttf(PdfAssets.fontDataBoldItalic);
 
-    final logoImage = pw.MemoryImage(_logoData!.buffer.asUint8List());
+    final logoImage = pw.MemoryImage(PdfAssets.logoData.buffer.asUint8List());
 
     final store = providedStore ?? BinaStore.instance;
     final activeSystems = ActiveSystemsEngine.calculateRequirements(store);
@@ -2243,15 +2134,15 @@ class PdfService {
   static Future<pw.Document> _buildCombinedDocument({
     BinaStore? providedStore,
   }) async {
-    await _ensureAssetsLoaded();
+    await PdfAssets.ensureAssetsLoaded();
     final pdf = pw.Document();
 
-    final ttf = pw.Font.ttf(_fontData!);
-    final ttfBold = pw.Font.ttf(_fontDataBold!);
-    final ttfItalic = pw.Font.ttf(_fontDataItalic!);
-    final ttfBoldItalic = pw.Font.ttf(_fontDataBoldItalic!);
+    final ttf = pw.Font.ttf(PdfAssets.fontData);
+    final ttfBold = pw.Font.ttf(PdfAssets.fontDataBold);
+    final ttfItalic = pw.Font.ttf(PdfAssets.fontDataItalic);
+    final ttfBoldItalic = pw.Font.ttf(PdfAssets.fontDataBoldItalic);
 
-    final logoImage = pw.MemoryImage(_logoData!.buffer.asUint8List());
+    final logoImage = pw.MemoryImage(PdfAssets.logoData.buffer.asUint8List());
 
     final store = providedStore ?? BinaStore.instance;
     final metrics = ReportEngine.calculateRiskMetrics(store: store);
@@ -2680,7 +2571,7 @@ class PdfService {
                           final vText = vEntry.value;
                           if (vText.isEmpty) return pw.SizedBox();
                           return pw.Text(
-                            _cleanEmojis(vText),
+                            PdfUtils.cleanEmojis(vText),
                             style: pw.TextStyle(
                               font: (vIdx == 0 && valueRaw.contains('\n'))
                                   ? fontBold
@@ -2712,7 +2603,7 @@ class PdfService {
                               children: p.split('\n').asMap().entries.map((e) {
                                 final isFirstLine = e.key == 0;
                                 return pw.Text(
-                                  _cleanEmojis(e.value),
+                                  PdfUtils.cleanEmojis(e.value),
                                   style: pw.TextStyle(
                                     font: isFirstLine ? fontBold : font,
                                     fontSize: isFirstLine ? 8.5 : 7.5,
@@ -2725,7 +2616,7 @@ class PdfService {
                               }).toList(),
                             )
                           : pw.Text(
-                              _cleanEmojis(p),
+                              PdfUtils.cleanEmojis(p),
                               style: pw.TextStyle(
                                 font: (isSubHeader || shouldBold)
                                     ? fontBold
@@ -2818,7 +2709,7 @@ class PdfService {
     final label = item['label'] ?? '';
     final value = item['value'] ?? '';
     // Rengi tetikleyen ancak görsel kirlilik yaratan önekleri (BİLGİ, DURUM vb.) temizle
-    final report = ReportEngine.cleanPrefix(_cleanEmojis(item['report'] ?? ''));
+    final report = ReportEngine.cleanPrefix(PdfUtils.cleanEmojis(item['report'] ?? ''));
 
     final content = pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -2922,7 +2813,7 @@ class PdfService {
           pw.Padding(
             padding: const pw.EdgeInsets.only(left: 6),
             child: pw.Text(
-              _cleanEmojis(item['advice']!),
+              PdfUtils.cleanEmojis(item['advice']!),
               style: pw.TextStyle(
                 fontSize: 9,
                 font: font,
@@ -3029,7 +2920,7 @@ class PdfService {
   static Future<void> shareRiskAnalysisPdf(BuildContext context) async {
     final store = BinaStore.instance;
     final pdf = await _buildRiskAnalysisDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
@@ -3039,7 +2930,7 @@ class PdfService {
   static Future<void> shareActiveSystemsPdf(BuildContext context) async {
     final store = BinaStore.instance;
     final pdf = await _buildActiveSystemsDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
@@ -3049,28 +2940,25 @@ class PdfService {
   static Future<void> shareCombinedPdf(BuildContext context) async {
     final store = BinaStore.instance;
     final pdf = await _buildCombinedDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
     await Printing.sharePdf(bytes: bytes, filename: fileName);
   }
 
-  static String _generateTimestamp() {
-    final now = DateTime.now();
-    return "${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}";
-  }
+
 
   static Future<String> saveRiskAnalysisPdfToDevice(
     BuildContext context,
   ) async {
     final store = BinaStore.instance;
     final pdf = await _buildRiskAnalysisDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
-    return _saveBytesToDevice(bytes, fileName);
+    return PdfUtils.saveBytesToDevice(bytes, fileName);
   }
 
   static Future<String> saveActiveSystemsPdfToDevice(
@@ -3078,86 +2966,54 @@ class PdfService {
   ) async {
     final store = BinaStore.instance;
     final pdf = await _buildActiveSystemsDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
-    return _saveBytesToDevice(bytes, fileName);
+    return PdfUtils.saveBytesToDevice(bytes, fileName);
   }
 
   static Future<String> saveCombinedPdfToDevice(BuildContext context) async {
     final store = BinaStore.instance;
     final pdf = await _buildCombinedDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
-    return _saveBytesToDevice(bytes, fileName);
+    return PdfUtils.saveBytesToDevice(bytes, fileName);
   }
 
-  static Future<String> _saveBytesToDevice(
-    List<int> bytes,
-    String fileName,
-  ) async {
-    String dirPath;
-    if (Platform.isAndroid) {
-      dirPath = '/storage/emulated/0/Download';
-    } else {
-      final dir = await getApplicationDocumentsDirectory();
-      dirPath = dir.path;
-    }
-    final file = File('$dirPath/$fileName');
-    await file.writeAsBytes(bytes);
-    if (Platform.isAndroid) {
-      _notifyMediaStore(file.path);
-    }
-    return file.path;
-  }
 
-  static void _notifyMediaStore(String filePath) {
-    try {
-      const channel = MethodChannel('com.example.life_safety/media');
-      channel.invokeMethod('scanFile', {'path': filePath});
-    } catch (_) {}
-  }
 
   static Future<String> saveRiskAnalysisPdfToTemp() async {
     final store = BinaStore.instance;
     final pdf = await _buildRiskAnalysisDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Yangin_Risk_Analizi_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
-    return _saveBytesToTemp(bytes, fileName);
+    return PdfUtils.saveBytesToTemp(bytes, fileName);
   }
 
   static Future<String> saveActiveSystemsPdfToTemp() async {
     final store = BinaStore.instance;
     final pdf = await _buildActiveSystemsDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Aktif_Sistem_Gereksinimleri_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
-    return _saveBytesToTemp(bytes, fileName);
+    return PdfUtils.saveBytesToTemp(bytes, fileName);
   }
 
   static Future<String> saveCombinedPdfToTemp() async {
     final store = BinaStore.instance;
     final pdf = await _buildCombinedDocument(providedStore: store);
-    final timestamp = _generateTimestamp();
+    final timestamp = PdfUtils.generateTimestamp();
     final fileName =
         "Birlesik_Rapor_${(store.currentBinaName ?? 'Bina').replaceAll(' ', '_')}_$timestamp.pdf";
     final bytes = await pdf.save();
-    return _saveBytesToTemp(bytes, fileName);
+    return PdfUtils.saveBytesToTemp(bytes, fileName);
   }
 
-  static Future<String> _saveBytesToTemp(
-    List<int> bytes,
-    String fileName,
-  ) async {
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/$fileName');
-    await file.writeAsBytes(bytes);
-    return file.path;
-  }
+
 }
