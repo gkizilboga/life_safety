@@ -119,6 +119,8 @@ class PdfService {
     required String subTitle,
     required BinaStore store,
     required Map<String, dynamic> metrics,
+    required pw.Font ttf,
+    required pw.Font ttfBold,
     bool showScore = true,
   }) {
     // Renk Paleti
@@ -152,6 +154,7 @@ class PdfService {
                   "BİNALARIN YANGINDAN KORUNMASI HAKKINDA YÖNETMELİĞİ'NE GÖRE",
                   textAlign: pw.TextAlign.center,
                   style: pw.TextStyle(
+                    font: ttf,
                     color: slateGray,
                     fontSize: 10,
                     letterSpacing: 1.2,
@@ -169,6 +172,7 @@ class PdfService {
                     mainTitle,
                     textAlign: pw.TextAlign.center,
                     style: pw.TextStyle(
+                      font: ttfBold,
                       color: navyBlue,
                       fontSize: 22,
                       fontWeight: pw.FontWeight.bold,
@@ -189,6 +193,7 @@ class PdfService {
                   child: pw.Text(
                     "${metrics['score']} / 100",
                     style: pw.TextStyle(
+                      font: ttfBold,
                       fontSize: 26,
                       fontWeight: pw.FontWeight.bold,
                       color: PdfUtils.getScoreColorForPdf(metrics['score'] as int),
@@ -398,7 +403,7 @@ class PdfService {
 
     for (int id = 1; id <= 36; id++) {
       // 33 (Kapasite Analizi) eklendi
-      if ([3, 5, 6, 7, 10, 12, 21, 33, 36].contains(id)) {
+      if ([3, 5, 6, 7, 10, 12, 33, 36].contains(id)) {
         final fullReport = ReportEngine.getSectionSummaryReport(
           id,
           store: store,
@@ -413,7 +418,7 @@ class PdfService {
         final details = ReportEngine.getSectionDetailedReport(id, store: store);
         for (final item in details) {
           final status = item['status'] as ReportStatus? ?? ReportStatus.info;
-          final reportText = (item['report'] ?? '').toString();
+          final reportText = (item['exec_summary'] ?? item['report'] ?? '').toString();
 
           if (isRedBar(reportText, status, id)) {
             // Değerlendirme notunun TAMAMINI al
@@ -1217,6 +1222,8 @@ class PdfService {
         subTitle: "",
         store: store,
         metrics: metrics,
+        ttf: ttf,
+        ttfBold: ttfBold,
         showScore: true,
       ),
     );
@@ -1838,56 +1845,68 @@ class PdfService {
     result.add(pw.SizedBox(height: 15));
 
     final Map<int, pw.TableColumnWidth> columnWidths = {
-      0: const pw.FixedColumnWidth(200),
-      1: const pw.FixedColumnWidth(65),
-      2: const pw.FixedColumnWidth(65),
-      3: const pw.FixedColumnWidth(75),
-      4: const pw.FixedColumnWidth(75),
+      0: const pw.FixedColumnWidth(215),
+      1: const pw.FixedColumnWidth(55),
+      2: const pw.FixedColumnWidth(55),
+      3: const pw.FixedColumnWidth(65),
+      4: const pw.FixedColumnWidth(90),
     };
 
     final headerTable = pw.Table(
-      border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+      border: pw.TableBorder.all(color: PdfColor.fromInt(0xFF1a365d), width: 0.5),
       columnWidths: columnWidths,
       children: [
         pw.TableRow(
-          decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFFe8eef7)),
+          decoration: const pw.BoxDecoration(color: PdfColor.fromInt(0xFF1a365d)),
           children: [
             pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 6),
-              child: pw.Text(
-                "Gereksinimler",
-                style: pw.TextStyle(font: ttfBold, fontSize: 8, color: const PdfColor.fromInt(0xFF1a365d)),
+              padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              child: pw.Center(
+                child: pw.Text(
+                  "Gereksinimler",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(font: ttfBold, fontSize: 8, color: PdfColors.white),
+                ),
               ),
             ),
             pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 3, vertical: 6),
-              child: pw.Text(
-                "Binada\nmevcut mu?",
-                textAlign: pw.TextAlign.center,
-                style: pw.TextStyle(font: ttfBold, fontSize: 7, color: const PdfColor.fromInt(0xFF1a365d)),
+              padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              child: pw.Center(
+                child: pw.Text(
+                  "Binada\nMevcut mu?",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(font: ttfBold, fontSize: 8, color: PdfColors.white),
+                ),
               ),
             ),
             pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 3, vertical: 6),
-              child: pw.Text(
-                "Yangın anında\nçalışır mı?",
-                textAlign: pw.TextAlign.center,
-                style: pw.TextStyle(font: ttfBold, fontSize: 7, color: const PdfColor.fromInt(0xFF1a365d)),
+              padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              child: pw.Center(
+                child: pw.Text(
+                  "Yangın Anında\nÇalışır mı?",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(font: ttfBold, fontSize: 8, color: PdfColors.white),
+                ),
               ),
             ),
             pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 3, vertical: 6),
-              child: pw.Text(
-                "Periyodik bakım &\ntestleri yapılıyor mu?",
-                textAlign: pw.TextAlign.center,
-                style: pw.TextStyle(font: ttfBold, fontSize: 7, color: const PdfColor.fromInt(0xFF1a365d)),
+              padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              child: pw.Center(
+                child: pw.Text(
+                  "Periyodik Bakım\nve Testleri\nYapılıyor mu?",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(font: ttfBold, fontSize: 8, color: PdfColors.white),
+                ),
               ),
             ),
             pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 5, vertical: 6),
-              child: pw.Text(
-                "Açıklama",
-                style: pw.TextStyle(font: ttfBold, fontSize: 8, color: const PdfColor.fromInt(0xFF1a365d)),
+              padding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              child: pw.Center(
+                child: pw.Text(
+                  "Açıklama",
+                  textAlign: pw.TextAlign.center,
+                  style: pw.TextStyle(font: ttfBold, fontSize: 8, color: PdfColors.white),
+                ),
               ),
             ),
           ],
@@ -1974,17 +1993,17 @@ class PdfService {
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(vertical: 6),
-                child: _buildCheckboxSquare(),
+                child: isMandatory ? _buildCheckboxSquare() : pw.SizedBox(),
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(vertical: 6),
-                child: _buildCheckboxSquare(),
+                child: isMandatory ? _buildCheckboxSquare() : pw.SizedBox(),
               ),
               pw.Padding(
                 padding: const pw.EdgeInsets.symmetric(vertical: 6),
-                child: _buildCheckboxSquare(),
+                child: isMandatory ? _buildCheckboxSquare() : pw.SizedBox(),
               ),
-              _buildExplanationLines(),
+              isMandatory ? _buildExplanationLines() : pw.SizedBox(),
             ],
           ),
         ],
@@ -2033,6 +2052,8 @@ class PdfService {
         subTitle: "",
         store: store,
         metrics: metrics,
+        ttf: ttf,
+        ttfBold: ttfBold,
         showScore: true,
       ),
     );
@@ -2163,6 +2184,8 @@ class PdfService {
         subTitle: "",
         store: store,
         metrics: metrics,
+        ttf: ttf,
+        ttfBold: ttfBold,
         showScore: true,
       ),
     );

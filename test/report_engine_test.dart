@@ -18,6 +18,9 @@ import 'package:life_safety/models/bolum_36_model.dart';
 import 'package:life_safety/models/bolum_6_model.dart';
 import 'package:life_safety/models/bolum_9_model.dart';
 import 'package:life_safety/models/bolum_13_model.dart';
+import 'package:life_safety/models/bolum_11_model.dart';
+import 'package:life_safety/models/report_status.dart';
+import 'package:life_safety/utils/app_content.dart';
 import 'package:life_safety/models/choice_result.dart';
 
 void main() {
@@ -463,6 +466,59 @@ void main() {
         report13.contains('Endüstriyel Mutfak (Büyük Restoran) Kapısı'),
         true,
       );
+    });
+
+    group('Bölüm 11 (İtfaiye Yaklaşım Mesafesi) Zayıf Geçiş Noktası Testleri', () {
+      test('Zayıf geçiş noktası (11-3-A) işaretlendiğinde diğer sorular olumlu/yeşil gösterilmeli', () {
+        store.bolum11 = Bolum11Model(
+          mesafe: Bolum11Content.mesafeOptionB, // Evet, aşıyor (Kritik Risk)
+          engel: Bolum11Content.engelOptionB, // Evet, engel var (Kritik Risk)
+          zayifNokta: Bolum11Content.zayifNoktaOptionA, // Evet, var (Olumlu)
+        );
+
+        // 1. Detay rapor testi: mesafe ve engel sorularının level'ı positive olmalı ve reportText güncellenmeli
+        final details = ReportEngine.getSectionDetailedReport(11, store: store);
+        expect(details.length, 3);
+        
+        final mesafeDetail = details.firstWhere((d) => d['label'].contains('yaklaşım mesafesi'));
+        final engelDetail = details.firstWhere((d) => d['label'].contains('engelleyen bir bahçe duvarı'));
+        final zayifNoktaDetail = details.firstWhere((d) => d['label'].contains('zayıf bir bölüm'));
+
+        expect(mesafeDetail['status'], ReportStatus.compliant);
+        expect(mesafeDetail['report'].contains('OLUMLU:'), true);
+        
+        expect(engelDetail['status'], ReportStatus.compliant);
+        expect(engelDetail['report'].contains('OLUMLU:'), true);
+
+        expect(zayifNoktaDetail['status'], ReportStatus.compliant);
+
+        // 2. Bölüm genel risk seviyesi testi: zayıf nokta olumlu olduğu için tüm bölüm positive olmalı
+        final sectionLevel = ReportEngine.getSectionRiskLevel(11, store: store);
+        expect(sectionLevel, RiskLevel.positive);
+
+        // 3. Bölüm genel rapor metni testi: hasZayifNokta durumunda olumlu genel metin dönmeli
+        final fullReport = ReportEngine.getSectionFullReport(11, store: store);
+        expect(fullReport.contains('OLUMLU:'), true);
+        expect(fullReport.contains('itfaiyenin kolayca yıkıp geçebileceği zayıf/geçiş bölümü mevcuttur'), true);
+      });
+
+      test('Zayıf geçiş noktası olmaması (11-3-B) durumunda engeller kritik risk olarak kalmalı', () {
+        store.bolum11 = Bolum11Model(
+          mesafe: Bolum11Content.mesafeOptionB, // Evet, aşıyor (Kritik Risk)
+          engel: Bolum11Content.engelOptionB, // Evet, engel var (Kritik Risk)
+          zayifNokta: Bolum11Content.zayifNoktaOptionB, // Hayır, yok (Kritik Risk)
+        );
+
+        final details = ReportEngine.getSectionDetailedReport(11, store: store);
+        final mesafeDetail = details.firstWhere((d) => d['label'].contains('yaklaşım mesafesi'));
+        final engelDetail = details.firstWhere((d) => d['label'].contains('engelleyen bir bahçe duvarı'));
+
+        expect(mesafeDetail['status'], ReportStatus.risk);
+        expect(engelDetail['status'], ReportStatus.risk);
+
+        final sectionLevel = ReportEngine.getSectionRiskLevel(11, store: store);
+        expect(sectionLevel, RiskLevel.critical);
+      });
     });
   });
 }

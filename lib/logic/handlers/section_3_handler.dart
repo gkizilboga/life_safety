@@ -89,7 +89,7 @@ class Section3Handler {
     // Yüksek bina sınıflandırması
     final bool isYuksek = b3.isYuksekBina;
     details.add({
-      'label': 'Yüksek Bina Statüsü',
+      'label': 'Yükseklik Statüsü',
       'value': isYuksek ? 'Yüksek Bina' : 'Yüksek Olmayan Bina',
       'report': '',
       'status': ReportStatus.info,

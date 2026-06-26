@@ -643,8 +643,8 @@ class StairInputGroupCard extends StatelessWidget {
                 ctrl: p.disAcikCtrl,
                 error: p.disAcikErr,
                 assetPaths: const [
+                  AppAssets.section20DisAcik1,
                   AppAssets.section20DisAcik2,
-                  AppAssets.section20DisAcik3,
                 ],
                 onChange: (val) => p.updateController('disAcik', val),
               ),
@@ -726,8 +726,8 @@ class BasementStairInputGroupCard extends StatelessWidget {
                 ctrl: p.bodDisAcikCtrl,
                 error: p.bodDisAcikErr,
                 assetPaths: const [
+                  AppAssets.section20DisAcik1,
                   AppAssets.section20DisAcik2,
-                  AppAssets.section20DisAcik3,
                 ],
                 onChange: (val) => p.updateController('bodDisAcik', val),
               ),

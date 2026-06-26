@@ -10,8 +10,6 @@ class AppAssets {
       'assets/images/sections/normal_asansor.webp';
   static const String section7Jenerator =
       'assets/images/sections/jenerator_odasi.webp';
-  static const String section7OrtakDuvar =
-      'assets/images/sections/ortak_duvar.webp';
   static const String section8Ayrik = 'assets/images/sections/ayrik_nizam.webp';
   static const String section8Bitisik =
       'assets/images/sections/bitisik_nizam_1.webp';
@@ -28,12 +26,8 @@ class AppAssets {
       'assets/images/sections/doseme_yalitim.webp';
   static const String section15Gecis =
       'assets/images/sections/tesisat_gecis.webp';
-  static const String section15Gecis2 =
-      'assets/images/sections/tesisat_gecis_2.webp';
   static const String section16EpsMantolama =
       'assets/images/sections/eps_mantolama.webp';
-  static const String section16XpsMantolama =
-      'assets/images/sections/xps_mantolama.webp';
   static const String section16TasyunuMantolama =
       'assets/images/sections/tasyunu_mantolama.webp';
   static const String section16Giydirme =
@@ -53,11 +47,9 @@ class AppAssets {
   static const String section20DisKapali =
       'assets/images/sections/dis_kapali_merdiven.webp';
   static const String section20DisAcik1 =
-      'assets/images/sections/dis_acik_merdiven_1.webp';
+      'assets/images/sections/dis_acik_merdiven_3.webp';
   static const String section20DisAcik2 =
       'assets/images/sections/dis_acik_merdiven_2.webp';
-  static const String section20DisAcik3 =
-      'assets/images/sections/dis_acik_merdiven_3.webp';
   static const String section20Dairesel =
       'assets/images/sections/dairesel_merdiven.webp';
   static const String section20Dengelenmis =
@@ -71,8 +63,6 @@ class AppAssets {
       'assets/images/sections/basinclandirma.webp';
   static const String section24DisGecit =
       'assets/images/sections/dis_kacis_gecidi.webp';
-  static const String section24DisGecit2 =
-      'assets/images/sections/dis_kacis_gecidi_2.webp';
   static const String section24KapaliKoridor =
       'assets/images/sections/kapali_koridor.webp';
   static const String section26Rampa =

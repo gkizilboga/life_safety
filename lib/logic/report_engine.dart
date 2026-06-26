@@ -2510,6 +2510,9 @@ class ReportEngine {
     switch (id) {
       case 11:
         final b = s.bolum11;
+        if (b?.zayifNokta?.label == "11-3-A") {
+          return RiskLevel.positive;
+        }
         return _maxLevel([
           b?.mesafe?.level,
           b?.engel?.level,
@@ -2961,9 +2964,15 @@ class ReportEngine {
     // --- BÖLÜM 11 (İtfaiye Yaklaşım) ---
     final b11 = s.bolum11;
     if (b11 != null) {
-      add(b11.mesafe);
-      add(b11.engel);
-      add(b11.zayifNokta);
+      if (b11.zayifNokta?.label == "11-3-A") {
+        addLevel(RiskLevel.positive);
+        addLevel(RiskLevel.positive);
+        addLevel(RiskLevel.positive);
+      } else {
+        add(b11.mesafe);
+        add(b11.engel);
+        add(b11.zayifNokta);
+      }
     }
 
     // --- BÖLÜM 12 (Yapısal Dayanım) ---
@@ -4086,28 +4095,38 @@ class ReportEngine {
   ) {
     final b11 = s.bolum11;
     if (b11 != null) {
+      final bool hasZayifNokta = b11.zayifNokta?.label == "11-3-A";
+
       if (b11.mesafe != null) {
+        final level = hasZayifNokta ? RiskLevel.positive : b11.mesafe!.level;
+        final reportText = hasZayifNokta
+            ? "OLUMLU: İtfaiye yaklaşım mesafesi 45 metreyi aşsa da, erişimi engelleyen duvarda itfaiyenin yıkıp geçebileceği zayıf bir bölüm bulunmaktadır."
+            : b11.mesafe!.reportText;
         _addDetail(
           details,
           label:
               'İtfaiye aracının binaya yaklaşım mesafesi 45 metreyi aşıyor mu?',
           value: b11.mesafe!.uiTitle,
           subtitle: b11.mesafe!.uiSubtitle,
-          report: b11.mesafe!.reportText,
-          advice: b11.mesafe!.adviceText,
-          level: b11.mesafe!.level,
+          report: reportText,
+          advice: hasZayifNokta ? '' : b11.mesafe!.adviceText,
+          level: level,
         );
       }
       if (b11.engel != null) {
+        final level = hasZayifNokta ? RiskLevel.positive : b11.engel!.level;
+        final reportText = hasZayifNokta
+            ? "OLUMLU: Bahçe duvarı veya kilitli kapı engeli bulunmasına rağmen, bu engelde itfaiyenin kolayca yıkıp geçebileceği zayıf bir bölüm bulunmaktadır."
+            : b11.engel!.reportText;
         _addDetail(
           details,
           label:
               'İtfaiye aracının binaya yanaşmasını engelleyen bir bahçe duvarı veya kilitli kapılar var mı?',
           value: b11.engel!.uiTitle,
           subtitle: b11.engel!.uiSubtitle,
-          report: b11.engel!.reportText,
-          advice: b11.engel!.adviceText,
-          level: b11.engel!.level,
+          report: reportText,
+          advice: hasZayifNokta ? '' : b11.engel!.adviceText,
+          level: level,
         );
       }
       if (b11.zayifNokta != null) {

@@ -819,16 +819,22 @@ class BinaStore {
         );
       case 11:
         if (_bolum11 == null) return null;
+        final hasZayifNokta = _bolum11!.zayifNokta?.label == "11-3-A";
         return ChoiceResult(
           label: "11",
           uiTitle: "İtfaiye Yaklaşım Mesafesi",
           uiSubtitle: "",
-          reportText: _bolum11!.mesafe?.reportText ?? "",
-          adviceText: _joinAdvice([
-            _bolum11!.mesafe,
-            _bolum11!.engel,
-            _bolum11!.zayifNokta,
-          ]),
+          reportText: hasZayifNokta
+              ? "OLUMLU: İtfaiye yaklaşım mesafesi veya engel durumları olsa dahi, duvarda itfaiyenin kolayca yıkıp geçebileceği zayıf/geçiş bölümü mevcuttur."
+              : (_bolum11!.mesafe?.reportText ?? ""),
+          adviceText: hasZayifNokta
+              ? ""
+              : _joinAdvice([
+                  _bolum11!.mesafe,
+                  _bolum11!.engel,
+                  _bolum11!.zayifNokta,
+                ]),
+          level: hasZayifNokta ? RiskLevel.positive : (_bolum11!.mesafe?.level ?? RiskLevel.positive),
         );
       case 12:
         return _bolum12?.secim;

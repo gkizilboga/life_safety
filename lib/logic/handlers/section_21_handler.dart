@@ -13,6 +13,7 @@ class Section21Handler {
     required String label,
     required String value,
     required String report,
+    String? execSummary,
     String? subtitle,
     String? advice,
     RiskLevel? level,
@@ -22,6 +23,7 @@ class Section21Handler {
       'value': value,
       'subtitle': subtitle ?? '',
       'report': report,
+      'exec_summary': ?execSummary,
       'advice': advice ?? '',
       'isTable': false,
       'status': level != null
@@ -90,6 +92,7 @@ class Section21Handler {
           value: b21.malzeme?.uiTitle ?? '-',
           subtitle: b21.malzeme?.uiSubtitle,
           report: '',
+          execSummary: b21.malzeme?.reportText,
           advice: b21.malzeme?.adviceText,
           level: b21.malzeme?.level,
         );
@@ -99,6 +102,7 @@ class Section21Handler {
           value: b21.kapi?.uiTitle ?? '-',
           subtitle: b21.kapi?.uiSubtitle,
           report: '',
+          execSummary: b21.kapi?.reportText,
           advice: b21.kapi?.adviceText,
           level: b21.kapi?.level,
         );
@@ -108,6 +112,7 @@ class Section21Handler {
           value: b21.esya?.uiTitle ?? '-',
           subtitle: b21.esya?.uiSubtitle,
           report: '',
+          execSummary: b21.esya?.reportText,
           advice: b21.esya?.adviceText,
           level: b21.esya?.level,
         );

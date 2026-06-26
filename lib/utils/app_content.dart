@@ -1334,7 +1334,7 @@ class Bolum15Content {
     uiTitle: "Alçıpanel, metal vb.",
     uiSubtitle: "Yanmaz malzeme",
     reportText:
-        "OLUMLU: Asma tavan malzemesinin yangına tepki sınıfı A1 veya A2 sınıfıdır. Yönetmelikçe sınıf bakımından yeterli olsa da malzemelerin yangına tepki test raporlarının kontrol edilmesi önerilir.",
+        "OLUMLU: Asma tavan malzemesinin yangına tepki sınıfı A1 veya A2 olarak kabul edilebilir. Yönetmelikçe sınıf bakımından yeterli olsa da malzemelerin yangına tepki test raporlarının kontrol edilmesi önerilir.",
     level: RiskLevel.positive,
   );
 
@@ -1478,7 +1478,6 @@ class Bolum16Content {
         "BİLİNMİYOR: Katlar arasındaki yangına dayanıklı cephe elemanıyla dolu yüzey yüksekliği bilinmiyor. 100 cm'den az ise yangın dikeyde hızla yayılabilir.",
     level: RiskLevel.unknown,
   );
-
 
   static final bitisikOptionA = ChoiceResult(
     label: "16-3-A (Bitişik)",
@@ -3979,7 +3978,7 @@ class Bolum31Content {
     uiTitle: "Evet, içinden su boruları geçiyor.",
     uiSubtitle: "",
     reportText:
-        "KRİTİK RİSK: Yüksek gerilim hattının olduğu yerden su borusu gerilmemelidir.",
+        "KRİTİK RİSK: Yüksek gerilim hattının olduğu yerden su borusu geçirilmemelidir.",
     level: RiskLevel.critical,
   );
 
@@ -4010,7 +4009,7 @@ class Bolum32Content {
         "Duvarları beton / tuğla, kapısı yangına dayanıklı çelik kapı ve dışarıya doğru açılıyor.",
     uiSubtitle: "",
     reportText:
-        "OLUMLU: Jeneratör odasında yangın kompartımantasyonunun sağlandığı söylenebilir.",
+        "OLUMLU: Jeneratör odasında gerekli kapı-duvar özellikleri sağlanmıştır.",
     level: RiskLevel.positive,
   );
   static final yapiOptionB = ChoiceResult(
